@@ -33,10 +33,13 @@ jobs:
       - name: Validate datasets
         run: npm run validate:data
 
+      # The whole tree, not just public/packs: the build also writes assigned
+      # item ids back into content/es, so a row committed without one would
+      # otherwise slip through unnoticed.
       - name: Datasets match their sources
         run: |
           npm run build:data
-          git diff --exit-code public/packs
+          git diff --exit-code
 
       - name: Build
         run: npm run build

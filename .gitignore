@@ -40,9 +40,14 @@ dev-dist/
 # same twenty phrases (docs/tasks/canonical-audio.md §4.1)
 audio-samples/
 
-# local TTS model weights, fetched with `piper.download_voices`. Large, and not
-# ours to redistribute — see the licence question in the audio task.
-.piper-voices/
+# a TTS toolchain, if one is ever set up here. No engine is chosen yet
+# (docs/tasks/canonical-audio.md §4.0); these are listed so a local experiment
+# can never be committed by accident. Keep any such toolchain project-local, and
+# note that package caches must sit OUTSIDE the repo — something in this folder
+# holds handles on new files and breaks atomic renames.
+.tools/
+.venv/
+.tts-models/
 
 # generated clips. Deliberately ignored while a voice is still being chosen:
 # clips are content-addressed, so every regeneration is a new blob that would

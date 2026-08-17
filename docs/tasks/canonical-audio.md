@@ -7,9 +7,11 @@ rather than a field on them, so voices are addable without regenerating content
 and a pack stays importable/exportable. Storage size is explicitly not a
 constraint; §4 and §5 were rewritten around that, and §9 is new.
 **Revised:** 2026-08-17 — `scripts/generate-audio.ts` and its tests exist, so
-§6 describes something running rather than something planned. §4.1 is the only
-thing still blocking: no voice has been chosen, and this machine has no Spanish
-voice of any kind to choose from.
+§6 describes something running rather than something planned.
+**Revised:** 2026-08-17 — the `audio` record kind, its schema, the repository
+index and the integrity checks have landed. Choosing a TTS engine is **deferred
+pending proper research**; §4.0 records what the first pass ruled out and why.
+Nothing else in the task depends on that choice.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** a new pack file kind, a batch generator, a voice ledger, a build step
 and a review pass. The audio service, playback controls and service-worker
@@ -70,8 +72,12 @@ the ledger, resumable batches, ffmpeg post-processing, and `--compare` for blind
 listening. It ships a `stub` provider that writes a padded tone, so all of that
 is testable with no TTS installed.
 
-What is still missing: **a voice** (§4.1), the `audio` record kind, the build step
-that emits the records, and the review pass.
+The `audio` record kind has landed too: schema, generic loading, a repository
+index, voice-aware resolution and integrity checks, with tests in
+[`tests/domain/repository.test.ts`](../../tests/domain/repository.test.ts).
+
+What is still missing: **an engine and a voice** (§4.0), the build step that turns
+ledger rows into records, and the review pass.
 
 ---
 
@@ -121,6 +127,43 @@ decision. Quality and licence should.
 ## 4. Three decisions to make before generating a batch
 
 Settle these on a twenty-item sample. Getting them wrong means regenerating.
+
+### 4.0 Status: open, deliberately
+
+**No engine has been chosen and none is installed.** A first pass tried and
+backed out; this section records what it established so the eventual research
+starts from evidence rather than from scratch.
+
+| Candidate                      | Licence              | Maintained            | Spanish                                            |
+| ------------------------------ | -------------------- | --------------------- | -------------------------------------------------- |
+| piper (`OHF-Voice/piper1-gpl`) | **GPL-3.0-or-later** | yes, v1.7.0           | es-ES + es-MX, but **voice licences unstated**     |
+| `kokoro-js` (npm)              | Apache-2.0           | last publish May 2025 | **English only**                                   |
+| `sherpa-onnx-node`             | Apache-2.0           | very active           | its Kokoro build is **English + Chinese only**     |
+| Kokoro-82M (Python)            | Apache-2.0           | v1.0 Jan 2025         | 3 voices, **all Latin American — no Spain accent** |
+
+Findings worth keeping:
+
+- **`rhasspy/piper` (MIT) was archived in October 2025.** Development moved to
+  `OHF-Voice/piper1-gpl`, which is GPL-3.0-or-later. The licence on the code is
+  the lesser problem: its Spanish voice configs state **no licence at all**,
+  which is precisely the §4.1 hazard.
+- **The accent question constrains the engine.** The cleanly-licensed options are
+  Latin American. Choosing that is defensible but not free: the pack declares
+  `es-ES` first, ships Spain-side vocabulary (`patata`, `móvil`, `ordenador`) and
+  now generates **vosotros** commands, which a Latin American voice does not use.
+- **Python 3.14 blocks most of the ecosystem here.** Kokoro pulls
+  `spacy`→`thinc`, which has no 3.14 wheels, so any Python route needs a
+  project-local 3.12.
+- **Spanish needs no system espeak-ng.** `espeakng-loader` bundles the library
+  and arrives with `misaki[en]`, so phonemisation stays inside a venv.
+- **This folder breaks atomic renames.** `uv` fails with "access is denied" when
+  its cache or its managed interpreters live inside the repo — something here (a
+  dev-server watcher, or the virus scanner) holds handles on new files. A venv in
+  the project is fine; caches have to sit outside it.
+
+None of this blocks the rest of the task: the record kind, the generator and the
+review flow are all engine-agnostic, and the engine is reached through a command
+template, so adopting one later is an environment variable rather than a rewrite.
 
 ### 4.1 Which voice — and may you ship its output?
 

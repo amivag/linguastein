@@ -86,15 +86,15 @@ Run `npx vitest run tests/a11y` after any UI change.
 
 Three pieces decide what a learner sees, and they are separable on purpose:
 
-- **Scheduling** () models memory stability and item
+- **Scheduling** (`domain/progress/fsrs.ts`) models memory stability and item
   difficulty, so intervals adapt per item. Weights are FSRS defaults awaiting a
   per-user fit against the attempt log we already store.
-- **Composition** () decides _how_ each item is
+- **Composition** (`domain/sessions/composer.ts`) decides _how_ each item is
   practised: items climb recognition → cued recall → production as their memory
   stabilises, and drop back after a lapse. It also breaks up runs of one
   exercise type. Do not reintroduce a fixed preference order — that produced
   multiple choice on effectively every item.
-- **Mastery** () infers strength for words and
+- **Mastery** (`domain/progress/mastery.ts`) infers strength for words and
   patterns from item history, weighted by how many different sentences a word
   appears in. It is derived, never stored.
 

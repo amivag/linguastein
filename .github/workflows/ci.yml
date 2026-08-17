@@ -33,5 +33,10 @@ jobs:
       - name: Validate datasets
         run: npm run validate:data
 
+      - name: Datasets match their sources
+        run: |
+          npm run build:data
+          git diff --exit-code public/packs
+
       - name: Build
         run: npm run build

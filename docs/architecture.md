@@ -46,6 +46,11 @@ features/ ──▶ app/ ──▶ domain/
 Dependencies point inwards. `domain` imports nothing from `data`, `storage`,
 `audio`, `features` or `app`.
 
+`src/languages/<tag>/` holds language-specific morphology (Spanish conjugation,
+plurals, adjective agreement). The engine never imports it; the dataset build
+does. That is what keeps the engine language-agnostic while still letting the
+Spanish pack ship 2,000 generated verb forms.
+
 ## Composition root
 
 `src/app/services.ts` is the only place that picks concrete implementations:

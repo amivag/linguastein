@@ -1,0 +1,342 @@
+# Spanish nouns — authoring source for the core-es pack.
+# Columns: lemma	gloss (en)	gender	plural (blank = regular)	level	topics
+# Plurals are generated unless an irregular one is given (examen → exámenes).
+persona	person	f		a1	people
+hombre	man	m		a1	people
+mujer	woman	f		a1	people
+niño	boy, child	m		a1	people,family
+niña	girl	f		a1	people,family
+bebé	baby	m		a1	family
+familia	family	f		a1	family
+padre	father	m		a1	family
+madre	mother	f		a1	family
+hijo	son	m		a1	family
+hija	daughter	f		a1	family
+hermano	brother	m		a1	family
+hermana	sister	f		a1	family
+abuelo	grandfather	m		a1	family
+abuela	grandmother	f		a1	family
+tío	uncle	m		a1	family
+tía	aunt	f		a1	family
+primo	cousin	m		a2	family
+esposo	husband	m		a1	family
+esposa	wife	f		a1	family
+novio	boyfriend	m		a1	family
+novia	girlfriend	f		a1	family
+amigo	friend	m		a1	social
+amiga	friend (female)	f		a1	social
+vecino	neighbour	m		a2	social
+gente	people	f		a1	people
+señor	sir, mister	m		a1	social
+señora	madam, missus	f		a1	social
+chico	boy, guy	m		a1	people
+nombre	name	m		a1	people
+cuerpo	body	m		a1	body
+cabeza	head	f		a1	body
+pelo	hair	m		a1	body
+cara	face	f		a1	body
+ojo	eye	m		a1	body
+nariz	nose	f		a1	body
+boca	mouth	f		a1	body
+diente	tooth	m		a1	body
+oreja	ear	f		a1	body
+cuello	neck	m		a2	body
+brazo	arm	m		a1	body
+mano	hand	f		a1	body
+dedo	finger	m		a1	body
+pierna	leg	f		a1	body
+pie	foot	m		a1	body
+espalda	back	f		a2	body
+corazón	heart	m		a1	body
+estómago	stomach	m		a2	body
+piel	skin	f		a2	body
+sangre	blood	f		a2	body
+dolor	pain	m		a1	health
+fiebre	fever	f		a2	health
+medicina	medicine	f		a2	health
+médico	doctor	m		a1	health
+hospital	hospital	m		a1	health
+salud	health	f		a1	health
+comida	food, meal	f		a1	food-drink
+desayuno	breakfast	m		a1	food-drink
+almuerzo	lunch	m		a1	food-drink
+cena	dinner	f		a1	food-drink
+pan	bread	m		a1	food-drink
+agua	water	f		a1	food-drink
+leche	milk	f		a1	food-drink
+café	coffee	m		a1	food-drink
+té	tea	m		a1	food-drink
+jugo	juice	m		a1	food-drink
+cerveza	beer	f		a1	food-drink
+vino	wine	m		a1	food-drink
+carne	meat	f		a1	food-drink
+pollo	chicken	m		a1	food-drink
+pescado	fish (food)	m		a1	food-drink
+huevo	egg	m		a1	food-drink
+queso	cheese	m		a1	food-drink
+arroz	rice	m		a1	food-drink
+sopa	soup	f		a1	food-drink
+ensalada	salad	f		a1	food-drink
+verdura	vegetable	f		a1	food-drink
+fruta	fruit	f		a1	food-drink
+manzana	apple	f		a1	food-drink
+naranja	orange	f		a1	food-drink
+plátano	banana	m		a1	food-drink
+uva	grape	f		a2	food-drink
+fresa	strawberry	f		a2	food-drink
+tomate	tomato	m		a1	food-drink
+papa	potato	f		a1	food-drink
+cebolla	onion	f		a2	food-drink
+ajo	garlic	m		a2	food-drink
+zanahoria	carrot	f		a2	food-drink
+lechuga	lettuce	f		a2	food-drink
+sal	salt	f		a1	food-drink
+azúcar	sugar	m		a1	food-drink
+aceite	oil	m		a2	food-drink
+mantequilla	butter	f		a2	food-drink
+pastel	cake	m		a1	food-drink
+helado	ice cream	m		a1	food-drink
+chocolate	chocolate	m		a1	food-drink
+galleta	biscuit, cookie	f		a1	food-drink
+postre	dessert	m		a1	restaurant
+hambre	hunger	f		a1	food-drink
+sed	thirst	f		a1	food-drink
+cuenta	bill, account	f		a1	restaurant
+propina	tip	f		a2	restaurant
+menú	menu	m		a1	restaurant
+casa	house, home	f		a1	home
+piso	flat, floor	m		a1	home
+apartamento	apartment	m		a1	home
+habitación	room	f		a1	home
+cocina	kitchen	f		a1	home
+baño	bathroom	m		a1	home
+sala	living room	f		a1	home
+comedor	dining room	m		a2	home
+dormitorio	bedroom	m		a1	home
+cama	bed	f		a1	home
+mesa	table	f		a1	home
+silla	chair	f		a1	home
+sofá	sofa	m		a1	home
+puerta	door	f		a1	home
+ventana	window	f		a1	home
+pared	wall	f		a2	home
+suelo	floor, ground	m		a2	home
+llave	key	f		a1	home
+luz	light	f		a1	home
+lámpara	lamp	f		a2	home
+espejo	mirror	m		a2	home
+armario	wardrobe	m		a2	home
+plato	plate, dish	m		a1	home,restaurant
+vaso	glass	m		a1	home,restaurant
+taza	cup	f		a1	home
+cuchillo	knife	m		a1	home
+tenedor	fork	m		a1	home
+cuchara	spoon	f		a1	home
+servilleta	napkin	f		a2	restaurant
+toalla	towel	f		a2	home
+jabón	soap	m		a2	home
+basura	rubbish, trash	f		a2	home
+jardín	garden	m		a1	home
+ciudad	city	f		a1	city
+pueblo	town, village	m		a1	city
+país	country	m		a1	city
+calle	street	f		a1	city
+plaza	square	f		a1	city
+tienda	shop	f		a1	shopping
+mercado	market	m		a1	shopping
+supermercado	supermarket	m		a1	shopping
+restaurante	restaurant	m		a1	restaurant
+bar	bar	m		a1	restaurant
+hotel	hotel	m		a1	travel
+banco	bank	m		a1	city
+farmacia	pharmacy	f		a1	city
+panadería	bakery	f		a2	shopping
+iglesia	church	f		a2	city
+museo	museum	m		a1	city
+parque	park	m		a1	city
+cine	cinema	m		a1	city
+teatro	theatre	m		a2	city
+biblioteca	library	f		a1	city
+estación	station	f		a1	travel
+aeropuerto	airport	m		a1	travel
+avión	plane	m		a1	travel
+tren	train	m		a1	travel
+autobús	bus	m		a1	travel
+coche	car	m		a1	travel
+taxi	taxi	m		a1	travel
+bicicleta	bicycle	f		a1	travel
+billete	ticket	m		a1	travel
+maleta	suitcase	f		a1	travel
+viaje	trip, journey	m		a1	travel
+mapa	map	m		a1	travel
+camino	way, road	m		a2	travel
+puente	bridge	m		a2	city
+esquina	corner	f		a2	city
+frontera	border	f		a2	travel
+trabajo	work, job	m		a1	work
+oficina	office	f		a1	work
+empresa	company	f		a2	work
+jefe	boss	m		a1	work
+empleado	employee	m		a2	work
+reunión	meeting	f		a2	work
+proyecto	project	m		a2	work
+dinero	money	m		a1	work,shopping
+sueldo	salary	m		a2	work
+cliente	customer	m		a1	work
+escuela	school	f		a1	school
+universidad	university	f		a1	school
+clase	class	f		a1	school
+profesor	teacher	m		a1	school
+alumno	pupil	m		a2	school
+estudiante	student	m		a1	school
+examen	exam	m	exámenes	a1	school
+tarea	homework, task	f		a1	school
+libro	book	m		a1	school
+cuaderno	notebook	m		a2	school
+lápiz	pencil	m		a1	school
+bolígrafo	pen	m		a1	school
+papel	paper	m		a1	school
+palabra	word	f		a1	language
+pregunta	question	f		a1	language
+respuesta	answer	f		a1	language
+idioma	language	m		a1	language
+número	number	m		a1	core
+letra	letter (character)	f		a2	language
+frase	sentence, phrase	f		a2	language
+tiempo	time, weather	m		a1	time
+hora	hour, time	f		a1	time
+minuto	minute	m		a1	time
+segundo	second	m		a2	time
+día	day	m		a1	time
+mañana	morning	f		a1	time
+tarde	afternoon	f		a1	time
+noche	night	f		a1	time
+semana	week	f		a1	time
+mes	month	m		a1	time
+año	year	m		a1	time
+fecha	date	f		a1	time
+cumpleaños	birthday	m	cumpleaños	a1	time
+fiesta	party	f		a1	social
+vacaciones	holidays	f	vacaciones	a1	travel
+momento	moment	m		a1	time
+vez	time (occasion)	f		a1	time
+rato	while	m		a2	time
+sol	sun	m		a1	weather
+luna	moon	f		a2	nature
+estrella	star	f		a2	nature
+cielo	sky	m		a1	nature
+nube	cloud	f		a2	weather
+lluvia	rain	f		a1	weather
+nieve	snow	f		a1	weather
+viento	wind	m		a1	weather
+calor	heat	m		a1	weather
+frío	cold	m		a1	weather
+mar	sea	m		a1	nature
+río	river	m		a1	nature
+lago	lake	m		a2	nature
+montaña	mountain	f		a1	nature
+playa	beach	f		a1	travel
+campo	countryside, field	m		a1	nature
+bosque	forest	m		a2	nature
+árbol	tree	m		a1	nature
+flor	flower	f		a1	nature
+animal	animal	m		a1	animals
+perro	dog	m		a1	animals
+gato	cat	m		a1	animals
+pájaro	bird	m		a1	animals
+caballo	horse	m		a2	animals
+vaca	cow	f		a2	animals
+ropa	clothes	f		a1	clothes
+camisa	shirt	f		a1	clothes
+camiseta	t-shirt	f		a1	clothes
+pantalón	trousers	m		a1	clothes
+falda	skirt	f		a1	clothes
+vestido	dress	m		a1	clothes
+chaqueta	jacket	f		a1	clothes
+abrigo	coat	m		a1	clothes
+zapato	shoe	m		a1	clothes
+calcetín	sock	m		a2	clothes
+sombrero	hat	m		a2	clothes
+bolso	handbag	m		a2	clothes
+cinturón	belt	m		a2	clothes
+gafas	glasses	f	gafas	a1	clothes
+reloj	watch, clock	m		a1	objects
+teléfono	telephone	m		a1	objects
+móvil	mobile phone	m		a1	objects
+ordenador	computer	m		a1	objects
+pantalla	screen	f		a2	objects
+correo	mail, email	m		a1	communication
+mensaje	message	m		a1	communication
+foto	photo	f		a1	objects
+música	music	f		a1	music
+canción	song	f		a1	music
+película	film, movie	f		a1	entertainment
+televisión	television	f		a1	entertainment
+periódico	newspaper	m		a2	communication
+revista	magazine	f		a2	communication
+carta	letter (post)	f		a1	communication
+tarjeta	card	f		a1	shopping
+bolsa	bag	f		a1	shopping
+caja	box	f		a2	objects
+cosa	thing	f		a1	core
+vida	life	f		a1	core
+mundo	world	m		a1	core
+amor	love	m		a1	core
+problema	problem	m		a1	core
+idea	idea	f		a1	core
+verdad	truth	f		a1	core
+mentira	lie	f		a2	core
+suerte	luck	f		a1	core
+miedo	fear	m		a1	core
+ayuda	help	f		a1	core
+ejemplo	example	m		a1	core
+manera	way, manner	f		a2	core
+parte	part	f		a1	core
+lugar	place	m		a1	core
+sitio	place, spot	m		a2	core
+edad	age	f		a1	people
+color	colour	m		a1	core
+precio	price	m		a1	shopping
+error	mistake	m		a1	core
+razón	reason	f		a1	core
+historia	story, history	f		a1	entertainment
+cuento	story, tale	m		a2	entertainment
+juego	game	m		a1	sport
+deporte	sport	m		a1	sport
+fútbol	football	m		a1	sport
+equipo	team	m		a2	sport
+partido	match, game	m		a2	sport
+ejercicio	exercise	m		a2	sport
+lunes	Monday	m	lunes	a1	time
+martes	Tuesday	m	martes	a1	time
+miércoles	Wednesday	m	miércoles	a1	time
+jueves	Thursday	m	jueves	a1	time
+viernes	Friday	m	viernes	a1	time
+sábado	Saturday	m		a1	time
+domingo	Sunday	m		a1	time
+enero	January	m		a1	time
+febrero	February	m		a1	time
+marzo	March	m		a1	time
+abril	April	m		a1	time
+mayo	May	m		a1	time
+junio	June	m		a1	time
+julio	July	m		a1	time
+agosto	August	m		a1	time
+septiembre	September	m		a1	time
+octubre	October	m		a1	time
+noviembre	November	m		a1	time
+diciembre	December	m		a1	time
+primavera	spring	f		a1	time
+verano	summer	m		a1	time
+otoño	autumn	m		a1	time
+invierno	winter	m		a1	time
+favor	favour	m		a1	greetings
+nevera	fridge	f		a2	home
+centro	centre	m		a1	city
+euro	euro	m		a1	shopping
+talla	size	f		a2	shopping
+pasaporte	passport	m		a1	travel
+derecha	right (side)	f		a1	travel
+izquierda	left (side)	f		a1	travel
+inglés	English (language)	m		a1	language
+español	Spanish (language)	m		a1	language

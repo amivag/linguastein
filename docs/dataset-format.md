@@ -11,20 +11,44 @@ depends on it.
 
 Lines beginning with `#` are treated as comments, and blank lines are ignored.
 
-## Layout
+## Authoring vs. generated
+
+Two directories, one direction of flow:
 
 ```text
-public/demo-data/
-├── catalog.json                     which packs ship with this build
-└── demo-es/
-    ├── pack.json                    manifest
-    ├── es-a1-core-skills.jsonl
-    ├── es-a1-core-lexemes.jsonl
-    ├── es-a1-core-verb-forms.jsonl
-    ├── es-a1-core-vocabulary.jsonl
-    ├── es-a1-core-phrases.jsonl
-    └── es-a1-core-translations-en.jsonl
+content/es/            ← humans edit this (TSV, one row per lemma or sentence)
+├── verbs.tsv              lemma, gloss, level, regular|irregular, topics
+├── nouns.tsv              lemma, gloss, gender, irregular plural, level, topics
+├── modifiers.tsv          adjectives, adverbs, function words, extra forms
+└── sentences-*.tsv        spanish, english, level, topics, optional note
+
+        │  npm run build:data
+        ▼
+
+public/packs/          ← generated, shipped, never hand-edited
+├── catalog.json
+└── core-es/
+    ├── pack.json
+    ├── es-a1-a2-core-skills.jsonl
+    ├── es-a1-a2-core-verbs.jsonl          lexemes
+    ├── es-a1-a2-core-nouns.jsonl          lexemes
+    ├── es-a1-a2-core-modifiers.jsonl      lexemes
+    ├── es-a1-a2-core-verb-forms.jsonl     2,000 generated forms
+    ├── es-a1-a2-core-vocabulary.jsonl     word cards
+    ├── es-a1-a2-core-sentences.jsonl      tokenised, annotated sentences
+    └── es-a1-a2-core-translations-en.jsonl
 ```
+
+The build derives everything mechanical: conjugations (`src/languages/es`),
+plurals and adjective agreement, stable ids, sentence tokenisation, token →
+lexeme links, grammar-pattern annotations, and translation records for items,
+lexemes and skills. It also reports coverage — which lemmas appear in no
+sentence — and refuses to run when a verb is tagged `irregular` without an entry
+in the irregularity table. CI re-runs it and fails on any diff.
+
+Ambiguous surface forms are resolved by the preceding word (`el trabajo` is the
+noun, `trabajo en una oficina` is the verb). Where that is not decisive, the
+token is left unlinked: a missing lemma is better than a wrong one.
 
 ## File naming
 

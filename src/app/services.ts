@@ -28,7 +28,7 @@ export interface CreateServicesOptions {
 }
 
 export async function createServices(options: CreateServicesOptions = {}): Promise<AppServices> {
-  const datasetBaseUrl = options.datasetBaseUrl ?? `${import.meta.env.BASE_URL}demo-data/`;
+  const datasetBaseUrl = options.datasetBaseUrl ?? `${import.meta.env.BASE_URL}packs/`;
   const source = httpDatasetSource(datasetBaseUrl);
 
   const catalog = await loadCatalog(source);

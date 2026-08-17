@@ -19,9 +19,17 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   pattern it belongs to, its other forms and other phrases that use it
 - Copy / share, including "copy as AI prompt"
 - Mobile-first UI: home, session, settings
+- Dataset authoring pipeline: TSV sources → generated pack, with a Spanish
+  conjugator, coverage reporting and a CI drift check
+- core-es pack: 100 verbs (2,000 generated forms), 339 nouns, 172 modifiers,
+  443 sentences — 845 practisable items
 - Reference-language architecture (English is the first, not the only)
 
 ## Next
+
+0. **Editorial review of core-es** — the pack is machine-generated and marked
+   unreviewed. Genders, glosses and sentence naturalness need a human pass
+   before any of it can be called canonical.
 
 1. **Study mode for flashcards** — free browsing with previous/next, order
    toggle and no scoring, separate from tracked practice sessions.

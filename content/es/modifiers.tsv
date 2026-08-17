@@ -1,0 +1,176 @@
+# Spanish adjectives, adverbs and function words — authoring source for core-es.
+# Columns: lemma	gloss (en)	pos	level	topics	extra surface forms (optional)
+# Adjectives are listed in the masculine singular; the build derives the other
+# surface forms so that "cansada" in a sentence still links to this lexeme.
+bueno	good	ADJ	a1	core	buen
+malo	bad	ADJ	a1	core	mal
+grande	big	ADJ	a1	core	gran
+pequeño	small	ADJ	a1	core
+nuevo	new	ADJ	a1	core
+viejo	old	ADJ	a1	core
+joven	young	ADJ	a1	people
+alto	tall, high	ADJ	a1	core
+bajo	short, low	ADJ	a1	core
+largo	long	ADJ	a1	core
+corto	short	ADJ	a1	core
+gordo	fat	ADJ	a2	people
+delgado	thin	ADJ	a2	people
+guapo	good-looking	ADJ	a1	people
+bonito	pretty, nice	ADJ	a1	core
+feo	ugly	ADJ	a2	core
+limpio	clean	ADJ	a1	home
+sucio	dirty	ADJ	a1	home
+fácil	easy	ADJ	a1	core
+difícil	difficult	ADJ	a1	core
+importante	important	ADJ	a1	core
+interesante	interesting	ADJ	a1	core
+aburrido	boring	ADJ	a1	core
+divertido	fun	ADJ	a1	core
+cansado	tired	ADJ	a1	health
+contento	happy, pleased	ADJ	a1	feelings
+feliz	happy	ADJ	a1	feelings
+triste	sad	ADJ	a1	feelings
+enfermo	ill	ADJ	a1	health
+fuerte	strong	ADJ	a1	core
+débil	weak	ADJ	a2	core
+rápido	fast	ADJ	a1	core
+lento	slow	ADJ	a1	core
+caro	expensive	ADJ	a1	shopping
+barato	cheap	ADJ	a1	shopping
+rico	rich, tasty	ADJ	a1	core
+pobre	poor	ADJ	a2	core
+caliente	hot	ADJ	a1	food-drink
+frío	cold	ADJ	a1	weather
+listo	ready, clever	ADJ	a1	core
+amable	kind	ADJ	a1	people
+simpático	nice, friendly	ADJ	a1	people
+tranquilo	calm, quiet	ADJ	a1	feelings
+nervioso	nervous	ADJ	a2	feelings
+ocupado	busy	ADJ	a1	work
+libre	free	ADJ	a1	core
+lleno	full	ADJ	a2	core
+vacío	empty	ADJ	a2	core
+abierto	open	ADJ	a1	city
+cerrado	closed	ADJ	a1	city
+primero	first	ADJ	a1	core	primer
+último	last	ADJ	a1	core
+mismo	same	ADJ	a1	core
+otro	other, another	ADJ	a1	core
+próximo	next	ADJ	a1	time
+blanco	white	ADJ	a1	colours
+negro	black	ADJ	a1	colours
+rojo	red	ADJ	a1	colours
+azul	blue	ADJ	a1	colours
+verde	green	ADJ	a1	colours
+amarillo	yellow	ADJ	a1	colours
+gris	grey	ADJ	a2	colours
+aquí	here	ADV	a1	place
+allí	there	ADV	a1	place
+ahora	now	ADV	a1	time
+hoy	today	ADV	a1	time
+ayer	yesterday	ADV	a1	time
+siempre	always	ADV	a1	time
+nunca	never	ADV	a1	time
+también	also, too	ADV	a1	core
+tampoco	neither	ADV	a2	core
+muy	very	ADV	a1	core
+más	more	ADV	a1	core
+menos	less	ADV	a1	core
+ya	already, now	ADV	a1	time
+todavía	still, yet	ADV	a1	time
+bien	well	ADV	a1	core
+mal	badly	ADV	a1	core
+casi	almost	ADV	a1	core
+solo	only, alone	ADV	a1	core
+temprano	early	ADV	a1	time
+pronto	soon	ADV	a1	time
+despacio	slowly	ADV	a2	core
+demasiado	too much	ADV	a2	core
+mucho	a lot, much	ADV	a1	core
+poco	little, few	ADV	a1	core
+bastante	quite, enough	ADV	a2	core
+juntos	together	ADV	a2	social
+yo	I	PRON	a1	grammar
+tú	you (informal)	PRON	a1	grammar
+él	he	PRON	a1	grammar
+ella	she	PRON	a1	grammar
+usted	you (formal)	PRON	a1	grammar
+nosotros	we	PRON	a1	grammar
+ellos	they	PRON	a1	grammar
+me	me, myself	PRON	a1	grammar
+te	you, yourself	PRON	a1	grammar
+se	himself, herself, oneself	PRON	a1	grammar
+nos	us, ourselves	PRON	a1	grammar
+lo	it, him	PRON	a1	grammar
+le	to him, to her	PRON	a1	grammar
+qué	what	PRON	a1	questions
+quién	who	PRON	a1	questions
+cuál	which	PRON	a1	questions
+cuánto	how much	PRON	a1	questions
+dónde	where	ADV	a1	questions
+cuándo	when	ADV	a1	questions
+cómo	how	ADV	a1	questions
+por qué	why	ADV	a1	questions
+a	to, at	ADP	a1	grammar
+de	of, from	ADP	a1	grammar
+en	in, on	ADP	a1	grammar
+con	with	ADP	a1	grammar
+sin	without	ADP	a1	grammar
+para	for, in order to	ADP	a1	grammar
+por	for, by, through	ADP	a1	grammar
+sobre	on, about	ADP	a2	grammar
+entre	between	ADP	a2	grammar
+hasta	until, up to	ADP	a1	grammar
+desde	from, since	ADP	a2	grammar
+antes	before	ADV	a1	time
+después	after, afterwards	ADV	a1	time
+cerca	near	ADV	a1	place
+lejos	far	ADV	a1	place
+y	and	CCONJ	a1	grammar
+o	or	CCONJ	a1	grammar
+pero	but	CCONJ	a1	grammar
+porque	because	SCONJ	a1	grammar
+que	that, than	SCONJ	a1	grammar
+si	if	SCONJ	a1	grammar
+cuando	when	SCONJ	a1	grammar
+como	like, as	SCONJ	a1	grammar
+sí	yes	INTJ	a1	core
+no	no, not	ADV	a1	core
+hola	hello	INTJ	a1	greetings
+adiós	goodbye	INTJ	a1	greetings
+gracias	thank you	INTJ	a1	greetings
+perdón	sorry, excuse me	INTJ	a1	greetings
+el	the	DET	a1	grammar	la,los,las
+un	a, an	DET	a1	grammar	una,unos,unas
+mi	my	DET	a1	grammar	mis
+tu	your	DET	a1	grammar	tus
+su	his, her, their	DET	a1	grammar	sus
+nuestro	our	DET	a1	grammar	nuestra,nuestros,nuestras
+este	this	DET	a1	grammar	esta,estos,estas
+ese	that	DET	a1	grammar	esa,esos,esas
+al	to the	ADP	a1	grammar	
+del	of the, from the	ADP	a1	grammar	
+hay	there is, there are	VERB	a1	grammar	
+todo	all, everything	PRON	a1	core	toda,todos,todas
+algo	something	PRON	a1	core	
+nada	nothing	PRON	a1	core	
+alguien	someone	PRON	a2	core	
+nadie	nobody	PRON	a2	core	
+cada	each, every	DET	a1	core	
+uno	one	NUM	a1	numbers	
+dos	two	NUM	a1	numbers	
+tres	three	NUM	a1	numbers	
+cuatro	four	NUM	a1	numbers	
+cinco	five	NUM	a1	numbers	
+seis	six	NUM	a1	numbers	
+siete	seven	NUM	a1	numbers	
+ocho	eight	NUM	a1	numbers	
+nueve	nine	NUM	a1	numbers	
+diez	ten	NUM	a1	numbers	
+once	eleven	NUM	a1	numbers	
+doce	twelve	NUM	a1	numbers	
+veinte	twenty	NUM	a1	numbers	
+treinta	thirty	NUM	a1	numbers	
+cien	a hundred	NUM	a1	numbers	
+mil	a thousand	NUM	a1	numbers	
+medio	half	ADJ	a1	numbers	media

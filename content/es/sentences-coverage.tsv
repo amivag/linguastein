@@ -1,0 +1,132 @@
+# Sentences written to cover lemmas the other files miss (see the build's coverage report).
+# Columns: spanish	english	level	topics	note (English, optional)
+El hombre y la mujer entran en la casa.	The man and the woman go into the house.	a1	people
+Ese chico es mi primo.	That boy is my cousin.	a1	family
+Mi tío y mi tía tienen un bebé.	My uncle and aunt have a baby.	a1	family
+La señora del piso de arriba es muy amable.	The lady from the flat upstairs is very kind.	a2	social
+El señor pregunta mi nombre.	The gentleman asks my name.	a1	social
+Mi esposo cocina los domingos.	My husband cooks on Sundays.	a1	family
+Mi esposa trabaja en un hospital.	My wife works at a hospital.	a1	family
+Mi novio canta muy mal.	My boyfriend sings very badly.	a1	family
+Esa niña es amiga de mi hija.	That girl is a friend of my daughter.	a1	family
+Hay mucha gente en la plaza.	There are a lot of people in the square.	a1	city
+Me duele la cabeza y el cuello.	My head and neck hurt.	a1	body
+Tengo los ojos verdes y el pelo negro.	I have green eyes and black hair.	a1	body
+Me lavo la cara y los dientes.	I wash my face and brush my teeth.	a1	daily-routine
+Me duele el brazo derecho.	My right arm hurts.	a1	body
+Tengo un dedo roto en la mano.	I have a broken finger on my hand.	a2	body
+Me duelen las piernas y la espalda.	My legs and back hurt.	a2	body
+El médico mira mi oreja.	The doctor looks at my ear.	a1	health
+El corazón es un músculo fuerte.	The heart is a strong muscle.	a2	body
+Tiene la piel muy blanca.	He has very fair skin.	a2	body
+La salud es lo más importante.	Health is the most important thing.	a2	health
+Necesito una medicina para el dolor.	I need medicine for the pain.	a1	health
+El almuerzo es a la una y la cena a las nueve.	Lunch is at one and dinner at nine.	a1	food-drink
+Quiero un jugo de naranja.	I'd like an orange juice.	a1	food-drink
+Bebemos vino con la comida.	We drink wine with the meal.	a1	food-drink
+Como un huevo y queso en el desayuno.	I eat an egg and cheese for breakfast.	a1	food-drink
+La ensalada lleva tomate y lechuga.	The salad has tomato and lettuce.	a1	food-drink
+Compro manzanas, plátanos y uvas.	I buy apples, bananas and grapes.	a1	shopping
+El pastel de fresa está delicioso.	The strawberry cake is delicious.	a2	food-drink
+Pongo azúcar en el café y mantequilla en el pan.	I put sugar in my coffee and butter on my bread.	a1	food-drink
+Los niños quieren helado y chocolate.	The children want ice cream and chocolate.	a1	food-drink
+Comí una galleta con el té.	I ate a biscuit with my tea.	a2	food-drink
+La papa, el ajo y la zanahoria son verduras.	Potato, garlic and carrot are vegetables.	a1	food-drink
+El camarero trae el menú y una servilleta.	The waiter brings the menu and a napkin.	a2	restaurant
+Dejamos una propina en la mesa.	We leave a tip on the table.	a2	restaurant
+Vivo en un apartamento pequeño.	I live in a small apartment.	a1	home
+Mi piso tiene dos dormitorios.	My flat has two bedrooms.	a1	home
+Comemos en el comedor y descansamos en la sala.	We eat in the dining room and rest in the living room.	a1	home
+Hay cuatro sillas alrededor de la mesa.	There are four chairs around the table.	a1	home
+El espejo está en la pared.	The mirror is on the wall.	a1	home
+La lámpara del armario no funciona.	The wardrobe light doesn't work.	a2	home
+Necesito un cuchillo, un tenedor y una cuchara.	I need a knife, a fork and a spoon.	a1	home
+Bebo el té en una taza grande.	I drink tea from a big cup.	a1	home
+El jabón está en el baño.	The soap is in the bathroom.	a1	home
+El suelo de la cocina está limpio.	The kitchen floor is clean.	a1	home
+La farmacia está al lado de la iglesia.	The pharmacy is next to the church.	a1	city
+Vamos al cine o al teatro esta noche.	We're going to the cinema or the theatre tonight.	a1	city
+El taxi llega al aeropuerto en veinte minutos.	The taxi gets to the airport in twenty minutes.	a1	travel
+Voy en bicicleta al trabajo.	I cycle to work.	a1	travel
+Miro el mapa para encontrar el camino.	I look at the map to find the way.	a1	travel
+La tienda está en la esquina, cerca del puente.	The shop is on the corner, near the bridge.	a2	city
+Pasamos la frontera por la mañana.	We crossed the border in the morning.	a2	travel
+El empleado recibe un sueldo cada mes.	The employee receives a salary every month.	a2	work
+Este alumno estudia mucho.	This pupil studies a lot.	a2	school
+Los estudiantes entran en la clase.	The students go into the classroom.	a1	school
+Escribo con un bolígrafo, no con un lápiz.	I write with a pen, not a pencil.	a1	school
+Necesito papel para el examen.	I need paper for the exam.	a1	school
+No sé la respuesta de esta pregunta.	I don't know the answer to this question.	a1	school
+El profesor enseña dos idiomas.	The teacher teaches two languages.	a1	school
+¿Cuál es tu número de teléfono?	What's your phone number?	a1	communication
+Esta letra es difícil de leer.	This letter is hard to read.	a2	language
+Espera un segundo, por favor.	Wait a second, please.	a1	time
+El mes de mayo tiene treinta y un días.	The month of May has thirty-one days.	a1	time
+¿Cuál es la fecha de hoy?	What's today's date?	a1	time
+Mi cumpleaños es en abril.	My birthday is in April.	a1	time
+Las vacaciones empiezan en julio.	The holidays start in July.	a1	travel
+Descansamos un rato después de comer.	We rest for a while after eating.	a2	daily-routine
+El lunes y el martes trabajo en casa.	On Monday and Tuesday I work at home.	a1	work
+El miércoles tengo clase de español.	On Wednesday I have a Spanish class.	a1	school
+El jueves vamos al mercado.	On Thursday we go to the market.	a1	shopping
+El viernes salgo con mis amigos.	On Friday I go out with my friends.	a1	social
+En febrero hace mucho frío.	In February it's very cold.	a1	weather
+Marzo y abril son meses de primavera.	March and April are spring months.	a1	time
+En junio y julio hace calor.	In June and July it's hot.	a1	weather
+Septiembre y octubre son meses de otoño.	September and October are autumn months.	a1	time
+En noviembre y diciembre llueve mucho.	In November and December it rains a lot.	a1	weather
+Por la noche se ven la luna y las estrellas.	At night you can see the moon and the stars.	a2	nature
+Hay nubes grises y va a llover.	There are grey clouds and it's going to rain.	a1	weather
+La lluvia y la nieve son normales en invierno.	Rain and snow are normal in winter.	a2	weather
+En el bosque hay árboles muy altos.	In the forest there are very tall trees.	a2	nature
+Un pájaro canta en el jardín.	A bird is singing in the garden.	a1	animals
+El caballo y la vaca están en el campo.	The horse and the cow are in the field.	a2	animals
+Mi animal favorito es el perro.	My favourite animal is the dog.	a1	animals
+Ella lleva una falda y un vestido nuevo.	She's wearing a skirt and a new dress.	a1	clothes
+Necesito calcetines y un cinturón.	I need socks and a belt.	a2	clothes
+Llevo un sombrero cuando hace sol.	I wear a hat when it's sunny.	a2	clothes
+Mi bolso está debajo de la silla.	My handbag is under the chair.	a2	clothes
+No encuentro mis gafas ni mi reloj.	I can't find my glasses or my watch.	a1	objects
+Uso el ordenador para trabajar.	I use the computer for work.	a1	objects
+La pantalla del móvil está rota.	The phone screen is broken.	a2	objects
+Te mando un mensaje esta tarde.	I'll send you a message this afternoon.	a1	communication
+Leo el periódico y una revista los domingos.	I read the newspaper and a magazine on Sundays.	a2	communication
+Pon la fruta en la bolsa.	Put the fruit in the bag.	a1	shopping
+Esta cosa no sirve para nada.	This thing is useless.	a2	core
+La vida en esta ciudad es tranquila.	Life in this city is calm.	a2	city
+Quiero ver mundo.	I want to see the world.	a2	travel
+El amor es más fuerte que el miedo.	Love is stronger than fear.	a2	feelings
+Dime la verdad, no una mentira.	Tell me the truth, not a lie.	a2	core
+Buena suerte con el examen.	Good luck with the exam.	a1	school
+Te doy un ejemplo.	I'll give you an example.	a1	core
+Lo hago de otra manera.	I do it another way.	a2	core
+Esta parte del libro es la mejor.	This part of the book is the best.	a2	school
+Es un lugar muy bonito.	It's a very pretty place.	a1	travel
+Busco un sitio para comer.	I'm looking for a place to eat.	a1	restaurant
+¿Qué edad tiene tu hijo?	How old is your son?	a1	people
+¿De qué color es tu coche?	What colour is your car?	a1	core
+El precio parece muy alto.	The price seems very high.	a2	shopping
+Perdona, ha sido un error mío.	Sorry, it was my mistake.	a2	core
+Mi abuelo cuenta historias del pueblo.	My grandfather tells stories about the village.	a2	family
+Ese cuento es para niños.	That story is for children.	a1	entertainment
+El fútbol es mi deporte favorito.	Football is my favourite sport.	a1	sport
+Este juego es muy divertido.	This game is a lot of fun.	a1	sport
+Me quedo en casa esta noche.	I'm staying at home tonight.	a1	social
+Sigue por esta calle hasta la plaza.	Carry on down this street to the square.	a2	travel
+El camarero nos ofrece un postre.	The waiter offers us a dessert.	a2	restaurant
+Voy a cambiar de trabajo.	I'm going to change jobs.	a2	work
+Acabo de comer.	I've just eaten.	a2	food-drink	acabar de + infinitive means to have just done something
+Intento comprender el problema.	I'm trying to understand the problem.	a2	core
+Decidimos comenzar mañana temprano.	We decided to start early tomorrow.	a2	work
+La tienda vende ropa de niño.	The shop sells children's clothes.	a2	shopping
+El profesor muestra un ejemplo en la pantalla.	The teacher shows an example on the screen.	a2	school
+Descubrí un restaurante nuevo cerca de casa.	I discovered a new restaurant near my house.	a2	restaurant
+Toco la guitarra los fines de semana.	I play the guitar at weekends.	a2	music
+El cuerpo humano necesita agua.	The human body needs water.	a2	body
+Abre la boca, por favor.	Open your mouth, please.	a1	health
+Me duele la nariz cuando hace frío.	My nose hurts when it's cold.	a2	body
+Tengo un problema en el pie izquierdo.	I have a problem with my left foot.	a2	body
+El niño se cayó en la calle.	The child fell in the street.	a2	health
+Decidí estudiar español el año pasado.	I decided to study Spanish last year.	a2	school
+Hay sangre en su camisa.	There is blood on his shirt.	a2	health
+Se me cae el teléfono muy a menudo.	I drop my phone very often.	a2	objects

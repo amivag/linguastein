@@ -1,0 +1,51 @@
+{
+  "id": "core-es",
+  "name": "Spanish Core A1–A2",
+  "targetLanguage": "es",
+  "version": "0.1.0",
+  "description": "High-frequency Spanish verbs, nouns, modifiers and everyday sentences. Generated from content/es and not yet reviewed by a human editor.",
+  "license": "CC0-1.0",
+  "levels": ["a1", "a2"],
+  "referenceLanguages": ["en"],
+  "pronunciationLocales": ["es-ES", "es-MX"],
+  "provenance": {
+    "source": "generated",
+    "origin": "content/es",
+    "review": "unreviewed",
+    "revision": 1
+  },
+  "files": [
+    {
+      "kind": "skills",
+      "path": "es-a1-a2-core-skills.jsonl"
+    },
+    {
+      "kind": "lexemes",
+      "path": "es-a1-a2-core-verbs.jsonl"
+    },
+    {
+      "kind": "lexemes",
+      "path": "es-a1-a2-core-nouns.jsonl"
+    },
+    {
+      "kind": "lexemes",
+      "path": "es-a1-a2-core-modifiers.jsonl"
+    },
+    {
+      "kind": "verb-forms",
+      "path": "es-a1-a2-core-verb-forms.jsonl"
+    },
+    {
+      "kind": "items",
+      "path": "es-a1-a2-core-vocabulary.jsonl"
+    },
+    {
+      "kind": "items",
+      "path": "es-a1-a2-core-sentences.jsonl"
+    },
+    {
+      "kind": "translations",
+      "path": "es-a1-a2-core-translations-en.jsonl"
+    }
+  ]
+}

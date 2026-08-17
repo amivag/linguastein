@@ -1,0 +1,77 @@
+# Food, shopping and travel. Columns: spanish	english	level	topics	note (English, optional)
+Una cerveza, por favor.	A beer, please.	a1	restaurant
+Dos cafés con leche, por favor.	Two white coffees, please.	a1	restaurant
+Un vaso de agua, por favor.	A glass of water, please.	a1	restaurant
+¿Me trae la carta?	Could you bring me the menu?	a1	restaurant	Formal usted form of traer
+¿Qué me recomienda?	What do you recommend?	a2	restaurant
+Quiero pedir la sopa.	I'd like to order the soup.	a1	restaurant
+Para mí, el pollo.	For me, the chicken.	a1	restaurant
+¿Tienen algo vegetariano?	Do you have anything vegetarian?	a2	restaurant
+Sin cebolla, por favor.	Without onion, please.	a1	restaurant
+Está muy rico.	It's delicious.	a1	restaurant	rico means tasty when talking about food
+La comida está fría.	The food is cold.	a1	restaurant
+¿Me trae la cuenta?	Could you bring me the bill?	a1	restaurant
+¿Puedo pagar con tarjeta?	Can I pay by card?	a1	shopping
+La cuenta, por favor.	The bill, please.	a1	restaurant
+El desayuno es a las ocho.	Breakfast is at eight.	a1	food-drink
+Como fruta cada mañana.	I eat fruit every morning.	a1	food-drink
+Bebo mucha agua.	I drink a lot of water.	a1	food-drink
+No como carne.	I don't eat meat.	a1	food-drink
+Prefiero el té al café.	I prefer tea to coffee.	a1	food-drink
+Voy a cocinar arroz con pollo.	I'm going to cook rice with chicken.	a1	food-drink
+El pescado está muy caliente.	The fish is very hot.	a1	food-drink
+Necesito sal y aceite.	I need salt and oil.	a1	food-drink
+Compro pan en la panadería.	I buy bread at the bakery.	a1	shopping
+Almuerzo a la una.	I have lunch at one.	a1	food-drink
+Vamos a cenar fuera esta noche.	We're going out for dinner tonight.	a1	restaurant
+Probé un postre delicioso.	I tried a delicious dessert.	a2	restaurant
+¿Cuánto cuesta?	How much does it cost?	a1	shopping
+¿Cuánto cuestan estos zapatos?	How much are these shoes?	a1	shopping
+Es demasiado caro.	It's too expensive.	a1	shopping
+Es muy barato.	It's very cheap.	a1	shopping
+¿Tiene algo más barato?	Do you have anything cheaper?	a1	shopping
+Quiero probar esta chaqueta.	I want to try on this jacket.	a1	shopping
+¿Tiene una talla más grande?	Do you have a bigger size?	a2	shopping
+Me llevo estos pantalones.	I'll take these trousers.	a2	shopping
+¿Dónde está la caja?	Where is the till?	a1	shopping
+Voy al supermercado.	I'm going to the supermarket.	a1	shopping
+Necesito comprar verduras.	I need to buy vegetables.	a1	shopping
+La tienda abre a las diez.	The shop opens at ten.	a1	shopping
+El mercado cierra a las dos.	The market closes at two.	a1	shopping
+No tengo dinero suficiente.	I don't have enough money.	a1	shopping
+Pagué veinte euros.	I paid twenty euros.	a2	shopping
+Me gusta esta camiseta azul.	I like this blue t-shirt.	a1	clothes
+Busco un abrigo negro.	I'm looking for a black coat.	a1	clothes
+Estos zapatos son muy cómodos.	These shoes are very comfortable.	a2	clothes
+Llevo una camisa blanca.	I'm wearing a white shirt.	a1	clothes	llevar means to wear as well as to carry
+¿Dónde está la estación?	Where is the station?	a1	travel
+¿Dónde está el baño?	Where is the bathroom?	a1	travel
+¿Cómo llego al centro?	How do I get to the centre?	a1	travel
+¿Está lejos de aquí?	Is it far from here?	a1	travel
+Está muy cerca.	It's very close.	a1	travel
+Siga todo recto.	Go straight ahead.	a2	travel	Formal command
+Gire a la derecha.	Turn right.	a2	travel
+Está a la izquierda.	It's on the left.	a1	travel
+Voy en autobús.	I go by bus.	a1	travel
+Prefiero ir en tren.	I prefer to go by train.	a1	travel
+El avión sale a las seis.	The plane leaves at six.	a1	travel
+El tren llega tarde.	The train is arriving late.	a1	travel
+¿A qué hora sale el próximo autobús?	What time does the next bus leave?	a1	travel
+Un billete a Madrid, por favor.	A ticket to Madrid, please.	a1	travel
+¿Cuánto dura el viaje?	How long does the journey take?	a2	travel
+Tengo una reserva.	I have a reservation.	a1	travel
+Quiero una habitación doble.	I'd like a double room.	a1	travel
+¿Está incluido el desayuno?	Is breakfast included?	a2	travel
+¿Hay wifi en el hotel?	Is there wifi at the hotel?	a1	travel
+Mi maleta es esta.	My suitcase is this one.	a1	travel
+He perdido mi pasaporte.	I've lost my passport.	a2	travel
+Vamos de vacaciones en agosto.	We go on holiday in August.	a1	travel
+Viajo por trabajo.	I travel for work.	a1	travel
+Me encanta viajar.	I love travelling.	a1	travel
+El hotel está en el centro.	The hotel is in the centre.	a1	travel
+La playa está a diez minutos.	The beach is ten minutes away.	a1	travel
+Fuimos en coche hasta la montaña.	We drove up to the mountain.	a2	travel
+El viaje fue muy largo.	The journey was very long.	a2	travel
+Visitamos un museo muy interesante.	We visited a very interesting museum.	a2	travel
+¿Puede sacarnos una foto?	Could you take a photo of us?	a2	travel
+Aquí se come muy bien.	The food is very good here.	a2	restaurant

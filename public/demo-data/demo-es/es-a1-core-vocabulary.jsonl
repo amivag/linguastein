@@ -1,7 +1,0 @@
-# Single-word items. Meaning is carried by translations, not by this file.
-{"id":"demo-es:item:000101","pack":"demo-es","type":"word","text":"cerveza","level":"a1","topics":["food-drink"],"lexemes":["demo-es:lexeme:cerveza"]}
-{"id":"demo-es:item:000102","pack":"demo-es","type":"word","text":"agua","level":"a1","topics":["food-drink"],"lexemes":["demo-es:lexeme:agua"]}
-{"id":"demo-es:item:000103","pack":"demo-es","type":"word","text":"pan","level":"a1","topics":["food-drink"],"lexemes":["demo-es:lexeme:pan"]}
-{"id":"demo-es:item:000104","pack":"demo-es","type":"word","text":"café","level":"a1","topics":["food-drink"],"lexemes":["demo-es:lexeme:cafe"]}
-{"id":"demo-es:item:000105","pack":"demo-es","type":"word","text":"camisa","level":"a1","topics":["shopping"],"lexemes":["demo-es:lexeme:camisa"]}
-{"id":"demo-es:item:000106","pack":"demo-es","type":"word","text":"cansado","level":"a1","topics":["everyday"],"lexemes":["demo-es:lexeme:cansado"],"examples":["demo-es:item:000206"]}

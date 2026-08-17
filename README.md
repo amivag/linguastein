@@ -6,9 +6,9 @@ engine is language-agnostic by design.
 **See it, hear it, repeat it, reveal it, review it** — in two minutes, on a
 phone, offline, with no account.
 
-Status: **v0.1 groundwork**. The architecture, data model, engine and a working
-practice loop are in place. Production datasets are curated separately and are
-not part of this repository yet (see [`docs/spec`](docs/spec)).
+Status: **v0.1**. The architecture, engine and practice loop are in place, with a
+generated A1–A2 Spanish pack of 845 practisable items awaiting editorial review
+(see [`docs/spec`](docs/spec) for the product specification).
 
 ## Quick start
 
@@ -24,17 +24,18 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 
 ## Scripts
 
-| Script                  | What it does                                 |
-| ----------------------- | -------------------------------------------- |
-| `npm run dev`           | Vite dev server                              |
-| `npm run build`         | Type-check and build the PWA into `dist/`    |
-| `npm run preview`       | Serve the production build locally           |
-| `npm test`              | Vitest (unit + component)                    |
-| `npm run typecheck`     | TypeScript, no emit                          |
-| `npm run lint`          | ESLint (flat config)                         |
-| `npm run format`        | Prettier                                     |
-| `npm run validate:data` | Validate every dataset in `public/demo-data` |
-| `npm run check`         | Everything above, in the order CI runs it    |
+| Script                  | What it does                              |
+| ----------------------- | ----------------------------------------- |
+| `npm run dev`           | Vite dev server                           |
+| `npm run build`         | Type-check and build the PWA into `dist/` |
+| `npm run preview`       | Serve the production build locally        |
+| `npm test`              | Vitest (unit + component)                 |
+| `npm run typecheck`     | TypeScript, no emit                       |
+| `npm run lint`          | ESLint (flat config)                      |
+| `npm run format`        | Prettier                                  |
+| `npm run build:data`    | Rebuild `public/packs` from `content/es`  |
+| `npm run validate:data` | Validate every shipped dataset            |
+| `npm run check`         | Everything above, in the order CI runs it |
 
 ## Layout
 
@@ -54,7 +55,8 @@ src/
 ├── styles/       design tokens and global CSS
 └── utils/        small helpers (RNG, clipboard)
 
-public/demo-data/ tiny demo dataset — development fixture, not curriculum
+content/es/      dataset authoring sources (TSV) — the human-edited input
+public/packs/    generated, shipped content packs (JSONL + manifest)
 docs/             architecture notes, dataset format, product spec
 tests/            unit and component tests, mirroring src/
 scripts/          dataset validation CLI
@@ -81,8 +83,19 @@ from a dataset passes through the validation boundary in
 `src/data/validation`; malformed records are reported and skipped rather than
 breaking a session.
 
-The dataset in `public/demo-data/` exists to exercise the engine. It is not
-curriculum, and the production datasets will be curated separately.
+The shipped `core-es` pack covers A1–A2: **100 verbs** with generated forms,
+**339 nouns**, **172 modifiers** and **443 example sentences** — 845 practisable
+items in total.
+
+Humans author compact TSV in `content/es/`; `npm run build:data` derives
+everything mechanical from it — conjugations, plurals, adjective agreement,
+stable ids, sentence tokenisation, lexeme links, grammar-pattern annotations and
+translation records. Nobody hand-types `hablábamos`. CI fails if the generated
+pack drifts from its sources.
+
+The pack is machine-generated and carries `source: generated, review:
+unreviewed` in its manifest. It is good enough to practise with, and it is not
+yet reviewed curriculum. See [`docs/dataset-format.md`](docs/dataset-format.md).
 
 ## Audio
 

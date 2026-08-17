@@ -1,6 +1,0 @@
-# Trainable skills: patterns, grammar and communicative functions (spec §8.2).
-{"id":"demo-es:skill:tener-que-infinitive","kind":"pattern","label":"tener que + infinitivo","level":"a1"}
-{"id":"demo-es:skill:querer-infinitive","kind":"pattern","label":"querer + infinitivo","level":"a1"}
-{"id":"demo-es:skill:present-indicative","kind":"grammar","label":"presente de indicativo","level":"a1"}
-{"id":"demo-es:skill:estar-states","kind":"pattern","label":"estar + estado","level":"a1"}
-{"id":"demo-es:skill:asking-location","kind":"function","label":"preguntar dónde está algo","level":"a1"}

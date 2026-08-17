@@ -1,4 +1,0 @@
-{
-  "$comment": "Packs shipped with this build. Production datasets are curated separately (spec §26).",
-  "packs": [{ "id": "demo-es", "manifest": "demo-es/pack.json" }]
-}

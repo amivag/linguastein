@@ -14,7 +14,7 @@ import { formatIssue } from '../src/data/validation/validate.ts';
 import { loadCatalog, loadPack } from '../src/data/loaders/pack.ts';
 import type { DatasetSource } from '../src/data/loaders/source.ts';
 
-const root = resolve(process.argv[2] ?? 'public/demo-data');
+const root = resolve(process.argv[2] ?? 'public/packs');
 
 const fileSource: DatasetSource = {
   name: root,

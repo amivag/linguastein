@@ -46,6 +46,12 @@
   font-weight: 600;
 }
 
+/* An answer to pick, not an action to take: recessed into the card so it cannot
+   be mistaken for the primary button sitting under the same stack. */
+.option {
+  --button-bg: var(--color-surface-sunken);
+}
+
 .ghost {
   --button-bg: transparent;
 
@@ -74,6 +80,14 @@
 
 .block {
   width: 100%;
+}
+
+/* A row to pick from: marker first, label ranged left — the opposite reading of
+   the centred label an action button carries. */
+.alignStart {
+  justify-content: flex-start;
+  gap: var(--space-3);
+  text-align: left;
 }
 
 .large {

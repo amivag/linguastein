@@ -45,3 +45,20 @@ describe('ContentRepository', () => {
     expect(facets.levels).toEqual(['a1']);
   });
 });
+
+describe('usage filters', () => {
+  const repository = testRepository();
+
+  it('filters by register, treating unmarked content as neutral', () => {
+    // The fixture marks item 003 colloquial; nothing else carries a register.
+    expect(repository.query({ registers: ['colloquial'] }).map((item) => item.text)).toEqual([
+      '¿Tienes tiempo?',
+    ]);
+    expect(repository.query({ registers: ['neutral'] }).length).toBe(repository.itemCount - 1);
+  });
+
+  it('narrows to what is said in a region, keeping neutral content', () => {
+    const everywhere = repository.query({ usableIn: 'es-MX' });
+    expect(everywhere.length).toBe(repository.itemCount);
+  });
+});

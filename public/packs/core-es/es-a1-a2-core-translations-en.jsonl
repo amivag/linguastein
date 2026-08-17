@@ -781,69 +781,78 @@
 {"ref":"core-es:item:500337","lang":"en","text":"left (side)","type":"natural"}
 {"ref":"core-es:item:500338","lang":"en","text":"English (language)","type":"natural"}
 {"ref":"core-es:item:500339","lang":"en","text":"Spanish (language)","type":"natural"}
-{"ref":"core-es:item:500340","lang":"en","text":"good","type":"natural"}
-{"ref":"core-es:item:500341","lang":"en","text":"bad","type":"natural"}
-{"ref":"core-es:item:500342","lang":"en","text":"big","type":"natural"}
-{"ref":"core-es:item:500343","lang":"en","text":"small","type":"natural"}
-{"ref":"core-es:item:500344","lang":"en","text":"new","type":"natural"}
-{"ref":"core-es:item:500345","lang":"en","text":"old","type":"natural"}
-{"ref":"core-es:item:500346","lang":"en","text":"young","type":"natural"}
-{"ref":"core-es:item:500347","lang":"en","text":"tall, high","type":"natural"}
-{"ref":"core-es:item:500348","lang":"en","text":"short, low","type":"natural"}
-{"ref":"core-es:item:500349","lang":"en","text":"long","type":"natural"}
-{"ref":"core-es:item:500350","lang":"en","text":"short","type":"natural"}
-{"ref":"core-es:item:500351","lang":"en","text":"fat","type":"natural"}
-{"ref":"core-es:item:500352","lang":"en","text":"thin","type":"natural"}
-{"ref":"core-es:item:500353","lang":"en","text":"good-looking","type":"natural"}
-{"ref":"core-es:item:500354","lang":"en","text":"pretty, nice","type":"natural"}
-{"ref":"core-es:item:500355","lang":"en","text":"ugly","type":"natural"}
-{"ref":"core-es:item:500356","lang":"en","text":"clean","type":"natural"}
-{"ref":"core-es:item:500357","lang":"en","text":"dirty","type":"natural"}
-{"ref":"core-es:item:500358","lang":"en","text":"easy","type":"natural"}
-{"ref":"core-es:item:500359","lang":"en","text":"difficult","type":"natural"}
-{"ref":"core-es:item:500360","lang":"en","text":"important","type":"natural"}
-{"ref":"core-es:item:500361","lang":"en","text":"interesting","type":"natural"}
-{"ref":"core-es:item:500362","lang":"en","text":"boring","type":"natural"}
-{"ref":"core-es:item:500363","lang":"en","text":"fun","type":"natural"}
-{"ref":"core-es:item:500364","lang":"en","text":"tired","type":"natural"}
-{"ref":"core-es:item:500365","lang":"en","text":"happy, pleased","type":"natural"}
-{"ref":"core-es:item:500366","lang":"en","text":"happy","type":"natural"}
-{"ref":"core-es:item:500367","lang":"en","text":"sad","type":"natural"}
-{"ref":"core-es:item:500368","lang":"en","text":"ill","type":"natural"}
-{"ref":"core-es:item:500369","lang":"en","text":"strong","type":"natural"}
-{"ref":"core-es:item:500370","lang":"en","text":"weak","type":"natural"}
-{"ref":"core-es:item:500371","lang":"en","text":"fast","type":"natural"}
-{"ref":"core-es:item:500372","lang":"en","text":"slow","type":"natural"}
-{"ref":"core-es:item:500373","lang":"en","text":"expensive","type":"natural"}
-{"ref":"core-es:item:500374","lang":"en","text":"cheap","type":"natural"}
-{"ref":"core-es:item:500375","lang":"en","text":"rich, tasty","type":"natural"}
-{"ref":"core-es:item:500376","lang":"en","text":"poor","type":"natural"}
-{"ref":"core-es:item:500377","lang":"en","text":"hot","type":"natural"}
-{"ref":"core-es:item:500378","lang":"en","text":"cold","type":"natural"}
-{"ref":"core-es:item:500379","lang":"en","text":"ready, clever","type":"natural"}
-{"ref":"core-es:item:500380","lang":"en","text":"kind","type":"natural"}
-{"ref":"core-es:item:500381","lang":"en","text":"nice, friendly","type":"natural"}
-{"ref":"core-es:item:500382","lang":"en","text":"calm, quiet","type":"natural"}
-{"ref":"core-es:item:500383","lang":"en","text":"nervous","type":"natural"}
-{"ref":"core-es:item:500384","lang":"en","text":"busy","type":"natural"}
-{"ref":"core-es:item:500385","lang":"en","text":"free","type":"natural"}
-{"ref":"core-es:item:500386","lang":"en","text":"full","type":"natural"}
-{"ref":"core-es:item:500387","lang":"en","text":"empty","type":"natural"}
-{"ref":"core-es:item:500388","lang":"en","text":"open","type":"natural"}
-{"ref":"core-es:item:500389","lang":"en","text":"closed","type":"natural"}
-{"ref":"core-es:item:500390","lang":"en","text":"first","type":"natural"}
-{"ref":"core-es:item:500391","lang":"en","text":"last","type":"natural"}
-{"ref":"core-es:item:500392","lang":"en","text":"same","type":"natural"}
-{"ref":"core-es:item:500393","lang":"en","text":"other, another","type":"natural"}
-{"ref":"core-es:item:500394","lang":"en","text":"next","type":"natural"}
-{"ref":"core-es:item:500395","lang":"en","text":"white","type":"natural"}
-{"ref":"core-es:item:500396","lang":"en","text":"black","type":"natural"}
-{"ref":"core-es:item:500397","lang":"en","text":"red","type":"natural"}
-{"ref":"core-es:item:500398","lang":"en","text":"blue","type":"natural"}
-{"ref":"core-es:item:500399","lang":"en","text":"green","type":"natural"}
-{"ref":"core-es:item:500400","lang":"en","text":"yellow","type":"natural"}
-{"ref":"core-es:item:500401","lang":"en","text":"grey","type":"natural"}
-{"ref":"core-es:item:500402","lang":"en","text":"half","type":"natural"}
+{"ref":"core-es:item:500340","lang":"en","text":"potato","type":"natural"}
+{"ref":"core-es:item:500341","lang":"en","text":"car","type":"natural"}
+{"ref":"core-es:item:500342","lang":"en","text":"juice","type":"natural"}
+{"ref":"core-es:item:500343","lang":"en","text":"computer","type":"natural"}
+{"ref":"core-es:item:500344","lang":"en","text":"mobile phone","type":"natural"}
+{"ref":"core-es:item:500345","lang":"en","text":"ticket","type":"natural"}
+{"ref":"core-es:item:500346","lang":"en","text":"bus (Mexico), lorry","type":"natural"}
+{"ref":"core-es:item:500347","lang":"en","text":"money","type":"natural"}
+{"ref":"core-es:item:500348","lang":"en","text":"cash","type":"natural"}
+{"ref":"core-es:item:500349","lang":"en","text":"good","type":"natural"}
+{"ref":"core-es:item:500350","lang":"en","text":"bad","type":"natural"}
+{"ref":"core-es:item:500351","lang":"en","text":"big","type":"natural"}
+{"ref":"core-es:item:500352","lang":"en","text":"small","type":"natural"}
+{"ref":"core-es:item:500353","lang":"en","text":"new","type":"natural"}
+{"ref":"core-es:item:500354","lang":"en","text":"old","type":"natural"}
+{"ref":"core-es:item:500355","lang":"en","text":"young","type":"natural"}
+{"ref":"core-es:item:500356","lang":"en","text":"tall, high","type":"natural"}
+{"ref":"core-es:item:500357","lang":"en","text":"short, low","type":"natural"}
+{"ref":"core-es:item:500358","lang":"en","text":"long","type":"natural"}
+{"ref":"core-es:item:500359","lang":"en","text":"short","type":"natural"}
+{"ref":"core-es:item:500360","lang":"en","text":"fat","type":"natural"}
+{"ref":"core-es:item:500361","lang":"en","text":"thin","type":"natural"}
+{"ref":"core-es:item:500362","lang":"en","text":"good-looking","type":"natural"}
+{"ref":"core-es:item:500363","lang":"en","text":"pretty, nice","type":"natural"}
+{"ref":"core-es:item:500364","lang":"en","text":"ugly","type":"natural"}
+{"ref":"core-es:item:500365","lang":"en","text":"clean","type":"natural"}
+{"ref":"core-es:item:500366","lang":"en","text":"dirty","type":"natural"}
+{"ref":"core-es:item:500367","lang":"en","text":"easy","type":"natural"}
+{"ref":"core-es:item:500368","lang":"en","text":"difficult","type":"natural"}
+{"ref":"core-es:item:500369","lang":"en","text":"important","type":"natural"}
+{"ref":"core-es:item:500370","lang":"en","text":"interesting","type":"natural"}
+{"ref":"core-es:item:500371","lang":"en","text":"boring","type":"natural"}
+{"ref":"core-es:item:500372","lang":"en","text":"fun","type":"natural"}
+{"ref":"core-es:item:500373","lang":"en","text":"tired","type":"natural"}
+{"ref":"core-es:item:500374","lang":"en","text":"happy, pleased","type":"natural"}
+{"ref":"core-es:item:500375","lang":"en","text":"happy","type":"natural"}
+{"ref":"core-es:item:500376","lang":"en","text":"sad","type":"natural"}
+{"ref":"core-es:item:500377","lang":"en","text":"ill","type":"natural"}
+{"ref":"core-es:item:500378","lang":"en","text":"strong","type":"natural"}
+{"ref":"core-es:item:500379","lang":"en","text":"weak","type":"natural"}
+{"ref":"core-es:item:500380","lang":"en","text":"fast","type":"natural"}
+{"ref":"core-es:item:500381","lang":"en","text":"slow","type":"natural"}
+{"ref":"core-es:item:500382","lang":"en","text":"expensive","type":"natural"}
+{"ref":"core-es:item:500383","lang":"en","text":"cheap","type":"natural"}
+{"ref":"core-es:item:500384","lang":"en","text":"rich, tasty","type":"natural"}
+{"ref":"core-es:item:500385","lang":"en","text":"poor","type":"natural"}
+{"ref":"core-es:item:500386","lang":"en","text":"hot","type":"natural"}
+{"ref":"core-es:item:500387","lang":"en","text":"cold","type":"natural"}
+{"ref":"core-es:item:500388","lang":"en","text":"ready, clever","type":"natural"}
+{"ref":"core-es:item:500389","lang":"en","text":"kind","type":"natural"}
+{"ref":"core-es:item:500390","lang":"en","text":"nice, friendly","type":"natural"}
+{"ref":"core-es:item:500391","lang":"en","text":"calm, quiet","type":"natural"}
+{"ref":"core-es:item:500392","lang":"en","text":"nervous","type":"natural"}
+{"ref":"core-es:item:500393","lang":"en","text":"busy","type":"natural"}
+{"ref":"core-es:item:500394","lang":"en","text":"free","type":"natural"}
+{"ref":"core-es:item:500395","lang":"en","text":"full","type":"natural"}
+{"ref":"core-es:item:500396","lang":"en","text":"empty","type":"natural"}
+{"ref":"core-es:item:500397","lang":"en","text":"open","type":"natural"}
+{"ref":"core-es:item:500398","lang":"en","text":"closed","type":"natural"}
+{"ref":"core-es:item:500399","lang":"en","text":"first","type":"natural"}
+{"ref":"core-es:item:500400","lang":"en","text":"last","type":"natural"}
+{"ref":"core-es:item:500401","lang":"en","text":"same","type":"natural"}
+{"ref":"core-es:item:500402","lang":"en","text":"other, another","type":"natural"}
+{"ref":"core-es:item:500403","lang":"en","text":"next","type":"natural"}
+{"ref":"core-es:item:500404","lang":"en","text":"white","type":"natural"}
+{"ref":"core-es:item:500405","lang":"en","text":"black","type":"natural"}
+{"ref":"core-es:item:500406","lang":"en","text":"red","type":"natural"}
+{"ref":"core-es:item:500407","lang":"en","text":"blue","type":"natural"}
+{"ref":"core-es:item:500408","lang":"en","text":"green","type":"natural"}
+{"ref":"core-es:item:500409","lang":"en","text":"yellow","type":"natural"}
+{"ref":"core-es:item:500410","lang":"en","text":"grey","type":"natural"}
+{"ref":"core-es:item:500411","lang":"en","text":"half","type":"natural"}
 {"ref":"core-es:lexeme:ser","lang":"en","text":"to be (identity, characteristics)"}
 {"ref":"core-es:lexeme:estar","lang":"en","text":"to be (state, location)"}
 {"ref":"core-es:lexeme:tener","lang":"en","text":"to have"}
@@ -1283,6 +1292,15 @@
 {"ref":"core-es:lexeme:izquierda","lang":"en","text":"left (side)"}
 {"ref":"core-es:lexeme:ingles","lang":"en","text":"English (language)"}
 {"ref":"core-es:lexeme:espanol","lang":"en","text":"Spanish (language)"}
+{"ref":"core-es:lexeme:patata","lang":"en","text":"potato"}
+{"ref":"core-es:lexeme:carro","lang":"en","text":"car"}
+{"ref":"core-es:lexeme:zumo","lang":"en","text":"juice"}
+{"ref":"core-es:lexeme:computadora","lang":"en","text":"computer"}
+{"ref":"core-es:lexeme:celular","lang":"en","text":"mobile phone"}
+{"ref":"core-es:lexeme:boleto","lang":"en","text":"ticket"}
+{"ref":"core-es:lexeme:camion","lang":"en","text":"bus (Mexico), lorry"}
+{"ref":"core-es:lexeme:plata","lang":"en","text":"money"}
+{"ref":"core-es:lexeme:pasta","lang":"en","text":"cash"}
 {"ref":"core-es:lexeme:bueno","lang":"en","text":"good"}
 {"ref":"core-es:lexeme:malo","lang":"en","text":"bad"}
 {"ref":"core-es:lexeme:grande","lang":"en","text":"big"}

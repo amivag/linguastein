@@ -18,9 +18,9 @@ Two directories, one direction of flow:
 ```text
 content/es/            ← humans edit this (TSV, one row per lemma or sentence)
 ├── verbs.tsv              lemma, gloss, level, regular|irregular, topics
-├── nouns.tsv              lemma, gloss, gender, irregular plural, level, topics
+├── nouns.tsv              lemma, gloss, gender, plural, level, topics, regions, register
 ├── modifiers.tsv          adjectives, adverbs, function words, extra forms
-└── sentences-*.tsv        spanish, english, level, topics, optional note
+└── sentences-*.tsv        spanish, english, level, topics, note, register, address, regions
 
         │  npm run build:data
         ▼
@@ -65,6 +65,34 @@ es-a1-travel-phrases.jsonl
 es-mx-a1-everyday-phrases.jsonl
 es-b1-b2-storytelling-phrases.jsonl
 ```
+
+## Usage: register, address and region
+
+Three fields say _when_ a phrase is safe to use. They matter as much as the
+translation: address a stranger as `tú` and you are rude; order a `zumo` in
+Bogotá and nobody knows what you mean.
+
+| Field      | Values                                         | Meaning                               |
+| ---------- | ---------------------------------------------- | ------------------------------------- |
+| `register` | `neutral` · `colloquial` · `formal` · `vulgar` | how casual it is; unmarked = neutral  |
+| `address`  | `tu` · `usted` · `vosotros` · `ustedes`        | who it is said to                     |
+| `regions`  | BCP 47 tags, e.g. `es-ES`, `es-419`, `es-MX`   | where it is said; unmarked = anywhere |
+
+`address` is derived automatically where the morphology is unambiguous: a
+second-person singular verb means `tu`, a second-person plural means
+`vosotros` (and marks the sentence `es-ES`). Third person is never inferred —
+`está` is `usted` or `él`/`ella` depending on context — so those are declared
+by hand.
+
+Regions propagate. A word marked `es-419` marks every sentence that uses it,
+and its word card, so a learner aiming at Spain is not taught `papa`. Content
+with no region passes everywhere, which is the common case; `es-419` covers any
+Latin American locale.
+
+Where a language has two words for one thing, ship both sides of the pair:
+`papa`/`patata`, `coche`/`carro`, `jugo`/`zumo`, `ordenador`/`computadora`,
+`móvil`/`celular`, `billete`/`boleto`. Shipping one silently teaches a dialect
+as if it were universal.
 
 ## Identity
 

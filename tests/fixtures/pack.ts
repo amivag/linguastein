@@ -81,7 +81,12 @@ export const ITEMS: readonly LearningItem[] = [
     topics: ['everyday'],
     lexemes: [id<LexemeId>('test-es:lexeme:tener')],
   }),
-  item('003', '¿Tienes tiempo?', { topics: ['everyday'] }),
+  // Carries usage marking: casual, and addressed to someone as tú.
+  item('003', '¿Tienes tiempo?', {
+    topics: ['everyday'],
+    register: 'colloquial',
+    address: 'tu',
+  }),
   item('004', 'cerveza', { type: 'word', topics: ['food-drink'] }),
   item('005', 'agua', { type: 'word', topics: ['food-drink'] }),
   item('006', 'pan', { type: 'word', topics: ['food-drink'] }),

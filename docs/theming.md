@@ -51,7 +51,8 @@ fails cannot be merged.
 | `--color-bg`                  | page background                         |
 | `--color-surface`             | cards and sheets                        |
 | `--color-surface-raised`      | controls sitting on a surface           |
-| `--color-border`              | decorative separators                   |
+| `--color-surface-sunken`      | rows to pick from, answer slots         |
+| `--color-border`              | decorative separators, progress tracks  |
 | `--color-border-strong`       | interactive boundaries (must reach 3:1) |
 | `--color-text`                | body text                               |
 | `--color-text-muted`          | hints and labels (must reach 4.5:1)     |

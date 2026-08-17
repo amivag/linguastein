@@ -10,6 +10,7 @@
 
 import { z } from 'zod';
 import {
+  ADDRESS_FORMS,
   ANNOTATION_TYPES,
   CEFR_LEVELS,
   ENTITY_KINDS,
@@ -104,6 +105,7 @@ export const learningItemSchema = z
     text: z.string().min(1),
     level: level.optional(),
     register: z.enum(REGISTERS).optional(),
+    address: z.enum(ADDRESS_FORMS).optional(),
     regions: z.array(languageTag).optional(),
     topics: z.array(z.string()).optional(),
     tags: z.array(z.string()).optional(),
@@ -125,6 +127,8 @@ export const lexemeSchema = z
     pos: z.enum(POS_TAGS),
     level: level.optional(),
     frequencyRank: z.number().int().positive().optional(),
+    register: z.enum(REGISTERS).optional(),
+    regions: z.array(languageTag).optional(),
     gender: z.enum(['masculine', 'feminine', 'neuter']).optional(),
     tags: z.array(z.string()).optional(),
     provenance: provenanceSchema.optional(),

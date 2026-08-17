@@ -3,8 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
+import { UsageBadges } from '../../components/UsageBadges';
 import { VoiceInput } from '../../components/VoiceInput';
-import { CEFR_LEVELS, type CefrLevel, type ItemType } from '../../domain/content';
+import {
+  CEFR_LEVELS,
+  PRONUNCIATION_LOCALES,
+  REGISTERS,
+  type CefrLevel,
+  type ItemType,
+  type Register,
+} from '../../domain/content';
 import styles from './BrowseScreen.module.css';
 
 const TYPES: readonly { id: ItemType | 'all'; label: string }[] = [
@@ -28,6 +36,8 @@ export function BrowseScreen() {
   const [type, setType] = useState<ItemType | 'all'>('all');
   const [level, setLevel] = useState<CefrLevel | 'all'>('all');
   const [topic, setTopic] = useState('all');
+  const [register, setRegister] = useState<Register | 'all'>('all');
+  const [region, setRegion] = useState('all');
   const [limit, setLimit] = useState(PAGE_SIZE);
 
   const facets = useMemo(() => services.repository.facets(), [services.repository]);
@@ -39,8 +49,10 @@ export function BrowseScreen() {
         ...(type === 'all' ? {} : { types: [type] }),
         ...(level === 'all' ? {} : { levels: [level] }),
         ...(topic === 'all' ? {} : { topics: [topic] }),
+        ...(register === 'all' ? {} : { registers: [register] }),
+        ...(region === 'all' ? {} : { usableIn: region }),
       }),
-    [services.repository, search, type, level, topic],
+    [services.repository, search, type, level, topic, register, region],
   );
 
   const shown = results.slice(0, limit);
@@ -97,6 +109,36 @@ export function BrowseScreen() {
         </label>
 
         <label className={styles.filter}>
+          <span className="visually-hidden">Register</span>
+          <select
+            value={register}
+            onChange={(event) => setRegister(event.target.value as Register | 'all')}
+          >
+            <option value="all">Any register</option>
+            {REGISTERS.map((option) => (
+              <option key={option} value={option}>
+                {option === 'colloquial' ? 'casual' : option}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className={styles.filter}>
+          <span className="visually-hidden">Region</span>
+          <select value={region} onChange={(event) => setRegion(event.target.value)}>
+            {/* Region-neutral content always passes, so this narrows rather
+                than excludes: it drops what is not said where you are aiming. */}
+            <option value="all">Anywhere</option>
+            <option value="es-419">Latin America</option>
+            {PRONUNCIATION_LOCALES.map((option) => (
+              <option key={option.locale} value={option.locale}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className={styles.filter}>
           <span className="visually-hidden">Topic</span>
           <select value={topic} onChange={(event) => setTopic(event.target.value)}>
             <option value="all">Any topic</option>
@@ -129,6 +171,12 @@ export function BrowseScreen() {
                 {item.level?.toUpperCase()}
                 {item.topics?.length ? ` · ${item.topics.join(', ').replace(/-/g, ' ')}` : ''}
               </span>
+              <UsageBadges
+                compact
+                register={item.register}
+                address={item.address}
+                regions={item.regions}
+              />
             </li>
           );
         })}

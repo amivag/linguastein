@@ -12,6 +12,9 @@
   --color-bg: #f7f8fa;
   --color-surface: #ffffff;
   --color-surface-raised: #ffffff;
+  /* Recessed into a card: rows you pick from, answer slots, tracks. A light
+     theme cannot raise anything above white, so depth has to go downwards. */
+  --color-surface-sunken: #e9ecf1;
   --color-border: #e2e5ea;
   --color-border-strong: #7e858f;
   --color-text: #14161a;

@@ -18,6 +18,18 @@ export type CefrLevel = (typeof CEFR_LEVELS)[number];
 export const REGISTERS = ['neutral', 'colloquial', 'formal', 'vulgar'] as const;
 export type Register = (typeof REGISTERS)[number];
 
+/**
+ * Who a phrase addresses. Spanish forces this choice in almost every sentence
+ * spoken to another person, and getting it wrong is the difference between
+ * polite and rude — so it is first-class data rather than a note.
+ *
+ * Named after the pronouns because that is the choice a learner is making.
+ * Third-person singular is deliberately never inferred: `está` is `usted` or
+ * `él`/`ella` depending on context, and guessing would teach the wrong thing.
+ */
+export const ADDRESS_FORMS = ['tu', 'usted', 'vosotros', 'ustedes'] as const;
+export type AddressForm = (typeof ADDRESS_FORMS)[number];
+
 /** Pre-generated, reviewed audio for one pronunciation locale (spec §6). */
 export interface AudioRef {
   readonly locale: LanguageTag;
@@ -53,6 +65,9 @@ export interface Lexeme {
   readonly level?: CefrLevel;
   /** Frequency rank in the target language; lower is more frequent. */
   readonly frequencyRank?: number;
+  readonly register?: Register;
+  /** Regions where this word is the usual choice: papa in Latin America, patata in Spain. */
+  readonly regions?: readonly LanguageTag[];
   readonly gender?: Morphology['gender'];
   readonly tags?: readonly string[];
   readonly provenance?: Provenance;
@@ -111,6 +126,9 @@ export interface LearningItem {
   readonly text: string;
   readonly level?: CefrLevel;
   readonly register?: Register;
+  /** Set when the phrase is spoken to someone; derived from morphology where possible. */
+  readonly address?: AddressForm;
+  /** Where this is said. Absent means it works anywhere Spanish is spoken. */
   readonly regions?: readonly LanguageTag[];
   readonly topics?: readonly string[];
   readonly tags?: readonly string[];

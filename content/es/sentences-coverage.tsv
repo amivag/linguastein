@@ -1,5 +1,5 @@
 # Sentences written to cover lemmas the other files miss (see the build's coverage report).
-# Columns: spanish	english	level	topics	note (English, optional)
+# Columns: spanish	english	level	topics	note	register	address	regions
 El hombre y la mujer entran en la casa.	The man and the woman go into the house.	a1	people
 Ese chico es mi primo.	That boy is my cousin.	a1	family
 Mi tío y mi tía tienen un bebé.	My uncle and aunt have a baby.	a1	family
@@ -92,13 +92,13 @@ La pantalla del móvil está rota.	The phone screen is broken.	a2	objects
 Te mando un mensaje esta tarde.	I'll send you a message this afternoon.	a1	communication
 Leo el periódico y una revista los domingos.	I read the newspaper and a magazine on Sundays.	a2	communication
 Pon la fruta en la bolsa.	Put the fruit in the bag.	a1	shopping
-Esta cosa no sirve para nada.	This thing is useless.	a2	core
+Esta cosa no sirve para nada.	This thing is useless.	a2	core		colloquial		
 La vida en esta ciudad es tranquila.	Life in this city is calm.	a2	city
 Quiero ver mundo.	I want to see the world.	a2	travel
 El amor es más fuerte que el miedo.	Love is stronger than fear.	a2	feelings
-Dime la verdad, no una mentira.	Tell me the truth, not a lie.	a2	core
-Buena suerte con el examen.	Good luck with the exam.	a1	school
-Te doy un ejemplo.	I'll give you an example.	a1	core
+Dime la verdad, no una mentira.	Tell me the truth, not a lie.	a2	core		colloquial	tu	
+Buena suerte con el examen.	Good luck with the exam.	a1	school		colloquial		
+Te doy un ejemplo.	I'll give you an example.	a1	core		colloquial	tu	
 Lo hago de otra manera.	I do it another way.	a2	core
 Esta parte del libro es la mejor.	This part of the book is the best.	a2	school
 Es un lugar muy bonito.	It's a very pretty place.	a1	travel
@@ -115,7 +115,7 @@ Me quedo en casa esta noche.	I'm staying at home tonight.	a1	social
 Sigue por esta calle hasta la plaza.	Carry on down this street to the square.	a2	travel
 El camarero nos ofrece un postre.	The waiter offers us a dessert.	a2	restaurant
 Voy a cambiar de trabajo.	I'm going to change jobs.	a2	work
-Acabo de comer.	I've just eaten.	a2	food-drink	acabar de + infinitive means to have just done something
+Acabo de comer.	I've just eaten.	a2	food-drink	acabar de + infinitive means to have just done something	colloquial		
 Intento comprender el problema.	I'm trying to understand the problem.	a2	core
 Decidimos comenzar mañana temprano.	We decided to start early tomorrow.	a2	work
 La tienda vende ropa de niño.	The shop sells children's clothes.	a2	shopping

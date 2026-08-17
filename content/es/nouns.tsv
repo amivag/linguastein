@@ -1,5 +1,5 @@
 # Spanish nouns — authoring source for the core-es pack.
-# Columns: lemma	gloss (en)	gender	plural (blank = regular)	level	topics
+# Columns: lemma	gloss (en)	gender	plural (blank = regular)	level	topics	regions	register
 # Plurals are generated unless an irregular one is given (examen → exámenes).
 persona	person	f		a1	people
 hombre	man	m		a1	people
@@ -66,7 +66,7 @@ agua	water	f		a1	food-drink
 leche	milk	f		a1	food-drink
 café	coffee	m		a1	food-drink
 té	tea	m		a1	food-drink
-jugo	juice	m		a1	food-drink
+jugo	juice	m		a1	food-drink	es-419	
 cerveza	beer	f		a1	food-drink
 vino	wine	m		a1	food-drink
 carne	meat	f		a1	food-drink
@@ -85,7 +85,7 @@ plátano	banana	m		a1	food-drink
 uva	grape	f		a2	food-drink
 fresa	strawberry	f		a2	food-drink
 tomate	tomato	m		a1	food-drink
-papa	potato	f		a1	food-drink
+papa	potato	f		a1	food-drink	es-419	
 cebolla	onion	f		a2	food-drink
 ajo	garlic	m		a2	food-drink
 zanahoria	carrot	f		a2	food-drink
@@ -162,10 +162,10 @@ aeropuerto	airport	m		a1	travel
 avión	plane	m		a1	travel
 tren	train	m		a1	travel
 autobús	bus	m		a1	travel
-coche	car	m		a1	travel
+coche	car	m		a1	travel	es-ES	
 taxi	taxi	m		a1	travel
 bicicleta	bicycle	f		a1	travel
-billete	ticket	m		a1	travel
+billete	ticket	m		a1	travel	es-ES	
 maleta	suitcase	f		a1	travel
 viaje	trip, journey	m		a1	travel
 mapa	map	m		a1	travel
@@ -262,8 +262,8 @@ cinturón	belt	m		a2	clothes
 gafas	glasses	f	gafas	a1	clothes
 reloj	watch, clock	m		a1	objects
 teléfono	telephone	m		a1	objects
-móvil	mobile phone	m		a1	objects
-ordenador	computer	m		a1	objects
+móvil	mobile phone	m		a1	objects	es-ES	
+ordenador	computer	m		a1	objects	es-ES	
 pantalla	screen	f		a2	objects
 correo	mail, email	m		a1	communication
 mensaje	message	m		a1	communication
@@ -340,3 +340,12 @@ derecha	right (side)	f		a1	travel
 izquierda	left (side)	f		a1	travel
 inglés	English (language)	m		a1	language
 español	Spanish (language)	m		a1	language
+patata	potato	f		a1	food-drink	es-ES	
+carro	car	m		a1	travel	es-419	
+zumo	juice	m		a1	food-drink	es-ES	
+computadora	computer	f		a1	objects	es-419	
+celular	mobile phone	m		a1	objects	es-419	
+boleto	ticket	m		a1	travel	es-419	
+camión	bus (Mexico), lorry	m	camiones	a2	travel	es-MX	colloquial
+plata	money	f		a2	shopping	es-419	colloquial
+pasta	cash	f		a2	shopping	es-ES	colloquial

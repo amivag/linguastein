@@ -1,11 +1,11 @@
-# Everyday core sentences. Columns: spanish	english	level	topics	note (English, optional)
-Hola, ¿cómo estás?	Hi, how are you?	a1	greetings
-Buenos días.	Good morning.	a1	greetings
-Buenas tardes.	Good afternoon.	a1	greetings
-Buenas noches.	Good evening.	a1	greetings
+# Everyday core sentences. Columns: spanish	english	level	topics	note	register	address	regions
+Hola, ¿cómo estás?	Hi, how are you?	a1	greetings		colloquial	tu	
+Buenos días.	Good morning.	a1	greetings		neutral		
+Buenas tardes.	Good afternoon.	a1	greetings		neutral		
+Buenas noches.	Good evening.	a1	greetings		neutral		
 ¿Cómo te llamas?	What's your name?	a1	greetings	Literally: how do you call yourself?
 Me llamo Ana.	My name is Ana.	a1	greetings
-Mucho gusto.	Nice to meet you.	a1	greetings
+Mucho gusto.	Nice to meet you.	a1	greetings		formal		
 ¿De dónde eres?	Where are you from?	a1	greetings
 Soy de España.	I'm from Spain.	a1	greetings
 ¿Hablas inglés?	Do you speak English?	a1	communication
@@ -16,12 +16,12 @@ No entiendo.	I don't understand.	a1	communication
 Más despacio, por favor.	Slower, please.	a1	communication
 ¿Qué significa esta palabra?	What does this word mean?	a1	language
 ¿Cómo se dice en español?	How do you say it in Spanish?	a1	language
-Gracias por tu ayuda.	Thanks for your help.	a1	greetings
-De nada.	You're welcome.	a1	greetings
-Perdón, no te oigo.	Sorry, I can't hear you.	a1	communication
-Lo siento mucho.	I'm very sorry.	a1	greetings
-Hasta mañana.	See you tomorrow.	a1	greetings
-Adiós, buen viaje.	Goodbye, have a good trip.	a1	greetings
+Gracias por tu ayuda.	Thanks for your help.	a1	greetings		colloquial	tu	
+De nada.	You're welcome.	a1	greetings		neutral		
+Perdón, no te oigo.	Sorry, I can't hear you.	a1	communication		colloquial	tu	
+Lo siento mucho.	I'm very sorry.	a1	greetings		neutral		
+Hasta mañana.	See you tomorrow.	a1	greetings		colloquial		
+Adiós, buen viaje.	Goodbye, have a good trip.	a1	greetings		neutral		
 Tengo que trabajar.	I have to work.	a1	work	tener que + infinitive means to have to do something
 Tengo que irme.	I have to go.	a1	core
 Tengo hambre.	I'm hungry.	a1	food-drink	Spanish "has" hunger rather than "being" hungry
@@ -59,7 +59,7 @@ Quiero comprar una camisa.	I want to buy a shirt.	a1	shopping
 No quiero salir esta noche.	I don't want to go out tonight.	a1	social
 ¿Quieres venir con nosotros?	Do you want to come with us?	a1	social
 Queremos ver la ciudad.	We want to see the city.	a1	travel
-Quisiera reservar una mesa.	I would like to book a table.	a2	restaurant	quisiera is a polite way to say quiero
+Quisiera reservar una mesa.	I would like to book a table.	a2	restaurant	quisiera is a polite way to say quiero	formal		
 ¿Puedo pasar?	May I come in?	a1	social
 ¿Puedes ayudarme?	Can you help me?	a1	social
 No puedo ir hoy.	I can't go today.	a1	core

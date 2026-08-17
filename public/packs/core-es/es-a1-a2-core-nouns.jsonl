@@ -64,7 +64,7 @@
 {"id":"core-es:lexeme:leche","lemma":"leche","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:cafe","lemma":"café","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:te","lemma":"té","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:jugo","lemma":"jugo","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:jugo","lemma":"jugo","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-419"]}
 {"id":"core-es:lexeme:cerveza","lemma":"cerveza","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:vino","lemma":"vino","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:carne","lemma":"carne","pos":"NOUN","level":"a1","gender":"feminine"}
@@ -83,7 +83,7 @@
 {"id":"core-es:lexeme:uva","lemma":"uva","pos":"NOUN","level":"a2","gender":"feminine"}
 {"id":"core-es:lexeme:fresa","lemma":"fresa","pos":"NOUN","level":"a2","gender":"feminine"}
 {"id":"core-es:lexeme:tomate","lemma":"tomate","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:papa","lemma":"papa","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:papa","lemma":"papa","pos":"NOUN","level":"a1","gender":"feminine","regions":["es-419"]}
 {"id":"core-es:lexeme:cebolla","lemma":"cebolla","pos":"NOUN","level":"a2","gender":"feminine"}
 {"id":"core-es:lexeme:ajo","lemma":"ajo","pos":"NOUN","level":"a2","gender":"masculine"}
 {"id":"core-es:lexeme:zanahoria","lemma":"zanahoria","pos":"NOUN","level":"a2","gender":"feminine"}
@@ -160,10 +160,10 @@
 {"id":"core-es:lexeme:avion","lemma":"avión","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:tren","lemma":"tren","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:autobus","lemma":"autobús","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:coche","lemma":"coche","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:coche","lemma":"coche","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-ES"]}
 {"id":"core-es:lexeme:taxi","lemma":"taxi","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:bicicleta","lemma":"bicicleta","pos":"NOUN","level":"a1","gender":"feminine"}
-{"id":"core-es:lexeme:billete","lemma":"billete","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:billete","lemma":"billete","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-ES"]}
 {"id":"core-es:lexeme:maleta","lemma":"maleta","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:viaje","lemma":"viaje","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:mapa","lemma":"mapa","pos":"NOUN","level":"a1","gender":"masculine"}
@@ -260,8 +260,8 @@
 {"id":"core-es:lexeme:gafas","lemma":"gafas","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:reloj","lemma":"reloj","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:telefono","lemma":"teléfono","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:movil","lemma":"móvil","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:ordenador","lemma":"ordenador","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:movil","lemma":"móvil","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-ES"]}
+{"id":"core-es:lexeme:ordenador","lemma":"ordenador","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-ES"]}
 {"id":"core-es:lexeme:pantalla","lemma":"pantalla","pos":"NOUN","level":"a2","gender":"feminine"}
 {"id":"core-es:lexeme:correo","lemma":"correo","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:mensaje","lemma":"mensaje","pos":"NOUN","level":"a1","gender":"masculine"}
@@ -338,3 +338,12 @@
 {"id":"core-es:lexeme:izquierda","lemma":"izquierda","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:ingles","lemma":"inglés","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:espanol","lemma":"español","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:patata","lemma":"patata","pos":"NOUN","level":"a1","gender":"feminine","regions":["es-ES"]}
+{"id":"core-es:lexeme:carro","lemma":"carro","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-419"]}
+{"id":"core-es:lexeme:zumo","lemma":"zumo","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-ES"]}
+{"id":"core-es:lexeme:computadora","lemma":"computadora","pos":"NOUN","level":"a1","gender":"feminine","regions":["es-419"]}
+{"id":"core-es:lexeme:celular","lemma":"celular","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-419"]}
+{"id":"core-es:lexeme:boleto","lemma":"boleto","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-419"]}
+{"id":"core-es:lexeme:camion","lemma":"camión","pos":"NOUN","level":"a2","gender":"masculine","register":"colloquial","regions":["es-MX"]}
+{"id":"core-es:lexeme:plata","lemma":"plata","pos":"NOUN","level":"a2","gender":"feminine","register":"colloquial","regions":["es-419"]}
+{"id":"core-es:lexeme:pasta","lemma":"pasta","pos":"NOUN","level":"a2","gender":"feminine","register":"colloquial","regions":["es-ES"]}

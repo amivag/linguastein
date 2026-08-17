@@ -77,6 +77,58 @@ export function resolveByLanguage<T>(
   return undefined;
 }
 
+/**
+ * Latin American locales, for resolving the `es-419` macro-region. A word
+ * marked `es-419` is the usual choice across these; one marked `es-ES` is not.
+ */
+const LATIN_AMERICAN = new Set([
+  'es-419',
+  'es-MX',
+  'es-AR',
+  'es-CO',
+  'es-CL',
+  'es-PE',
+  'es-VE',
+  'es-EC',
+  'es-GT',
+  'es-CU',
+  'es-BO',
+  'es-DO',
+  'es-HN',
+  'es-PY',
+  'es-SV',
+  'es-NI',
+  'es-CR',
+  'es-PA',
+  'es-UY',
+  'es-PR',
+]);
+
+/**
+ * Whether content marked for `region` is what someone learning `locale` should
+ * be taught. `patata` is marked `es-ES`; a learner aiming at Mexico should not
+ * meet it unmarked, and `papa` (`es-419`) is the word they want.
+ */
+export function regionCovers(region: LanguageTag, locale: LanguageTag): boolean {
+  if (region === locale) return true;
+  // A bare language tag means "anywhere this language is spoken".
+  if (region === baseLanguage(region)) return baseLanguage(locale) === region;
+  if (region === 'es-419') return LATIN_AMERICAN.has(locale);
+  return false;
+}
+
+/**
+ * Content with no regions works everywhere; content with regions has to cover
+ * the learner's locale. Absence is the common case and must stay permissive.
+ */
+export function isUsableIn(
+  regions: readonly LanguageTag[] | undefined,
+  locale: LanguageTag,
+): boolean {
+  if (!regions || regions.length === 0) return true;
+  return regions.some((region) => regionCovers(region, locale));
+}
+
 /** Best matching pronunciation locale for a set of available ones. */
 export function resolvePronunciationLocale(
   available: readonly LanguageTag[],
@@ -85,4 +137,19 @@ export function resolvePronunciationLocale(
   if (available.includes(preferred)) return preferred;
   const base = baseLanguage(preferred);
   return available.find((locale) => baseLanguage(locale) === base) ?? available[0];
+}
+
+const REGION_NAMES: Record<string, string> = {
+  'es-ES': 'Spain',
+  'es-419': 'Latin America',
+  'es-MX': 'Mexico',
+  'es-AR': 'Argentina',
+  'es-CO': 'Colombia',
+  'es-CL': 'Chile',
+  'es-PE': 'Peru',
+};
+
+/** Human-readable region name, falling back to the tag itself. */
+export function regionLabel(region: LanguageTag): string {
+  return REGION_NAMES[region] ?? region;
 }

@@ -17,6 +17,7 @@
   --color-bg: #0f1115;
   --color-surface: #171a21;
   --color-surface-raised: #1f232c;
+  --color-surface-sunken: #0d1014;
   --color-border: #2a2f3a;
   /* Boundaries of interactive controls: 3:1 against the surface (WCAG 1.4.11). */
   --color-border-strong: #697386;

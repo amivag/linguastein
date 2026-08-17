@@ -30,7 +30,8 @@
   display: flex;
   height: 10px;
   border-radius: 999px;
-  background: var(--color-surface-raised);
+  /* Same reason as the session progress track: visible on either background. */
+  background: var(--color-border);
   overflow: hidden;
 }
 

@@ -10,7 +10,7 @@
 import type { Morphology, PartOfSpeech, Token, TokenId } from './annotation';
 import type { ItemId, LexemeId, SkillId } from './ids';
 import type { LanguageTag } from './language';
-import type { LearningItem } from './model';
+import type { LearningItem, Register } from './model';
 import type { ContentRepository } from './repository';
 import { normalise } from './repository';
 
@@ -45,6 +45,9 @@ export interface WordInfo {
   readonly gloss?: string;
   /** Grammar of this occurrence, e.g. `1st sg · present · indicative`. */
   readonly grammar?: string;
+  /** How the word itself is marked: colloquial, or regional like `papa`. */
+  readonly register?: Register;
+  readonly regions?: readonly LanguageTag[];
   readonly constructions: readonly WordConstruction[];
   /** Other forms of the same lexeme — the "variations" of a verb. */
   readonly forms: readonly WordForm[];
@@ -85,6 +88,8 @@ export function inspectToken(
       ? examplesOf(repository, lexemeId, item.id, language, options.maxExamples ?? 3)
       : [],
     ...(lexemeId ? { lexeme: lexemeId } : {}),
+    ...optional('register', lexeme?.register),
+    ...(lexeme?.regions?.length ? { regions: lexeme.regions } : {}),
     ...(lemma ? { lemma } : {}),
     ...(pos ? { pos, posLabel: POS_LABELS[pos] } : {}),
     ...(lexemeId ? optional('gloss', glossOf(repository, lexemeId, language)) : {}),

@@ -6,8 +6,14 @@
  */
 
 import type { ItemId, LexemeId, PackId, SenseId, SkillId, VerbFormId } from './ids';
-import { type LanguageTag, resolveByLanguage, resolvePronunciationLocale } from './language';
+import {
+  isUsableIn,
+  type LanguageTag,
+  resolveByLanguage,
+  resolvePronunciationLocale,
+} from './language';
 import type {
+  AddressForm,
   AudioRef,
   CefrLevel,
   ContentPack,
@@ -15,6 +21,7 @@ import type {
   LearningItem,
   Lexeme,
   PackManifest,
+  Register,
   Sense,
   Skill,
   Translation,
@@ -25,6 +32,14 @@ export interface ItemFilter {
   readonly packs?: readonly PackId[];
   readonly types?: readonly ItemType[];
   readonly levels?: readonly CefrLevel[];
+  readonly registers?: readonly Register[];
+  /**
+   * Keep only content usable where the learner is aiming. Region-neutral
+   * content always passes; `es-419` content passes for any Latin American
+   * locale.
+   */
+  readonly usableIn?: LanguageTag;
+  readonly address?: readonly AddressForm[];
   readonly topics?: readonly string[];
   readonly tags?: readonly string[];
   readonly lexemes?: readonly LexemeId[];
@@ -173,6 +188,14 @@ export class ContentRepository {
       if (filter.types?.length && !filter.types.includes(item.type)) return false;
       if (filter.levels?.length && !(item.level && filter.levels.includes(item.level)))
         return false;
+      // Unmarked content counts as neutral: most phrases carry no register.
+      if (filter.registers?.length && !filter.registers.includes(item.register ?? 'neutral')) {
+        return false;
+      }
+      if (filter.address?.length && !(item.address && filter.address.includes(item.address))) {
+        return false;
+      }
+      if (filter.usableIn && !isUsableIn(item.regions, filter.usableIn)) return false;
       if (filter.topics?.length && !overlaps(item.topics, filter.topics)) return false;
       if (filter.tags?.length && !overlaps(item.tags, filter.tags)) return false;
       if (filter.lexemes?.length && !overlaps(item.lexemes, filter.lexemes)) return false;

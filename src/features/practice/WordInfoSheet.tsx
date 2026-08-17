@@ -1,6 +1,7 @@
 import { useFocusTrap } from '../../components/useFocusTrap';
 import { useServices } from '../../app/services-context';
 import { Button } from '../../components/Button';
+import { UsageBadges } from '../../components/UsageBadges';
 import { inspectToken, type LearningItem, type TokenId } from '../../domain/content';
 import styles from './WordInfoSheet.module.css';
 
@@ -62,6 +63,7 @@ export function WordInfoSheet({ item, tokenId, onClose }: WordInfoSheetProps) {
         </header>
 
         {info.gloss && <p className={styles.gloss}>{info.gloss}</p>}
+        <UsageBadges register={info.register} regions={info.regions} />
         {info.grammar && <p className={styles.grammar}>{info.grammar}</p>}
 
         {info.constructions.length > 0 && (

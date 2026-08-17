@@ -41,6 +41,9 @@ interface NounRow {
   plural: string;
   level: string;
   topics: string[];
+  /** Regions where this is the usual word: papa in Latin America, patata in Spain. */
+  regions: string[];
+  register: string;
 }
 interface ModifierRow {
   lemma: string;
@@ -57,6 +60,12 @@ interface SentenceRow {
   level: string;
   topics: string[];
   note: string;
+  /** neutral | colloquial | formal | vulgar; blank means neutral. */
+  register: string;
+  /** tu | usted | vosotros | ustedes; blank means derive it or leave unset. */
+  address: string;
+  /** Regions where this is said, blank meaning everywhere. */
+  regions: string[];
   source: string;
 }
 
@@ -82,13 +91,15 @@ const verbs: VerbRow[] = readTsv('verbs.tsv').map(([lemma, gloss, level, regular
 }));
 
 const nouns: NounRow[] = readTsv('nouns.tsv').map(
-  ([lemma, gloss, gender, plural, level, topics]) => ({
+  ([lemma, gloss, gender, plural, level, topics, regions, register]) => ({
     lemma: lemma!,
     gloss: gloss!,
     gender: gender!,
     plural: plural ?? '',
     level: level!,
     topics: list(topics),
+    regions: list(regions),
+    register: register ?? '',
   }),
 );
 
@@ -107,12 +118,15 @@ const sentences: SentenceRow[] = readdirSync(CONTENT_DIR)
   .filter((file) => file.startsWith('sentences') && file.endsWith('.tsv'))
   .sort()
   .flatMap((file) =>
-    readTsv(file).map(([text, translation, level, topics, note]) => ({
+    readTsv(file).map(([text, translation, level, topics, note, register, address, regions]) => ({
       text: text!,
       translation: translation!,
       level: level!,
       topics: list(topics),
       note: note ?? '',
+      register: register ?? '',
+      address: address ?? '',
+      regions: list(regions),
       source: file,
     })),
   );
@@ -145,6 +159,8 @@ interface LexemeRecord {
   pos: string;
   level: string;
   gender?: string;
+  register?: string;
+  regions?: string[];
   tags?: string[];
 }
 
@@ -188,6 +204,8 @@ const nounLexemes: LexemeRecord[] = nouns.map((noun) => ({
   pos: 'NOUN',
   level: noun.level,
   gender: noun.gender === 'f' ? 'feminine' : 'masculine',
+  ...(noun.register ? { register: noun.register } : {}),
+  ...(noun.regions.length > 0 ? { regions: noun.regions } : {}),
 }));
 
 const modifierLexemes: LexemeRecord[] = modifiers.map((modifier) => ({
@@ -554,6 +572,29 @@ const TENSE_SKILLS: Record<string, { id: string; label: string; gloss: string; l
 
 const usedSkills = new Set<string>();
 
+/** Lexeme id → the regions that word belongs to, for propagating onto phrases. */
+const nounRegions = new Map<string, string[]>(
+  nouns
+    .filter((noun) => noun.regions.length > 0)
+    .map((noun) => [lexemeId(noun.lemma, 'NOUN'), noun.regions]),
+);
+
+/**
+ * Who a sentence addresses, read from the verb morphology already in the data.
+ *
+ * Only the unambiguous cases are inferred: a second-person form is `tú` or
+ * `vosotros` and nothing else. Third person is left alone because `está` is
+ * `usted` or `él`/`ella` depending on context — those are declared by hand.
+ */
+function deriveAddress(tokens: readonly Token[]): string {
+  for (const token of tokens) {
+    const morph = token.morph as { person?: number; number?: string } | undefined;
+    if (morph?.person !== 2) continue;
+    return morph.number === 'plural' ? 'vosotros' : 'tu';
+  }
+  return '';
+}
+
 const sentenceItems: ItemRecord[] = sentences.map((sentence, position) => {
   const tokens = tokenise(sentence.text);
   const annotations: Annotation[] = [];
@@ -583,6 +624,16 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence, position) => {
 
   const lexemes = [...new Set(tokens.map((token) => token.lexeme).filter(Boolean))] as string[];
   const hasFiniteVerb = tokens.some((token) => token.morph?.['verbForm'] === 'finite');
+  const address = sentence.address || deriveAddress(tokens);
+  // A sentence inherits the regional limits of the words it uses: a phrase
+  // built on `papa` is not one a learner in Spain should be taught unmarked.
+  const regions = [
+    ...new Set([
+      ...sentence.regions,
+      ...lexemes.flatMap((id) => nounRegions.get(id) ?? []),
+      ...(address === 'vosotros' ? ['es-ES'] : []),
+    ]),
+  ];
 
   return {
     id: `${NS}item:${String(position + 1).padStart(6, '0')}`,
@@ -590,6 +641,9 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence, position) => {
     type: hasFiniteVerb ? 'sentence' : 'phrase',
     text: sentence.text,
     level: sentence.level,
+    ...(sentence.register ? { register: sentence.register } : {}),
+    ...(address ? { address } : {}),
+    ...(regions.length > 0 ? { regions } : {}),
     ...(sentence.topics.length > 0 ? { topics: sentence.topics } : {}),
     tokens,
     ...(annotations.length > 0 ? { annotations } : {}),
@@ -615,6 +669,10 @@ const vocabularySources = [
     pos: 'NOUN',
     level: noun.level,
     topics: noun.topics,
+    // A word card *is* the word, so it inherits whatever marks the lexeme:
+    // `papa` must not be offered to someone learning the Spanish of Spain.
+    regions: noun.regions,
+    register: noun.register,
   })),
   ...modifiers
     .filter((modifier) => modifier.pos === 'ADJ')
@@ -623,6 +681,8 @@ const vocabularySources = [
       pos: 'ADJ',
       level: modifier.level,
       topics: modifier.topics,
+      regions: [] as string[],
+      register: '',
     })),
 ];
 
@@ -636,6 +696,8 @@ const vocabularyItems: ItemRecord[] = vocabularySources.map((entry, position) =>
     text: entry.lemma,
     level: entry.level,
     ...(entry.topics.length > 0 ? { topics: entry.topics } : {}),
+    ...(entry.register ? { register: entry.register } : {}),
+    ...(entry.regions.length > 0 ? { regions: entry.regions } : {}),
     lexemes: [lexeme],
     ...(examples.length > 0 ? { examples } : {}),
   };

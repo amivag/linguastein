@@ -1,4 +1,4 @@
-# Work, school, health, people, feelings, nature. Columns: spanish	english	level	topics	note (English, optional)
+# Work, school, health, people, feelings, nature. Columns: spanish	english	level	topics	note	register	address	regions
 Trabajo de nueve a cinco.	I work from nine to five.	a1	work
 Tengo una reunión a las diez.	I have a meeting at ten.	a1	work
 Mi jefe es muy amable.	My boss is very kind.	a1	work
@@ -45,12 +45,12 @@ Mis abuelos viven en el campo.	My grandparents live in the countryside.	a1	famil
 Voy a visitar a mi tía.	I'm going to visit my aunt.	a1	family
 Mi mejor amigo se llama Luis.	My best friend is called Luis.	a1	social
 Conocí a mi novia en Madrid.	I met my girlfriend in Madrid.	a2	social
-Nos vemos el viernes.	See you on Friday.	a1	social
-¿Quedamos a las siete?	Shall we meet at seven?	a2	social
+Nos vemos el viernes.	See you on Friday.	a1	social		colloquial		
+¿Quedamos a las siete?	Shall we meet at seven?	a2	social		colloquial	tu	
 Vamos a una fiesta esta noche.	We're going to a party tonight.	a1	social
 Mis amigos vienen a cenar.	My friends are coming for dinner.	a1	social
-Feliz cumpleaños.	Happy birthday.	a1	social
-¿Quieres tomar algo?	Do you want to have a drink?	a1	social
+Feliz cumpleaños.	Happy birthday.	a1	social		neutral		
+¿Quieres tomar algo?	Do you want to have a drink?	a1	social		colloquial	tu	
 Estoy muy feliz hoy.	I'm very happy today.	a1	feelings
 Ella está triste.	She is sad.	a1	feelings
 No estoy nervioso.	I'm not nervous.	a2	feelings
@@ -60,14 +60,14 @@ Pienso que es una buena idea.	I think it's a good idea.	a1	core
 No sé qué hacer.	I don't know what to do.	a1	core
 No lo recuerdo.	I don't remember it.	a1	core
 Lo entiendo perfectamente.	I understand it perfectly.	a2	core
-Espero que sí.	I hope so.	a2	core
+Espero que sí.	I hope so.	a2	core		neutral		
 Depende del tiempo.	It depends on the weather.	a2	core
 Es la primera vez.	It's the first time.	a1	core
 Otra vez, por favor.	Again, please.	a1	core
-Poco a poco.	Little by little.	a1	core
-Claro que sí.	Of course.	a1	core
-Está bien.	It's fine.	a1	core
-No pasa nada.	It's no problem.	a1	core
+Poco a poco.	Little by little.	a1	core		colloquial		
+Claro que sí.	Of course.	a1	core		colloquial		
+Está bien.	It's fine.	a1	core		colloquial		
+No pasa nada.	It's no problem.	a1	core		colloquial		
 Hoy llueve mucho.	It's raining a lot today.	a1	weather
 Mañana va a hacer sol.	Tomorrow it's going to be sunny.	a1	weather
 En invierno nieva en la montaña.	In winter it snows in the mountains.	a2	weather

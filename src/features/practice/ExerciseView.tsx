@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { Button } from '../../components/Button';
+import { Button, type ButtonVariant } from '../../components/Button';
 import type { Exercise, GradeResult } from '../../domain/exercises';
 import { isSelfRated } from '../../domain/exercises';
 import type { TokenId } from '../../domain/content';
 import { REVIEW_GRADES, type ReviewGrade } from '../../domain/progress';
 import { AudioControls } from './AudioControls';
+import { UsageBadges } from '../../components/UsageBadges';
 import { ItemDetails } from './ItemDetails';
 import { SpeakCheck } from './SpeakCheck';
 import styles from './Practice.module.css';
@@ -156,22 +157,27 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             </p>
           )}
           <div className={styles.choices}>
-            {exercise.choices.map((choice) => (
-              <Button
-                key={choice.id}
-                block
-                large
-                disabled={answered}
-                variant={choiceVariant(answered, choice.correct, chosen === choice.id)}
-                lang={exercise.kind === 'cloze-choice' ? 'es' : undefined}
-                onClick={() => {
-                  setChosen(choice.id);
-                  runner.submitAnswer({ value: choice.id, latencyMs: elapsed() });
-                }}
-              >
-                {choice.text}
-              </Button>
-            ))}
+            {exercise.choices.map((choice, position) => {
+              const variant = choiceVariant(answered, choice.correct, chosen === choice.id);
+              return (
+                <Button
+                  key={choice.id}
+                  block
+                  large
+                  align="start"
+                  disabled={answered}
+                  variant={variant}
+                  lang={exercise.kind === 'cloze-choice' ? 'es' : undefined}
+                  onClick={() => {
+                    setChosen(choice.id);
+                    runner.submitAnswer({ value: choice.id, latencyMs: elapsed() });
+                  }}
+                >
+                  <ChoiceMarker variant={variant} position={position} />
+                  {choice.text}
+                </Button>
+              );
+            })}
           </div>
           {answered && <Verdict result={runner.lastResult} />}
         </>
@@ -188,6 +194,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
               <Button
                 key={`${part}-${position}`}
                 lang="es"
+                variant="option"
                 disabled={answered || built.includes(part)}
                 onClick={() => setBuilt((current) => [...current, part])}
               >
@@ -231,6 +238,10 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
         )
       )}
 
+      {/* Who you may say this to, and where — learned with the phrase, not
+          looked up afterwards. */}
+      <UsageBadges register={item.register} address={item.address} regions={item.regions} />
+
       {!answerLocked && <ItemDetails item={item} />}
 
       {selectedToken && (
@@ -268,9 +279,38 @@ function Verdict({ result }: { readonly result: GradeResult | null }) {
   );
 }
 
-/** Marks the right answer, and the wrong one only if that is what was tapped. */
-function choiceVariant(answered: boolean, correct: boolean, wasChosen: boolean) {
-  if (!answered) return 'default' as const;
-  if (correct) return 'correct' as const;
-  return wasChosen ? ('incorrect' as const) : ('default' as const);
+/**
+ * The numbered disc that makes a choice read as one option among several. Once
+ * graded it shows the outcome, so the marking is not carried by fill alone —
+ * decorative to a screen reader, which hears the verdict instead.
+ */
+function ChoiceMarker({
+  variant,
+  position,
+}: {
+  readonly variant: ButtonVariant;
+  readonly position: number;
+}) {
+  const state =
+    variant === 'correct'
+      ? styles.choiceMarkerCorrect
+      : variant === 'incorrect'
+        ? styles.choiceMarkerIncorrect
+        : '';
+
+  return (
+    <span className={`${styles.choiceMarker} ${state}`} aria-hidden="true">
+      {variant === 'correct' ? '✓' : variant === 'incorrect' ? '✗' : position + 1}
+    </span>
+  );
+}
+
+/**
+ * Marks the right answer, and the wrong one only if that is what was tapped —
+ * the choices nobody picked keep their unanswered look and simply fade.
+ */
+function choiceVariant(answered: boolean, correct: boolean, wasChosen: boolean): ButtonVariant {
+  if (!answered) return 'option';
+  if (correct) return 'correct';
+  return wasChosen ? 'incorrect' : 'option';
 }

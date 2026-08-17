@@ -64,6 +64,11 @@ conjugation by hand, and add an `irregulars.ts` entry when a verb needs one
 The shipped pack is marked `source: generated, review: unreviewed`. Do not
 describe it as reviewed curriculum.
 
+Content carries usage as data, not prose: `register`, `address` (tú/usted) and
+`regions`. `address` is derived from morphology where unambiguous and declared
+otherwise; third person is never guessed. When adding a word that differs by
+region, add both sides of the pair — one alone teaches a dialect as universal.
+
 ## Accessibility is the agent interface
 
 The app is driven through the accessibility tree by screen readers and by

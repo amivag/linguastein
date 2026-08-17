@@ -1,16 +1,16 @@
-# Food, shopping and travel. Columns: spanish	english	level	topics	note (English, optional)
+# Food, shopping and travel. Columns: spanish	english	level	topics	note	register	address	regions
 Una cerveza, por favor.	A beer, please.	a1	restaurant
 Dos cafés con leche, por favor.	Two white coffees, please.	a1	restaurant
 Un vaso de agua, por favor.	A glass of water, please.	a1	restaurant
-¿Me trae la carta?	Could you bring me the menu?	a1	restaurant	Formal usted form of traer
-¿Qué me recomienda?	What do you recommend?	a2	restaurant
+¿Me trae la carta?	Could you bring me the menu?	a1	restaurant	Formal usted form of traer	formal	usted	
+¿Qué me recomienda?	What do you recommend?	a2	restaurant		formal	usted	
 Quiero pedir la sopa.	I'd like to order the soup.	a1	restaurant
 Para mí, el pollo.	For me, the chicken.	a1	restaurant
 ¿Tienen algo vegetariano?	Do you have anything vegetarian?	a2	restaurant
 Sin cebolla, por favor.	Without onion, please.	a1	restaurant
 Está muy rico.	It's delicious.	a1	restaurant	rico means tasty when talking about food
 La comida está fría.	The food is cold.	a1	restaurant
-¿Me trae la cuenta?	Could you bring me the bill?	a1	restaurant
+¿Me trae la cuenta?	Could you bring me the bill?	a1	restaurant		formal	usted	
 ¿Puedo pagar con tarjeta?	Can I pay by card?	a1	shopping
 La cuenta, por favor.	The bill, please.	a1	restaurant
 El desayuno es a las ocho.	Breakfast is at eight.	a1	food-drink
@@ -49,8 +49,8 @@ Llevo una camisa blanca.	I'm wearing a white shirt.	a1	clothes	llevar means to w
 ¿Cómo llego al centro?	How do I get to the centre?	a1	travel
 ¿Está lejos de aquí?	Is it far from here?	a1	travel
 Está muy cerca.	It's very close.	a1	travel
-Siga todo recto.	Go straight ahead.	a2	travel	Formal command
-Gire a la derecha.	Turn right.	a2	travel
+Siga todo recto.	Go straight ahead.	a2	travel	Formal command	formal	usted	
+Gire a la derecha.	Turn right.	a2	travel		formal	usted	
 Está a la izquierda.	It's on the left.	a1	travel
 Voy en autobús.	I go by bus.	a1	travel
 Prefiero ir en tren.	I prefer to go by train.	a1	travel
@@ -60,8 +60,8 @@ El tren llega tarde.	The train is arriving late.	a1	travel
 Un billete a Madrid, por favor.	A ticket to Madrid, please.	a1	travel
 ¿Cuánto dura el viaje?	How long does the journey take?	a2	travel
 Tengo una reserva.	I have a reservation.	a1	travel
-Quiero una habitación doble.	I'd like a double room.	a1	travel
-¿Está incluido el desayuno?	Is breakfast included?	a2	travel
+Quiero una habitación doble.	I'd like a double room.	a1	travel		neutral		
+¿Está incluido el desayuno?	Is breakfast included?	a2	travel		neutral		
 ¿Hay wifi en el hotel?	Is there wifi at the hotel?	a1	travel
 Mi maleta es esta.	My suitcase is this one.	a1	travel
 He perdido mi pasaporte.	I've lost my passport.	a2	travel
@@ -73,5 +73,5 @@ La playa está a diez minutos.	The beach is ten minutes away.	a1	travel
 Fuimos en coche hasta la montaña.	We drove up to the mountain.	a2	travel
 El viaje fue muy largo.	The journey was very long.	a2	travel
 Visitamos un museo muy interesante.	We visited a very interesting museum.	a2	travel
-¿Puede sacarnos una foto?	Could you take a photo of us?	a2	travel
-Aquí se come muy bien.	The food is very good here.	a2	restaurant
+¿Puede sacarnos una foto?	Could you take a photo of us?	a2	travel		formal	usted	
+Aquí se come muy bien.	The food is very good here.	a2	restaurant		colloquial		

@@ -1,0 +1,20 @@
+.token {
+  padding: 0;
+  border: 0;
+  border-bottom: 2px dotted var(--color-border);
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  border-radius: 4px;
+}
+
+.token:hover,
+.token:focus-visible {
+  border-bottom-color: var(--color-accent);
+}
+
+.selected {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  border-bottom-color: var(--color-accent);
+}

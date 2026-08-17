@@ -18,3 +18,23 @@
 {"ref":"demo-es:skill:asking-location","lang":"en","text":"asking where something is"}
 {"ref":"demo-es:skill:estar-states","lang":"en","text":"estar for temporary states"}
 {"ref":"demo-es:skill:present-indicative","lang":"en","text":"present tense"}
+# Word-level meanings, shown when a learner taps a word inside a phrase.
+{"ref":"demo-es:lexeme:tener","lang":"en","text":"to have"}
+{"ref":"demo-es:lexeme:estar","lang":"en","text":"to be (state, location)"}
+{"ref":"demo-es:lexeme:querer","lang":"en","text":"to want"}
+{"ref":"demo-es:lexeme:trabajar","lang":"en","text":"to work"}
+{"ref":"demo-es:lexeme:comprar","lang":"en","text":"to buy"}
+{"ref":"demo-es:lexeme:ir","lang":"en","text":"to go"}
+{"ref":"demo-es:lexeme:cerveza","lang":"en","text":"beer"}
+{"ref":"demo-es:lexeme:agua","lang":"en","text":"water"}
+{"ref":"demo-es:lexeme:pan","lang":"en","text":"bread"}
+{"ref":"demo-es:lexeme:cafe","lang":"en","text":"coffee"}
+{"ref":"demo-es:lexeme:camisa","lang":"en","text":"shirt"}
+{"ref":"demo-es:lexeme:bano","lang":"en","text":"bathroom"}
+{"ref":"demo-es:lexeme:tiempo","lang":"en","text":"time"}
+{"ref":"demo-es:lexeme:hambre","lang":"en","text":"hunger"}
+{"ref":"demo-es:lexeme:cansado","lang":"en","text":"tired"}
+{"ref":"demo-es:lexeme:que","lang":"en","text":"that / to (links two verbs)"}
+{"ref":"demo-es:lexeme:donde","lang":"en","text":"where"}
+{"ref":"demo-es:lexeme:hoy","lang":"en","text":"today"}
+{"ref":"demo-es:lexeme:muy","lang":"en","text":"very"}

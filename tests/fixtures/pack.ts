@@ -53,6 +53,13 @@ export const ITEMS: readonly LearningItem[] = [
         lemma: 'tener',
         pos: 'VERB',
         lexeme: id<LexemeId>('test-es:lexeme:tener'),
+        morph: {
+          person: 1,
+          number: 'singular',
+          tense: 'present',
+          mood: 'indicative',
+          verbForm: 'finite',
+        },
       },
       { id: 't2', text: 'que', pos: 'SCONJ' },
       { id: 't3', text: 'trabajar', pos: 'VERB' },
@@ -70,7 +77,10 @@ export const ITEMS: readonly LearningItem[] = [
       { locale: 'es-MX', src: 'audio/es-MX/001.mp3' },
     ],
   }),
-  item('002', 'Tengo que irme.', { topics: ['everyday'] }),
+  item('002', 'Tengo que irme.', {
+    topics: ['everyday'],
+    lexemes: [id<LexemeId>('test-es:lexeme:tener')],
+  }),
   item('003', '¿Tienes tiempo?', { topics: ['everyday'] }),
   item('004', 'cerveza', { type: 'word', topics: ['food-drink'] }),
   item('005', 'agua', { type: 'word', topics: ['food-drink'] }),
@@ -94,6 +104,8 @@ export const TRANSLATIONS: readonly Translation[] = [
   { ref: 'test-es:item:006', lang: 'en', text: 'bread' },
   { ref: 'test-es:item:007', lang: 'en', text: 'coffee' },
   { ref: 'test-es:item:004', lang: 'de', text: 'Bier' },
+  // Word-level meaning, shown when a learner taps a word inside a phrase.
+  { ref: 'test-es:lexeme:tener', lang: 'en', text: 'to have' },
 ];
 
 export const TEST_PACK: ContentPack = {

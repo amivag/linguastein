@@ -2,10 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../components/Button';
 import type { Exercise } from '../../domain/exercises';
 import { isSelfRated } from '../../domain/exercises';
+import type { TokenId } from '../../domain/content';
 import { REVIEW_GRADES, type ReviewGrade } from '../../domain/progress';
 import { AudioControls } from './AudioControls';
 import { ItemDetails } from './ItemDetails';
 import styles from './Practice.module.css';
+import { TokenizedText } from './TokenizedText';
+import { WordInfoSheet } from './WordInfoSheet';
 import type { SessionRunner } from './useSessionRunner';
 
 interface ExerciseViewProps {
@@ -27,11 +30,13 @@ const GRADE_LABELS: Record<ReviewGrade, string> = {
 export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const [revealed, setRevealed] = useState(false);
   const [built, setBuilt] = useState<readonly string[]>([]);
+  const [selectedToken, setSelectedToken] = useState<TokenId | null>(null);
   const startedAt = useRef(Date.now());
 
   useEffect(() => {
     setRevealed(false);
     setBuilt([]);
+    setSelectedToken(null);
     startedAt.current = Date.now();
   }, [exercise.id]);
 
@@ -40,13 +45,22 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const answered = runner.lastResult !== null;
   const item = exercise.item;
 
+  // Tapping a word shows its meaning, so it must not give away an answer the
+  // learner is currently being asked for.
+  const wordsUnlocked =
+    exercise.kind === 'multiple-choice' || exercise.kind === 'cloze-choice' ? answered : true;
+  const selectWord = wordsUnlocked ? setSelectedToken : undefined;
+
   return (
     <section className={styles.card} aria-live="polite">
       {exercise.kind === 'listen-repeat' && (
         <>
-          <p className={styles.prompt} lang="es">
-            {item.text}
-          </p>
+          <TokenizedText
+            item={item}
+            className={styles.prompt}
+            onSelect={selectWord}
+            selected={selectedToken}
+          />
           <AudioControls item={item} autoPlay />
           <p className={styles.hint}>Listen, then say it aloud.</p>
           {revealed && exercise.translation ? (
@@ -61,9 +75,12 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
 
       {exercise.kind === 'reveal' && (
         <>
-          <p className={styles.prompt} lang="es">
-            {item.text}
-          </p>
+          <TokenizedText
+            item={item}
+            className={styles.prompt}
+            onSelect={selectWord}
+            selected={selectedToken}
+          />
           <AudioControls item={item} />
           {revealed && exercise.translation ? (
             <p className={styles.reveal}>{exercise.translation.text}</p>
@@ -81,9 +98,12 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           <p className={styles.hint}>Say it in Spanish, then reveal.</p>
           {revealed ? (
             <>
-              <p className={styles.prompt} lang="es">
-                {exercise.answer}
-              </p>
+              <TokenizedText
+                item={item}
+                className={styles.prompt}
+                onSelect={selectWord}
+                selected={selectedToken}
+              />
               <AudioControls item={item} autoPlay />
             </>
           ) : (
@@ -96,9 +116,19 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
 
       {(exercise.kind === 'multiple-choice' || exercise.kind === 'cloze-choice') && (
         <>
-          <p className={styles.prompt} lang="es">
-            {exercise.prompt}
-          </p>
+          {/* Once answered, the full sentence is shown and its words open up. */}
+          {answered ? (
+            <TokenizedText
+              item={item}
+              className={styles.prompt}
+              onSelect={selectWord}
+              selected={selectedToken}
+            />
+          ) : (
+            <p className={styles.prompt} lang="es">
+              {exercise.prompt}
+            </p>
+          )}
           <div className={styles.choices}>
             {exercise.choices.map((choice) => (
               <Button
@@ -179,6 +209,10 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
       )}
 
       <ItemDetails item={item} />
+
+      {selectedToken && (
+        <WordInfoSheet item={item} tokenId={selectedToken} onClose={() => setSelectedToken(null)} />
+      )}
     </section>
   );
 }

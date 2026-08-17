@@ -29,7 +29,8 @@ describe('SessionScreen', () => {
     });
 
     expect(await screen.findByText('1/2')).toBeInTheDocument();
-    expect(screen.getByText('Tengo que trabajar.')).toBeInTheDocument();
+    // The phrase renders as individually tappable words (see word-info tests).
+    expect(screen.getByRole('button', { name: 'About “Tengo”' })).toBeInTheDocument();
 
     // Reveal, then self-rate — the audio-first loop of spec §4.2.
     await user.click(screen.getByRole('button', { name: 'Reveal' }));

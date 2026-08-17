@@ -14,3 +14,7 @@
 {"id":"demo-es:lexeme:tiempo","lemma":"tiempo","pos":"NOUN","gender":"masculine","level":"a1"}
 {"id":"demo-es:lexeme:hambre","lemma":"hambre","pos":"NOUN","gender":"feminine","level":"a1"}
 {"id":"demo-es:lexeme:cansado","lemma":"cansado","pos":"ADJ","level":"a1"}
+{"id":"demo-es:lexeme:que","lemma":"que","pos":"SCONJ","level":"a1"}
+{"id":"demo-es:lexeme:donde","lemma":"dónde","pos":"ADV","level":"a1"}
+{"id":"demo-es:lexeme:hoy","lemma":"hoy","pos":"ADV","level":"a1"}
+{"id":"demo-es:lexeme:muy","lemma":"muy","pos":"ADV","level":"a1"}

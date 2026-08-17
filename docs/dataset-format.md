@@ -137,7 +137,18 @@ in any reference language, or none.
 ```
 
 `type` is `natural` (default), `literal` or `alternative`. `ref` may point at an
-item, sense or skill.
+item, sense, skill or lexeme.
+
+Lexeme translations are what a learner sees when they tap a word inside a
+phrase, so give every content word one:
+
+```json
+{ "ref": "demo-es:lexeme:tener", "lang": "en", "text": "to have" }
+```
+
+Word inspection also uses `tokens[].lexeme`, `tokens[].morph` and the
+annotations covering the token, so the richer those are, the more the app can
+say about a word without any extra data being authored per phrase.
 
 ### Provenance
 

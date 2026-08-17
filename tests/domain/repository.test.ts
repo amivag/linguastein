@@ -13,7 +13,7 @@ describe('ContentRepository', () => {
   it('filters by type, topic and lexeme', () => {
     expect(repository.query({ types: ['word'] })).toHaveLength(4);
     expect(repository.query({ topics: ['food-drink'] })).toHaveLength(4);
-    expect(repository.query({ lexemes: [id<LexemeId>('test-es:lexeme:tener')] })).toHaveLength(1);
+    expect(repository.query({ lexemes: [id<LexemeId>('test-es:lexeme:tener')] })).toHaveLength(2);
   });
 
   it('matches search without diacritics', () => {

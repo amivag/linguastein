@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
@@ -33,17 +33,7 @@ export function HomeScreen() {
     void navigate(`/session?preset=${preset}&size=${size}`);
 
   return (
-    <AppShell
-      title={pack?.name ?? 'Practice'}
-      action={
-        <div className={styles.headerActions}>
-          <ThemeToggle variant="compact" />
-          <Link to="/settings" aria-label="Settings" className={styles.iconLink}>
-            <span aria-hidden="true">⚙</span>
-          </Link>
-        </div>
-      }
-    >
+    <AppShell title={pack?.name ?? 'Practice'} action={<ThemeToggle variant="compact" />}>
       <div className={styles.stats}>
         <div className={styles.stat}>
           <span className={styles.statValue}>{summary?.due ?? '—'}</span>

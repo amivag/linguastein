@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppNav } from './AppNav';
 import styles from './AppShell.module.css';
 
 interface AppShellProps {
@@ -7,6 +8,8 @@ interface AppShellProps {
   readonly children: ReactNode;
   readonly onBack?: 'history' | (() => void);
   readonly action?: ReactNode;
+  /** Practice sessions hide the chrome and fill the screen. */
+  readonly showNav?: boolean;
 }
 
 /**
@@ -15,7 +18,7 @@ interface AppShellProps {
  * Every screen gets exactly one `<h1>`, one `<main>` and a matching document
  * title, so both screen readers and automated agents can tell where they are.
  */
-export function AppShell({ title, children, onBack, action }: AppShellProps) {
+export function AppShell({ title, children, onBack, action, showNav = true }: AppShellProps) {
   const navigate = useNavigate();
   const back = onBack === 'history' ? () => void navigate(-1) : onBack;
 
@@ -24,7 +27,7 @@ export function AppShell({ title, children, onBack, action }: AppShellProps) {
   }, [title]);
 
   return (
-    <div className={styles.shell}>
+    <div className={`${styles.shell} ${showNav ? styles.withNav : ''}`}>
       <a className={styles.skipLink} href="#main">
         Skip to content
       </a>
@@ -40,6 +43,7 @@ export function AppShell({ title, children, onBack, action }: AppShellProps) {
       <main id="main" className={styles.main} tabIndex={-1}>
         {children}
       </main>
+      {showNav && <AppNav />}
     </div>
   );
 }

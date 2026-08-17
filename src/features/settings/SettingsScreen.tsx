@@ -44,115 +44,135 @@ export function SettingsScreen() {
   const errors = services.datasetIssues.filter((issue) => issue.severity === 'error');
 
   return (
-    <AppShell title="Settings" onBack="history">
-      <label className={styles.field}>
-        <span className={styles.label}>Reference language</span>
-        <select
-          value={preferences.referenceLanguage}
-          onChange={(event) => updatePreferences({ referenceLanguage: event.target.value })}
-        >
-          {REFERENCE_LANGUAGES.map((language) => (
-            <option key={language.tag} value={language.tag}>
-              {language.nativeName}
-            </option>
-          ))}
-        </select>
-        <span className={styles.hint}>
-          The language meanings are shown in. More will follow — English is only the first.
-        </span>
-      </label>
-
-      <label className={styles.field}>
-        <span className={styles.label}>Pronunciation</span>
-        <select
-          value={preferences.pronunciationLocale}
-          onChange={(event) =>
-            // A voice chosen for one accent should not survive into another.
-            updatePreferences({ pronunciationLocale: event.target.value, voiceName: '' })
-          }
-        >
-          {PRONUNCIATION_LOCALES.map((locale) => (
-            <option key={locale.locale} value={locale.locale}>
-              {locale.label} ({locale.locale})
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="voice">
-          Voice
-        </label>
-        <select
-          id="voice"
-          value={preferences.voiceName}
-          disabled={voices.length === 0}
-          onChange={(event) => updatePreferences({ voiceName: event.target.value })}
-        >
-          <option value="">Best match automatically</option>
-          {voices.map((voice) => (
-            <option key={voice.name} value={voice.name}>
-              {voice.name} ({voice.locale})
-            </option>
-          ))}
-        </select>
-        {voices.length === 0 ? (
+    <AppShell title="Settings">
+      <section className={styles.group} aria-labelledby="group-language">
+        <h2 className={styles.groupTitle} id="group-language">
+          Language
+        </h2>
+        <label className={styles.field}>
+          <span className={styles.label}>Reference language</span>
+          <select
+            value={preferences.referenceLanguage}
+            onChange={(event) => updatePreferences({ referenceLanguage: event.target.value })}
+          >
+            {REFERENCE_LANGUAGES.map((language) => (
+              <option key={language.tag} value={language.tag}>
+                {language.nativeName}
+              </option>
+            ))}
+          </select>
           <span className={styles.hint}>
-            This device has no {preferences.pronunciationLocale} voice installed, so nothing is
-            spoken — the app stays silent rather than reading Spanish with a voice from another
-            language. Add a Spanish voice in your operating system’s speech settings, or use a
-            dataset that ships reviewed audio.
+            The language meanings are shown in. More will follow — English is only the first.
           </span>
-        ) : (
-          <>
-            <Button onClick={testVoice}>Test voice</Button>
-            <span className={styles.hint}>
-              {voices.length} voice(s) available for {preferences.pronunciationLocale}. Reviewed
-              audio in a dataset always takes priority over these.
-            </span>
-          </>
-        )}
-      </div>
-
-      <label className={styles.toggle}>
-        <input
-          type="checkbox"
-          checked={preferences.autoPlayAudio}
-          onChange={(event) => updatePreferences({ autoPlayAudio: event.target.checked })}
-        />
-        <span>Play audio automatically</span>
-      </label>
-
-      <label className={styles.toggle}>
-        <input
-          type="checkbox"
-          checked={preferences.slowAudio}
-          onChange={(event) => updatePreferences({ slowAudio: event.target.checked })}
-        />
-        <span>Prefer slow playback</span>
-      </label>
-
-      <div className={styles.field}>
-        <span className={styles.label} id="theme-label">
-          Theme
-        </span>
-        <ThemeToggle />
-        <span className={styles.hint} aria-hidden="true">
-          System follows your device setting and switches with it.
-        </span>
-      </div>
-
-      <section className={styles.field}>
-        <span className={styles.label}>Content</span>
-        <p className={styles.hint}>
-          {services.repository.itemCount} items in {services.repository.packs.length} pack(s).
-          {errors.length > 0 && ` ${errors.length} dataset error(s) were skipped.`}
-        </p>
+        </label>
       </section>
 
-      <Button block onClick={() => void resetProgress()}>
-        {cleared ? 'Progress cleared ✓' : 'Reset progress'}
-      </Button>
+      <section className={styles.group} aria-labelledby="group-audio">
+        <h2 className={styles.groupTitle} id="group-audio">
+          Audio
+        </h2>
+        <label className={styles.field}>
+          <span className={styles.label}>Pronunciation</span>
+          <select
+            value={preferences.pronunciationLocale}
+            onChange={(event) =>
+              // A voice chosen for one accent should not survive into another.
+              updatePreferences({ pronunciationLocale: event.target.value, voiceName: '' })
+            }
+          >
+            {PRONUNCIATION_LOCALES.map((locale) => (
+              <option key={locale.locale} value={locale.locale}>
+                {locale.label} ({locale.locale})
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="voice">
+            Voice
+          </label>
+          <select
+            id="voice"
+            value={preferences.voiceName}
+            disabled={voices.length === 0}
+            onChange={(event) => updatePreferences({ voiceName: event.target.value })}
+          >
+            <option value="">Best match automatically</option>
+            {voices.map((voice) => (
+              <option key={voice.name} value={voice.name}>
+                {voice.name} ({voice.locale})
+              </option>
+            ))}
+          </select>
+          {voices.length === 0 ? (
+            <span className={styles.hint}>
+              This device has no {preferences.pronunciationLocale} voice installed, so nothing is
+              spoken — the app stays silent rather than reading Spanish with a voice from another
+              language. Add a Spanish voice in your operating system’s speech settings, or use a
+              dataset that ships reviewed audio.
+            </span>
+          ) : (
+            <>
+              <Button onClick={testVoice}>Test voice</Button>
+              <span className={styles.hint}>
+                {voices.length} voice(s) available for {preferences.pronunciationLocale}. Reviewed
+                audio in a dataset always takes priority over these.
+              </span>
+            </>
+          )}
+        </div>
+
+        <label className={styles.toggle}>
+          <input
+            type="checkbox"
+            checked={preferences.autoPlayAudio}
+            onChange={(event) => updatePreferences({ autoPlayAudio: event.target.checked })}
+          />
+          <span>Play audio automatically</span>
+        </label>
+
+        <label className={styles.toggle}>
+          <input
+            type="checkbox"
+            checked={preferences.slowAudio}
+            onChange={(event) => updatePreferences({ slowAudio: event.target.checked })}
+          />
+          <span>Prefer slow playback</span>
+        </label>
+      </section>
+
+      <section className={styles.group} aria-labelledby="group-appearance">
+        <h2 className={styles.groupTitle} id="group-appearance">
+          Appearance
+        </h2>
+        <div className={styles.field}>
+          <span className={styles.label} id="theme-label">
+            Theme
+          </span>
+          <ThemeToggle />
+          <span className={styles.hint} aria-hidden="true">
+            System follows your device setting and switches with it.
+          </span>
+        </div>
+      </section>
+
+      <section className={styles.group} aria-labelledby="group-data">
+        <h2 className={styles.groupTitle} id="group-data">
+          Data
+        </h2>
+        <div className={styles.field}>
+          <span className={styles.label}>Content</span>
+          <p className={styles.hint}>
+            {services.repository.itemCount} items in {services.repository.packs.length} pack(s).
+            {errors.length > 0 && ` ${errors.length} dataset error(s) were skipped.`}
+          </p>
+        </div>
+
+        <Button block onClick={() => void resetProgress()}>
+          {cleared ? 'Progress cleared ✓' : 'Reset progress'}
+        </Button>
+      </section>
     </AppShell>
   );
 }

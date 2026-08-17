@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowseScreen } from '../features/browse/BrowseScreen';
 import { HomeScreen } from '../features/home/HomeScreen';
+import { ProgressScreen } from '../features/progress/ProgressScreen';
 import { SessionScreen } from '../features/practice/SessionScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import type { Preferences } from '../storage';
@@ -70,6 +72,8 @@ export function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomeScreen />} />
+          <Route path="/browse" element={<BrowseScreen />} />
+          <Route path="/progress" element={<ProgressScreen />} />
           <Route path="/session" element={<SessionScreen />} />
           <Route path="/settings" element={<SettingsScreen />} />
           <Route path="*" element={<HomeScreen />} />

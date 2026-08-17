@@ -31,7 +31,7 @@ export function SessionScreen() {
   const runner = useSessionRunner(config);
 
   return (
-    <AppShell title={preset.label} onBack="history">
+    <AppShell title={preset.label} onBack="history" showNav={false}>
       {runner.status === 'loading' && <p className={styles.hint}>Preparing…</p>}
 
       {runner.status === 'empty' && (

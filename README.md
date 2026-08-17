@@ -47,12 +47,14 @@ src/
 │   ├── exercises/exercise generation and grading
 │   ├── sessions/ session planning: filters, ordering, sizing
 │   └── progress/ learner state and review scheduling
+├── languages/    Spanish morphology used to generate the dataset
 ├── data/         dataset loading (JSONL) and the validation boundary
 ├── storage/      IndexedDB and in-memory implementations of learner storage
-├── audio/        audio service + TTS provider seam
-├── features/     screens: home, practice, settings, sharing
-├── components/   shared UI primitives
-├── styles/       design tokens and global CSS
+├── audio/        audio service, TTS and speech-recognition seams
+├── ai/           AI provider seam and learner-context builder
+├── features/     screens: home, browse, progress, practice, settings, sharing
+├── components/   shared UI: AppShell, AppNav, Button, ThemeToggle, VoiceInput
+├── styles/       primitives + one CSS file per theme
 └── utils/        small helpers (RNG, clipboard)
 
 content/es/      dataset authoring sources (TSV) — the human-edited input
@@ -62,6 +64,20 @@ tests/            unit and component tests, mirroring src/
 scripts/          dataset validation CLI
 dist/             build output (git-ignored)
 ```
+
+## The app
+
+Four sections behind a tab bar (a rail on wider screens):
+
+| Section  | What it is                                                        |
+| -------- | ----------------------------------------------------------------- |
+| Practice | quick sessions and the six practice presets                       |
+| Browse   | search and filter all 845 items; dictate the search with the mic  |
+| Progress | what has been practised, accuracy, weak items, recent sessions    |
+| Settings | language, audio and voice, appearance, data — in grouped sections |
+
+A running session hides the chrome and fills the screen, so practice stays the
+focus rather than the navigation.
 
 ## Architecture in one page
 

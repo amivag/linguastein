@@ -78,3 +78,18 @@
 .main:focus {
   outline: none;
 }
+
+/* Room for the tab bar on a phone, for the rail once it moves to the side. */
+.withNav {
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .withNav {
+    padding-bottom: var(--space-5);
+    padding-left: calc(96px + var(--space-4));
+    /* The rail sits inside the centred box, so widen it by the rail width to
+       keep the content itself centred in the space that is left. */
+    max-width: calc(var(--content-width) + 96px);
+  }
+}

@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
+import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
+import { ProgressScreen } from '../../src/features/progress/ProgressScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import { renderWithServices } from '../fixtures/services';
 import { expectNoViolations } from './axe';
@@ -16,6 +18,18 @@ describe('accessibility', () => {
 
   it('settings screen has no WCAG violations', async () => {
     const { container } = renderWithServices(<SettingsScreen />, { route: '/settings' });
+    await screen.findByRole('heading', { level: 1 });
+    await expectNoViolations(container);
+  });
+
+  it('browse screen has no WCAG violations', async () => {
+    const { container } = renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await screen.findByRole('searchbox');
+    await expectNoViolations(container);
+  });
+
+  it('progress screen has no WCAG violations', async () => {
+    const { container } = renderWithServices(<ProgressScreen />, { route: '/progress' });
     await screen.findByRole('heading', { level: 1 });
     await expectNoViolations(container);
   });

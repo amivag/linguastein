@@ -46,7 +46,9 @@ src/data/        dataset loading + the zod validation boundary
 src/storage/     IndexedDB and in-memory LearnerStorage
 src/audio/       audio service + TTS seam
 src/ai/          AI seam and learner-context builder (no vendor, no network)
-src/features/    screens; src/components/ shared UI; src/styles/ tokens
+src/features/    screens: home, browse, progress, practice, settings, sharing
+src/components/  shared UI: AppShell, AppNav, Button, ThemeToggle, VoiceInput
+src/styles/      primitives + one file per theme
 content/es/      hand-authored dataset sources (TSV)
 public/packs/    GENERATED datasets — never edit by hand
 ```
@@ -74,7 +76,7 @@ automated agents alike, so the same rules serve both:
 - each screen has exactly one `<h1>`, one `<main>` and a matching document title
 - session state lives in the URL (`/session?preset=verbs&size=items:10`), so a
   session can be resumed, shared or scripted
-- colour contrast is asserted against `src/styles/tokens.css` in
+- colour contrast is asserted against every file in `src/styles/themes/` by
   `tests/a11y/contrast.test.ts`; use `--color-border-strong` for interactive
   boundaries and `--color-border` for decoration
 

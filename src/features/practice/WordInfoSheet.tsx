@@ -33,6 +33,7 @@ export function WordInfoSheet({ item, tokenId, onClose }: WordInfoSheetProps) {
     void services.audio.speak({
       text: info.token.text,
       locale: preferences.pronunciationLocale,
+      voice: preferences.voiceName || undefined,
     });
 
   return (

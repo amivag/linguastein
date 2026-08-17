@@ -78,6 +78,7 @@ possible later.
 | `DatasetSource`               | `data/loaders/source.ts`         | bundled, remote or user-imported packs |
 | `LearnerStorage`              | `storage/types.ts`               | cloud sync behind the same contract    |
 | `TtsProvider`                 | `audio/types.ts`                 | higher-quality or cached voices        |
+| `TtsVoice`                    | `audio/types.ts`                 | voice choice, without vendor types     |
 | `SpeechRecognitionProvider`   | `audio/types.ts`                 | pronunciation practice                 |
 | `Provenance`                  | `domain/content/provenance.ts`   | community + AI-generated content       |
 | Reference-language resolution | `domain/content/language.ts`     | translation packs beyond English       |

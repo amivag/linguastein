@@ -12,6 +12,8 @@ export interface Preferences {
   readonly targetLanguage: LanguageTag;
   readonly referenceLanguage: LanguageTag;
   readonly pronunciationLocale: LanguageTag;
+  /** Chosen speech voice name; empty means "pick the best match automatically". */
+  readonly voiceName: string;
   readonly autoPlayAudio: boolean;
   readonly slowAudio: boolean;
   readonly showRomanisationHints: boolean;

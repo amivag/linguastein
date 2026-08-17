@@ -2,16 +2,21 @@
  * Resolves what to play for an item: reviewed canonical audio first, device
  * speech second, silence third. Also owns the playback controls the UI exposes
  * — normal, slow, replay, loop (spec §6.1).
+ *
+ * Silence is a legitimate outcome: if the dataset has no audio and the device
+ * has no voice for the target language, the UI says so rather than reading
+ * Spanish with an English voice.
  */
 
 import type { ContentRepository, LanguageTag, LearningItem } from '../domain/content';
 import {
   NOOP_PLAYBACK,
   type AudioService,
-  type PlayOptions,
   type PlaybackHandle,
+  type PlayOptions,
   type SpeechRequest,
   type TtsProvider,
+  type TtsVoice,
 } from './types';
 
 export interface AudioServiceOptions {
@@ -31,6 +36,12 @@ export function createAudioService(options: AudioServiceOptions): AudioService {
   const stop = () => {
     current?.stop();
     current = null;
+  };
+
+  const canSpeak = (locale: LanguageTag): boolean => {
+    if (!tts?.isAvailable()) return false;
+    // A provider that cannot report its voices is trusted; ours can.
+    return tts.hasVoiceFor?.(locale) ?? true;
   };
 
   const playFile = (src: string, rate: number): PlaybackHandle => {
@@ -84,7 +95,13 @@ export function createAudioService(options: AudioServiceOptions): AudioService {
       }
       if (tts?.isAvailable()) {
         return repeatedly(
-          () => tts.speak({ text: item.text, locale: playOptions.locale, rate }),
+          () =>
+            tts.speak({
+              text: item.text,
+              locale: playOptions.locale,
+              rate,
+              voice: playOptions.voice,
+            }),
           repeat,
         );
       }
@@ -101,8 +118,18 @@ export function createAudioService(options: AudioServiceOptions): AudioService {
 
     stop,
 
-    isAvailable(_locale: LanguageTag) {
-      return tts?.isAvailable() ?? false;
+    canPlay(item: LearningItem, locale: LanguageTag) {
+      return repository.audioOf(item, locale) !== undefined || canSpeak(locale);
+    },
+
+    canSpeak,
+
+    voicesFor(locale: LanguageTag): readonly TtsVoice[] {
+      return tts?.voicesFor?.(locale) ?? [];
+    },
+
+    async ready() {
+      await tts?.ready?.();
     },
   };
 }

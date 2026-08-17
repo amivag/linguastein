@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useServices } from '../../app/services-context';
 import { SLOW_RATE } from '../../audio';
 import { Button } from '../../components/Button';
@@ -16,18 +16,40 @@ export function AudioControls({ item, autoPlay = false }: AudioControlsProps) {
   const { services, preferences } = useServices();
   const { audio } = services;
   const locale = preferences.pronunciationLocale;
+  const [playable, setPlayable] = useState(true);
 
   const play = useCallback(
     (rate: number, repeat = 1) => {
-      void audio.play(item, { locale, rate, repeat });
+      void audio.play(item, { locale, rate, repeat, voice: preferences.voiceName || undefined });
     },
-    [audio, item, locale],
+    [audio, item, locale, preferences.voiceName],
   );
+
+  // Voice discovery is asynchronous, so availability is re-checked once the
+  // provider is ready rather than assumed on first render.
+  useEffect(() => {
+    let cancelled = false;
+    void audio.ready().then(() => {
+      if (!cancelled) setPlayable(audio.canPlay(item, locale));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [audio, item, locale]);
 
   useEffect(() => {
     if (autoPlay && preferences.autoPlayAudio) play(preferences.slowAudio ? SLOW_RATE : 1);
     return () => audio.stop();
   }, [autoPlay, play, preferences.autoPlayAudio, preferences.slowAudio, audio]);
+
+  if (!playable) {
+    return (
+      <p className={styles.hint}>
+        No {locale} voice on this device — check Settings, or add one in your system’s speech
+        settings.
+      </p>
+    );
+  }
 
   return (
     <div className={styles.audio}>

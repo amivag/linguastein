@@ -8,11 +8,15 @@ import { ExerciseEngine } from '../../src/domain/exercises';
 import { createMemoryStorage, DEFAULT_PREFERENCES } from '../../src/storage';
 import { testRepository } from './pack';
 
+/** No device speech in tests, but the dataset-audio path stays reachable. */
 const silentAudio: AudioService = {
   play: () => Promise.resolve(NOOP_PLAYBACK),
   speak: () => Promise.resolve(NOOP_PLAYBACK),
   stop: () => {},
-  isAvailable: () => false,
+  canPlay: () => true,
+  canSpeak: () => true,
+  voicesFor: () => [],
+  ready: () => Promise.resolve(),
 };
 
 export function testServices(overrides: Partial<AppServices> = {}): AppServices {

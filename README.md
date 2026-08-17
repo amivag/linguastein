@@ -90,6 +90,22 @@ Reviewed, pre-generated audio is preferred and cached. Where a dataset has no
 audio yet, the app falls back to device speech synthesis. No TTS vendor is
 referenced above `src/audio/` — providers are injected at the composition root.
 
+Device speech is chosen carefully: the browser's voice list loads
+asynchronously, so the app waits for it before speaking, and it will only use a
+voice that actually speaks the target language. If a device has no Spanish
+voice installed, the app stays silent and says so — reading Spanish with an
+English voice teaches the wrong pronunciation. Settings lists the available
+voices and lets a learner pick one.
+
+Installing a Spanish voice:
+
+- **Windows** — Settings → Time & language → Speech → Manage voices → Add
+  voices → Spanish (then restart the browser)
+- **macOS/iOS** — System Settings → Accessibility → Spoken Content → System
+  Voice → Manage Voices → Spanish
+- **Android** — Settings → Accessibility → Text-to-speech output → install the
+  Spanish voice data
+
 ## Offline
 
 The app is an installable PWA: the shell and datasets are precached, audio is

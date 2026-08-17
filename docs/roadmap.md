@@ -28,7 +28,10 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 2. **Session filters in the UI** — level, topic, verb and "due only" are
    supported by the planner but not yet exposed.
 3. **Canonical audio pipeline** — generate → review → approve → store, plus the
-   `audio/<locale>/` layout in packs. Until then the app uses device speech.
+   `audio/<locale>/` layout in packs. This is the real fix for pronunciation
+   quality: device voices vary wildly between platforms, and many devices ship
+   no Spanish voice at all. Until then the app uses device speech where a
+   suitable voice exists, and says so where none does.
 4. **Verb practice depth** — surface `VerbForm` records directly (person and
    tense drills), not only cloze inside sentences. Word inspection already
    shows the forms; practising them directly is the next step.

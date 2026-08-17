@@ -14,7 +14,14 @@ export interface SpeechRequest {
   readonly locale: LanguageTag;
   /** 1 = normal, 0.7 ≈ the "slow" control. */
   readonly rate?: number;
-  readonly voice?: string;
+  readonly voice?: string | undefined;
+}
+
+/** A voice offered to the learner, described without any vendor's types. */
+export interface TtsVoice {
+  readonly name: string;
+  readonly locale: LanguageTag;
+  readonly isDefault: boolean;
 }
 
 export interface PlaybackHandle {
@@ -27,6 +34,11 @@ export interface TtsProvider {
   readonly id: string;
   isAvailable(): boolean;
   speak(request: SpeechRequest): Promise<PlaybackHandle>;
+  /** Resolves once the provider knows which voices it has. */
+  ready?(): Promise<void>;
+  /** Voices able to speak this language. Empty means: do not speak it. */
+  voicesFor?(locale: LanguageTag): readonly TtsVoice[];
+  hasVoiceFor?(locale: LanguageTag): boolean;
 }
 
 export interface PlayOptions {
@@ -34,6 +46,8 @@ export interface PlayOptions {
   readonly rate?: number;
   /** Repeat count for the "loop ×3" control. */
   readonly repeat?: number;
+  /** Learner-chosen voice name; falls back to the best automatic match. */
+  readonly voice?: string | undefined;
 }
 
 /** What feature code uses. Resolves canonical audio, then falls back to TTS. */
@@ -41,8 +55,17 @@ export interface AudioService {
   play(item: LearningItem, options: PlayOptions): Promise<PlaybackHandle>;
   speak(request: SpeechRequest): Promise<PlaybackHandle>;
   stop(): void;
-  /** Whether anything at all can be heard right now. */
-  isAvailable(locale: LanguageTag): boolean;
+  /**
+   * Whether this item can be heard: either the dataset ships audio for it, or
+   * the device can speak the language.
+   */
+  canPlay(item: LearningItem, locale: LanguageTag): boolean;
+  /** Whether the device can speak this language at all. */
+  canSpeak(locale: LanguageTag): boolean;
+  /** Voices available for the locale, for the settings picker. */
+  voicesFor(locale: LanguageTag): readonly TtsVoice[];
+  /** Resolves once voice discovery has finished. */
+  ready(): Promise<void>;
 }
 
 // Reserved for later; declared here so the shape of the seam is visible.

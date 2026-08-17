@@ -9,6 +9,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   targetLanguage: DEFAULT_TARGET_LANGUAGE,
   referenceLanguage: DEFAULT_REFERENCE_LANGUAGE,
   pronunciationLocale: DEFAULT_PRONUNCIATION_LOCALE,
+  voiceName: '',
   autoPlayAudio: true,
   slowAudio: false,
   showRomanisationHints: false,

@@ -8,9 +8,18 @@
  */
 
 import type { Annotation, Morphology, PartOfSpeech, Token } from './annotation';
-import type { ItemId, LexemeId, PackId, PassageId, SenseId, SkillId, VerbFormId } from './ids';
+import type {
+  AudioId,
+  ItemId,
+  LexemeId,
+  PackId,
+  PassageId,
+  SenseId,
+  SkillId,
+  VerbFormId,
+} from './ids';
 import type { LanguageTag } from './language';
-import type { Provenance } from './provenance';
+import type { Provenance, ReviewState } from './provenance';
 
 export const CEFR_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'] as const;
 export type CefrLevel = (typeof CEFR_LEVELS)[number];
@@ -30,14 +39,63 @@ export type Register = (typeof REGISTERS)[number];
 export const ADDRESS_FORMS = ['tu', 'usted', 'vosotros', 'ustedes'] as const;
 export type AddressForm = (typeof ADDRESS_FORMS)[number];
 
-/** Pre-generated, reviewed audio for one pronunciation locale (spec §6). */
+/**
+ * What playback needs to speak one item: where the sound is and how long it
+ * lasts. Items may embed these directly, which suits a small hand-authored
+ * pack; a generated pack ships `AudioClip` records instead (see below).
+ */
 export interface AudioRef {
   readonly locale: LanguageTag;
-  /** Path relative to the pack root, e.g. `audio/es-ES/000001.mp3`. */
+  /** Path relative to the pack root, e.g. `audio/es-ES/lucia/000001-9f3ab27c.m4a`. */
   readonly src: string;
   readonly durationMs?: number;
   readonly voice?: string;
   readonly provenance?: Provenance;
+}
+
+/**
+ * One recording of one item, as its own record referencing the item — the same
+ * shape passages use for text.
+ *
+ * Audio deliberately does not live *on* the item. A voice would otherwise mean
+ * rewriting every content file that mentions it, and an item could only ever
+ * hold one set of takes. As separate records, a voice is addable without
+ * touching content, several voices can coexist for the same phrase, and a whole
+ * voice can be shipped, archived or dropped on its own.
+ */
+export interface AudioClip {
+  readonly id: AudioId;
+  readonly pack: PackId;
+  readonly item: ItemId;
+  readonly locale: LanguageTag;
+  /** Which voice speaks it, matching a `PackVoice` id in the manifest. */
+  readonly voice: string;
+  /** Path relative to the pack root. Never absolute: packs are portable. */
+  readonly src: string;
+  /**
+   * Hash of the text this clip actually speaks. An item keeps its id through a
+   * typo fix, so this is the only thing that can tell a current clip from one
+   * that is still pronouncing the old wording.
+   */
+  readonly textHash: string;
+  readonly durationMs?: number;
+  readonly provenance?: Provenance;
+}
+
+/**
+ * A voice a pack ships, described well enough to choose, credit and license it.
+ * Generated speech is not automatically yours to redistribute, so a voice
+ * carries its own licence rather than inheriting the pack's.
+ */
+export interface PackVoice {
+  readonly id: string;
+  readonly locale: LanguageTag;
+  /** What a learner sees in the settings picker. */
+  readonly label?: string;
+  /** Model or service that produced it, for reproducibility. */
+  readonly provider?: string;
+  readonly license?: string;
+  readonly review?: ReviewState;
 }
 
 export const TRANSLATION_TYPES = ['natural', 'literal', 'alternative'] as const;
@@ -192,6 +250,8 @@ export interface PackManifest {
   readonly levels?: readonly CefrLevel[];
   readonly referenceLanguages?: readonly LanguageTag[];
   readonly pronunciationLocales?: readonly LanguageTag[];
+  /** Voices this pack ships clips for, so they can be listed, credited and chosen. */
+  readonly voices?: readonly PackVoice[];
   readonly files: readonly PackFile[];
   readonly provenance?: Provenance;
 }
@@ -204,6 +264,7 @@ export const PACK_FILE_KINDS = [
   'skills',
   'translations',
   'passages',
+  'audio',
 ] as const;
 export type PackFileKind = (typeof PACK_FILE_KINDS)[number];
 
@@ -223,4 +284,5 @@ export interface ContentPack {
   readonly skills: readonly Skill[];
   readonly translations: readonly Translation[];
   readonly passages: readonly Passage[];
+  readonly audio: readonly AudioClip[];
 }

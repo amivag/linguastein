@@ -7,6 +7,7 @@
  */
 
 import type {
+  AudioClip,
   ContentPack,
   LearningItem,
   Lexeme,
@@ -84,6 +85,7 @@ export async function loadPack(source: DatasetSource, manifestPath: string): Pro
     skills: [],
     translations: [],
     passages: [],
+    audio: [],
   };
 
   for (const file of manifest.files) {
@@ -106,6 +108,7 @@ export async function loadPack(source: DatasetSource, manifestPath: string): Pro
     skills: collected.skills as Skill[],
     translations: collected.translations as Translation[],
     passages: collected.passages as Passage[],
+    audio: collected.audio as AudioClip[],
   };
 
   issues.push(...validatePackIntegrity(pack));

@@ -42,6 +42,11 @@ const languageTag = z.string().regex(/^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/, {
   message: 'expected a BCP 47 language tag',
 });
 const packId = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+
+/** Rejects `/x`, `C:\x`, `https://x` and `../x`: a pack must stay portable. */
+const notAbsolute = (path: string): boolean =>
+  !/^([a-zA-Z]:[\\/]|[\\/]|[a-zA-Z][a-zA-Z0-9+.-]*:)/.test(path) &&
+  !path.split(/[\\/]/).includes('..');
 const level = z.enum(CEFR_LEVELS);
 
 export const provenanceSchema = z
@@ -206,6 +211,38 @@ export const packFileSchema = z
   })
   .loose();
 
+/**
+ * One recording of one item. A separate record rather than a field on the item,
+ * so a voice can be added without rewriting content and several voices can
+ * coexist for the same phrase.
+ */
+export const audioClipSchema = z
+  .object({
+    id: entityId('audio'),
+    pack: packId,
+    item: entityId('item'),
+    locale: languageTag,
+    voice: z.string().min(1),
+    // Relative to the pack root. An absolute path or URL would defeat exporting
+    // a pack as a self-contained unit.
+    src: z.string().min(1).refine(notAbsolute, { message: 'must be relative to the pack root' }),
+    textHash: z.string().min(4),
+    durationMs: z.number().positive().optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+export const packVoiceSchema = z
+  .object({
+    id: z.string().min(1),
+    locale: languageTag,
+    label: z.string().optional(),
+    provider: z.string().optional(),
+    license: z.string().optional(),
+    review: z.enum(REVIEW_STATES).optional(),
+  })
+  .loose();
+
 export const packManifestSchema = z
   .object({
     id: packId,
@@ -217,6 +254,7 @@ export const packManifestSchema = z
     levels: z.array(level).optional(),
     referenceLanguages: z.array(languageTag).optional(),
     pronunciationLocales: z.array(languageTag).optional(),
+    voices: z.array(packVoiceSchema).optional(),
     files: z.array(packFileSchema),
     provenance: provenanceSchema.optional(),
   })
@@ -231,6 +269,7 @@ export const RECORD_SCHEMAS = {
   skills: skillSchema,
   translations: translationSchema,
   passages: passageSchema,
+  audio: audioClipSchema,
 } as const satisfies Record<(typeof PACK_FILE_KINDS)[number], z.ZodType>;
 
 export type RecordKind = keyof typeof RECORD_SCHEMAS;

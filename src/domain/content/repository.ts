@@ -14,6 +14,7 @@ import {
 } from './language';
 import type {
   AddressForm,
+  AudioClip,
   AudioRef,
   CefrLevel,
   ContentPack,
@@ -21,6 +22,7 @@ import type {
   LearningItem,
   Lexeme,
   PackManifest,
+  PackVoice,
   Passage,
   Register,
   Sense,
@@ -76,6 +78,8 @@ export class ContentRepository {
   private readonly passageOrder: PassageId[] = [];
   /** item → the passages it reads as part of, so a sentence can point home. */
   private readonly passagesByItem = new Map<ItemId, PassageId[]>();
+  /** item → every recording of it, across locales and voices. */
+  private readonly clipsByItem = new Map<ItemId, AudioClip[]>();
 
   static from(packs: readonly ContentPack[]): ContentRepository {
     const repository = new ContentRepository();
@@ -107,6 +111,8 @@ export class ContentRepository {
       this.passagesById.set(passage.id, passage);
       for (const item of passage.items) push(this.passagesByItem, item, passage.id);
     }
+
+    for (const clip of pack.audio) push(this.clipsByItem, clip.item, clip);
 
     for (const translation of pack.translations) {
       let byLanguage = this.translationsByRef.get(translation.ref);
@@ -222,15 +228,65 @@ export class ContentRepository {
     return [...(this.translationsByRef.get(ref)?.values() ?? EMPTY)];
   }
 
-  /** Best audio for the preferred pronunciation locale (spec §6). */
-  audioOf(item: LearningItem, preferredLocale: LanguageTag): AudioRef | undefined {
-    const audio = item.audio ?? EMPTY;
-    if (audio.length === 0) return undefined;
+  /**
+   * Every recording of an item, from clip records and from anything the item
+   * embeds directly. Both sources are supported on purpose: a generated pack
+   * ships records so voices stay separable, while a small hand-authored pack can
+   * keep two clips inline without a second file.
+   */
+  private refsOf(item: LearningItem): readonly AudioRef[] {
+    const clips = this.clipsByItem.get(item.id) ?? EMPTY;
+    if (clips.length === 0) return item.audio ?? EMPTY;
+    const fromClips = clips.map((clip): AudioRef => ({
+      locale: clip.locale,
+      src: clip.src,
+      voice: clip.voice,
+      ...(clip.durationMs === undefined ? {} : { durationMs: clip.durationMs }),
+      ...(clip.provenance === undefined ? {} : { provenance: clip.provenance }),
+    }));
+    return [...fromClips, ...(item.audio ?? EMPTY)];
+  }
+
+  /**
+   * Best audio for the preferred pronunciation locale (spec §6), and the
+   * preferred voice within it where one is asked for and available.
+   *
+   * Locale is resolved first: hearing the right language in the wrong voice
+   * beats hearing the wrong accent because a voice name matched.
+   */
+  audioOf(
+    item: LearningItem,
+    preferredLocale: LanguageTag,
+    preferredVoice?: string,
+  ): AudioRef | undefined {
+    const forLocale = this.audioVariantsOf(item, preferredLocale);
+    if (forLocale.length === 0) return undefined;
+    if (preferredVoice === undefined) return forLocale[0];
+    return forLocale.find((entry) => entry.voice === preferredVoice) ?? forLocale[0];
+  }
+
+  /**
+   * Every take of an item in the resolved locale, so the UI can offer a choice
+   * and playback can vary voices deliberately. Order is stable, which matters:
+   * varying the voice per review has to be reproducible under a session seed.
+   */
+  audioVariantsOf(item: LearningItem, preferredLocale: LanguageTag): readonly AudioRef[] {
+    const refs = this.refsOf(item);
+    if (refs.length === 0) return EMPTY;
     const locale = resolvePronunciationLocale(
-      audio.map((entry) => entry.locale),
+      refs.map((entry) => entry.locale),
       preferredLocale,
     );
-    return audio.find((entry) => entry.locale === locale);
+    return refs.filter((entry) => entry.locale === locale);
+  }
+
+  /**
+   * Voices the loaded packs ship clips for, optionally narrowed to one locale.
+   * The settings picker lists these alongside the device's own voices.
+   */
+  packVoices(locale?: LanguageTag): readonly PackVoice[] {
+    const voices = [...this.packsById.values()].flatMap((manifest) => manifest.voices ?? EMPTY);
+    return locale === undefined ? voices : voices.filter((voice) => voice.locale === locale);
   }
 
   query(filter: ItemFilter = {}): readonly LearningItem[] {

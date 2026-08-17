@@ -40,6 +40,10 @@ dev-dist/
 # same twenty phrases (docs/tasks/canonical-audio.md §4.1)
 audio-samples/
 
+# local TTS model weights, fetched with `piper.download_voices`. Large, and not
+# ours to redistribute — see the licence question in the audio task.
+.piper-voices/
+
 # generated clips. Deliberately ignored while a voice is still being chosen:
 # clips are content-addressed, so every regeneration is a new blob that would
 # stay in history for ever. Un-ignore when the voice is settled and shipping.

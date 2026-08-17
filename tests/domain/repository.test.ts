@@ -38,6 +38,53 @@ describe('ContentRepository', () => {
     expect(repository.audioOf(item!, 'es-AR')?.locale).toBe('es-ES');
   });
 
+  it('prefers the requested voice within the resolved locale', () => {
+    const item = repository.getItem(id<ItemId>('test-es:item:001'))!;
+
+    expect(repository.audioOf(item, 'es-ES', 'luis')?.voice).toBe('luis');
+    expect(repository.audioOf(item, 'es-ES', 'ana')?.voice).toBe('ana');
+  });
+
+  it('resolves the locale before the voice', () => {
+    const item = repository.getItem(id<ItemId>('test-es:item:001'))!;
+
+    // `mateo` only speaks es-MX. Asking for him while aiming at Spain should
+    // give a Spanish-of-Spain take, not the wrong accent because a name matched.
+    const chosen = repository.audioOf(item, 'es-ES', 'mateo');
+
+    expect(chosen?.locale).toBe('es-ES');
+    expect(chosen?.voice).not.toBe('mateo');
+  });
+
+  it('falls back rather than going silent when a voice is missing', () => {
+    const item = repository.getItem(id<ItemId>('test-es:item:001'))!;
+
+    expect(repository.audioOf(item, 'es-ES', 'nobody')).toBeDefined();
+  });
+
+  it('lists every take in a locale, merging clip records with embedded refs', () => {
+    const item = repository.getItem(id<ItemId>('test-es:item:001'))!;
+
+    const variants = repository.audioVariantsOf(item, 'es-ES');
+
+    // ana and luis as records, plus the one the item embeds directly.
+    expect(variants).toHaveLength(3);
+    expect(variants.every((variant) => variant.locale === 'es-ES')).toBe(true);
+    expect(variants.map((variant) => variant.voice)).toContain('ana');
+  });
+
+  it('has no audio for an item nothing was recorded for', () => {
+    const item = repository.getItem(id<ItemId>('test-es:item:002'))!;
+
+    expect(repository.audioOf(item, 'es-ES')).toBeUndefined();
+    expect(repository.audioVariantsOf(item, 'es-ES')).toHaveLength(0);
+  });
+
+  it('lists the voices a pack ships, narrowed to a locale', () => {
+    expect(repository.packVoices().map((voice) => voice.id)).toEqual(['ana', 'luis', 'mateo']);
+    expect(repository.packVoices('es-MX').map((voice) => voice.id)).toEqual(['mateo']);
+  });
+
   it('exposes facets for filter UIs', () => {
     const facets = repository.facets();
     expect(facets.types).toEqual(['sentence', 'word']);

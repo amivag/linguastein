@@ -1,6 +1,8 @@
 /** Small hand-built pack used across tests. Mirrors the demo dataset shape. */
 
 import type {
+  AudioClip,
+  AudioId,
   ContentPack,
   ItemId,
   LearningItem,
@@ -28,6 +30,12 @@ const manifest: PackManifest = {
   files: [
     { kind: 'items', path: 'items.jsonl' },
     { kind: 'passages', path: 'passages.jsonl' },
+    { kind: 'audio', path: 'audio-es-ES.jsonl' },
+  ],
+  voices: [
+    { id: 'ana', locale: 'es-ES', label: 'Ana', review: 'reviewed' },
+    { id: 'luis', locale: 'es-ES', label: 'Luis', review: 'unreviewed' },
+    { id: 'mateo', locale: 'es-MX', label: 'Mateo', review: 'reviewed' },
   ],
 };
 
@@ -140,10 +148,49 @@ export const PASSAGES: readonly Passage[] = [
   },
 ];
 
+/**
+ * Item 001 has two voices in one locale and one in another, which is what makes
+ * the resolution rules testable: locale wins over voice, and a requested voice
+ * that is missing falls back rather than going silent.
+ */
+export const AUDIO: readonly AudioClip[] = [
+  {
+    id: id<AudioId>('test-es:audio:001-es-ES-ana'),
+    pack: TEST_PACK_ID,
+    item: id<ItemId>('test-es:item:001'),
+    locale: 'es-ES',
+    voice: 'ana',
+    src: 'audio/es-ES/ana/001-aaaa1111.m4a',
+    textHash: 'aaaa1111',
+    durationMs: 1800,
+  },
+  {
+    id: id<AudioId>('test-es:audio:001-es-ES-luis'),
+    pack: TEST_PACK_ID,
+    item: id<ItemId>('test-es:item:001'),
+    locale: 'es-ES',
+    voice: 'luis',
+    src: 'audio/es-ES/luis/001-aaaa1111.m4a',
+    textHash: 'aaaa1111',
+    durationMs: 1950,
+  },
+  {
+    id: id<AudioId>('test-es:audio:001-es-MX-mateo'),
+    pack: TEST_PACK_ID,
+    item: id<ItemId>('test-es:item:001'),
+    locale: 'es-MX',
+    voice: 'mateo',
+    src: 'audio/es-MX/mateo/001-aaaa1111.m4a',
+    textHash: 'aaaa1111',
+    durationMs: 1875,
+  },
+];
+
 export const TEST_PACK: ContentPack = {
   manifest,
   items: ITEMS,
   passages: PASSAGES,
+  audio: AUDIO,
   lexemes: [{ id: id<LexemeId>('test-es:lexeme:tener'), lemma: 'tener', pos: 'VERB', level: 'a1' }],
   senses: [],
   verbForms: [

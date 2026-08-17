@@ -195,6 +195,39 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
     }
   }
 
+  const audioIds = new Set<string>();
+  const declaredVoices = new Set((pack.manifest.voices ?? []).map((voice) => voice.id));
+  for (const clip of pack.audio) {
+    if (audioIds.has(clip.id)) report(`duplicate audio id: ${clip.id}`, 'error', clip.id);
+    audioIds.add(clip.id);
+
+    if (clip.pack !== pack.manifest.id) {
+      report(`audio ${clip.id} declares pack "${clip.pack}"`, 'error', clip.id);
+    }
+    // A clip for an item that is not here plays for nobody. Only a warning: the
+    // audio is useless but everything else in the pack still works.
+    if (!itemIds.has(clip.item)) {
+      report(`audio ${clip.id} references unknown item ${clip.item}`, 'warning', clip.id);
+    }
+    // An undeclared voice cannot be credited, licensed or offered in settings,
+    // and the licence is the part that matters — see docs/tasks/canonical-audio.md.
+    if (declaredVoices.size > 0 && !declaredVoices.has(clip.voice)) {
+      report(
+        `audio ${clip.id} uses voice "${clip.voice}" the manifest does not declare`,
+        'warning',
+        clip.id,
+      );
+    }
+  }
+
+  // Two clips of the same words in the same voice and locale means one is stale:
+  // a regenerated clip should replace its predecessor, not sit beside it.
+  for (const duplicate of duplicates(
+    pack.audio.map((clip) => `${clip.item}\t${clip.locale}\t${clip.voice}`),
+  )) {
+    report(`two clips for the same item, locale and voice: ${duplicate.replaceAll('\t', ' ')}`);
+  }
+
   const declaredKinds = new Set(pack.manifest.files.map((file) => file.kind));
   if (!declaredKinds.has('items')) {
     report('manifest declares no items file', 'warning');

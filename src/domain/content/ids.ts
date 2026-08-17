@@ -19,11 +19,20 @@ export type SenseId = Brand<string, 'SenseId'>;
 export type VerbFormId = Brand<string, 'VerbFormId'>;
 export type SkillId = Brand<string, 'SkillId'>;
 export type PassageId = Brand<string, 'PassageId'>;
+export type AudioId = Brand<string, 'AudioId'>;
 
 /** Any entity that can be referenced by a translation, annotation or progress record. */
-export type EntityId = ItemId | LexemeId | SenseId | VerbFormId | SkillId | PassageId;
+export type EntityId = ItemId | LexemeId | SenseId | VerbFormId | SkillId | PassageId | AudioId;
 
-export const ENTITY_KINDS = ['item', 'lexeme', 'sense', 'form', 'skill', 'passage'] as const;
+export const ENTITY_KINDS = [
+  'item',
+  'lexeme',
+  'sense',
+  'form',
+  'skill',
+  'passage',
+  'audio',
+] as const;
 export type EntityKind = (typeof ENTITY_KINDS)[number];
 
 export interface ParsedEntityId {

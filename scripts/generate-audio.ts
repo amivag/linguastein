@@ -470,7 +470,7 @@ const TRIM_AND_NORMALISE = [
  * bigger files carrying no more speech. Pinning the rate also stops two voices
  * with different native rates from landing in the pack at different qualities.
  */
-const SPEECH_RATE_HZ = '24000';
+const SPEECH_RATE_HZ = process.env['LINGO_AUDIO_RATE'] ?? '24000';
 
 function postProcess(wav: string, out: string): void {
   execFileSync(

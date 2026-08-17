@@ -5,7 +5,8 @@
 
 import type { ItemId } from '../content';
 import type { ExerciseKind } from '../exercises/types';
-import { ladderScheduler, type Scheduler } from './scheduler';
+import { fsrsScheduler } from './fsrs';
+import type { Scheduler } from './scheduler';
 import {
   isDue,
   newItemProgress,
@@ -34,7 +35,7 @@ export function recordAttempt(
   current: ItemProgress | undefined,
   input: AttemptInput,
   now: Timestamp,
-  scheduler: Scheduler = ladderScheduler,
+  scheduler: Scheduler = fsrsScheduler,
 ): RecordedAttempt {
   const previous = current ?? newItemProgress(input.itemId);
   const reviewed = scheduler.review(previous, input.grade, now);

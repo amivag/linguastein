@@ -3,7 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
-import { summarise, type ItemProgress, type ProgressSummary } from '../../domain/progress';
+import {
+  inferMastery,
+  summarise,
+  weakest as weakestMastery,
+  type ItemProgress,
+  type MasteryRecord,
+  type ProgressSummary,
+} from '../../domain/progress';
 import type { SessionRecord } from '../../domain/sessions';
 import styles from './ProgressScreen.module.css';
 
@@ -12,7 +19,15 @@ interface Loaded {
   readonly weakest: readonly ItemProgress[];
   readonly sessions: readonly SessionRecord[];
   readonly accuracy: number | null;
+  /** Words and patterns, not sentences — what has actually been acquired. */
+  readonly mastery: readonly MasteryRecord[];
 }
+
+const MASTERY_LABELS: Record<MasteryRecord['status'], string> = {
+  weak: 'shaky',
+  developing: 'coming along',
+  strong: 'solid',
+};
 
 /** What the learner has actually done — the counterpart to the practice loop. */
 export function ProgressScreen() {
@@ -40,6 +55,7 @@ export function ProgressScreen() {
           .slice(0, 5),
         sessions,
         accuracy: attempts > 0 ? Math.round((correct / attempts) * 100) : null,
+        mastery: weakestMastery(inferMastery(services.repository, progress), 8),
       });
     })();
     return () => {
@@ -49,7 +65,7 @@ export function ProgressScreen() {
 
   if (!data) return <AppShell title="Progress">{null}</AppShell>;
 
-  const { summary, weakest, sessions, accuracy } = data;
+  const { summary, weakest, sessions, accuracy, mastery } = data;
   const started = summary.seen > 0;
 
   return (
@@ -109,9 +125,30 @@ export function ProgressScreen() {
             </Button>
           )}
 
+          {mastery.length > 0 && (
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>Words &amp; patterns</h2>
+              <ul className={styles.list}>
+                {mastery.map((record) => (
+                  <li key={record.id} className={styles.row}>
+                    <span lang="es">{record.label}</span>
+                    <span className={styles.muted}>
+                      {MASTERY_LABELS[record.status]} · seen in {record.encounters}{' '}
+                      {record.encounters === 1 ? 'sentence' : 'sentences'}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className={styles.caption}>
+                Strength counts how many different sentences a word appears in, not just how well
+                one is remembered.
+              </p>
+            </section>
+          )}
+
           {weakest.length > 0 && (
             <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Needs work</h2>
+              <h2 className={styles.sectionTitle}>Sentences to revisit</h2>
               <ul className={styles.list}>
                 {weakest.map((record) => {
                   const item = services.repository.getItem(record.itemId);

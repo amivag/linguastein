@@ -151,7 +151,7 @@ export function SettingsScreen() {
             Theme
           </span>
           <ThemeToggle />
-          <span className={styles.hint} aria-hidden="true">
+          <span className={styles.hint}>
             System follows your device setting and switches with it.
           </span>
         </div>

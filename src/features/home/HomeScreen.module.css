@@ -69,34 +69,9 @@
   text-align: center;
 }
 
-.headerActions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.iconLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--tap-target);
-  height: var(--tap-target);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  font-size: var(--text-lg);
-  text-decoration: none;
-}
-
 /* Two columns once there is room; one thumb-sized column on a phone. */
 @media (min-width: 600px) {
   .presets {
     grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .iconLink:hover {
-    color: var(--color-text);
-    background: var(--color-surface-raised);
   }
 }

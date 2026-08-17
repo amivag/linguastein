@@ -3,13 +3,16 @@
  * whatever the learner pastes into an external chat — should be given instead
  * of "teach me Spanish" (spec §18).
  *
+ * What counts as "known" comes from word- and pattern-level mastery rather than
+ * item history: a sentence answered correctly once does not mean its vocabulary
+ * is learned, and a tutor told otherwise will pitch everything too high.
+ *
  * Pure, offline and vendor-free: it reads the repository and local progress and
  * produces data. Nothing here talks to a network.
  */
 
-import type { CefrLevel, ContentRepository, ItemId } from '../domain/content';
-import type { ItemProgress } from '../domain/progress';
-import { isDue } from '../domain/progress';
+import type { CefrLevel, ContentRepository } from '../domain/content';
+import { inferMastery, isDue, type ItemProgress } from '../domain/progress';
 import type { LearnerContext, WeakPoint } from './types';
 
 export interface BuildContextOptions {
@@ -25,9 +28,6 @@ export interface BuildContextOptions {
   readonly topic?: string;
 }
 
-const KNOWN_DIFFICULTY = 0.35;
-const WEAK_DIFFICULTY = 0.5;
-
 export function buildLearnerContext(options: BuildContextOptions): LearnerContext {
   const {
     repository,
@@ -40,86 +40,54 @@ export function buildLearnerContext(options: BuildContextOptions): LearnerContex
     maxNewWords = 3,
   } = options;
 
-  const known = new Set<string>();
-  const weak: WeakPoint[] = [];
+  const relevant = options.topic
+    ? progress.filter((record) =>
+        (repository.getItem(record.itemId)?.topics ?? []).includes(options.topic!),
+      )
+    : progress;
+
+  const mastery = inferMastery(repository, relevant, now);
+  const entries = [...mastery.lexemes.values(), ...mastery.skills.values()];
+
   const topics = new Set<string>();
   let mastered = 0;
   let due = 0;
 
-  for (const record of [...progress].sort((a, b) => b.difficulty - a.difficulty)) {
+  for (const record of relevant) {
     const item = repository.getItem(record.itemId);
     if (!item) continue;
-    if (options.topic && !(item.topics ?? []).includes(options.topic)) continue;
-
     if (record.status === 'mastered') mastered++;
     if (isDue(record, now)) due++;
     for (const topic of item.topics ?? []) topics.add(topic);
-
-    const lemmas = (item.lexemes ?? [])
-      .map((id) => repository.getLexeme(id)?.lemma)
-      .filter((lemma) => lemma !== undefined);
-
-    if (record.difficulty >= WEAK_DIFFICULTY || record.status === 'learning') {
-      weak.push(...weakPoints(repository, record, item.id, lemmas));
-    } else if (record.difficulty <= KNOWN_DIFFICULTY && record.attempts > 0) {
-      for (const lemma of lemmas) known.add(lemma);
-    }
   }
+
+  const known = entries
+    .filter((entry) => entry.status === 'strong')
+    .sort((a, b) => b.strength - a.strength)
+    .map((entry) => entry.label);
+
+  const weak: WeakPoint[] = entries
+    .filter((entry) => entry.status === 'weak' || entry.status === 'developing')
+    // Equally weak, a pattern is worth reporting before a single word: it tells
+    // a tutor what to build a whole exercise around.
+    .sort((a, b) => a.strength - b.strength || rank(a.kind) - rank(b.kind))
+    .map((entry) => ({
+      label: entry.label,
+      kind: entry.kind,
+      ref: entry.id,
+      difficulty: round2(1 - entry.strength),
+    }));
 
   return {
     targetLanguage,
     referenceLanguage,
-    level: dominantLevel(repository, progress),
-    known: [...known].slice(0, maxKnown),
-    weak: dedupe(weak).slice(0, maxWeak),
+    level: dominantLevel(repository, relevant),
+    known: known.slice(0, maxKnown),
+    weak: weak.slice(0, maxWeak),
     topics: [...topics].sort(),
     maxNewWords,
-    totals: { seen: progress.length, mastered, due },
+    totals: { seen: relevant.length, mastered, due },
   };
-}
-
-function weakPoints(
-  repository: ContentRepository,
-  record: ItemProgress,
-  itemId: ItemId,
-  lemmas: readonly string[],
-): WeakPoint[] {
-  const item = repository.getItem(itemId);
-  const skills = (item?.skills ?? [])
-    .map((id) => ({ id, skill: repository.getSkill(id) }))
-    .filter((entry) => entry.skill !== undefined);
-
-  // A weak sentence usually means a weak pattern, so patterns are named first.
-  if (skills.length > 0) {
-    return skills.map((entry) => ({
-      label: entry.skill!.label,
-      kind: 'skill' as const,
-      ref: entry.id,
-      difficulty: record.difficulty,
-    }));
-  }
-  if (lemmas.length > 0 && item?.lexemes?.[0]) {
-    return [
-      {
-        label: lemmas[0]!,
-        kind: 'lexeme' as const,
-        ref: item.lexemes[0],
-        difficulty: record.difficulty,
-      },
-    ];
-  }
-  return [
-    { label: item?.text ?? itemId, kind: 'item', ref: itemId, difficulty: record.difficulty },
-  ];
-}
-
-function dedupe(points: readonly WeakPoint[]): WeakPoint[] {
-  const seen = new Map<string, WeakPoint>();
-  for (const point of points) {
-    const existing = seen.get(point.label);
-    if (!existing || existing.difficulty < point.difficulty) seen.set(point.label, point);
-  }
-  return [...seen.values()].sort((a, b) => b.difficulty - a.difficulty);
 }
 
 /** The level the learner is actually working at, not the level they claim. */
@@ -159,4 +127,10 @@ export function formatLearnerContext(context: LearnerContext): string {
   lines.push('', `Maximum new vocabulary: ${context.maxNewWords} words`);
 
   return lines.join('\n');
+}
+
+const rank = (kind: WeakPoint['kind']) => (kind === 'skill' ? 0 : 1);
+
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
 }

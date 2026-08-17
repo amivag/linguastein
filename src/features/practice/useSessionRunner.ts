@@ -15,7 +15,12 @@ import {
   type GradeResult,
 } from '../../domain/exercises';
 import { recordAttempt, type ItemProgress, type ReviewGrade } from '../../domain/progress';
-import { planSession, type SessionConfig } from '../../domain/sessions';
+import {
+  composeSession,
+  planSession,
+  type SessionConfig,
+  type SessionStep,
+} from '../../domain/sessions';
 import { seededRng } from '../../utils/random';
 
 export type SessionStatus = 'loading' | 'active' | 'complete' | 'empty';
@@ -47,7 +52,7 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
   const { repository, storage, exercises } = services;
 
   const [status, setStatus] = useState<SessionStatus>('loading');
-  const [itemIds, setItemIds] = useState<readonly ItemId[]>([]);
+  const [steps, setSteps] = useState<readonly SessionStep[]>([]);
   const [sessionId, setSessionId] = useState('');
   const [index, setIndex] = useState(0);
   const [stats, setStats] = useState<SessionStats>({ answered: 0, correct: 0 });
@@ -71,13 +76,26 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
       const plan = planSession({ repository, config, progress, now: Date.now() });
       if (cancelled) return;
 
+      // The planner picks what to practise; the composer picks how, moving each
+      // item along the recognition → recall → production ladder and keeping the
+      // session from settling into a single exercise type.
+      const composed = composeSession({
+        items: plan.itemIds
+          .map((id) => repository.getItem(id))
+          .filter((item) => item !== undefined),
+        progress,
+        allowed: config.exerciseKinds,
+        rng: seededRng(hash(plan.id)),
+        study: config.mode === 'study',
+      });
+
       startedAtRef.current = Date.now();
       setSessionId(plan.id);
-      setItemIds(plan.itemIds);
+      setSteps(composed);
       setIndex(0);
       setStats({ answered: 0, correct: 0 });
       setLastResult(null);
-      setStatus(plan.itemIds.length === 0 ? 'empty' : 'active');
+      setStatus(composed.length === 0 ? 'empty' : 'active');
     })();
 
     return () => {
@@ -85,14 +103,16 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     };
   }, [repository, storage, config, generation]);
 
+  const step = steps[index] ?? null;
+
   const item = useMemo(() => {
-    const id = itemIds[index];
+    const id = step?.itemId;
     return id ? (repository.getItem(id) ?? null) : null;
-  }, [itemIds, index, repository]);
+  }, [step, repository]);
 
   const exercise = useMemo(() => {
     if (!item) return null;
-    return exercises.generateFirst(item, config.exerciseKinds, {
+    return exercises.generateFirst(item, step?.kinds ?? config.exerciseKinds, {
       repository,
       referenceLanguage: config.referenceLanguage,
       // Seeded per position so re-renders never reshuffle the choices.
@@ -100,6 +120,7 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     });
   }, [
     item,
+    step,
     exercises,
     config.exerciseKinds,
     config.referenceLanguage,
@@ -112,13 +133,13 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     setLastResult(null);
     setIndex((current) => {
       const next = current + 1;
-      if (next >= itemIds.length) {
+      if (next >= steps.length) {
         setStatus('complete');
         return current;
       }
       return next;
     });
-  }, [itemIds.length]);
+  }, [steps.length]);
 
   const persist = useCallback(
     (grade: ReviewGrade, correct: boolean | undefined, latencyMs: number | undefined) => {
@@ -154,11 +175,11 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
       id: sessionId,
       startedAt: startedAtRef.current,
       endedAt: Date.now(),
-      planned: itemIds.length,
+      planned: steps.length,
       completed: stats.answered,
       correct: stats.correct,
     });
-  }, [status, sessionId, itemIds.length, stats, storage]);
+  }, [status, sessionId, steps.length, stats, storage]);
 
   const submitAnswer = useCallback(
     (answer: Answer): GradeResult | null => {
@@ -192,7 +213,7 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     exercise,
     item,
     index,
-    total: itemIds.length,
+    total: steps.length,
     stats,
     lastResult,
     submitAnswer,

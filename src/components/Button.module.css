@@ -1,4 +1,17 @@
+/*
+ * Every variant declares `--button-bg` rather than setting `background`
+ * directly, so hover can tint the button's own colour.
+ *
+ * A shared hover background does not work: `.button:hover:not(:disabled)` and
+ * `.primary:hover:not(:disabled)` have the same specificity, so the generic
+ * rule kept its background and repainted a primary button in the surface
+ * colour while the label stayed `--color-accent-contrast` — white on white in
+ * the light theme. `tests/a11y/hover-states.test.ts` holds the rule in place.
+ */
+
 .button {
+  --button-bg: var(--color-surface-raised);
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -7,7 +20,7 @@
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
+  background: var(--button-bg);
   color: var(--color-text);
   font-size: var(--text-base);
   font-weight: 500;
@@ -26,26 +39,37 @@
 }
 
 .primary {
-  background: var(--color-accent);
+  --button-bg: var(--color-accent);
+
   border-color: transparent;
   color: var(--color-accent-contrast);
   font-weight: 600;
 }
 
 .ghost {
-  background: transparent;
+  --button-bg: transparent;
+
   border-color: transparent;
   color: var(--color-text-muted);
 }
 
 .correct {
+  --button-bg: color-mix(in srgb, var(--color-success) 22%, transparent);
+
   border-color: var(--color-success);
-  background: color-mix(in srgb, var(--color-success) 18%, transparent);
 }
 
 .incorrect {
+  --button-bg: color-mix(in srgb, var(--color-danger) 22%, transparent);
+
   border-color: var(--color-danger);
-  background: color-mix(in srgb, var(--color-danger) 18%, transparent);
+}
+
+/* A graded choice is switched off, not unavailable: it carries the result, so
+   it keeps full contrast while the rest of the disabled styling still holds. */
+.correct:disabled,
+.incorrect:disabled {
+  opacity: 1;
 }
 
 .block {
@@ -58,15 +82,12 @@
 }
 
 /* Hover styles only where a pointer can actually hover, so a tap on a phone
-   does not leave a button stuck in its hover state. */
+   does not leave a button stuck in its hover state. Mixing towards
+   --color-text darkens the button under a light theme and lightens it under a
+   dark one, so the shift is visible either way and always moves the background
+   further from the label it sits behind. */
 @media (hover: hover) and (pointer: fine) {
   .button:hover:not(:disabled) {
-    background: var(--color-surface);
-    border-color: var(--color-text-muted);
-  }
-
-  .primary:hover:not(:disabled) {
-    filter: brightness(1.06);
-    border-color: transparent;
+    background: color-mix(in srgb, var(--button-bg) 90%, var(--color-text));
   }
 }

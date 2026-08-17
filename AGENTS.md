@@ -82,6 +82,25 @@ automated agents alike, so the same rules serve both:
 
 Run `npx vitest run tests/a11y` after any UI change.
 
+## The learning model
+
+Three pieces decide what a learner sees, and they are separable on purpose:
+
+- **Scheduling** () models memory stability and item
+  difficulty, so intervals adapt per item. Weights are FSRS defaults awaiting a
+  per-user fit against the attempt log we already store.
+- **Composition** () decides _how_ each item is
+  practised: items climb recognition → cued recall → production as their memory
+  stabilises, and drop back after a lapse. It also breaks up runs of one
+  exercise type. Do not reintroduce a fixed preference order — that produced
+  multiple choice on effectively every item.
+- **Mastery** () infers strength for words and
+  patterns from item history, weighted by how many different sentences a word
+  appears in. It is derived, never stored.
+
+Recognition is the weakest retrieval mode and the most flattering; prefer
+production wherever the data supports it.
+
 ## Theming
 
 Themes are colour-only and live in `src/styles/themes/<id>.css`, registered in

@@ -47,4 +47,24 @@ describe('word inspection', () => {
     // answer state is what gates it, not the exercise being over.
     expect(await screen.findByRole('button', { name: 'Continue' })).toBeInTheDocument();
   });
+
+  it('keeps the details below the card shut until the answer is in', async () => {
+    const user = userEvent.setup();
+    renderWithServices(<SessionScreen />, { route: '/session?preset=vocabulary&size=items:1' });
+
+    // The block lists example sentences beside their translations, so on a
+    // graded card it hands over the answer the engine is about to check.
+    const choices = await screen.findAllByRole('button', { name: /beer|water|bread|coffee/ });
+    expect(screen.queryByText('Copy & share')).not.toBeInTheDocument();
+
+    await user.click(choices[0]!);
+    expect(await screen.findByText('Copy & share')).toBeInTheDocument();
+  });
+
+  it('leaves the details open on a self-rated card', async () => {
+    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+
+    await screen.findByRole('button', { name: 'Reveal' });
+    expect(screen.getByText('Copy & share')).toBeInTheDocument();
+  });
 });

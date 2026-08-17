@@ -94,7 +94,10 @@ describe('progress', () => {
     const stats = await screen.findByRole('list', { name: 'Overall progress' });
     expect(within(stats).getByText('items practised')).toBeInTheDocument();
     expect(within(stats).getByText('75%')).toBeInTheDocument();
-    expect(await screen.findByText('Needs work')).toBeInTheDocument();
+    expect(await screen.findByText('Sentences to revisit')).toBeInTheDocument();
+    // Mastery is reported for the word and the pattern, not only the sentence.
+    expect(screen.getByText('Words & patterns')).toBeInTheDocument();
+    expect(screen.getByText('tener que + infinitivo')).toBeInTheDocument();
     expect(screen.getByText('Tengo que trabajar.')).toBeInTheDocument();
   });
 });

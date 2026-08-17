@@ -22,8 +22,14 @@ export interface ItemProgress {
   readonly attempts: number;
   readonly correct: number;
   readonly incorrect: number;
-  /** 0 (effortless) … 1 (very hard), smoothed across attempts. */
+  /** 0 (effortless) … 1 (very hard). FSRS difficulty, normalised for display. */
   readonly difficulty: number;
+  /**
+   * Days until recall of this item decays to the target retention. The core
+   * FSRS quantity: absent on records written before scheduling was upgraded,
+   * in which case the next review initialises it.
+   */
+  readonly stability?: number;
   readonly lastReviewedAt?: Timestamp;
   readonly dueAt?: Timestamp;
   /** Rolling mean answer latency, used later for fluency work. */

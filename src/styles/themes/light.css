@@ -16,7 +16,12 @@
   --color-border-strong: #7e858f;
   --color-text: #14161a;
   --color-text-muted: #5c6472;
-  --color-accent: #9a4f00;
+  /* An accent on a white page has to be dark enough to carry white text and to
+     read as a link — which rules out warm hues, since orange only stays orange
+     while it is light and turns to mud once it is dark. Indigo sits far from
+     both the success green and the danger red, and shares the cool cast of the
+     greys above. */
+  --color-accent: #3b4ecc;
   --color-accent-contrast: #ffffff;
   --color-success: #0b6b3a;
   --color-danger: #b3261e;

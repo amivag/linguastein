@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Button } from '../../components/Button';
-import type { Exercise } from '../../domain/exercises';
+import type { Exercise, GradeResult } from '../../domain/exercises';
 import { isSelfRated } from '../../domain/exercises';
 import type { TokenId } from '../../domain/content';
 import { REVIEW_GRADES, type ReviewGrade } from '../../domain/progress';
@@ -42,6 +42,9 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const [revealed, setRevealed] = useState(false);
   const [built, setBuilt] = useState<readonly string[]>([]);
   const [selectedToken, setSelectedToken] = useState<TokenId | null>(null);
+  // Which choice was tapped, so the feedback can mark that one rather than
+  // painting every distractor red.
+  const [chosen, setChosen] = useState<string | null>(null);
 
   // Per-card state resets by remounting on a new exercise (SessionScreen keys
   // this component by exercise id), so no reset effect is needed. The clock is
@@ -62,11 +65,12 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const answered = runner.lastResult !== null;
   const item = exercise.item;
 
-  // Tapping a word shows its meaning, so it must not give away an answer the
-  // learner is currently being asked for.
-  const wordsUnlocked =
-    exercise.kind === 'multiple-choice' || exercise.kind === 'cloze-choice' ? answered : true;
-  const selectWord = wordsUnlocked ? setSelectedToken : undefined;
+  // A card the engine grades must not display the answer it is about to grade.
+  // Word meanings and the details below — notes, skills, example sentences with
+  // their translations — each spell it out, so both stay shut until the answer
+  // is in. Self-rated cards reveal on the learner's own terms.
+  const answerLocked = !isSelfRated(exercise.kind) && !answered;
+  const selectWord = answerLocked ? undefined : setSelectedToken;
 
   return (
     <section ref={cardRef} className={styles.card} tabIndex={-1} aria-labelledby={headingId}>
@@ -158,19 +162,18 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
                 block
                 large
                 disabled={answered}
-                variant={choiceVariant(answered, choice.correct)}
+                variant={choiceVariant(answered, choice.correct, chosen === choice.id)}
                 lang={exercise.kind === 'cloze-choice' ? 'es' : undefined}
-                onClick={() => runner.submitAnswer({ value: choice.id, latencyMs: elapsed() })}
+                onClick={() => {
+                  setChosen(choice.id);
+                  runner.submitAnswer({ value: choice.id, latencyMs: elapsed() });
+                }}
               >
                 {choice.text}
               </Button>
             ))}
           </div>
-          {answered && (
-            <p role="status" className={runner.lastResult?.correct ? styles.reveal : styles.hint}>
-              {runner.lastResult?.correct ? '¡Correcto!' : `Answer: ${runner.lastResult?.expected}`}
-            </p>
-          )}
+          {answered && <Verdict result={runner.lastResult} />}
         </>
       )}
 
@@ -204,11 +207,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
               Check
             </Button>
           </div>
-          {answered && (
-            <p role="status" className={runner.lastResult?.correct ? styles.reveal : styles.hint}>
-              {runner.lastResult?.correct ? '¡Correcto!' : `Answer: ${runner.lastResult?.expected}`}
-            </p>
-          )}
+          {answered && <Verdict result={runner.lastResult} />}
         </>
       )}
 
@@ -232,7 +231,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
         )
       )}
 
-      <ItemDetails item={item} />
+      {!answerLocked && <ItemDetails item={item} />}
 
       {selectedToken && (
         <WordInfoSheet item={item} tokenId={selectedToken} onClose={() => setSelectedToken(null)} />
@@ -241,7 +240,37 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   );
 }
 
-function choiceVariant(answered: boolean, correct: boolean) {
+/**
+ * The result, stated loudly enough to catch someone already reaching for the
+ * next card: an icon, the word, and — when it was wrong — the answer itself,
+ * announced through `role="status"` for anyone not looking at the screen.
+ */
+function Verdict({ result }: { readonly result: GradeResult | null }) {
+  if (result === null) return null;
+  const correct = result.correct;
+
+  return (
+    <p
+      role="status"
+      className={`${styles.verdict} ${correct ? styles.verdictCorrect : styles.verdictIncorrect}`}
+    >
+      <span className={styles.verdictIcon} aria-hidden="true">
+        {correct ? '✓' : '✗'}
+      </span>
+      {correct ? (
+        <span lang="es">¡Correcto!</span>
+      ) : (
+        <span>
+          Answer: <span className={styles.verdictAnswer}>{result.expected}</span>
+        </span>
+      )}
+    </p>
+  );
+}
+
+/** Marks the right answer, and the wrong one only if that is what was tapped. */
+function choiceVariant(answered: boolean, correct: boolean, wasChosen: boolean) {
   if (!answered) return 'default' as const;
-  return correct ? ('correct' as const) : ('incorrect' as const);
+  if (correct) return 'correct' as const;
+  return wasChosen ? ('incorrect' as const) : ('default' as const);
 }

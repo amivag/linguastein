@@ -48,6 +48,59 @@
   color: var(--color-success);
 }
 
+/* The verdict is the one thing a learner must not miss, so it is a band across
+   the card rather than a line of small print: colour, an icon and a size step,
+   any one of which carries the result on its own. */
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid;
+  border-radius: var(--radius-md);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.verdictIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  /* Knocked out of the badge in the card's own colour. */
+  color: var(--color-surface);
+  font-size: var(--text-base);
+}
+
+.verdictCorrect {
+  border-color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 12%, transparent);
+  color: var(--color-success);
+}
+
+.verdictCorrect .verdictIcon {
+  background: var(--color-success);
+}
+
+.verdictIncorrect {
+  border-color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+  color: var(--color-danger);
+}
+
+.verdictIncorrect .verdictIcon {
+  background: var(--color-danger);
+}
+
+/* The expected answer is read, not just glanced at, so it stays in body text. */
+.verdictAnswer {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
 .hint {
   color: var(--color-text-muted);
   font-size: var(--text-sm);

@@ -22,8 +22,10 @@
   --color-border-strong: #697386;
   --color-text: #f2f4f8;
   --color-text-muted: #9aa3b2;
-  --color-accent: #ffb454;
-  --color-accent-contrast: #1a1206;
+  /* Same indigo identity as the light theme, lifted until it carries a near
+     black label and reads as a link on the page background. */
+  --color-accent: #7f9cff;
+  --color-accent-contrast: #0b1030;
   --color-success: #5fd18c;
   --color-danger: #ff6b6b;
 

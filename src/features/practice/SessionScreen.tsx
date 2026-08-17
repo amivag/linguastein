@@ -18,16 +18,14 @@ export function SessionScreen() {
   const preset = PRESETS[isPresetId(presetId) ? presetId : 'quick'];
   const size = parseSize(params.get('size'));
 
+  // The URL is the source of truth for a session; rebuilding the config on
+  // every render would replan the session on every keystroke of state.
+  const search = params.toString();
+  const repository = services.repository;
   const config = useMemo(
-    () =>
-      buildSessionConfig(preset, {
-        repository: services.repository,
-        preferences,
-        size,
-      }),
-    // The URL is the source of truth; rebuilding on every render would replan.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [preset.id, params.toString(), services.repository, preferences],
+    () => buildSessionConfig(preset, { repository, preferences, size }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `search` stands in for preset+size
+    [search, repository, preferences],
   );
 
   const runner = useSessionRunner(config);
@@ -48,10 +46,17 @@ export function SessionScreen() {
       {runner.status === 'active' && (
         <>
           <div className={styles.progress}>
-            <span>
+            <span aria-hidden="true">
               {runner.index + 1}/{runner.total}
             </span>
-            <div className={styles.progressBar}>
+            <div
+              className={styles.progressBar}
+              role="progressbar"
+              aria-label={`Item ${runner.index + 1} of ${runner.total}`}
+              aria-valuenow={runner.index + 1}
+              aria-valuemin={0}
+              aria-valuemax={runner.total}
+            >
               <div
                 className={styles.progressFill}
                 style={{ width: `${((runner.index + 1) / Math.max(runner.total, 1)) * 100}%` }}
@@ -60,7 +65,7 @@ export function SessionScreen() {
           </div>
 
           {runner.exercise ? (
-            <ExerciseView exercise={runner.exercise} runner={runner} />
+            <ExerciseView key={runner.exercise.id} exercise={runner.exercise} runner={runner} />
           ) : (
             <p className={styles.hint}>This item has no exercise available yet.</p>
           )}

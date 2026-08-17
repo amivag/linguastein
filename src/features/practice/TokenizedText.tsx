@@ -46,6 +46,8 @@ export function TokenizedText({ item, className, onSelect, selected }: Tokenized
               className={`${styles.token} ${selected === token.id ? styles.selected : ''}`}
               onClick={() => onSelect(token.id)}
               aria-label={`About “${token.text}”`}
+              aria-expanded={selected === token.id}
+              aria-haspopup="dialog"
             >
               {token.text}
             </button>

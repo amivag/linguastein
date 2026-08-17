@@ -4,7 +4,13 @@
  * interfaces, so vendors and formats stay swappable (Rules 7 & 8).
  */
 
-import { createAudioService, createWebSpeechTtsProvider, type AudioService } from '../audio';
+import {
+  createAudioService,
+  createWebSpeechRecognitionProvider,
+  createWebSpeechTtsProvider,
+  type AudioService,
+  type SpeechRecognitionProvider,
+} from '../audio';
 import { httpDatasetSource, loadCatalog, loadPacks } from '../data/loaders';
 import type { ValidationIssue } from '../data/validation';
 import { ContentRepository } from '../domain/content';
@@ -16,6 +22,8 @@ export interface AppServices {
   readonly repository: ContentRepository;
   readonly storage: LearnerStorage;
   readonly audio: AudioService;
+  /** Optional speech input; absent where the browser cannot listen. */
+  readonly speech: SpeechRecognitionProvider;
   readonly exercises: ExerciseEngine;
   readonly preferences: Preferences;
   /** Non-fatal dataset problems, surfaced in Settings rather than swallowed. */
@@ -51,6 +59,7 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     repository,
     storage,
     audio,
+    speech: createWebSpeechRecognitionProvider(),
     exercises: new ExerciseEngine(),
     preferences,
     datasetIssues: issues,

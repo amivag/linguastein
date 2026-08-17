@@ -1,0 +1,65 @@
+/**
+ * Design primitives: everything that is not colour.
+ *
+ * Themes may only override the colour roles declared in `themes/*.css`. These
+ * values stay constant across themes so a new theme cannot accidentally change
+ * spacing, rhythm or tap-target sizes.
+ */
+
+:root {
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+
+  /* Layout: one readable column that widens with the viewport rather than
+     stretching text to unreadable line lengths on a desktop monitor. */
+  --content-width: 640px;
+
+  /* Comfortable thumb target on a phone (WCAG 2.5.8 asks for 24px minimum;
+     48px is the usable size for a one-handed practice loop). */
+  --tap-target: 48px;
+
+  --transition-fast: 120ms ease;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --content-width: 720px;
+    --text-lg: 1.35rem;
+    --text-xl: 1.7rem;
+    --text-2xl: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --content-width: 840px;
+    --text-2xl: 2.5rem;
+  }
+}
+
+/* A mouse or trackpad can hit a smaller target than a thumb, but never below
+   the WCAG 2.5.8 minimum. */
+@media (pointer: fine) {
+  :root {
+    --tap-target: 44px;
+  }
+}

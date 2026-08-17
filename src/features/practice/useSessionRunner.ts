@@ -55,7 +55,7 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
   const [generation, setGeneration] = useState(0);
 
   const progressRef = useRef(new Map<ItemId, ItemProgress>());
-  const startedAtRef = useRef(Date.now());
+  const startedAtRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;

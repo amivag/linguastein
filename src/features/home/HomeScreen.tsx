@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
+import { ThemeToggle } from '../../components/ThemeToggle';
 import { summarise, type ProgressSummary } from '../../domain/progress';
 import { DEFAULT_SESSION_MINUTES } from '../../domain/sessions';
 import { formatSize, PRESET_IDS, PRESETS } from '../practice/presets';
@@ -35,9 +36,12 @@ export function HomeScreen() {
     <AppShell
       title={pack?.name ?? 'Practice'}
       action={
-        <Link to="/settings" aria-label="Settings" className={styles.sectionTitle}>
-          ⚙
-        </Link>
+        <div className={styles.headerActions}>
+          <ThemeToggle variant="compact" />
+          <Link to="/settings" aria-label="Settings" className={styles.iconLink}>
+            <span aria-hidden="true">⚙</span>
+          </Link>
+        </div>
       }
     >
       <div className={styles.stats}>

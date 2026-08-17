@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ServicesContext } from '../../src/app/services-context';
 import type { AppServices } from '../../src/app/services';
-import { NOOP_PLAYBACK, type AudioService } from '../../src/audio';
+import { NOOP_PLAYBACK, type AudioService, type SpeechRecognitionProvider } from '../../src/audio';
 import { ExerciseEngine } from '../../src/domain/exercises';
 import { createMemoryStorage, DEFAULT_PREFERENCES } from '../../src/storage';
 import { testRepository } from './pack';
@@ -19,11 +19,21 @@ const silentAudio: AudioService = {
   ready: () => Promise.resolve(),
 };
 
+/** No microphone in tests unless a case supplies one. */
+const noSpeech: SpeechRecognitionProvider = {
+  id: 'none',
+  isAvailable: () => false,
+  supportsLanguage: () => false,
+  listen: () => Promise.reject(new Error('unavailable')),
+  stop: () => {},
+};
+
 export function testServices(overrides: Partial<AppServices> = {}): AppServices {
   return {
     repository: testRepository(),
     storage: createMemoryStorage(),
     audio: silentAudio,
+    speech: noSpeech,
     exercises: new ExerciseEngine(),
     preferences: DEFAULT_PREFERENCES,
     datasetIssues: [],

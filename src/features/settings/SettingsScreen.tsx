@@ -3,6 +3,7 @@ import { useServices } from '../../app/services-context';
 import type { TtsVoice } from '../../audio';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
+import { ThemeToggle } from '../../components/ThemeToggle';
 import { PRONUNCIATION_LOCALES, REFERENCE_LANGUAGES } from '../../domain/content';
 import styles from './SettingsScreen.module.css';
 
@@ -131,19 +132,15 @@ export function SettingsScreen() {
         <span>Prefer slow playback</span>
       </label>
 
-      <label className={styles.field}>
-        <span className={styles.label}>Theme</span>
-        <select
-          value={preferences.theme}
-          onChange={(event) =>
-            updatePreferences({ theme: event.target.value as typeof preferences.theme })
-          }
-        >
-          <option value="system">Follow system</option>
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
-      </label>
+      <div className={styles.field}>
+        <span className={styles.label} id="theme-label">
+          Theme
+        </span>
+        <ThemeToggle />
+        <span className={styles.hint} aria-hidden="true">
+          System follows your device setting and switches with it.
+        </span>
+      </div>
 
       <section className={styles.field}>
         <span className={styles.label}>Content</span>

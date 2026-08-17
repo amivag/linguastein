@@ -9,7 +9,14 @@ import type { ExerciseKind } from '../../domain/exercises';
 import type { Ordering, SessionConfig, SessionSize } from '../../domain/sessions';
 import type { Preferences } from '../../storage';
 
-export const PRESET_IDS = ['quick', 'flashcards', 'verbs', 'vocabulary'] as const;
+export const PRESET_IDS = [
+  'quick',
+  'listen',
+  'speaking',
+  'flashcards',
+  'verbs',
+  'vocabulary',
+] as const;
 export type PresetId = (typeof PRESET_IDS)[number];
 
 export interface Preset {
@@ -32,6 +39,24 @@ export const PRESETS: Record<PresetId, Preset> = {
     mode: 'practice',
     ordering: 'smart',
     filter: () => ({}),
+  },
+  listen: {
+    id: 'listen',
+    label: 'Listen & repeat',
+    description: 'Hear it, say it back, check yourself',
+    exerciseKinds: ['listen-repeat'],
+    mode: 'practice',
+    ordering: 'smart',
+    filter: () => ({ types: ['sentence', 'phrase'] }),
+  },
+  speaking: {
+    id: 'speaking',
+    label: 'Think & say',
+    description: 'Say the Spanish before you reveal it',
+    exerciseKinds: ['think-say'],
+    mode: 'practice',
+    ordering: 'smart',
+    filter: () => ({ types: ['sentence', 'phrase'] }),
   },
   flashcards: {
     id: 'flashcards',

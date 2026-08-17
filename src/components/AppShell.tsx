@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './AppShell.module.css';
 
@@ -9,23 +9,37 @@ interface AppShellProps {
   readonly action?: ReactNode;
 }
 
-/** Single-column mobile layout with a compact header. */
+/**
+ * Single-column mobile layout with a compact header.
+ *
+ * Every screen gets exactly one `<h1>`, one `<main>` and a matching document
+ * title, so both screen readers and automated agents can tell where they are.
+ */
 export function AppShell({ title, children, onBack, action }: AppShellProps) {
   const navigate = useNavigate();
   const back = onBack === 'history' ? () => void navigate(-1) : onBack;
 
+  useEffect(() => {
+    document.title = `${title} · Lingo`;
+  }, [title]);
+
   return (
     <div className={styles.shell}>
+      <a className={styles.skipLink} href="#main">
+        Skip to content
+      </a>
       <header className={styles.header}>
         {back && (
           <button type="button" className={styles.back} onClick={back} aria-label="Go back">
-            ←
+            <span aria-hidden="true">←</span>
           </button>
         )}
         <h1 className={styles.title}>{title}</h1>
         {action}
       </header>
-      <main className={styles.main}>{children}</main>
+      <main id="main" className={styles.main} tabIndex={-1}>
+        {children}
+      </main>
     </div>
   );
 }

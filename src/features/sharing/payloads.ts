@@ -4,6 +4,7 @@
  * trying to replace them.
  */
 
+import { formatLearnerContext, type LearnerContext } from '../../ai';
 import type { ContentRepository, LanguageTag, LearningItem } from '../../domain/content';
 
 export interface SharePayload {
@@ -16,6 +17,7 @@ export function buildSharePayloads(
   repository: ContentRepository,
   item: LearningItem,
   referenceLanguage: LanguageTag,
+  learner?: LearnerContext,
 ): readonly SharePayload[] {
   const translation = repository.translationOf(item.id, referenceLanguage);
   const examples = (item.examples ?? [])
@@ -64,6 +66,19 @@ export function buildSharePayloads(
     label: 'Copy as AI prompt',
     text: buildAiPrompt(item),
   });
+
+  // The same prompt, but telling the AI what this learner already knows
+  // (spec §18) instead of asking it to guess.
+  if (learner) {
+    payloads.push({
+      id: 'ai-prompt-personal',
+      label: 'Copy AI prompt with my level',
+      text: `${buildAiPrompt(item)}
+
+About me:
+${formatLearnerContext(learner)}`,
+    });
+  }
 
   return payloads;
 }

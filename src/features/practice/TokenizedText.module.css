@@ -1,7 +1,7 @@
 .token {
   padding: 0;
   border: 0;
-  border-bottom: 2px dotted var(--color-border);
+  border-bottom: 2px dotted var(--color-border-strong);
   background: none;
   color: inherit;
   font: inherit;

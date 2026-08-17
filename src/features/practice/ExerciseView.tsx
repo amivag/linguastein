@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Button } from '../../components/Button';
 import type { Exercise } from '../../domain/exercises';
 import { isSelfRated } from '../../domain/exercises';
@@ -6,6 +6,7 @@ import type { TokenId } from '../../domain/content';
 import { REVIEW_GRADES, type ReviewGrade } from '../../domain/progress';
 import { AudioControls } from './AudioControls';
 import { ItemDetails } from './ItemDetails';
+import { SpeakCheck } from './SpeakCheck';
 import styles from './Practice.module.css';
 import { TokenizedText } from './TokenizedText';
 import { WordInfoSheet } from './WordInfoSheet';
@@ -15,6 +16,16 @@ interface ExerciseViewProps {
   readonly exercise: Exercise;
   readonly runner: SessionRunner;
 }
+
+/** Names each card so the practice surface is self-describing. */
+const CARD_HEADINGS: Record<Exercise['kind'], string> = {
+  'listen-repeat': 'Listen and repeat',
+  reveal: 'Reveal the meaning',
+  'think-say': 'Say it in Spanish',
+  'multiple-choice': 'Choose the meaning',
+  'cloze-choice': 'Choose the missing word',
+  'tap-to-build': 'Build the sentence',
+};
 
 const GRADE_LABELS: Record<ReviewGrade, string> = {
   again: 'Again',
@@ -31,16 +42,22 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const [revealed, setRevealed] = useState(false);
   const [built, setBuilt] = useState<readonly string[]>([]);
   const [selectedToken, setSelectedToken] = useState<TokenId | null>(null);
-  const startedAt = useRef(Date.now());
 
+  // Per-card state resets by remounting on a new exercise (SessionScreen keys
+  // this component by exercise id), so no reset effect is needed. The clock is
+  // read after mount rather than during render, which keeps rendering pure.
+  const startedAt = useRef(0);
   useEffect(() => {
-    setRevealed(false);
-    setBuilt([]);
-    setSelectedToken(null);
     startedAt.current = Date.now();
-  }, [exercise.id]);
+  }, []);
 
-  const elapsed = () => Date.now() - startedAt.current;
+  const elapsed = useCallback(() => Date.now() - startedAt.current, []);
+
+  const cardRef = useRef<HTMLElement>(null);
+  const headingId = useId();
+  useEffect(() => {
+    cardRef.current?.focus({ preventScroll: true });
+  }, []);
 
   const answered = runner.lastResult !== null;
   const item = exercise.item;
@@ -52,7 +69,10 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const selectWord = wordsUnlocked ? setSelectedToken : undefined;
 
   return (
-    <section className={styles.card} aria-live="polite">
+    <section ref={cardRef} className={styles.card} tabIndex={-1} aria-labelledby={headingId}>
+      <h2 id={headingId} className="visually-hidden">
+        {CARD_HEADINGS[exercise.kind]}
+      </h2>
       {exercise.kind === 'listen-repeat' && (
         <>
           <TokenizedText
@@ -63,6 +83,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           />
           <AudioControls item={item} autoPlay />
           <p className={styles.hint}>Listen, then say it aloud.</p>
+          <SpeakCheck expected={item.text} />
           {revealed && exercise.translation ? (
             <p className={styles.reveal}>{exercise.translation.text}</p>
           ) : (
@@ -105,6 +126,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
                 selected={selectedToken}
               />
               <AudioControls item={item} autoPlay />
+              <SpeakCheck expected={exercise.answer} />
             </>
           ) : (
             <Button block large onClick={() => setRevealed(true)}>
@@ -137,6 +159,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
                 large
                 disabled={answered}
                 variant={choiceVariant(answered, choice.correct)}
+                lang={exercise.kind === 'cloze-choice' ? 'es' : undefined}
                 onClick={() => runner.submitAnswer({ value: choice.id, latencyMs: elapsed() })}
               >
                 {choice.text}
@@ -144,7 +167,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             ))}
           </div>
           {answered && (
-            <p className={runner.lastResult?.correct ? styles.reveal : styles.hint}>
+            <p role="status" className={runner.lastResult?.correct ? styles.reveal : styles.hint}>
               {runner.lastResult?.correct ? '¡Correcto!' : `Answer: ${runner.lastResult?.expected}`}
             </p>
           )}
@@ -161,6 +184,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             {exercise.parts.map((part, position) => (
               <Button
                 key={`${part}-${position}`}
+                lang="es"
                 disabled={answered || built.includes(part)}
                 onClick={() => setBuilt((current) => [...current, part])}
               >
@@ -181,7 +205,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             </Button>
           </div>
           {answered && (
-            <p className={runner.lastResult?.correct ? styles.reveal : styles.hint}>
+            <p role="status" className={runner.lastResult?.correct ? styles.reveal : styles.hint}>
               {runner.lastResult?.correct ? '¡Correcto!' : `Answer: ${runner.lastResult?.expected}`}
             </p>
           )}

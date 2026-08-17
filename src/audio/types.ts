@@ -68,12 +68,24 @@ export interface AudioService {
   ready(): Promise<void>;
 }
 
-// Reserved for later; declared here so the shape of the seam is visible.
+export interface SpeechResult {
+  readonly transcript: string;
+  /** 0–1 where the recogniser reports it; some engines always return 0. */
+  readonly confidence: number;
+  /** Other readings the recogniser considered, best first. */
+  readonly alternatives?: readonly string[];
+}
 
+/**
+ * Listens once and returns what it heard. Always optional: an exercise that
+ * offers speech input must remain completable without it.
+ */
 export interface SpeechRecognitionProvider {
   readonly id: string;
   isAvailable(): boolean;
-  listen(locale: LanguageTag): Promise<{ transcript: string; confidence: number }>;
+  supportsLanguage(locale: LanguageTag): boolean;
+  listen(locale: LanguageTag): Promise<SpeechResult>;
+  stop(): void;
 }
 
 export const NOOP_PLAYBACK: PlaybackHandle = { stop: () => {}, done: Promise.resolve() };

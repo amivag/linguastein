@@ -1,0 +1,32 @@
+/**
+ * Dark theme — the default, because most practice happens on a phone.
+ *
+ * A theme declares exactly these colour roles and nothing else. `:root` carries
+ * them too, so the app still renders correctly before the theme script runs or
+ * with JavaScript disabled.
+ *
+ * Contrast for every role is asserted in `tests/a11y/contrast.test.ts`, which
+ * discovers theme files automatically — a new theme is checked the moment it
+ * is added.
+ */
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #0f1115;
+  --color-surface: #171a21;
+  --color-surface-raised: #1f232c;
+  --color-border: #2a2f3a;
+  /* Boundaries of interactive controls: 3:1 against the surface (WCAG 1.4.11). */
+  --color-border-strong: #697386;
+  --color-text: #f2f4f8;
+  --color-text-muted: #9aa3b2;
+  --color-accent: #ffb454;
+  --color-accent-contrast: #1a1206;
+  --color-success: #5fd18c;
+  --color-danger: #ff6b6b;
+
+  --shadow-card: 0 8px 24px rgb(0 0 0 / 35%);
+  --backdrop: rgb(0 0 0 / 55%);
+}

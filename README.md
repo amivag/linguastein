@@ -119,6 +119,41 @@ Installing a Spanish voice:
 - **Android** — Settings → Accessibility → Text-to-speech output → install the
   Spanish voice data
 
+## Themes and layout
+
+Dark and light, switchable from the header or Settings, defaulting to the OS
+setting and following it live. Themes are one CSS file each plus a registry
+entry — see [`docs/theming.md`](docs/theming.md). Colour contrast for every
+theme is asserted in tests, so a new theme cannot ship below WCAG AA.
+
+The layout is one readable column that widens with the viewport (phone →
+tablet → desktop), with hover styles applied only where a pointer can hover and
+tap targets that stay at least 44px. The word panel is a bottom sheet on a
+phone and a centred dialog on a larger screen.
+
+## Accessibility
+
+WCAG 2.2 AA is a build gate, not an aspiration:
+
+- axe runs over every screen in `tests/a11y` and must report zero violations
+- colour contrast is computed from the theme files and asserted for both themes
+- focus is trapped in dialogs and restored on close; every screen has one
+  `<h1>`, one `<main>`, a skip link and a matching document title
+- state is exposed through ARIA — `role="status"` for answer feedback,
+  `aria-expanded` on word buttons, `role="progressbar"` for session position
+
+The same properties make the app drivable by automated agents, which read the
+accessibility tree. See [AGENTS.md](AGENTS.md).
+
+## Speech input
+
+Speaking exercises offer an optional pronunciation check using the browser's
+built-in recogniser: free, no API key, nothing to host. It never gates
+progress — self-rating remains the way through — and the control is hidden
+where the browser cannot listen (Firefox today). Desktop Chrome sends audio to
+a Google service for transcription; Android and iOS recognise on device. The
+app itself never records, stores or transmits audio.
+
 ## Offline
 
 The app is an installable PWA: the shell and datasets are precached, audio is

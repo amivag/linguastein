@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useFocusTrap } from '../../components/useFocusTrap';
 import { useServices } from '../../app/services-context';
 import { Button } from '../../components/Button';
 import { inspectToken, type LearningItem, type TokenId } from '../../domain/content';
@@ -19,13 +19,7 @@ export function WordInfoSheet({ item, tokenId, onClose }: WordInfoSheetProps) {
   const { services, preferences } = useServices();
   const info = inspectToken(services.repository, item, tokenId, preferences.referenceLanguage);
 
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  const sheetRef = useFocusTrap<HTMLElement>(onClose);
 
   if (!info) return null;
 
@@ -38,8 +32,15 @@ export function WordInfoSheet({ item, tokenId, onClose }: WordInfoSheetProps) {
 
   return (
     <div className={styles.overlay}>
-      <button type="button" className={styles.backdrop} aria-label="Dismiss" onClick={onClose} />
-      <section className={styles.sheet} role="dialog" aria-label={`About ${info.token.text}`}>
+      <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
+      <section
+        ref={sheetRef}
+        className={styles.sheet}
+        role="dialog"
+        aria-modal="true"
+        tabIndex={-1}
+        aria-label={`About ${info.token.text}`}
+      >
         <header className={styles.header}>
           <div>
             <p className={styles.word} lang="es">

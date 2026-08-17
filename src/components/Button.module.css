@@ -5,7 +5,7 @@
   gap: var(--space-2);
   min-height: var(--tap-target);
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
   background: var(--color-surface-raised);
   color: var(--color-text);
@@ -55,4 +55,18 @@
 .large {
   min-height: 56px;
   font-size: var(--text-lg);
+}
+
+/* Hover styles only where a pointer can actually hover, so a tap on a phone
+   does not leave a button stuck in its hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .button:hover:not(:disabled) {
+    background: var(--color-surface);
+    border-color: var(--color-text-muted);
+  }
+
+  .primary:hover:not(:disabled) {
+    filter: brightness(1.06);
+    border-color: transparent;
+  }
 }

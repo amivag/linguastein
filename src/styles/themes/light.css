@@ -1,0 +1,26 @@
+/**
+ * Light theme.
+ *
+ * `data-theme` is always set on <html> by the pre-paint script in index.html
+ * (resolving "system" from the OS preference), so each theme is declared once —
+ * no duplicated media-query copy to keep in sync.
+ */
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --color-bg: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-border: #e2e5ea;
+  --color-border-strong: #7e858f;
+  --color-text: #14161a;
+  --color-text-muted: #5c6472;
+  --color-accent: #9a4f00;
+  --color-accent-contrast: #ffffff;
+  --color-success: #0b6b3a;
+  --color-danger: #b3261e;
+
+  --shadow-card: 0 6px 18px rgb(20 22 26 / 8%);
+  --backdrop: rgb(20 22 26 / 40%);
+}

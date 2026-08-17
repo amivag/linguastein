@@ -4,6 +4,7 @@ import { HomeScreen } from '../features/home/HomeScreen';
 import { SessionScreen } from '../features/practice/SessionScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import type { Preferences } from '../storage';
+import { applyTheme } from '../styles/themes';
 import { createServices, type AppServices } from './services';
 import { ServicesContext } from './services-context';
 
@@ -48,12 +49,16 @@ export function App() {
     [services],
   );
 
-  // Theme is applied to the document so CSS variables resolve everywhere.
+  // The document always carries a concrete theme; `system` is resolved here and
+  // re-resolved when the OS preference changes while the app is open.
+  const preferredTheme = preferences?.theme ?? 'system';
   useEffect(() => {
-    const theme = preferences?.theme ?? 'system';
-    if (theme === 'system') document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme', theme);
-  }, [preferences?.theme]);
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const sync = () => applyTheme(preferredTheme, media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, [preferredTheme]);
 
   if (boot.phase === 'loading') return <Splash message="Loading…" />;
   if (boot.phase === 'failed')

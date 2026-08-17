@@ -24,6 +24,11 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - core-es pack: 100 verbs (2,000 generated forms), 339 nouns, 172 modifiers,
   443 sentences — 845 practisable items
 - Reference-language architecture (English is the first, not the only)
+- WCAG 2.2 AA accessibility, enforced by axe and contrast tests in CI
+- Switchable dark/light themes on a modular, extensible token system
+- Responsive from phone to desktop, with pointer-aware interaction
+- Optional speech-input pronunciation check on speaking exercises
+- AI seam plus a learner-context builder (no vendor, no network)
 
 ## Next
 

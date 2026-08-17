@@ -7,6 +7,7 @@
 import type { ItemId, LanguageTag } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionRecord } from '../domain/sessions';
+import type { ThemePreference } from '../styles/themes';
 
 export interface Preferences {
   readonly targetLanguage: LanguageTag;
@@ -17,7 +18,7 @@ export interface Preferences {
   readonly autoPlayAudio: boolean;
   readonly slowAudio: boolean;
   readonly showRomanisationHints: boolean;
-  readonly theme: 'system' | 'light' | 'dark';
+  readonly theme: ThemePreference;
 }
 
 export interface ProgressStore {

@@ -13,11 +13,11 @@ import { id } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
 
 describe('navigation', () => {
-  it('offers the four main sections', async () => {
+  it('offers the main sections', async () => {
     renderWithServices(<HomeScreen />);
 
     const nav = await screen.findByRole('navigation', { name: 'Main' });
-    for (const label of ['Practice', 'Browse', 'Progress', 'Settings']) {
+    for (const label of ['Practice', 'Read', 'Browse', 'Progress', 'Settings']) {
       expect(within(nav).getByRole('link', { name: label })).toBeInTheDocument();
     }
   });

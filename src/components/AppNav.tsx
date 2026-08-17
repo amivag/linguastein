@@ -9,6 +9,7 @@ interface NavItem {
 
 const ITEMS: readonly NavItem[] = [
   { to: '/', label: 'Practice', icon: '◎' },
+  { to: '/read', label: 'Read', icon: '☰' },
   { to: '/browse', label: 'Browse', icon: '⌕' },
   { to: '/progress', label: 'Progress', icon: '▦' },
   { to: '/settings', label: 'Settings', icon: '⚙' },

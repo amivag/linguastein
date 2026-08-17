@@ -1,10 +1,13 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { ProgressScreen } from '../../src/features/progress/ProgressScreen';
+import { PassageScreen } from '../../src/features/read/PassageScreen';
+import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import { renderWithServices } from '../fixtures/services';
 import { expectNoViolations } from './axe';
@@ -25,6 +28,23 @@ describe('accessibility', () => {
   it('browse screen has no WCAG violations', async () => {
     const { container } = renderWithServices(<BrowseScreen />, { route: '/browse' });
     await screen.findByRole('searchbox');
+    await expectNoViolations(container);
+  });
+
+  it('reading list has no WCAG violations', async () => {
+    const { container } = renderWithServices(<ReadScreen />, { route: '/read' });
+    await screen.findByRole('heading', { level: 1 });
+    await expectNoViolations(container);
+  });
+
+  it('a passage has no WCAG violations', async () => {
+    const { container } = renderWithServices(
+      <Routes>
+        <Route path="/read/:id" element={<PassageScreen />} />
+      </Routes>,
+      { route: '/read/700002' },
+    );
+    await screen.findByRole('heading', { level: 1 });
     await expectNoViolations(container);
   });
 

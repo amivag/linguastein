@@ -1,8 +1,8 @@
-import { useFocusTrap } from '../../components/useFocusTrap';
-import { useServices } from '../../app/services-context';
-import { Button } from '../../components/Button';
-import { UsageBadges } from '../../components/UsageBadges';
-import { inspectToken, type LearningItem, type TokenId } from '../../domain/content';
+import { useServices } from '../app/services-context';
+import { inspectToken, type LearningItem, type TokenId } from '../domain/content';
+import { Button } from './Button';
+import { UsageBadges } from './UsageBadges';
+import { useFocusTrap } from './useFocusTrap';
 import styles from './WordInfoSheet.module.css';
 
 interface WordInfoSheetProps {

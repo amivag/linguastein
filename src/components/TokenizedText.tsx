@@ -1,4 +1,4 @@
-import { isInspectable, type LearningItem, type TokenId } from '../../domain/content';
+import { isInspectable, type LearningItem, type TokenId } from '../domain/content';
 import styles from './TokenizedText.module.css';
 
 interface TokenizedTextProps {

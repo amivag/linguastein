@@ -1,0 +1,147 @@
+.intro {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filter {
+  flex: 1 1 30%;
+}
+
+.filter select {
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
+.count {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.card:hover {
+  border-color: var(--color-border-strong);
+}
+
+.cardTitle {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.cardMeaning {
+  color: var(--color-text-muted);
+}
+
+.cardMeta {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.empty {
+  padding: var(--space-5) 0;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* ── one passage ────────────────────────────────────────────────────────── */
+
+.passageHeader {
+  display: grid;
+  gap: 2px;
+}
+
+.passageActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.lines {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* A reading column rather than a list of cards: the text should look like a
+   text, so only the speaker label and the play button sit outside the flow. */
+.line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 var(--space-2);
+  align-items: start;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.line:last-child {
+  border-bottom: none;
+}
+
+.speaker {
+  grid-column: 1 / -1;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.lineText {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+}
+
+.lineMeaning {
+  grid-column: 1;
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+}
+
+.linePlay {
+  grid-row: span 2;
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: inherit;
+  cursor: pointer;
+}
+
+.linePlay:hover {
+  border-color: var(--color-border-strong);
+}
+
+@media (min-width: 768px) {
+  .list {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -9,8 +9,8 @@ import { UsageBadges } from '../../components/UsageBadges';
 import { ItemDetails } from './ItemDetails';
 import { SpeakCheck } from './SpeakCheck';
 import styles from './Practice.module.css';
-import { TokenizedText } from './TokenizedText';
-import { WordInfoSheet } from './WordInfoSheet';
+import { TokenizedText } from '../../components/TokenizedText';
+import { WordInfoSheet } from '../../components/WordInfoSheet';
 import type { SessionRunner } from './useSessionRunner';
 
 interface ExerciseViewProps {

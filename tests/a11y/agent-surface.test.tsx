@@ -9,9 +9,12 @@
 
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
+import { PassageScreen } from '../../src/features/read/PassageScreen';
+import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import { renderWithServices } from '../fixtures/services';
 
@@ -51,6 +54,28 @@ describe('agent surface', () => {
     const { container } = renderWithServices(<SettingsScreen />, { route: '/settings' });
     await screen.findByRole('heading', { level: 1 });
     await expectEveryControlNamed(container);
+  });
+
+  it('names every control on the reading list', async () => {
+    const { container } = renderWithServices(<ReadScreen />, { route: '/read' });
+    await screen.findByRole('heading', { level: 1 });
+    await expectEveryControlNamed(container);
+  });
+
+  it('names every control in a passage, including each line’s play button', async () => {
+    const { container } = renderWithServices(
+      <Routes>
+        <Route path="/read/:id" element={<PassageScreen />} />
+      </Routes>,
+      { route: '/read/700001' },
+    );
+    await screen.findByRole('heading', { level: 1 });
+    await expectEveryControlNamed(container);
+
+    // A play button per line has to say *which* line, or an agent cannot pick.
+    expect(
+      screen.getByRole('button', { name: 'Listen to “Tengo que trabajar.”' }),
+    ).toBeInTheDocument();
   });
 
   it('names every control in a practice session', async () => {

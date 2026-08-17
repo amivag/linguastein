@@ -6,6 +6,10 @@
 rather than a field on them, so voices are addable without regenerating content
 and a pack stays importable/exportable. Storage size is explicitly not a
 constraint; §4 and §5 were rewritten around that, and §9 is new.
+**Revised:** 2026-08-17 — `scripts/generate-audio.ts` and its tests exist, so
+§6 describes something running rather than something planned. §4.1 is the only
+thing still blocking: no voice has been chosen, and this machine has no Spanish
+voice of any kind to choose from.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** a new pack file kind, a batch generator, a voice ledger, a build step
 and a review pass. The audio service, playback controls and service-worker
@@ -58,8 +62,16 @@ The runtime half is done, and the extension point for the data half is clean.
 declares a kind it does not yet ship is an established pattern rather than a new
 one.
 
-What is missing: the record kind, a batch generator, a ledger of what was
-generated, a review step, and the build step that emits the records.
+The generator half now exists too — [`scripts/generate-audio.ts`](../../scripts/generate-audio.ts)
+(`npm run generate:audio`), covered by
+[`tests/data/audio-generation.test.ts`](../../tests/data/audio-generation.test.ts):
+provider seam, the twenty-item sample of §4.1, hash-keyed naming, dedupe on text,
+the ledger, resumable batches, ffmpeg post-processing, and `--compare` for blind
+listening. It ships a `stub` provider that writes a padded tone, so all of that
+is testable with no TTS installed.
+
+What is still missing: **a voice** (§4.1), the `audio` record kind, the build step
+that emits the records, and the review pass.
 
 ---
 
@@ -132,10 +144,21 @@ per-clip `provenance.license` and per-voice licence in the manifest (§5.3) exis
 for exactly this, and the pack then stops being uniformly CC0 — say so in the
 manifest and in `docs/dataset-format.md`.
 
-Do not decide from a spec sheet. Generate the same twenty items — sentences and
-single words, including a `¿…?` question, an exclamation, and something with a
-regional word — on each candidate, listen blind, and let licence break a tie.
-Record the winner, the settings and the reasoning in this file.
+Do not decide from a spec sheet. `--sample` picks the twenty items for you and
+prints what each one is listening for; generate them on each candidate, then
+`--compare` and listen without knowing which voice is which. Let licence break a
+tie. Record the winner, the settings and the reasoning in this file.
+
+Two things the first pass over this established:
+
+- **The `sapi` provider cannot serve Spanish here.** This machine has en-US and
+  el-GR voices and nothing else, so the generator refuses rather than reading
+  Spanish with an English voice — the same choice the app makes at runtime. That
+  is the problem this whole task exists to fix, visible on the development
+  machine itself.
+- **The sample cannot test exclamation prosody**, because not one of the 1,028
+  items contains `¡`. The generator reports the gap rather than quietly dropping
+  the criterion. It is a content gap, noted in the dataset task.
 
 ### 4.2 Key clips by a hash of the spoken text, not by item id
 
@@ -166,6 +189,12 @@ Since size is not a constraint, choose for compatibility and quality: **AAC in
 `.m4a`, mono, 48–64 kbps** is universally decodable by `<audio>` and leaves no
 audible artefacts on speech. Opus is smaller at equal quality but carries a
 Safari version floor; there is no longer a reason to take that risk.
+
+**Pin the output sample rate.** `loudnorm` resamples to 192 kHz internally and
+will leave the output there: the first run produced 96 kHz clips from a 16 kHz
+source — larger files carrying no more speech. The generator forces 24 kHz mono,
+which also stops two voices with different native rates landing in one pack at
+different qualities.
 
 Whatever the codec, **post-process every clip**: trim leading and trailing
 silence to ~50 ms and loudness-normalise (around −16 LUFS). This matters more to
@@ -318,8 +347,22 @@ item	locale	voice	textHash	file	durationMs	generated	review
 
 **Unlike [`id-ledger.tsv`](../../content/es/id-ledger.tsv), this one is not purely
 generated.** The generator fills every column except `review`; a human owns that
-one. Say so at the top of the file, or a future session will regenerate it and
-throw the review work away.
+one. The file says so in its own header, because otherwise a future session
+regenerates it and throws the review work away.
+
+Three things that follow from a human owning a file a script also appends to:
+
+- **A sample must never write to the shipping ledger.** `--sample` or any
+  explicit `--out` keeps its ledger beside its own output; only a default run
+  touches `content/es/audio-ledger.tsv`. Without that rule the first test run
+  wrote rows for a temp directory into the real ledger.
+- **Append defensively.** Plenty of editors strip a trailing newline on save, and
+  the next appended row would then be glued onto the reviewer's last line.
+- **Prune orphans deliberately.** Fixing a typo gives the text a new hash and so a
+  new file; the old clip stays on disk, referenced by nothing. That is the safe
+  direction to fail, but it needs a `--prune` that deletes clips no ledger row
+  points at — never an automatic delete, since an unreferenced file is also what
+  a half-finished batch looks like.
 
 The build step reads the **ledger**, not the audio files, and emits the records
 of §5.1. It must succeed with no clips on disk — that keeps CI honest without
@@ -426,6 +469,9 @@ unreviewed`. A voice is `unreviewed` until a human has listened to a sample, and
 ## 11. Definition of done
 
 - [ ] §4.1 decided: voice chosen from a blind comparison, licence recorded here
+- [x] A sample of twenty items, chosen to expose how a Spanish voice fails, with
+      the gaps in what it can test reported rather than hidden
+- [x] A blind comparison page over every candidate voice (`--compare`)
 - [ ] `'audio'` is a pack file kind with a schema, loaded generically, indexed by
       item in the repository
 - [ ] `item.audio[]` still works for embedded packs; both sources merge
@@ -433,9 +479,10 @@ unreviewed`. A voice is `unreviewed` until a human has listened to a sample, and
 - [ ] Manifest declares `voices` with provider, licence and review state
 - [ ] Every path in a pack is relative to the pack root
 - [ ] `src` resolution goes through one resolver, ready for blob-backed packs
-- [ ] `content/es/audio-ledger.tsv` exists, with its human-owned column documented
-- [ ] `generate-audio.ts` is resumable, deduplicating, quota-limitable, `--dry-run`
-- [ ] Every clip is silence-trimmed and loudness-normalised
+- [x] The ledger format exists, with its human-owned column documented in the file
+- [x] `generate-audio.ts` is resumable, deduplicating, quota-limitable, `--dry-run`
+- [x] Every clip is silence-trimmed, loudness-normalised and at a pinned rate
+- [ ] `--prune` removes clips no ledger row points at
 - [ ] `build:data` emits audio records, fills `durationMs`, reports current /
       stale / missing per voice
 - [ ] Stale clips fail the build

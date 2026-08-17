@@ -22,7 +22,8 @@
     "format:check": "prettier --check .",
     "validate:data": "tsx scripts/validate-datasets.ts",
     "check": "npm run typecheck && npm run lint && npm run test && npm run validate:data",
-    "build:data": "tsx scripts/build-dataset.ts"
+    "build:data": "tsx scripts/build-dataset.ts",
+    "generate:audio": "tsx scripts/generate-audio.ts"
   },
   "dependencies": {
     "idb": "^8.0.3",

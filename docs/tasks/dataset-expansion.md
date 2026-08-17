@@ -169,6 +169,12 @@ recycling target and produces better input than 449 unrelated sentences would.
   propagate from a lexeme to the sentences that use it — the sentences built on
   `plata` and `pasta` had to be marked colloquial by hand. Decide whether it
   should propagate and make it uniform either way.
+- **Exclamations**: not one item of 1,028 contains `¡`. Every sentence is a
+  statement or a question, so the pack never shows `¡…!` — which a learner needs
+  to read as much as `¿…?` — and nothing in it carries exclamatory intonation for
+  audio to demonstrate. Surfaced by the audio sampler, which reports that it
+  cannot test that prosody; cheap to fix while writing passages, since a dialogue
+  is where an exclamation naturally belongs.
 - **Audio**: none. Out of scope here — see §7 and
   [`canonical-audio.md`](canonical-audio.md).
 

@@ -70,4 +70,24 @@ describe('describeMorphology', () => {
     expect(describeMorphology(undefined)).toBeUndefined();
     expect(describeMorphology({})).toBeUndefined();
   });
+
+  it('describes a command by who it is aimed at', () => {
+    // "2nd sg · imperative · formal" is accurate and unhelpful; the choice the
+    // learner is making is tú or usted.
+    const command = { mood: 'imperative', person: 2, verbForm: 'finite' } as const;
+
+    expect(describeMorphology({ ...command, number: 'singular', formality: 'informal' })).toBe(
+      'command · tú',
+    );
+    expect(describeMorphology({ ...command, number: 'singular', formality: 'formal' })).toBe(
+      'command · usted',
+    );
+    expect(describeMorphology({ ...command, number: 'plural', formality: 'formal' })).toBe(
+      'command · ustedes',
+    );
+    // A command carries no tense, so none should leak into the description.
+    expect(describeMorphology({ ...command, number: 'plural', formality: 'informal' })).toBe(
+      'command · vosotros',
+    );
+  });
 });

@@ -45,6 +45,16 @@ export interface Irregularity {
    * stem-changing verbs take: pedir → pidió, pidiendo; dormir → durmió.
    */
   readonly preteriteStemChange?: 'e-i' | 'o-u';
+  /**
+   * Irregular tú command, where it is not simply the third person present:
+   * `di`, `haz`, `ve`, `pon`, `sal`, `sé`, `ten`, `ven`.
+   */
+  readonly imperativeTu?: string;
+  /**
+   * usted and ustedes commands for the handful of verbs whose subjunctive is not
+   * derivable from the yo form — `soy` would give `soya` rather than `sea`.
+   */
+  readonly imperativeFormal?: readonly [string, string];
 }
 
 const PRESENT_ENDINGS: Record<Conjugation, readonly string[]> = {
@@ -93,9 +103,10 @@ export function stemOf(lemma: string): string {
 }
 
 /**
- * Generates present, preterite and imperfect indicative, plus the gerund and
- * the participle. Beginner priority per spec §14; the subjunctive and the
- * compound tenses are deliberately left out of this pass.
+ * Generates present, preterite and imperfect indicative, the affirmative
+ * commands, plus the gerund and the participle. Beginner priority per spec §14;
+ * the subjunctive proper (and so the negative commands) and the compound tenses
+ * are deliberately left out of this pass.
  */
 export function conjugate(lemma: string, irregular: Irregularity = {}): readonly GeneratedForm[] {
   const conjugation = conjugationOf(lemma);
@@ -111,7 +122,9 @@ export function conjugate(lemma: string, irregular: Irregularity = {}): readonly
     });
   };
 
-  present(lemma, conjugation, irregular).forEach((form, index) =>
+  const presentForms = present(lemma, conjugation, irregular);
+
+  presentForms.forEach((form, index) =>
     push(
       form,
       { ...PERSONS[index], tense: 'present', mood: 'indicative', verbForm: 'finite' },
@@ -138,10 +151,61 @@ export function conjugate(lemma: string, irregular: Irregularity = {}): readonly
     ),
   );
 
+  for (const command of imperatives(lemma, conjugation, irregular, presentForms)) {
+    forms.push(command);
+  }
+
   push(gerund(lemma, conjugation, irregular), { verbForm: 'gerund' }, 'a2');
   push(participle(lemma, conjugation, irregular), { verbForm: 'participle' }, 'a2');
 
   return forms;
+}
+
+/**
+ * Affirmative commands, which a beginner meets constantly in service Spanish
+ * (`siga`, `dígame`, `abre`) and which are not a tense — an imperative carries
+ * mood and person but no time reference.
+ *
+ * The tú form is the third person present, apart from eight verbs that shorten
+ * it. The usted and ustedes forms are the present subjunctive, which for all but
+ * six verbs is the yo form with its `-o` swapped for the opposite vowel — the
+ * rule a learner is actually taught.
+ */
+function imperatives(
+  lemma: string,
+  conjugation: Conjugation,
+  irregular: Irregularity,
+  presentForms: readonly string[],
+): readonly GeneratedForm[] {
+  const tu = irregular.imperativeTu ?? presentForms[2]!;
+  const [usted, ustedes] =
+    irregular.imperativeFormal ?? formalCommands(conjugation, presentForms[0]!);
+  // hablar → hablad, oír → oíd: the infinitive's -r becomes -d, no exceptions.
+  const vosotros = `${lemma.slice(0, -1)}d`;
+
+  const command = (form: string, morph: Morphology): GeneratedForm => ({
+    form,
+    morph: { ...morph, mood: 'imperative', verbForm: 'finite' },
+    level: 'a1',
+  });
+
+  return [
+    command(tu, { person: 2, number: 'singular', formality: 'informal' }),
+    command(usted, { person: 2, number: 'singular', formality: 'formal' }),
+    {
+      ...command(vosotros, { person: 2, number: 'plural', formality: 'informal' }),
+      regions: SPAIN_ONLY,
+    },
+    command(ustedes, { person: 2, number: 'plural', formality: 'formal' }),
+  ];
+}
+
+/** `sigo` → `siga`/`sigan`, `giro` → `gire`/`giren`, `juego` → `juegue`. */
+function formalCommands(conjugation: Conjugation, yo: string): [string, string] {
+  const stem = yo.endsWith('o') ? yo.slice(0, -1) : yo;
+  if (conjugation !== 'ar') return [`${stem}a`, `${stem}an`];
+  const spelled = hardenBeforeE(stem);
+  return [`${spelled}e`, `${spelled}en`];
 }
 
 function present(
@@ -248,11 +312,19 @@ function spellPresentYo(stem: string, lemma: string, ending: string): string {
 /** Orthographic changes in the first person singular preterite. */
 function spellPreteriteYo(stem: string, conjugation: Conjugation, ending: string): string {
   if (conjugation !== 'ar') return stem + ending;
-  // buscar → busqué, llegar → llegué, empezar → empecé: the sound is kept.
-  if (stem.endsWith('c')) return `${stem.slice(0, -1)}qué`;
-  if (stem.endsWith('g')) return `${stem}ué`;
-  if (stem.endsWith('z')) return `${stem.slice(0, -1)}cé`;
-  return stem + ending;
+  return hardenBeforeE(stem) + ending;
+}
+
+/**
+ * Keeps an -ar stem's final consonant sounding the same before a front vowel:
+ * buscar → busqué/busque, llegar → llegué/llegue, empezar → empecé/empiece.
+ * The preterite yo and the usted command both need it.
+ */
+function hardenBeforeE(stem: string): string {
+  if (stem.endsWith('c')) return `${stem.slice(0, -1)}qu`;
+  if (stem.endsWith('g')) return `${stem}u`;
+  if (stem.endsWith('z')) return `${stem.slice(0, -1)}c`;
+  return stem;
 }
 
 /** `ió`/`ieron` become `yó`/`yeron` after a vowel: leyó, cayeron. */

@@ -22,11 +22,18 @@ export function SessionScreen() {
   // every render would replan the session on every keystroke of state.
   const search = params.toString();
   const repository = services.repository;
-  const config = useMemo(
-    () => buildSessionConfig(preset, { repository, preferences, size }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- `search` stands in for preset+size
-    [search, repository, preferences],
-  );
+  const config = useMemo(() => {
+    // `?passage=` practises exactly one text, in its reading order.
+    const passage = params.get('passage');
+    const scope = passage ? { ids: repository.passageByLocalId(passage)?.items ?? [] } : undefined;
+    return buildSessionConfig(preset, {
+      repository,
+      preferences,
+      size,
+      ...(scope ? { scope } : {}),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `search` stands in for preset+size+passage
+  }, [search, repository, preferences]);
 
   const runner = useSessionRunner(config);
 

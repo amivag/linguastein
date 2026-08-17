@@ -1,69 +1,71 @@
 # Spanish adjectives, adverbs and function words — authoring source for core-es.
-# Columns: lemma	gloss (en)	pos	level	topics	extra surface forms (optional)
+# Columns: id	lemma	gloss (en)	pos	level	topics	extra surface forms (optional)
+# Only adjectives become word cards, so only those rows carry an id. Leave it off
+# a new row: the build assigns one and writes it back.
 # Adjectives are listed in the masculine singular; the build derives the other
 # surface forms so that "cansada" in a sentence still links to this lexeme.
-bueno	good	ADJ	a1	core	buen
-malo	bad	ADJ	a1	core	mal
-grande	big	ADJ	a1	core	gran
-pequeño	small	ADJ	a1	core
-nuevo	new	ADJ	a1	core
-viejo	old	ADJ	a1	core
-joven	young	ADJ	a1	people
-alto	tall, high	ADJ	a1	core
-bajo	short, low	ADJ	a1	core
-largo	long	ADJ	a1	core
-corto	short	ADJ	a1	core
-gordo	fat	ADJ	a2	people
-delgado	thin	ADJ	a2	people
-guapo	good-looking	ADJ	a1	people
-bonito	pretty, nice	ADJ	a1	core
-feo	ugly	ADJ	a2	core
-limpio	clean	ADJ	a1	home
-sucio	dirty	ADJ	a1	home
-fácil	easy	ADJ	a1	core
-difícil	difficult	ADJ	a1	core
-importante	important	ADJ	a1	core
-interesante	interesting	ADJ	a1	core
-aburrido	boring	ADJ	a1	core
-divertido	fun	ADJ	a1	core
-cansado	tired	ADJ	a1	health
-contento	happy, pleased	ADJ	a1	feelings
-feliz	happy	ADJ	a1	feelings
-triste	sad	ADJ	a1	feelings
-enfermo	ill	ADJ	a1	health
-fuerte	strong	ADJ	a1	core
-débil	weak	ADJ	a2	core
-rápido	fast	ADJ	a1	core
-lento	slow	ADJ	a1	core
-caro	expensive	ADJ	a1	shopping
-barato	cheap	ADJ	a1	shopping
-rico	rich, tasty	ADJ	a1	core
-pobre	poor	ADJ	a2	core
-caliente	hot	ADJ	a1	food-drink
-frío	cold	ADJ	a1	weather
-listo	ready, clever	ADJ	a1	core
-amable	kind	ADJ	a1	people
-simpático	nice, friendly	ADJ	a1	people
-tranquilo	calm, quiet	ADJ	a1	feelings
-nervioso	nervous	ADJ	a2	feelings
-ocupado	busy	ADJ	a1	work
-libre	free	ADJ	a1	core
-lleno	full	ADJ	a2	core
-vacío	empty	ADJ	a2	core
-abierto	open	ADJ	a1	city
-cerrado	closed	ADJ	a1	city
-primero	first	ADJ	a1	core	primer
-último	last	ADJ	a1	core
-mismo	same	ADJ	a1	core
-otro	other, another	ADJ	a1	core
-próximo	next	ADJ	a1	time
-blanco	white	ADJ	a1	colours
-negro	black	ADJ	a1	colours
-rojo	red	ADJ	a1	colours
-azul	blue	ADJ	a1	colours
-verde	green	ADJ	a1	colours
-amarillo	yellow	ADJ	a1	colours
-gris	grey	ADJ	a2	colours
+600001	bueno	good	ADJ	a1	core	buen
+600002	malo	bad	ADJ	a1	core	mal
+600003	grande	big	ADJ	a1	core	gran
+600004	pequeño	small	ADJ	a1	core
+600005	nuevo	new	ADJ	a1	core
+600006	viejo	old	ADJ	a1	core
+600007	joven	young	ADJ	a1	people
+600008	alto	tall, high	ADJ	a1	core
+600009	bajo	short, low	ADJ	a1	core
+600010	largo	long	ADJ	a1	core
+600011	corto	short	ADJ	a1	core
+600012	gordo	fat	ADJ	a2	people
+600013	delgado	thin	ADJ	a2	people
+600014	guapo	good-looking	ADJ	a1	people
+600015	bonito	pretty, nice	ADJ	a1	core
+600016	feo	ugly	ADJ	a2	core
+600017	limpio	clean	ADJ	a1	home
+600018	sucio	dirty	ADJ	a1	home
+600019	fácil	easy	ADJ	a1	core
+600020	difícil	difficult	ADJ	a1	core
+600021	importante	important	ADJ	a1	core
+600022	interesante	interesting	ADJ	a1	core
+600023	aburrido	boring	ADJ	a1	core
+600024	divertido	fun	ADJ	a1	core
+600025	cansado	tired	ADJ	a1	health
+600026	contento	happy, pleased	ADJ	a1	feelings
+600027	feliz	happy	ADJ	a1	feelings
+600028	triste	sad	ADJ	a1	feelings
+600029	enfermo	ill	ADJ	a1	health
+600030	fuerte	strong	ADJ	a1	core
+600031	débil	weak	ADJ	a2	core
+600032	rápido	fast	ADJ	a1	core
+600033	lento	slow	ADJ	a1	core
+600034	caro	expensive	ADJ	a1	shopping
+600035	barato	cheap	ADJ	a1	shopping
+600036	rico	rich, tasty	ADJ	a1	core
+600037	pobre	poor	ADJ	a2	core
+600038	caliente	hot	ADJ	a1	food-drink
+600039	frío	cold	ADJ	a1	weather
+600040	listo	ready, clever	ADJ	a1	core
+600041	amable	kind	ADJ	a1	people
+600042	simpático	nice, friendly	ADJ	a1	people
+600043	tranquilo	calm, quiet	ADJ	a1	feelings
+600044	nervioso	nervous	ADJ	a2	feelings
+600045	ocupado	busy	ADJ	a1	work
+600046	libre	free	ADJ	a1	core
+600047	lleno	full	ADJ	a2	core
+600048	vacío	empty	ADJ	a2	core
+600049	abierto	open	ADJ	a1	city
+600050	cerrado	closed	ADJ	a1	city
+600051	primero	first	ADJ	a1	core	primer
+600052	último	last	ADJ	a1	core
+600053	mismo	same	ADJ	a1	core
+600054	otro	other, another	ADJ	a1	core
+600055	próximo	next	ADJ	a1	time
+600056	blanco	white	ADJ	a1	colours
+600057	negro	black	ADJ	a1	colours
+600058	rojo	red	ADJ	a1	colours
+600059	azul	blue	ADJ	a1	colours
+600060	verde	green	ADJ	a1	colours
+600061	amarillo	yellow	ADJ	a1	colours
+600062	gris	grey	ADJ	a2	colours
 aquí	here	ADV	a1	place
 allí	there	ADV	a1	place
 ahora	now	ADV	a1	time
@@ -86,8 +88,8 @@ temprano	early	ADV	a1	time
 pronto	soon	ADV	a1	time
 despacio	slowly	ADV	a2	core
 demasiado	too much	ADV	a2	core
-mucho	a lot, much	ADV	a1	core
-poco	little, few	ADV	a1	core
+mucho	a lot, much	ADV	a1	core	mucha,muchos,muchas
+poco	little, few	ADV	a1	core	poca,pocos,pocas
 bastante	quite, enough	ADV	a2	core
 juntos	together	ADV	a2	social
 yo	I	PRON	a1	grammar
@@ -106,7 +108,7 @@ le	to him, to her	PRON	a1	grammar
 qué	what	PRON	a1	questions
 quién	who	PRON	a1	questions
 cuál	which	PRON	a1	questions
-cuánto	how much	PRON	a1	questions
+cuánto	how much	PRON	a1	questions	cuánta,cuántos,cuántas
 dónde	where	ADV	a1	questions
 cuándo	when	ADV	a1	questions
 cómo	how	ADV	a1	questions
@@ -173,4 +175,30 @@ veinte	twenty	NUM	a1	numbers
 treinta	thirty	NUM	a1	numbers	
 cien	a hundred	NUM	a1	numbers	
 mil	a thousand	NUM	a1	numbers	
-medio	half	ADJ	a1	numbers	media
+600063	medio	half	ADJ	a1	numbers	media
+# Words the sentences already used but the lexicon did not carry. New adjectives
+# go below the existing ones: word-card ids are positional within the adjectives.
+600064	favorito	favourite	ADJ	a1	core
+600065	delicioso	delicious	ADJ	a2	food-drink
+600066	cómodo	comfortable	ADJ	a2	core
+600067	roto	broken	ADJ	a1	core
+600068	mejor	better, best	ADJ	a1	core
+600069	normal	normal	ADJ	a2	core
+600070	humano	human	ADJ	a2	body
+600071	vegetariano	vegetarian	ADJ	a2	food-drink
+600072	suficiente	enough	ADJ	a2	core
+600073	doble	double	ADJ	a2	travel
+600074	izquierdo	left	ADJ	a1	body
+600075	derecho	right	ADJ	a1	body
+600076	incluido	included	ADJ	a2	travel
+600077	claro	clear, of course	ADJ	a1	core
+600078	mío	mine	ADJ	a2	grammar
+anoche	last night	ADV	a2	time
+arriba	up, upstairs	ADV	a2	place
+debajo	underneath	ADV	a1	place
+alrededor	around	ADV	a2	place
+fuera	outside	ADV	a1	place
+perfectamente	perfectly	ADV	a2	core
+recto	straight ahead	ADV	a2	travel
+mí	me (after a preposition)	PRON	a1	grammar
+ni	nor, neither	CCONJ	a2	grammar

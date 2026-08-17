@@ -23,6 +23,8 @@ function formsOf(lemma: string) {
     imperfect: tense('imperfect'),
     gerund: nonFinite('gerund'),
     participle: nonFinite('participle'),
+    /** tú, usted, vosotros, ustedes — the order the generator emits. */
+    commands: generated.filter((form) => form.morph.mood === 'imperative').map((form) => form.form),
   };
 }
 
@@ -231,6 +233,72 @@ describe('irregular verbs', () => {
   });
 });
 
+describe('commands', () => {
+  it('builds the four affirmative commands of a regular verb', () => {
+    // tú is the third person present; usted and ustedes come from the yo form.
+    expect(formsOf('hablar').commands).toEqual(['habla', 'hable', 'hablad', 'hablen']);
+    expect(formsOf('comer').commands).toEqual(['come', 'coma', 'comed', 'coman']);
+    expect(formsOf('vivir').commands).toEqual(['vive', 'viva', 'vivid', 'vivan']);
+  });
+
+  it('derives the formal command from the yo form, stem change and all', () => {
+    // The rule a learner is taught: sigo → siga, not "sega".
+    expect(formsOf('seguir').commands[1]).toBe('siga');
+    expect(formsOf('pedir').commands[1]).toBe('pida');
+    expect(formsOf('volver').commands[1]).toBe('vuelva');
+    expect(formsOf('pensar').commands[1]).toBe('piense');
+    expect(formsOf('tener').commands[1]).toBe('tenga');
+    expect(formsOf('conducir').commands[1]).toBe('conduzca');
+  });
+
+  it('keeps the consonant sound before the -e ending', () => {
+    expect(formsOf('buscar').commands[1]).toBe('busque');
+    expect(formsOf('llegar').commands[1]).toBe('llegue');
+    expect(formsOf('empezar').commands[1]).toBe('empiece');
+    expect(formsOf('jugar').commands[1]).toBe('juegue');
+  });
+
+  it('shortens the eight irregular tú commands', () => {
+    const tu = (lemma: string) => formsOf(lemma).commands[0];
+    expect([
+      tu('decir'),
+      tu('hacer'),
+      tu('ir'),
+      tu('poner'),
+      tu('salir'),
+      tu('ser'),
+      tu('tener'),
+      tu('venir'),
+    ]).toEqual(['di', 'haz', 've', 'pon', 'sal', 'sé', 'ten', 'ven']);
+  });
+
+  it('declares the formal commands whose yo form cannot produce them', () => {
+    // soy → "soya" is why these six are in the table rather than derived.
+    expect(formsOf('ser').commands.slice(1, 2)).toEqual(['sea']);
+    expect(formsOf('ir').commands[1]).toBe('vaya');
+    expect(formsOf('saber').commands[1]).toBe('sepa');
+    expect(formsOf('dar').commands[1]).toBe('dé');
+    expect(formsOf('estar').commands[1]).toBe('esté');
+  });
+
+  it('carries mood and person but no tense, because a command has no time', () => {
+    const command = conjugate('hablar').find((form) => form.morph.mood === 'imperative');
+
+    expect(command?.morph.tense).toBeUndefined();
+    expect(command?.morph.person).toBe(2);
+    expect(command?.morph.verbForm).toBe('finite');
+  });
+
+  it('marks the vosotros command as Spain-only, like the rest of vosotros', () => {
+    const vosotros = conjugate('hablar').find(
+      (form) => form.morph.mood === 'imperative' && form.morph.number === 'plural',
+    );
+
+    expect(vosotros?.form).toBe('hablad');
+    expect(vosotros?.regions).toEqual(['es-ES']);
+  });
+});
+
 describe('generated metadata', () => {
   it('marks vosotros as Spain-only and past tenses as A2', () => {
     const forms = conjugate('hablar');
@@ -245,8 +313,13 @@ describe('generated metadata', () => {
     expect(preterite?.level).toBe('a2');
   });
 
-  it('produces 20 forms per verb', () => {
-    expect(conjugate('hablar')).toHaveLength(20);
+  it('produces 24 forms per verb', () => {
+    const forms = conjugate('hablar');
+
+    // 18 finite indicative + 4 commands + gerund + participle.
+    expect(forms).toHaveLength(24);
+    expect(forms.filter((form) => form.morph.mood === 'indicative')).toHaveLength(18);
+    expect(forms.filter((form) => form.morph.mood === 'imperative')).toHaveLength(4);
   });
 
   it('rejects anything that is not an infinitive', () => {

@@ -8,7 +8,7 @@
  */
 
 import type { Annotation, Morphology, PartOfSpeech, Token } from './annotation';
-import type { ItemId, LexemeId, PackId, SenseId, SkillId, VerbFormId } from './ids';
+import type { ItemId, LexemeId, PackId, PassageId, SenseId, SkillId, VerbFormId } from './ids';
 import type { LanguageTag } from './language';
 import type { Provenance } from './provenance';
 
@@ -145,6 +145,42 @@ export interface LearningItem {
   readonly provenance?: Provenance;
 }
 
+export const PASSAGE_KINDS = ['text', 'dialogue'] as const;
+export type PassageKind = (typeof PASSAGE_KINDS)[number];
+
+/**
+ * Several sentences read as one connected text (spec §16).
+ *
+ * A passage is a *container*, not a longer item: it references sentences that
+ * remain independently practisable items. That matters twice over. The exercise
+ * engine derives interactions per item, so a passage's sentences stay usable as
+ * cloze, flashcards and speaking practice; and mastery weights a word by how
+ * many different sentences it appears in, so a paragraph earns its recycling
+ * honestly rather than looking like one long sentence.
+ *
+ * It is also why a passage carries no text of its own — the text is its
+ * sentences, in order.
+ */
+export interface Passage {
+  readonly id: PassageId;
+  readonly pack: PackId;
+  readonly kind: PassageKind;
+  /** Target-language title, e.g. `Una mañana normal`. Translated separately. */
+  readonly title: string;
+  readonly level?: CefrLevel;
+  readonly topics?: readonly string[];
+  /** Union of the regions its sentences are limited to; absent means anywhere. */
+  readonly regions?: readonly LanguageTag[];
+  /** The sentences, in reading order. */
+  readonly items: readonly ItemId[];
+  /**
+   * Who speaks each line of a dialogue, index-aligned with `items`. A name is a
+   * display label, so it is plain text rather than an id.
+   */
+  readonly speakers?: readonly string[];
+  readonly provenance?: Provenance;
+}
+
 /** A published, independently versioned collection of content (spec §10, §20). */
 export interface PackManifest {
   readonly id: PackId;
@@ -167,6 +203,7 @@ export const PACK_FILE_KINDS = [
   'verb-forms',
   'skills',
   'translations',
+  'passages',
 ] as const;
 export type PackFileKind = (typeof PACK_FILE_KINDS)[number];
 
@@ -185,4 +222,5 @@ export interface ContentPack {
   readonly verbForms: readonly VerbForm[];
   readonly skills: readonly Skill[];
   readonly translations: readonly Translation[];
+  readonly passages: readonly Passage[];
 }

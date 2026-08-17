@@ -1,0 +1,113 @@
+# Sentences that read as connected texts. The `passage` column groups them; see
+# passages.tsv for each passage's title and kind.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker
+#
+# These are written from vocabulary the pack already has, and deliberately reuse
+# it: the second mention of a word arrives while the first is still fresh, which
+# is the point of reading a paragraph rather than five unrelated sentences.
+# Each row is still an ordinary practisable item — the passage only orders them.
+#
+# ── Una mañana normal ─────────────────────────────────────────────────────────
+000516	Me despierto temprano, a las siete.	I wake up early, at seven.	a1	daily-routine					mañana
+000517	Hace frío y no quiero salir de la cama.	It's cold and I don't want to get out of bed.	a1	daily-routine					mañana
+000518	Como pan con mantequilla y bebo un café.	I eat bread and butter and drink a coffee.	a1	food-drink					mañana
+000519	Salgo de casa a las ocho y voy al trabajo en autobús.	I leave home at eight and go to work by bus.	a1	daily-routine					mañana
+000520	Llego a la oficina a las nueve.	I get to the office at nine.	a1	work					mañana
+#
+# ── Mi piso ───────────────────────────────────────────────────────────────────
+000521	Vivo en un piso pequeño con dos dormitorios.	I live in a small flat with two bedrooms.	a1	home					piso
+000522	La cocina es grande y tiene una ventana muy alta.	The kitchen is big and has a very tall window.	a1	home					piso
+000523	Mi habitación está siempre limpia.	My room is always clean.	a1	home					piso
+000524	No hay jardín, pero hay una plaza cerca.	There's no garden, but there's a square nearby.	a1	home					piso
+000525	Me gusta mucho vivir aquí.	I like living here a lot.	a1	home					piso
+#
+# ── Un día en la oficina ──────────────────────────────────────────────────────
+000526	Trabajo en una oficina en el centro.	I work in an office in the centre.	a1	work					oficina
+000527	Llego a las nueve y leo mis correos.	I arrive at nine and read my emails.	a1	work					oficina
+000528	Tengo una reunión con mi jefe a las once.	I have a meeting with my boss at eleven.	a1	work					oficina
+000529	Almuerzo con un amigo a la una.	I have lunch with a friend at one.	a1	work					oficina
+000530	Termino a las seis y vuelvo a casa cansado.	I finish at six and come home tired.	a1	work					oficina
+#
+# ── El sábado ─────────────────────────────────────────────────────────────────
+000531	El sábado no trabajo.	On Saturday I don't work.	a1	social					sabado
+000532	Por la mañana limpio la casa y lavo la ropa.	In the morning I clean the house and do the laundry.	a1	home					sabado
+000533	Después voy al mercado a comprar fruta y verduras.	Then I go to the market to buy fruit and vegetables.	a1	shopping					sabado
+000534	Por la tarde juego al fútbol con mis amigos.	In the afternoon I play football with my friends.	a1	sport					sabado
+000535	Por la noche cenamos juntos en un restaurante.	In the evening we have dinner together at a restaurant.	a1	social					sabado
+#
+# ── No me siento bien ─────────────────────────────────────────────────────────
+000536	Ayer no me sentí bien.	Yesterday I didn't feel well.	a2	health					enfermo
+000537	Me dolía la cabeza y tenía fiebre.	My head hurt and I had a fever.	a2	health					enfermo
+000538	No pude dormir por la noche.	I couldn't sleep at night.	a2	health					enfermo
+000539	Esta mañana fui al médico.	This morning I went to the doctor.	a2	health					enfermo
+000540	Me dio una medicina y ahora estoy mejor.	He gave me some medicine and now I'm better.	a2	health					enfermo
+#
+# ── El verano pasado ──────────────────────────────────────────────────────────
+000541	El verano pasado viajamos a México.	Last summer we travelled to Mexico.	a2	travel					verano
+000542	Fuimos en avión y llegamos por la noche.	We went by plane and arrived at night.	a2	travel					verano
+000543	El hotel estaba cerca de la playa.	The hotel was near the beach.	a2	travel					verano
+000544	Todos los días comíamos pescado y bebíamos jugo de naranja.	Every day we ate fish and drank orange juice.	a2	food-drink					verano
+000545	Fue un viaje muy bonito.	It was a lovely trip.	a2	travel					verano
+#
+# ── En el mercado ─────────────────────────────────────────────────────────────
+000546	Voy al mercado los jueves.	I go to the market on Thursdays.	a1	shopping					mercado
+000547	Compro manzanas, tomates y cebollas.	I buy apples, tomatoes and onions.	a1	shopping					mercado
+000548	El pescado está muy rico.	The fish is delicious.	a1	food-drink					mercado
+000549	Todo cuesta poco y la gente es muy amable.	Everything costs little and the people are very kind.	a1	shopping					mercado
+000550	Pago con tarjeta y vuelvo a casa con dos bolsas.	I pay by card and go home with two bags.	a1	shopping					mercado
+#
+# ── Un día de lluvia ──────────────────────────────────────────────────────────
+000551	Llueve mucho desde ayer.	It's been raining a lot since yesterday.	a1	weather					lluvia
+000552	El cielo está gris y hace viento.	The sky is grey and it's windy.	a1	weather					lluvia
+000553	No puedo ir en bicicleta al trabajo.	I can't cycle to work.	a1	weather					lluvia
+000554	Voy en tren y leo el periódico.	I go by train and read the newspaper.	a1	travel					lluvia
+000555	Pero mañana va a hacer sol.	But tomorrow it's going to be sunny.	a1	weather					lluvia
+#
+# ── En la cafetería (dialogue) ────────────────────────────────────────────────
+000556	Buenos días, ¿qué quiere tomar?	Good morning, what would you like?	a1	restaurant		formal	usted		cafeteria	Camarero
+000557	Un café con leche, por favor.	A coffee with milk, please.	a1	restaurant					cafeteria	Cliente
+000558	¿Algo más?	Anything else?	a1	restaurant		formal	usted		cafeteria	Camarero
+000559	Sí, una galleta. ¿Cuánto es?	Yes, a biscuit. How much is it?	a1	restaurant					cafeteria	Cliente
+000560	Tres euros.	Three euros.	a1	restaurant					cafeteria	Camarero
+000561	Gracias.	Thank you.	a1	greetings					cafeteria	Cliente
+#
+# ── En la tienda de ropa (dialogue) ───────────────────────────────────────────
+000562	¿Necesita ayuda?	Do you need any help?	a1	shopping		formal	usted		tienda	Dependienta
+000563	Busco una chaqueta negra.	I'm looking for a black jacket.	a1	clothes					tienda	Cliente
+000564	¿Qué talla tiene?	What size are you?	a2	shopping		formal	usted		tienda	Dependienta
+000565	No sé. ¿Puedo probar esta?	I don't know. Can I try this one on?	a1	shopping					tienda	Cliente
+000566	Claro, está allí.	Of course, it's over there.	a1	shopping		formal	usted		tienda	Dependienta
+000567	Me llevo esta. ¿Cuánto cuesta?	I'll take this one. How much is it?	a2	shopping					tienda	Cliente
+000568	Treinta euros.	Thirty euros.	a1	shopping					tienda	Dependienta
+#
+# ── Perdona, ¿dónde está? (dialogue) ──────────────────────────────────────────
+000569	Perdón, ¿dónde está la estación?	Excuse me, where is the station?	a1	travel		formal	usted		calle	Turista
+000570	Está muy cerca. Siga por esta calle.	It's very close. Carry on down this street.	a2	travel		formal	usted		calle	Señora
+000571	¿Está lejos la plaza?	Is the square far?	a1	travel					calle	Turista
+000572	No, a diez minutos a la derecha.	No, ten minutes on the right.	a1	travel					calle	Señora
+000573	Muchas gracias.	Thank you very much.	a1	greetings					calle	Turista
+#
+# ── En el hotel (dialogue) ────────────────────────────────────────────────────
+000574	Buenas tardes, ¿tiene una reserva?	Good afternoon, do you have a reservation?	a1	travel		formal	usted		hotel	Recepcionista
+000575	Sí, una habitación doble para dos noches.	Yes, a double room for two nights.	a1	travel					hotel	Cliente
+000576	¿El desayuno está incluido en el precio?	Is breakfast included in the price?	a2	travel					hotel	Cliente
+000577	Sí, de siete a diez.	Yes, from seven to ten.	a1	travel		formal	usted		hotel	Recepcionista
+000578	¿Hay un restaurante en el hotel?	Is there a restaurant in the hotel?	a1	travel					hotel	Cliente
+000579	Sí, está en el primer piso.	Yes, it's on the first floor.	a1	travel		formal	usted		hotel	Recepcionista
+#
+# ── En el médico (dialogue) ───────────────────────────────────────────────────
+000580	Buenos días, ¿qué le pasa?	Good morning, what's the matter?	a2	health		formal	usted		medico	Médica
+000581	Me duele mucho el estómago.	My stomach hurts a lot.	a2	health					medico	Paciente
+000582	¿Desde cuándo?	Since when?	a2	health		formal	usted		medico	Médica
+000583	Desde ayer por la noche. No pude dormir.	Since last night. I couldn't sleep.	a2	health					medico	Paciente
+000584	¿Tiene fiebre?	Do you have a fever?	a2	health		formal	usted		medico	Médica
+000585	No, pero estoy muy cansado.	No, but I'm very tired.	a2	health					medico	Paciente
+000586	Tiene que descansar y beber mucha agua.	You need to rest and drink a lot of water.	a2	health		formal	usted		medico	Médica
+#
+# ── ¿Qué hacemos esta noche? (dialogue) ───────────────────────────────────────
+000587	¿Qué hacemos esta noche?	What shall we do tonight?	a1	social					amigos	Ana
+000588	No sé. ¿Quieres ir al cine?	I don't know. Do you want to go to the cinema?	a1	social					amigos	Luis
+000589	Hay una película nueva muy buena.	There's a very good new film.	a1	entertainment					amigos	Ana
+000590	¿A qué hora empieza la película?	What time does the film start?	a1	time					amigos	Luis
+000591	A las nueve. Podemos cenar antes.	At nine. We can have dinner beforehand.	a1	social					amigos	Ana
+000592	Muy bien, nos vemos a las siete.	All right, see you at seven.	a1	social					amigos	Luis

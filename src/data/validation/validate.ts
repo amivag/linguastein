@@ -145,7 +145,46 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
     }
   }
 
-  const known = new Set([...itemIds, ...lexemeIds, ...skillIds, ...senseIds, ...formIds]);
+  const passageIds = new Set<string>();
+  for (const passage of pack.passages) {
+    if (passageIds.has(passage.id)) {
+      report(`duplicate passage id: ${passage.id}`, 'error', passage.id);
+    }
+    passageIds.add(passage.id);
+
+    if (passage.pack !== pack.manifest.id) {
+      report(`passage ${passage.id} declares pack "${passage.pack}"`, 'error', passage.id);
+    }
+    // A passage the reader cannot follow is worse than no passage: its sentences
+    // are the text, so a missing one leaves a hole mid-paragraph.
+    for (const item of passage.items) {
+      if (!itemIds.has(item)) {
+        report(`passage ${passage.id} references unknown item ${item}`, 'error', passage.id);
+      }
+    }
+    if (new Set(passage.items).size !== passage.items.length) {
+      report(`passage ${passage.id} lists the same item twice`, 'error', passage.id);
+    }
+    if (passage.speakers && passage.speakers.length !== passage.items.length) {
+      report(
+        `passage ${passage.id} has ${passage.speakers.length} speakers for ${passage.items.length} lines`,
+        'error',
+        passage.id,
+      );
+    }
+    if (passage.kind === 'dialogue' && !passage.speakers) {
+      report(`dialogue ${passage.id} names no speakers`, 'warning', passage.id);
+    }
+  }
+
+  const known = new Set([
+    ...itemIds,
+    ...lexemeIds,
+    ...skillIds,
+    ...senseIds,
+    ...formIds,
+    ...passageIds,
+  ]);
   for (const translation of pack.translations) {
     if (!known.has(translation.ref)) {
       report(

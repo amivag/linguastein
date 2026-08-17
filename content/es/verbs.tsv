@@ -102,3 +102,22 @@ almorzar	to have lunch	a1	irregular	food-drink
 preferir	to prefer	a1	irregular	core
 despertar	to wake up	a2	irregular	daily-routine
 descansar	to rest	a1	regular	health
+# doler and encantar are named by the gustar-type pattern in build-dataset.ts,
+# so leaving them out made that pattern reachable by gustar alone.
+doler	to hurt	a1	irregular	health
+encantar	to delight (to love)	a1	regular	core
+llover	to rain	a1	irregular	weather
+nevar	to snow	a2	irregular	weather
+cenar	to have dinner	a1	regular	food-drink
+visitar	to visit	a1	regular	travel
+funcionar	to work, to function	a2	regular	objects
+depender	to depend	a2	regular	core
+durar	to last	a2	regular	time
+nacer	to be born	a2	irregular	people
+conducir	to drive	a2	irregular	travel
+recomendar	to recommend	a2	irregular	restaurant
+significar	to mean	a1	regular	language
+mandar	to send	a2	regular	communication
+reservar	to book, to reserve	a2	regular	travel
+girar	to turn	a2	regular	travel
+perdonar	to forgive, to excuse	a2	regular	greetings

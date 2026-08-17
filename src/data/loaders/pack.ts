@@ -11,6 +11,7 @@ import type {
   LearningItem,
   Lexeme,
   PackManifest,
+  Passage,
   Sense,
   Skill,
   Translation,
@@ -82,6 +83,7 @@ export async function loadPack(source: DatasetSource, manifestPath: string): Pro
     'verb-forms': [],
     skills: [],
     translations: [],
+    passages: [],
   };
 
   for (const file of manifest.files) {
@@ -103,6 +105,7 @@ export async function loadPack(source: DatasetSource, manifestPath: string): Pro
     verbForms: collected['verb-forms'] as VerbForm[],
     skills: collected.skills as Skill[],
     translations: collected.translations as Translation[],
+    passages: collected.passages as Passage[],
   };
 
   issues.push(...validatePackIntegrity(pack));

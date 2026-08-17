@@ -1,0 +1,82 @@
+# Sentences for words that shipped with no example at all: both halves of the
+# regional pairs, and the high-frequency adjectives, adverbs and pronouns the
+# other files never used.
+# Columns: id	spanish	english	level	topics	note	register	address	regions
+#
+# ── Regional pairs: the side that had no sentence ─────────────────────────────
+000444	La patata y el tomate son verduras.	Potato and tomato are vegetables.	a1	food-drink
+000445	Compro patatas en el supermercado.	I buy potatoes at the supermarket.	a1	shopping
+000446	Mi carro es viejo pero funciona.	My car is old but it works.	a1	travel
+000447	Vamos en carro a la playa.	We're going to the beach by car.	a1	travel
+000448	Un zumo de naranja, por favor.	An orange juice, please.	a1	restaurant
+000449	Bebo zumo en el desayuno.	I drink juice at breakfast.	a1	food-drink
+000450	La computadora de la oficina es nueva.	The office computer is new.	a1	objects
+000451	Trabajo con la computadora todos los días.	I work with the computer every day.	a1	work
+000452	Mi celular está en la mesa.	My mobile is on the table.	a1	objects
+000453	No encuentro mi celular.	I can't find my mobile.	a1	objects
+000454	Compré dos boletos para el tren.	I bought two tickets for the train.	a2	travel
+000455	El boleto de autobús cuesta poco.	The bus ticket doesn't cost much.	a1	travel
+000456	El camión llega a las ocho.	The bus arrives at eight.	a2	travel		colloquial
+000457	Voy en camión al centro.	I go into town by bus.	a2	travel		colloquial
+000458	No tengo plata para el taxi.	I haven't got the money for a taxi.	a2	shopping		colloquial
+000459	Gano poca plata en este trabajo.	I earn little money in this job.	a2	work		colloquial
+000460	No me queda pasta hasta el lunes.	I've no cash left until Monday.	a2	shopping		colloquial
+000461	Necesito pasta para el fin de semana.	I need cash for the weekend.	a2	shopping		colloquial
+000462	Busco mis lentes.	I'm looking for my glasses.	a1	clothes
+000463	Los lentes están debajo del libro.	The glasses are under the book.	a1	clothes
+000464	Pongo la leche en el refrigerador.	I put the milk in the fridge.	a2	home
+000465	El refrigerador está vacío.	The fridge is empty.	a2	home
+#
+# ── Adjectives that had no example ────────────────────────────────────────────
+000466	Mi hermano es joven y alto.	My brother is young and tall.	a1	people
+000467	Esta silla es muy baja.	This chair is very low.	a1	home
+000468	El pelo corto es más fácil.	Short hair is easier.	a1	body
+000469	El perro es gordo y el gato es delgado.	The dog is fat and the cat is thin.	a2	animals
+000470	Tu hermana es muy guapa.	Your sister is very good-looking.	a1	people
+000471	Ese sombrero es feo.	That hat is ugly.	a2	clothes
+000472	La clase de hoy es aburrida.	Today's class is boring.	a1	school
+000473	Me siento débil desde ayer.	I've felt weak since yesterday.	a2	health
+000474	El tren es rápido y el autobús es lento.	The train is fast and the bus is slow.	a1	travel
+000475	Somos pobres pero felices.	We're poor but happy.	a2	feelings
+000476	¿Estás listo?	Are you ready?	a1	core
+000477	Mi vecino es muy simpático.	My neighbour is very nice.	a2	social
+000478	El sábado estoy libre.	I'm free on Saturday.	a1	social
+000479	El vaso está lleno.	The glass is full.	a2	home
+000480	La tienda está abierta hasta las nueve.	The shop is open until nine.	a1	shopping
+000481	El museo está cerrado los lunes.	The museum is closed on Mondays.	a1	city
+000482	Es la última vez.	It's the last time.	a1	core
+000483	Vivimos en la misma calle.	We live on the same street.	a1	city
+000484	Su camisa es roja.	His shirt is red.	a1	colours
+000485	El sol es amarillo.	The sun is yellow.	a1	colours
+#
+# ── Pronouns, adverbs and function words that had no example ──────────────────
+000486	¿Quién es ese señor?	Who is that gentleman?	a1	questions
+000487	Yo soy de México y tú eres de España.	I'm from Mexico and you're from Spain.	a1	greetings
+000488	Él trabaja aquí y ella también.	He works here and so does she.	a1	work
+000489	¿Usted habla inglés?	Do you speak English?	a1	communication		formal	usted
+000490	Ellos viven allí.	They live over there.	a1	city
+000491	Ahora no puedo, pero mañana sí.	I can't now, but tomorrow yes.	a1	core
+000492	No como carne y tampoco pescado.	I don't eat meat, or fish either.	a2	food-drink
+000493	Quiero menos azúcar en el café.	I want less sugar in my coffee.	a1	food-drink
+000494	Casi siempre desayuno en casa.	I almost always have breakfast at home.	a1	daily-routine
+000495	Vivo solo desde enero.	I've lived alone since January.	a1	home
+000496	Hasta pronto.	See you soon.	a1	greetings
+000497	Hablo bastante bien el español.	I speak Spanish quite well.	a2	communication
+000498	¿Cuándo llega el tren?	When does the train arrive?	a1	travel
+000499	Estudio español porque me gusta.	I study Spanish because I like it.	a1	school
+000500	Si llueve, no salimos.	If it rains, we won't go out.	a2	weather
+000501	Nuestra casa es pequeña.	Our house is small.	a1	home
+000502	El libro está sobre la mesa.	The book is on the table.	a2	home
+000503	El banco está entre la farmacia y el cine.	The bank is between the pharmacy and the cinema.	a2	city
+000504	Hay alguien en la puerta.	There's someone at the door.	a2	home
+000505	No hay nadie en la oficina.	There's nobody in the office.	a2	work
+000506	Le doy el libro a mi hermana.	I give the book to my sister.	a1	family
+000507	Solo tengo uno.	I've only got one.	a1	numbers
+000508	Son las doce.	It's twelve o'clock.	a1	time
+000509	La maleta cuesta cien euros.	The suitcase costs a hundred euros.	a1	shopping
+000510	Mil gracias.	Thanks a million.	a1	greetings		colloquial
+000511	¿Por qué no vamos al cine?	Why don't we go to the cinema?	a1	social
+000512	Puedo ayudar con la cena.	I can help with dinner.	a1	home
+000513	Hace mal tiempo hoy.	The weather is bad today.	a1	weather
+000514	Es una mala idea.	It's a bad idea.	a1	core
+000515	Estudiamos juntos los sábados.	We study together on Saturdays.	a2	school

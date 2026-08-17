@@ -5,7 +5,7 @@
  * detail of the data layer.
  */
 
-import type { ItemId, LexemeId, PackId, SenseId, SkillId, VerbFormId } from './ids';
+import type { ItemId, LexemeId, PackId, PassageId, SenseId, SkillId, VerbFormId } from './ids';
 import {
   isUsableIn,
   type LanguageTag,
@@ -21,6 +21,7 @@ import type {
   LearningItem,
   Lexeme,
   PackManifest,
+  Passage,
   Register,
   Sense,
   Skill,
@@ -30,6 +31,14 @@ import type {
 
 export interface ItemFilter {
   readonly packs?: readonly PackId[];
+  /**
+   * Exactly these items, e.g. the sentences of one passage.
+   *
+   * Unlike the faceted filters below, an *empty* list means no items rather than
+   * no constraint: it is an explicit allow-list, so an unresolved passage yields
+   * an empty session instead of quietly practising the whole pack.
+   */
+  readonly ids?: readonly ItemId[];
   readonly types?: readonly ItemType[];
   readonly levels?: readonly CefrLevel[];
   readonly registers?: readonly Register[];
@@ -63,6 +72,10 @@ export class ContentRepository {
   private readonly itemsBySkill = new Map<SkillId, ItemId[]>();
   private readonly formsByLexeme = new Map<LexemeId, VerbFormId[]>();
   private readonly itemOrder: ItemId[] = [];
+  private readonly passagesById = new Map<PassageId, Passage>();
+  private readonly passageOrder: PassageId[] = [];
+  /** item → the passages it reads as part of, so a sentence can point home. */
+  private readonly passagesByItem = new Map<ItemId, PassageId[]>();
 
   static from(packs: readonly ContentPack[]): ContentRepository {
     const repository = new ContentRepository();
@@ -87,6 +100,12 @@ export class ContentRepository {
       this.itemsById.set(item.id, item);
       for (const lexeme of item.lexemes ?? EMPTY) push(this.itemsByLexeme, lexeme, item.id);
       for (const skill of item.skills ?? EMPTY) push(this.itemsBySkill, skill, item.id);
+    }
+
+    for (const passage of pack.passages) {
+      if (!this.passagesById.has(passage.id)) this.passageOrder.push(passage.id);
+      this.passagesById.set(passage.id, passage);
+      for (const item of passage.items) push(this.passagesByItem, item, passage.id);
     }
 
     for (const translation of pack.translations) {
@@ -138,6 +157,39 @@ export class ContentRepository {
     return this.itemOrder.map((id) => this.itemsById.get(id)).filter(isDefined);
   }
 
+  getPassage(id: PassageId): Passage | undefined {
+    return this.passagesById.get(id);
+  }
+
+  /** Passages in stable pack order. */
+  allPassages(): readonly Passage[] {
+    return this.passageOrder.map((id) => this.passagesById.get(id)).filter(isDefined);
+  }
+
+  /**
+   * Resolves the local part of a passage id — `700001` for
+   * `core-es:passage:700001` — which is what a route carries so URLs stay
+   * readable. With several packs loaded the first match wins, so a shared route
+   * is only unambiguous while local ids are.
+   */
+  passageByLocalId(local: string): Passage | undefined {
+    return this.allPassages().find((passage) => passage.id.endsWith(`:passage:${local}`));
+  }
+
+  /** The passages a sentence reads as part of, usually none or one. */
+  passagesOfItem(id: ItemId): readonly Passage[] {
+    return (this.passagesByItem.get(id) ?? EMPTY)
+      .map((passageId) => this.passagesById.get(passageId))
+      .filter(isDefined);
+  }
+
+  /** A passage's sentences in reading order, skipping any that failed to load. */
+  itemsOfPassage(id: PassageId): readonly LearningItem[] {
+    const passage = this.passagesById.get(id);
+    if (!passage) return EMPTY;
+    return passage.items.map((itemId) => this.itemsById.get(itemId)).filter(isDefined);
+  }
+
   itemsOfLexeme(id: LexemeId): readonly LearningItem[] {
     return (this.itemsByLexeme.get(id) ?? EMPTY)
       .map((itemId) => this.itemsById.get(itemId))
@@ -185,6 +237,7 @@ export class ContentRepository {
     const search = filter.search ? normalise(filter.search) : undefined;
     return this.allItems().filter((item) => {
       if (filter.packs?.length && !filter.packs.includes(item.pack)) return false;
+      if (filter.ids && !filter.ids.includes(item.id)) return false;
       if (filter.types?.length && !filter.types.includes(item.type)) return false;
       if (filter.levels?.length && !(item.level && filter.levels.includes(item.level)))
         return false;

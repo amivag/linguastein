@@ -1,104 +1,105 @@
-# Work, school, health, people, feelings, nature. Columns: spanish	english	level	topics	note	register	address	regions
-Trabajo de nueve a cinco.	I work from nine to five.	a1	work
-Tengo una reunión a las diez.	I have a meeting at ten.	a1	work
-Mi jefe es muy amable.	My boss is very kind.	a1	work
-Estoy muy ocupado esta semana.	I'm very busy this week.	a1	work
-El proyecto es difícil.	The project is difficult.	a1	work
-Necesito terminar este trabajo hoy.	I need to finish this work today.	a1	work
-¿Puedes enviarme el correo?	Can you send me the email?	a2	work
-Voy a llamar al cliente.	I'm going to call the client.	a1	work
-La empresa es grande.	The company is big.	a2	work
-Empecé a trabajar en enero.	I started working in January.	a2	work
-Gano poco dinero.	I earn little money.	a2	work
-Busco un trabajo nuevo.	I'm looking for a new job.	a1	work
-Estudio dos idiomas.	I study two languages.	a1	school
-El examen fue muy difícil.	The exam was very difficult.	a2	school
-Tengo mucha tarea hoy.	I have a lot of homework today.	a1	school
-El profesor explica muy bien.	The teacher explains very well.	a1	school
-No entiendo esta pregunta.	I don't understand this question.	a1	school
-¿Puedes explicarme esta palabra?	Can you explain this word to me?	a1	school
-Aprendí mucho en esa clase.	I learned a lot in that class.	a2	school
-Escribo en mi cuaderno.	I write in my notebook.	a1	school
-Olvidé el libro en casa.	I forgot the book at home.	a2	school
-Repite la frase, por favor.	Repeat the sentence, please.	a1	school
-Voy a la biblioteca a estudiar.	I'm going to the library to study.	a1	school
-No me siento bien.	I don't feel well.	a1	health
-Me duele la cabeza.	My head hurts.	a1	health	doler works like gustar
-Me duele el estómago.	I have a stomach ache.	a1	health
-Tengo fiebre.	I have a fever.	a1	health
-Estoy enfermo desde ayer.	I've been ill since yesterday.	a2	health
-Necesito ir al médico.	I need to go to the doctor.	a1	health
-El hospital está cerca del parque.	The hospital is near the park.	a1	health
-Tomo una medicina cada día.	I take medicine every day.	a2	health
-Debes descansar.	You should rest.	a1	health
-Hago ejercicio tres veces por semana.	I exercise three times a week.	a1	sport
-Corro por el parque los sábados.	I run in the park on Saturdays.	a1	sport
-Juego al fútbol con mis amigos.	I play football with my friends.	a1	sport	jugar a + sport
-Nado en el mar en verano.	I swim in the sea in summer.	a1	sport
-Camino al trabajo todos los días.	I walk to work every day.	a1	sport
-Mi equipo ganó el partido.	My team won the match.	a2	sport
-Tengo dos hermanos y una hermana.	I have two brothers and a sister.	a1	family
-Mi padre trabaja en un banco.	My father works at a bank.	a1	family
-Mi hija tiene cinco años.	My daughter is five.	a1	family
-Vivo con mi familia.	I live with my family.	a1	family
-Mis abuelos viven en el campo.	My grandparents live in the countryside.	a1	family
-Voy a visitar a mi tía.	I'm going to visit my aunt.	a1	family
-Mi mejor amigo se llama Luis.	My best friend is called Luis.	a1	social
-Conocí a mi novia en Madrid.	I met my girlfriend in Madrid.	a2	social
-Nos vemos el viernes.	See you on Friday.	a1	social		colloquial		
-¿Quedamos a las siete?	Shall we meet at seven?	a2	social		colloquial	tu	
-Vamos a una fiesta esta noche.	We're going to a party tonight.	a1	social
-Mis amigos vienen a cenar.	My friends are coming for dinner.	a1	social
-Feliz cumpleaños.	Happy birthday.	a1	social		neutral		
-¿Quieres tomar algo?	Do you want to have a drink?	a1	social		colloquial	tu	
-Estoy muy feliz hoy.	I'm very happy today.	a1	feelings
-Ella está triste.	She is sad.	a1	feelings
-No estoy nervioso.	I'm not nervous.	a2	feelings
-Me encanta esta canción.	I love this song.	a1	music
-Creo que tienes razón.	I think you're right.	a1	core
-Pienso que es una buena idea.	I think it's a good idea.	a1	core
-No sé qué hacer.	I don't know what to do.	a1	core
-No lo recuerdo.	I don't remember it.	a1	core
-Lo entiendo perfectamente.	I understand it perfectly.	a2	core
-Espero que sí.	I hope so.	a2	core		neutral		
-Depende del tiempo.	It depends on the weather.	a2	core
-Es la primera vez.	It's the first time.	a1	core
-Otra vez, por favor.	Again, please.	a1	core
-Poco a poco.	Little by little.	a1	core		colloquial		
-Claro que sí.	Of course.	a1	core		colloquial		
-Está bien.	It's fine.	a1	core		colloquial		
-No pasa nada.	It's no problem.	a1	core		colloquial		
-Hoy llueve mucho.	It's raining a lot today.	a1	weather
-Mañana va a hacer sol.	Tomorrow it's going to be sunny.	a1	weather
-En invierno nieva en la montaña.	In winter it snows in the mountains.	a2	weather
-Hace mucho viento hoy.	It's very windy today.	a1	weather
-El cielo está gris.	The sky is grey.	a1	weather
-Me gusta el sol de la mañana.	I like the morning sun.	a1	weather
-Los árboles del parque son muy altos.	The trees in the park are very tall.	a2	nature
-Mi perro come mucho.	My dog eats a lot.	a1	animals
-El gato duerme en el sofá.	The cat sleeps on the sofa.	a1	animals
-Hay flores en el jardín.	There are flowers in the garden.	a1	nature
-El río pasa por la ciudad.	The river runs through the city.	a2	nature
-Cerca de mi casa hay un lago.	There's a lake near my house.	a2	nature
-Limpio la cocina los sábados.	I clean the kitchen on Saturdays.	a1	home
-Lavo la ropa una vez por semana.	I do the laundry once a week.	a1	home
-Pongo los platos en la mesa.	I put the plates on the table.	a1	home
-Saco la basura por la noche.	I take the rubbish out at night.	a2	home
-Mi habitación está muy sucia.	My room is very dirty.	a1	home
-La luz de la cocina no funciona.	The kitchen light doesn't work.	a2	home
-Necesito una toalla limpia.	I need a clean towel.	a1	home
-El sofá es viejo pero cómodo.	The sofa is old but comfortable.	a2	home
-Deja las llaves en la mesa.	Leave the keys on the table.	a1	home
-Ayer llegué tarde a casa.	Yesterday I got home late.	a2	daily-routine
-Anoche vi a mis vecinos.	Last night I saw my neighbours.	a2	social
-La semana pasada estuve en Barcelona.	Last week I was in Barcelona.	a2	travel
-El año pasado aprendí a conducir.	Last year I learned to drive.	a2	travel
-Hace dos años vivía en otro país.	Two years ago I was living in another country.	a2	people
-De niño jugaba en la calle.	As a child I used to play in the street.	a2	people
-Mi hermano nació en marzo.	My brother was born in March.	a2	family
-Todavía no he comido.	I haven't eaten yet.	a2	food-drink
-Ya he terminado.	I've already finished.	a2	core
-Nunca he estado en Argentina.	I've never been to Argentina.	a2	travel
-¿Has visto mi teléfono?	Have you seen my phone?	a2	objects
-He escrito tres cartas.	I've written three letters.	a2	communication
-Hemos hecho mucho trabajo hoy.	We've done a lot of work today.	a2	work
+# Work, school, health, people, feelings, nature.
+# Columns: id	spanish	english	level	topics	note	register	address	regions
+000341	Trabajo de nueve a cinco.	I work from nine to five.	a1	work
+000342	Tengo una reunión a las diez.	I have a meeting at ten.	a1	work
+000343	Mi jefe es muy amable.	My boss is very kind.	a1	work
+000344	Estoy muy ocupado esta semana.	I'm very busy this week.	a1	work
+000345	El proyecto es difícil.	The project is difficult.	a1	work
+000346	Necesito terminar este trabajo hoy.	I need to finish this work today.	a1	work
+000347	¿Puedes enviarme el correo?	Can you send me the email?	a2	work
+000348	Voy a llamar al cliente.	I'm going to call the client.	a1	work
+000349	La empresa es grande.	The company is big.	a2	work
+000350	Empecé a trabajar en enero.	I started working in January.	a2	work
+000351	Gano poco dinero.	I earn little money.	a2	work
+000352	Busco un trabajo nuevo.	I'm looking for a new job.	a1	work
+000353	Estudio dos idiomas.	I study two languages.	a1	school
+000354	El examen fue muy difícil.	The exam was very difficult.	a2	school
+000355	Tengo mucha tarea hoy.	I have a lot of homework today.	a1	school
+000356	El profesor explica muy bien.	The teacher explains very well.	a1	school
+000357	No entiendo esta pregunta.	I don't understand this question.	a1	school
+000358	¿Puedes explicarme esta palabra?	Can you explain this word to me?	a1	school
+000359	Aprendí mucho en esa clase.	I learned a lot in that class.	a2	school
+000360	Escribo en mi cuaderno.	I write in my notebook.	a1	school
+000361	Olvidé el libro en casa.	I forgot the book at home.	a2	school
+000362	Repite la frase, por favor.	Repeat the sentence, please.	a1	school			tu
+000363	Voy a la biblioteca a estudiar.	I'm going to the library to study.	a1	school
+000364	No me siento bien.	I don't feel well.	a1	health
+000365	Me duele la cabeza.	My head hurts.	a1	health	doler works like gustar
+000366	Me duele el estómago.	I have a stomach ache.	a1	health
+000367	Tengo fiebre.	I have a fever.	a1	health
+000368	Estoy enfermo desde ayer.	I've been ill since yesterday.	a2	health
+000369	Necesito ir al médico.	I need to go to the doctor.	a1	health
+000370	El hospital está cerca del parque.	The hospital is near the park.	a1	health
+000371	Tomo una medicina cada día.	I take medicine every day.	a2	health
+000372	Debes descansar.	You should rest.	a1	health
+000373	Hago ejercicio tres veces por semana.	I exercise three times a week.	a1	sport
+000374	Corro por el parque los sábados.	I run in the park on Saturdays.	a1	sport
+000375	Juego al fútbol con mis amigos.	I play football with my friends.	a1	sport	jugar a + sport
+000376	Nado en el mar en verano.	I swim in the sea in summer.	a1	sport
+000377	Camino al trabajo todos los días.	I walk to work every day.	a1	sport
+000378	Mi equipo ganó el partido.	My team won the match.	a2	sport
+000379	Tengo dos hermanos y una hermana.	I have two brothers and a sister.	a1	family
+000380	Mi padre trabaja en un banco.	My father works at a bank.	a1	family
+000381	Mi hija tiene cinco años.	My daughter is five.	a1	family
+000382	Vivo con mi familia.	I live with my family.	a1	family
+000383	Mis abuelos viven en el campo.	My grandparents live in the countryside.	a1	family
+000384	Voy a visitar a mi tía.	I'm going to visit my aunt.	a1	family
+000385	Mi mejor amigo se llama Luis.	My best friend is called Luis.	a1	social
+000386	Conocí a mi novia en Madrid.	I met my girlfriend in Madrid.	a2	social
+000387	Nos vemos el viernes.	See you on Friday.	a1	social		colloquial		
+000388	¿Quedamos a las siete?	Shall we meet at seven?	a2	social		colloquial	tu	
+000389	Vamos a una fiesta esta noche.	We're going to a party tonight.	a1	social
+000390	Mis amigos vienen a cenar.	My friends are coming for dinner.	a1	social
+000391	Feliz cumpleaños.	Happy birthday.	a1	social		neutral		
+000392	¿Quieres tomar algo?	Do you want to have a drink?	a1	social		colloquial	tu	
+000393	Estoy muy feliz hoy.	I'm very happy today.	a1	feelings
+000394	Ella está triste.	She is sad.	a1	feelings
+000395	No estoy nervioso.	I'm not nervous.	a2	feelings
+000396	Me encanta esta canción.	I love this song.	a1	music
+000397	Creo que tienes razón.	I think you're right.	a1	core
+000398	Pienso que es una buena idea.	I think it's a good idea.	a1	core
+000399	No sé qué hacer.	I don't know what to do.	a1	core
+000400	No lo recuerdo.	I don't remember it.	a1	core
+000401	Lo entiendo perfectamente.	I understand it perfectly.	a2	core
+000402	Espero que sí.	I hope so.	a2	core		neutral		
+000403	Depende del tiempo.	It depends on the weather.	a2	core
+000404	Es la primera vez.	It's the first time.	a1	core
+000405	Otra vez, por favor.	Again, please.	a1	core
+000406	Poco a poco.	Little by little.	a1	core		colloquial		
+000407	Claro que sí.	Of course.	a1	core		colloquial		
+000408	Está bien.	It's fine.	a1	core		colloquial		
+000409	No pasa nada.	It's no problem.	a1	core		colloquial		
+000410	Hoy llueve mucho.	It's raining a lot today.	a1	weather
+000411	Mañana va a hacer sol.	Tomorrow it's going to be sunny.	a1	weather
+000412	En invierno nieva en la montaña.	In winter it snows in the mountains.	a2	weather
+000413	Hace mucho viento hoy.	It's very windy today.	a1	weather
+000414	El cielo está gris.	The sky is grey.	a1	weather
+000415	Me gusta el sol de la mañana.	I like the morning sun.	a1	weather
+000416	Los árboles del parque son muy altos.	The trees in the park are very tall.	a2	nature
+000417	Mi perro come mucho.	My dog eats a lot.	a1	animals
+000418	El gato duerme en el sofá.	The cat sleeps on the sofa.	a1	animals
+000419	Hay flores en el jardín.	There are flowers in the garden.	a1	nature
+000420	El río pasa por la ciudad.	The river runs through the city.	a2	nature
+000421	Cerca de mi casa hay un lago.	There's a lake near my house.	a2	nature
+000422	Limpio la cocina los sábados.	I clean the kitchen on Saturdays.	a1	home
+000423	Lavo la ropa una vez por semana.	I do the laundry once a week.	a1	home
+000424	Pongo los platos en la mesa.	I put the plates on the table.	a1	home
+000425	Saco la basura por la noche.	I take the rubbish out at night.	a2	home
+000426	Mi habitación está muy sucia.	My room is very dirty.	a1	home
+000427	La luz de la cocina no funciona.	The kitchen light doesn't work.	a2	home
+000428	Necesito una toalla limpia.	I need a clean towel.	a1	home
+000429	El sofá es viejo pero cómodo.	The sofa is old but comfortable.	a2	home
+000430	Deja las llaves en la mesa.	Leave the keys on the table.	a1	home			tu
+000431	Ayer llegué tarde a casa.	Yesterday I got home late.	a2	daily-routine
+000432	Anoche vi a mis vecinos.	Last night I saw my neighbours.	a2	social
+000433	La semana pasada estuve en Barcelona.	Last week I was in Barcelona.	a2	travel
+000434	El año pasado aprendí a conducir.	Last year I learned to drive.	a2	travel
+000435	Hace dos años vivía en otro país.	Two years ago I was living in another country.	a2	people
+000436	De niño jugaba en la calle.	As a child I used to play in the street.	a2	people
+000437	Mi hermano nació en marzo.	My brother was born in March.	a2	family
+000438	Todavía no he comido.	I haven't eaten yet.	a2	food-drink
+000439	Ya he terminado.	I've already finished.	a2	core
+000440	Nunca he estado en Argentina.	I've never been to Argentina.	a2	travel
+000441	¿Has visto mi teléfono?	Have you seen my phone?	a2	objects
+000442	He escrito tres cartas.	I've written three letters.	a2	communication
+000443	Hemos hecho mucho trabajo hoy.	We've done a lot of work today.	a2	work

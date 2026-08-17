@@ -257,7 +257,7 @@
 {"id":"core-es:lexeme:sombrero","lemma":"sombrero","pos":"NOUN","level":"a2","gender":"masculine"}
 {"id":"core-es:lexeme:bolso","lemma":"bolso","pos":"NOUN","level":"a2","gender":"masculine"}
 {"id":"core-es:lexeme:cinturon","lemma":"cinturón","pos":"NOUN","level":"a2","gender":"masculine"}
-{"id":"core-es:lexeme:gafas","lemma":"gafas","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:gafas","lemma":"gafas","pos":"NOUN","level":"a1","gender":"feminine","regions":["es-ES"]}
 {"id":"core-es:lexeme:reloj","lemma":"reloj","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:telefono","lemma":"teléfono","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:movil","lemma":"móvil","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-ES"]}
@@ -347,3 +347,13 @@
 {"id":"core-es:lexeme:camion","lemma":"camión","pos":"NOUN","level":"a2","gender":"masculine","register":"colloquial","regions":["es-MX"]}
 {"id":"core-es:lexeme:plata","lemma":"plata","pos":"NOUN","level":"a2","gender":"feminine","register":"colloquial","regions":["es-419"]}
 {"id":"core-es:lexeme:pasta","lemma":"pasta","pos":"NOUN","level":"a2","gender":"feminine","register":"colloquial","regions":["es-ES"]}
+{"id":"core-es:lexeme:camarero","lemma":"camarero","pos":"NOUN","level":"a2","gender":"masculine"}
+{"id":"core-es:lexeme:sueno","lemma":"sueño","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:prisa","lemma":"prisa","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:fin","lemma":"fin","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:lado","lemma":"lado","pos":"NOUN","level":"a2","gender":"masculine"}
+{"id":"core-es:lexeme:guitarra","lemma":"guitarra","pos":"NOUN","level":"a2","gender":"feminine"}
+{"id":"core-es:lexeme:musculo","lemma":"músculo","pos":"NOUN","level":"a2","gender":"masculine"}
+{"id":"core-es:lexeme:reserva","lemma":"reserva","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:lentes","lemma":"lentes","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-419"]}
+{"id":"core-es:lexeme:refrigerador","lemma":"refrigerador","pos":"NOUN","level":"a2","gender":"masculine","regions":["es-419"]}

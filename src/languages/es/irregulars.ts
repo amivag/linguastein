@@ -17,6 +17,8 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     imperfect: ['era', 'eras', 'era', 'éramos', 'erais', 'eran'],
     gerund: 'siendo',
     participle: 'sido',
+    imperativeTu: 'sé',
+    imperativeFormal: ['sea', 'sean'],
   },
   ir: {
     present: ['voy', 'vas', 'va', 'vamos', 'vais', 'van'],
@@ -24,14 +26,18 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     imperfect: ['iba', 'ibas', 'iba', 'íbamos', 'ibais', 'iban'],
     gerund: 'yendo',
     participle: 'ido',
+    imperativeTu: 've',
+    imperativeFormal: ['vaya', 'vayan'],
   },
   estar: {
     present: ['estoy', 'estás', 'está', 'estamos', 'estáis', 'están'],
     preteriteStem: 'estuv',
+    imperativeFormal: ['esté', 'estén'],
   },
   haber: {
     present: ['he', 'has', 'ha', 'hemos', 'habéis', 'han'],
     preteriteStem: 'hub',
+    imperativeFormal: ['haya', 'hayan'],
   },
   ver: {
     yo: 'veo',
@@ -42,23 +48,31 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   dar: {
     yo: 'doy',
     preterite: ['di', 'diste', 'dio', 'dimos', 'disteis', 'dieron'],
+    imperativeFormal: ['dé', 'den'],
   },
 
   // ── Irregular yo + strong preterite ────────────────────────────────────
-  tener: { stemChange: 'e-ie', yo: 'tengo', preteriteStem: 'tuv' },
-  venir: { stemChange: 'e-ie', yo: 'vengo', preteriteStem: 'vin', gerund: 'viniendo' },
-  poner: { yo: 'pongo', preteriteStem: 'pus', participle: 'puesto' },
-  hacer: { yo: 'hago', preteriteStem: 'hic', participle: 'hecho' },
+  tener: { stemChange: 'e-ie', yo: 'tengo', preteriteStem: 'tuv', imperativeTu: 'ten' },
+  venir: {
+    stemChange: 'e-ie',
+    yo: 'vengo',
+    preteriteStem: 'vin',
+    gerund: 'viniendo',
+    imperativeTu: 'ven',
+  },
+  poner: { yo: 'pongo', preteriteStem: 'pus', participle: 'puesto', imperativeTu: 'pon' },
+  hacer: { yo: 'hago', preteriteStem: 'hic', participle: 'hecho', imperativeTu: 'haz' },
   decir: {
     stemChange: 'e-i',
     yo: 'digo',
     preteriteStem: 'dij',
     participle: 'dicho',
     preteriteStemChange: 'e-i',
+    imperativeTu: 'di',
   },
   traer: { yo: 'traigo', preteriteStem: 'traj', gerund: 'trayendo', participle: 'traído' },
-  salir: { yo: 'salgo' },
-  saber: { yo: 'sé', preteriteStem: 'sup' },
+  salir: { yo: 'salgo', imperativeTu: 'sal' },
+  saber: { yo: 'sé', preteriteStem: 'sup', imperativeFormal: ['sepa', 'sepan'] },
   caer: { yo: 'caigo' },
   oír: { present: ['oigo', 'oyes', 'oye', 'oímos', 'oís', 'oyen'] },
   conocer: { yo: 'conozco' },
@@ -74,6 +88,7 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   // ── Stem-changing: e → ie ──────────────────────────────────────────────
   pensar: { stemChange: 'e-ie' },
   empezar: { stemChange: 'e-ie' },
+  recomendar: { stemChange: 'e-ie' },
   comenzar: { stemChange: 'e-ie' },
   entender: { stemChange: 'e-ie' },
   perder: { stemChange: 'e-ie' },
@@ -88,6 +103,8 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   // ── Stem-changing: o → ue ──────────────────────────────────────────────
   volver: { stemChange: 'o-ue', participle: 'vuelto' },
   contar: { stemChange: 'o-ue' },
+  acostar: { stemChange: 'o-ue' },
+  doler: { stemChange: 'o-ue' },
   encontrar: { stemChange: 'o-ue' },
   recordar: { stemChange: 'o-ue' },
   costar: { stemChange: 'o-ue' },

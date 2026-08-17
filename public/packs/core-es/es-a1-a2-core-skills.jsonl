@@ -10,3 +10,4 @@
 {"id":"core-es:skill:present-indicative","kind":"grammar","label":"presente de indicativo","level":"a1"}
 {"id":"core-es:skill:preterite","kind":"grammar","label":"pretérito indefinido","level":"a2"}
 {"id":"core-es:skill:imperfect","kind":"grammar","label":"pretérito imperfecto","level":"a2"}
+{"id":"core-es:skill:imperative","kind":"grammar","label":"imperativo","level":"a1"}

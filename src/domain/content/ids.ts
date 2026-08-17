@@ -18,11 +18,12 @@ export type LexemeId = Brand<string, 'LexemeId'>;
 export type SenseId = Brand<string, 'SenseId'>;
 export type VerbFormId = Brand<string, 'VerbFormId'>;
 export type SkillId = Brand<string, 'SkillId'>;
+export type PassageId = Brand<string, 'PassageId'>;
 
 /** Any entity that can be referenced by a translation, annotation or progress record. */
-export type EntityId = ItemId | LexemeId | SenseId | VerbFormId | SkillId;
+export type EntityId = ItemId | LexemeId | SenseId | VerbFormId | SkillId | PassageId;
 
-export const ENTITY_KINDS = ['item', 'lexeme', 'sense', 'form', 'skill'] as const;
+export const ENTITY_KINDS = ['item', 'lexeme', 'sense', 'form', 'skill', 'passage'] as const;
 export type EntityKind = (typeof ENTITY_KINDS)[number];
 
 export interface ParsedEntityId {

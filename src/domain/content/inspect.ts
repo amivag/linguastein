@@ -100,6 +100,15 @@ export function inspectToken(
 /** `1st sg · present · indicative` — empty when nothing is annotated. */
 export function describeMorphology(morph: Morphology | undefined): string | undefined {
   if (!morph) return undefined;
+
+  // A command is best described by who it is aimed at, because that is the choice
+  // the learner is making. `command · usted` beats `2nd sg · imperative · formal`,
+  // and it matches the vocabulary the rest of the app uses for address.
+  if (morph.mood === 'imperative') {
+    const audience = COMMAND_AUDIENCE[`${morph.number ?? 'singular'}:${morph.formality ?? ''}`];
+    return audience ? `command · ${audience}` : 'command';
+  }
+
   const parts: string[] = [];
 
   if (morph.verbForm === 'infinitive') parts.push('infinitive');
@@ -115,6 +124,13 @@ export function describeMorphology(morph: Morphology | undefined): string | unde
 
   return parts.length > 0 ? parts.join(' · ') : undefined;
 }
+
+const COMMAND_AUDIENCE: Record<string, string | undefined> = {
+  'singular:informal': 'tú',
+  'singular:formal': 'usted',
+  'plural:informal': 'vosotros',
+  'plural:formal': 'ustedes',
+};
 
 function personLabel(morph: Morphology): string | undefined {
   if (morph.person === undefined) return morph.number ? NUMBER_LABELS[morph.number] : undefined;

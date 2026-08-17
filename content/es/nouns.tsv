@@ -1,351 +1,366 @@
 # Spanish nouns — authoring source for the core-es pack.
-# Columns: lemma	gloss (en)	gender	plural (blank = regular)	level	topics	regions	register
+# Columns: id	lemma	gloss (en)	gender	plural (blank = regular)	level	topics	regions	register
 # Plurals are generated unless an irregular one is given (examen → exámenes).
-persona	person	f		a1	people
-hombre	man	m		a1	people
-mujer	woman	f		a1	people
-niño	boy, child	m		a1	people,family
-niña	girl	f		a1	people,family
-bebé	baby	m		a1	family
-familia	family	f		a1	family
-padre	father	m		a1	family
-madre	mother	f		a1	family
-hijo	son	m		a1	family
-hija	daughter	f		a1	family
-hermano	brother	m		a1	family
-hermana	sister	f		a1	family
-abuelo	grandfather	m		a1	family
-abuela	grandmother	f		a1	family
-tío	uncle	m		a1	family
-tía	aunt	f		a1	family
-primo	cousin	m		a2	family
-esposo	husband	m		a1	family
-esposa	wife	f		a1	family
-novio	boyfriend	m		a1	family
-novia	girlfriend	f		a1	family
-amigo	friend	m		a1	social
-amiga	friend (female)	f		a1	social
-vecino	neighbour	m		a2	social
-gente	people	f		a1	people
-señor	sir, mister	m		a1	social
-señora	madam, missus	f		a1	social
-chico	boy, guy	m		a1	people
-nombre	name	m		a1	people
-cuerpo	body	m		a1	body
-cabeza	head	f		a1	body
-pelo	hair	m		a1	body
-cara	face	f		a1	body
-ojo	eye	m		a1	body
-nariz	nose	f		a1	body
-boca	mouth	f		a1	body
-diente	tooth	m		a1	body
-oreja	ear	f		a1	body
-cuello	neck	m		a2	body
-brazo	arm	m		a1	body
-mano	hand	f		a1	body
-dedo	finger	m		a1	body
-pierna	leg	f		a1	body
-pie	foot	m		a1	body
-espalda	back	f		a2	body
-corazón	heart	m		a1	body
-estómago	stomach	m		a2	body
-piel	skin	f		a2	body
-sangre	blood	f		a2	body
-dolor	pain	m		a1	health
-fiebre	fever	f		a2	health
-medicina	medicine	f		a2	health
-médico	doctor	m		a1	health
-hospital	hospital	m		a1	health
-salud	health	f		a1	health
-comida	food, meal	f		a1	food-drink
-desayuno	breakfast	m		a1	food-drink
-almuerzo	lunch	m		a1	food-drink
-cena	dinner	f		a1	food-drink
-pan	bread	m		a1	food-drink
-agua	water	f		a1	food-drink
-leche	milk	f		a1	food-drink
-café	coffee	m		a1	food-drink
-té	tea	m		a1	food-drink
-jugo	juice	m		a1	food-drink	es-419	
-cerveza	beer	f		a1	food-drink
-vino	wine	m		a1	food-drink
-carne	meat	f		a1	food-drink
-pollo	chicken	m		a1	food-drink
-pescado	fish (food)	m		a1	food-drink
-huevo	egg	m		a1	food-drink
-queso	cheese	m		a1	food-drink
-arroz	rice	m		a1	food-drink
-sopa	soup	f		a1	food-drink
-ensalada	salad	f		a1	food-drink
-verdura	vegetable	f		a1	food-drink
-fruta	fruit	f		a1	food-drink
-manzana	apple	f		a1	food-drink
-naranja	orange	f		a1	food-drink
-plátano	banana	m		a1	food-drink
-uva	grape	f		a2	food-drink
-fresa	strawberry	f		a2	food-drink
-tomate	tomato	m		a1	food-drink
-papa	potato	f		a1	food-drink	es-419	
-cebolla	onion	f		a2	food-drink
-ajo	garlic	m		a2	food-drink
-zanahoria	carrot	f		a2	food-drink
-lechuga	lettuce	f		a2	food-drink
-sal	salt	f		a1	food-drink
-azúcar	sugar	m		a1	food-drink
-aceite	oil	m		a2	food-drink
-mantequilla	butter	f		a2	food-drink
-pastel	cake	m		a1	food-drink
-helado	ice cream	m		a1	food-drink
-chocolate	chocolate	m		a1	food-drink
-galleta	biscuit, cookie	f		a1	food-drink
-postre	dessert	m		a1	restaurant
-hambre	hunger	f		a1	food-drink
-sed	thirst	f		a1	food-drink
-cuenta	bill, account	f		a1	restaurant
-propina	tip	f		a2	restaurant
-menú	menu	m		a1	restaurant
-casa	house, home	f		a1	home
-piso	flat, floor	m		a1	home
-apartamento	apartment	m		a1	home
-habitación	room	f		a1	home
-cocina	kitchen	f		a1	home
-baño	bathroom	m		a1	home
-sala	living room	f		a1	home
-comedor	dining room	m		a2	home
-dormitorio	bedroom	m		a1	home
-cama	bed	f		a1	home
-mesa	table	f		a1	home
-silla	chair	f		a1	home
-sofá	sofa	m		a1	home
-puerta	door	f		a1	home
-ventana	window	f		a1	home
-pared	wall	f		a2	home
-suelo	floor, ground	m		a2	home
-llave	key	f		a1	home
-luz	light	f		a1	home
-lámpara	lamp	f		a2	home
-espejo	mirror	m		a2	home
-armario	wardrobe	m		a2	home
-plato	plate, dish	m		a1	home,restaurant
-vaso	glass	m		a1	home,restaurant
-taza	cup	f		a1	home
-cuchillo	knife	m		a1	home
-tenedor	fork	m		a1	home
-cuchara	spoon	f		a1	home
-servilleta	napkin	f		a2	restaurant
-toalla	towel	f		a2	home
-jabón	soap	m		a2	home
-basura	rubbish, trash	f		a2	home
-jardín	garden	m		a1	home
-ciudad	city	f		a1	city
-pueblo	town, village	m		a1	city
-país	country	m		a1	city
-calle	street	f		a1	city
-plaza	square	f		a1	city
-tienda	shop	f		a1	shopping
-mercado	market	m		a1	shopping
-supermercado	supermarket	m		a1	shopping
-restaurante	restaurant	m		a1	restaurant
-bar	bar	m		a1	restaurant
-hotel	hotel	m		a1	travel
-banco	bank	m		a1	city
-farmacia	pharmacy	f		a1	city
-panadería	bakery	f		a2	shopping
-iglesia	church	f		a2	city
-museo	museum	m		a1	city
-parque	park	m		a1	city
-cine	cinema	m		a1	city
-teatro	theatre	m		a2	city
-biblioteca	library	f		a1	city
-estación	station	f		a1	travel
-aeropuerto	airport	m		a1	travel
-avión	plane	m		a1	travel
-tren	train	m		a1	travel
-autobús	bus	m		a1	travel
-coche	car	m		a1	travel	es-ES	
-taxi	taxi	m		a1	travel
-bicicleta	bicycle	f		a1	travel
-billete	ticket	m		a1	travel	es-ES	
-maleta	suitcase	f		a1	travel
-viaje	trip, journey	m		a1	travel
-mapa	map	m		a1	travel
-camino	way, road	m		a2	travel
-puente	bridge	m		a2	city
-esquina	corner	f		a2	city
-frontera	border	f		a2	travel
-trabajo	work, job	m		a1	work
-oficina	office	f		a1	work
-empresa	company	f		a2	work
-jefe	boss	m		a1	work
-empleado	employee	m		a2	work
-reunión	meeting	f		a2	work
-proyecto	project	m		a2	work
-dinero	money	m		a1	work,shopping
-sueldo	salary	m		a2	work
-cliente	customer	m		a1	work
-escuela	school	f		a1	school
-universidad	university	f		a1	school
-clase	class	f		a1	school
-profesor	teacher	m		a1	school
-alumno	pupil	m		a2	school
-estudiante	student	m		a1	school
-examen	exam	m	exámenes	a1	school
-tarea	homework, task	f		a1	school
-libro	book	m		a1	school
-cuaderno	notebook	m		a2	school
-lápiz	pencil	m		a1	school
-bolígrafo	pen	m		a1	school
-papel	paper	m		a1	school
-palabra	word	f		a1	language
-pregunta	question	f		a1	language
-respuesta	answer	f		a1	language
-idioma	language	m		a1	language
-número	number	m		a1	core
-letra	letter (character)	f		a2	language
-frase	sentence, phrase	f		a2	language
-tiempo	time, weather	m		a1	time
-hora	hour, time	f		a1	time
-minuto	minute	m		a1	time
-segundo	second	m		a2	time
-día	day	m		a1	time
-mañana	morning	f		a1	time
-tarde	afternoon	f		a1	time
-noche	night	f		a1	time
-semana	week	f		a1	time
-mes	month	m		a1	time
-año	year	m		a1	time
-fecha	date	f		a1	time
-cumpleaños	birthday	m	cumpleaños	a1	time
-fiesta	party	f		a1	social
-vacaciones	holidays	f	vacaciones	a1	travel
-momento	moment	m		a1	time
-vez	time (occasion)	f		a1	time
-rato	while	m		a2	time
-sol	sun	m		a1	weather
-luna	moon	f		a2	nature
-estrella	star	f		a2	nature
-cielo	sky	m		a1	nature
-nube	cloud	f		a2	weather
-lluvia	rain	f		a1	weather
-nieve	snow	f		a1	weather
-viento	wind	m		a1	weather
-calor	heat	m		a1	weather
-frío	cold	m		a1	weather
-mar	sea	m		a1	nature
-río	river	m		a1	nature
-lago	lake	m		a2	nature
-montaña	mountain	f		a1	nature
-playa	beach	f		a1	travel
-campo	countryside, field	m		a1	nature
-bosque	forest	m		a2	nature
-árbol	tree	m		a1	nature
-flor	flower	f		a1	nature
-animal	animal	m		a1	animals
-perro	dog	m		a1	animals
-gato	cat	m		a1	animals
-pájaro	bird	m		a1	animals
-caballo	horse	m		a2	animals
-vaca	cow	f		a2	animals
-ropa	clothes	f		a1	clothes
-camisa	shirt	f		a1	clothes
-camiseta	t-shirt	f		a1	clothes
-pantalón	trousers	m		a1	clothes
-falda	skirt	f		a1	clothes
-vestido	dress	m		a1	clothes
-chaqueta	jacket	f		a1	clothes
-abrigo	coat	m		a1	clothes
-zapato	shoe	m		a1	clothes
-calcetín	sock	m		a2	clothes
-sombrero	hat	m		a2	clothes
-bolso	handbag	m		a2	clothes
-cinturón	belt	m		a2	clothes
-gafas	glasses	f	gafas	a1	clothes
-reloj	watch, clock	m		a1	objects
-teléfono	telephone	m		a1	objects
-móvil	mobile phone	m		a1	objects	es-ES	
-ordenador	computer	m		a1	objects	es-ES	
-pantalla	screen	f		a2	objects
-correo	mail, email	m		a1	communication
-mensaje	message	m		a1	communication
-foto	photo	f		a1	objects
-música	music	f		a1	music
-canción	song	f		a1	music
-película	film, movie	f		a1	entertainment
-televisión	television	f		a1	entertainment
-periódico	newspaper	m		a2	communication
-revista	magazine	f		a2	communication
-carta	letter (post)	f		a1	communication
-tarjeta	card	f		a1	shopping
-bolsa	bag	f		a1	shopping
-caja	box	f		a2	objects
-cosa	thing	f		a1	core
-vida	life	f		a1	core
-mundo	world	m		a1	core
-amor	love	m		a1	core
-problema	problem	m		a1	core
-idea	idea	f		a1	core
-verdad	truth	f		a1	core
-mentira	lie	f		a2	core
-suerte	luck	f		a1	core
-miedo	fear	m		a1	core
-ayuda	help	f		a1	core
-ejemplo	example	m		a1	core
-manera	way, manner	f		a2	core
-parte	part	f		a1	core
-lugar	place	m		a1	core
-sitio	place, spot	m		a2	core
-edad	age	f		a1	people
-color	colour	m		a1	core
-precio	price	m		a1	shopping
-error	mistake	m		a1	core
-razón	reason	f		a1	core
-historia	story, history	f		a1	entertainment
-cuento	story, tale	m		a2	entertainment
-juego	game	m		a1	sport
-deporte	sport	m		a1	sport
-fútbol	football	m		a1	sport
-equipo	team	m		a2	sport
-partido	match, game	m		a2	sport
-ejercicio	exercise	m		a2	sport
-lunes	Monday	m	lunes	a1	time
-martes	Tuesday	m	martes	a1	time
-miércoles	Wednesday	m	miércoles	a1	time
-jueves	Thursday	m	jueves	a1	time
-viernes	Friday	m	viernes	a1	time
-sábado	Saturday	m		a1	time
-domingo	Sunday	m		a1	time
-enero	January	m		a1	time
-febrero	February	m		a1	time
-marzo	March	m		a1	time
-abril	April	m		a1	time
-mayo	May	m		a1	time
-junio	June	m		a1	time
-julio	July	m		a1	time
-agosto	August	m		a1	time
-septiembre	September	m		a1	time
-octubre	October	m		a1	time
-noviembre	November	m		a1	time
-diciembre	December	m		a1	time
-primavera	spring	f		a1	time
-verano	summer	m		a1	time
-otoño	autumn	m		a1	time
-invierno	winter	m		a1	time
-favor	favour	m		a1	greetings
-nevera	fridge	f		a2	home
-centro	centre	m		a1	city
-euro	euro	m		a1	shopping
-talla	size	f		a2	shopping
-pasaporte	passport	m		a1	travel
-derecha	right (side)	f		a1	travel
-izquierda	left (side)	f		a1	travel
-inglés	English (language)	m		a1	language
-español	Spanish (language)	m		a1	language
-patata	potato	f		a1	food-drink	es-ES	
-carro	car	m		a1	travel	es-419	
-zumo	juice	m		a1	food-drink	es-ES	
-computadora	computer	f		a1	objects	es-419	
-celular	mobile phone	m		a1	objects	es-419	
-boleto	ticket	m		a1	travel	es-419	
-camión	bus (Mexico), lorry	m	camiones	a2	travel	es-MX	colloquial
-plata	money	f		a2	shopping	es-419	colloquial
-pasta	cash	f		a2	shopping	es-ES	colloquial
+# Leave the id off a new row: the build assigns one and writes it back, and the
+# row keeps it thereafter however the file is edited or reordered.
+500001	persona	person	f		a1	people
+500002	hombre	man	m		a1	people
+500003	mujer	woman	f		a1	people
+500004	niño	boy, child	m		a1	people,family
+500005	niña	girl	f		a1	people,family
+500006	bebé	baby	m		a1	family
+500007	familia	family	f		a1	family
+500008	padre	father	m		a1	family
+500009	madre	mother	f		a1	family
+500010	hijo	son	m		a1	family
+500011	hija	daughter	f		a1	family
+500012	hermano	brother	m		a1	family
+500013	hermana	sister	f		a1	family
+500014	abuelo	grandfather	m		a1	family
+500015	abuela	grandmother	f		a1	family
+500016	tío	uncle	m		a1	family
+500017	tía	aunt	f		a1	family
+500018	primo	cousin	m		a2	family
+500019	esposo	husband	m		a1	family
+500020	esposa	wife	f		a1	family
+500021	novio	boyfriend	m		a1	family
+500022	novia	girlfriend	f		a1	family
+500023	amigo	friend	m		a1	social
+500024	amiga	friend (female)	f		a1	social
+500025	vecino	neighbour	m		a2	social
+500026	gente	people	f		a1	people
+500027	señor	sir, mister	m		a1	social
+500028	señora	madam, missus	f		a1	social
+500029	chico	boy, guy	m		a1	people
+500030	nombre	name	m		a1	people
+500031	cuerpo	body	m		a1	body
+500032	cabeza	head	f		a1	body
+500033	pelo	hair	m		a1	body
+500034	cara	face	f		a1	body
+500035	ojo	eye	m		a1	body
+500036	nariz	nose	f		a1	body
+500037	boca	mouth	f		a1	body
+500038	diente	tooth	m		a1	body
+500039	oreja	ear	f		a1	body
+500040	cuello	neck	m		a2	body
+500041	brazo	arm	m		a1	body
+500042	mano	hand	f		a1	body
+500043	dedo	finger	m		a1	body
+500044	pierna	leg	f		a1	body
+500045	pie	foot	m		a1	body
+500046	espalda	back	f		a2	body
+500047	corazón	heart	m		a1	body
+500048	estómago	stomach	m		a2	body
+500049	piel	skin	f		a2	body
+500050	sangre	blood	f		a2	body
+500051	dolor	pain	m		a1	health
+500052	fiebre	fever	f		a2	health
+500053	medicina	medicine	f		a2	health
+500054	médico	doctor	m		a1	health
+500055	hospital	hospital	m		a1	health
+500056	salud	health	f		a1	health
+500057	comida	food, meal	f		a1	food-drink
+500058	desayuno	breakfast	m		a1	food-drink
+500059	almuerzo	lunch	m		a1	food-drink
+500060	cena	dinner	f		a1	food-drink
+500061	pan	bread	m		a1	food-drink
+500062	agua	water	f		a1	food-drink
+500063	leche	milk	f		a1	food-drink
+500064	café	coffee	m		a1	food-drink
+500065	té	tea	m		a1	food-drink
+500066	jugo	juice	m		a1	food-drink	es-419	
+500067	cerveza	beer	f		a1	food-drink
+500068	vino	wine	m		a1	food-drink
+500069	carne	meat	f		a1	food-drink
+500070	pollo	chicken	m		a1	food-drink
+500071	pescado	fish (food)	m		a1	food-drink
+500072	huevo	egg	m		a1	food-drink
+500073	queso	cheese	m		a1	food-drink
+500074	arroz	rice	m		a1	food-drink
+500075	sopa	soup	f		a1	food-drink
+500076	ensalada	salad	f		a1	food-drink
+500077	verdura	vegetable	f		a1	food-drink
+500078	fruta	fruit	f		a1	food-drink
+500079	manzana	apple	f		a1	food-drink
+500080	naranja	orange	f		a1	food-drink
+500081	plátano	banana	m		a1	food-drink
+500082	uva	grape	f		a2	food-drink
+500083	fresa	strawberry	f		a2	food-drink
+500084	tomate	tomato	m		a1	food-drink
+500085	papa	potato	f		a1	food-drink	es-419	
+500086	cebolla	onion	f		a2	food-drink
+500087	ajo	garlic	m		a2	food-drink
+500088	zanahoria	carrot	f		a2	food-drink
+500089	lechuga	lettuce	f		a2	food-drink
+500090	sal	salt	f		a1	food-drink
+500091	azúcar	sugar	m		a1	food-drink
+500092	aceite	oil	m		a2	food-drink
+500093	mantequilla	butter	f		a2	food-drink
+500094	pastel	cake	m		a1	food-drink
+500095	helado	ice cream	m		a1	food-drink
+500096	chocolate	chocolate	m		a1	food-drink
+500097	galleta	biscuit, cookie	f		a1	food-drink
+500098	postre	dessert	m		a1	restaurant
+500099	hambre	hunger	f		a1	food-drink
+500100	sed	thirst	f		a1	food-drink
+500101	cuenta	bill, account	f		a1	restaurant
+500102	propina	tip	f		a2	restaurant
+500103	menú	menu	m		a1	restaurant
+500104	casa	house, home	f		a1	home
+500105	piso	flat, floor	m		a1	home
+500106	apartamento	apartment	m		a1	home
+500107	habitación	room	f		a1	home
+500108	cocina	kitchen	f		a1	home
+500109	baño	bathroom	m		a1	home
+500110	sala	living room	f		a1	home
+500111	comedor	dining room	m		a2	home
+500112	dormitorio	bedroom	m		a1	home
+500113	cama	bed	f		a1	home
+500114	mesa	table	f		a1	home
+500115	silla	chair	f		a1	home
+500116	sofá	sofa	m		a1	home
+500117	puerta	door	f		a1	home
+500118	ventana	window	f		a1	home
+500119	pared	wall	f		a2	home
+500120	suelo	floor, ground	m		a2	home
+500121	llave	key	f		a1	home
+500122	luz	light	f		a1	home
+500123	lámpara	lamp	f		a2	home
+500124	espejo	mirror	m		a2	home
+500125	armario	wardrobe	m		a2	home
+500126	plato	plate, dish	m		a1	home,restaurant
+500127	vaso	glass	m		a1	home,restaurant
+500128	taza	cup	f		a1	home
+500129	cuchillo	knife	m		a1	home
+500130	tenedor	fork	m		a1	home
+500131	cuchara	spoon	f		a1	home
+500132	servilleta	napkin	f		a2	restaurant
+500133	toalla	towel	f		a2	home
+500134	jabón	soap	m		a2	home
+500135	basura	rubbish, trash	f		a2	home
+500136	jardín	garden	m		a1	home
+500137	ciudad	city	f		a1	city
+500138	pueblo	town, village	m		a1	city
+500139	país	country	m		a1	city
+500140	calle	street	f		a1	city
+500141	plaza	square	f		a1	city
+500142	tienda	shop	f		a1	shopping
+500143	mercado	market	m		a1	shopping
+500144	supermercado	supermarket	m		a1	shopping
+500145	restaurante	restaurant	m		a1	restaurant
+500146	bar	bar	m		a1	restaurant
+500147	hotel	hotel	m		a1	travel
+500148	banco	bank	m		a1	city
+500149	farmacia	pharmacy	f		a1	city
+500150	panadería	bakery	f		a2	shopping
+500151	iglesia	church	f		a2	city
+500152	museo	museum	m		a1	city
+500153	parque	park	m		a1	city
+500154	cine	cinema	m		a1	city
+500155	teatro	theatre	m		a2	city
+500156	biblioteca	library	f		a1	city
+500157	estación	station	f		a1	travel
+500158	aeropuerto	airport	m		a1	travel
+500159	avión	plane	m		a1	travel
+500160	tren	train	m		a1	travel
+500161	autobús	bus	m		a1	travel
+500162	coche	car	m		a1	travel	es-ES	
+500163	taxi	taxi	m		a1	travel
+500164	bicicleta	bicycle	f		a1	travel
+500165	billete	ticket	m		a1	travel	es-ES	
+500166	maleta	suitcase	f		a1	travel
+500167	viaje	trip, journey	m		a1	travel
+500168	mapa	map	m		a1	travel
+500169	camino	way, road	m		a2	travel
+500170	puente	bridge	m		a2	city
+500171	esquina	corner	f		a2	city
+500172	frontera	border	f		a2	travel
+500173	trabajo	work, job	m		a1	work
+500174	oficina	office	f		a1	work
+500175	empresa	company	f		a2	work
+500176	jefe	boss	m		a1	work
+500177	empleado	employee	m		a2	work
+500178	reunión	meeting	f		a2	work
+500179	proyecto	project	m		a2	work
+500180	dinero	money	m		a1	work,shopping
+500181	sueldo	salary	m		a2	work
+500182	cliente	customer	m		a1	work
+500183	escuela	school	f		a1	school
+500184	universidad	university	f		a1	school
+500185	clase	class	f		a1	school
+500186	profesor	teacher	m		a1	school
+500187	alumno	pupil	m		a2	school
+500188	estudiante	student	m		a1	school
+500189	examen	exam	m	exámenes	a1	school
+500190	tarea	homework, task	f		a1	school
+500191	libro	book	m		a1	school
+500192	cuaderno	notebook	m		a2	school
+500193	lápiz	pencil	m		a1	school
+500194	bolígrafo	pen	m		a1	school
+500195	papel	paper	m		a1	school
+500196	palabra	word	f		a1	language
+500197	pregunta	question	f		a1	language
+500198	respuesta	answer	f		a1	language
+500199	idioma	language	m		a1	language
+500200	número	number	m		a1	core
+500201	letra	letter (character)	f		a2	language
+500202	frase	sentence, phrase	f		a2	language
+500203	tiempo	time, weather	m		a1	time
+500204	hora	hour, time	f		a1	time
+500205	minuto	minute	m		a1	time
+500206	segundo	second	m		a2	time
+500207	día	day	m		a1	time
+500208	mañana	morning	f		a1	time
+500209	tarde	afternoon	f		a1	time
+500210	noche	night	f		a1	time
+500211	semana	week	f		a1	time
+500212	mes	month	m		a1	time
+500213	año	year	m		a1	time
+500214	fecha	date	f		a1	time
+500215	cumpleaños	birthday	m	cumpleaños	a1	time
+500216	fiesta	party	f		a1	social
+500217	vacaciones	holidays	f	vacaciones	a1	travel
+500218	momento	moment	m		a1	time
+500219	vez	time (occasion)	f		a1	time
+500220	rato	while	m		a2	time
+500221	sol	sun	m		a1	weather
+500222	luna	moon	f		a2	nature
+500223	estrella	star	f		a2	nature
+500224	cielo	sky	m		a1	nature
+500225	nube	cloud	f		a2	weather
+500226	lluvia	rain	f		a1	weather
+500227	nieve	snow	f		a1	weather
+500228	viento	wind	m		a1	weather
+500229	calor	heat	m		a1	weather
+500230	frío	cold	m		a1	weather
+500231	mar	sea	m		a1	nature
+500232	río	river	m		a1	nature
+500233	lago	lake	m		a2	nature
+500234	montaña	mountain	f		a1	nature
+500235	playa	beach	f		a1	travel
+500236	campo	countryside, field	m		a1	nature
+500237	bosque	forest	m		a2	nature
+500238	árbol	tree	m		a1	nature
+500239	flor	flower	f		a1	nature
+500240	animal	animal	m		a1	animals
+500241	perro	dog	m		a1	animals
+500242	gato	cat	m		a1	animals
+500243	pájaro	bird	m		a1	animals
+500244	caballo	horse	m		a2	animals
+500245	vaca	cow	f		a2	animals
+500246	ropa	clothes	f		a1	clothes
+500247	camisa	shirt	f		a1	clothes
+500248	camiseta	t-shirt	f		a1	clothes
+500249	pantalón	trousers	m		a1	clothes
+500250	falda	skirt	f		a1	clothes
+500251	vestido	dress	m		a1	clothes
+500252	chaqueta	jacket	f		a1	clothes
+500253	abrigo	coat	m		a1	clothes
+500254	zapato	shoe	m		a1	clothes
+500255	calcetín	sock	m		a2	clothes
+500256	sombrero	hat	m		a2	clothes
+500257	bolso	handbag	m		a2	clothes
+500258	cinturón	belt	m		a2	clothes
+500259	gafas	glasses	f	gafas	a1	clothes	es-ES
+500260	reloj	watch, clock	m		a1	objects
+500261	teléfono	telephone	m		a1	objects
+500262	móvil	mobile phone	m		a1	objects	es-ES	
+500263	ordenador	computer	m		a1	objects	es-ES	
+500264	pantalla	screen	f		a2	objects
+500265	correo	mail, email	m		a1	communication
+500266	mensaje	message	m		a1	communication
+500267	foto	photo	f		a1	objects
+500268	música	music	f		a1	music
+500269	canción	song	f		a1	music
+500270	película	film, movie	f		a1	entertainment
+500271	televisión	television	f		a1	entertainment
+500272	periódico	newspaper	m		a2	communication
+500273	revista	magazine	f		a2	communication
+500274	carta	letter (post), menu	f		a1	communication
+500275	tarjeta	card	f		a1	shopping
+500276	bolsa	bag	f		a1	shopping
+500277	caja	box	f		a2	objects
+500278	cosa	thing	f		a1	core
+500279	vida	life	f		a1	core
+500280	mundo	world	m		a1	core
+500281	amor	love	m		a1	core
+500282	problema	problem	m		a1	core
+500283	idea	idea	f		a1	core
+500284	verdad	truth	f		a1	core
+500285	mentira	lie	f		a2	core
+500286	suerte	luck	f		a1	core
+500287	miedo	fear	m		a1	core
+500288	ayuda	help	f		a1	core
+500289	ejemplo	example	m		a1	core
+500290	manera	way, manner	f		a2	core
+500291	parte	part	f		a1	core
+500292	lugar	place	m		a1	core
+500293	sitio	place, spot	m		a2	core
+500294	edad	age	f		a1	people
+500295	color	colour	m		a1	core
+500296	precio	price	m		a1	shopping
+500297	error	mistake	m		a1	core
+500298	razón	reason	f		a1	core
+500299	historia	story, history	f		a1	entertainment
+500300	cuento	story, tale	m		a2	entertainment
+500301	juego	game	m		a1	sport
+500302	deporte	sport	m		a1	sport
+500303	fútbol	football	m		a1	sport
+500304	equipo	team	m		a2	sport
+500305	partido	match, game	m		a2	sport
+500306	ejercicio	exercise	m		a2	sport
+500307	lunes	Monday	m	lunes	a1	time
+500308	martes	Tuesday	m	martes	a1	time
+500309	miércoles	Wednesday	m	miércoles	a1	time
+500310	jueves	Thursday	m	jueves	a1	time
+500311	viernes	Friday	m	viernes	a1	time
+500312	sábado	Saturday	m		a1	time
+500313	domingo	Sunday	m		a1	time
+500314	enero	January	m		a1	time
+500315	febrero	February	m		a1	time
+500316	marzo	March	m		a1	time
+500317	abril	April	m		a1	time
+500318	mayo	May	m		a1	time
+500319	junio	June	m		a1	time
+500320	julio	July	m		a1	time
+500321	agosto	August	m		a1	time
+500322	septiembre	September	m		a1	time
+500323	octubre	October	m		a1	time
+500324	noviembre	November	m		a1	time
+500325	diciembre	December	m		a1	time
+500326	primavera	spring	f		a1	time
+500327	verano	summer	m		a1	time
+500328	otoño	autumn	m		a1	time
+500329	invierno	winter	m		a1	time
+500330	favor	favour	m		a1	greetings
+500331	nevera	fridge	f		a2	home
+500332	centro	centre	m		a1	city
+500333	euro	euro	m		a1	shopping
+500334	talla	size	f		a2	shopping
+500335	pasaporte	passport	m		a1	travel
+500336	derecha	right (side)	f		a1	travel
+500337	izquierda	left (side)	f		a1	travel
+500338	inglés	English (language)	m		a1	language
+500339	español	Spanish (language)	m		a1	language
+500340	patata	potato	f		a1	food-drink	es-ES	
+500341	carro	car	m		a1	travel	es-419	
+500342	zumo	juice	m		a1	food-drink	es-ES	
+500343	computadora	computer	f		a1	objects	es-419	
+500344	celular	mobile phone	m		a1	objects	es-419	
+500345	boleto	ticket	m		a1	travel	es-419	
+500346	camión	bus, lorry	m	camiones	a2	travel	es-MX	colloquial
+500347	plata	money	f		a2	shopping	es-419	colloquial
+500348	pasta	cash	f		a2	shopping	es-ES	colloquial
+# Words that sentences already used but the lexicon did not carry, so the tokens
+# linked to nothing and the words could not be inspected or practised.
+500349	camarero	waiter	m		a2	restaurant
+500350	sueño	sleepiness, dream	m		a1	health
+500351	prisa	hurry	f		a1	core
+500352	fin	end	m		a1	time
+500353	lado	side	m		a2	core
+500354	guitarra	guitar	f		a2	music
+500355	músculo	muscle	m		a2	body
+500356	reserva	reservation	f		a1	travel
+# Latin American halves of pairs whose Spanish-of-Spain side shipped unmarked.
+500357	lentes	glasses	m	lentes	a1	clothes	es-419
+500358	refrigerador	fridge	m		a2	home	es-419

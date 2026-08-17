@@ -5,9 +5,17 @@
   "version": "0.1.0",
   "description": "High-frequency Spanish verbs, nouns, modifiers and everyday sentences. Generated from content/es and not yet reviewed by a human editor.",
   "license": "CC0-1.0",
-  "levels": ["a1", "a2"],
-  "referenceLanguages": ["en"],
-  "pronunciationLocales": ["es-ES", "es-MX"],
+  "levels": [
+    "a1",
+    "a2"
+  ],
+  "referenceLanguages": [
+    "en"
+  ],
+  "pronunciationLocales": [
+    "es-ES",
+    "es-MX"
+  ],
   "provenance": {
     "source": "generated",
     "origin": "content/es",
@@ -42,6 +50,10 @@
     {
       "kind": "items",
       "path": "es-a1-a2-core-sentences.jsonl"
+    },
+    {
+      "kind": "passages",
+      "path": "es-a1-a2-core-passages.jsonl"
     },
     {
       "kind": "translations",

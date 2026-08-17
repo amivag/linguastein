@@ -35,7 +35,8 @@ for (const entry of catalog.packs) {
   console.log(
     `\n${pack.manifest.id} v${pack.manifest.version} — ${pack.items.length} items, ` +
       `${pack.lexemes.length} lexemes, ${pack.verbForms.length} forms, ` +
-      `${pack.skills.length} skills, ${pack.translations.length} translations`,
+      `${pack.skills.length} skills, ${pack.passages.length} passages, ` +
+      `${pack.translations.length} translations`,
   );
   for (const issue of issues) console.log(`  ${formatIssue(issue)}`);
 }

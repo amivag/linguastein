@@ -109,12 +109,14 @@ export interface BuildConfigOptions {
   readonly size: SessionSize;
   readonly ordering?: Ordering;
   readonly seed?: number;
+  /** Narrows the preset further, e.g. to the sentences of one passage. */
+  readonly scope?: ItemFilter;
 }
 
 export function buildSessionConfig(preset: Preset, options: BuildConfigOptions): SessionConfig {
   return {
     mode: preset.mode,
-    filter: preset.filter(options.repository),
+    filter: { ...preset.filter(options.repository), ...options.scope },
     size: options.size,
     ordering: options.ordering ?? preset.ordering,
     exerciseKinds: preset.exerciseKinds,

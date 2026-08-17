@@ -17,6 +17,7 @@ import {
   ITEM_TYPES,
   MOODS,
   PACK_FILE_KINDS,
+  PASSAGE_KINDS,
   POS_TAGS,
   PROVENANCE_SOURCES,
   REGISTERS,
@@ -181,6 +182,23 @@ export const translationSchema = z
   })
   .loose();
 
+export const passageSchema = z
+  .object({
+    id: entityId('passage'),
+    pack: packId,
+    kind: z.enum(PASSAGE_KINDS),
+    title: z.string().min(1),
+    level: level.optional(),
+    topics: z.array(z.string()).optional(),
+    regions: z.array(languageTag).optional(),
+    // Two sentences is the minimum that makes a passage worth having; one is
+    // just an item with extra steps.
+    items: z.array(entityId('item')).min(2),
+    speakers: z.array(z.string()).optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
 export const packFileSchema = z
   .object({
     kind: z.enum(PACK_FILE_KINDS),
@@ -212,6 +230,7 @@ export const RECORD_SCHEMAS = {
   'verb-forms': verbFormSchema,
   skills: skillSchema,
   translations: translationSchema,
+  passages: passageSchema,
 } as const satisfies Record<(typeof PACK_FILE_KINDS)[number], z.ZodType>;
 
 export type RecordKind = keyof typeof RECORD_SCHEMAS;

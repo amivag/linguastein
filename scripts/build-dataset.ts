@@ -14,14 +14,18 @@
  * Usage: tsx scripts/build-dataset.ts
  */
 
-import { readFileSync, mkdirSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { PASSAGE_KINDS } from '../src/domain/content/model.ts';
 import { conjugate } from '../src/languages/es/conjugation.ts';
 import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
 import { adjectiveForms, pluralOf } from '../src/languages/es/morphology.ts';
 
-const CONTENT_DIR = resolve('content/es');
-const OUT_DIR = resolve('public/packs/core-es');
+// Overridable so a test can build a scratch copy of the sources without
+// touching the checked-in pack.
+const CONTENT_DIR = resolve(process.env['LINGO_CONTENT_DIR'] ?? 'content/es');
+const PACKS_DIR = resolve(process.env['LINGO_PACKS_DIR'] ?? 'public/packs');
+const OUT_DIR = join(PACKS_DIR, 'core-es');
 const PACK_ID = 'core-es';
 const NS = `${PACK_ID}:`;
 
@@ -44,6 +48,8 @@ interface NounRow {
   /** Regions where this is the usual word: papa in Latin America, patata in Spain. */
   regions: string[];
   register: string;
+  /** Where the row lives, so its word card can claim a stable id. */
+  row: SourceRow;
 }
 interface ModifierRow {
   lemma: string;
@@ -53,6 +59,7 @@ interface ModifierRow {
   topics: string[];
   /** Extra surface forms that should link to this lexeme (la, los, buen…). */
   forms: string[];
+  row: SourceRow;
 }
 interface SentenceRow {
   text: string;
@@ -66,15 +73,76 @@ interface SentenceRow {
   address: string;
   /** Regions where this is said, blank meaning everywhere. */
   regions: string[];
+  /** Key of the passage this sentence reads as part of, blank if it stands alone. */
+  passage: string;
+  /** Who says this line, for dialogues only. */
+  speaker: string;
   source: string;
+  row: SourceRow;
+}
+interface PassageRow {
+  key: string;
+  kind: string;
+  title: string;
+  titleTranslation: string;
+  level: string;
+  topics: string[];
+  row: SourceRow;
 }
 
-function readTsv(file: string): string[][] {
-  return readFileSync(join(CONTENT_DIR, file), 'utf8')
-    .split(/\r?\n/)
-    .filter((line) => line.trim().length > 0 && !line.startsWith('#'))
-    .map((line) => line.split('\t').map((cell) => cell.trim()));
+/**
+ * A data row, with its stable id separated from the authored columns.
+ *
+ * Ids live in the first column and are optional: an author appends a row
+ * without one and the build assigns it, so a row can be corrected, moved or
+ * reordered without its id changing. Nothing else in a source file is six
+ * digits, which is what makes the column safe to leave out.
+ */
+interface SourceRow {
+  id: string | undefined;
+  /** The authored columns, with any id stripped off the front. */
+  fields: string[];
+  /** Index into `SourceFile.lines`, so an assigned id can be written back. */
+  line: number;
 }
+
+interface SourceFile {
+  name: string;
+  /** Every physical line, so comments and blank lines survive a write-back. */
+  lines: string[];
+  rows: SourceRow[];
+}
+
+const ID_PATTERN = /^\d{6}$/;
+
+function readSource(file: string): SourceFile {
+  const lines = readFileSync(join(CONTENT_DIR, file), 'utf8').split(/\r?\n/);
+  const rows: SourceRow[] = [];
+
+  for (const [line, text] of lines.entries()) {
+    if (text.trim().length === 0 || text.startsWith('#')) continue;
+    const cells = text.split('\t').map((cell) => cell.trim());
+    const hasId = ID_PATTERN.test(cells[0] ?? '');
+    rows.push({
+      ...(hasId ? { id: cells[0]! } : { id: undefined }),
+      fields: hasId ? cells.slice(1) : cells,
+      line,
+    });
+  }
+
+  return { name: file, lines, rows };
+}
+
+const sourceFiles: SourceFile[] = [];
+
+/** Reads a file, remembering it so assigned ids can be written back later. */
+function readRows(file: string): SourceRow[] {
+  const source = readSource(file);
+  sourceFiles.push(source);
+  return source.rows;
+}
+
+const readTsv = (file: string): string[][] => readRows(file).map((row) => row.fields);
 
 const list = (value: string | undefined): string[] =>
   (value ?? '')
@@ -90,8 +158,9 @@ const verbs: VerbRow[] = readTsv('verbs.tsv').map(([lemma, gloss, level, regular
   topics: list(topics),
 }));
 
-const nouns: NounRow[] = readTsv('nouns.tsv').map(
-  ([lemma, gloss, gender, plural, level, topics, regions, register]) => ({
+const nouns: NounRow[] = readRows('nouns.tsv').map((row) => {
+  const [lemma, gloss, gender, plural, level, topics, regions, register] = row.fields;
+  return {
     lemma: lemma!,
     gloss: gloss!,
     gender: gender!,
@@ -100,36 +169,61 @@ const nouns: NounRow[] = readTsv('nouns.tsv').map(
     topics: list(topics),
     regions: list(regions),
     register: register ?? '',
-  }),
-);
+    row,
+  };
+});
 
-const modifiers: ModifierRow[] = readTsv('modifiers.tsv').map(
-  ([lemma, gloss, pos, level, topics, forms]) => ({
+const modifiers: ModifierRow[] = readRows('modifiers.tsv').map((row) => {
+  const [lemma, gloss, pos, level, topics, forms] = row.fields;
+  return {
     lemma: lemma!,
     gloss: gloss!,
     pos: pos!,
     level: level!,
     topics: list(topics),
     forms: list(forms),
-  }),
-);
+    row,
+  };
+});
 
 const sentences: SentenceRow[] = readdirSync(CONTENT_DIR)
   .filter((file) => file.startsWith('sentences') && file.endsWith('.tsv'))
   .sort()
   .flatMap((file) =>
-    readTsv(file).map(([text, translation, level, topics, note, register, address, regions]) => ({
-      text: text!,
-      translation: translation!,
-      level: level!,
-      topics: list(topics),
-      note: note ?? '',
-      register: register ?? '',
-      address: address ?? '',
-      regions: list(regions),
-      source: file,
-    })),
+    readRows(file).map((row) => {
+      const [text, translation, level, topics, note, register, address, regions, passage, speaker] =
+        row.fields;
+      return {
+        text: text!,
+        translation: translation!,
+        level: level!,
+        topics: list(topics),
+        note: note ?? '',
+        register: register ?? '',
+        address: address ?? '',
+        regions: list(regions),
+        passage: passage ?? '',
+        speaker: speaker ?? '',
+        source: file,
+        row,
+      };
+    }),
   );
+
+const passageRows: PassageRow[] = existsSync(join(CONTENT_DIR, 'passages.tsv'))
+  ? readRows('passages.tsv').map((row) => {
+      const [key, kind, title, titleTranslation, level, topics] = row.fields;
+      return {
+        key: key!,
+        kind: kind!,
+        title: title!,
+        titleTranslation: titleTranslation ?? '',
+        level: level!,
+        topics: list(topics),
+        row,
+      };
+    })
+  : [];
 
 // ── guards ──────────────────────────────────────────────────────────────────
 
@@ -149,6 +243,169 @@ for (const verb of verbs) {
 if (problems.length > 0) {
   console.error('Source problems:\n  ' + problems.join('\n  '));
   process.exit(1);
+}
+
+// ── stable item ids ─────────────────────────────────────────────────────────
+
+/**
+ * Learner progress, attempt history and mastery all reference item ids, so an
+ * id must mean the same item forever (spec §20). Ids used to be the row's
+ * position, which meant inserting a sentence silently repointed every learner's
+ * history at a different sentence.
+ *
+ * Now a row owns its id: the build assigns one to any row that lacks it and
+ * writes it back into the source file. Correcting a typo, moving a row to
+ * another file and reordering rows all keep the id, which is what §20.1
+ * requires and what a content hash could not give.
+ *
+ * `id-ledger.tsv` remembers every id ever issued, so a deleted row's id is
+ * retired rather than handed to the next new row.
+ */
+const LEDGER_FILE = 'id-ledger.tsv';
+
+type IdKind = 'sentence' | 'noun-card' | 'adjective-card' | 'passage';
+
+/** One range per kind, so appending a noun cannot renumber an adjective. */
+const ID_RANGES: Record<IdKind, { first: number; last: number }> = {
+  sentence: { first: 1, last: 499_999 },
+  'noun-card': { first: 500_001, last: 599_999 },
+  'adjective-card': { first: 600_001, last: 699_999 },
+  passage: { first: 700_001, last: 799_999 },
+};
+
+interface LedgerEntry {
+  readonly id: string;
+  readonly kind: IdKind;
+  readonly status: 'active' | 'retired';
+  /** A reminder of what the id refers to. Never identity — the id is. */
+  readonly text: string;
+}
+
+function readLedger(): Map<string, LedgerEntry> {
+  const entries = new Map<string, LedgerEntry>();
+  const path = join(CONTENT_DIR, LEDGER_FILE);
+  if (!existsSync(path)) return entries;
+
+  for (const line of readFileSync(path, 'utf8').split(/\r?\n/)) {
+    if (line.trim().length === 0 || line.startsWith('#')) continue;
+    const [id, kind, status, text] = line.split('\t').map((cell) => cell.trim());
+    if (!id) continue;
+    entries.set(id, {
+      id,
+      kind: kind as IdKind,
+      status: status === 'retired' ? 'retired' : 'active',
+      text: text ?? '',
+    });
+  }
+  return entries;
+}
+
+const ledger = readLedger();
+
+function allocatorFor(kind: IdKind): () => string {
+  const range = ID_RANGES[kind];
+  // Start above every id this range has ever issued, retired ones included.
+  let cursor = range.first - 1;
+  for (const entry of ledger.values()) {
+    const value = Number(entry.id);
+    if (value >= range.first && value <= range.last) cursor = Math.max(cursor, value);
+  }
+  return () => {
+    cursor += 1;
+    if (cursor > range.last) throw new Error(`${kind} ids exhausted at ${cursor}`);
+    return String(cursor).padStart(6, '0');
+  };
+}
+
+/** Every id claimed by this build, for the ledger and for duplicate detection. */
+const claimed = new Map<string, { kind: IdKind; text: string }>();
+const idProblems: string[] = [];
+
+function claimId(row: SourceRow, kind: IdKind, text: string, next: () => string): string {
+  const id = row.id ?? next();
+  row.id = id;
+
+  const existing = claimed.get(id);
+  if (existing) {
+    idProblems.push(`${id} is claimed by both "${existing.text}" and "${text}"`);
+  }
+  claimed.set(id, { kind, text });
+  return id;
+}
+
+const nextSentenceId = allocatorFor('sentence');
+for (const sentence of sentences) {
+  claimId(sentence.row, 'sentence', sentence.text, nextSentenceId);
+}
+
+const nextNounCardId = allocatorFor('noun-card');
+for (const noun of nouns) {
+  claimId(noun.row, 'noun-card', noun.lemma, nextNounCardId);
+}
+
+// Only adjectives become word cards, so only those rows carry an id.
+const nextAdjectiveCardId = allocatorFor('adjective-card');
+for (const modifier of modifiers) {
+  if (modifier.pos !== 'ADJ') continue;
+  claimId(modifier.row, 'adjective-card', modifier.lemma, nextAdjectiveCardId);
+}
+
+const nextPassageId = allocatorFor('passage');
+for (const passage of passageRows) {
+  claimId(passage.row, 'passage', passage.title, nextPassageId);
+}
+
+if (idProblems.length > 0) {
+  console.error('Item id problems:\n  ' + idProblems.join('\n  '));
+  process.exit(1);
+}
+
+const itemId = (row: SourceRow): string => `${NS}item:${row.id!}`;
+const passageEntityId = (row: SourceRow): string => `${NS}passage:${row.id!}`;
+
+/** Writes assigned ids back into the sources that gained them. */
+function writeBackIds(): string[] {
+  const touched: string[] = [];
+
+  for (const source of sourceFiles) {
+    let changed = false;
+    for (const row of source.rows) {
+      if (!row.id) continue;
+      const cells = source.lines[row.line]!.split('\t').map((cell) => cell.trim());
+      if (ID_PATTERN.test(cells[0] ?? '')) continue;
+      source.lines[row.line] = [row.id, ...cells].join('\t');
+      changed = true;
+    }
+    if (!changed) continue;
+    writeFileSync(join(CONTENT_DIR, source.name), source.lines.join('\n'), 'utf8');
+    touched.push(source.name);
+  }
+
+  return touched;
+}
+
+function writeLedger(): void {
+  const entries: LedgerEntry[] = [
+    ...[...claimed].map(([id, { kind, text }]) => ({
+      id,
+      kind,
+      status: 'active' as const,
+      text,
+    })),
+    // An id no row claims any more is retired, never reused.
+    ...[...ledger.values()]
+      .filter((entry) => !claimed.has(entry.id))
+      .map((entry) => ({ ...entry, status: 'retired' as const })),
+  ].sort((left, right) => left.id.localeCompare(right.id));
+
+  const header = [
+    `# Every item id ${PACK_ID} has ever issued. Generated by scripts/build-dataset.ts.`,
+    '# A row that goes away keeps its id here as `retired`, so it is never reissued.',
+    '# Columns: id\tkind\tstatus\ttext — text is a reminder, the id is the identity.',
+  ].join('\n');
+  const body = entries.map((entry) => [entry.id, entry.kind, entry.status, entry.text].join('\t'));
+
+  writeFileSync(join(CONTENT_DIR, LEDGER_FILE), `${header}\n${body.join('\n')}\n`, 'utf8');
 }
 
 // ── lexemes ─────────────────────────────────────────────────────────────────
@@ -243,11 +500,25 @@ function formSuffix(morph: {
   person?: number;
   number?: string;
   verbForm?: string;
+  mood?: string;
+  formality?: string;
 }) {
   if (morph.verbForm === 'gerund') return 'ger';
   if (morph.verbForm === 'participle') return 'part';
+  const plural = morph.number === 'plural';
+  // A command has no tense, so it is keyed by who it is addressed to instead.
+  if (morph.mood === 'imperative') {
+    const audience = plural
+      ? morph.formality === 'formal'
+        ? 'ustedes'
+        : 'vosotros'
+      : morph.formality === 'formal'
+        ? 'usted'
+        : 'tu';
+    return `cmd-${audience}`;
+  }
   const tense = { present: 'pres', preterite: 'pret', imperfect: 'imp' }[morph.tense ?? ''] ?? 'x';
-  return `${tense}-${morph.person}${morph.number === 'plural' ? 'p' : 's'}`;
+  return `${tense}-${morph.person}${plural ? 'p' : 's'}`;
 }
 
 // ── surface form index, used to link sentence tokens to lexemes ─────────────
@@ -272,11 +543,15 @@ for (const verb of verbs) {
   const lexeme = lexemeId(verb.lemma, 'VERB');
   index(verb.lemma, { lexeme, lemma: verb.lemma, pos: 'VERB', morph: { verbForm: 'infinitive' } });
 }
-for (const form of verbForms) {
-  const verb = verbLexemes.find((lexeme) => lexeme.id === form.lexeme);
-  if (verb)
-    index(form.form, { lexeme: form.lexeme, lemma: verb.lemma, pos: 'VERB', morph: form.morph });
+
+const verbLemmaOf = new Map(verbLexemes.map((lexeme) => [lexeme.id, lexeme.lemma]));
+const isCommand = (form: FormRecord) => form.morph['mood'] === 'imperative';
+
+for (const form of verbForms.filter((entry) => !isCommand(entry))) {
+  const lemma = verbLemmaOf.get(form.lexeme);
+  if (lemma) index(form.form, { lexeme: form.lexeme, lemma, pos: 'VERB', morph: form.morph });
 }
+
 for (const noun of nouns) {
   const lexeme = lexemeId(noun.lemma, 'NOUN');
   const gender = noun.gender === 'f' ? 'feminine' : 'masculine';
@@ -304,6 +579,24 @@ for (const modifier of modifiers) {
   }
 }
 
+/**
+ * Commands go in last, and only where they cannot outbid a word that is already
+ * claimed: `sé` is `saber` far more often than a command to *be*, `entre` is the
+ * preposition, and `limpia` is the adjective. Indexing them earlier made all
+ * three ambiguous and cost more links than the commands gained.
+ *
+ * Within one lexeme the overlap is harmless — `cierra` is `cerrar` either way —
+ * and which reading a sentence means is settled later by `retagCommand`, from
+ * the address the author declared.
+ */
+for (const form of verbForms.filter(isCommand)) {
+  const lemma = verbLemmaOf.get(form.lexeme);
+  if (!lemma) continue;
+  const claimants = surfaces.get(form.form.toLowerCase()) ?? [];
+  if (claimants.some((entry) => entry.lexeme !== form.lexeme)) continue;
+  index(form.form, { lexeme: form.lexeme, lemma, pos: 'VERB', morph: form.morph });
+}
+
 // ── sentences → items ───────────────────────────────────────────────────────
 
 interface Token {
@@ -328,6 +621,9 @@ interface ItemRecord {
   type: string;
   text: string;
   level: string;
+  register?: string;
+  address?: string;
+  regions?: string[];
   topics?: string[];
   tokens?: Token[];
   annotations?: Annotation[];
@@ -377,13 +673,14 @@ const NOMINAL_CUES = new Set([
 
 /**
  * Picks between lexemes that share a surface form. `trabajo` is the noun in
- * "el trabajo" and the verb in "trabajo en una oficina"; the word before it
- * decides. When the cue is missing or several candidates survive, the token is
+ * "el trabajo" and the verb in "trabajo en una oficina"; the words around it
+ * decide. When the cues are missing or several candidates survive, the token is
  * left unlinked — a wrong lemma is worse than a missing one.
  */
 function disambiguate(
   candidates: SurfaceEntry[],
   previous: Token | undefined,
+  next: string | undefined,
 ): SurfaceEntry | null {
   if (candidates.length === 0) return null;
 
@@ -391,23 +688,35 @@ function disambiguate(
   // are not an ambiguity at all.
   if (new Set(candidates.map((entry) => entry.lexeme)).size === 1) return candidates[0]!;
 
+  // Nothing follows, so no noun can follow either, which rules out the
+  // apocopated adjective: "canta muy mal" is the adverb, "un mal día" is not.
+  if (next === undefined || PUNCTUATION.has(next)) {
+    const adverbs = candidates.filter((entry) => entry.pos === 'ADV');
+    if (adverbs.length === 1) return adverbs[0]!;
+  }
+
   const previousText = previous?.text.toLowerCase() ?? '';
   const afterNominalCue = NOMINAL_CUES.has(previousText);
-  // A noun is also the likely reading straight after a finite verb or a
-  // preposition: "bebemos vino", "en casa".
+  // A noun is also the likely reading straight after a verb or a preposition:
+  // "bebemos vino", "en casa". `hay` is checked by part of speech because it is
+  // declared as a bare surface form and carries no morphology.
   const afterVerbOrPreposition =
-    previous?.morph?.['verbForm'] === 'finite' || previous?.pos === 'ADP';
+    previous?.morph?.['verbForm'] === 'finite' ||
+    previous?.pos === 'VERB' ||
+    previous?.pos === 'ADP';
+  const nominalPosition = afterNominalCue || afterVerbOrPreposition;
 
-  const preferred =
-    afterNominalCue || afterVerbOrPreposition
-      ? candidates.filter((entry) => entry.pos === 'NOUN' || entry.pos === 'ADJ')
-      : candidates.filter((entry) => entry.pos === 'VERB');
+  const preferred = nominalPosition
+    ? candidates.filter(
+        (entry) => entry.pos === 'NOUN' || entry.pos === 'ADJ' || entry.pos === 'PRON',
+      )
+    : candidates.filter((entry) => entry.pos === 'VERB');
 
   if (preferred.length === 1) return preferred[0]!;
-  // A determiner introduces a noun phrase, so the noun wins over the adjective
-  // that happens to share the form (la cara, mucho frío).
-  const nouns = preferred.filter((entry) => entry.pos === 'NOUN');
-  if (afterNominalCue && nouns.length === 1) return nouns[0]!;
+  // The head of a noun phrase wins over the adjective that happens to share its
+  // form: "la cara", "mucho frío", "tengo frío".
+  const heads = preferred.filter((entry) => entry.pos === 'NOUN' || entry.pos === 'PRON');
+  if (nominalPosition && heads.length === 1) return heads[0]!;
 
   return null;
 }
@@ -424,7 +733,7 @@ function tokenise(text: string): Token[] {
     }
 
     const candidates = surfaces.get(surface.toLowerCase()) ?? [];
-    const entry = disambiguate(candidates, tokens.at(-1));
+    const entry = disambiguate(candidates, tokens.at(-1), matches[position + 1]);
     if (!entry) {
       tokens.push({ id, text: surface });
       continue;
@@ -570,6 +879,17 @@ const TENSE_SKILLS: Record<string, { id: string; label: string; gloss: string; l
   },
 };
 
+/**
+ * Commands are a mood rather than a tense, so they are not in TENSE_SKILLS —
+ * but they are just as practisable, and a beginner meets them constantly.
+ */
+const IMPERATIVE_SKILL = {
+  id: `${NS}skill:imperative`,
+  label: 'imperativo',
+  gloss: 'telling someone to do something',
+  level: 'a1',
+};
+
 const usedSkills = new Set<string>();
 
 /** Lexeme id → the regions that word belongs to, for propagating onto phrases. */
@@ -588,15 +908,64 @@ const nounRegions = new Map<string, string[]>(
  */
 function deriveAddress(tokens: readonly Token[]): string {
   for (const token of tokens) {
-    const morph = token.morph as { person?: number; number?: string } | undefined;
+    const morph = token.morph as
+      { person?: number; number?: string; formality?: string } | undefined;
     if (morph?.person !== 2) continue;
-    return morph.number === 'plural' ? 'vosotros' : 'tu';
+    const plural = morph.number === 'plural';
+    // A command states who it is aimed at outright, which is why `Siga` yields
+    // usted where no indicative form could: usted takes third-person morphology.
+    if (morph.formality === 'formal') return plural ? 'ustedes' : 'usted';
+    return plural ? 'vosotros' : 'tu';
   }
   return '';
 }
 
-const sentenceItems: ItemRecord[] = sentences.map((sentence, position) => {
+/**
+ * A tú command is spelled exactly like the third person present — `cierra la
+ * puerta` and `la tienda cierra a las dos` differ only in what they mean, and
+ * the linker cannot see the difference.
+ *
+ * So the build does not guess. It trusts the author: a sentence that declares
+ * who it is spoken to, and is not a question, is read as a command when it opens
+ * with a verb that has that very command form. Everything else stays indicative,
+ * which is why weather verbs (`Hace frío`) and statements (`Está muy cerca`) are
+ * unaffected.
+ */
+function retagCommand(tokens: Token[], sentence: SentenceRow): void {
+  if (!sentence.address) return;
+  const text = sentence.text.trim();
+  if (text.startsWith('¿') || text.endsWith('?')) return;
+
+  const opening = tokens.find((token) => token.pos !== 'PUNCT');
+  if (!opening?.lexeme || opening.morph?.['mood'] !== 'indicative') return;
+
+  // The command must be the one the declared address asks for. Without this,
+  // "Está muy cerca. Siga por esta calle." — declared usted — would match
+  // estar's *tú* command, which is spelled `está`, and mislabel a statement.
+  const wanted = COMMAND_AUDIENCE[sentence.address];
+  if (!wanted) return;
+
+  const command = verbForms.find(
+    (form) =>
+      form.lexeme === opening.lexeme &&
+      isCommand(form) &&
+      form.form.toLowerCase() === opening.text.toLowerCase() &&
+      form.morph['number'] === wanted.number &&
+      form.morph['formality'] === wanted.formality,
+  );
+  if (command) opening.morph = command.morph;
+}
+
+const COMMAND_AUDIENCE: Record<string, { number: string; formality: string } | undefined> = {
+  tu: { number: 'singular', formality: 'informal' },
+  usted: { number: 'singular', formality: 'formal' },
+  vosotros: { number: 'plural', formality: 'informal' },
+  ustedes: { number: 'plural', formality: 'formal' },
+};
+
+const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
   const tokens = tokenise(sentence.text);
+  retagCommand(tokens, sentence);
   const annotations: Annotation[] = [];
 
   for (let i = 0; i < tokens.length; i++) {
@@ -620,6 +989,10 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence, position) => {
       skills.add(TENSE_SKILLS[tense]!.id);
       usedSkills.add(TENSE_SKILLS[tense]!.id);
     }
+    if (token.morph?.['mood'] === 'imperative') {
+      skills.add(IMPERATIVE_SKILL.id);
+      usedSkills.add(IMPERATIVE_SKILL.id);
+    }
   }
 
   const lexemes = [...new Set(tokens.map((token) => token.lexeme).filter(Boolean))] as string[];
@@ -636,7 +1009,7 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence, position) => {
   ];
 
   return {
-    id: `${NS}item:${String(position + 1).padStart(6, '0')}`,
+    id: itemId(sentence.row),
     pack: PACK_ID,
     type: hasFiniteVerb ? 'sentence' : 'phrase',
     text: sentence.text,
@@ -652,6 +1025,108 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence, position) => {
   };
 });
 
+// ── no two items may carry the same text ────────────────────────────────────
+
+/**
+ * Two items with identical text split a learner in half: progress, mastery and
+ * scheduling all key on the item id, so the same sentence would be practised
+ * twice and known once. Easy to introduce by accident when writing a passage
+ * around sentences that already exist.
+ */
+const textOwners = new Map<string, string[]>();
+for (const [index, item] of sentenceItems.entries()) {
+  const key = item.text
+    .toLowerCase()
+    .replace(/[¿¡?!.,;:]/g, '')
+    .trim();
+  const owners = textOwners.get(key);
+  const label = `${item.id} (${sentences[index]!.source})`;
+  if (owners) owners.push(label);
+  else textOwners.set(key, [label]);
+}
+
+const duplicateTexts = [...textOwners.entries()].filter(([, owners]) => owners.length > 1);
+if (duplicateTexts.length > 0) {
+  console.error(
+    'Duplicate sentence text — reword one, or have the passage reference the existing item:\n  ' +
+      duplicateTexts.map(([text, owners]) => `"${text}" → ${owners.join(', ')}`).join('\n  '),
+  );
+  process.exit(1);
+}
+
+// ── passages (several sentences read as one text) ────────────────────────────
+
+/**
+ * A passage is a container over sentences that stay individually practisable, so
+ * nothing here touches the item records — it only references them in order.
+ * Membership is authored on the sentence rows, which keeps a paragraph together
+ * in the file a human is reading.
+ */
+interface PassageRecord {
+  id: string;
+  pack: string;
+  kind: string;
+  title: string;
+  level?: string;
+  topics?: string[];
+  regions?: string[];
+  items: string[];
+  speakers?: string[];
+}
+
+const itemById = new Map(sentenceItems.map((item, index) => [sentences[index]!, item]));
+const passageProblems: string[] = [];
+const declaredKeys = new Set(passageRows.map((passage) => passage.key));
+
+for (const sentence of sentences) {
+  if (sentence.passage && !declaredKeys.has(sentence.passage)) {
+    passageProblems.push(
+      `"${sentence.text}" claims passage "${sentence.passage}", which passages.tsv does not declare`,
+    );
+  }
+}
+
+const passageRecords: PassageRecord[] = passageRows.map((passage) => {
+  const members = sentences.filter((sentence) => sentence.passage === passage.key);
+
+  if (members.length < 2) {
+    passageProblems.push(
+      `passage "${passage.key}" has ${members.length} sentence(s); a passage needs at least two`,
+    );
+  }
+  if (!(PASSAGE_KINDS as readonly string[]).includes(passage.kind)) {
+    passageProblems.push(`passage "${passage.key}" has unknown kind "${passage.kind}"`);
+  }
+  if (passage.kind === 'dialogue' && members.some((member) => !member.speaker)) {
+    passageProblems.push(`dialogue "${passage.key}" has a line with no speaker`);
+  }
+  if (passage.kind === 'text' && members.some((member) => member.speaker)) {
+    passageProblems.push(`passage "${passage.key}" is not a dialogue but names a speaker`);
+  }
+
+  const items = members.map((member) => itemById.get(member)!);
+  // A passage is only readable where all of its sentences are, so it inherits
+  // the union of their regional limits rather than none of them.
+  const regions = [...new Set(items.flatMap((item) => item.regions ?? []))];
+
+  return {
+    id: passageEntityId(passage.row),
+    pack: PACK_ID,
+    kind: passage.kind,
+    title: passage.title,
+    ...(passage.level ? { level: passage.level } : {}),
+    ...(passage.topics.length > 0 ? { topics: passage.topics } : {}),
+    ...(regions.length > 0 ? { regions } : {}),
+    items: items.map((item) => item.id),
+    ...(passage.kind === 'dialogue' ? { speakers: members.map((member) => member.speaker) } : {}),
+  };
+});
+
+if (passageProblems.length > 0) {
+  console.error('Passage problems:\n  ' + passageProblems.join('\n  '));
+  process.exit(1);
+}
+
 // ── vocabulary items (one card per noun and adjective) ──────────────────────
 
 const examplesByLexeme = new Map<string, string[]>();
@@ -665,6 +1140,7 @@ for (const item of sentenceItems) {
 
 const vocabularySources = [
   ...nouns.map((noun) => ({
+    id: itemId(noun.row),
     lemma: noun.lemma,
     pos: 'NOUN',
     level: noun.level,
@@ -677,6 +1153,7 @@ const vocabularySources = [
   ...modifiers
     .filter((modifier) => modifier.pos === 'ADJ')
     .map((modifier) => ({
+      id: itemId(modifier.row),
       lemma: modifier.lemma,
       pos: 'ADJ',
       level: modifier.level,
@@ -686,11 +1163,11 @@ const vocabularySources = [
     })),
 ];
 
-const vocabularyItems: ItemRecord[] = vocabularySources.map((entry, position) => {
+const vocabularyItems: ItemRecord[] = vocabularySources.map((entry) => {
   const lexeme = lexemeId(entry.lemma, entry.pos);
   const examples = (examplesByLexeme.get(lexeme) ?? []).slice(0, 3);
   return {
-    id: `${NS}item:${String(500000 + position + 1).padStart(6, '0')}`,
+    id: entry.id,
     pack: PACK_ID,
     type: 'word',
     text: entry.lemma,
@@ -719,7 +1196,7 @@ const skillRecords: SkillRecord[] = [
     label: pattern.label,
     level: pattern.level,
   })),
-  ...Object.values(TENSE_SKILLS).map((skill) => ({
+  ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL].map((skill) => ({
     id: skill.id,
     kind: 'grammar',
     label: skill.label,
@@ -729,7 +1206,9 @@ const skillRecords: SkillRecord[] = [
 
 const skillGlosses = new Map<string, string>([
   ...PATTERNS.map((pattern) => [pattern.skill, pattern.gloss] as const),
-  ...Object.values(TENSE_SKILLS).map((skill) => [skill.id, skill.gloss] as const),
+  ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL].map(
+    (skill) => [skill.id, skill.gloss] as const,
+  ),
 ]);
 
 interface TranslationRecord {
@@ -767,6 +1246,16 @@ const translations: TranslationRecord[] = [
     lang: 'en',
     text: skillGlosses.get(skill.id) ?? skill.label,
   })),
+  // A passage title is target-language text like any other, so its reference
+  // translation is a separate record rather than a field.
+  ...passageRows
+    .filter((passage) => passage.titleTranslation)
+    .map((passage) => ({
+      ref: passageEntityId(passage.row),
+      lang: 'en',
+      text: passage.titleTranslation,
+      type: 'natural',
+    })),
 ];
 
 function glossOf(lemma: string, pos: string): string {
@@ -784,8 +1273,9 @@ const files = [
   { kind: 'verb-forms', path: 'es-a1-a2-core-verb-forms.jsonl', records: verbForms },
   { kind: 'items', path: 'es-a1-a2-core-vocabulary.jsonl', records: vocabularyItems },
   { kind: 'items', path: 'es-a1-a2-core-sentences.jsonl', records: sentenceItems },
+  { kind: 'passages', path: 'es-a1-a2-core-passages.jsonl', records: passageRecords },
   { kind: 'translations', path: 'es-a1-a2-core-translations-en.jsonl', records: translations },
-] as const;
+].filter((file) => file.records.length > 0);
 
 /** Drops empty arrays and undefined fields so the JSONL stays readable. */
 function clean<T extends object>(records: readonly T[]): T[] {
@@ -798,6 +1288,9 @@ function clean<T extends object>(records: readonly T[]): T[] {
       ) as T,
   );
 }
+
+const idsWrittenBack = writeBackIds();
+writeLedger();
 
 mkdirSync(OUT_DIR, { recursive: true });
 
@@ -825,7 +1318,7 @@ const manifest = {
 writeFileSync(join(OUT_DIR, 'pack.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 
 writeFileSync(
-  resolve('public/packs/catalog.json'),
+  join(PACKS_DIR, 'catalog.json'),
   `${JSON.stringify(
     {
       $comment: 'Packs shipped with this build. Generated by scripts/build-dataset.ts.',
@@ -850,6 +1343,21 @@ console.log(
 console.log(`  ${verbForms.length} verb forms`);
 console.log(`  ${sentenceItems.length} sentences · ${vocabularyItems.length} word cards`);
 console.log(`  ${skillRecords.length} skills · ${translations.length} translations`);
+
+if (passageRecords.length > 0) {
+  const lines = passageRecords.reduce((total, passage) => total + passage.items.length, 0);
+  const dialogues = passageRecords.filter((passage) => passage.kind === 'dialogue').length;
+  console.log(
+    `  ${passageRecords.length} passages (${dialogues} dialogues) · ` +
+      `${lines} sentences read in context, ${(lines / passageRecords.length).toFixed(1)} per passage`,
+  );
+}
+
+const retired = [...ledger.values()].filter((entry) => !claimed.has(entry.id)).length;
+console.log(
+  `\n  item ids: ${claimed.size} active, ${retired} retired` +
+    (idsWrittenBack.length > 0 ? ` — assigned new ids in ${idsWrittenBack.join(', ')}` : ''),
+);
 
 const linked = sentenceItems.flatMap((item) => item.tokens ?? []);
 const linkedCount = linked.filter((token) => token.lexeme).length;

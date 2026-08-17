@@ -1,0 +1,22 @@
+# Passages: several sentences read as one connected text (spec §16).
+# Columns: id	key	kind	title (es)	title (en)	level	topics
+#
+# The sentences themselves live in the sentences-*.tsv files and carry the
+# passage key in their `passage` column, so a paragraph stays together in the
+# file a human is reading and each of its sentences stays practisable on its own.
+# `kind` is text or dialogue; a dialogue needs a speaker on every line.
+# Leave the id off a new row: the build assigns one and writes it back.
+700001	mañana	text	Una mañana normal	An ordinary morning	a1	daily-routine
+700002	piso	text	Mi piso	My flat	a1	home
+700003	oficina	text	Un día en la oficina	A day at the office	a1	work
+700004	sabado	text	El sábado	Saturday	a1	social
+700005	enfermo	text	No me siento bien	I don't feel well	a2	health
+700006	verano	text	El verano pasado	Last summer	a2	travel
+700007	mercado	text	En el mercado	At the market	a1	shopping
+700008	lluvia	text	Un día de lluvia	A rainy day	a1	weather
+700009	cafeteria	dialogue	En la cafetería	At the café	a1	restaurant
+700010	tienda	dialogue	En la tienda de ropa	At the clothes shop	a1	shopping
+700011	calle	dialogue	Perdona, ¿dónde está?	Excuse me, where is it?	a1	travel
+700012	hotel	dialogue	En el hotel	At the hotel	a1	travel
+700013	medico	dialogue	En el médico	At the doctor's	a2	health
+700014	amigos	dialogue	¿Qué hacemos esta noche?	What shall we do tonight?	a1	social

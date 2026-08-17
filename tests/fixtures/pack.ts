@@ -7,6 +7,8 @@ import type {
   LexemeId,
   PackId,
   PackManifest,
+  Passage,
+  PassageId,
   SkillId,
   Translation,
   VerbForm,
@@ -23,7 +25,10 @@ const manifest: PackManifest = {
   name: 'Test Spanish',
   targetLanguage: 'es',
   version: '1.0.0',
-  files: [{ kind: 'items', path: 'items.jsonl' }],
+  files: [
+    { kind: 'items', path: 'items.jsonl' },
+    { kind: 'passages', path: 'passages.jsonl' },
+  ],
 };
 
 const item = (
@@ -113,9 +118,32 @@ export const TRANSLATIONS: readonly Translation[] = [
   { ref: 'test-es:lexeme:tener', lang: 'en', text: 'to have' },
 ];
 
+/** Two sentences read as one text, plus a two-line dialogue. */
+export const PASSAGES: readonly Passage[] = [
+  {
+    id: id<PassageId>('test-es:passage:700001'),
+    pack: TEST_PACK_ID,
+    kind: 'text',
+    title: 'Un día de trabajo',
+    level: 'a1',
+    topics: ['work'],
+    items: [id<ItemId>('test-es:item:001'), id<ItemId>('test-es:item:002')],
+  },
+  {
+    id: id<PassageId>('test-es:passage:700002'),
+    pack: TEST_PACK_ID,
+    kind: 'dialogue',
+    title: '¿Tienes tiempo?',
+    level: 'a1',
+    items: [id<ItemId>('test-es:item:003'), id<ItemId>('test-es:item:002')],
+    speakers: ['Ana', 'Luis'],
+  },
+];
+
 export const TEST_PACK: ContentPack = {
   manifest,
   items: ITEMS,
+  passages: PASSAGES,
   lexemes: [{ id: id<LexemeId>('test-es:lexeme:tener'), lemma: 'tener', pos: 'VERB', level: 'a1' }],
   senses: [],
   verbForms: [

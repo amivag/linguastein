@@ -1,0 +1,32 @@
+.details {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+
+.summary {
+  min-height: var(--tap-target);
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  list-style: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary::after {
+  content: '＋';
+  margin-left: auto;
+}
+
+.details[open] .summary::after {
+  content: '−';
+}
+
+.actions {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+}

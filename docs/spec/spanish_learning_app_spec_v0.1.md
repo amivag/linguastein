@@ -1,0 +1,1686 @@
+# Spanish Learning App — Draft Product & Technical Specification
+
+**Status:** Draft v0.1  
+**Date:** 2026-08-17  
+**Purpose:** Handoff document for a fresh AI coding/design agent session.  
+**Important:** Do not build or generate the production datasets yet. Dataset creation/curation will be handled separately.
+
+---
+
+# 1. Project Summary
+
+Build a **free, public, mobile-first language-learning and practice app**, starting with Spanish.
+
+The initial implementation should be deliberately simple and useful:
+
+- practice basic Spanish verbs
+- practice useful phrases
+- practice words/vocabulary
+- listen to native-quality pronunciation
+- repeat aloud
+- reveal translations/meaning when needed
+- view extra examples and contextual information
+- perform quick mobile-friendly exercises
+- track progress locally
+
+The architecture must allow the app to grow later into a much more powerful learning system without requiring a rewrite.
+
+The long-term goal is not merely a flashcard app. It is a **language-learning engine** that can support:
+
+- vocabulary
+- verbs and conjugation
+- phrases and sentences
+- grammar patterns
+- listening
+- pronunciation
+- speaking
+- contextual examples
+- dialogues
+- stories
+- narrative practice
+- multiple exercise types
+- spaced repetition
+- adaptive sessions
+- AI-assisted learning
+- multiple target languages
+- multiple learner/reference languages
+- community-submitted material and corrections
+- optional cloud synchronization
+
+The initial app should remain focused on basic Spanish practice.
+
+---
+
+# 2. Product Philosophy
+
+## 2.1 Mobile-first and low-friction
+
+The primary device is expected to be a **smartphone**.
+
+The default learning loop should require little or no typing.
+
+Primary interaction:
+
+1. see a word/phrase/sentence
+2. listen
+3. repeat aloud
+4. reveal meaning if needed
+5. optionally inspect examples/details
+6. move to the next item
+
+Typing should exist as an exercise mode, but it is not a high-priority interaction.
+
+Mobile-friendly interaction types should be preferred:
+
+- listen and repeat
+- reveal
+- multiple choice
+- large choice buttons
+- cloze with selectable answers
+- tap-to-build sentence
+- self-rating
+- speech/repetition
+- optional typing
+
+---
+
+## 2.2 Language should be learned through use and context
+
+The system should not be built around memorizing isolated dictionary entries only.
+
+Important influences:
+
+### Kató Lomb-inspired principles
+
+The app should eventually support:
+
+- meaningful contextual exposure
+- interesting material
+- repeated encounters with vocabulary
+- listening and imitation
+- tolerance of partial understanding
+- learning words through context
+- reading/listening before over-explaining grammar
+- active use of the language
+- self-directed speaking/monologues
+
+Grammar should generally be available **just in time**, rather than forcing the learner through abstract grammar chapters before using the language.
+
+### Storytelling as a learning goal
+
+A strong marker of language ownership is the ability to tell a story.
+
+The app should eventually support narrative progression such as:
+
+- tell 3 sentences about yesterday
+- tell a short event
+- use sequencing words
+- retell a story
+- retell without prompts
+- change tense
+- change point of view
+- extend a story
+- tell a 1–3 minute free narrative
+
+Storytelling is a future capability, not part of the first MVP.
+
+---
+
+# 3. Initial User Experience
+
+The first release should feel simple.
+
+A possible home screen:
+
+```text
+Spanish Basics
+
+27 due
+8 new
+
+[ Quick Practice ]
+[ Flashcards ]
+[ Verbs ]
+[ Vocabulary ]
+```
+
+Potential quick-session options:
+
+```text
+2 min
+5 min
+10 min
+20 min
+Free practice
+```
+
+The app should allow a user to quickly practice while waiting somewhere, walking, commuting, or during a longer dedicated study session.
+
+---
+
+# 4. Initial Practice Tools
+
+The first app does not need every future exercise type.
+
+The initial set should focus on a small number of high-value tools.
+
+## 4.1 Listen & Repeat
+
+Default audio-first practice.
+
+Example:
+
+```text
+Tengo que trabajar.
+
+🔊 Play
+```
+
+User listens and repeats aloud.
+
+Expandable actions:
+
+```text
+Meaning
+More info
+Examples
+Alternative phrases
+Copy
+Share
+```
+
+Meaning:
+
+```text
+I have to work.
+```
+
+Extra information:
+
+```text
+tener que + infinitive
+= to have to do something
+```
+
+Examples:
+
+```text
+Tengo que irme.
+Tenemos que esperar.
+¿Tienes que trabajar hoy?
+```
+
+---
+
+## 4.2 Flashcards
+
+Flashcards should support two distinct modes.
+
+### Study mode
+
+Free browsing:
+
+- previous
+- next
+- reveal
+- listen
+- examples
+- notes
+- copy/share
+- sequential/random order
+
+No strict scoring is required.
+
+### Practice mode
+
+Session-oriented:
+
+- generated item set
+- optional random order
+- no arbitrary navigation required
+- learner rating
+- progress tracking
+- future SRS integration
+
+Possible rating buttons:
+
+```text
+Again
+Hard
+Good
+Easy
+```
+
+---
+
+## 4.3 Think & Say
+
+Active recall without typing.
+
+Prompt:
+
+```text
+I have to work.
+```
+
+The user says the Spanish answer aloud.
+
+Then:
+
+```text
+[ Reveal ]
+```
+
+Result:
+
+```text
+Tengo que trabajar.
+🔊
+```
+
+This is more demanding than simple recognition and should become an important practice mode.
+
+---
+
+## 4.4 Multiple Choice
+
+Highly suitable for smartphones.
+
+Examples:
+
+### Meaning
+
+```text
+cerveza
+
+○ beer
+○ water
+○ bread
+○ coffee
+```
+
+### Verb form
+
+```text
+Yo ___ que trabajar.
+
+○ tengo
+○ tienes
+○ tiene
+○ tenemos
+```
+
+### Context
+
+```text
+¿Dónde ___ el baño?
+
+○ está
+○ tengo
+○ quiero
+○ voy
+```
+
+Distractors should eventually be generated from structured language data so they remain plausible.
+
+---
+
+## 4.5 Cloze / Choice
+
+Example:
+
+```text
+Nosotros [ tenemos ▼ ] que irnos.
+```
+
+On mobile, large buttons may be preferable to literal HTML dropdowns.
+
+---
+
+## 4.6 Tap-to-Build
+
+Optional early/future exercise:
+
+```text
+I have to work.
+
+trabajar   que   tengo   puedo
+```
+
+Learner taps:
+
+```text
+Tengo → que → trabajar
+```
+
+This tests recall and word order without opening the smartphone keyboard.
+
+---
+
+## 4.7 Verb Practice
+
+Verb practice should not initially mean memorizing full conjugation tables.
+
+Prefer useful forms inside natural examples.
+
+Example for `tener`:
+
+```text
+Tengo hambre.
+¿Tienes tiempo?
+Tiene agua.
+Tenemos que irnos.
+Tuve un problema.
+Tenía mucho trabajo.
+```
+
+The most frequent verbs should eventually receive deeper coverage across:
+
+- persons
+- common tenses
+- useful patterns
+- real examples
+
+Lower-priority verbs can initially have fewer forms/examples.
+
+---
+
+## 4.8 Vocabulary Practice
+
+Vocabulary cards should support:
+
+```text
+cansado 🔊
+```
+
+Reveal:
+
+```text
+tired
+```
+
+Examples:
+
+```text
+Estoy cansado.
+Hoy estoy muy cansado.
+```
+
+The app should encourage learning vocabulary through examples rather than isolated translation only.
+
+---
+
+# 5. Session Controls
+
+Users should be able to select what they want to practice.
+
+Possible filters:
+
+- level
+- pack/set
+- verbs
+- vocabulary
+- phrases
+- topic
+- weak items
+- due items
+- new items
+- region
+- register
+- tense
+- specific verb(s)
+
+Initial UI can expose only the most useful subset.
+
+## 5.1 Session size
+
+Support both item-based and time-based sessions.
+
+Item-based:
+
+```text
+5 items
+10 items
+20 items
+All
+```
+
+Time-based:
+
+```text
+2 min
+5 min
+10 min
+20 min
+```
+
+A session timer is useful.
+
+A per-card timer should be optional and is not required initially.
+
+A future "fluency mode" may introduce answer-time pressure.
+
+## 5.2 Ordering
+
+Support:
+
+- sequential
+- random
+
+Later:
+
+- smart/adaptive
+
+Smart ordering may mix:
+
+```text
+weak items
+due items
+new items
+occasional mastered items
+```
+
+---
+
+# 6. Audio and Pronunciation
+
+Audio should be a major part of the product.
+
+For canonical learning material, prefer:
+
+```text
+generate once
+→ review
+→ approve
+→ store audio
+→ reuse/cached playback
+```
+
+This avoids unnecessary TTS API calls and gives pronunciation quality control.
+
+The system should eventually support multiple pronunciation locales, for example:
+
+```text
+es-ES
+es-MX
+es-AR
+es-CO
+```
+
+Do not assume one generic "Spanish accent."
+
+## 6.1 Audio controls
+
+Useful controls:
+
+- normal playback
+- slow playback
+- replay
+- loop ×3
+- future hands-free practice
+
+Possible future hands-free sequence:
+
+```text
+native audio
+pause
+learner repeats
+native audio again
+next item
+```
+
+## 6.2 Recording the learner
+
+A useful future feature before advanced pronunciation scoring:
+
+```text
+🔊 Native
+🎙 Record
+▶ Hear yourself
+🔊 Native again
+```
+
+Later, speech recognition/pronunciation assessment can be plugged into the same flow.
+
+---
+
+# 7. Copy and Share
+
+Copy/share should be treated as a first-class product feature.
+
+Any word, phrase, sentence, example, paragraph, or story should be easy to copy.
+
+Possible actions:
+
+- Copy Spanish
+- Copy Spanish + translation
+- Copy with grammar/context
+- Copy examples
+- Copy as AI prompt
+- Share using the device share sheet
+
+Example generated AI prompt:
+
+```text
+Explain this Spanish sentence for a beginner:
+"Tengo que trabajar."
+
+Include:
+- meaning
+- grammar pattern
+- pronunciation tips
+- 3 natural variations
+```
+
+The app should work well together with external tools such as ChatGPT, translators, notes apps, messaging apps, and other AI systems.
+
+The app should not try to replace every external tool.
+
+---
+
+# 8. Progress and Practice Model
+
+Keep these concepts separate:
+
+```text
+language content
+exercise behavior
+learner state
+```
+
+This is a fundamental architecture rule.
+
+A content item such as:
+
+```text
+Tengo que trabajar.
+```
+
+should not need separate stored copies for translation, cloze, listening, speaking, or multiple-choice exercises.
+
+The exercise engine should generate different interactions from the same structured learning content.
+
+## 8.1 Item progress
+
+Eventually track:
+
+- status
+- attempts
+- correct
+- incorrect
+- difficulty
+- last review
+- next review
+- response latency
+- hints used
+
+Possible states:
+
+```text
+new
+learning
+review
+mastered
+```
+
+## 8.2 Skill progress
+
+The application should eventually track knowledge beyond individual sentences.
+
+If the learner successfully handles:
+
+```text
+Tengo que trabajar.
+Tengo que irme.
+Tengo que comprar comida.
+```
+
+the system may infer increasing mastery of:
+
+```text
+tener que + infinitive
+```
+
+Likewise it can eventually infer mastery of specific verbs, verb forms, tenses, patterns, vocabulary, grammatical functions, and communicative functions.
+
+This does not need to be fully implemented in the first release, but the data model must not prevent it.
+
+---
+
+# 9. Data Architecture Principles
+
+The canonical learning data should use:
+
+```text
+JSON + JSONL
+```
+
+Use:
+
+- `.json` for small hierarchical/configuration documents
+- `.jsonl` for large collections of independent records
+
+CSV should remain an optional import/export/editing format for spreadsheet workflows.
+
+Canonical data should not rely on CSV.
+
+---
+
+# 10. Dataset File Naming
+
+Dataset filenames must clearly describe their content.
+
+General convention:
+
+```text
+<language>-<level>-<scope>-<content-type>.jsonl
+```
+
+Examples:
+
+```text
+es-a1-core-verbs.jsonl
+es-a1-core-verb-forms.jsonl
+es-a1-core-vocabulary.jsonl
+es-a1-core-phrases.jsonl
+es-a1-core-sentences.jsonl
+
+es-a1-travel-phrases.jsonl
+es-a1-restaurant-sentences.jsonl
+es-a1-everyday-dialogues.jsonl
+
+es-a2-core-verbs.jsonl
+es-b1-core-vocabulary.jsonl
+```
+
+Regional examples:
+
+```text
+es-es-a1-everyday-phrases.jsonl
+es-mx-a1-everyday-phrases.jsonl
+es-ar-a2-conversation-phrases.jsonl
+```
+
+Level ranges:
+
+```text
+es-a1-a2-essential-verbs.jsonl
+es-b1-b2-storytelling-phrases.jsonl
+```
+
+Use lowercase, kebab-case, predictable controlled naming.
+
+Do not put dataset version numbers in every filename. Versioning belongs in metadata/manifests/releases.
+
+---
+
+# 11. Target Language and Reference Language
+
+The app must distinguish:
+
+```text
+target language
+reference language
+pronunciation locale
+```
+
+Initial release:
+
+```text
+Target language: Spanish (es)
+Reference language: English (en)
+```
+
+The app should already be architecturally aware that future users may choose Spanish with Greek, German, French, or other translations.
+
+Prefer the term **reference language** internally rather than `nativeLanguage`.
+
+Someone's preferred explanation/translation language is not necessarily their native language.
+
+## 11.1 Translation fallback
+
+Conceptually:
+
+```text
+selected reference locale
+→ base reference language
+→ English fallback
+→ target-language-only mode
+```
+
+Examples:
+
+```text
+el-GR → el → en
+pt-BR → pt → en
+```
+
+Use standard BCP 47 language tags where applicable.
+
+---
+
+# 12. Translations
+
+Target-language content should not depend on one reference language.
+
+Translations should be logically separable from Spanish canonical content.
+
+A Spanish sentence should remain usable regardless of whether its translation is shown in English, Greek, German, another language, or not at all.
+
+Translation types may eventually include:
+
+```text
+natural
+alternative
+literal
+```
+
+AI integration may reduce the need to hardcode enormous numbers of translations, but the system should retain trusted canonical translations for offline operation, deterministic exercises, validation, basic learning, and AI-independent operation.
+
+---
+
+# 13. Lexemes, Verbs, Senses and Examples
+
+The system should distinguish between a word/verb and its examples.
+
+Example lexeme:
+
+```json
+{
+  "id": "es:lexeme:tener",
+  "lemma": "tener",
+  "pos": "VERB"
+}
+```
+
+Do not embed every example inside the lexeme definition.
+
+A word can have multiple senses, many examples, many verb forms, related phrases, and contextual passages.
+
+## 13.1 Senses
+
+A word can have multiple meanings/uses.
+
+Example:
+
+```text
+tener
+├── possession
+├── age expressions
+├── physical states
+└── obligation pattern: tener que
+```
+
+Do not assume one Spanish word equals one English translation.
+
+## 13.2 Examples
+
+Examples should be independent reusable learning objects.
+
+Example:
+
+```text
+Quiero comprar una camisa.
+```
+
+This may simultaneously exemplify:
+
+- querer
+- comprar
+- camisa
+- querer + infinitive
+- present tense
+- first person singular
+- shopping topic
+
+The same example should be reusable across multiple learning targets.
+
+## 13.3 Contextual paragraphs
+
+Words and verbs should eventually support contextual material such as:
+
+```text
+Tengo un coche pequeño. Todos los días tengo que ir al trabajo.
+Hoy tengo un problema porque el coche no funciona.
+```
+
+This may reinforce tener, tener que, coche, trabajo, problema, funcionar, and porque.
+
+This is important for memory and contextual learning.
+
+---
+
+# 14. Verb Forms
+
+Verb forms should be representable as structured records.
+
+Do not rely only on conjugation tables rendered for humans.
+
+Example conceptual record:
+
+```json
+{
+  "verb": "es:lexeme:tener",
+  "form": "tengo",
+  "tense": "present",
+  "mood": "indicative",
+  "person": 1,
+  "number": "singular"
+}
+```
+
+The most important verbs should eventually have examples across useful forms.
+
+Beginner priority:
+
+- present indicative
+- infinitive constructions
+- `ir a + infinitive`
+- common imperatives
+- preterite
+- imperfect
+- present perfect with regional notes
+- common polite/conditional forms
+
+Do not force all tenses for every verb in the first version.
+
+---
+
+# 15. Rich Linguistic Annotation
+
+The dataset should allow phrases/sentences to contain structured linguistic annotations.
+
+The application should know, when available:
+
+- token text
+- lemma
+- part of speech
+- morphology
+- grammatical/semantic construction
+- linked skill
+
+Example:
+
+```text
+Tengo      VERB   tener
+que        connector / construction component
+trabajar   VERB   infinitive
+```
+
+Higher-level annotation:
+
+```text
+Tengo que trabajar
+→ tener que + infinitive
+```
+
+## 15.1 Do not store character positions
+
+Do not store brittle fields such as:
+
+```text
+start: 6
+end: 9
+```
+
+The token array order already gives sequence.
+
+Use local token IDs:
+
+```text
+t1
+t2
+t3
+```
+
+Example:
+
+```json
+{
+  "text": "Tengo que trabajar.",
+  "tokens": [
+    {
+      "id": "t1",
+      "text": "Tengo",
+      "lemma": "tener",
+      "pos": "VERB"
+    },
+    {
+      "id": "t2",
+      "text": "que",
+      "lemma": "que",
+      "pos": "SCONJ"
+    },
+    {
+      "id": "t3",
+      "text": "trabajar",
+      "lemma": "trabajar",
+      "pos": "VERB"
+    }
+  ]
+}
+```
+
+Annotations may reference:
+
+```json
+{
+  "tokens": ["t1", "t2", "t3"],
+  "type": "construction",
+  "skill": "es:pattern:tener-que-infinitive"
+}
+```
+
+Character offsets may be derived by the application at runtime if needed for rendering/highlighting.
+
+## 15.2 Linguistic standards
+
+Prefer established linguistic vocabularies where useful instead of inventing everything.
+
+For example, POS tags compatible with Universal Dependencies:
+
+```text
+NOUN
+VERB
+ADJ
+ADV
+PRON
+DET
+ADP
+AUX
+CCONJ
+SCONJ
+NUM
+PART
+INTJ
+PROPN
+```
+
+Possible morphology:
+
+- person
+- number
+- tense
+- mood
+- gender
+- verb form
+- degree
+
+Do not require a full syntactic dependency tree in the MVP.
+
+The schema should allow richer annotation later.
+
+---
+
+# 16. Content Types for Future Expansion
+
+The system should eventually support reusable contextual content:
+
+```text
+dialogue
+micro-story
+article
+scene
+monologue
+transcript
+story
+paragraph
+```
+
+These may reference learning items/skills.
+
+Conceptually:
+
+```text
+Dialogue
+ ├── querer
+ ├── tener que
+ ├── hasta
+ └── present tense
+```
+
+The same sentence may appear inside contextual content, as a flashcard, in SRS, as listening practice, in a cloze exercise, or in speaking practice.
+
+---
+
+# 17. Future Story Mode
+
+Not part of the initial release, but preserve room for it.
+
+Possible progression:
+
+```text
+Tell 3 sentences about yesterday.
+↓
+Tell a short event.
+↓
+Use sequencing words.
+↓
+Retell without prompts.
+↓
+Change tense.
+↓
+Change point of view.
+↓
+Extend the story.
+↓
+Speak freely for 1–3 minutes.
+```
+
+Potentially track duration, connectors used, known vocabulary used, grammar structures used, self-correction, fluency, and comprehensibility.
+
+Do not over-design this yet.
+
+---
+
+# 18. AI Integration
+
+AI should be optional and layered on top of the learning engine.
+
+Core practice must remain usable without an AI API.
+
+Future AI uses:
+
+- explain a phrase
+- explain grammar
+- generate extra examples
+- generate personalized examples
+- create mini-dialogues
+- roleplay
+- create controlled practice
+- create stories
+- pronunciation coaching
+- analyze learner errors
+- suggest corrections
+- enrich learning material
+- create temporary/private practice content
+
+The AI should consume structured learner/context information.
+
+Example:
+
+```text
+Learner level: A1
+Known:
+- tener
+- querer + infinitive
+
+Weak:
+- poder, 2nd person
+- usted requests
+
+Topic:
+restaurant
+
+Maximum new vocabulary:
+3 words
+```
+
+This is preferable to simply asking an AI to "teach Spanish."
+
+## 18.1 AI-generated content
+
+AI-generated material should be distinguishable from reviewed canonical curriculum.
+
+Possible provenance:
+
+```text
+editorial
+community
+imported
+generated
+```
+
+AI-generated examples may be immediately usable as private practice material.
+
+They should not automatically become public canonical content.
+
+---
+
+# 19. External/Open Linguistic Data
+
+The project may later import/enrich lexical data from open sources.
+
+Potential sources include:
+
+- Wikidata Lexemes
+- Wiktionary/Wiktextract
+- UniMorph
+- Tatoeba
+- Universal Dependencies
+- Apertium
+
+Imported dictionary/linguistic information must remain distinguishable from curated learning content.
+
+Track provenance.
+
+The project should add value through pedagogical selection, useful examples, contextualization, practice design, level assignment, regional/register notes, and human/editorial review.
+
+Do not spend effort manually recreating well-established morphological data if it can be safely imported from an appropriate open source.
+
+---
+
+# 20. Dataset Provenance and Stable Identity
+
+Every published item must have a stable identifier.
+
+Avoid IDs that collide across independent datasets.
+
+Potential namespace style:
+
+```text
+core-es:item:000001
+core-es:lexeme:tener
+core-es:skill:tener-que-infinitive
+travel-es:item:000042
+```
+
+Exact ID syntax can be finalized in the dataset specification.
+
+Important rules:
+
+- published IDs must remain stable
+- learner progress references stable IDs
+- independent datasets must not collide
+- display labels are not identity
+
+## 20.1 Revision support
+
+Future public content should support revision history.
+
+Examples:
+
+- typo correction → same item ID
+- translation correction → same item ID
+- improved notes → same item ID
+- materially different learning object → new item ID
+- deprecated item → keep identity and optionally reference replacement
+
+This groundwork is important for future user reports/corrections.
+
+---
+
+# 21. Future User Reports and Contributions
+
+Do not implement this in the MVP.
+
+The architecture should allow future users to:
+
+- report incorrect translation
+- report unnatural Spanish
+- report grammar issue
+- report pronunciation issue
+- report regional usage issue
+- report typo
+- report duplicates
+- submit comments
+- submit suggested corrections
+- submit example sentences
+- submit phrases
+- submit dialogues/stories
+- submit learning material
+
+Canonical public data must never be directly modified by user submissions.
+
+Future flow:
+
+```text
+submission
+→ review
+→ accepted/rejected
+→ publication
+```
+
+Private user content may be immediately usable by that user without publication.
+
+---
+
+# 22. Application Architecture
+
+Recommended initial stack:
+
+```text
+React
+TypeScript
+Vite
+npm
+Vitest
+IndexedDB
+PWA
+```
+
+Primary goals:
+
+- mobile-first
+- local-first
+- installable
+- offline-capable
+- fast
+- simple hosting
+- no required account
+- no required backend
+
+Do not introduce a backend until a concrete feature requires one.
+
+## 22.1 High-level modules
+
+Conceptually:
+
+```text
+Dataset loader
+Dataset validator
+Normalized language model
+Learning engine
+Exercise generator
+Session planner
+Progress store
+Audio layer
+UI
+```
+
+Future provider interfaces:
+
+```text
+TtsProvider
+SpeechRecognitionProvider
+AiTutorProvider
+SyncProvider
+```
+
+Do not hard-wire Azure, Google, OpenAI, ElevenLabs, or any other vendor into the learning engine.
+
+---
+
+# 23. Local-first Storage
+
+Initial learner state should live in IndexedDB.
+
+Likely stored locally:
+
+- progress
+- attempt history
+- user preferences
+- selected target/reference language
+- audio/cache metadata
+- session history
+- private learner content
+
+Later, optional account/cloud sync can synchronize local state.
+
+The basic app should not require registration.
+
+---
+
+# 24. PWA Requirements
+
+The application should be designed as an installable PWA.
+
+Expected capabilities:
+
+- mobile home-screen installation
+- offline app shell
+- cached datasets
+- cached canonical audio where reasonable
+- responsive mobile UI
+- desktop usability as a secondary target
+
+A native mobile app should only be considered later if concrete browser limitations justify it.
+
+---
+
+# 25. Public/Free Service Constraints
+
+This is intended to become a public free service.
+
+Therefore:
+
+- core learning must not depend on paid APIs
+- canonical TTS audio should normally be cached/pre-generated
+- AI should be optional
+- expensive cloud services should be quota-controlled or optional
+- future BYO API key support may be considered
+- hosting costs should remain predictable
+- local-first operation is preferred
+
+---
+
+# 26. Dataset Scope for Initial Release
+
+The datasets themselves will be created separately later.
+
+Do not generate the production datasets during initial app implementation.
+
+Initial app should expect a basic Spanish dataset containing some combination of:
+
+- high-frequency verbs
+- useful verb forms
+- basic vocabulary
+- useful phrases
+- useful sentences/examples
+- translations to English
+- pronunciation/audio metadata
+- basic annotations
+
+The app architecture must allow later expansion without changing the fundamental content model.
+
+---
+
+# 27. Recommended Initial Dataset Categories
+
+Likely future files may include:
+
+```text
+es-a1-core-verbs.jsonl
+es-a1-core-verb-forms.jsonl
+es-a1-core-vocabulary.jsonl
+es-a1-core-phrases.jsonl
+es-a1-core-sentences.jsonl
+es-a1-core-skills.jsonl
+```
+
+Future:
+
+```text
+es-a1-everyday-dialogues.jsonl
+es-a1-micro-stories.jsonl
+es-a2-core-verbs.jsonl
+...
+```
+
+Do not assume this exact split is final until the dataset specification is formalized.
+
+---
+
+# 28. What the Initial MVP Should Implement
+
+Keep v0.1 intentionally small.
+
+## Required
+
+- React/TypeScript/Vite PWA foundation
+- local dataset loading
+- clear dataset abstraction
+- IndexedDB/local progress storage
+- mobile-first UI
+- basic set/category selection
+- sequential/random practice
+- session item count or timer
+- Listen & Repeat
+- Flashcards
+- Think & Say with reveal
+- Multiple Choice
+- basic Verb Practice
+- basic Vocabulary Practice
+- audio playback abstraction
+- reveal translation
+- reveal more information/examples
+- previous/next in Study mode
+- copy to clipboard
+- device share action where supported
+- basic progress/self-rating
+- reference-language setting architecture, with English as the only initial choice
+
+## Optional if straightforward
+
+- cloze choice
+- tap-to-build
+- simple quick-session presets
+- slow/loop audio control
+- simple offline caching
+
+---
+
+# 29. Explicit Non-Goals for Initial MVP
+
+Do not initially build:
+
+- backend
+- user accounts
+- social features
+- cloud sync
+- community submissions
+- moderation system
+- AI tutor
+- live LLM integration
+- full pronunciation scoring
+- advanced speech recognition
+- stories
+- dialogues
+- free-speaking analysis
+- native mobile app
+- app-store publishing pipeline
+- complex achievements/gamification
+- complete grammar course
+- complete conjugation trainer
+- massive production dataset
+- multi-language translation packs beyond English
+
+The architecture may leave room for these, but do not build them yet.
+
+---
+
+# 30. Core Design Rules
+
+### Rule 1
+
+**Language content, exercise logic, and learner state are separate systems.**
+
+### Rule 2
+
+**Canonical data describes language; the app derives exercises from it.**
+
+### Rule 3
+
+**Store semantic information. Derive presentation information.**
+
+Example:
+
+- store ordered tokens and their linguistic meaning
+- derive character offsets at runtime
+
+### Rule 4
+
+**Stable IDs matter more than filenames or display labels.**
+
+### Rule 5
+
+**Do not make English structurally mandatory.**
+
+English is merely the first supported reference language.
+
+### Rule 6
+
+**Do not make one Spanish accent structurally mandatory.**
+
+Pronunciation locale is separate from target language.
+
+### Rule 7
+
+**Do not hard-wire AI into core practice.**
+
+AI enriches the system; it does not define it.
+
+### Rule 8
+
+**Do not hard-wire one TTS/STT vendor.**
+
+Use provider interfaces.
+
+### Rule 9
+
+**Prefer structured examples and context over isolated translation memorization.**
+
+### Rule 10
+
+**Do not over-engineer hypothetical future features.**
+
+Provide extension points, not premature implementations.
+
+---
+
+# 31. Suggested First Engineering Steps
+
+A fresh AI coding agent should proceed approximately as follows:
+
+1. Read this entire specification.
+2. Identify any genuinely blocking ambiguities.
+3. Propose a minimal repository structure.
+4. Create the application shell.
+5. Create strong TypeScript domain interfaces for the initial learning model.
+6. Define a small internal/demo dataset format compatible with the future JSON/JSONL direction.
+7. Implement dataset loading and validation boundaries.
+8. Implement IndexedDB persistence abstraction.
+9. Implement Study/Flashcard flow.
+10. Implement Listen & Repeat.
+11. Implement Think & Say/reveal.
+12. Implement basic Multiple Choice.
+13. Implement set/filter/session selection.
+14. Implement copy/share.
+15. Add tests for content loading, session selection, progress updates, random/sequential behavior, and exercise generation.
+16. Keep CSS/mobile interaction simple and ergonomic.
+17. Do not create the full production Spanish dataset.
+
+---
+
+# 32. Suggested Repository Direction
+
+Possible structure:
+
+```text
+src/
+├── app/
+├── domain/
+│   ├── content/
+│   ├── exercises/
+│   ├── sessions/
+│   └── progress/
+├── data/
+│   ├── loaders/
+│   └── validation/
+├── storage/
+├── audio/
+├── features/
+│   ├── practice/
+│   ├── flashcards/
+│   ├── verbs/
+│   └── vocabulary/
+├── components/
+└── utils/
+
+public/
+└── demo-data/
+
+tests/
+
+docs/
+```
+
+This is guidance, not a rigid requirement.
+
+Prefer clean modular boundaries and avoid unnecessary abstractions.
+
+---
+
+# 33. Success Criteria for v0.1
+
+The first version is successful if a user can open the app on a smartphone and:
+
+1. choose a basic Spanish practice set
+2. choose a short session
+3. see/hear a phrase or vocabulary item
+4. repeat it aloud
+5. reveal its English meaning
+6. view another example when useful
+7. move quickly to the next item
+8. use multiple-choice or verb practice
+9. rate whether it was easy/hard
+10. close the app
+11. return later and retain local progress
+12. copy/share an item to an AI or translator
+
+The app should feel fast enough that a user can perform a useful 2-minute practice session with essentially no setup.
+
+---
+
+# 34. Long-Term Vision
+
+The same learning engine should eventually be capable of supporting a progression such as:
+
+```text
+A1 basic vocabulary
+↓
+high-frequency phrases
+↓
+core verbs and patterns
+↓
+listening/repetition
+↓
+active recall
+↓
+multiple contexts/examples
+↓
+dialogue
+↓
+story comprehension
+↓
+storytelling
+↓
+free speaking
+↓
+advanced grammar/vocabulary
+↓
+AI-guided adaptive conversation
+```
+
+The underlying learning graph may eventually connect:
+
+```text
+lexemes
+senses
+forms
+phrases
+sentences
+skills
+examples
+contexts
+dialogues
+stories
+pronunciations
+translations
+learner attempts
+learner mastery
+```
+
+The initial application should expose only a small part of this.
+
+---
+
+# 35. Final Direction
+
+Build the **smallest genuinely useful mobile-first Spanish practice app** on top of a foundation capable of becoming a richer language-learning system.
+
+Do not confuse future extensibility with building every future feature now.
+
+The first product should excel at:
+
+```text
+see
+listen
+repeat
+reveal
+understand
+practice
+review
+```
+
+while the architecture quietly preserves room for:
+
+```text
+context
+stories
+speech
+AI
+community
+multiple languages
+advanced learning
+```

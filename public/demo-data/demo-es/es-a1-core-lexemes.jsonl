@@ -1,0 +1,16 @@
+# Headwords only. Examples live as items, never inside the lexeme (spec §13).
+{"id":"demo-es:lexeme:tener","lemma":"tener","pos":"VERB","level":"a1","frequencyRank":29}
+{"id":"demo-es:lexeme:estar","lemma":"estar","pos":"VERB","level":"a1","frequencyRank":22}
+{"id":"demo-es:lexeme:querer","lemma":"querer","pos":"VERB","level":"a1","frequencyRank":58}
+{"id":"demo-es:lexeme:trabajar","lemma":"trabajar","pos":"VERB","level":"a1","frequencyRank":320}
+{"id":"demo-es:lexeme:comprar","lemma":"comprar","pos":"VERB","level":"a1","frequencyRank":410}
+{"id":"demo-es:lexeme:ir","lemma":"ir","pos":"VERB","level":"a1","frequencyRank":31}
+{"id":"demo-es:lexeme:cerveza","lemma":"cerveza","pos":"NOUN","gender":"feminine","level":"a1"}
+{"id":"demo-es:lexeme:agua","lemma":"agua","pos":"NOUN","gender":"feminine","level":"a1"}
+{"id":"demo-es:lexeme:pan","lemma":"pan","pos":"NOUN","gender":"masculine","level":"a1"}
+{"id":"demo-es:lexeme:cafe","lemma":"café","pos":"NOUN","gender":"masculine","level":"a1"}
+{"id":"demo-es:lexeme:camisa","lemma":"camisa","pos":"NOUN","gender":"feminine","level":"a1"}
+{"id":"demo-es:lexeme:bano","lemma":"baño","pos":"NOUN","gender":"masculine","level":"a1"}
+{"id":"demo-es:lexeme:tiempo","lemma":"tiempo","pos":"NOUN","gender":"masculine","level":"a1"}
+{"id":"demo-es:lexeme:hambre","lemma":"hambre","pos":"NOUN","gender":"feminine","level":"a1"}
+{"id":"demo-es:lexeme:cansado","lemma":"cansado","pos":"ADJ","level":"a1"}

@@ -1,0 +1,213 @@
+/**
+ * The validation boundary. Everything entering the app from a dataset file is
+ * parsed here; nothing downstream may assume unvalidated shapes.
+ *
+ * These schemas mirror `src/domain/content/model.ts`. They are intentionally
+ * permissive about *extra* fields — datasets may carry richer annotation than
+ * this version of the app understands (spec §15) — and strict about the fields
+ * the engine relies on.
+ */
+
+import { z } from 'zod';
+import {
+  ANNOTATION_TYPES,
+  CEFR_LEVELS,
+  ENTITY_KINDS,
+  ITEM_TYPES,
+  MOODS,
+  PACK_FILE_KINDS,
+  POS_TAGS,
+  PROVENANCE_SOURCES,
+  REGISTERS,
+  REVIEW_STATES,
+  SKILL_KINDS,
+  TENSES,
+  TRANSLATION_TYPES,
+  VERB_FORMS,
+} from '../../domain/content';
+
+const entityIdPattern = new RegExp(
+  `^[a-z0-9]+(?:-[a-z0-9]+)*:(?:${ENTITY_KINDS.join('|')}):[^\\s:]+$`,
+);
+
+const entityId = (kind: (typeof ENTITY_KINDS)[number]) =>
+  z.string().regex(new RegExp(`^[a-z0-9]+(?:-[a-z0-9]+)*:${kind}:[^\\s:]+$`), {
+    message: `expected a "${kind}" id such as core-es:${kind}:example`,
+  });
+
+const anyEntityId = z.string().regex(entityIdPattern, { message: 'expected a namespaced id' });
+const languageTag = z.string().regex(/^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/, {
+  message: 'expected a BCP 47 language tag',
+});
+const packId = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+const level = z.enum(CEFR_LEVELS);
+
+export const provenanceSchema = z
+  .object({
+    source: z.enum(PROVENANCE_SOURCES),
+    origin: z.string().optional(),
+    license: z.string().optional(),
+    review: z.enum(REVIEW_STATES).optional(),
+    revision: z.number().int().nonnegative().optional(),
+    replacedBy: anyEntityId.optional(),
+  })
+  .loose();
+
+export const morphologySchema = z
+  .object({
+    person: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
+    number: z.enum(['singular', 'plural']).optional(),
+    gender: z.enum(['masculine', 'feminine', 'neuter']).optional(),
+    tense: z.enum(TENSES).optional(),
+    mood: z.enum(MOODS).optional(),
+    verbForm: z.enum(VERB_FORMS).optional(),
+    degree: z.enum(['positive', 'comparative', 'superlative']).optional(),
+    formality: z.enum(['informal', 'formal']).optional(),
+  })
+  .loose();
+
+export const tokenSchema = z
+  .object({
+    id: z.string().min(1),
+    text: z.string().min(1),
+    lemma: z.string().optional(),
+    pos: z.enum(POS_TAGS).optional(),
+    morph: morphologySchema.optional(),
+    lexeme: entityId('lexeme').optional(),
+  })
+  .loose();
+
+export const annotationSchema = z
+  .object({
+    tokens: z.array(z.string().min(1)).min(1),
+    type: z.enum(ANNOTATION_TYPES),
+    skill: entityId('skill').optional(),
+    label: z.string().optional(),
+  })
+  .loose();
+
+export const audioRefSchema = z
+  .object({
+    locale: languageTag,
+    src: z.string().min(1),
+    durationMs: z.number().positive().optional(),
+    voice: z.string().optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+export const learningItemSchema = z
+  .object({
+    id: entityId('item'),
+    pack: packId,
+    type: z.enum(ITEM_TYPES),
+    text: z.string().min(1),
+    level: level.optional(),
+    register: z.enum(REGISTERS).optional(),
+    regions: z.array(languageTag).optional(),
+    topics: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional(),
+    tokens: z.array(tokenSchema).optional(),
+    annotations: z.array(annotationSchema).optional(),
+    lexemes: z.array(entityId('lexeme')).optional(),
+    skills: z.array(entityId('skill')).optional(),
+    examples: z.array(entityId('item')).optional(),
+    audio: z.array(audioRefSchema).optional(),
+    note: z.string().optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+export const lexemeSchema = z
+  .object({
+    id: entityId('lexeme'),
+    lemma: z.string().min(1),
+    pos: z.enum(POS_TAGS),
+    level: level.optional(),
+    frequencyRank: z.number().int().positive().optional(),
+    gender: z.enum(['masculine', 'feminine', 'neuter']).optional(),
+    tags: z.array(z.string()).optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+export const senseSchema = z
+  .object({
+    id: entityId('sense'),
+    lexeme: entityId('lexeme'),
+    label: z.string().optional(),
+    register: z.enum(REGISTERS).optional(),
+    regions: z.array(languageTag).optional(),
+    skills: z.array(entityId('skill')).optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+export const verbFormSchema = z
+  .object({
+    id: entityId('form'),
+    lexeme: entityId('lexeme'),
+    form: z.string().min(1),
+    morph: morphologySchema,
+    level: level.optional(),
+    regions: z.array(languageTag).optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+export const skillSchema = z
+  .object({
+    id: entityId('skill'),
+    kind: z.enum(SKILL_KINDS),
+    label: z.string().min(1),
+    level: level.optional(),
+    prerequisites: z.array(entityId('skill')).optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+export const translationSchema = z
+  .object({
+    ref: anyEntityId,
+    lang: languageTag,
+    text: z.string().min(1),
+    type: z.enum(TRANSLATION_TYPES).optional(),
+    note: z.string().optional(),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+export const packFileSchema = z
+  .object({
+    kind: z.enum(PACK_FILE_KINDS),
+    path: z.string().min(1),
+  })
+  .loose();
+
+export const packManifestSchema = z
+  .object({
+    id: packId,
+    name: z.string().min(1),
+    targetLanguage: languageTag,
+    version: z.string().min(1),
+    description: z.string().optional(),
+    license: z.string().optional(),
+    levels: z.array(level).optional(),
+    referenceLanguages: z.array(languageTag).optional(),
+    pronunciationLocales: z.array(languageTag).optional(),
+    files: z.array(packFileSchema),
+    provenance: provenanceSchema.optional(),
+  })
+  .loose();
+
+/** Registry mapping a pack file kind to the schema for one record. */
+export const RECORD_SCHEMAS = {
+  items: learningItemSchema,
+  lexemes: lexemeSchema,
+  senses: senseSchema,
+  'verb-forms': verbFormSchema,
+  skills: skillSchema,
+  translations: translationSchema,
+} as const satisfies Record<(typeof PACK_FILE_KINDS)[number], z.ZodType>;
+
+export type RecordKind = keyof typeof RECORD_SCHEMAS;

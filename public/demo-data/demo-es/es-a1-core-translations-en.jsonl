@@ -1,0 +1,20 @@
+# Translations are separate records: Spanish content works with any reference language, or none (spec §12).
+{"ref":"demo-es:item:000101","lang":"en","text":"beer","type":"natural"}
+{"ref":"demo-es:item:000102","lang":"en","text":"water","type":"natural"}
+{"ref":"demo-es:item:000103","lang":"en","text":"bread","type":"natural"}
+{"ref":"demo-es:item:000104","lang":"en","text":"coffee","type":"natural"}
+{"ref":"demo-es:item:000105","lang":"en","text":"shirt","type":"natural"}
+{"ref":"demo-es:item:000106","lang":"en","text":"tired","type":"natural"}
+{"ref":"demo-es:item:000201","lang":"en","text":"I have to work.","type":"natural"}
+{"ref":"demo-es:item:000202","lang":"en","text":"I have to go.","type":"natural"}
+{"ref":"demo-es:item:000203","lang":"en","text":"Do you have time?","type":"natural"}
+{"ref":"demo-es:item:000204","lang":"en","text":"I'm hungry.","type":"natural","note":"Literally: I have hunger."}
+{"ref":"demo-es:item:000205","lang":"en","text":"Where is the bathroom?","type":"natural"}
+{"ref":"demo-es:item:000206","lang":"en","text":"I'm very tired today.","type":"natural"}
+{"ref":"demo-es:item:000207","lang":"en","text":"I want to buy a shirt.","type":"natural"}
+{"ref":"demo-es:item:000208","lang":"en","text":"a beer, please","type":"natural"}
+{"ref":"demo-es:skill:tener-que-infinitive","lang":"en","text":"to have to do something"}
+{"ref":"demo-es:skill:querer-infinitive","lang":"en","text":"to want to do something"}
+{"ref":"demo-es:skill:asking-location","lang":"en","text":"asking where something is"}
+{"ref":"demo-es:skill:estar-states","lang":"en","text":"estar for temporary states"}
+{"ref":"demo-es:skill:present-indicative","lang":"en","text":"present tense"}

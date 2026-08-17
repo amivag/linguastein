@@ -12,7 +12,9 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   cloze choice, tap to build
 - Session planner: filters, sequential / random / smart ordering, item- and
   time-based sizing, seeded determinism
-- Progress model + interval scheduler behind a `Scheduler` seam
+- Progress model + FSRS scheduling behind a `Scheduler` seam, exercise
+  composition that climbs recognition → cued recall → production, and derived
+  word- and pattern-level mastery
 - IndexedDB storage with an in-memory fallback and identical contract tests
 - Audio service with pre-generated-audio-first resolution and a TTS seam
 - Word inspection: tap any word in a phrase for its meaning, grammar, the
@@ -21,8 +23,14 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - Mobile-first UI: home, session, settings
 - Dataset authoring pipeline: TSV sources → generated pack, with a Spanish
   conjugator, coverage reporting and a CI drift check
-- core-es pack: 100 verbs (2,000 generated forms), 339 nouns, 172 modifiers,
-  443 sentences — 845 practisable items
+- Stable item ids: a row owns its id, keeps it through edits, reordering and file
+  moves, and a deleted row's id is retired rather than reused
+- Passages: connected texts and dialogues as containers over sentences that stay
+  individually practisable, with a reading view and passage-scoped sessions
+- Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
+  `imperativo` as a practisable skill and address derived from the command form
+- core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 196 modifiers,
+  592 sentences — 1,028 practisable items, 99% of sentence words linked to a lexeme
 - Reference-language architecture (English is the first, not the only)
 - WCAG 2.2 AA accessibility, enforced by axe and contrast tests in CI
 - Switchable dark/light themes on a modular, extensible token system
@@ -39,32 +47,58 @@ The dataset work is briefed in full for a fresh session:
    unreviewed. Genders, glosses and sentence naturalness need a human pass
    before any of it can be called canonical.
 
-1. **Study mode for flashcards** — free browsing with previous/next, order
+1. **More passages** — 14 exist (8 texts, 6 dialogues); the target is 30–60. The
+   model, the authoring shape and the reading view are all in place, so this is
+   now content work, and it is also the cheapest route to the vocabulary
+   -recycling target. See the dataset task.
+2. **Study mode for flashcards** — free browsing with previous/next, order
    toggle and no scoring, separate from tracked practice sessions.
-2. **Session filters in the UI** — level, topic, verb and "due only" are
+3. **Session filters in the UI** — level, topic, verb and "due only" are
    supported by the planner but not yet exposed.
-3. **Canonical audio pipeline** — generate → review → approve → store, plus the
-   `audio/<locale>/` layout in packs. This is the real fix for pronunciation
-   quality: device voices vary wildly between platforms, and many devices ship
-   no Spanish voice at all. Until then the app uses device speech where a
-   suitable voice exists, and says so where none does.
-4. **Verb practice depth** — surface `VerbForm` records directly (person and
+4. **Canonical audio pipeline** — generate in batches → review the voice →
+   approve → store, plus an `audio/<locale>/<voice>/` layout in packs. This is the
+   real fix for pronunciation quality: device voices vary wildly between platforms,
+   and many devices ship no Spanish voice at all. Until then the app uses device
+   speech where a suitable voice exists, and says so where none does.
+
+   The runtime half is already done — canonical audio resolves before the TTS seam,
+   the service worker fetches audio on demand, and `PACK_FILE_KINDS` is a clean
+   extension point. The data half is a new **audio record kind that references
+   items**, the way passages do, so a voice can be added without rewriting a byte of
+   content and a pack stays a self-contained unit that can be imported and exported.
+   Several voices per phrase are a feature, not a special case: dialogues can voice
+   their speakers separately, and rotating voices stops a learner recognising a
+   waveform instead of a word.
+
+   Storage size is not a constraint — audio takes space, and it is fetched on demand.
+   Review attention is the real budget (~2 hours of listening per voice), which is
+   why the voice is reviewed from a sample and clips are flagged by exception. The
+   two decisions that bind: whether the chosen voice's licence permits shipping its
+   output from a CC0, exportable pack — free tiers are usually the most restrictive,
+   so a self-hosted model is the cleanest fit — and keying clips by a hash of the
+   spoken text, so a typo fix cannot leave stale audio behind a deliberately stable
+   item id. Briefed in full in
+   [docs/tasks/canonical-audio.md](tasks/canonical-audio.md).
+
+5. **Verb practice depth** — surface `VerbForm` records directly (person and
    tense drills), not only cloze inside sentences. Word inspection already
    shows the forms; practising them directly is the next step.
-5. **Word-level progress** — inspection knows which lexeme a tapped word maps
+6. **Word-level progress** — inspection knows which lexeme a tapped word maps
    to, so "words I keep looking up" is a natural weak-item signal to feed back
    into session planning.
-6. **Offline dataset caching** — verify precache coverage and add a visible
+7. **Offline dataset caching** — verify precache coverage and add a visible
    "available offline" state.
-7. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
+8. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
 
 ## Later (architecture allows, code does not attempt)
 
-Spaced repetition proper · skill-level mastery inference · contextual content
-(dialogues, micro-stories) · story mode · speech recognition and pronunciation
-scoring · AI tutor behind an `AiTutorProvider` · community submissions and
-review flow · cloud sync behind `LearnerStorage` · translation packs beyond
-English.
+Story mode · speech recognition and pronunciation scoring · AI tutor behind an
+`AiTutorProvider` · community submissions and review flow · cloud sync behind
+`LearnerStorage` · translation packs beyond English · the subjunctive proper (and
+so negative commands), the future and the compound tenses · senses for polysemous
+words · **importing and exporting language packs**, including their audio, as
+self-contained units — the audio task (item 4) keeps pack paths relative and
+routes asset resolution through one seam so this stays possible.
 
 ## Explicitly out of scope for now
 

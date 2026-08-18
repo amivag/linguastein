@@ -7,12 +7,15 @@ import { UsageBadges } from '../../components/UsageBadges';
 import { VoiceInput } from '../../components/VoiceInput';
 import {
   CEFR_LEVELS,
-  PRONUNCIATION_LOCALES,
+  FILTERABLE_REGIONS,
   REGISTERS,
   type CefrLevel,
+  type ItemFilter,
   type ItemType,
   type Register,
 } from '../../domain/content';
+import type { SessionSize } from '../../domain/sessions';
+import { sessionPath } from '../practice/session-url';
 import styles from './BrowseScreen.module.css';
 
 const TYPES: readonly { id: ItemType | 'all'; label: string }[] = [
@@ -23,6 +26,8 @@ const TYPES: readonly { id: ItemType | 'all'; label: string }[] = [
 ];
 
 const PAGE_SIZE = 40;
+/** Longest session offered from a filter, however much the filter matched. */
+const SESSION_CAP = 20;
 
 /**
  * Free browsing of the whole pack — the "study mode" half of spec §4.2, and
@@ -42,20 +47,25 @@ export function BrowseScreen() {
 
   const facets = useMemo(() => services.repository.facets(), [services.repository]);
 
-  const results = useMemo(
-    () =>
-      services.repository.query({
-        ...(search.trim() ? { search: search.trim() } : {}),
-        ...(type === 'all' ? {} : { types: [type] }),
-        ...(level === 'all' ? {} : { levels: [level] }),
-        ...(topic === 'all' ? {} : { topics: [topic] }),
-        ...(register === 'all' ? {} : { registers: [register] }),
-        ...(region === 'all' ? {} : { usableIn: region }),
-      }),
-    [services.repository, search, type, level, topic, register, region],
+  // One filter object drives both the list and the session link, so what a
+  // learner sees here is exactly what "Practise these" practises.
+  const filter = useMemo<ItemFilter>(
+    () => ({
+      ...(search.trim() ? { search: search.trim() } : {}),
+      ...(type === 'all' ? {} : { types: [type] }),
+      ...(level === 'all' ? {} : { levels: [level] }),
+      ...(topic === 'all' ? {} : { topics: [topic] }),
+      ...(register === 'all' ? {} : { registers: [register] }),
+      ...(region === 'all' ? {} : { usableIn: region }),
+    }),
+    [search, type, level, topic, register, region],
   );
 
+  const results = useMemo(() => services.repository.query(filter), [services.repository, filter]);
+
   const shown = results.slice(0, limit);
+  // Never offer a longer session than the filter actually found.
+  const size: SessionSize = { kind: 'items', count: Math.min(results.length, SESSION_CAP) };
 
   return (
     <AppShell title="Browse">
@@ -129,8 +139,7 @@ export function BrowseScreen() {
             {/* Region-neutral content always passes, so this narrows rather
                 than excludes: it drops what is not said where you are aiming. */}
             <option value="all">Anywhere</option>
-            <option value="es-419">Latin America</option>
-            {PRONUNCIATION_LOCALES.map((option) => (
+            {FILTERABLE_REGIONS.map((option) => (
               <option key={option.locale} value={option.locale}>
                 {option.label}
               </option>
@@ -193,18 +202,22 @@ export function BrowseScreen() {
       )}
 
       {results.length > 0 && (
-        <Button
-          variant="primary"
-          block
-          large
-          onClick={() =>
-            void navigate(
-              `/session?preset=flashcards&size=items:20${topic === 'all' ? '' : `&topic=${topic}`}`,
-            )
-          }
-        >
-          Practise these
-        </Button>
+        <div className={styles.actions}>
+          <Button
+            variant="primary"
+            block
+            large
+            onClick={() => void navigate(sessionPath({ preset: 'quick', size, filter }))}
+          >
+            Practise these
+          </Button>
+          <Button
+            block
+            onClick={() => void navigate(sessionPath({ preset: 'flashcards', size, filter }))}
+          >
+            Study these
+          </Button>
+        </div>
       )}
     </AppShell>
   );

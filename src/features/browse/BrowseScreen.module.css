@@ -79,3 +79,11 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* Practise (tracked) and study (untracked) are different intents, so the pair
+   is stacked with the tracked one primary rather than sharing a row. */
+.actions {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}

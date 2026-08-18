@@ -280,6 +280,16 @@ must remain distinguishable from reviewed editorial content.
 
 `source`: `editorial` · `community` · `imported` · `generated`
 
+`review`: `unreviewed` · `reviewed` · `deprecated`
+
+A pack carries provenance in its manifest, and an item may carry its own. An item
+without one inherits the pack's, so review can be recorded item by item: `core-es`
+ships `generated`/`unreviewed` at the pack level, and each item a human has signed
+off in [`content/es/reviewed.tsv`](../content/es/reviewed.tsv) carries
+`{ "source": "generated", "review": "reviewed" }` of its own. `generated` stays
+accurate after review — `source` says where the wording came from, `review` says
+whether a person has checked it.
+
 ## Manifest
 
 ```json

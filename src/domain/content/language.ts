@@ -47,6 +47,18 @@ export const PRONUNCIATION_LOCALES: readonly PronunciationLocaleOption[] = [
 
 export const DEFAULT_PRONUNCIATION_LOCALE: LanguageTag = 'es-ES';
 
+/**
+ * Regions content can be filtered to (`ItemFilter.usableIn`). Wider than the
+ * pronunciation locales because a learner aims at a region, not a voice: it
+ * includes the `es-419` macro-region, which every Latin American locale
+ * satisfies. Shared so the Browse controls and the session URL cannot disagree
+ * about which values are valid.
+ */
+export const FILTERABLE_REGIONS: readonly PronunciationLocaleOption[] = [
+  { locale: 'es-419', label: 'Latin America' },
+  ...PRONUNCIATION_LOCALES,
+];
+
 /** `es-419-x-foo` → `es-419` → `es`. */
 export function baseLanguage(tag: LanguageTag): LanguageTag {
   const [primary] = tag.split('-');

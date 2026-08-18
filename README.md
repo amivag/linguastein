@@ -7,7 +7,7 @@ engine is language-agnostic by design.
 phone, offline, with no account.
 
 Status: **v0.1**. The architecture, engine and practice loop are in place, with a
-generated A1–A2 Spanish pack of 845 practisable items awaiting editorial review
+generated A1–A2 Spanish pack of 1,027 practisable items awaiting editorial review
 (see [`docs/spec`](docs/spec) for the product specification).
 
 ## Quick start
@@ -30,6 +30,7 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 | `npm run build`         | Type-check and build the PWA into `dist/` |
 | `npm run preview`       | Serve the production build locally        |
 | `npm test`              | Vitest (unit + component)                 |
+| `npm run test:coverage` | Vitest with the enforced coverage floors  |
 | `npm run typecheck`     | TypeScript, no emit                       |
 | `npm run lint`          | ESLint (flat config)                      |
 | `npm run format`        | Prettier                                  |
@@ -69,12 +70,12 @@ dist/             build output (git-ignored)
 
 Four sections behind a tab bar (a rail on wider screens):
 
-| Section  | What it is                                                        |
-| -------- | ----------------------------------------------------------------- |
-| Practice | quick sessions and the six practice presets                       |
-| Browse   | search and filter all 845 items; dictate the search with the mic  |
-| Progress | what has been practised, accuracy, weak items, recent sessions    |
-| Settings | language, audio and voice, appearance, data — in grouped sections |
+| Section  | What it is                                                         |
+| -------- | ------------------------------------------------------------------ |
+| Practice | quick sessions and the six practice presets                        |
+| Browse   | search and filter all 1,027 items; dictate the search with the mic |
+| Progress | what has been practised, accuracy, weak items, recent sessions     |
+| Settings | language, audio and voice, appearance, data — in grouped sections  |
 
 A running session hides the chrome and fills the screen, so practice stays the
 focus rather than the navigation.
@@ -99,8 +100,8 @@ from a dataset passes through the validation boundary in
 `src/data/validation`; malformed records are reported and skipped rather than
 breaking a session.
 
-The shipped `core-es` pack covers A1–A2: **100 verbs** with generated forms,
-**339 nouns**, **172 modifiers** and **443 example sentences** — 845 practisable
+The shipped `core-es` pack covers A1–A2: **117 verbs** with generated forms,
+**358 nouns**, **196 modifiers** and **592 example sentences** — 1,027 practisable
 items in total.
 
 Humans author compact TSV in `content/es/`; `npm run build:data` derives
@@ -174,6 +175,19 @@ app itself never records, stores or transmits audio.
 
 The app is an installable PWA: the shell and datasets are precached, audio is
 cached on first play, and all learner state lives in IndexedDB on the device.
+
+## Versions and updates
+
+The app reports its own version in Settings → Data as `Lingo <version> (<commit>)`,
+alongside the version of each loaded content pack — content ships independently of
+the app. `package.json` is the source of truth; the build injects it. Changes are
+recorded in [CHANGELOG.md](CHANGELOG.md).
+
+JS and CSS are content-hashed, so an update can never be served from a stale
+cache. When the service worker has fetched a new build, the app offers a reload
+rather than taking one — being thrown back to the start of a session mid-answer is
+worse than running a few minutes behind. Details, including the two files that
+must not be HTTP-cached: [docs/architecture.md](docs/architecture.md#updates-and-caching).
 
 ## License
 

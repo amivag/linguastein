@@ -1,0 +1,21 @@
+# Editorial sign-off for core-es. Hand-authored — the one file in content/es a
+# human writes about content rather than writing content.
+#
+# The shipped pack is machine-generated and marked `review: unreviewed`. An entry
+# here marks one item `reviewed` in the pack, so review is incremental: a slice
+# can be signed off without waiting for all 1,027 items.
+#
+# Columns: id	text	reviewer	date	note
+#
+# `text` is the wording that was actually read and approved. The build compares
+# it against the current text and fails if they differ, so an edit after
+# sign-off cannot silently inherit it — re-read the row and update the entry.
+# An id no item claims any more also fails the build, so a deleted row cannot
+# leave a stale approval behind.
+#
+# Reviewing an item means checking: the Spanish is natural and correctly spelled
+# and accented, the English gloss is accurate and unambiguous, the level and
+# topics fit, and any register/address/region marking is right. See
+# docs/tasks/dataset-expansion.md for what each of those means.
+#
+# No entries yet: the pack is unreviewed, and nothing here should say otherwise.

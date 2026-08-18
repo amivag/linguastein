@@ -19,7 +19,12 @@ describe('HomeScreen', () => {
 });
 
 describe('SessionScreen', () => {
-  it('runs a flashcard session and records progress', async () => {
+  /**
+   * Flashcards are a study session: browsing, not testing. A self-rated reveal
+   * is not evidence of retrieval, and Browse routes into this preset — so
+   * flipping through cards must not move an item's schedule.
+   */
+  it('runs a flashcard session without recording anything', async () => {
     const user = userEvent.setup();
     const services = testServices();
 
@@ -32,12 +37,33 @@ describe('SessionScreen', () => {
     // The phrase renders as individually tappable words (see word-info tests).
     expect(screen.getByRole('button', { name: 'About “Tengo”' })).toBeInTheDocument();
 
-    // Reveal, then self-rate — the audio-first loop of spec §4.2.
     await user.click(screen.getByRole('button', { name: 'Reveal' }));
     expect(screen.getByText('I have to work.')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Good' }));
     expect(await screen.findByText('2/2')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Reveal' }));
+    await user.click(screen.getByRole('button', { name: 'Good' }));
+
+    // Studying is reported as a count, and says plainly that it did not count.
+    expect(await screen.findByText(/not scored/)).toBeInTheDocument();
+    expect(await services.storage.progress.all()).toHaveLength(0);
+    expect(await services.storage.attempts.recent(5)).toHaveLength(0);
+    expect(await services.storage.sessions.recent(5)).toHaveLength(0);
+  });
+
+  it('records a self-rated answer in a tracked session', async () => {
+    const user = userEvent.setup();
+    const services = testServices();
+
+    renderWithServices(<SessionScreen />, {
+      services,
+      route: '/session?preset=listen&size=items:1',
+    });
+
+    // Listen & repeat is self-rated too — the audio-first loop of spec §4.2.
+    await user.click(await screen.findByRole('button', { name: 'Meaning' }));
+    await user.click(screen.getByRole('button', { name: 'Good' }));
 
     await waitFor(async () => {
       expect(await services.storage.progress.all()).toHaveLength(1);

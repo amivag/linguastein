@@ -109,11 +109,22 @@ export interface BuildConfigOptions {
   readonly size: SessionSize;
   readonly ordering?: Ordering;
   readonly seed?: number;
+  readonly dueOnly?: boolean;
   /** Narrows the preset further, e.g. to the sentences of one passage. */
   readonly scope?: ItemFilter;
 }
 
+/**
+ * How much unseen material an open-ended session may mix in. It exists to stop
+ * "10 minutes of practice" turning into ten first encounters — so it must not
+ * apply to a set the learner picked deliberately: capping a 12-sentence passage
+ * at 8 would silently practise two thirds of what the button offered.
+ */
+const NEW_ITEM_CAP = 8;
+
 export function buildSessionConfig(preset: Preset, options: BuildConfigOptions): SessionConfig {
+  const scoped = options.scope !== undefined && Object.keys(options.scope).length > 0;
+
   return {
     mode: preset.mode,
     filter: { ...preset.filter(options.repository), ...options.scope },
@@ -122,7 +133,8 @@ export function buildSessionConfig(preset: Preset, options: BuildConfigOptions):
     exerciseKinds: preset.exerciseKinds,
     referenceLanguage: options.preferences.referenceLanguage,
     pronunciationLocale: options.preferences.pronunciationLocale,
-    maxNewItems: 8,
+    ...(scoped ? {} : { maxNewItems: NEW_ITEM_CAP }),
+    ...(options.dueOnly ? { dueOnly: true } : {}),
     ...(options.seed !== undefined ? { seed: options.seed } : {}),
   };
 }

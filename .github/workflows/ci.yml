@@ -27,8 +27,10 @@ jobs:
       - name: Format check
         run: npm run format:check
 
+      # With coverage, so the floors in vite.config.ts are enforced rather than
+      # merely recorded. Same command `npm run check` runs locally.
       - name: Test
-        run: npm test
+        run: npm run test:coverage
 
       - name: Validate datasets
         run: npm run validate:data

@@ -12,6 +12,11 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   cloze choice, tap to build
 - Session planner: filters, sequential / random / smart ordering, item- and
   time-based sizing, seeded determinism
+- Sessions fully described by their URL — preset, size, passage, the faceted
+  filters, review-only, ordering and seed — built and parsed in one place, so a
+  session can be filtered from Browse, resumed, shared or scripted
+- Review what is due: the due count on Home and Progress starts a session of
+  exactly those items
 - Progress model + FSRS scheduling behind a `Scheduler` seam, exercise
   composition that climbs recognition → cued recall → production, and derived
   word- and pattern-level mastery
@@ -30,7 +35,9 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 196 modifiers,
-  592 sentences — 1,028 practisable items, 99% of sentence words linked to a lexeme
+  592 sentences — 1,027 practisable items, 99% of sentence words linked to a lexeme
+- Editorial review machinery: per-item sign-off pinned to the reviewed wording,
+  and `npm run review:data` reporting content questions by exception
 - Reference-language architecture (English is the first, not the only)
 - WCAG 2.2 AA accessibility, enforced by axe and contrast tests in CI
 - Switchable dark/light themes on a modular, extensible token system
@@ -47,15 +54,28 @@ The dataset work is briefed in full for a fresh session:
    unreviewed. Genders, glosses and sentence naturalness need a human pass
    before any of it can be called canonical.
 
+   The machinery for that pass is now in place, and it is only machinery: review
+   is per item via `content/es/reviewed.tsv`, so a slice can be signed off without
+   reading all 1,027 at once, and `npm run review:data` reports the rows worth
+   attention rather than asking anyone to scan the lot. Sign-off is pinned to the
+   wording that was read, so an edit afterwards fails the build instead of
+   inheriting the approval. **Nothing is signed off yet** — the pack is still
+   generated and unreviewed, and only a human reading the Spanish changes that.
+
+   What the report currently raises: one gloss shared by two sentences that need
+   distinguishing, one word (`dinero`) to confirm as universal rather than
+   regional, and 18 words no lexeme claims — mostly irregular preterites (`fue`,
+   `fui`), infinitive+pronoun forms (`ayudarme`, `explicarme`) and conditionals
+   (`quisiera`, `gustaría`), which is a sources gap rather than a wording one.
+
 1. **More passages** — 14 exist (8 texts, 6 dialogues); the target is 30–60. The
    model, the authoring shape and the reading view are all in place, so this is
    now content work, and it is also the cheapest route to the vocabulary
    -recycling target. See the dataset task.
-2. **Study mode for flashcards** — free browsing with previous/next, order
-   toggle and no scoring, separate from tracked practice sessions.
-3. **Session filters in the UI** — level, topic, verb and "due only" are
-   supported by the planner but not yet exposed.
-4. **Canonical audio pipeline** — generate in batches → review the voice →
+2. **Study mode for flashcards** — previous/next and no scoring are in place: a
+   study session records nothing and reports a count rather than a score. What
+   remains is the order toggle in the UI; `?order=` already carries it.
+3. **Canonical audio pipeline** — generate in batches → review the voice →
    approve → store, plus an `audio/<locale>/<voice>/` layout in packs. This is the
    real fix for pronunciation quality: device voices vary wildly between platforms,
    and many devices ship no Spanish voice at all. Until then the app uses device
@@ -80,15 +100,15 @@ The dataset work is briefed in full for a fresh session:
    item id. Briefed in full in
    [docs/tasks/canonical-audio.md](tasks/canonical-audio.md).
 
-5. **Verb practice depth** — surface `VerbForm` records directly (person and
+4. **Verb practice depth** — surface `VerbForm` records directly (person and
    tense drills), not only cloze inside sentences. Word inspection already
    shows the forms; practising them directly is the next step.
-6. **Word-level progress** — inspection knows which lexeme a tapped word maps
+5. **Word-level progress** — inspection knows which lexeme a tapped word maps
    to, so "words I keep looking up" is a natural weak-item signal to feed back
    into session planning.
-7. **Offline dataset caching** — verify precache coverage and add a visible
+6. **Offline dataset caching** — verify precache coverage and add a visible
    "available offline" state.
-8. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
+7. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
 
 ## Later (architecture allows, code does not attempt)
 
@@ -97,7 +117,7 @@ Story mode · speech recognition and pronunciation scoring · AI tutor behind an
 `LearnerStorage` · translation packs beyond English · the subjunctive proper (and
 so negative commands), the future and the compound tenses · senses for polysemous
 words · **importing and exporting language packs**, including their audio, as
-self-contained units — the audio task (item 4) keeps pack paths relative and
+self-contained units — the audio task (item 3) keeps pack paths relative and
 routes asset resolution through one seam so this stays possible.
 
 ## Explicitly out of scope for now

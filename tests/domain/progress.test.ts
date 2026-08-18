@@ -1,52 +1,42 @@
 import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
 import {
-  ladderScheduler,
   newItemProgress,
   recordAttempt,
   summarise,
   type ItemProgress,
+  type Scheduler,
 } from '../../src/domain/progress';
 import { id } from '../fixtures/pack';
 
 const ITEM = id<ItemId>('test-es:item:001');
 const NOW = 1_700_000_000_000;
 
-const review = (progress: ItemProgress, grades: readonly ('again' | 'good' | 'easy' | 'hard')[]) =>
-  grades.reduce(
-    (state, grade, index) => ladderScheduler.review(state, grade, NOW + index),
-    progress,
-  );
+describe('the scheduler seam', () => {
+  /**
+   * Scheduling is swappable by design, so `recordAttempt` must delegate the
+   * interval rather than compute one of its own — and must still layer on the
+   * things only it tracks. A stub is the whole point of the seam: it proves the
+   * indirection without a second real algorithm to keep in step.
+   */
+  it('delegates scheduling and keeps its own bookkeeping on top', () => {
+    const stub: Scheduler = {
+      id: 'stub',
+      review: (progress) => ({ ...progress, attempts: progress.attempts + 1, dueAt: 42 }),
+    };
 
-describe('ladder scheduler', () => {
-  it('schedules a first review shortly after a correct answer', () => {
-    const result = ladderScheduler.review(newItemProgress(ITEM), 'good', NOW);
-    expect(result.status).toBe('learning');
-    expect(result.streak).toBe(1);
-    expect(result.dueAt).toBeGreaterThan(NOW);
-    expect(result.dueAt! - NOW).toBeLessThan(2 * 24 * 60 * 60 * 1000);
-  });
+    const { progress } = recordAttempt(
+      undefined,
+      { itemId: ITEM, exerciseKind: 'reveal', grade: 'good', latencyMs: 1000, hintsUsed: 2 },
+      NOW,
+      stub,
+    );
 
-  it('lengthens intervals as the streak grows', () => {
-    const first = ladderScheduler.review(newItemProgress(ITEM), 'good', NOW);
-    const second = ladderScheduler.review(first, 'good', NOW);
-    expect(second.dueAt! - NOW).toBeGreaterThan(first.dueAt! - NOW);
-  });
-
-  it('resets the streak and difficulty on a lapse', () => {
-    const learned = review(newItemProgress(ITEM), ['good', 'good', 'easy']);
-    const lapsed = ladderScheduler.review(learned, 'again', NOW);
-
-    expect(lapsed.streak).toBe(0);
-    expect(lapsed.status).toBe('learning');
-    expect(lapsed.incorrect).toBe(1);
-    expect(lapsed.difficulty).toBeGreaterThan(learned.difficulty);
-  });
-
-  it('reaches mastered after a consistent easy streak', () => {
-    const mastered = review(newItemProgress(ITEM), ['easy', 'easy', 'easy', 'easy']);
-    expect(mastered.status).toBe('mastered');
-    expect(mastered.correct).toBe(4);
+    expect(progress.dueAt).toBe(42);
+    expect(progress.attempts).toBe(1);
+    // Latency and hints belong to the tracker, not the scheduler.
+    expect(progress.averageLatencyMs).toBe(1000);
+    expect(progress.hintsUsed).toBe(2);
   });
 });
 

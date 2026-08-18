@@ -5,8 +5,9 @@ import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { summarise, type ProgressSummary } from '../../domain/progress';
-import { DEFAULT_SESSION_MINUTES } from '../../domain/sessions';
-import { formatSize, PRESET_IDS, PRESETS } from '../practice/presets';
+import { DEFAULT_SESSION_MINUTES, type SessionSize } from '../../domain/sessions';
+import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
+import { sessionPath } from '../practice/session-url';
 import styles from './HomeScreen.module.css';
 
 /** The two-tap entry point: pick how long, pick what (spec §3). */
@@ -29,8 +30,8 @@ export function HomeScreen() {
   }, [services]);
 
   const pack = services.repository.packs[0];
-  const start = (preset: string, size: string) =>
-    void navigate(`/session?preset=${preset}&size=${size}`);
+  const start = (preset: PresetId, size: SessionSize) =>
+    void navigate(sessionPath({ preset, size }));
 
   return (
     <AppShell title={pack?.name ?? 'Practice'} action={<ThemeToggle variant="compact" />}>
@@ -51,13 +52,32 @@ export function HomeScreen() {
         </div>
       </div>
 
+      {summary !== null && summary.due > 0 && (
+        <Button
+          variant="primary"
+          block
+          large
+          onClick={() =>
+            void navigate(
+              sessionPath({
+                preset: 'quick',
+                size: { kind: 'items', count: summary.due },
+                dueOnly: true,
+              }),
+            )
+          }
+        >
+          Review {summary.due} due
+        </Button>
+      )}
+
       <h2 className={styles.sectionTitle}>Quick session</h2>
       <div className={styles.quick}>
         {DEFAULT_SESSION_MINUTES.map((minutes) => (
           <Button
             key={minutes}
             variant="primary"
-            onClick={() => start('quick', formatSize({ kind: 'time', minutes }))}
+            onClick={() => start('quick', { kind: 'time', minutes })}
           >
             {minutes} min
           </Button>
@@ -73,7 +93,7 @@ export function HomeScreen() {
               key={id}
               block
               className={styles.preset}
-              onClick={() => start(id, formatSize({ kind: 'items', count: 10 }))}
+              onClick={() => start(id, { kind: 'items', count: 10 })}
             >
               <span className={styles.presetLabel}>{preset.label}</span>
               <span className={styles.presetDescription}>{preset.description}</span>

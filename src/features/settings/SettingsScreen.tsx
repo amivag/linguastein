@@ -5,14 +5,22 @@ import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { PRONUNCIATION_LOCALES, REFERENCE_LANGUAGES } from '../../domain/content';
+import { buildDate, buildLabel } from '../../app/version';
 import styles from './SettingsScreen.module.css';
 
 /** Sample used by the "Test voice" button. */
 const VOICE_SAMPLE = 'Tengo que trabajar.';
 
+/**
+ * Resetting is a three-state control rather than one button, because the action
+ * is irreversible and there is nowhere to restore from: learner state is local
+ * to the device by design, so a mis-tap is the whole history gone.
+ */
+type ResetState = 'idle' | 'confirming' | 'cleared';
+
 export function SettingsScreen() {
   const { services, preferences, updatePreferences } = useServices();
-  const [cleared, setCleared] = useState(false);
+  const [reset, setReset] = useState<ResetState>('idle');
   const [voices, setVoices] = useState<readonly TtsVoice[]>([]);
 
   // The browser loads its voice list asynchronously, so wait for it before
@@ -31,7 +39,9 @@ export function SettingsScreen() {
     await services.storage.progress.clear();
     await services.storage.attempts.clear();
     await services.storage.sessions.clear();
-    setCleared(true);
+    // Preferences are deliberately kept: nobody asking to clear their history
+    // is also asking to have their voice and theme picked again.
+    setReset('cleared');
   };
 
   const testVoice = () =>
@@ -169,9 +179,38 @@ export function SettingsScreen() {
           </p>
         </div>
 
-        <Button block onClick={() => void resetProgress()}>
-          {cleared ? 'Progress cleared ✓' : 'Reset progress'}
-        </Button>
+        <div className={styles.field}>
+          <span className={styles.label}>Version</span>
+          {/* The string a bug report should quote, and the pack version beside it:
+              content ships and updates independently of the app. */}
+          <p className={styles.hint}>
+            Lingo {buildLabel()}
+            {buildDate() && ` · built ${buildDate()}`}
+          </p>
+          <p className={styles.hint}>
+            {services.repository.packs.map((pack) => `${pack.name} ${pack.version}`).join(' · ') ||
+              'No content packs loaded'}
+          </p>
+        </div>
+
+        {reset === 'confirming' ? (
+          <>
+            {/* Announced, not just coloured: the warning is the only thing
+                standing between a tap and an unrecoverable delete. */}
+            <p className={styles.hint} role="alert">
+              This erases every attempt, session and review schedule stored on this device. It
+              cannot be undone.
+            </p>
+            <div className={styles.confirm}>
+              <Button onClick={() => setReset('idle')}>Cancel</Button>
+              <Button onClick={() => void resetProgress()}>Erase everything</Button>
+            </div>
+          </>
+        ) : (
+          <Button block onClick={() => setReset('confirming')}>
+            {reset === 'cleared' ? 'Progress cleared ✓' : 'Reset progress'}
+          </Button>
+        )}
       </section>
     </AppShell>
   );

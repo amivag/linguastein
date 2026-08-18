@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppNav } from './AppNav';
+import { UpdateBanner } from './UpdateBanner';
 import styles from './AppShell.module.css';
 
 interface AppShellProps {
@@ -41,6 +42,10 @@ export function AppShell({ title, children, onBack, action, showNav = true }: Ap
         {action}
       </header>
       <main id="main" className={styles.main} tabIndex={-1}>
+        {/* Inside `main` so the skip link reaches it, and above the content so it
+            is read before whatever the screen is asking of you. Renders nothing
+            until the worker reports a new build. */}
+        <UpdateBanner />
         {children}
       </main>
       {showNav && <AppNav />}

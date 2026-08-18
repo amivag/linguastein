@@ -1,0 +1,27 @@
+/*
+ * A slim strip under the header, in normal flow: it may appear mid-session, and
+ * anything overlaying the answer buttons would be worse than the stale build it
+ * is offering to replace.
+ */
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+
+.message {
+  font-size: var(--text-sm);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  /* Keeps both buttons reachable when the strip wraps on a narrow phone. */
+  margin-left: auto;
+}

@@ -228,7 +228,6 @@
 {"id":"core-es:item:500227","pack":"core-es","type":"word","text":"nieve","level":"a1","topics":["weather"],"lexemes":["core-es:lexeme:nieve"],"examples":["core-es:item:000212"]}
 {"id":"core-es:item:500228","pack":"core-es","type":"word","text":"viento","level":"a1","topics":["weather"],"lexemes":["core-es:lexeme:viento"],"examples":["core-es:item:000413","core-es:item:000552"]}
 {"id":"core-es:item:500229","pack":"core-es","type":"word","text":"calor","level":"a1","topics":["weather"],"lexemes":["core-es:lexeme:calor"],"examples":["core-es:item:000029","core-es:item:000087","core-es:item:000207"]}
-{"id":"core-es:item:500230","pack":"core-es","type":"word","text":"frío","level":"a1","topics":["weather"],"lexemes":["core-es:lexeme:frio"],"examples":["core-es:item:000028","core-es:item:000086","core-es:item:000205"]}
 {"id":"core-es:item:500231","pack":"core-es","type":"word","text":"mar","level":"a1","topics":["nature"],"lexemes":["core-es:lexeme:mar"],"examples":["core-es:item:000376"]}
 {"id":"core-es:item:500232","pack":"core-es","type":"word","text":"río","level":"a1","topics":["nature"],"lexemes":["core-es:lexeme:rio"],"examples":["core-es:item:000420"]}
 {"id":"core-es:item:500233","pack":"core-es","type":"word","text":"lago","level":"a2","topics":["nature"],"lexemes":["core-es:lexeme:lago"],"examples":["core-es:item:000421"]}
@@ -329,7 +328,7 @@
 {"id":"core-es:item:500328","pack":"core-es","type":"word","text":"otoño","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:otono"],"examples":["core-es:item:000208"]}
 {"id":"core-es:item:500329","pack":"core-es","type":"word","text":"invierno","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:invierno"],"examples":["core-es:item:000212","core-es:item:000412"]}
 {"id":"core-es:item:500330","pack":"core-es","type":"word","text":"favor","level":"a1","topics":["greetings"],"lexemes":["core-es:lexeme:favor"],"examples":["core-es:item:000014","core-es:item:000015","core-es:item:000056"]}
-{"id":"core-es:item:500331","pack":"core-es","type":"word","text":"nevera","level":"a2","topics":["home"],"lexemes":["core-es:lexeme:nevera"],"examples":["core-es:item:000085"]}
+{"id":"core-es:item:500331","pack":"core-es","type":"word","text":"nevera","level":"a2","topics":["home"],"regions":["es-ES"],"lexemes":["core-es:lexeme:nevera"],"examples":["core-es:item:000085"]}
 {"id":"core-es:item:500332","pack":"core-es","type":"word","text":"centro","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:centro"],"examples":["core-es:item:000115","core-es:item:000312","core-es:item:000334"]}
 {"id":"core-es:item:500333","pack":"core-es","type":"word","text":"euro","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:euro"],"examples":["core-es:item:000305","core-es:item:000509","core-es:item:000560"]}
 {"id":"core-es:item:500334","pack":"core-es","type":"word","text":"talla","level":"a2","topics":["shopping"],"lexemes":["core-es:lexeme:talla"],"examples":["core-es:item:000297","core-es:item:000564"]}

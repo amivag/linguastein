@@ -5,7 +5,8 @@ import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { ExerciseView } from './ExerciseView';
 import styles from './Practice.module.css';
-import { buildSessionConfig, isPresetId, parseSize, PRESETS } from './presets';
+import { buildSessionConfig, PRESETS } from './presets';
+import { parseSessionUrl } from './session-url';
 import { useSessionRunner } from './useSessionRunner';
 
 /** A session is fully described by the URL, so it survives a reload or a share. */
@@ -14,25 +15,33 @@ export function SessionScreen() {
   const navigate = useNavigate();
   const { services, preferences } = useServices();
 
-  const presetId = params.get('preset');
-  const preset = PRESETS[isPresetId(presetId) ? presetId : 'quick'];
-  const size = parseSize(params.get('size'));
-
   // The URL is the source of truth for a session; rebuilding the config on
-  // every render would replan the session on every keystroke of state.
+  // every render would replan the session on every keystroke of state. The
+  // query string is the dependency, so the plan changes only when the link does.
   const search = params.toString();
   const repository = services.repository;
-  const config = useMemo(() => {
-    // `?passage=` practises exactly one text, in its reading order.
-    const passage = params.get('passage');
-    const scope = passage ? { ids: repository.passageByLocalId(passage)?.items ?? [] } : undefined;
-    return buildSessionConfig(preset, {
-      repository,
-      preferences,
-      size,
-      ...(scope ? { scope } : {}),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- `search` stands in for preset+size+passage
+  const { preset, config } = useMemo(() => {
+    const url = parseSessionUrl(new URLSearchParams(search));
+    const chosen = PRESETS[url.preset];
+    // `?passage=` practises exactly one text; facets narrow it further, since
+    // the repository ANDs an id allow-list with everything else.
+    const passageItems = url.passage
+      ? (repository.passageByLocalId(url.passage)?.items ?? [])
+      : undefined;
+    const scope = { ...url.filter, ...(passageItems ? { ids: passageItems } : {}) };
+
+    return {
+      preset: chosen,
+      config: buildSessionConfig(chosen, {
+        repository,
+        preferences,
+        size: url.size,
+        scope,
+        ...(url.ordering ? { ordering: url.ordering } : {}),
+        ...(url.dueOnly ? { dueOnly: true } : {}),
+        ...(url.seed !== undefined ? { seed: url.seed } : {}),
+      }),
+    };
   }, [search, repository, preferences]);
 
   const runner = useSessionRunner(config);
@@ -91,11 +100,15 @@ export function SessionScreen() {
       {runner.status === 'complete' && (
         <section className={styles.summaryScreen}>
           <p className={styles.summaryScore}>
-            {runner.stats.correct}/{runner.stats.answered}
+            {runner.tracked ? `${runner.stats.correct}/${runner.stats.answered}` : runner.total}
           </p>
-          <p className={styles.hint}>Session complete. Progress saved on this device.</p>
+          <p className={styles.hint}>
+            {runner.tracked
+              ? 'Session complete. Progress saved on this device.'
+              : `${runner.total === 1 ? 'Card' : 'Cards'} reviewed. Studying is not scored, so nothing was recorded.`}
+          </p>
           <Button variant="primary" block large onClick={runner.restart}>
-            Practise again
+            {runner.tracked ? 'Practise again' : 'Study again'}
           </Button>
           <Button block onClick={() => void navigate('/')}>
             Home

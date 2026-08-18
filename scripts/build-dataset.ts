@@ -100,11 +100,23 @@ interface PassageRow {
  */
 interface SourceRow {
   id: string | undefined;
+  /**
+   * `-` in the id column: this row contributes a lexeme and its meaning, but no
+   * word card of its own. Some words are only learned in context — and a
+   * homograph like the noun `frío` would otherwise ship a card identical to the
+   * adjective's, which splits one word a learner sees into two ids.
+   *
+   * It never owns an id, so the ledger retires one it used to hold and the
+   * sentences that use the word are untouched.
+   */
+  noCard: boolean;
   /** The authored columns, with any id stripped off the front. */
   fields: string[];
   /** Index into `SourceFile.lines`, so an assigned id can be written back. */
   line: number;
 }
+
+const NO_CARD = '-';
 
 interface SourceFile {
   name: string;
@@ -123,9 +135,12 @@ function readSource(file: string): SourceFile {
     if (text.trim().length === 0 || text.startsWith('#')) continue;
     const cells = text.split('\t').map((cell) => cell.trim());
     const hasId = ID_PATTERN.test(cells[0] ?? '');
+    const noCard = cells[0] === NO_CARD;
     rows.push({
       ...(hasId ? { id: cells[0]! } : { id: undefined }),
-      fields: hasId ? cells.slice(1) : cells,
+      noCard,
+      // The sentinel occupies the id column, so it is stripped like an id.
+      fields: hasId || noCard ? cells.slice(1) : cells,
       line,
     });
   }
@@ -340,6 +355,7 @@ for (const sentence of sentences) {
 
 const nextNounCardId = allocatorFor('noun-card');
 for (const noun of nouns) {
+  if (noun.row.noCard) continue;
   claimId(noun.row, 'noun-card', noun.lemma, nextNounCardId);
 }
 
@@ -631,6 +647,8 @@ interface ItemRecord {
   skills?: string[];
   examples?: string[];
   note?: string;
+  /** Present only where a human has signed the item off; see reviewed.tsv. */
+  provenance?: { source: string; review: string };
 }
 
 const TOKEN_PATTERN = /[¿¡]|[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+|[.,!?;:]/g;
@@ -1025,35 +1043,6 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
   };
 });
 
-// ── no two items may carry the same text ────────────────────────────────────
-
-/**
- * Two items with identical text split a learner in half: progress, mastery and
- * scheduling all key on the item id, so the same sentence would be practised
- * twice and known once. Easy to introduce by accident when writing a passage
- * around sentences that already exist.
- */
-const textOwners = new Map<string, string[]>();
-for (const [index, item] of sentenceItems.entries()) {
-  const key = item.text
-    .toLowerCase()
-    .replace(/[¿¡?!.,;:]/g, '')
-    .trim();
-  const owners = textOwners.get(key);
-  const label = `${item.id} (${sentences[index]!.source})`;
-  if (owners) owners.push(label);
-  else textOwners.set(key, [label]);
-}
-
-const duplicateTexts = [...textOwners.entries()].filter(([, owners]) => owners.length > 1);
-if (duplicateTexts.length > 0) {
-  console.error(
-    'Duplicate sentence text — reword one, or have the passage reference the existing item:\n  ' +
-      duplicateTexts.map(([text, owners]) => `"${text}" → ${owners.join(', ')}`).join('\n  '),
-  );
-  process.exit(1);
-}
-
 // ── passages (several sentences read as one text) ────────────────────────────
 
 /**
@@ -1139,17 +1128,19 @@ for (const item of sentenceItems) {
 }
 
 const vocabularySources = [
-  ...nouns.map((noun) => ({
-    id: itemId(noun.row),
-    lemma: noun.lemma,
-    pos: 'NOUN',
-    level: noun.level,
-    topics: noun.topics,
-    // A word card *is* the word, so it inherits whatever marks the lexeme:
-    // `papa` must not be offered to someone learning the Spanish of Spain.
-    regions: noun.regions,
-    register: noun.register,
-  })),
+  ...nouns
+    .filter((noun) => !noun.row.noCard)
+    .map((noun) => ({
+      id: itemId(noun.row),
+      lemma: noun.lemma,
+      pos: 'NOUN',
+      level: noun.level,
+      topics: noun.topics,
+      // A word card *is* the word, so it inherits whatever marks the lexeme:
+      // `papa` must not be offered to someone learning the Spanish of Spain.
+      regions: noun.regions,
+      register: noun.register,
+    })),
   ...modifiers
     .filter((modifier) => modifier.pos === 'ADJ')
     .map((modifier) => ({
@@ -1179,6 +1170,99 @@ const vocabularyItems: ItemRecord[] = vocabularySources.map((entry) => {
     ...(examples.length > 0 ? { examples } : {}),
   };
 });
+
+// ── no two items may carry the same text ────────────────────────
+
+/**
+ * Two items with identical text split a learner in half: progress, mastery and
+ * scheduling all key on the item id, so the same word or sentence would be
+ * practised twice and known once. Easy to introduce by accident when writing a
+ * passage around sentences that already exist — or when a noun and an adjective
+ * share a surface form, which is why word cards are checked here as well, and
+ * against the sentences rather than only against each other.
+ */
+const textOwners = new Map<string, string[]>();
+for (const [item, origin] of [
+  ...sentenceItems.map((item, index) => [item, sentences[index]!.source] as const),
+  ...vocabularyItems.map((item) => [item, 'word card'] as const),
+]) {
+  const key = item.text
+    .toLowerCase()
+    .replace(/[¿¡?!.,;:]/g, '')
+    .trim();
+  const owners = textOwners.get(key);
+  const label = `${item.id} (${origin})`;
+  if (owners) owners.push(label);
+  else textOwners.set(key, [label]);
+}
+
+const duplicateTexts = [...textOwners.entries()].filter(([, owners]) => owners.length > 1);
+if (duplicateTexts.length > 0) {
+  console.error(
+    'Duplicate item text — reword one, have the passage reference the existing item,\n' +
+      `or mark the row that should not own a card with "${NO_CARD}" in its id column:\n  ` +
+      duplicateTexts.map(([text, owners]) => `"${text}" → ${owners.join(', ')}`).join('\n  '),
+  );
+  process.exit(1);
+}
+
+// ── editorial sign-off ─────────────────────────
+
+/**
+ * `reviewed.tsv` is the one file in `content/es` a human writes *about* content
+ * rather than writing content. The pack ships `review: unreviewed`; an entry
+ * marks a single item `reviewed`, so an editorial pass can land a slice at a
+ * time instead of all 1,027 items at once.
+ *
+ * The approved wording is recorded beside the id and compared here, because an
+ * id deliberately survives a typo fix — which would otherwise let an edited row
+ * keep an approval nobody gave it.
+ */
+const REVIEW_FILE = 'reviewed.tsv';
+
+interface ReviewEntry {
+  id: string;
+  text: string;
+  reviewer: string;
+}
+
+const reviewEntries: ReviewEntry[] = existsSync(join(CONTENT_DIR, REVIEW_FILE))
+  ? readFileSync(join(CONTENT_DIR, REVIEW_FILE), 'utf8')
+      .split(/\r?\n/)
+      .filter((line) => line.trim().length > 0 && !line.startsWith('#'))
+      .map((line) => {
+        const [id, text, reviewer] = line.split('\t').map((cell) => cell.trim());
+        return { id: id ?? '', text: text ?? '', reviewer: reviewer ?? '' };
+      })
+  : [];
+
+const itemsById = new Map([...sentenceItems, ...vocabularyItems].map((item) => [item.id, item]));
+const reviewProblems: string[] = [];
+
+for (const entry of reviewEntries) {
+  const item = itemsById.get(`${NS}item:${entry.id}`);
+  if (!item) {
+    reviewProblems.push(`${entry.id} is signed off, but no item claims that id any more`);
+  } else if (item.text !== entry.text) {
+    reviewProblems.push(
+      `${entry.id} changed after sign-off: reviewed "${entry.text}", now "${item.text}"`,
+    );
+  } else if (!entry.reviewer) {
+    reviewProblems.push(`${entry.id} has no reviewer — sign-off needs a name`);
+  } else {
+    item.provenance = { source: 'generated', review: 'reviewed' };
+  }
+}
+
+if (reviewProblems.length > 0) {
+  console.error(
+    `Editorial sign-off problems in ${REVIEW_FILE} — re-read the row, then update its entry:\n  ` +
+      reviewProblems.join('\n  '),
+  );
+  process.exit(1);
+}
+
+const reviewedCount = reviewEntries.length - reviewProblems.length;
 
 // ── skills and translations ─────────────────────────────────────────────────
 
@@ -1343,6 +1427,13 @@ console.log(
 console.log(`  ${verbForms.length} verb forms`);
 console.log(`  ${sentenceItems.length} sentences · ${vocabularyItems.length} word cards`);
 console.log(`  ${skillRecords.length} skills · ${translations.length} translations`);
+
+const totalItems = sentenceItems.length + vocabularyItems.length;
+const reviewedShare = totalItems === 0 ? 0 : Math.round((reviewedCount / totalItems) * 100);
+console.log(
+  `  editorial review: ${reviewedCount}/${totalItems} items signed off (${reviewedShare}%)` +
+    (reviewedCount === 0 ? ' — the pack is machine-generated and unreviewed' : ''),
+);
 
 if (passageRecords.length > 0) {
   const lines = passageRecords.reduce((total, passage) => total + passage.items.length, 0);

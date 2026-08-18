@@ -7,6 +7,7 @@ import { TokenizedText } from '../../components/TokenizedText';
 import { UsageBadges } from '../../components/UsageBadges';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import type { ItemId, TokenId } from '../../domain/content';
+import { sessionPath } from '../practice/session-url';
 import styles from './Read.module.css';
 
 /**
@@ -114,7 +115,9 @@ export function PassageScreen() {
         variant="primary"
         block
         large
-        onClick={() => void navigate(`/session?preset=quick&size=all&passage=${id}`)}
+        onClick={() =>
+          void navigate(sessionPath({ preset: 'quick', size: { kind: 'all' }, passage: id }))
+        }
       >
         Practise these sentences
       </Button>

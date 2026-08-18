@@ -11,27 +11,25 @@
  * the ledger and resumption.
  */
 
-import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { repoRoot, runScript } from '../fixtures/dataset';
 
-const root = resolve(process.cwd());
 let out: string;
 
 /** Runs the generator against a scratch output directory. */
 function generate(...args: string[]): string {
-  return execFileSync(
-    process.execPath,
-    ['--import', 'tsx', join(root, 'scripts/generate-audio.ts'), '--out', out, '--raw', ...args],
-    {
-      cwd: root,
-      env: { ...process.env, LINGO_NOW: '2026-01-01' },
-      encoding: 'utf8',
-      stdio: 'pipe',
-    },
-  );
+  return generateFrom(undefined, ...args);
+}
+
+/** As `generate`, but reading a scratch copy of the packs directory. */
+function generateFrom(packs: string | undefined, ...args: string[]): string {
+  return runScript('scripts/generate-audio.ts', {
+    args: ['--out', out, '--raw', ...args],
+    env: { LINGO_NOW: '2026-01-01', ...(packs ? { LINGO_PACKS_DIR: packs } : {}) },
+  });
 }
 
 const ledgerPath = () => join(out, 'audio-ledger.tsv');
@@ -115,18 +113,36 @@ describe('audio generation', { timeout: 120_000 }, () => {
     expect(ledgerRows().map((each) => each[3])).toEqual(['deadbeef', trueHash]);
   });
 
+  /**
+   * `core-es` used to ship `frío` as both a noun card and an adjective card, and
+   * that pair was this test's subject. The build now rejects two items with the
+   * same text, so the case can only arrive in an imported pack — which is still
+   * worth handling, because synthesising it twice buys two slightly different
+   * readings of one word. Hence a scratch pack with the collision planted in it.
+   */
   it('synthesises identical text once, and records it for both items', () => {
-    // `frío` ships as both a noun card and an adjective card: two items, two
-    // lexemes, one pronunciation.
-    const output = generate('--items', '500230,600039', '--provider', 'stub', '--voice', 'v1');
+    const packs = mkdtempSync(join(tmpdir(), 'lingo-audio-pack-'));
+    try {
+      cpSync(join(repoRoot, 'public/packs'), packs, { recursive: true });
+      const vocabulary = join(packs, 'core-es', 'es-a1-a2-core-vocabulary.jsonl');
+      const lines = readFileSync(vocabulary, 'utf8').trimEnd().split('\n');
+      const original = JSON.parse(lines.at(-1)!) as { id: string; text: string };
+      const twin = { ...original, id: 'core-es:item:900001' };
+      writeFileSync(vocabulary, `${lines.join('\n')}\n${JSON.stringify(twin)}\n`, 'utf8');
 
-    expect(output).toContain("1 item(s) reuse another item's clip");
-    expect(clips()).toHaveLength(1);
+      const ids = `${original.id.replace('core-es:item:', '')},900001`;
+      const output = generateFrom(packs, '--items', ids, '--provider', 'stub', '--voice', 'v1');
 
-    const rows = ledgerRows();
-    expect(rows).toHaveLength(2);
-    expect(rows[0]?.[3]).toBe(rows[1]?.[3]); // same text hash
-    expect(rows[0]?.[4]).toBe(rows[1]?.[4]); // and the same file
+      expect(output).toContain("1 item(s) reuse another item's clip");
+      expect(clips()).toHaveLength(1);
+
+      const rows = ledgerRows();
+      expect(rows).toHaveLength(2);
+      expect(rows[0]?.[3]).toBe(rows[1]?.[3]); // same text hash
+      expect(rows[0]?.[4]).toBe(rows[1]?.[4]); // and the same file
+    } finally {
+      rmSync(packs, { recursive: true, force: true });
+    }
   });
 
   it('regenerates what a reviewer rejected, and nothing else', () => {

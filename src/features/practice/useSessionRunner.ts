@@ -37,6 +37,8 @@ export interface SessionRunner {
   readonly index: number;
   readonly total: number;
   readonly stats: SessionStats;
+  /** False in study mode: nothing is written and no score is reported. */
+  readonly tracked: boolean;
   readonly lastResult: GradeResult | null;
   /** Machine-graded exercises: returns the verdict and records it. */
   submitAnswer(answer: Answer): GradeResult | null;
@@ -58,6 +60,8 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
   const [stats, setStats] = useState<SessionStats>({ answered: 0, correct: 0 });
   const [lastResult, setLastResult] = useState<GradeResult | null>(null);
   const [generation, setGeneration] = useState(0);
+
+  const tracked = config.mode !== 'study';
 
   const progressRef = useRef(new Map<ItemId, ItemProgress>());
   const startedAtRef = useRef(0);
@@ -144,33 +148,41 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
   const persist = useCallback(
     (grade: ReviewGrade, correct: boolean | undefined, latencyMs: number | undefined) => {
       if (!exercise || !item) return;
-      const now = Date.now();
-      const { progress, attempt } = recordAttempt(
-        progressRef.current.get(item.id),
-        {
-          itemId: item.id,
-          exerciseKind: exercise.kind,
-          grade,
-          sessionId,
-          ...(correct !== undefined ? { correct } : {}),
-          ...(latencyMs !== undefined ? { latencyMs } : {}),
-        },
-        now,
-      );
-      progressRef.current.set(item.id, progress);
-      void storage.progress.put(progress);
-      void storage.attempts.append(attempt);
+
+      // A study session browses rather than tests, so it records nothing: a
+      // self-rated reveal is not evidence of retrieval, and Browse routes into
+      // one — flipping through cards must not reschedule what it showed.
+      if (tracked) {
+        const now = Date.now();
+        const { progress, attempt } = recordAttempt(
+          progressRef.current.get(item.id),
+          {
+            itemId: item.id,
+            exerciseKind: exercise.kind,
+            grade,
+            sessionId,
+            ...(correct !== undefined ? { correct } : {}),
+            ...(latencyMs !== undefined ? { latencyMs } : {}),
+          },
+          now,
+        );
+        progressRef.current.set(item.id, progress);
+        void storage.progress.put(progress);
+        void storage.attempts.append(attempt);
+      }
+
+      // Counted either way; the screen presents it as a score only when tracked.
       setStats((current) => ({
         answered: current.answered + 1,
         correct: current.correct + (grade === 'again' ? 0 : 1),
       }));
     },
-    [exercise, item, sessionId, storage],
+    [exercise, item, sessionId, storage, tracked],
   );
 
   // Session totals are written once the last item is graded.
   useEffect(() => {
-    if (status !== 'complete') return;
+    if (status !== 'complete' || !tracked) return;
     void storage.sessions.put({
       id: sessionId,
       startedAt: startedAtRef.current,
@@ -179,7 +191,7 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
       completed: stats.answered,
       correct: stats.correct,
     });
-  }, [status, sessionId, steps.length, stats, storage]);
+  }, [status, tracked, sessionId, steps.length, stats, storage]);
 
   const submitAnswer = useCallback(
     (answer: Answer): GradeResult | null => {
@@ -215,6 +227,7 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     index,
     total: steps.length,
     stats,
+    tracked,
     lastResult,
     submitAnswer,
     submitGrade,

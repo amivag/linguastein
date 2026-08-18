@@ -1,7 +1,8 @@
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
+import { markUpdateReady, resetUpdateState } from '../../src/app/updates';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
@@ -29,6 +30,19 @@ describe('accessibility', () => {
     const { container } = renderWithServices(<BrowseScreen />, { route: '/browse' });
     await screen.findByRole('searchbox');
     await expectNoViolations(container);
+  });
+
+  it('the update banner has no WCAG violations', async () => {
+    // A new surface with its own colours, so it is held to contrast and naming
+    // like any screen. It renders nothing until the worker reports a build.
+    const { container } = renderWithServices(<HomeScreen />);
+    await screen.findByRole('heading', { level: 1 });
+
+    act(() => markUpdateReady());
+    await screen.findByRole('button', { name: 'Reload' });
+
+    await expectNoViolations(container);
+    resetUpdateState();
   });
 
   it('reading list has no WCAG violations', async () => {

@@ -10,6 +10,7 @@ npm run check          # typecheck + lint + test + validate:data — run before 
 npm test               # vitest
 npx vitest run tests/a11y   # accessibility suite alone
 npm run build:data     # regenerate public/packs from content/es
+npm run review:data    # editorial review aid: content questions, by exception
 npm run build          # production PWA build
 ```
 
@@ -82,12 +83,29 @@ indicative. Do not "fix" this by guessing from word order — `Hace frío` and
 The shipped pack is marked `source: generated, review: unreviewed`. Do not
 describe it as reviewed curriculum.
 
+Editorial review is per item and incremental. `content/es/reviewed.tsv` is the
+one file in `content/es` a human writes _about_ content: an entry marks that item
+`review: reviewed` in the pack. Sign-off is pinned to the wording that was read,
+because an id deliberately survives a typo fix — edit a row after sign-off and
+the build fails rather than letting it inherit an approval nobody gave. Never add
+an entry for content you have not read: the field exists to keep generated
+material distinguishable from checked material, and a forged signature destroys
+that. `npm run review:data` finds the rows worth a reviewer's attention, and
+stops raising a finding once every item in it is signed off.
+
+A row whose id column holds `-` contributes a lexeme and its meaning but no word
+card. Use it where a noun and an adjective share a surface form — the noun `frío`
+and the adjective `frío` would otherwise be two identical cards splitting one
+word into two ids. The word stays practisable in sentences and inspectable when
+tapped. No two items may carry the same text, and the build checks this across
+sentences and word cards together.
+
 Passages group several sentences into one connected text (a paragraph or a
 dialogue). Membership is authored in the `passage` column of a sentence row; the
 build derives a container record that _references_ items rather than holding
 text, so each sentence stays independently practisable and mastery keeps counting
-distinct sentences per word. Never give a passage its own copy of the text, and
-never ship two items with the same text — the build fails on both.
+distinct sentences per word. Never give a passage its own copy of the text — the
+build fails on that, as it does on the duplicate text it tends to produce.
 
 Content carries usage as data, not prose: `register`, `address` (tú/usted) and
 `regions`. `address` is derived from morphology where unambiguous and declared
@@ -104,8 +122,10 @@ automated agents alike, so the same rules serve both:
 - state is exposed as ARIA — `role="status"` for results, `aria-expanded` on
   word buttons, `role="progressbar"` for session position — never colour alone
 - each screen has exactly one `<h1>`, one `<main>` and a matching document title
-- session state lives in the URL (`/session?preset=verbs&size=items:10`), so a
-  session can be resumed, shared or scripted
+- session state lives in the URL (`/session?preset=verbs&size=items:10&due=1`), so
+  a session can be resumed, shared or scripted. `src/features/practice/session-url.ts`
+  owns both directions — build links with `sessionPath` rather than by hand, so a
+  parameter cannot be written that the screen does not read
 - colour contrast is asserted against every file in `src/styles/themes/` by
   `tests/a11y/contrast.test.ts`; use `--color-border-strong` for interactive
   boundaries and `--color-border` for decoration
@@ -131,6 +151,34 @@ Three pieces decide what a learner sees, and they are separable on purpose:
 Recognition is the weakest retrieval mode and the most flattering; prefer
 production wherever the data supports it.
 
+A **study** session (`mode: 'study'`, e.g. the Flashcards preset, and where Browse
+sends you) records nothing: no attempt, no progress, no session row, and no score
+at the end. A self-rated reveal is not evidence of retrieval, and browsing must
+not reschedule what it happened to show. Only `mode: 'practice'` feeds the
+scheduler. `maxNewItems` caps unseen material in an open-ended session, and is
+deliberately not applied when the learner picked the set — capping a 12-sentence
+passage at 8 would quietly practise two thirds of it.
+
+## Versioning
+
+`package.json`'s `version` is the only place the app's version is written. The
+build injects it (plus the short commit and build time) via `define`, and
+`src/app/version.ts` is the only module allowed to read those globals — do not
+import `package.json` at runtime or copy the number into a constant.
+
+Releasing is: bump `version`, move the `Unreleased` section of
+[CHANGELOG.md](CHANGELOG.md) under the new number, commit, tag. Settings shows
+`Lingo <version> (<commit>)`, which is what a bug report should quote.
+
+Content packs version separately in their own `pack.json` — a dataset can ship
+without an app release, and does.
+
+JS and CSS are content-hashed, so they need no cache-busting of their own.
+`index.html` and `sw.js` cannot be hashed and must be served no-store; a service
+worker update is offered to the learner rather than force-reloading the page. The
+reasoning is in [docs/architecture.md](docs/architecture.md#updates-and-caching) —
+read it before changing `registerSW` options or the workbox config.
+
 ## Theming
 
 Themes are colour-only and live in `src/styles/themes/<id>.css`, registered in
@@ -152,6 +200,13 @@ appears.
 - Prefer `import type` for types (`verbatimModuleSyntax` is on).
 - Tests live in `tests/`, mirroring `src/`. New behaviour needs a test; bug
   fixes need the test that would have caught them.
+- Coverage floors are enforced (`vite.config.ts`), with `src/domain` and
+  `src/languages` held much higher than the app as a whole — they are pure and
+  cheap to test. Raise a floor when the real figure moves up; do not lower one to
+  make a change fit.
+- Tests that exercise the dataset scripts build a scratch copy of `content/es`
+  through `tests/fixtures/dataset.ts` — use `createScratchPack` rather than
+  spawning the build yourself, so there is one spelling of it.
 - Comments explain _why_. Do not narrate what the code already says.
 - Keep the domain layer free of framework imports.
 

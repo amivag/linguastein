@@ -8,68 +8,48 @@
  * script without touching the checked-in pack.
  */
 
-import { execFileSync } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { createScratchPack, type ScratchPack } from '../fixtures/dataset';
 
-const root = resolve(process.cwd());
-let workspace: string;
-let content: string;
-let packs: string;
+const SENTENCES = 'sentences-core.tsv';
 
-/** Runs the dataset build against the scratch copy. */
-function build(): void {
-  execFileSync(process.execPath, ['--import', 'tsx', join(root, 'scripts/build-dataset.ts')], {
-    cwd: root,
-    env: { ...process.env, LINGO_CONTENT_DIR: content, LINGO_PACKS_DIR: packs },
-    stdio: 'pipe',
-  });
-}
+let pack: ScratchPack;
 
-/** Item id → text, for every practisable item in the built pack. */
+/** Item text → id, for every practisable item in the built pack. */
 function itemsByText(): Map<string, string> {
   const items = new Map<string, string>();
   for (const file of ['es-a1-a2-core-sentences.jsonl', 'es-a1-a2-core-vocabulary.jsonl']) {
-    for (const line of readFileSync(join(packs, 'core-es', file), 'utf8').split('\n')) {
-      if (line.trim().length === 0 || line.startsWith('#')) continue;
-      const record = JSON.parse(line) as { id: string; text: string };
+    for (const record of pack.records<{ id: string; text: string }>(file)) {
       items.set(record.text, record.id);
     }
   }
   return items;
 }
 
-const sentenceFile = () => join(content, 'sentences-core.tsv');
-
 beforeAll(() => {
-  workspace = mkdtempSync(join(tmpdir(), 'lingo-ids-'));
-  content = join(workspace, 'content');
-  packs = join(workspace, 'packs');
-  cpSync(join(root, 'content/es'), content, { recursive: true });
-  build();
+  pack = createScratchPack('lingo-ids');
+  pack.build();
 }, 120_000);
 
 afterAll(() => {
-  rmSync(workspace, { recursive: true, force: true });
+  pack.dispose();
 });
 
 describe('item ids', () => {
   it('are unchanged by a second build', () => {
     const before = itemsByText();
-    build();
+    pack.build();
     expect(itemsByText()).toEqual(before);
   });
 
   it('survive a row inserted at the top of a source file', () => {
     const before = itemsByText();
-    const lines = readFileSync(sentenceFile(), 'utf8').split('\n');
+    const lines = pack.read(SENTENCES).split('\n');
     // After the header comment, i.e. ahead of every existing sentence.
     lines.splice(1, 0, 'Hasta luego.\tSee you later.\ta1\tgreetings');
-    writeFileSync(sentenceFile(), lines.join('\n'), 'utf8');
+    pack.write(SENTENCES, lines.join('\n'));
 
-    build();
+    pack.build();
     const after = itemsByText();
 
     for (const [text, id] of before) {
@@ -80,7 +60,8 @@ describe('item ids', () => {
   });
 
   it('are written back into the source row that owns them', () => {
-    const inserted = readFileSync(sentenceFile(), 'utf8')
+    const inserted = pack
+      .read(SENTENCES)
       .split('\n')
       .find((line) => line.includes('Hasta luego.'));
 
@@ -93,21 +74,21 @@ describe('item ids', () => {
     const removed = itemsByText().get('Hasta luego.');
     expect(removed).toBeDefined();
 
-    const kept = readFileSync(sentenceFile(), 'utf8')
+    const kept = pack
+      .read(SENTENCES)
       .split('\n')
       .filter((line) => !line.includes('Hasta luego.'));
     // Add a different sentence in the same breath, so something needs a new id.
     kept.splice(1, 0, 'Nos vemos luego.\tSee you later.\ta1\tgreetings');
-    writeFileSync(sentenceFile(), kept.join('\n'), 'utf8');
+    pack.write(SENTENCES, kept.join('\n'));
 
-    build();
+    pack.build();
 
     const replacement = itemsByText().get('Nos vemos luego.');
     expect(replacement).toBeDefined();
     expect(replacement).not.toBe(removed);
 
-    const ledger = readFileSync(join(content, 'id-ledger.tsv'), 'utf8');
-    expect(ledger).toMatch(
+    expect(pack.read('id-ledger.tsv')).toMatch(
       new RegExp(`^${removed!.replace(/^.*:/, '')}\\tsentence\\tretired`, 'm'),
     );
   });

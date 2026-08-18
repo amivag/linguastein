@@ -1,6 +1,10 @@
 # Spanish nouns — authoring source for the core-es pack.
 # Columns: id	lemma	gloss (en)	gender	plural (blank = regular)	level	topics	regions	register
 # Plurals are generated unless an irregular one is given (examen → exámenes).
+# Put `-` in the id column for a word that should not get its own card: the
+# lexeme and its meaning still ship, so sentences using it stay inspectable,
+# but no flashcard is generated. Used where a noun and an adjective share a
+# surface form (frío), which would otherwise be two identical cards.
 # Leave the id off a new row: the build assigns one and writes it back, and the
 # row keeps it thereafter however the file is edited or reordered.
 500001	persona	person	f		a1	people
@@ -232,7 +236,7 @@
 500227	nieve	snow	f		a1	weather
 500228	viento	wind	m		a1	weather
 500229	calor	heat	m		a1	weather
-500230	frío	cold	m		a1	weather
+-	frío	cold	m		a1	weather
 500231	mar	sea	m		a1	nature
 500232	río	river	m		a1	nature
 500233	lago	lake	m		a2	nature
@@ -333,7 +337,7 @@
 500328	otoño	autumn	m		a1	time
 500329	invierno	winter	m		a1	time
 500330	favor	favour	m		a1	greetings
-500331	nevera	fridge	f		a2	home
+500331	nevera	fridge	f		a2	home	es-ES
 500332	centro	centre	m		a1	city
 500333	euro	euro	m		a1	shopping
 500334	talla	size	f		a2	shopping

@@ -329,7 +329,7 @@
 {"id":"core-es:lexeme:otono","lemma":"otoño","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:invierno","lemma":"invierno","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:favor","lemma":"favor","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:nevera","lemma":"nevera","pos":"NOUN","level":"a2","gender":"feminine"}
+{"id":"core-es:lexeme:nevera","lemma":"nevera","pos":"NOUN","level":"a2","gender":"feminine","regions":["es-ES"]}
 {"id":"core-es:lexeme:centro","lemma":"centro","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:euro","lemma":"euro","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:talla","lemma":"talla","pos":"NOUN","level":"a2","gender":"feminine"}

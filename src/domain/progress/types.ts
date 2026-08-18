@@ -35,7 +35,7 @@ export interface ItemProgress {
   /** Rolling mean answer latency, used later for fluency work. */
   readonly averageLatencyMs?: number;
   readonly hintsUsed: number;
-  /** Consecutive non-`again` grades; drives the interval ladder. */
+  /** Consecutive non-`again` grades; gates the learning → review → mastered status. */
   readonly streak: number;
 }
 

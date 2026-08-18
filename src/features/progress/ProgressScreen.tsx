@@ -12,6 +12,7 @@ import {
   type ProgressSummary,
 } from '../../domain/progress';
 import type { SessionRecord } from '../../domain/sessions';
+import { sessionPath } from '../practice/session-url';
 import styles from './ProgressScreen.module.css';
 
 interface Loaded {
@@ -119,7 +120,18 @@ export function ProgressScreen() {
               variant="primary"
               block
               large
-              onClick={() => void navigate('/session?preset=quick&size=items:20')}
+              onClick={() =>
+                void navigate(
+                  sessionPath({
+                    preset: 'quick',
+                    // Exactly the due items, all of them: the label is a promise,
+                    // and every attempt persists as it happens, so a long queue
+                    // costs nothing to abandon part-way.
+                    size: { kind: 'items', count: summary.due },
+                    dueOnly: true,
+                  }),
+                )
+              }
             >
               Review {summary.due} due
             </Button>

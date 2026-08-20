@@ -21,8 +21,8 @@ import { conjugate } from '../src/languages/es/conjugation.ts';
 import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
 import { adjectiveForms, pluralOf } from '../src/languages/es/morphology.ts';
 import {
-  MAX_CARDINAL,
   NUMERAL_RULES,
+  parseCardinal,
   spellCardinal,
   type NumeralRule,
 } from '../src/languages/es/numerals.ts';
@@ -323,24 +323,31 @@ if (topicRows.length > 0) {
  * the generator are cross-checked, the same way a verb's declared regularity is
  * cross-checked against `irregulars.ts`.
  *
- * Membership, not identity: the row carries no digit to compare against, so this
- * proves the lemma is a real numeral spelled the way the module spells it. Which
- * number it *means* is then fixed by the English gloss beside it.
+ * A round trip, not set membership: reading the lemma back gives the number it
+ * means, and spelling that number again has to return the very same string. So
+ * `dieciseis` fails for having no reading, and a variant spelling fails even if
+ * it parses, because it is not what the module would have written.
  */
-const numeralSpellings = new Set<string>();
-for (let n = 0; n <= 1000; n++) numeralSpellings.add(spellCardinal(n));
-for (const n of [100_000, 1_000_000, MAX_CARDINAL]) {
-  for (const word of spellCardinal(n).split(' ')) numeralSpellings.add(word);
-}
+const numeralValues = new Map<string, number>();
 
 for (const modifier of modifiers) {
   if (modifier.pos !== 'NUM') continue;
-  if (!numeralSpellings.has(modifier.lemma)) {
+
+  const value = parseCardinal(modifier.lemma);
+  if (value === null) {
     problems.push(
-      `${modifier.lemma}: tagged NUM but numerals.ts never spells it — ` +
-        `check the accent, or use the spelling the module produces`,
+      `${modifier.lemma}: tagged NUM but numerals.ts cannot read it — check the accent`,
     );
+    continue;
   }
+  const canonical = spellCardinal(value);
+  if (canonical !== modifier.lemma) {
+    problems.push(
+      `${modifier.lemma}: numerals.ts spells ${value} as "${canonical}" — use that spelling`,
+    );
+    continue;
+  }
+  numeralValues.set(modifier.lemma, value);
 }
 
 for (const verb of verbs) {
@@ -1492,7 +1499,9 @@ const translations: TranslationRecord[] = [
   ...modifiers.map((modifier) => ({
     ref: lexemeId(modifier.lemma, modifier.pos),
     lang: 'en',
-    text: modifier.gloss,
+    // Same decoration as the card: tapping `treinta` in a sentence should show
+    // "(30)" too, and this is the only gloss the 22 uncarded numerals ever get.
+    text: glossOf(modifier.lemma, modifier.pos),
   })),
   ...skillRecords.map((skill) => ({
     ref: skill.id,
@@ -1513,7 +1522,15 @@ const translations: TranslationRecord[] = [
 
 function glossOf(lemma: string, pos: string): string {
   if (pos === 'NOUN') return nouns.find((noun) => noun.lemma === lemma)!.gloss;
-  return modifiers.find((modifier) => modifier.lemma === lemma)!.gloss;
+  const gloss = modifiers.find((modifier) => modifier.lemma === lemma)!.gloss;
+
+  // A numeral's gloss carries its digits. Without them the exercises drill a
+  // translation rather than a number: "twenty → veinte" is a vocabulary question
+  // a learner half-answers from English, while "20 → veinte" is the real cue,
+  // and it is the one they will meet on a price tag. Derived, never authored, so
+  // the digits cannot disagree with the word beside them.
+  const value = numeralValues.get(lemma);
+  return value === undefined ? gloss : `${gloss} (${value})`;
 }
 
 // ── write ───────────────────────────────────────────────────────────────────

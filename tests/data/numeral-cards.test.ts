@@ -12,7 +12,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { spellCardinal } from '../../src/languages/es/numerals';
+import { parseCardinal, spellCardinal } from '../../src/languages/es/numerals';
 import { createScratchPack, shippedRecords, type ScratchPack } from '../fixtures/dataset';
 
 interface Lexeme {
@@ -38,12 +38,47 @@ const numeralCards = cards.filter((card) => card.lexemes?.some((id) => numeralId
 
 describe('the shipped number cards', () => {
   it('spells every numeral lexeme exactly as the module does', () => {
-    // The guard that makes hand-typing one impossible: `dieciseis` without its
-    // accent would look right in a diff and teach a misspelling.
-    const spellings = new Set<string>();
-    for (let n = 0; n <= 1000; n++) spellings.add(spellCardinal(n));
+    // A round trip, not set membership: reading the lemma gives the number it
+    // means, and spelling that number again must return the same string. So
+    // `dieciseis` fails for being unreadable, and `diez y seis` fails for not
+    // being what the module would have written, even though it parses.
+    const wrong = numLexemes.filter((lexeme) => {
+      const value = parseCardinal(lexeme.lemma);
+      return value === null || spellCardinal(value) !== lexeme.lemma;
+    });
+    expect(wrong.map((lexeme) => lexeme.lemma)).toEqual([]);
+  });
 
-    expect(numLexemes.filter((lexeme) => !spellings.has(lexeme.lemma))).toEqual([]);
+  it('carries the digits in the gloss, so the drill asks a number', () => {
+    // "twenty → veinte" is a vocabulary question a learner half-answers from
+    // English. "20 → veinte" is the cue they meet on a price tag, and the
+    // existing exercise kinds prompt from the gloss.
+    const glosses = new Map(
+      shippedRecords<{ ref: string; lang: string; text: string }>(
+        'es-a1-a2-core-translations-en.jsonl',
+      )
+        .filter((entry) => entry.lang === 'en')
+        .map((entry) => [entry.ref, entry.text]),
+    );
+
+    for (const lexeme of numLexemes) {
+      const value = parseCardinal(lexeme.lemma)!;
+      // Both glosses: the card's, and the lexeme's for the 22 with no card.
+      expect(glosses.get(lexeme.id), lexeme.lemma).toContain(`(${value})`);
+    }
+
+    const card = numeralCards.find((entry) => entry.text === 'veinte');
+    expect(glosses.get(card!.id)).toBe('twenty (20)');
+  });
+
+  it('leaves a non-numeral gloss alone', () => {
+    const glosses = shippedRecords<{ ref: string; lang: string; text: string }>(
+      'es-a1-a2-core-translations-en.jsonl',
+    );
+    const adjective = shippedRecords<Lexeme>('es-a1-a2-core-modifiers.jsonl').find(
+      (lexeme) => lexeme.lemma === 'bueno',
+    );
+    expect(glosses.find((entry) => entry.ref === adjective!.id)?.text).toBe('good');
   });
 
   it('cards the numerals a sentence can show, and only those', () => {
@@ -121,6 +156,41 @@ describe('the no-card sentinel on a modifier row', () => {
     expect(dashed.length).toBeGreaterThan(0);
     // Second cell is the lemma, not a six-digit id that leaked in.
     for (const cells of dashed) expect(cells[1]).not.toMatch(/^\d{6}$/);
+  });
+
+  /**
+   * Drops the row `append` added, so each case starts from a clean source.
+   * Trailing newline trimmed first — `append` leaves one, so slicing the raw
+   * split discards the blank line and keeps the row.
+   */
+  function dropLastRow(file: string): void {
+    const rows = pack.read(file).trimEnd().split('\n');
+    pack.write(file, `${rows.slice(0, -1).join('\n')}\n`);
+  }
+
+  it('refuses a numeral it cannot read', () => {
+    pack.append('modifiers.tsv', ['dieciseis', 'sixteen', 'NUM', 'a1', 'numbers'].join('\t'));
+
+    const { ok, output } = pack.tryBuild();
+    expect(ok).toBe(false);
+    expect(output).toContain('cannot read it');
+
+    dropLastRow('modifiers.tsv');
+    expect(pack.tryBuild().ok).toBe(true);
+  });
+
+  it('refuses a spelling the module would not have written, even if it parses', () => {
+    // `diez y seis` reads as 16 perfectly well. It is still not what the module
+    // writes, and two spellings of one number is how a dataset starts lying.
+    pack.append('modifiers.tsv', ['diez y seis', 'sixteen', 'NUM', 'a1', 'numbers'].join('\t'));
+
+    const { ok, output } = pack.tryBuild();
+    expect(ok).toBe(false);
+    // The message has to name the spelling to use, or the author is guessing.
+    expect(output).toContain('spells 16 as "dieciséis"');
+
+    dropLastRow('modifiers.tsv');
+    expect(pack.tryBuild().ok).toBe(true);
   });
 
   it('cards a numeral as soon as a sentence uses it', () => {

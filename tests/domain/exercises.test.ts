@@ -41,6 +41,29 @@ describe('exercise generation', () => {
     expect(new Set(exercise.choices.map((choice) => choice.text)).size).toBe(4);
   });
 
+  it('draws distractors from the same theme, so the question has to be read', () => {
+    // `cerveza` offered against "June", "name" and "hot" is answerable without
+    // knowing any Spanish — the only food word wins. Against the other
+    // food-drink cards it is a real question.
+    const exercise = engine.generate(itemOf('004'), 'multiple-choice', context());
+    if (exercise?.kind !== 'multiple-choice') throw new Error('expected multiple choice');
+
+    const distractors = exercise.choices.filter((choice) => !choice.correct);
+    const offTopic = distractors.filter((choice) => {
+      const source = choice.sourceItem ? repository.getItem(choice.sourceItem) : undefined;
+      return !source?.topics?.includes('food-drink');
+    });
+    expect(offTopic.map((choice) => choice.text)).toEqual([]);
+  });
+
+  it('widens the pool rather than shrinking the question on a thin topic', () => {
+    // `everyday` has too few cards to fill four choices. Starving them would
+    // leave a two-option question, which is easier than an off-topic one.
+    const exercise = engine.generate(itemOf('002'), 'multiple-choice', context());
+    if (exercise?.kind !== 'multiple-choice') throw new Error('expected multiple choice');
+    expect(exercise.choices).toHaveLength(4);
+  });
+
   it('is deterministic for a given seed', () => {
     const first = engine.generate(itemOf('004'), 'multiple-choice', context(42));
     const second = engine.generate(itemOf('004'), 'multiple-choice', context(42));

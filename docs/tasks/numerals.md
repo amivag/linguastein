@@ -1,8 +1,9 @@
 # Task: numbers as a system, not as vocabulary
 
-**Status:** in progress — §3 (the module), §4.1 (the number cards) and §5 (the
-pattern records) have landed. §4.2 and §6 remain: the exercise generator and the
-drill.
+**Status:** in progress — §3 (the module, now with `parseCardinal`), §4.1 (the
+number cards) and §5 (the pattern records) have landed, and the carded numerals
+are practisable today through the existing exercise kinds. §4.2 and the bespoke
+kinds in §6 remain, blocked on a decision recorded in §6.1.
 **Written:** 2026-08-20
 **Revised:** 2026-08-20 — `src/languages/es/numerals.ts` exists and is tested at
 100%. §3.2 is new: it records what building it turned up, including one rule the
@@ -268,6 +269,48 @@ difficulty: two digits, then three, then four, then the awkward ones — anythin
 needing a `veintiún`, anything with a zero in the middle, anything crossing a
 hundreds boundary.
 
+### 6.1 What landed instead, and what blocks the rest
+
+**Landed: `parseCardinal`**, the exact inverse of `spellCardinal`, asserted over
+every integer the module can spell. All three kinds above need it — the digit
+directions have to read what a learner typed — and the build now uses it too, so
+a `NUM` lemma is checked by round trip rather than by set membership and the
+error message can name the spelling to use.
+
+**Landed: the carded numerals are practisable now, with no new exercise kind.**
+A numeral's gloss carries its digits (`twenty (20)`), derived at build time from
+`parseCardinal`, so the existing multiple-choice and think-say kinds already ask
+a number rather than a translation. "twenty → veinte" is a vocabulary question a
+learner half-answers from English; "20 → veinte" is the cue on a price tag.
+
+That change exposed a real defect in `distractors()`, now fixed: the pool was
+filtered to same type and same level only, so `uno` was offered against "June",
+"name" and "hot" — answerable without knowing any Spanish, and the digits made it
+worse by marking the answer visually. Distractors now *prefer* candidates sharing
+a topic, falling back when a topic is too thin to fill four choices. This is a
+general improvement, not a numeral fix: `comida` now competes with fish, sugar
+and cheese.
+
+**Blocked: the unbounded drill, and why.** A session is planned from a list of
+item ids (`SessionPlan.itemIds`, and the runner reads `step.itemId`), and a
+generated target like 1042 has no item. So asking for 1042 needs more than a
+generator: it needs either
+
+- a **synthetic item**, whose id would leak into the attempt log and break rule 4,
+  or
+- a **separate practice surface** that is not a session, plus somewhere to record
+  attempts that is not `ItemProgress` — which is keyed on `ItemId` all the way
+  down through `Attempt` and the storage schema.
+
+The second is the right one, and it is the `domain/progress` change §4.2 said
+this task should not make. It is also more than a generator: a Numbers screen
+with its own loop. Worth its own slice, and worth doing — 1042 is the question
+that started this — but not worth faking with a synthetic id.
+
+`mode: 'study'` is *not* an acceptable fallback here, contrary to §4.2's second
+option: a typed numeral answer is graded evidence, not a self-rating, and study
+mode would throw it away.
+
 ---
 
 ## 7. Pronunciation
@@ -321,9 +364,11 @@ gets silence plus an explanation, which is deliberate.
 - [x] The source cannot drift from the generator: a `NUM` lemma the module would
       not spell fails the build
 - [ ] The 22 deferred numerals get an example sentence each (dataset work)
-- [ ] A numeral exercise generator exists, with the three kinds in §6
-- [ ] The drill records attempts against pattern ids, or §4.2's fallback with the
-      reason written down
+- [x] `parseCardinal` reads a spelled numeral back, as the exact inverse
+- [x] The carded numerals are practisable, prompted by their digits, through the
+      existing exercise kinds
+- [ ] The three bespoke kinds in §6 (typed entry, audio → digits)
+- [ ] The drill records attempts against pattern ids — blocked, see §6.1
 - [x] Numbers are reachable as a category — `numbers` is registered in
       `content/es/topics.tsv` and shown by the Browse category picker. It holds
       27 sentences that use a numeral for counting, a price, a duration or a

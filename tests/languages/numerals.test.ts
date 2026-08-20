@@ -15,6 +15,7 @@ import {
   MAX_CARDINAL,
   MAX_ORDINAL,
   NUMERAL_RULES,
+  parseCardinal,
   rulesFor,
   spellCardinal,
   spellOrdinal,
@@ -231,6 +232,64 @@ describe('every cardinal 0–1000', () => {
 
   it('spells every number distinctly', () => {
     expect(new Set(all.map(([, form]) => form)).size).toBe(all.length);
+  });
+});
+
+describe('parseCardinal', () => {
+  it('reads back what spellCardinal wrote, for every number it can spell', () => {
+    // The property that matters: an exact inverse. Anything less and a drill
+    // marks a correct answer wrong, which is worse than not asking.
+    const broken: [number, string, number | null][] = [];
+    for (let n = 0; n <= 1000; n++) {
+      const spelled = spellCardinal(n);
+      const parsed = parseCardinal(spelled);
+      if (parsed !== n) broken.push([n, spelled, parsed]);
+    }
+    expect(broken).toEqual([]);
+  });
+
+  it('round-trips the awkward ones above a thousand', () => {
+    for (const n of [
+      1001, 1042, 2000, 21_000, 100_000, 999_000, 1_000_000, 1_000_042, 2_000_000,
+      21_000_000, 1_200_000, MAX_CARDINAL,
+    ]) {
+      expect(parseCardinal(spellCardinal(n)), spellCardinal(n)).toBe(n);
+    }
+  });
+
+  it('accepts the agreement forms a learner might reasonably type', () => {
+    expect(parseCardinal('un')).toBe(1);
+    expect(parseCardinal('una')).toBe(1);
+    expect(parseCardinal('veintiún')).toBe(21);
+    expect(parseCardinal('veintiuna')).toBe(21);
+    expect(parseCardinal('doscientas casas'.split(' ')[0]!)).toBe(200);
+    expect(parseCardinal('doscientas')).toBe(200);
+    expect(parseCardinal('treinta y una')).toBe(31);
+    expect(parseCardinal('veintiún mil')).toBe(21_000);
+  });
+
+  it('is forgiving about case, spacing and stray commas', () => {
+    expect(parseCardinal('  Ciento   Treinta y Seis ')).toBe(136);
+    expect(parseCardinal('mil, cuarenta y dos')).toBe(1042);
+  });
+
+  it('rejects nonsense rather than scoring it', () => {
+    // A parser that returned a number here would mark a nonsense answer correct.
+    expect(parseCardinal('mil mil')).toBeNull();
+    expect(parseCardinal('millón millón')).toBeNull();
+    // Scales have to descend: `mil millones` is a billion, which is out of range
+    // for this module and must not be read as `un millón`.
+    expect(parseCardinal('mil millones')).toBeNull();
+    expect(parseCardinal('')).toBeNull();
+    expect(parseCardinal('   ')).toBeNull();
+    expect(parseCardinal('y')).toBeNull();
+    expect(parseCardinal('perro')).toBeNull();
+    expect(parseCardinal('ciento perro')).toBeNull();
+    expect(parseCardinal('16')).toBeNull();
+  });
+
+  it('reads cero as zero, not as nothing', () => {
+    expect(parseCardinal('cero')).toBe(0);
   });
 });
 

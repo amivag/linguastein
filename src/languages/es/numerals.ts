@@ -279,6 +279,92 @@ function agree(form: string, gender: Gender | undefined): string {
   return `${form.slice(0, -2)}as`;
 }
 
+// ── reading a numeral back ──────────────────────────────────────────────────
+
+/**
+ * Every word that carries a value, including the agreement forms, since a
+ * learner may reasonably type `veintiún` or `doscientas`. Built from the tables
+ * above rather than listed again, so the two cannot disagree about a spelling.
+ */
+const VALUES: ReadonlyMap<string, number> = (() => {
+  const values = new Map<string, number>();
+  UNITS.forEach((word, value) => values.set(word, value));
+  TEENS.forEach((word, index) => values.set(word, 16 + index));
+  TWENTIES.forEach((word, index) => values.set(word, 21 + index));
+  TENS.forEach((word, index) => word && values.set(word, index * 10));
+  HUNDREDS.forEach((word, index) => word && values.set(word, index * 100));
+
+  values.set('cien', 100);
+  // Agreement forms of the two words that have them.
+  values.set('un', 1);
+  values.set('una', 1);
+  values.set('veintiún', 21);
+  values.set('veintiuna', 21);
+  for (const [word, value] of [...values]) {
+    if (word.endsWith('ientos')) values.set(`${word.slice(0, -2)}as`, value);
+  }
+  return values;
+})();
+
+/** Multipliers, largest first, which is also the only order they may appear in. */
+const SCALES: readonly [word: string, factor: number][] = [
+  ['millones', 1_000_000],
+  ['millón', 1_000_000],
+  ['mil', 1000],
+];
+
+/**
+ * Reads a spelled numeral back to a number, or `null` if it is not one.
+ *
+ * The exact inverse of {@link spellCardinal} — a property the tests assert over
+ * every integer it can spell. Needed in both directions: a drill that asks for
+ * `136` has to accept what the learner typed, and one that asks what
+ * `ciento treinta y seis` means has to check the digits they answered with.
+ *
+ * Strict about structure, because a parser that returns a number for nonsense
+ * would mark a nonsense answer correct: `mil mil` is rejected rather than read
+ * as two thousand.
+ */
+export function parseCardinal(text: string): number | null {
+  const words = text
+    .toLowerCase()
+    .normalize('NFC')
+    .split(/[\s,]+/)
+    .filter((word) => word.length > 0);
+  if (words.length === 0) return null;
+
+  let total = 0;
+  let group = 0;
+  let counted = false;
+  // Scales must descend: `mil` may follow `millón`, never the reverse, and
+  // neither may repeat.
+  let ceiling = Infinity;
+
+  for (const word of words) {
+    // `y` joins tens to units and carries no value of its own.
+    if (word === 'y') continue;
+
+    const scale = SCALES.find(([spelling]) => spelling === word);
+    if (scale) {
+      const [, factor] = scale;
+      if (factor >= ceiling) return null;
+      ceiling = factor;
+      // A bare `mil` means one thousand: the counter Spanish leaves unsaid.
+      total += (group === 0 ? 1 : group) * factor;
+      group = 0;
+      counted = true;
+      continue;
+    }
+
+    const value = VALUES.get(word);
+    if (value === undefined) return null;
+    group += value;
+    counted = true;
+  }
+
+  return counted ? total + group : null;
+}
+
 // ── ordinals ────────────────────────────────────────────────────────────────
 
 /** Ordinals shortened before a masculine noun: `el primer día`, `el tercer piso`. */

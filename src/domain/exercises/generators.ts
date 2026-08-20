@@ -37,6 +37,12 @@ export interface ExerciseGenerator<K extends ExerciseKind = ExerciseKind> {
 
 const DEFAULT_CHOICE_COUNT = 4;
 
+/** True when the two share at least one entry; empty on either side is no match. */
+function overlaps(a: readonly string[] | undefined, b: readonly string[] | undefined): boolean {
+  if (!a?.length || !b?.length) return false;
+  return a.some((value) => b.includes(value));
+}
+
 function exerciseId(item: LearningItem, kind: ExerciseKind): string {
   return `${item.id}#${kind}`;
 }
@@ -256,8 +262,18 @@ function distractors(
     (candidate) =>
       candidate.id !== item.id && candidate.type === item.type && candidate.level === item.level,
   );
+  /**
+   * Sharing a theme is what makes a choice a question rather than a spot-the-odd-
+   * one-out. `uno` offered against "June", "name" and "hot" is answered without
+   * knowing any Spanish; against `dos`, `diez` and `mil` it has to be read.
+   *
+   * A preference, not a filter: a thin topic would otherwise starve the choices
+   * and leave a two-option question, which is easier still.
+   */
+  const sameTopic = sameShape.filter((candidate) => overlaps(item.topics, candidate.topics));
   const fallback = pool.filter((candidate) => candidate.id !== item.id);
-  const ordered = sameShape.length >= count ? sameShape : fallback;
+  const ordered =
+    sameTopic.length >= count ? sameTopic : sameShape.length >= count ? sameShape : fallback;
 
   const seen = new Set([normalise(translationOf(item, context)?.text ?? item.text)]);
   const found: Distractor[] = [];

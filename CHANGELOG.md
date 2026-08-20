@@ -73,6 +73,12 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 - "Reset progress" now asks for confirmation before erasing learner history. It
   is irreversible and there is no server copy, so a single mis-tap should not be
   enough.
+- Browse's filters are confined to a fixed area instead of growing with the
+  pack. The thirty-five category tiles scroll inside a box of a set height, the
+  topic `<select>` moved up beside the "Categories" heading as their compact
+  half, and the four remaining selects sit on one row. The results used to start
+  a screen and a half down; they now start above the fold, and adding a category
+  no longer pushes them further.
 
 ### Known gaps
 

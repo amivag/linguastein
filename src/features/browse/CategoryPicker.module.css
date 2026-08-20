@@ -1,6 +1,14 @@
 .picker {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-2);
+}
+
+/* Heading and the compact topic control on one line, so the block announces
+   itself and offers its shortcut in the height of a single row. */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .heading {
@@ -9,13 +17,51 @@
   font-weight: 600;
 }
 
+.action {
+  min-width: 0;
+  margin-left: auto;
+}
+
+/*
+ * The confined area. Thirty-five tiles in six groups laid out in full made the
+ * filters the tallest thing on the page and pushed the results themselves below
+ * the fold, so they scroll inside a box instead: the page's shape is now a
+ * constant rather than a function of how many categories the pack declares.
+ *
+ * `overscroll-behavior` keeps a flick that reaches the end of the list from
+ * carrying on into the page behind it, which on a phone reads as the page
+ * jumping when you were reading the list.
+ *
+ * No top padding — the group headings supply their own, so the first one sits
+ * flush with the top edge and the sticky ones below cover the tiles passing
+ * under them completely.
+ */
+.pane {
+  display: grid;
+  max-height: 12.5rem;
+  gap: var(--space-2);
+  padding: 0 var(--space-3) var(--space-3);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+}
+
 .group {
   display: grid;
   gap: var(--space-2);
 }
 
+/* Pinned while its own tiles scroll past, so a list this long never leaves you
+   looking at chips without knowing which group you are in. */
 .groupHeading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   margin: 0;
+  padding-block: var(--space-2) var(--space-1);
+  background: var(--color-surface-sunken);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
   font-weight: 600;
@@ -39,6 +85,10 @@
  * Selection here is an attribute, so `[aria-pressed='true']:hover` outranks
  * `.tile:hover` outright and the pairs below cannot cross: no state can end up
  * wearing another state's text colour on its background.
+ *
+ * Still at the full tap target despite the box being smaller: fitting another
+ * row in by shrinking the chips would trade a thumb's accuracy for a scroll of
+ * the wheel, and the scroll is the cheaper of the two.
  *
  * Deliberately not transitioned. A filter should answer instantly, and a motion
  * scale that could carry this safely is `docs/tasks/game-feel.md`, not a

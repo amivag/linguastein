@@ -8,6 +8,8 @@
  * the chosen category survives into the session the screen offers.
  */
 
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router-dom';
@@ -61,6 +63,15 @@ describe('browsing by category', () => {
 
     expect(tile).toHaveAttribute('aria-pressed', 'true');
     expect(await screen.findByRole('status')).toHaveTextContent('4 items');
+  });
+
+  it('keeps the compact topic control inside the categories block', () => {
+    renderWithServices(<BrowseScreen />, { route: '/browse' });
+
+    // The select is the tiles' compact half, not a fifth entry in the row of
+    // narrowing filters: the pane scrolls, so this is what still names the
+    // chosen category when its tile is out of view.
+    expect(categories().getByRole('combobox', { name: 'Topic' })).toBeInTheDocument();
   });
 
   it('keeps the picker and the topic select on one piece of state', async () => {
@@ -117,5 +128,39 @@ describe('browsing by category', () => {
 
     const topics = screen.getByRole('combobox', { name: 'Topic' });
     expect(within(topics).getByRole('option', { name: 'Food and drink' })).toBeInTheDocument();
+  });
+});
+
+/**
+ * The filters' height must not be a function of how much the pack declares.
+ * Thirty-five tiles laid out in full pushed the results themselves off the
+ * screen, and every category added afterwards pushed them further. jsdom has no
+ * layout, so the box is asserted against the stylesheet — the approach
+ * `hover-states.test.ts` takes to the cascade.
+ */
+describe('CategoryPicker.module.css', () => {
+  const css = readFileSync(
+    resolve(process.cwd(), 'src/features/browse/CategoryPicker.module.css'),
+    'utf8',
+  ).replace(/\/\*[\s\S]*?\*\//g, '');
+
+  /** Declaration block of the rule whose selector contains `needle`. */
+  function block(needle: string): string {
+    const rule = css.split('}').find((part) => part.includes(needle) && part.includes('{'));
+    return rule?.slice(rule.indexOf('{') + 1) ?? '';
+  }
+
+  it('confines the tiles to a box of a fixed height, and scrolls the rest', () => {
+    const pane = block('.pane');
+    expect(pane).toMatch(/max-height:/);
+    expect(pane).toMatch(/overflow-y:\s*auto/);
+  });
+
+  it('keeps a group heading visible while its own tiles scroll past', () => {
+    const heading = block('.groupHeading');
+    expect(heading).toMatch(/position:\s*sticky/);
+    // Without a background of its own it would be a heading with tiles sliding
+    // through it, which is worse than no sticky heading at all.
+    expect(heading).toMatch(/background:/);
   });
 });

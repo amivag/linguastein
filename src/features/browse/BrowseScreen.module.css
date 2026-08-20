@@ -1,3 +1,11 @@
+/* One block for everything that narrows the list, spaced tighter than the page
+   spaces its sections, so the filters read as a toolbar rather than as content
+   the results happen to follow. */
+.toolbar {
+  display: grid;
+  gap: var(--space-3);
+}
+
 .search {
   display: flex;
   gap: var(--space-2);
@@ -12,16 +20,20 @@
   background: var(--color-surface);
 }
 
+/*
+ * Four equal columns wherever the content box can hold them, which is one row
+ * on any screen wider than a small phone. `flex: 1 1 30%` gave each select a
+ * third of the row as a *minimum*, so four of them always wrapped to two rows
+ * and five to two uneven ones.
+ */
 .filters {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
   gap: var(--space-2);
 }
 
-.filter {
-  flex: 1 1 30%;
-}
-
+/* Shared chrome for every narrowing control, wherever it is placed: four sit in
+   the row above the results, and the topic one sits in the picker's header. */
 .filter select {
   width: 100%;
   min-height: var(--tap-target);
@@ -29,6 +41,13 @@
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
   background: var(--color-surface-raised);
+}
+
+/* The one select outside that row: it sizes to its own labels rather than to a
+   grid column, and gives way to the heading beside it on a narrow screen. */
+.topic select {
+  width: auto;
+  max-width: 100%;
 }
 
 .count {

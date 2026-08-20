@@ -80,109 +80,121 @@ export function BrowseScreen() {
 
   return (
     <AppShell title="Browse">
-      <div className={styles.search}>
-        <label className="visually-hidden" htmlFor="browse-search">
-          Search Spanish or English
-        </label>
-        <input
-          id="browse-search"
-          type="search"
-          className={styles.input}
-          value={search}
-          placeholder="Search a word or phrase…"
-          onChange={(event) => {
-            setSearch(event.target.value);
+      {/* Search, categories and the narrowing selects are one block: three
+          stacked sections spaced like separate parts of the page is how the
+          filters came to occupy more of it than the results did. */}
+      <div className={styles.toolbar}>
+        <div className={styles.search}>
+          <label className="visually-hidden" htmlFor="browse-search">
+            Search Spanish or English
+          </label>
+          <input
+            id="browse-search"
+            type="search"
+            className={styles.input}
+            value={search}
+            placeholder="Search a word or phrase…"
+            onChange={(event) => {
+              setSearch(event.target.value);
+              setLimit(PAGE_SIZE);
+            }}
+          />
+          <VoiceInput
+            label="Search by voice"
+            locale={preferences.pronunciationLocale}
+            onResult={(text) => {
+              setSearch(text);
+              setLimit(PAGE_SIZE);
+            }}
+          />
+        </div>
+
+        <CategoryPicker
+          topics={topics}
+          selected={topic}
+          onSelect={(next) => {
+            setTopic(next);
             setLimit(PAGE_SIZE);
           }}
+          action={
+            <label className={`${styles.filter} ${styles.topic}`}>
+              <span className="visually-hidden">Topic</span>
+              <select
+                value={topic}
+                onChange={(event) => {
+                  setTopic(event.target.value);
+                  setLimit(PAGE_SIZE);
+                }}
+              >
+                <option value="all">Any topic</option>
+                {/* Registry order, matching the picker. Sorting by slug put
+                  "Telling the time" between "In town" and "Clothes" — an order
+                  that only made sense before the labels existed. */}
+                {topics
+                  .filter((option) => option.count > 0)
+                  .map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.label}
+                    </option>
+                  ))}
+              </select>
+            </label>
+          }
         />
-        <VoiceInput
-          label="Search by voice"
-          locale={preferences.pronunciationLocale}
-          onResult={(text) => {
-            setSearch(text);
-            setLimit(PAGE_SIZE);
-          }}
-        />
-      </div>
 
-      <CategoryPicker
-        topics={topics}
-        selected={topic}
-        onSelect={(next) => {
-          setTopic(next);
-          setLimit(PAGE_SIZE);
-        }}
-      />
-
-      <div className={styles.filters}>
-        <label className={styles.filter}>
-          <span className="visually-hidden">Type</span>
-          <select value={type} onChange={(event) => setType(event.target.value as ItemType)}>
-            {TYPES.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className={styles.filter}>
-          <span className="visually-hidden">Level</span>
-          <select value={level} onChange={(event) => setLevel(event.target.value as CefrLevel)}>
-            <option value="all">Any level</option>
-            {CEFR_LEVELS.filter((option) => facets.levels.includes(option)).map((option) => (
-              <option key={option} value={option}>
-                {option.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className={styles.filter}>
-          <span className="visually-hidden">Register</span>
-          <select
-            value={register}
-            onChange={(event) => setRegister(event.target.value as Register | 'all')}
-          >
-            <option value="all">Any register</option>
-            {REGISTERS.map((option) => (
-              <option key={option} value={option}>
-                {option === 'colloquial' ? 'casual' : option}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className={styles.filter}>
-          <span className="visually-hidden">Region</span>
-          <select value={region} onChange={(event) => setRegion(event.target.value)}>
-            {/* Region-neutral content always passes, so this narrows rather
-                than excludes: it drops what is not said where you are aiming. */}
-            <option value="all">Anywhere</option>
-            {FILTERABLE_REGIONS.map((option) => (
-              <option key={option.locale} value={option.locale}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className={styles.filter}>
-          <span className="visually-hidden">Topic</span>
-          <select value={topic} onChange={(event) => setTopic(event.target.value)}>
-            <option value="all">Any topic</option>
-            {/* Registry order, matching the picker. Sorting by slug put
-                "Telling the time" between "In town" and "Clothes" — an order
-                that only made sense before the labels existed. */}
-            {topics
-              .filter((option) => option.count > 0)
-              .map((option) => (
+        <div className={styles.filters}>
+          <label className={styles.filter}>
+            <span className="visually-hidden">Type</span>
+            <select value={type} onChange={(event) => setType(event.target.value as ItemType)}>
+              {TYPES.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.label}
                 </option>
               ))}
-          </select>
-        </label>
+            </select>
+          </label>
+
+          <label className={styles.filter}>
+            <span className="visually-hidden">Level</span>
+            <select value={level} onChange={(event) => setLevel(event.target.value as CefrLevel)}>
+              <option value="all">Any level</option>
+              {CEFR_LEVELS.filter((option) => facets.levels.includes(option)).map((option) => (
+                <option key={option} value={option}>
+                  {option.toUpperCase()}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className={styles.filter}>
+            <span className="visually-hidden">Register</span>
+            <select
+              value={register}
+              onChange={(event) => setRegister(event.target.value as Register | 'all')}
+            >
+              <option value="all">Any register</option>
+              {REGISTERS.map((option) => (
+                <option key={option} value={option}>
+                  {option === 'colloquial' ? 'casual' : option}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className={styles.filter}>
+            <span className="visually-hidden">Region</span>
+            <select value={region} onChange={(event) => setRegion(event.target.value)}>
+              {/* Region-neutral content always passes, so this narrows rather
+                than excludes: it drops what is not said where you are aiming. */}
+              <option value="all">Anywhere</option>
+              {FILTERABLE_REGIONS.map((option) => (
+                <option key={option.locale} value={option.locale}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
 
       <p className={styles.count} role="status">

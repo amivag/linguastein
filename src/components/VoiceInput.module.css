@@ -10,12 +10,22 @@
   background: var(--color-surface-raised);
 }
 
-.listening {
+/* Listening is ARIA state, not a class: the attribute outranks `.mic`, so the
+   live mic cannot be repainted back to its resting colours by a later rule. */
+.mic[aria-pressed='true'] {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  color: var(--color-text);
 }
 
-.error {
+.mic[aria-pressed='true']:hover {
+  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+}
+
+/* Carries the failure text. While listening the same region is `visually-hidden`
+   instead: the mic already shows that state, and a second flex item appearing
+   beside the search field would squeeze it on every dictation. */
+.status {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }

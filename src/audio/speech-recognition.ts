@@ -12,7 +12,7 @@
  */
 
 import { baseLanguage, type LanguageTag } from '../domain/content';
-import type { SpeechRecognitionProvider, SpeechResult } from './types';
+import { SPEECH_ABORTED, type SpeechRecognitionProvider, type SpeechResult } from './types';
 
 interface SpeechRecognitionLike extends EventTarget {
   lang: string;
@@ -33,6 +33,26 @@ interface SpeechRecognitionEventLike {
 
 type RecognitionConstructor = new () => SpeechRecognitionLike;
 
+/**
+ * How long one listen may stay open. The recogniser is supposed to end itself
+ * once the speaker stops, but a noisy room can hold its endpointer open for as
+ * long as the noise lasts, and a browser that stops firing events leaves it
+ * open for good. Well past any single sentence, so this only ever catches a
+ * listen that was never going to end on its own.
+ */
+const MAX_LISTEN_MS = 20_000;
+
+/**
+ * One listen in flight. Every way it can end — a result, an error, the
+ * recogniser closing, the learner pressing stop, the watchdog giving up —
+ * funnels through `settle`, and only the first of them counts.
+ */
+interface Listening {
+  readonly recognition: SpeechRecognitionLike;
+  readonly settle: (outcome: SpeechResult | Error) => void;
+  timer: ReturnType<typeof setTimeout> | undefined;
+}
+
 function constructor(): RecognitionConstructor | undefined {
   const scope = globalThis as unknown as {
     SpeechRecognition?: RecognitionConstructor;
@@ -42,11 +62,28 @@ function constructor(): RecognitionConstructor | undefined {
 }
 
 export function createWebSpeechRecognitionProvider(): SpeechRecognitionProvider {
-  let active: SpeechRecognitionLike | null = null;
+  let current: Listening | null = null;
+
+  /** Releases the slot and the watchdog once a listen is done with. */
+  const close = (listening: Listening) => {
+    clearTimeout(listening.timer);
+    listening.timer = undefined;
+    // An aborted recogniser fires `onend` after the next `listen` has already
+    // claimed the slot. Only the listen that still holds it may clear it —
+    // clearing it blindly loses the handle on the live recogniser, and `stop`
+    // then has nothing to abort, which is how the microphone stays open with
+    // no way to close it.
+    if (current === listening) current = null;
+  };
 
   const stop = () => {
-    active?.abort();
-    active = null;
+    const listening = current;
+    if (!listening) return;
+    close(listening);
+    listening.recognition.abort();
+    // Settled here rather than left to `onend`, because a recogniser that has
+    // stopped firing events is precisely the case a stop has to recover from.
+    listening.settle(new Error(SPEECH_ABORTED));
   };
 
   return {
@@ -72,7 +109,6 @@ export function createWebSpeechRecognitionProvider(): SpeechRecognitionProvider 
 
       stop();
       const recognition = new Recognition();
-      active = recognition;
       recognition.lang = locale;
       recognition.continuous = false;
       recognition.interimResults = false;
@@ -80,13 +116,29 @@ export function createWebSpeechRecognitionProvider(): SpeechRecognitionProvider 
 
       return new Promise<SpeechResult>((resolve, reject) => {
         let settled = false;
+        const listening: Listening = {
+          recognition,
+          settle: (outcome) => {
+            if (settled) return;
+            settled = true;
+            if (outcome instanceof Error) reject(outcome);
+            else resolve(outcome);
+          },
+          timer: undefined,
+        };
+        current = listening;
+
+        listening.timer = setTimeout(() => {
+          close(listening);
+          recognition.abort();
+          listening.settle(new Error('no-speech'));
+        }, MAX_LISTEN_MS);
 
         recognition.onresult = (event) => {
           const alternatives = event.results[0];
           const best = alternatives?.[0];
           if (!best) return;
-          settled = true;
-          resolve({
+          listening.settle({
             transcript: best.transcript.trim(),
             confidence: best.confidence,
             alternatives: Array.from({ length: alternatives.length }, (_, index) =>
@@ -96,14 +148,13 @@ export function createWebSpeechRecognitionProvider(): SpeechRecognitionProvider 
         };
 
         recognition.onerror = (event) => {
-          settled = true;
-          reject(new Error(event.error));
+          listening.settle(new Error(event.error));
         };
 
         recognition.onend = () => {
-          active = null;
+          close(listening);
           // Ending without a result means the recogniser heard nothing usable.
-          if (!settled) reject(new Error('no-speech'));
+          listening.settle(new Error('no-speech'));
         };
 
         recognition.start();

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useServices } from '../../app/services-context';
+import { SPEECH_ABORTED } from '../../audio';
 import { Button } from '../../components/Button';
 import { bestAlternative, type SpeechComparison } from '../../domain/exercises';
 import styles from './SpeakCheck.module.css';
@@ -28,6 +29,10 @@ const MESSAGES: Record<SpeechComparison['verdict'], string> = {
  * needs no key. It never gates progress: the rating buttons remain the way to
  * record how it went, and the control is hidden where the browser cannot
  * listen.
+ *
+ * The control is a toggle: a recogniser only ends a listen once it judges the
+ * speaker to have finished, and background noise can stop it ever judging
+ * that, so pressing again has to be able to end it.
  */
 export function SpeakCheck({ expected }: SpeakCheckProps) {
   const { services, preferences } = useServices();
@@ -54,7 +59,8 @@ export function SpeakCheck({ expected }: SpeakCheckProps) {
     } catch (error) {
       if (!mounted.current) return;
       const reason = error instanceof Error ? error.message : 'unknown';
-      setState({ phase: 'failed', reason });
+      // Stopping on purpose is not a failed attempt to report on.
+      setState(reason === SPEECH_ABORTED ? { phase: 'idle' } : { phase: 'failed', reason });
     }
   }, [speech, preferences.pronunciationLocale, expected]);
 
@@ -62,17 +68,20 @@ export function SpeakCheck({ expected }: SpeakCheckProps) {
     return null;
   }
 
+  const listening = state.phase === 'listening';
+
   return (
     <div className={styles.speak}>
       <Button
-        onClick={() => void listen()}
-        disabled={state.phase === 'listening'}
-        aria-label={state.phase === 'listening' ? 'Listening' : 'Check my pronunciation'}
+        onClick={() => (listening ? speech.stop() : void listen())}
+        aria-pressed={listening}
+        aria-label={listening ? 'Stop listening' : 'Check my pronunciation'}
       >
-        <span aria-hidden="true">🎙</span> {state.phase === 'listening' ? 'Listening…' : 'Say it'}
+        <span aria-hidden="true">{listening ? '■' : '🎙'}</span> {listening ? 'Stop' : 'Say it'}
       </Button>
 
       <p role="status" className={styles.result}>
+        {listening && <span className={styles.hint}>Listening…</span>}
         {state.phase === 'heard' && (
           <>
             <span className={verdictClass(state.comparison.verdict)}>

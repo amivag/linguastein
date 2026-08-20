@@ -84,6 +84,13 @@ export interface SpeechResult {
 }
 
 /**
+ * Rejection reason for a listen the caller ended through `stop`. Distinct from
+ * the recogniser's own reasons so a UI can tell "the learner changed their
+ * mind" from "the microphone heard nothing", and stay quiet about the first.
+ */
+export const SPEECH_ABORTED = 'aborted';
+
+/**
  * Listens once and returns what it heard. Always optional: an exercise that
  * offers speech input must remain completable without it.
  */
@@ -92,6 +99,12 @@ export interface SpeechRecognitionProvider {
   isAvailable(): boolean;
   supportsLanguage(locale: LanguageTag): boolean;
   listen(locale: LanguageTag): Promise<SpeechResult>;
+  /**
+   * Ends a listen in flight, rejecting its promise with `SPEECH_ABORTED`.
+   * Whatever offers a listen must also offer this: a recogniser only ends
+   * itself when it decides the speaker has finished, and it does not always
+   * decide.
+   */
   stop(): void;
 }
 

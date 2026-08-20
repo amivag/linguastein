@@ -87,6 +87,13 @@ learner state, and are not called out individually until 0.1.0 is tagged.
   Settings shows the same component, so there is one source of truth for what it
   changes, and the audio seam gained `voiceFor` so the UI can name the voice
   instead of promising an unspecified best match.
+- Playback on the graded cards, which had none. A fresh Quick practice session is
+  almost entirely multiple choice, so the preset opened on a silent card. Multiple
+  choice can now be heard straight away — the Spanish is on the card and the
+  choices are meanings, so hearing it reveals nothing — while a cloze and a
+  tap-to-build stay silent until answered, where the audio would say the missing
+  word or read the parts out in order. Tap-to-build also shows the sentence once
+  checked, so there is finally something to hear and to open words from.
 
 ### Known gaps
 

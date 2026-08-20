@@ -73,6 +73,13 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const answerLocked = !isSelfRated(exercise.kind) && !answered;
   const selectWord = answerLocked ? undefined : setSelectedToken;
 
+  // Playback speaks the item's own text, so it hands over any card whose answer
+  // is that text or a word missing from it. Multiple choice is the exception:
+  // it shows the Spanish and asks what it means, so hearing it reveals nothing
+  // the card is not already showing — and an audio-first app should let you
+  // hear the phrase before you commit to a meaning, not only afterwards.
+  const audioLocked = answerLocked && exercise.kind !== 'multiple-choice';
+
   return (
     <section ref={cardRef} className={styles.card} tabIndex={-1} aria-labelledby={headingId}>
       <h2 id={headingId} className="visually-hidden">
@@ -156,6 +163,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
               {exercise.prompt}
             </p>
           )}
+          {!audioLocked && <AudioControls item={item} />}
           <div className={styles.choices}>
             {exercise.choices.map((choice, position) => {
               const variant = choiceVariant(answered, choice.correct, chosen === choice.id);
@@ -215,6 +223,20 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             </Button>
           </div>
           {answered && <Verdict result={runner.lastResult} />}
+          {/* The sentence itself, once it can no longer give the answer away:
+              the parts above are the learner's attempt, not a phrase to hear
+              or to take words out of. */}
+          {answered && (
+            <>
+              <TokenizedText
+                item={item}
+                className={styles.prompt}
+                onSelect={selectWord}
+                selected={selectedToken}
+              />
+              <AudioControls item={item} />
+            </>
+          )}
         </>
       )}
 

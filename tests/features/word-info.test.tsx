@@ -10,7 +10,9 @@ import { renderWithServices } from '../fixtures/services';
 describe('word inspection', () => {
   it('opens a panel with meaning, grammar, pattern and other forms', async () => {
     const user = userEvent.setup();
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     const word = await screen.findByRole('button', { name: 'About “Tengo”' });
     await user.click(word);
@@ -31,7 +33,9 @@ describe('word inspection', () => {
 
   it('keeps the way out in the header rather than at the end of the entry', async () => {
     const user = userEvent.setup();
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     await user.click(await screen.findByRole('button', { name: 'About “Tengo”' }));
     const panel = await screen.findByRole('dialog', { name: 'About Tengo' });
@@ -48,7 +52,9 @@ describe('word inspection', () => {
 
   it('names the form in the phrase rather than only tinting it', async () => {
     const user = userEvent.setup();
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     await user.click(await screen.findByRole('button', { name: 'About “Tengo”' }));
     const panel = await screen.findByRole('dialog', { name: 'About Tengo' });
@@ -59,26 +65,46 @@ describe('word inspection', () => {
   });
 
   it('leaves punctuation inert', async () => {
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     await screen.findByRole('button', { name: 'About “Tengo”' });
     expect(screen.queryByRole('button', { name: 'About “.”' })).not.toBeInTheDocument();
   });
 
-  it('keeps words locked until a multiple-choice question is answered', async () => {
+  /**
+   * A meaning-recognition card withholds the *meaning*, not the words.
+   *
+   * Locking the words themselves made the one screen a learner is actually
+   * studying on the only place in the app where "what is this word?" had no
+   * answer. What the card grades is still safe: the gloss waits, and the part of
+   * speech, the gender and the other forms — which answer nothing this card is
+   * asking — do not.
+   */
+  it('withholds the meaning, not the word, while a multiple choice is live', async () => {
     const user = userEvent.setup();
-    renderWithServices(<SessionScreen />, { route: '/session?preset=vocabulary&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=vocabulary&size=items:1&order=sequential',
+    });
 
-    const choices = await screen.findAllByRole('button', { name: /beer|water|bread|coffee/ });
-    expect(screen.queryByRole('button', { name: /^About/ })).not.toBeInTheDocument();
+    await user.click(await screen.findByRole('button', { name: 'About “cerveza”' }));
+    const panel = await screen.findByRole('dialog', { name: 'About cerveza' });
 
-    // On a word card the meaning *is* the answer, so the card being one word
-    // makes the lock matter more, not less. It lifts when the answer is in.
-    await user.click(choices[0]!);
-    expect(await screen.findByRole('button', { name: 'Continue' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /^About “(cerveza|agua|pan|café)”$/ }),
-    ).toBeInTheDocument();
+    expect(panel).toHaveTextContent('noun');
+    expect(panel).toHaveTextContent('feminine');
+    // Said out loud, so an empty entry does not read as an unknown word.
+    expect(panel).toHaveTextContent('Meanings unlock once you answer.');
+    expect(panel).not.toHaveTextContent('beer');
+
+    await user.click(within(panel).getByRole('button', { name: 'Close' }));
+    await user.click(screen.getByRole('button', { name: /^beer$/ }));
+    await screen.findByRole('button', { name: 'Continue' });
+
+    await user.click(screen.getByRole('button', { name: 'About “cerveza”' }));
+    const answered = await screen.findByRole('dialog', { name: 'About cerveza' });
+    expect(answered).toHaveTextContent('beer');
+    expect(answered).not.toHaveTextContent('Meanings unlock');
   });
 
   /**
@@ -120,7 +146,9 @@ describe('word inspection', () => {
   });
 
   it('leaves the details open on a self-rated card', async () => {
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     await screen.findByRole('button', { name: 'Reveal' });
     expect(screen.getByText('Copy & share')).toBeInTheDocument();

@@ -83,8 +83,9 @@ describe('hearing and opening a graded card', () => {
 
     expect(playback()).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Play slowly' })).toBeInTheDocument();
-    // Words still wait for the answer: their meanings would give it away.
-    expect(firstWord()).not.toBeInTheDocument();
+    // The words open too. What the card grades is the *meaning*, and that is
+    // what the sheet holds back — see word-info for the sheet's own half.
+    expect(firstWord()).toBeInTheDocument();
   });
 
   /** The missing word is the answer, and the audio would simply say it. */

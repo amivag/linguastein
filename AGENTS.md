@@ -92,7 +92,8 @@ Three things narrow it, and they are deliberately different kinds of thing:
 
 - the **course** (path) — the standing context: which packs, which levels
 - the **focus** (`?focus=`, stored as a preference) — which items to _lead with_
-- the **filter** (`?topic=`, `?type=`, …) — an explicit narrowing a learner picked
+- the **filter** (`?topic=`, `?type=`, `?pos=`, …) — an explicit narrowing a
+  learner picked
 
 A focus is a bias, never a filter. `SESSION_FOCUSES` reorders the four buckets
 the planner already sorts into — due, weak, new, the rest — so "the ones I keep
@@ -108,6 +109,18 @@ device.
 
 `maxNewItems` still caps unseen material in an open-ended session, except under
 `focus=fresh`, where new material is exactly what was asked for.
+
+A word kind (`?pos=verb,noun`) is a filter like any other, and deliberately a
+_kind_ rather than a list: `ItemFilter.lexemes` answers "these exact words", and
+spelling "the verbs" that way meant enumerating every verb lexeme in the pack at
+the call site. Which kinds a picker offers comes from `partsOfSpeech(scope)` — the
+packs' own counts, empty ones dropped — narrowed to `STUDYABLE_POS`, because `de`
+and `el` are not a category anyone asks for.
+
+`ordering` is the session's, not the preset author's taste: `sequential` means
+pack order and must be _asked for_, since a preset that defaults to it deals the
+same first N items on every press for the life of the install. Study sessions
+record nothing, so nothing else varies what they show.
 
 ## Datasets
 
@@ -236,6 +249,16 @@ Three pieces decide what a learner sees, and they are separable on purpose:
 
 Recognition is the weakest retrieval mode and the most flattering; prefer
 production wherever the data supports it.
+
+A graded card hides what it is grading, and nothing else. Every word of every
+phrase is tappable on every screen, practice included — the alternative made the
+one screen a learner is actually studying on the only place "what is this word?"
+had no answer. So the _sheet_ withholds instead of the text: a multiple-choice
+card grades a meaning, so `WordInfoSheet meanings={false}` drops the gloss, the
+pattern's explanation and the example translations (one seam,
+`InspectOptions.meanings`, rather than four call sites deciding separately), and
+says so, because an entry that is silently empty reads as an unknown word. A cloze
+grades a _form_ and already renders it as the blank, so its sheet hides nothing.
 
 A **study** session (`mode: 'study'`, e.g. the Flashcards preset, and where Browse
 sends you) records nothing: no attempt, no progress, no session row, and no score

@@ -187,3 +187,46 @@ describe('describeMorphology', () => {
     );
   });
 });
+
+/**
+ * A card grading what a phrase *means* has to be able to open its words without
+ * handing that over. Meaning is separable here, in one place, rather than at
+ * each of the four call sites that would otherwise decide it independently —
+ * the gloss, the pattern's explanation, the example translations and the
+ * surrounding sentence's translation are all the same kind of thing.
+ */
+describe('inspection with meanings withheld', () => {
+  const withheld = inspectToken(repository, item, 't1', 'en', { meanings: false })!;
+
+  it('drops the gloss and keeps the grammar', () => {
+    expect(withheld.gloss).toBeUndefined();
+    expect(withheld.lemma).toBe('tener');
+    expect(withheld.posLabel).toBe('verb');
+    expect(withheld.grammar).toBe('1st sg · present');
+    // The other forms of the verb are Spanish, and give nothing away.
+    expect(withheld.forms.map((form) => form.form)).toContain('tienes');
+  });
+
+  it('keeps the pattern but not its explanation', () => {
+    expect(withheld.constructions.map((entry) => entry.label)).toEqual(['tener que + infinitivo']);
+    expect(withheld.constructions[0]?.gloss).toBeUndefined();
+  });
+
+  it('leaves example sentences untranslated', () => {
+    expect(withheld.examples.map((example) => example.text)).toContain('Tengo que irme.');
+    expect(withheld.examples.every((example) => example.translation === undefined)).toBe(true);
+  });
+
+  it('still says everything by default', () => {
+    const open = inspectToken(repository, item, 't1', 'en')!;
+    expect(open.gloss).toBe('to have');
+    expect(open.examples[0]?.translation).toBe('I have to go.');
+  });
+
+  it('withholds the meaning of a word card too, where the card is the word', () => {
+    const card = inspectItem(repository, wordItem('004'), 'en', { meanings: false })!;
+    expect(card.gloss).toBeUndefined();
+    expect(card.posLabel).toBe('noun');
+    expect(card.grammar).toBe('feminine');
+  });
+});

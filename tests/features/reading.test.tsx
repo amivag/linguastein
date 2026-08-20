@@ -113,7 +113,7 @@ describe('a passage', () => {
 describe('practising a passage', () => {
   it('scopes the session to that text’s sentences', async () => {
     renderWithServices(<SessionScreen />, {
-      route: '/session?preset=flashcards&size=all&passage=700001',
+      route: '/session?preset=flashcards&size=all&passage=700001&order=sequential',
     });
 
     // The fixture passage holds two of the pack's seven items.
@@ -122,7 +122,9 @@ describe('practising a passage', () => {
   });
 
   it('still practises the whole pack without a passage', async () => {
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=all' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=all&order=sequential',
+    });
 
     const progress = await screen.findByRole('progressbar');
     expect(progress).toHaveAttribute('aria-valuemax', '7');
@@ -130,7 +132,7 @@ describe('practising a passage', () => {
 
   it('practises nothing — not everything — for a passage that does not exist', async () => {
     renderWithServices(<SessionScreen />, {
-      route: '/session?preset=flashcards&size=all&passage=999999',
+      route: '/session?preset=flashcards&size=all&passage=999999&order=sequential',
     });
 
     expect(await screen.findByText('Nothing to practise here yet.')).toBeInTheDocument();

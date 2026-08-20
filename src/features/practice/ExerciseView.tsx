@@ -71,23 +71,28 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const item = exercise.item;
 
   // A card the engine grades must not display the answer it is about to grade.
-  // Word meanings and the details below — notes, skills, example sentences with
-  // their translations — each spell it out, so both stay shut until the answer
-  // is in. Self-rated cards reveal on the learner's own terms.
+  // The details below — notes, skills, example sentences with their translations
+  // — spell it out, so they stay shut until the answer is in. Self-rated cards
+  // reveal on the learner's own terms.
   const answerLocked = !isSelfRated(exercise.kind) && !answered;
-  const selectWord = answerLocked ? undefined : (tokenId: TokenId) => words.open(item.id, tokenId);
+  const selectWord = (tokenId: TokenId) => words.open(item.id, tokenId);
 
   /**
-   * A cloze is the one graded card whose prompt can be opened up before it is
-   * answered. Its answer is the missing word, and that word is rendered as the
-   * blank rather than as a button — so the rest of the sentence gives nothing
-   * away, and "what does *sé* mean, and why is it *que* here" is answerable at
-   * the moment the question is being read rather than only afterwards.
+   * Whether the word sheet may show meanings.
+   *
+   * Every word of every phrase is tappable on every screen, and a graded card is
+   * not the exception it used to be: being unable to ask what `va` is while
+   * reading the sentence it sits in made the one screen you are actually
+   * studying on the worst place to look something up.
+   *
+   * What the card is grading is still withheld, and only that. Multiple choice
+   * asks what the phrase *means*, so meaning is the one thing the sheet holds
+   * back until the answer is in — the form, the lemma, the pattern and the other
+   * forms are not the answer to it, and are most of the reason to tap a word
+   * mid-question. A cloze grades a *form*, and that form is already rendered as
+   * the blank rather than as a button, so its sheet has nothing left to hide.
    */
-  const clozeSelect =
-    exercise.kind === 'cloze-choice'
-      ? (tokenId: TokenId) => words.open(item.id, tokenId)
-      : undefined;
+  const meanings = !answerLocked || exercise.kind !== 'multiple-choice';
 
   // Playback speaks the item's own text, so it hands over any card whose answer
   // is that text or a word missing from it. Multiple choice is the exception:
@@ -168,31 +173,19 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
 
       {(exercise.kind === 'multiple-choice' || exercise.kind === 'cloze-choice') && (
         <>
-          {/* Once answered, the full sentence is shown and its words open up.
-              Before that, a cloze still shows its own sentence — with the blank
-              in place of the answer — so the words around the gap are tappable
-              while the question is live. Multiple choice cannot do the same: the
-              meaning of the sentence *is* what it is asking. */}
-          {answered ? (
-            <TokenizedText
-              item={item}
-              className={styles.prompt}
-              onSelect={selectWord}
-              selected={words.tokensFor(item.id)}
-            />
-          ) : exercise.kind === 'cloze-choice' ? (
-            <TokenizedText
-              item={item}
-              className={styles.prompt}
-              onSelect={clozeSelect}
-              selected={words.tokensFor(item.id)}
-              blankTokenId={exercise.blankTokenId}
-            />
-          ) : (
-            <p className={styles.prompt} lang="es">
-              {exercise.prompt}
-            </p>
-          )}
+          {/* The words are tappable throughout, on both kinds of card. The only
+              difference the answer makes is what the sheet will say: a cloze
+              blanks the form it grades out of the text, and multiple choice
+              holds back meanings until the choice is in. */}
+          <TokenizedText
+            item={item}
+            className={styles.prompt}
+            onSelect={selectWord}
+            selected={words.tokensFor(item.id)}
+            {...(!answered && exercise.kind === 'cloze-choice'
+              ? { blankTokenId: exercise.blankTokenId }
+              : {})}
+          />
           {!audioLocked && <AudioControls item={item} />}
           <div className={styles.choices}>
             {exercise.choices.map((choice, position) => {
@@ -306,6 +299,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           tokenIds={words.tokens}
           onChange={words.set}
           onClose={words.close}
+          meanings={meanings}
         />
       )}
     </section>

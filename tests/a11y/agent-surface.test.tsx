@@ -80,14 +80,16 @@ describe('agent surface', () => {
 
   it('names every control in a practice session', async () => {
     const { container } = renderWithServices(<SessionScreen />, {
-      route: '/session?preset=flashcards&size=items:2',
+      route: '/session?preset=flashcards&size=items:2&order=sequential',
     });
     await screen.findByRole('button', { name: 'Reveal' });
     await expectEveryControlNamed(container);
   });
 
   it('exposes each practice card as a named region', async () => {
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     const card = await screen.findByRole('region', { name: 'Reveal the meaning' });
     expect(within(card).getByRole('button', { name: 'Reveal' })).toBeInTheDocument();

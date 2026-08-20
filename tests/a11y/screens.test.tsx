@@ -70,7 +70,7 @@ describe('accessibility', () => {
 
   it('practice card has no WCAG violations', async () => {
     const { container } = renderWithServices(<SessionScreen />, {
-      route: '/session?preset=flashcards&size=items:2',
+      route: '/session?preset=flashcards&size=items:2&order=sequential',
     });
     await screen.findByRole('button', { name: 'Reveal' });
     await expectNoViolations(container);
@@ -79,7 +79,7 @@ describe('accessibility', () => {
   it('word panel has no WCAG violations', async () => {
     const user = userEvent.setup();
     const { container } = renderWithServices(<SessionScreen />, {
-      route: '/session?preset=flashcards&size=items:1',
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
     });
 
     await user.click(await screen.findByRole('button', { name: 'About “Tengo”' }));
@@ -107,7 +107,9 @@ describe('keyboard and screen-reader behaviour', () => {
   });
 
   it('reports session position as a progress bar', async () => {
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:2' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:2&order=sequential',
+    });
 
     const progress = await screen.findByRole('progressbar');
     expect(progress).toHaveAttribute('aria-valuenow', '1');
@@ -128,7 +130,9 @@ describe('keyboard and screen-reader behaviour', () => {
 
   it('traps focus in the word panel and restores it on close', async () => {
     const user = userEvent.setup();
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     const word = await screen.findByRole('button', { name: 'About “Tengo”' });
     await user.click(word);
@@ -145,7 +149,9 @@ describe('keyboard and screen-reader behaviour', () => {
 
   it('marks the open word as expanded', async () => {
     const user = userEvent.setup();
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     const word = await screen.findByRole('button', { name: 'About “Tengo”' });
     expect(word).toHaveAttribute('aria-expanded', 'false');
@@ -156,7 +162,7 @@ describe('keyboard and screen-reader behaviour', () => {
 
   it('labels Spanish content with its language for screen readers', async () => {
     const { container } = renderWithServices(<SessionScreen />, {
-      route: '/session?preset=flashcards&size=items:1',
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
     });
 
     await screen.findByRole('button', { name: 'Reveal' });

@@ -97,6 +97,37 @@ describe('Browse → session', () => {
 
     expect(new URLSearchParams(where().split('?')[1]).get('preset')).toBe('flashcards');
   });
+
+  /**
+   * A whole word kind is a set worth studying as a batch, so it has to survive
+   * the trip into a session — a filter the screen shows but the link drops is
+   * the exact failure "Practise these" started out with.
+   */
+  it('carries the word kind, so a batch of nouns practises nouns', async () => {
+    const user = userEvent.setup();
+    renderWithServices(
+      <>
+        <BrowseScreen />
+        <Where />
+      </>,
+      { route: '/browse' },
+    );
+
+    await user.selectOptions(await screen.findByDisplayValue('Any word kind'), 'NOUN');
+    expect(screen.getByText('4 items')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Practise these' }));
+    expect(new URLSearchParams(where().split('?')[1]).get('pos')).toBe('noun');
+  });
+
+  it('plans the word kind the link names', async () => {
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=quick&size=items:10&pos=verb',
+    });
+
+    // The two sentences annotated with a verb lexeme, and neither word card.
+    expect(await screen.findByText('1/2')).toBeInTheDocument();
+  });
 });
 
 describe('a filtered session', () => {

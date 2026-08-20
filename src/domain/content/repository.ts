@@ -5,6 +5,8 @@
  * detail of the data layer.
  */
 
+import type { PartOfSpeech } from './annotation';
+import { STUDYABLE_POS } from './annotation';
 import type { ItemId, LexemeId, PackId, PassageId, SenseId, SkillId, VerbFormId } from './ids';
 import {
   isUsableIn,
@@ -37,6 +39,12 @@ export interface TopicFacet extends PackTopic {
   readonly count: number;
 }
 
+/** A part of speech plus how many items in scope exemplify one. */
+export interface PosFacet {
+  readonly pos: PartOfSpeech;
+  readonly count: number;
+}
+
 export interface ItemFilter {
   readonly packs?: readonly PackId[];
   /**
@@ -60,6 +68,16 @@ export interface ItemFilter {
   readonly topics?: readonly string[];
   readonly tags?: readonly string[];
   readonly lexemes?: readonly LexemeId[];
+  /**
+   * Items exemplifying a lexeme of one of these parts of speech — "the verbs",
+   * "the nouns", however many lexemes that turns out to be.
+   *
+   * Kind rather than identity, which is what makes it a category a learner can
+   * pick: `lexemes` above answers "these exact words", and spelling "the verbs"
+   * that way meant enumerating every verb lexeme in the pack at the call site,
+   * so a second such set was a second enumeration.
+   */
+  readonly pos?: readonly PartOfSpeech[];
   readonly skills?: readonly SkillId[];
   /** Case/diacritic-insensitive substring match on the target-language text. */
   readonly search?: string;
@@ -314,10 +332,50 @@ export class ContentRepository {
       if (filter.topics?.length && !overlaps(item.topics, filter.topics)) return false;
       if (filter.tags?.length && !overlaps(item.tags, filter.tags)) return false;
       if (filter.lexemes?.length && !overlaps(item.lexemes, filter.lexemes)) return false;
+      if (filter.pos?.length && !this.exemplifies(item, filter.pos)) return false;
       if (filter.skills?.length && !overlaps(item.skills, filter.skills)) return false;
       if (search && !normalise(item.text).includes(search)) return false;
       return true;
     });
+  }
+
+  /**
+   * The parts of speech this item exemplifies, through the lexemes it is
+   * annotated with. Derived rather than indexed: a lexeme reached through a
+   * `Map` is cheap, and an index would have to be rebuilt whenever a pack
+   * arrived after the items referencing it.
+   */
+  private posOf(item: LearningItem): ReadonlySet<PartOfSpeech> {
+    const tags = new Set<PartOfSpeech>();
+    for (const lexemeId of item.lexemes ?? EMPTY) {
+      const pos = this.lexemesById.get(lexemeId)?.pos;
+      if (pos) tags.add(pos);
+    }
+    return tags;
+  }
+
+  private exemplifies(item: LearningItem, wanted: readonly PartOfSpeech[]): boolean {
+    const tags = this.posOf(item);
+    return wanted.some((pos) => tags.has(pos));
+  }
+
+  /**
+   * The word kinds a learner can narrow to, with a count in this scope.
+   *
+   * Counted rather than merely listed, for the reason {@link topics} is: a
+   * picker has to be able to drop a category that would lead nowhere, and
+   * working that out separately from the options is how the two drift apart.
+   * Only {@link STUDYABLE_POS} is offered — see there for why `DET` is not a
+   * category anyone would ask for.
+   */
+  partsOfSpeech(filter: ItemFilter = {}): readonly PosFacet[] {
+    const counts = new Map<PartOfSpeech, number>();
+    for (const item of this.query(filter)) {
+      for (const pos of this.posOf(item)) counts.set(pos, (counts.get(pos) ?? 0) + 1);
+    }
+    return STUDYABLE_POS.map((pos) => ({ pos, count: counts.get(pos) ?? 0 })).filter(
+      (facet) => facet.count > 0,
+    );
   }
 
   /**

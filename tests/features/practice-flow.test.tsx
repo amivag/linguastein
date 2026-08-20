@@ -31,7 +31,7 @@ describe('SessionScreen', () => {
 
     renderWithServices(<SessionScreen />, {
       services,
-      route: '/session?preset=flashcards&size=items:2',
+      route: '/session?preset=flashcards&size=items:2&order=sequential',
     });
 
     expect(await screen.findByText('1/2')).toBeInTheDocument();

@@ -34,7 +34,9 @@ describe('navigation', () => {
   });
 
   it('hides the chrome during a practice session', async () => {
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     await screen.findByRole('button', { name: 'Reveal' });
     expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument();

@@ -17,12 +17,15 @@ import {
   coursePath,
   FILTERABLE_REGIONS,
   ITEM_TYPES,
+  posFromSlug,
+  posSlug,
   REGISTERS,
   type CefrLevel,
   type Course,
   type ItemFilter,
   type ItemType,
   type LanguageTag,
+  type PartOfSpeech,
   type Register,
 } from '../../domain/content';
 import {
@@ -73,6 +76,7 @@ export function sessionPath(course: Course, input: SessionUrlInput): string {
   const filter = input.filter ?? {};
   if (filter.search) params.set('q', filter.search);
   if (filter.types?.length) params.set('type', filter.types.join(','));
+  if (filter.pos?.length) params.set('pos', filter.pos.map(posSlug).join(','));
   if (filter.levels?.length) params.set('level', filter.levels.join(','));
   if (filter.topics?.length) params.set('topic', filter.topics.join(','));
   if (filter.registers?.length) params.set('register', filter.registers.join(','));
@@ -109,6 +113,9 @@ export function parseSessionUrl(params: URLSearchParams): SessionUrl {
 function parseFilter(params: URLSearchParams): ItemFilter {
   const search = params.get('q')?.trim();
   const types = list(params.get('type'), ITEM_TYPES as readonly ItemType[]);
+  // Several on purpose — `?pos=verb,noun` is a batch of word kinds, and the
+  // repository ORs them exactly as it does types.
+  const pos = parts(params.get('pos'));
   const levels = list(params.get('level'), CEFR_LEVELS as readonly CefrLevel[]);
   const registers = list(params.get('register'), REGISTERS as readonly Register[]);
   const topics = (params.get('topic') ?? '')
@@ -120,6 +127,7 @@ function parseFilter(params: URLSearchParams): ItemFilter {
   return {
     ...(search ? { search } : {}),
     ...(types.length ? { types } : {}),
+    ...(pos.length ? { pos } : {}),
     ...(levels.length ? { levels } : {}),
     ...(registers.length ? { registers } : {}),
     ...(topics.length ? { topics } : {}),
@@ -134,6 +142,21 @@ function list<T extends string>(value: string | null, allowed: readonly T[]): re
   for (const part of value.split(',')) {
     const candidate = part.trim().toLowerCase();
     const match = allowed.find((option) => option === candidate);
+    if (match) seen.add(match);
+  }
+  return [...seen];
+}
+
+/**
+ * Comma-separated word kinds. Separate from {@link list} because the spelling in
+ * a link is not the spelling in the model — `verb` for `VERB` — and `posFromSlug`
+ * owns that translation rather than a lowercase comparison here.
+ */
+function parts(value: string | null): readonly PartOfSpeech[] {
+  if (!value) return [];
+  const seen = new Set<PartOfSpeech>();
+  for (const part of value.split(',')) {
+    const match = posFromSlug(part);
     if (match) seen.add(match);
   }
   return [...seen];

@@ -48,7 +48,7 @@ describe('during a session', () => {
   const start = (preferences: Partial<Preferences> = {}) =>
     renderWithServices(<SessionScreen />, {
       services: testServices({ preferences: { ...DEFAULT_PREFERENCES, ...preferences } }),
-      route: '/session?preset=flashcards&size=items:2',
+      route: '/session?preset=flashcards&size=items:2&order=sequential',
     });
 
   it('shows the time the session has been running', async () => {

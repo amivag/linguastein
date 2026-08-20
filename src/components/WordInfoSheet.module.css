@@ -115,6 +115,16 @@
   color: var(--color-success);
 }
 
+/* Sits where the meaning would be, so the entry reads as one held back rather
+   than one that is short. Muted rather than warning-coloured: nothing is wrong,
+   and a live question is not an error state. */
+.withheld {
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
 .block {
   display: grid;
   gap: var(--space-2);

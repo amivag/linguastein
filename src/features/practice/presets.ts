@@ -4,7 +4,7 @@
  * factory; the planner and the engine know nothing about presets.
  */
 
-import type { ContentRepository, ItemFilter, LexemeId } from '../../domain/content';
+import type { ContentRepository, ItemFilter } from '../../domain/content';
 import type { ExerciseKind } from '../../domain/exercises';
 import type { Ordering, SessionConfig, SessionFocus, SessionSize } from '../../domain/sessions';
 import type { Preferences } from '../../storage';
@@ -70,7 +70,15 @@ export const PRESETS: Record<PresetId, Preset> = {
     description: 'See it, say it, reveal the meaning',
     exerciseKinds: ['reveal'],
     mode: 'study',
-    ordering: 'sequential',
+    /**
+     * Random, not pack order. `sequential` meant this button dealt the first ten
+     * items of the pack every single time it was pressed — for the whole life of
+     * the install — which is how "I always see the same material" happens
+     * without a single line of the scheduler being wrong. Pack order is still
+     * reachable with `?order=sequential`, which is where a passage that has to
+     * be read in order asks for it.
+     */
+    ordering: 'random',
     filter: () => ({}),
   },
   verbs: {
@@ -86,7 +94,10 @@ export const PRESETS: Record<PresetId, Preset> = {
     ],
     mode: 'practice',
     ordering: 'smart',
-    filter: (repository) => ({ lexemes: verbLexemes(repository) }),
+    // "Verbs" as a kind, not as the list of every verb lexeme in the pack: the
+    // repository already knows which items exemplify one, and enumerating them
+    // here meant a second such set would be a second enumeration.
+    filter: () => ({ pos: ['VERB'] }),
   },
   vocabulary: {
     id: 'vocabulary',
@@ -170,14 +181,4 @@ export function parseSize(value: string | null): SessionSize {
   if (kind === 'time' && Number.isFinite(parsed)) return { kind: 'time', minutes: parsed };
   if (kind === 'all') return { kind: 'all' };
   return { kind: 'items', count: 10 };
-}
-
-function verbLexemes(repository: ContentRepository): readonly LexemeId[] {
-  const ids = new Set<LexemeId>();
-  for (const item of repository.query()) {
-    for (const lexemeId of item.lexemes ?? []) {
-      if (repository.getLexeme(lexemeId)?.pos === 'VERB') ids.add(lexemeId);
-    }
-  }
-  return [...ids];
 }

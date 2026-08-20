@@ -22,6 +22,17 @@ interface WordInfoSheetProps {
   /** Grow or shrink the selection without closing the sheet. */
   readonly onChange: (tokenIds: readonly TokenId[]) => void;
   readonly onClose: () => void;
+  /**
+   * False while a card is grading what this text *means*, which is the one
+   * thing the sheet then withholds. Everything else it knows — which word this
+   * is, what form it is in, the pattern it belongs to, its other forms — is not
+   * an answer to anything, and is most of the reason to tap a word mid-question.
+   *
+   * Said out loud rather than left as a gap: a noun whose entry is a gloss and
+   * nothing else would otherwise read "no extra information for this word yet",
+   * which is a different claim and a false one.
+   */
+  readonly meanings?: boolean;
 }
 
 /**
@@ -39,16 +50,24 @@ interface WordInfoSheetProps {
  * The word and the way out are pinned: only the detail below them scrolls, so
  * a verb with nine forms and four examples cannot push either off the screen.
  */
-export function WordInfoSheet({ item, tokenIds, onChange, onClose }: WordInfoSheetProps) {
+export function WordInfoSheet({
+  item,
+  tokenIds,
+  onChange,
+  onClose,
+  meanings = true,
+}: WordInfoSheetProps) {
   const { services, preferences } = useServices();
   const language = preferences.referenceLanguage;
 
   const word =
     tokenIds.length === 1 && tokenIds[0] !== undefined
-      ? inspectToken(services.repository, item, tokenIds[0], language)
+      ? inspectToken(services.repository, item, tokenIds[0], language, { meanings })
       : null;
   const phrase =
-    tokenIds.length > 1 ? inspectSpan(services.repository, item, tokenIds, language) : null;
+    tokenIds.length > 1
+      ? inspectSpan(services.repository, item, tokenIds, language, { meanings })
+      : null;
 
   const sheetRef = useFocusTrap<HTMLElement>(onClose);
 
@@ -94,8 +113,9 @@ export function WordInfoSheet({ item, tokenIds, onChange, onClose }: WordInfoShe
         <SpanControls item={item} tokenIds={tokenIds} onChange={onChange} />
 
         <div className={styles.body}>
-          {word && <WordBody info={word} />}
-          {phrase && <PhraseBody info={phrase} />}
+          {!meanings && <p className={styles.withheld}>Meanings unlock once you answer.</p>}
+          {word && <WordBody info={word} meanings={meanings} />}
+          {phrase && <PhraseBody info={phrase} meanings={meanings} />}
         </div>
       </section>
     </div>
@@ -165,7 +185,7 @@ function Lemma({ info }: { readonly info: WordInfo }) {
   return info.posLabel ? <p className={styles.lemma}>{info.posLabel}</p> : null;
 }
 
-function WordBody({ info }: { readonly info: WordInfo }) {
+function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanings: boolean }) {
   return (
     <>
       {info.gloss && <p className={styles.gloss}>{info.gloss}</p>}
@@ -208,7 +228,9 @@ function WordBody({ info }: { readonly info: WordInfo }) {
         </div>
       )}
 
-      {!info.gloss && !info.grammar && info.constructions.length === 0 && (
+      {/* Only claimable when the meaning was looked for and not found: with
+          meanings withheld, an empty entry means "not yet", not "nothing". */}
+      {meanings && !info.gloss && !info.grammar && info.constructions.length === 0 && (
         <p className={styles.grammar}>No extra information for this word yet.</p>
       )}
     </>
@@ -220,7 +242,7 @@ function WordBody({ info }: { readonly info: WordInfo }) {
  * add up to, and follows with the parts, because "you have to" does not tell
  * anyone which of these three words is `que`.
  */
-function PhraseBody({ info }: { readonly info: PhraseInfo }) {
+function PhraseBody({ info, meanings }: { readonly info: PhraseInfo; readonly meanings: boolean }) {
   const known = info.constructions.length > 0;
 
   return (
@@ -247,7 +269,7 @@ function PhraseBody({ info }: { readonly info: PhraseInfo }) {
               </span>
               <span className={styles.formLabel}>
                 {[entry.gloss, entry.grammar ?? entry.posLabel].filter(Boolean).join(' · ') ||
-                  'not in the dictionary yet'}
+                  (meanings ? 'not in the dictionary yet' : '')}
               </span>
             </li>
           ))}
@@ -270,7 +292,9 @@ function PhraseBody({ info }: { readonly info: PhraseInfo }) {
 
       {!known && (
         <p className={styles.grammar}>
-          These words are not recorded as a set phrase — what each one means is above.
+          {meanings
+            ? 'These words are not recorded as a set phrase — what each one means is above.'
+            : 'These words are not recorded as a set phrase.'}
         </p>
       )}
     </>

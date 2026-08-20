@@ -24,7 +24,9 @@ import { renderWithServices } from '../fixtures/services';
 
 describe('selecting a phrase', () => {
   const openTengo = async (user: ReturnType<typeof userEvent.setup>) => {
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
     await user.click(await screen.findByRole('button', { name: 'About “Tengo”' }));
     return screen.findByRole('dialog', { name: 'About Tengo' });
   };
@@ -84,7 +86,9 @@ describe('selecting a phrase', () => {
 
   it('never offers to select the punctuation', async () => {
     const user = userEvent.setup();
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     await user.click(await screen.findByRole('button', { name: 'About “trabajar”' }));
     const panel = await screen.findByRole('dialog', { name: 'About trabajar' });
@@ -167,7 +171,9 @@ describe('the example sentences under a card', () => {
    */
   it('opens a word of an example sentence', async () => {
     const user = userEvent.setup();
-    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:1&order=sequential',
+    });
 
     // Item 001's example is item 002, `Tengo que irme.`
     await user.click(

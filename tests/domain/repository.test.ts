@@ -154,3 +154,43 @@ describe('usage filters', () => {
     expect(everywhere.length).toBe(repository.itemCount);
   });
 });
+
+/**
+ * "The verbs", "the nouns" — a category of *kind* rather than a list of exact
+ * words, which is what makes it something a learner can point at and study a
+ * batch of. Resolved through the lexemes an item is annotated with, so a
+ * sentence counts as a verb item and a word card counts as its own kind.
+ */
+describe('word kinds', () => {
+  const repository = testRepository();
+
+  it('narrows to the items exemplifying a part of speech', () => {
+    expect(repository.query({ pos: ['VERB'] }).map((item) => item.text)).toEqual([
+      'Tengo que trabajar.',
+      'Tengo que irme.',
+    ]);
+    expect(repository.query({ pos: ['NOUN'], types: ['word'] }).map((item) => item.text)).toEqual([
+      'cerveza',
+      'agua',
+      'pan',
+      'café',
+    ]);
+  });
+
+  it('ORs several kinds, so a batch can be verbs and nouns at once', () => {
+    expect(repository.query({ pos: ['VERB', 'NOUN'] }).length).toBe(6);
+  });
+
+  it('counts the kinds on offer and drops the ones that would lead nowhere', () => {
+    expect(repository.partsOfSpeech()).toEqual([
+      { pos: 'VERB', count: 2 },
+      { pos: 'NOUN', count: 4 },
+    ]);
+  });
+
+  it('counts within the scope it is given, like the categories do', () => {
+    expect(repository.partsOfSpeech({ topics: ['food-drink'] })).toEqual([
+      { pos: 'NOUN', count: 4 },
+    ]);
+  });
+});

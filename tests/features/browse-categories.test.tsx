@@ -164,3 +164,47 @@ describe('CategoryPicker.module.css', () => {
     expect(heading).toMatch(/background:/);
   });
 });
+
+/**
+ * Word kinds: the way to pull up "the nouns" and study them as a batch.
+ *
+ * Only the kinds the packs have something for are offered — the same rule the
+ * category tiles follow, and the reason a pack that grows adverbs gets the
+ * option without a code change.
+ */
+describe('browsing by word kind', () => {
+  it('offers the kinds the pack has, and nothing it does not', async () => {
+    renderWithServices(<BrowseScreen />, { route: '/browse' });
+
+    const kinds = await screen.findByLabelText('Word kind');
+    const offered = [...kinds.querySelectorAll('option')].map((option) => option.textContent);
+
+    // The fixture carries one verb lexeme and four nouns, and no adjectives.
+    expect(offered).toEqual(['Any word kind', 'Verbs', 'Nouns']);
+  });
+
+  it('narrows to one kind', async () => {
+    const user = userEvent.setup();
+    renderWithServices(<BrowseScreen />, { route: '/browse' });
+
+    await user.selectOptions(await screen.findByLabelText('Word kind'), 'NOUN');
+
+    expect(screen.getByText('4 items')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'About “cerveza”' })).toBeInTheDocument();
+  });
+
+  /**
+   * Told to shorten a search they never typed, a learner has no way to find out
+   * that it was the two filters together that came to nothing.
+   */
+  it('blames the filters, not a search, when the filters are what emptied it', async () => {
+    const user = userEvent.setup();
+    renderWithServices(<BrowseScreen />, { route: '/browse' });
+
+    await user.selectOptions(await screen.findByLabelText('Type'), 'word');
+    await user.selectOptions(screen.getByLabelText('Word kind'), 'VERB');
+
+    expect(screen.getByText(/matches those filters yet/)).toBeInTheDocument();
+    expect(screen.queryByText(/shorter search/)).not.toBeInTheDocument();
+  });
+});

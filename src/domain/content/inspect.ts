@@ -58,6 +58,19 @@ export interface WordInfo {
 export interface InspectOptions {
   readonly maxExamples?: number;
   readonly maxForms?: number;
+  /**
+   * Whether to include reference-language meanings. Defaults to true.
+   *
+   * A card that grades what a phrase *means* cannot hand that over while the
+   * question is live — but which word this is, what form it is in and what else
+   * that verb does are not the answer to anything, and they are most of the
+   * reason to tap a word during practice. So meaning is separable here rather
+   * than at the call site: the gloss, the pattern's explanation, the example
+   * translations and the surrounding sentence's translation are all the same
+   * kind of thing, and four places deciding that independently is four places
+   * for one of them to leak.
+   */
+  readonly meanings?: boolean;
 }
 
 /** Punctuation carries nothing worth showing, so it is never inspectable. */
@@ -154,20 +167,21 @@ function describeWord(
   const lexeme = lexemeId ? repository.getLexeme(lexemeId) : undefined;
   const pos = token.pos ?? lexeme?.pos;
   const lemma = token.lemma ?? lexeme?.lemma;
+  const meanings = options.meanings !== false;
 
   return {
     token,
-    constructions: constructionsOf(repository, item, tokenId, language),
+    constructions: constructionsOf(repository, item, tokenId, language, meanings),
     forms: lexemeId ? formsOf(repository, lexemeId, token, options.maxForms ?? 8) : [],
     examples: lexemeId
-      ? examplesOf(repository, lexemeId, item.id, language, options.maxExamples ?? 3)
+      ? examplesOf(repository, lexemeId, item.id, language, options.maxExamples ?? 3, meanings)
       : [],
     ...(lexemeId ? { lexeme: lexemeId } : {}),
     ...optional('register', lexeme?.register),
     ...(lexeme?.regions?.length ? { regions: lexeme.regions } : {}),
     ...(lemma ? { lemma } : {}),
     ...(pos ? { pos, posLabel: POS_LABELS[pos] } : {}),
-    ...(lexemeId ? optional('gloss', glossOf(repository, lexemeId, language)) : {}),
+    ...(lexemeId && meanings ? optional('gloss', glossOf(repository, lexemeId, language)) : {}),
     ...optional('grammar', describeMorphology(token.morph)),
   };
 }
@@ -237,6 +251,7 @@ function constructionsOf(
   item: LearningItem,
   tokenId: TokenId,
   language: LanguageTag,
+  meanings: boolean,
 ): readonly WordConstruction[] {
   const constructions: WordConstruction[] = [];
   for (const annotation of item.annotations ?? []) {
@@ -244,9 +259,10 @@ function constructionsOf(
     const skill = annotation.skill ? repository.getSkill(annotation.skill) : undefined;
     const label = annotation.label ?? skill?.label;
     if (!label) continue;
-    const gloss = annotation.skill
-      ? repository.translationOf(annotation.skill, language)?.text
-      : undefined;
+    const gloss =
+      annotation.skill && meanings
+        ? repository.translationOf(annotation.skill, language)?.text
+        : undefined;
     constructions.push({
       label,
       ...(annotation.skill ? { skill: annotation.skill } : {}),
@@ -279,6 +295,7 @@ function examplesOf(
   exclude: ItemId,
   language: LanguageTag,
   limit: number,
+  meanings: boolean,
 ): readonly WordExample[] {
   return repository
     .itemsOfLexeme(lexemeId)
@@ -287,7 +304,9 @@ function examplesOf(
     .map((candidate) => ({
       id: candidate.id,
       text: candidate.text,
-      ...optional('translation', repository.translationOf(candidate.id, language)?.text),
+      ...(meanings
+        ? optional('translation', repository.translationOf(candidate.id, language)?.text)
+        : {}),
     }));
 }
 
@@ -439,18 +458,19 @@ export function inspectSpan(
     .filter((token) => chosen.has(token.id) || !isInspectable(token));
 
   const words = tokens.filter(isInspectable);
-  const constructions = spanConstructions(repository, item, chosen, language);
+  const meanings = options.meanings !== false;
+  const constructions = spanConstructions(repository, item, chosen, language, meanings);
   const skill = constructions.find((construction) => construction.skill)?.skill;
 
   return {
     tokens,
     text: joinTokens(tokens),
     constructions,
-    words: words.map((token) => describePhraseWord(repository, token, language)),
+    words: words.map((token) => describePhraseWord(repository, token, language, meanings)),
     examples: skill
-      ? examplesOfSkill(repository, skill, item.id, language, options.maxExamples ?? 3)
+      ? examplesOfSkill(repository, skill, item.id, language, options.maxExamples ?? 3, meanings)
       : [],
-    ...optional('context', repository.translationOf(item.id, language)?.text),
+    ...(meanings ? optional('context', repository.translationOf(item.id, language)?.text) : {}),
   };
 }
 
@@ -468,6 +488,7 @@ function spanConstructions(
   item: LearningItem,
   selected: ReadonlySet<TokenId>,
   language: LanguageTag,
+  meanings: boolean,
 ): readonly WordConstruction[] {
   const scored: { construction: WordConstruction; covers: boolean }[] = [];
 
@@ -479,9 +500,10 @@ function spanConstructions(
     const label = annotation.label ?? skill?.label;
     if (!label) continue;
 
-    const gloss = annotation.skill
-      ? repository.translationOf(annotation.skill, language)?.text
-      : undefined;
+    const gloss =
+      annotation.skill && meanings
+        ? repository.translationOf(annotation.skill, language)?.text
+        : undefined;
 
     scored.push({
       construction: {
@@ -502,6 +524,7 @@ function describePhraseWord(
   repository: ContentRepository,
   token: Token,
   language: LanguageTag,
+  meanings: boolean,
 ): PhraseWord {
   const lexeme = token.lexeme ? repository.getLexeme(token.lexeme) : undefined;
   const pos = token.pos ?? lexeme?.pos;
@@ -511,7 +534,9 @@ function describePhraseWord(
     token,
     ...(lemma ? { lemma } : {}),
     ...(pos ? { posLabel: POS_LABELS[pos] } : {}),
-    ...(token.lexeme ? optional('gloss', glossOf(repository, token.lexeme, language)) : {}),
+    ...(token.lexeme && meanings
+      ? optional('gloss', glossOf(repository, token.lexeme, language))
+      : {}),
     ...optional('grammar', describeMorphology(token.morph)),
   };
 }
@@ -522,6 +547,7 @@ function examplesOfSkill(
   exclude: ItemId,
   language: LanguageTag,
   limit: number,
+  meanings: boolean,
 ): readonly WordExample[] {
   return repository
     .itemsOfSkill(skill)
@@ -530,7 +556,9 @@ function examplesOfSkill(
     .map((candidate) => ({
       id: candidate.id,
       text: candidate.text,
-      ...optional('translation', repository.translationOf(candidate.id, language)?.text),
+      ...(meanings
+        ? optional('translation', repository.translationOf(candidate.id, language)?.text)
+        : {}),
     }));
 }
 

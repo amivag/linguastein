@@ -12,9 +12,11 @@ import { VoiceInput } from '../../components/VoiceInput';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
   FILTERABLE_REGIONS,
+  POS_LABELS,
   REGISTERS,
   type ItemFilter,
   type ItemType,
+  type PartOfSpeech,
   type Register,
 } from '../../domain/content';
 import type { SessionSize } from '../../domain/sessions';
@@ -34,6 +36,18 @@ const PAGE_SIZE = 40;
 const SESSION_CAP = 20;
 
 /**
+ * "Verbs", "Nouns" — the plural of what the sheet calls one word.
+ *
+ * Derived from the singular labels rather than tabled separately: the two would
+ * otherwise be able to disagree about what a `NUM` is called, and every part of
+ * speech the app offers as a category pluralises with an `s`.
+ */
+function posLabel(pos: PartOfSpeech): string {
+  const singular = POS_LABELS[pos];
+  return `${singular.charAt(0).toUpperCase()}${singular.slice(1)}s`;
+}
+
+/**
  * Free browsing of the whole pack — the "study mode" half of spec §4.2, and
  * the place to look something up rather than practise it.
  */
@@ -44,6 +58,7 @@ export function BrowseScreen() {
 
   const [search, setSearch] = useState('');
   const [type, setType] = useState<ItemType | 'all'>('all');
+  const [pos, setPos] = useState<PartOfSpeech | 'all'>('all');
   const [topic, setTopic] = useState('all');
   const [register, setRegister] = useState<Register | 'all'>('all');
   const [region, setRegion] = useState('all');
@@ -63,6 +78,14 @@ export function BrowseScreen() {
     () => new Map(topics.map((entry) => [entry.id, entry.label])),
     [topics],
   );
+  // Which word kinds the loaded packs actually have something for, counted over
+  // the course for the same reason the categories are: an option that would lead
+  // nowhere should not be offered, and a pack that grows adverbs gets the
+  // category with no code change.
+  const wordKinds = useMemo(
+    () => services.repository.partsOfSpeech(courseScope),
+    [services.repository, courseScope],
+  );
   const labelFor = (id: string) => topicLabels.get(id) ?? id.replace(/-/g, ' ');
 
   // One filter object drives both the list and the session link, so what a
@@ -75,11 +98,12 @@ export function BrowseScreen() {
     () => ({
       ...(search.trim() ? { search: search.trim() } : {}),
       ...(type === 'all' ? {} : { types: [type] }),
+      ...(pos === 'all' ? {} : { pos: [pos] }),
       ...(topic === 'all' ? {} : { topics: [topic] }),
       ...(register === 'all' ? {} : { registers: [register] }),
       ...(region === 'all' ? {} : { usableIn: region }),
     }),
-    [search, type, topic, register, region],
+    [search, type, pos, topic, register, region],
   );
 
   const results = useMemo(
@@ -173,6 +197,31 @@ export function BrowseScreen() {
             </select>
           </label>
 
+          {/* Verbs, nouns, adjectives — a whole word kind at once, which is what
+              makes "study a batch of the nouns" a thing you can point at. Kept
+              orthogonal to Type: with "Everything" it selects the sentences that
+              use a verb too, which is exactly what the Verbs preset practises,
+              and with "Words" it is the vocabulary list of that kind. */}
+          {wordKinds.length > 1 && (
+            <label className={styles.filter}>
+              <span className="visually-hidden">Word kind</span>
+              <select
+                value={pos}
+                onChange={(event) => {
+                  setPos(event.target.value as PartOfSpeech | 'all');
+                  setLimit(PAGE_SIZE);
+                }}
+              >
+                <option value="all">Any word kind</option>
+                {wordKinds.map((option) => (
+                  <option key={option.pos} value={option.pos}>
+                    {posLabel(option.pos)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+
           <label className={styles.filter}>
             <span className="visually-hidden">Register</span>
             <select
@@ -242,8 +291,16 @@ export function BrowseScreen() {
         })}
       </ul>
 
+      {/* Which of the two it is matters: told to shorten a search they never
+          typed, a learner has no way to find out that it was Words × Verbs that
+          came to nothing — the pack has verb *lexemes* in its sentences and no
+          verb word cards. */}
       {results.length === 0 && (
-        <p className={styles.empty}>Nothing matches that yet. Try a shorter search.</p>
+        <p className={styles.empty}>
+          {search.trim()
+            ? 'Nothing matches that yet. Try a shorter search.'
+            : 'Nothing in this course matches those filters yet. Try widening one.'}
+        </p>
       )}
 
       {shown.length < results.length && (

@@ -21,6 +21,14 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 
 ### Added
 
+- **Word kinds: pull up the verbs, or the nouns, and study the batch.** A part of
+  speech is a filter dimension now, in Browse and in a session link
+  (`?pos=verb,noun`), so "everything that uses a verb" or "the nouns" is a set you
+  can point at, look over and then hand to _Practise these_ or _Study these_. The
+  kinds on offer are counted from the packs actually loaded and the empty ones are
+  dropped, exactly as with categories — a pack that grows adverbs gets the
+  category with no code change. The Verbs preset is the same filter rather than its
+  own enumeration of every verb lexeme in the pack.
 - **Courses: a language and a level, in the URL.** Every screen now lives under
   `/<language>/<level>` — `/es/a1/browse`, `/es/all/read/700001` — and `/` is a
   redirect into the course the learner left. A level is a _ceiling_, not a
@@ -106,6 +114,23 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 
 ### Changed
 
+- **Words are tappable on a graded card too; only the meaning waits.** Multiple
+  choice rendered its phrase as inert text until it was answered, which made the
+  screen you actually study on the one place in the app where "what is this word?"
+  had no answer. Every word opens now, and what the card is grading is still
+  safe: a meaning-recognition card withholds the gloss, the pattern's explanation
+  and the example translations until the choice is in — and says so, rather than
+  leaving a gap that reads as an unknown word — while the lemma, the form, the
+  gender and the verb's other forms, which answer nothing the card is asking, are
+  there while the question is live. A cloze already blanked out the form it grades,
+  so its sheet keeps everything.
+- **Flashcards no longer deals the same cards every time.** The preset ordered by
+  pack order, so pressing it handed over the first ten items of the pack on every
+  press, for the life of the install — the one place "I keep seeing the same
+  material" was literally true, and nothing to do with the scheduler. Studying is
+  the mode with no memory, which is exactly why it must not start from the top.
+  Pack order is still reachable with `?order=sequential`, which is what a text
+  that has to be read in order asks for.
 - **A livelier palette and a display face for the things you read.** The app was
   clean and slightly austere: one flat background, one hue, and headings that
   were body text set larger. The page now has a light source — a fixed wash from

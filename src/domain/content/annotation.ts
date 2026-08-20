@@ -29,6 +29,37 @@ export const POS_TAGS = [
 ] as const;
 export type PartOfSpeech = (typeof POS_TAGS)[number];
 
+/**
+ * The parts of speech a learner picks a *set* of words by — "the verbs", "the
+ * nouns" — rather than the full tag inventory.
+ *
+ * The open classes plus numerals. Determiners, prepositions, pronouns and
+ * conjunctions are a closed handful each, met inside phrases rather than
+ * studied as a batch, and offering them as a category would put `de` and `el`
+ * at the head of a list of thousands. Which of these a picker actually shows is
+ * still derived from the packs: an empty one is dropped, exactly as an empty
+ * topic is.
+ */
+export const STUDYABLE_POS = ['VERB', 'NOUN', 'ADJ', 'ADV', 'NUM'] as const;
+export type StudyablePos = (typeof STUDYABLE_POS)[number];
+
+/**
+ * How a part of speech is spelled in a URL or a link: `verb`, `adj`.
+ *
+ * Both directions live here for the reason `session-url.ts` records about
+ * itself — a slug written by one hand and read by another is a slug that can go
+ * stale. The lowercased tag *is* the spelling, so there is no table to keep in
+ * step with `POS_TAGS`.
+ */
+export function posSlug(pos: PartOfSpeech): string {
+  return pos.toLowerCase();
+}
+
+export function posFromSlug(slug: string): PartOfSpeech | undefined {
+  const wanted = slug.trim().toLowerCase();
+  return POS_TAGS.find((tag) => posSlug(tag) === wanted);
+}
+
 export const MOODS = ['indicative', 'subjunctive', 'imperative', 'conditional'] as const;
 export type Mood = (typeof MOODS)[number];
 

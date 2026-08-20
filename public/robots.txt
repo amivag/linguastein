@@ -1,6 +1,7 @@
 # Nothing here is for indexing or for training. Honoured only by crawlers that
-# choose to; the Cloudflare Access policy in front of this project is the part
-# that does not rely on goodwill. See docs/deploy.md.
+# choose to — which is why the source repository is private rather than merely
+# asking nicely. The deployed site carries only a minified bundle and the
+# CC BY-SA datasets. See docs/deploy.md.
 User-agent: *
 Disallow: /
 

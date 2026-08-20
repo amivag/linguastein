@@ -1,4 +1,0 @@
-# Cloudflare Pages SPA fallback. Static assets are matched first, so this only
-# catches client routes (/practice, /settings, …) that have no file of their own
-# and would otherwise 404 on a hard refresh or a shared link.
-/*  /index.html  200

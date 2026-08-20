@@ -1,107 +1,138 @@
 # Deploying
 
 The app is a static bundle — a Vite build, an IndexedDB store, no server and no
-account — so hosting it costs nothing anywhere that serves files. The choice of
-host is therefore decided by something else: the repository is private, because no
-licence — this project's AGPL included — stops a scraper from feeding the source
-into a training corpus. Privacy is the control; the licence only governs the
-people we hand it to deliberately. That rules out the obvious free option and
-settles the rest of the setup.
+account — so hosting it costs nothing anywhere that serves files. Two constraints
+decide the shape of the setup:
 
-## Why Cloudflare Pages
+1. **The source stays private.** No licence prevents a scraper from feeding source
+   into a training corpus; this project's AGPL included. Privacy is the control,
+   and the licence only governs the people we hand the code to deliberately. That
+   rules out free GitHub Pages served straight from this repository, which requires
+   the repository to be public.
+2. **Free, with no new accounts.** GitHub only.
 
-- **GitHub Pages** is free only from a **public** repository. Public GitHub code
-  is scraped at scale and has gone into published training corpora, with no
-  opt-out — so a public repository gives away exactly what we set out to keep.
-- **Netlify** deploys from a private repository on the free tier, but its
-  password protection is a paid feature, so the deployed site stays open.
-- **Cloudflare Pages** deploys from a private repository for free, and Cloudflare
-  Access (free for up to 50 users) puts an email one-time-code in front of the
-  site. Nothing is publicly reachable, so nothing is crawlable.
+## The shape
 
-Pages also serves at the domain root, which matters more than it looks: the PWA
-manifest declares `start_url: '/'` and `scope: '/'`, and the router runs without
-a basename. A subpath host — `example.github.io/linguastein/` — would need all
-three changed, plus a `404.html` fallback, and would still install as a
-scope-limited PWA. Root serving keeps the offline and install behaviour intact.
+Two repositories:
+
+```text
+  linguastein  (private)  ──build──▶  amivag.github.io  (public)
+  source, history, issues             the current bundle, nothing else
+```
+
+A push to `main` runs [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml),
+which builds the app and force-pushes `dist/` to the public repository. Only
+minified output and the CC BY-SA datasets are ever public — no TypeScript, no
+history, no sourcemaps.
+
+**The public repository must be named `amivag.github.io`.** That is not cosmetic:
+a GitHub user site is served at the domain root, whereas any other repository is
+served under `/<repo>/`. The PWA manifest declares `start_url: '/'` and
+`scope: '/'` and the router runs without a basename, so root serving keeps the
+install and offline behaviour working with no code changes. A subpath would need
+all three altered plus a base path threaded through the build.
 
 ## One-time setup
 
-Steps 1 and 3 have to be done by hand — they need your GitHub and Cloudflare
-accounts.
+Steps 1–3 need your GitHub account, so they are yours to do.
 
-**1. Create the private repository and push.** On GitHub, new repository →
-**Private** → do not add a README, licence or `.gitignore` (the repository
-already has them). Then:
+**1. Create the private source repository and push.** On GitHub, new repository →
+name `linguastein` → **Private** → add nothing (this repository already has a
+README, licences and `.gitignore`).
 
 ```bash
-git remote add origin git@github.com:<you>/linguastein.git
+git remote add origin git@github.com:amivag/linguastein.git
 ```
 
 ```bash
 git push -u origin main
 ```
 
-**2. What is already in the repository.** Nothing to do here; listed so the
-moving parts are visible.
+**2. Create the public output repository.** New repository → name it exactly
+`amivag.github.io` → **Public** → completely empty, no README. Do not commit
+anything to it by hand; the workflow force-pushes over whatever is there. Pages
+serves a user site from the default branch automatically, so there is no Pages
+setting to switch on.
 
-| File                                                      | Why                                                                  |
-| --------------------------------------------------------- | -------------------------------------------------------------------- |
-| [`public/_redirects`](../public/_redirects)               | SPA fallback, so a hard refresh on `/practice` does not 404          |
-| [`public/_headers`](../public/_headers)                   | `X-Robots-Tag: noindex, …, noai` on every response                   |
-| [`public/robots.txt`](../public/robots.txt)               | Crawl and training opt-outs, including the named AI tokens           |
-| [`.nvmrc`](../.nvmrc)                                     | Pins Node for Cloudflare's builder; `package.json` requires >= 22.13 |
-| [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) | Type-check, lint, format, coverage floors, dataset validation, build |
+**3. Give the workflow permission to push to it.** The default `GITHUB_TOKEN`
+cannot reach another repository, so it needs a credential of its own. Settings →
+Developer settings → **Fine-grained tokens** → generate one with:
 
-CI and the deploy are independent: GitHub Actions runs the checks, Cloudflare
-builds and publishes. A red CI run does not block a deploy, so read the checks
-before trusting a preview URL.
+| Field             | Value                         |
+| ----------------- | ----------------------------- |
+| Repository access | Only `amivag.github.io`       |
+| Permissions       | Contents → **Read and write** |
 
-**3. Connect Cloudflare Pages.** Cloudflare dashboard → **Workers & Pages** →
-**Create** → **Pages** → **Connect to Git** → pick the repository, then:
+Then add it to the **private** repository under Settings → Secrets and variables
+→ Actions → new secret named `PAGES_DEPLOY_TOKEN`.
 
-| Setting           | Value           |
-| ----------------- | --------------- |
-| Framework preset  | None            |
-| Build command     | `npm run build` |
-| Build output      | `dist`          |
-| Production branch | `main`          |
+Fine-grained tokens expire. When it does, the deploy fails and the live site
+silently stays on the last build, so either set a calendar reminder or use a
+**deploy key** instead — an SSH key added to the public repository with write
+access, which does not expire and cannot be scoped any wider than that one
+repository.
 
-`npm run build` runs `tsc -b` first, so a type error fails the deploy rather
-than shipping. Every push to `main` republishes production; every other branch
-and pull request gets its own preview URL.
+## What is already in place
 
-**4. Gate it.** Two policies, because they are configured in different places
-and it is easy to protect only the first:
+| File                                                              | Why                                                             |
+| ----------------------------------------------------------------- | --------------------------------------------------------------- |
+| [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) | Checks, builds, publishes on every push to `main`               |
+| [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)         | The same checks on pull requests                                |
+| [`public/robots.txt`](../public/robots.txt)                       | Crawl and training opt-outs, including the named AI tokens      |
+| [`index.html`](../index.html)                                     | `<meta name="robots">`, since Pages cannot set response headers |
+| [`.nvmrc`](../.nvmrc)                                             | One Node version for both workflows and for local `nvm`         |
 
-- Production: Cloudflare **Zero Trust** → **Access** → **Applications** → add
-  the Pages domain, policy **Allow** → include **Emails** → your address.
-- Previews: the Pages project's **Settings** → **General** → enable the access
-  policy for preview deployments. Without this, every branch push publishes an
-  ungated URL.
+The deploy workflow runs `npm run check` before building, duplicating CI on a push
+to `main`. That is deliberate: nothing else stands between a bad commit and the
+live site. If the double run becomes annoying, drop `push: branches: [main]` from
+`ci.yml` rather than weakening the gate in `deploy.yml`.
 
-Optionally, on a custom domain, turn on **Security** → **Bots** → block AI
-scrapers and crawlers. Behind Access it is redundant; it is the backstop if
-Access is ever removed.
+## Known rough edges
 
-## One obligation to remember
+- **Deep links return HTTP 404.** Pages has no rewrite rule, so the workflow
+  copies `index.html` to `404.html`; the router then renders the right screen. The
+  page works, but the status code is wrong. Irrelevant while the app is `noindex`.
+- **No response headers.** `X-Robots-Tag`, CSP and cache-control are unavailable
+  on Pages. The crawler opt-outs moved into a meta tag; the rest is not currently
+  set.
+- **The site is publicly reachable.** Nothing gates it. That is consistent with
+  the goal — a deployed site never exposes source — but treat the URL as public
+  from the moment the first deploy lands.
 
-The code is AGPL-3.0-only, and AGPL §13 applies to software people use over a
-network: anyone who interacts with a modified Linguastein remotely must be offered
-its Corresponding Source. While the deployment is gated to you alone, there is
-nobody to offer it to. **The moment you invite someone through Access, or open the
-site up, the app owes its users a link to the source** — a line in Settings next to
-the version string is the usual way. That is a deliberate to-do, not an oversight,
-and it is waiting on the repository having a URL to point at.
+## One obligation to note
+
+The code is AGPL-3.0-only, and AGPL §13 covers software people use over a network:
+whoever interacts with a modified copy remotely should be offered its Corresponding
+Source. Serving the app publicly while the source repository stays private sits
+awkwardly against that.
+
+As sole copyright holder you are not bound by your own licence, so nothing is being
+breached — but the honest resolutions are worth knowing, because the awkwardness is
+real and it grows the moment the app has actual users:
+
+- Add a source link, or an offer of source on request, in Settings beside the
+  version string. Cheapest, and enough for an alpha.
+- Make the source repository public, accepting the scraping exposure.
+- State that the hosted build is offered under the copyright holder's reserved
+  rights rather than under the AGPL.
+
+Nothing is required today. Decide it before the app has users who are not you.
 
 ## Testing a change
 
-Push the branch, open the preview URL on a phone, sign in with the one-time code.
-The service worker uses `registerType: 'autoUpdate'`, so a second visit picks up
-the new build — see [architecture.md](architecture.md#updates-and-caching) for what
-that means for a session in progress.
+Push to `main`, wait about a minute for the workflow, then open
+`https://amivag.github.io/` on a phone. The service worker uses
+`registerType: 'autoUpdate'`, so a second visit picks up the new build — see
+[architecture.md](architecture.md#updates-and-caching) for what that means for a
+session in progress.
 
-Sourcemaps are off in production ([`vite.config.ts`](../vite.config.ts)) so the
+To test without publishing, the dev server is reachable across your own network:
+
+```bash
+npm run dev -- --host
+```
+
+Sourcemaps are off in production ([`vite.config.ts`](../vite.config.ts)), so the
 deployed bundle does not carry the original TypeScript. To debug a production
 build, reproduce it locally:
 

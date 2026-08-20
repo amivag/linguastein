@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0f1115" />
+    <!--
+      GitHub Pages cannot set response headers, so the crawler and training
+      opt-outs live here and in public/robots.txt instead of in an `X-Robots-Tag`.
+      Advisory either way: honoured only by crawlers that choose to.
+    -->
+    <meta name="robots" content="noindex, nofollow, noarchive" />
     <meta
       name="description"
       content="Mobile-first Spanish practice: listen, repeat, reveal, review."

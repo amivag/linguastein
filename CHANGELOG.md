@@ -47,10 +47,12 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 - Dark and light themes on a token system, held to WCAG 2.2 AA by axe and
   contrast tests in CI.
 - Optional speech-input pronunciation check on speaking exercises.
-- Deployment on Cloudflare Pages from a private repository, gated behind an email
-  one-time-code, with an SPA fallback, `robots.txt` and `X-Robots-Tag` opt-outs
-  for crawlers and model training, and a Node pin for the builder. Rationale and
-  setup in [docs/deploy.md](docs/deploy.md).
+- Deployment on GitHub Pages that keeps the source private: a push to `main`
+  checks, builds and force-pushes only `dist/` to a separate public repository,
+  named so that Pages serves it at the domain root and the PWA needs no base path.
+  Includes an SPA fallback, a Jekyll opt-out, and `robots.txt` and `<meta>`
+  opt-outs for crawlers and model training. Rationale, the setup steps and the
+  known rough edges in [docs/deploy.md](docs/deploy.md).
 
 ### Changed
 

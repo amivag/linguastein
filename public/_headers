@@ -1,7 +1,0 @@
-# Sent on every response, so the signal survives a crawler that never fetches
-# robots.txt. Advisory like robots.txt is — the access policy in front of the
-# project is what actually keeps the site unread.
-/*
-  X-Robots-Tag: noindex, nofollow, noarchive, noai, noimageai
-  Referrer-Policy: no-referrer
-  X-Content-Type-Options: nosniff

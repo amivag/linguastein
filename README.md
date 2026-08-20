@@ -65,7 +65,7 @@ src/
 
 content/es/      dataset authoring sources (TSV) — the human-edited input
 public/packs/    generated, shipped content packs (JSONL + manifest)
-public/_*         Cloudflare Pages routing and headers; robots.txt sits alongside
+public/robots.txt crawl and training opt-outs for the deployed site
 docs/             architecture notes, dataset format, deployment, product spec
 tests/            unit and component tests, mirroring src/
 scripts/          dataset validation CLI
@@ -197,10 +197,11 @@ must not be HTTP-cached: [docs/architecture.md](docs/architecture.md#updates-and
 
 ## Deploying
 
-Hosted on Cloudflare Pages, built from a private repository and gated behind an
-email one-time-code so nothing is publicly reachable or crawlable. Every push to
-`main` republishes; every branch gets a preview URL to open on a phone. Setup and
-the reasoning behind the choice: [docs/deploy.md](docs/deploy.md).
+The source repository is private; only the built bundle is published. A push to
+`main` checks, builds and force-pushes `dist/` to a separate public repository that
+GitHub Pages serves at the domain root — so no TypeScript, no history and no
+sourcemaps leave this repository, and the PWA keeps working without a base path.
+Setup and the reasoning: [docs/deploy.md](docs/deploy.md).
 
 ## Licence
 

@@ -1,0 +1,67 @@
+name: Deploy
+
+# The source repository is private; only the built bundle is published. This
+# builds it here and force-pushes the output to the public `amivag.github.io`
+# repository, which GitHub Pages serves at the domain root. Root serving is the
+# reason for the repository name: it keeps the PWA's `scope: '/'` and the router
+# working without a base path. See docs/deploy.md.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# A deploy is a force-push. Two at once would race to decide what is live.
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Deliberately the full gate, not just the build. This duplicates ci.yml on
+      # a push to main, which is cheap next to publishing a broken app: nothing
+      # else stands between a bad commit and the live site.
+      - name: Check
+        run: npm run check
+
+      # `tsc -b` runs inside this, and the checkout is a real git clone, so
+      # vite.config.ts resolves the build commit on its own.
+      - name: Build
+        run: npm run build
+
+      - name: SPA fallback and Jekyll opt-out
+        run: |
+          # GitHub Pages has no rewrite rule, so a hard refresh on /practice would
+          # 404. Serving the app shell as the 404 body lets the router take over.
+          cp dist/index.html dist/404.html
+          # Without this, Pages runs the output through Jekyll, which discards
+          # anything whose name begins with an underscore.
+          touch dist/.nojekyll
+
+      # An orphan commit each time, force-pushed. Assets are content-hashed, so
+      # keeping history would accumulate every build's bundles for ever in a
+      # repository whose only job is to hold the current one.
+      - name: Publish
+        env:
+          DEPLOY_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+        run: |
+          cd dist
+          git init -q -b main
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -q -m "Build ${GITHUB_SHA::7} from ${GITHUB_REPOSITORY}"
+          git push -q --force \
+            "https://x-access-token:${DEPLOY_TOKEN}@github.com/amivag/amivag.github.io.git" \
+            main

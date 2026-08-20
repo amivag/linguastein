@@ -5,7 +5,7 @@ import { ServicesContext } from '../../src/app/services-context';
 import type { AppServices } from '../../src/app/services';
 import { NOOP_PLAYBACK, type AudioService, type SpeechRecognitionProvider } from '../../src/audio';
 import { ExerciseEngine } from '../../src/domain/exercises';
-import { createMemoryStorage, DEFAULT_PREFERENCES } from '../../src/storage';
+import { createMemoryStorage, DEFAULT_PREFERENCES, type Preferences } from '../../src/storage';
 import { testRepository } from './pack';
 
 /** No device speech in tests, but the dataset-audio path stays reachable. */
@@ -16,6 +16,7 @@ const silentAudio: AudioService = {
   canPlay: () => true,
   canSpeak: () => true,
   voicesFor: () => [],
+  voiceFor: () => undefined,
   ready: () => Promise.resolve(),
 };
 
@@ -43,7 +44,12 @@ export function testServices(overrides: Partial<AppServices> = {}): AppServices 
 
 export function renderWithServices(
   ui: ReactElement,
-  options: { services?: AppServices; route?: string } = {},
+  options: {
+    services?: AppServices;
+    route?: string;
+    /** Supply one to assert on what a control tried to change. */
+    updatePreferences?: (patch: Partial<Preferences>) => void;
+  } = {},
 ) {
   const services = options.services ?? testServices();
   const wrapper = ({ children }: { children: ReactNode }) => (
@@ -51,7 +57,7 @@ export function renderWithServices(
       value={{
         services,
         preferences: services.preferences,
-        updatePreferences: () => {},
+        updatePreferences: options.updatePreferences ?? (() => {}),
       }}
     >
       <MemoryRouter initialEntries={[options.route ?? '/']}>{children}</MemoryRouter>

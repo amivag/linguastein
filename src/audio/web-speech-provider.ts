@@ -73,6 +73,11 @@ export function createWebSpeechTtsProvider(): TtsProvider {
       return refresh().filter(matchesLanguage(locale)).map(toTtsVoice);
     },
 
+    voiceFor(locale, preferred) {
+      const voice = selectVoice(refresh(), locale, preferred);
+      return voice ? toTtsVoice(voice) : undefined;
+    },
+
     hasVoiceFor(locale) {
       return refresh().some(matchesLanguage(locale));
     },

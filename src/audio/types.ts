@@ -38,6 +38,11 @@ export interface TtsProvider {
   ready?(): Promise<void>;
   /** Voices able to speak this language. Empty means: do not speak it. */
   voicesFor?(locale: LanguageTag): readonly TtsVoice[];
+  /**
+   * The voice a `speak` with these arguments would actually use, so the UI can
+   * name it rather than promising an unspecified "best match".
+   */
+  voiceFor?(locale: LanguageTag, preferred?: string): TtsVoice | undefined;
   hasVoiceFor?(locale: LanguageTag): boolean;
 }
 
@@ -64,6 +69,8 @@ export interface AudioService {
   canSpeak(locale: LanguageTag): boolean;
   /** Voices available for the locale, for the settings picker. */
   voicesFor(locale: LanguageTag): readonly TtsVoice[];
+  /** Which of them would speak, given the learner's choice (or none). */
+  voiceFor(locale: LanguageTag, preferred?: string): TtsVoice | undefined;
   /** Resolves once voice discovery has finished. */
   ready(): Promise<void>;
 }

@@ -128,6 +128,10 @@ export function createAudioService(options: AudioServiceOptions): AudioService {
       return tts?.voicesFor?.(locale) ?? [];
     },
 
+    voiceFor(locale: LanguageTag, preferred?: string): TtsVoice | undefined {
+      return tts?.voiceFor?.(locale, preferred);
+    },
+
     async ready() {
       await tts?.ready?.();
     },

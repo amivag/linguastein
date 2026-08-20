@@ -1,0 +1,131 @@
+/*
+ * The chip routes its background through `--control-bg` so hover can tint what
+ * the control is already painted with — see the note in `Button.module.css`
+ * for the specificity trap that avoids.
+ */
+
+.chip {
+  --control-bg: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--tap-target);
+  padding-inline: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--control-bg);
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+}
+
+/* The locale beside the glyph, small enough not to compete with the title. */
+.tag {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    background: color-mix(in srgb, var(--control-bg) 90%, var(--color-text));
+    color: var(--color-text);
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: var(--backdrop);
+  animation: fade var(--transition-base) both;
+}
+
+.menu {
+  position: relative;
+  display: grid;
+  gap: var(--space-3);
+  width: min(420px, 100%);
+  margin-inline: auto;
+  max-height: 82dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-4) var(--space-4) max(var(--space-5), env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  animation: rise var(--transition-slow) both;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.title {
+  flex: 1;
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.link {
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+}
+
+/* Arriving, not appearing. `global.css` collapses both under
+   prefers-reduced-motion. */
+@keyframes rise {
+  from {
+    transform: translateY(2rem);
+    opacity: 0;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * Once there is a pointer and room for it, the sheet becomes a panel hanging
+ * from the header the chip sits in, rather than a slab across the bottom of a
+ * large screen.
+ */
+@media (min-width: 768px) {
+  .overlay {
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: calc(var(--tap-target) + var(--space-5)) var(--space-4) var(--space-4);
+  }
+
+  .menu {
+    width: min(380px, 100%);
+    margin-inline: 0;
+    max-height: min(80dvh, 640px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    /* Hanging from above now, so it drops rather than rises. A second name
+       rather than a redefinition of `rise`: same-name keyframes inside a media
+       query win globally on some engines and are a trap. */
+    animation-name: drop;
+  }
+}
+
+@keyframes drop {
+  from {
+    transform: translateY(-0.75rem);
+    opacity: 0;
+  }
+}

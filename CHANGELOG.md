@@ -79,6 +79,14 @@ learner state, and are not called out individually until 0.1.0 is tagged.
   half, and the four remaining selects sit on one row. The results used to start
   a screen and a half down; they now start above the fold, and adding a category
   no longer pushes them further.
+- The voice moved into the header, on every screen. A chip names the voice that
+  would actually speak — or says plainly that none is installed for the locale —
+  and opens the full set of audio controls in place. Pronunciation is a running
+  condition rather than a setup step: the accent you want changes with what you
+  are reading, and "why is this silent?" is best answered where it is asked.
+  Settings shows the same component, so there is one source of truth for what it
+  changes, and the audio seam gained `voiceFor` so the UI can name the voice
+  instead of promising an unspecified best match.
 
 ### Known gaps
 

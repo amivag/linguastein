@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppNav } from './AppNav';
 import { UpdateBanner } from './UpdateBanner';
+import { VoicePresence } from './VoicePresence';
 import styles from './AppShell.module.css';
 
 interface AppShellProps {
@@ -18,6 +19,9 @@ interface AppShellProps {
  *
  * Every screen gets exactly one `<h1>`, one `<main>` and a matching document
  * title, so both screen readers and automated agents can tell where they are.
+ *
+ * The header sticks: it carries the way back and the voice control, and both
+ * are needed halfway down a long passage as much as at the top of it.
  */
 export function AppShell({ title, children, onBack, action, showNav = true }: AppShellProps) {
   const navigate = useNavigate();
@@ -39,6 +43,10 @@ export function AppShell({ title, children, onBack, action, showNav = true }: Ap
           </button>
         )}
         <h1 className={styles.title}>{title}</h1>
+        {/* Every screen, pinned: the app's voice is a running condition, not a
+            setup step, so what is speaking — or that nothing is — stays visible
+            and adjustable wherever you are. */}
+        <VoicePresence />
         {action}
       </header>
       <main id="main" className={styles.main} tabIndex={-1}>

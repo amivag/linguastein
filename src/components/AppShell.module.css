@@ -4,16 +4,31 @@
   min-height: 100%;
   max-width: var(--content-width);
   margin-inline: auto;
-  padding: max(var(--space-4), env(safe-area-inset-top)) var(--space-4)
-    max(var(--space-5), env(safe-area-inset-bottom));
+  /* No top padding of its own: the sticky header owns the top inset, so the
+     notch is cleared both at rest and once the header is pinned to it. */
+  padding: 0 var(--space-4) max(var(--space-5), env(safe-area-inset-bottom));
 }
 
+/*
+ * Pinned to the top of the viewport, because the controls it carries — back,
+ * and the voice — are wanted mid-scroll, not only at the top of a screen.
+ *
+ * The negative inline margin bleeds it into the shell's gutters so content
+ * scrolls behind the header rather than up its sides, and the padding puts the
+ * contents back where they were.
+ */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: flex;
   align-items: center;
   gap: var(--space-3);
   min-height: var(--tap-target);
+  margin-inline: calc(var(--space-4) * -1);
   margin-bottom: var(--space-4);
+  padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
+  background: var(--color-bg);
 }
 
 .title {

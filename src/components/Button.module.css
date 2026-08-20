@@ -95,6 +95,17 @@
   font-size: var(--text-lg);
 }
 
+/* A glyph, not a label: square at the tap target so two of them sit in a
+   dialog header without the word beside them being pushed off the line. */
+.icon {
+  width: var(--tap-target);
+  min-width: var(--tap-target);
+  padding: 0;
+  border-radius: var(--radius-md);
+  font-size: var(--text-lg);
+  line-height: 1;
+}
+
 /* Hover styles only where a pointer can actually hover, so a tap on a phone
    does not leave a button stuck in its hover state. Mixing towards
    --color-text darkens the button under a light theme and lightens it under a

@@ -8,6 +8,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly block?: boolean;
   readonly large?: boolean;
   /**
+   * A square control carrying a glyph instead of a label — the header actions
+   * on a dialog. Like `align`, it overrides the button's own padding, so it
+   * lives here rather than winning a specificity race from another file.
+   */
+  readonly icon?: boolean;
+  /**
    * `start` ranges the label left for a row of answers to pick from. It lives
    * here rather than in a screen's stylesheet because it overrides the button's
    * own layout, and a rule in another file would only win by import order.
@@ -20,6 +26,7 @@ export function Button({
   variant = 'default',
   block = false,
   large = false,
+  icon = false,
   align = 'center',
   className,
   type = 'button',
@@ -30,6 +37,7 @@ export function Button({
     variant !== 'default' ? styles[variant] : '',
     block ? styles.block : '',
     large ? styles.large : '',
+    icon ? styles.icon : '',
     align === 'start' ? styles.alignStart : '',
     className ?? '',
   ]

@@ -15,6 +15,9 @@ interface WordInfoSheetProps {
  * "What is this word?" — meaning, grammar, the construction it belongs to,
  * its other forms and other phrases that use it. All derived from the dataset
  * at render time (spec §4.1 "More info", §13.2 reusable examples).
+ *
+ * The word and the way out are pinned: only the detail below them scrolls, so
+ * a verb with nine forms and four examples cannot push either off the screen.
  */
 export function WordInfoSheet({ item, tokenId, onClose }: WordInfoSheetProps) {
   const { services, preferences } = useServices();
@@ -43,7 +46,7 @@ export function WordInfoSheet({ item, tokenId, onClose }: WordInfoSheetProps) {
         aria-label={`About ${info.token.text}`}
       >
         <header className={styles.header}>
-          <div>
+          <div className={styles.heading}>
             <p className={styles.word} lang="es">
               {info.token.text}
             </p>
@@ -57,67 +60,75 @@ export function WordInfoSheet({ item, tokenId, onClose }: WordInfoSheetProps) {
               <p className={styles.lemma}>{info.posLabel}</p>
             )}
           </div>
-          <Button variant="ghost" onClick={speak} aria-label="Pronounce">
-            🔊
-          </Button>
+          <div className={styles.actions}>
+            <Button variant="ghost" icon onClick={speak} aria-label="Pronounce">
+              🔊
+            </Button>
+            <Button variant="ghost" icon onClick={onClose} aria-label="Close">
+              ✕
+            </Button>
+          </div>
         </header>
 
-        {info.gloss && <p className={styles.gloss}>{info.gloss}</p>}
-        <UsageBadges register={info.register} regions={info.regions} />
-        {info.grammar && <p className={styles.grammar}>{info.grammar}</p>}
+        <div className={styles.body}>
+          {info.gloss && <p className={styles.gloss}>{info.gloss}</p>}
+          <UsageBadges register={info.register} regions={info.regions} />
+          {info.grammar && <p className={styles.grammar}>{info.grammar}</p>}
 
-        {info.constructions.length > 0 && (
-          <div className={styles.block}>
-            <h3 className={styles.blockTitle}>Pattern</h3>
-            {info.constructions.map((construction) => (
-              <p key={construction.label}>
-                <strong lang="es">{construction.label}</strong>
-                {construction.gloss ? ` — ${construction.gloss}` : ''}
-              </p>
-            ))}
-          </div>
-        )}
-
-        {info.forms.length > 0 && (
-          <div className={styles.block}>
-            <h3 className={styles.blockTitle}>Other forms</h3>
-            <ul className={styles.forms}>
-              {info.forms.map((form) => (
-                <li
-                  key={`${form.form}-${form.label}`}
-                  className={form.current ? styles.current : ''}
-                >
-                  <span lang="es">{form.form}</span>
-                  <span className={styles.formLabel}>{form.label}</span>
-                </li>
+          {info.constructions.length > 0 && (
+            <div className={styles.block}>
+              <h3 className={styles.blockTitle}>Pattern</h3>
+              {info.constructions.map((construction) => (
+                <p key={construction.label}>
+                  <strong lang="es">{construction.label}</strong>
+                  {construction.gloss ? ` — ${construction.gloss}` : ''}
+                </p>
               ))}
-            </ul>
-          </div>
-        )}
+            </div>
+          )}
 
-        {info.examples.length > 0 && (
-          <div className={styles.block}>
-            <h3 className={styles.blockTitle}>In other phrases</h3>
-            <ul className={styles.examples}>
-              {info.examples.map((example) => (
-                <li key={example.id}>
-                  <span lang="es">{example.text}</span>
-                  {example.translation && (
-                    <span className={styles.formLabel}> {example.translation}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+          {info.forms.length > 0 && (
+            <div className={styles.block}>
+              <h3 className={styles.blockTitle}>Other forms</h3>
+              <ul className={styles.forms}>
+                {info.forms.map((form) => (
+                  <li
+                    key={`${form.form}-${form.label}`}
+                    className={form.current ? styles.current : ''}
+                  >
+                    <span lang="es">{form.form}</span>
+                    <span className={styles.formLabel}>{form.label}</span>
+                    {/* The tint alone would carry this, and colour is never the
+                        only signal the app uses to say something. */}
+                    {form.current && (
+                      <span className="visually-hidden">the form in this phrase</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-        {!info.gloss && !info.grammar && info.constructions.length === 0 && (
-          <p className={styles.grammar}>No extra information for this word yet.</p>
-        )}
+          {info.examples.length > 0 && (
+            <div className={styles.block}>
+              <h3 className={styles.blockTitle}>In other phrases</h3>
+              <ul className={styles.examples}>
+                {info.examples.map((example) => (
+                  <li key={example.id}>
+                    <span lang="es">{example.text}</span>
+                    {example.translation && (
+                      <span className={styles.formLabel}> {example.translation}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-        <Button block onClick={onClose}>
-          Close
-        </Button>
+          {!info.gloss && !info.grammar && info.constructions.length === 0 && (
+            <p className={styles.grammar}>No extra information for this word yet.</p>
+          )}
+        </div>
       </section>
     </div>
   );

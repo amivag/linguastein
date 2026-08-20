@@ -1,24 +1,31 @@
 name: Deploy
 
-# The source repository is private; only the built bundle is published. This
-# builds it here and force-pushes the output to the public `amivag.github.io`
-# repository, which GitHub Pages serves at the domain root. Root serving is the
-# reason for the repository name: it keeps the PWA's `scope: '/'` and the router
-# working without a base path. See docs/deploy.md.
+# Publishes the built app to GitHub Pages. `Source: GitHub Actions` in the
+# repository's Pages settings is what makes this work — and what makes it safe:
+# Pages then serves only the artifact uploaded here, never the repository tree.
+# Serving the tree is what put raw TypeScript on the web the first time round.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-# A deploy is a force-push. Two at once would race to decide what is live.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Newest push wins; a queued deploy of an older commit is not worth waiting for.
 concurrency:
-  group: deploy
+  group: pages
   cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,28 +47,16 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: SPA fallback and Jekyll opt-out
-        run: |
-          # GitHub Pages has no rewrite rule, so a hard refresh on /practice would
-          # 404. Serving the app shell as the 404 body lets the router take over.
-          cp dist/index.html dist/404.html
-          # Without this, Pages runs the output through Jekyll, which discards
-          # anything whose name begins with an underscore.
-          touch dist/.nojekyll
+      # Pages has no rewrite rule, so a hard refresh on /practice would 404.
+      # Serving the app shell as the 404 body lets the router take over.
+      - name: SPA fallback
+        run: cp dist/index.html dist/404.html
 
-      # An orphan commit each time, force-pushed. Assets are content-hashed, so
-      # keeping history would accumulate every build's bundles for ever in a
-      # repository whose only job is to hold the current one.
-      - name: Publish
-        env:
-          DEPLOY_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
-        run: |
-          cd dist
-          git init -q -b main
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -q -m "Build ${GITHUB_SHA::7} from ${GITHUB_REPOSITORY}"
-          git push -q --force \
-            "https://x-access-token:${DEPLOY_TOKEN}@github.com/amivag/amivag.github.io.git" \
-            main
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

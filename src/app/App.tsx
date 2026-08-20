@@ -71,7 +71,7 @@ export function App() {
 
   return (
     <ServicesContext value={{ services, preferences, updatePreferences }}>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<HomeScreen />} />
           <Route path="/browse" element={<BrowseScreen />} />

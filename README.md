@@ -197,11 +197,12 @@ must not be HTTP-cached: [docs/architecture.md](docs/architecture.md#updates-and
 
 ## Deploying
 
-The source repository is private; only the built bundle is published. A push to
-`main` checks, builds and force-pushes `dist/` to a separate public repository that
-GitHub Pages serves at the domain root — so no TypeScript, no history and no
-sourcemaps leave this repository, and the PWA keeps working without a base path.
-Setup and the reasoning: [docs/deploy.md](docs/deploy.md).
+Live at **https://amivag.github.io/linguastein/**. A push to `main` checks, builds
+and uploads `dist/` as a GitHub Pages artifact — about a minute. Because a project
+page is served under `/<repo>/`, the subpath is threaded through the build from a
+single `BASE` constant in [vite.config.ts](vite.config.ts); the dev server uses it
+too, so a base-path mistake surfaces locally. Setup, the one Pages setting that
+matters, and the rough edges: [docs/deploy.md](docs/deploy.md).
 
 ## Licence
 
@@ -228,6 +229,8 @@ learner state on the device.
 Keeping that option open is also why [CONTRIBUTING.md](CONTRIBUTING.md) asks
 contributors to sign off on their patches.
 
-**On model training:** no open licence prevents it, this one included. Scrapers do
-not read licences. The repository being private is the only real control — see
-[docs/deploy.md](docs/deploy.md).
+**On model training:** no open licence prevents it, this one included, and scrapers
+do not read licences. The repository is public, so the `robots.txt` and `<meta>`
+opt-outs are the only signals sent and both are advisory. A deliberate trade, made
+in exchange for free hosting — the reasoning is in
+[docs/deploy.md](docs/deploy.md#on-the-source-being-public).

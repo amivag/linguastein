@@ -14,6 +14,16 @@ const pkg = JSON.parse(
  * tarball, a container that copied only `dist`). Never fatal: not knowing the
  * commit is worth strictly less than a build that fails.
  */
+/**
+ * The app is served from a project page — `amivag.github.io/linguastein/` — not
+ * from a domain root. Every absolute path the build emits has to carry this, so
+ * it is declared once and reused: Vite's `base`, the manifest's `start_url`,
+ * `scope` and icon paths, and the router's basename by way of
+ * `import.meta.env.BASE_URL`. Set in development too, so a base-path mistake
+ * shows up locally instead of only once deployed.
+ */
+const BASE = '/linguastein/';
+
 function buildCommit(): string {
   if (process.env['LINGUASTEIN_BUILD_COMMIT']) return process.env['LINGUASTEIN_BUILD_COMMIT'];
   try {
@@ -27,6 +37,7 @@ function buildCommit(): string {
 }
 
 export default defineConfig({
+  base: BASE,
   /**
    * Build identity, injected rather than imported: importing `package.json` would
    * pull the whole manifest into the bundle, and a hand-copied constant would
@@ -50,16 +61,16 @@ export default defineConfig({
         short_name: 'Linguastein',
         description: 'Mobile-first Spanish practice: listen, repeat, reveal, review.',
         lang: 'en',
-        start_url: '/',
-        scope: '/',
+        start_url: BASE,
+        scope: BASE,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#0f1115',
         theme_color: '#0f1115',
         icons: [
-          { src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+          { src: `${BASE}icons/icon.svg`, sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
           {
-            src: '/icons/icon-maskable.svg',
+            src: `${BASE}icons/icon-maskable.svg`,
             sizes: 'any',
             type: 'image/svg+xml',
             purpose: 'maskable',
@@ -93,12 +104,11 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     /**
-     * Off deliberately. A sourcemap hands every visitor the original TypeScript,
-     * which defeats the point of keeping the repository private. Debug a deployed
-     * build by reproducing it locally (`npm run build && npm run preview`), where
-     * maps cost nothing.
+     * On, now that the repository is public: a sourcemap gives a visitor nothing
+     * they could not read on GitHub, and it is the difference between debugging a
+     * phone-only problem and guessing at one.
      */
-    sourcemap: false,
+    sourcemap: true,
     target: 'es2022',
   },
   test: {

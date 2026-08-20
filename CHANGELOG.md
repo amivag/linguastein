@@ -47,12 +47,17 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 - Dark and light themes on a token system, held to WCAG 2.2 AA by axe and
   contrast tests in CI.
 - Optional speech-input pronunciation check on speaking exercises.
-- Deployment on GitHub Pages that keeps the source private: a push to `main`
-  checks, builds and force-pushes only `dist/` to a separate public repository,
-  named so that Pages serves it at the domain root and the PWA needs no base path.
-  Includes an SPA fallback, a Jekyll opt-out, and `robots.txt` and `<meta>`
-  opt-outs for crawlers and model training. Rationale, the setup steps and the
-  known rough edges in [docs/deploy.md](docs/deploy.md).
+- Deployment on GitHub Pages, live at `https://amivag.github.io/linguastein/`. A
+  push to `main` checks, builds and uploads `dist/` as a Pages artifact — which,
+  unlike serving a branch, publishes only the build and never the repository tree.
+  Served from a project page, so the app now carries a base path: one `BASE`
+  constant reaching Vite, the router's basename, the manifest's `start_url`,
+  `scope` and icons, and the dataset fetches. Includes an SPA fallback, and
+  `robots.txt` and `<meta>` opt-outs for crawlers and model training. Rationale
+  and the known rough edges in [docs/deploy.md](docs/deploy.md).
+- Production sourcemaps are on again, the repository being public: they give a
+  visitor nothing GitHub does not, and they are the difference between debugging a
+  phone-only problem and guessing at one.
 
 ### Changed
 
@@ -65,8 +70,6 @@ learner state, and are not called out individually until 0.1.0 is tagged.
   version served to others must publish its source. Contribution sign-off is now
   required ([CONTRIBUTING.md](CONTRIBUTING.md)) so a future commercial licence
   stays possible.
-- Production sourcemaps are off, so the deployed bundle no longer carries the
-  original TypeScript.
 - "Reset progress" now asks for confirmation before erasing learner history. It
   is irreversible and there is no server copy, so a single mis-tap should not be
   enough.

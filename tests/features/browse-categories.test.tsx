@@ -29,9 +29,7 @@ describe('browsing by category', () => {
   it('shows a tile per category, under the group heading the pack declared', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
 
-    expect(
-      categories().getByRole('button', { name: /Food and drink/ }),
-    ).toBeInTheDocument();
+    expect(categories().getByRole('button', { name: /Food and drink/ })).toBeInTheDocument();
     expect(categories().getByRole('heading', { name: 'Everyday life' })).toBeInTheDocument();
   });
 

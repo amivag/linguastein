@@ -106,12 +106,12 @@ These are in or out on purpose, not by accident. Recommended:
 | Thing                                                       | Call       |
 | ----------------------------------------------------------- | ---------- |
 | Cardinals 0 – 999,999,999                                   | in         |
-| Ordinals 1st – 20th, plus apocopating `primer` and `tercer`  | in         |
+| Ordinals 1st – 20th, plus apocopating `primer` and `tercer` | in         |
 | Agreement (gender, pre-noun apocopation)                    | in         |
-| The clock (`la una`, `las dos y cuarto`, `menos diez`)       | own module |
-| Dates (`el uno de enero`, and `el primero de` where used)    | own module |
-| Decimals (`dos coma cinco`) and percentages                  | later      |
-| Phone numbers read in pairs                                  | later      |
+| The clock (`la una`, `las dos y cuarto`, `menos diez`)      | own module |
+| Dates (`el uno de enero`, and `el primero de` where used)   | own module |
+| Decimals (`dos coma cinco`) and percentages                 | later      |
+| Phone numbers read in pairs                                 | later      |
 
 The clock and dates are number-_adjacent_, and are what a learner asks about
 next, but they are a different system with their own irregularities — and Latin
@@ -125,7 +125,7 @@ Three things worth knowing before touching the module, two of which the brief
 above did not anticipate:
 
 - **`mil` and `millón` do not agree the same way, and the reason is that one is a
-  noun.** `millón` is, so a numeral in front of it agrees with *it*:
+  noun.** `millón` is, so a numeral in front of it agrees with _it_:
   `doscientos millones de casas`, never `doscientas`. `mil` is not, so a numeral
   reaches straight through it to whatever is being counted:
   `doscientas mil personas`. The composer carries an internal `multiplier` flag
@@ -286,7 +286,7 @@ learner half-answers from English; "20 → veinte" is the cue on a price tag.
 That change exposed a real defect in `distractors()`, now fixed: the pool was
 filtered to same type and same level only, so `uno` was offered against "June",
 "name" and "hot" — answerable without knowing any Spanish, and the digits made it
-worse by marking the answer visually. Distractors now *prefer* candidates sharing
+worse by marking the answer visually. Distractors now _prefer_ candidates sharing
 a topic, falling back when a topic is too thin to fill four choices. This is a
 general improvement, not a numeral fix: `comida` now competes with fish, sugar
 and cheese.
@@ -307,7 +307,7 @@ this task should not make. It is also more than a generator: a Numbers screen
 with its own loop. Worth its own slice, and worth doing — 1042 is the question
 that started this — but not worth faking with a synthetic id.
 
-`mode: 'study'` is *not* an acceptable fallback here, contrary to §4.2's second
+`mode: 'study'` is _not_ an acceptable fallback here, contrary to §4.2's second
 option: a typed numeral answer is graded evidence, not a self-rating, and study
 mode would throw it away.
 
@@ -385,20 +385,20 @@ npm run check && npm run build:data && npm run build
 Then check the four numbers the request that prompted this task actually named —
 10, 27, 136, 1042 — and these, which are where a naive implementation breaks:
 
-| n         | Expected                             | What it catches           |
-| --------- | ------------------------------------ | ------------------------- |
-| 16        | `dieciséis`                          | solid form, accent        |
-| 17        | `diecisiete`                         | no accent — blanket rules |
-| 21        | `veintiuno` / `veintiún libros`      | apocopation               |
-| 27        | `veintisiete`                        | solid twenties            |
-| 31        | `treinta y uno`                      | `y` joins units           |
-| 100       | `cien`                               | bare hundred              |
-| 101       | `ciento uno`                         | **no** `y` after hundreds |
-| 136       | `ciento treinta y seis`              | both rules in one number  |
-| 200       | `doscientos` / `doscientas casas`    | hundreds agreement        |
-| 500       | `quinientos`                         | irregular hundred         |
-| 1000      | `mil`                                | never `un mil`            |
-| 1042      | `mil cuarenta y dos`                 | zero in the hundreds slot |
-| 21000     | `veintiún mil`                       | apocopation before `mil`  |
-| 100000    | `cien mil`                           | never `ciento mil`        |
-| 1000000   | `un millón` / `un millón de personas` | takes `un`, and `de`      |
+| n       | Expected                              | What it catches           |
+| ------- | ------------------------------------- | ------------------------- |
+| 16      | `dieciséis`                           | solid form, accent        |
+| 17      | `diecisiete`                          | no accent — blanket rules |
+| 21      | `veintiuno` / `veintiún libros`       | apocopation               |
+| 27      | `veintisiete`                         | solid twenties            |
+| 31      | `treinta y uno`                       | `y` joins units           |
+| 100     | `cien`                                | bare hundred              |
+| 101     | `ciento uno`                          | **no** `y` after hundreds |
+| 136     | `ciento treinta y seis`               | both rules in one number  |
+| 200     | `doscientos` / `doscientas casas`     | hundreds agreement        |
+| 500     | `quinientos`                          | irregular hundred         |
+| 1000    | `mil`                                 | never `un mil`            |
+| 1042    | `mil cuarenta y dos`                  | zero in the hundreds slot |
+| 21000   | `veintiún mil`                        | apocopation before `mil`  |
+| 100000  | `cien mil`                            | never `ciento mil`        |
+| 1000000 | `un millón` / `un millón de personas` | takes `un`, and `de`      |

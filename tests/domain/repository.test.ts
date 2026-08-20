@@ -109,7 +109,11 @@ describe('thematic categories', () => {
 
   it('carries the label and group a slug alone could not supply', () => {
     const [food] = repository.topics();
-    expect(food).toMatchObject({ id: 'food-drink', label: 'Food and drink', group: 'Everyday life' });
+    expect(food).toMatchObject({
+      id: 'food-drink',
+      label: 'Food and drink',
+      group: 'Everyday life',
+    });
   });
 
   it('counts the items in each category', () => {

@@ -86,7 +86,9 @@ describe('the motion scale', () => {
   it('never hard-codes an easing curve outside the scale', () => {
     const offenders = files
       .filter((file) => file !== PRIMITIVES)
-      .filter((file) => /cubic-bezier|\bease(-in|-out|-in-out)?\b/.test(withoutComments(read(file))))
+      .filter((file) =>
+        /cubic-bezier|\bease(-in|-out|-in-out)?\b/.test(withoutComments(read(file))),
+      )
       .map((file) => file);
 
     expect(offenders).toEqual([]);

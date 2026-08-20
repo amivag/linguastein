@@ -23,7 +23,12 @@ import type { ItemId } from '../../src/domain/content';
 import { id } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
 
-const change = (local: string, text: string, from: 'new' | 'learning' | 'review', to: typeof from) => ({
+const change = (
+  local: string,
+  text: string,
+  from: 'new' | 'learning' | 'review',
+  to: typeof from,
+) => ({
   itemId: id<ItemId>(`test-es:item:${local}`),
   text,
   from,
@@ -48,7 +53,10 @@ describe('the outcome summary', () => {
     render(
       <SessionOutcomeSummary
         outcome={outcome({
-          advanced: [change('004', 'cerveza', 'new', 'learning'), change('005', 'agua', 'new', 'learning')],
+          advanced: [
+            change('004', 'cerveza', 'new', 'learning'),
+            change('005', 'agua', 'new', 'learning'),
+          ],
         })}
       />,
     );
@@ -72,7 +80,9 @@ describe('the outcome summary', () => {
 
   it('marks the Spanish as Spanish, so it is not read out in English', () => {
     const { container } = render(
-      <SessionOutcomeSummary outcome={outcome({ advanced: [change('004', 'cerveza', 'new', 'learning')] })} />,
+      <SessionOutcomeSummary
+        outcome={outcome({ advanced: [change('004', 'cerveza', 'new', 'learning')] })}
+      />,
     );
     expect(container.querySelector('[lang="es"]')?.textContent).toBe('cerveza');
   });

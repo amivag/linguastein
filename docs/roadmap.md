@@ -121,8 +121,8 @@ The dataset work is briefed in full for a fresh session:
    [docs/tasks/game-feel.md](tasks/game-feel.md).
 6. **Situations as communicative functions** — "ordering food", "asking for
    directions". A second axis to topics rather than more topic slugs: `restaurant`
-   is what a sentence is *about*, ordering food is what a learner is *trying to
-   do*, and the two diverge. `SKILL_KINDS` already declares `function` and nothing
+   is what a sentence is _about_, ordering food is what a learner is _trying to
+   do_, and the two diverge. `SKILL_KINDS` already declares `function` and nothing
    uses it, items already carry `skills`, and mastery already derives per-skill
    strength — so "you can order food" becomes evidence rather than a filter. Two
    prerequisites: `sessionPath` does not serialise `skills`, so such a session

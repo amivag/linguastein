@@ -41,17 +41,17 @@ feel alive without making it loud.
 
 Not opinion — this is what is in the tree:
 
-| Measure                                | Now                                              |
-| -------------------------------------- | ------------------------------------------------ |
-| Motion tokens in `primitives.css`      | 3 durations, 2 curves, 3 composed pairs (§4.1)    |
-| Easing curves defined                  | `--ease-out`, `--ease-spring` (§4.1)              |
-| `prefers-reduced-motion` handling      | already global, in `global.css`                  |
-| Colour roles for feedback              | `--color-success`, `--color-danger`, `--color-accent` |
-| Colour role for celebration or reward  | none                                             |
-| End-of-session reward                  | the fraction, plus what moved (§4.4)             |
-| Streak, of any kind, anywhere          | none                                             |
-| Sound, other than TTS                  | none                                             |
-| Haptics                                | none                                             |
+| Measure                               | Now                                                   |
+| ------------------------------------- | ----------------------------------------------------- |
+| Motion tokens in `primitives.css`     | 3 durations, 2 curves, 3 composed pairs (§4.1)        |
+| Easing curves defined                 | `--ease-out`, `--ease-spring` (§4.1)                  |
+| `prefers-reduced-motion` handling     | already global, in `global.css`                       |
+| Colour roles for feedback             | `--color-success`, `--color-danger`, `--color-accent` |
+| Colour role for celebration or reward | none                                                  |
+| End-of-session reward                 | the fraction, plus what moved (§4.4)                  |
+| Streak, of any kind, anywhere         | none                                                  |
+| Sound, other than TTS                 | none                                                  |
+| Haptics                               | none                                                  |
 
 `prefers-reduced-motion` being already global is the load-bearing one: motion can
 be added without each component re-solving accessibility, which is why §4.1 could
@@ -181,7 +181,7 @@ Three things worth not undoing:
 Two React Compiler rules shaped the implementation, and both rejected the obvious
 approach: reading `progressRef.current` inside a `useMemo` is a ref read during
 render, and `useEffect(() => setNow(Date.now()), [])` is `setState` in an effect.
-So the stage change *and* the days-until-due are accumulated in the answer
+So the stage change _and_ the days-until-due are accumulated in the answer
 handler, where a clock read is legitimate, and the component renders purely from
 whole days. `SessionOutcome` carries `nextDueInDays` rather than a timestamp
 deliberately, not incidentally.

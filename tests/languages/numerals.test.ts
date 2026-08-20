@@ -250,8 +250,18 @@ describe('parseCardinal', () => {
 
   it('round-trips the awkward ones above a thousand', () => {
     for (const n of [
-      1001, 1042, 2000, 21_000, 100_000, 999_000, 1_000_000, 1_000_042, 2_000_000,
-      21_000_000, 1_200_000, MAX_CARDINAL,
+      1001,
+      1042,
+      2000,
+      21_000,
+      100_000,
+      999_000,
+      1_000_000,
+      1_000_042,
+      2_000_000,
+      21_000_000,
+      1_200_000,
+      MAX_CARDINAL,
     ]) {
       expect(parseCardinal(spellCardinal(n)), spellCardinal(n)).toBe(n);
     }

@@ -1,7 +1,11 @@
 # Task: numbers as a system, not as vocabulary
 
-**Status:** ready to start — nothing exists yet; the precedent it copies does
+**Status:** in progress — §3 (the module) has landed, fully covered. §4–§6
+remain: number cards, pattern records, the exercise generator and the drill.
 **Written:** 2026-08-20
+**Revised:** 2026-08-20 — `src/languages/es/numerals.ts` exists and is tested at
+100%. §3.2 is new: it records what building it turned up, including one rule the
+brief did not know about.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** a new language module, a bounded set of number cards, a numeral
 exercise generator, and pattern records. The learning engine, the scheduler and
@@ -112,6 +116,35 @@ next, but they are a different system with their own irregularities — and Lati
 America's `el primero de enero` against Spain's `el uno de enero` is a regional
 pair, which means the both-sides rule in `AGENTS.md` applies to it. Give them
 `time-expressions.ts`, not a branch inside `spellCardinal`.
+
+### 3.2 What building it turned up
+
+Three things worth knowing before touching the module, two of which the brief
+above did not anticipate:
+
+- **`mil` and `millón` do not agree the same way, and the reason is that one is a
+  noun.** `millón` is, so a numeral in front of it agrees with *it*:
+  `doscientos millones de casas`, never `doscientas`. `mil` is not, so a numeral
+  reaches straight through it to whatever is being counted:
+  `doscientas mil personas`. The composer carries an internal `multiplier` flag
+  for exactly this, and `un millón doscientas mil personas` is the case that
+  needs both behaviours in one number. Do not "simplify" the two into one path.
+- **`de` after a million depends on whether the number stops there.**
+  `un millón de personas`, but `un millón doscientas mil personas` with no `de`,
+  because the noun attaches to the lower part instead. Gated on `beforeNoun`.
+- **Ordinals ship 1–20 using `undécimo` and `duodécimo`**, RAE's first forms, in
+  preference to the equally accepted `décimo primero` / `décimo segundo`. The
+  choice is recorded here so nobody "corrects" it in either direction; the module
+  generates one spelling rather than choosing at runtime. `decimotercer`
+  apocopates like the `tercero` it contains.
+
+Four bugs were found by the tests rather than by reading, which is the argument
+for keeping the exhaustive pass in §10: `veintiun` without its accent (dropping
+the syllable moves the stress onto the `u`), `doscientoas` from trimming one
+letter instead of two, `quinientos` left masculine because it ends in `-ientos`
+and not `-cientos`, and `veintiún mil` reported as exercising no apocopation rule
+because the whole number ends in three zeros — the rule lives in the group, not
+in the number.
 
 ---
 
@@ -249,10 +282,10 @@ gets silence plus an explanation, which is deliberate.
 
 ## 9. Definition of done
 
-- [ ] `numerals.ts` spells every cardinal 0–999,999,999 and the ordinals in
-      scope, with agreement
-- [ ] `rulesFor` returns the rules a number exercises, and the build fails if a
-      rule has no matching pattern record
+- [x] `numerals.ts` spells every cardinal 0–999,999,999 and the ordinals in
+      scope, with agreement — 100% covered, every integer 0–1000 pinned
+- [x] `rulesFor` returns the rules a number exercises
+- [ ] The build fails if a rule has no matching pattern record
 - [ ] The bounded number words carry ids and appear as word cards
 - [ ] The `segundo` collision is resolved via the `-` convention, not by renaming
       either sense

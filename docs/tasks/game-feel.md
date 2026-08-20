@@ -1,7 +1,7 @@
 # Task: make it feel good to use
 
-**Status:** in progress — §4.1 (the motion scale) and §4.4 (the earned summary)
-have landed. §4.2, §4.3, §4.5 and §4.6 remain.
+**Status:** in progress — §4.1 (motion scale), §4.3 (segmented progress) and
+§4.4 (the earned summary) have landed. §4.2, §4.5 and §4.6 remain.
 **Written:** 2026-08-20
 **Revised:** 2026-08-20 — the two landed sections record what was actually built
 and the two constraints that shaped it.
@@ -133,12 +133,31 @@ it is; this is additive.
 The wrong-answer case deserves more thought than the right one. It should feel
 like information, not like a buzzer.
 
-### 4.3 Session progress that reads as progress
+### 4.3 Session progress that reads as progress — landed
 
-`role="progressbar"` is already in place. A continuous bar under-sells a
-ten-item session; segmented pips, one per item, filling as you go, tell a learner
-where they are at a glance and make the last two items feel close. Keep the
-accessible name and value the progressbar already exposes.
+`SessionProgress` draws one pip per item, and the `role="progressbar"` is
+untouched: same name, same value, minimum and maximum. The pips are `aria-hidden`
+decoration on top, because the progressbar already says "Item 3 of 8" and twenty
+anonymous spans repeating it would be noise.
+
+Three decisions worth keeping:
+
+- **Position only, never correctness.** Scoring each pip as it went would turn
+  the header into a running scoreboard, which is the pressure §3 argues against —
+  and it would have nothing to show in a study session, which is not scored.
+- **The current pip is taller as well as accent-coloured**, so position survives a
+  colour-vision difference and the reduced-motion path. Colour is never the only
+  signal, and neither is the transition.
+- **Above 20 items it falls back to the bar.** Measured rather than guessed: at
+  the worst case — 20 pips on a 375px phone — each pip is 12.3px against a 3px
+  gap, so it is still four times the gap and countable. Past that they stop
+  reading as segments. "Review everything due" is what pushes over the line.
+
+One thing a browser could not verify: the pane does not composite while hidden,
+so paint-only values (`background-color` from a `[data-state]` selector) read
+stale even though `data-state` and the layout-affecting height update correctly.
+The colour contract is asserted against the stylesheet instead, as
+`contrast.test.ts` and `hover-states.test.ts` already do.
 
 ### 4.4 An earned end-of-session summary — landed
 
@@ -222,7 +241,7 @@ the least valuable if the earlier ones landed well.
 - [x] A motion scale exists in `primitives.css`, and components use it rather
       than inline values — enforced by `tests/a11y/motion.test.ts`
 - [ ] Answer feedback has weight, without changing what `role="status"` announces
-- [ ] Session progress reads as progress, with the progressbar contract intact
+- [x] Session progress reads as progress, with the progressbar contract intact
 - [x] End of session says what was achieved; study mode says its honest version
 - [ ] Home leads with what is due
 - [ ] Sound and haptics exist, off by default, behind preferences

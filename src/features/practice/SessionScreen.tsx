@@ -4,6 +4,7 @@ import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { SessionOutcomeSummary } from './SessionOutcomeSummary';
+import { SessionProgress } from './SessionProgress';
 import { ExerciseView } from './ExerciseView';
 import styles from './Practice.module.css';
 import { buildSessionConfig, PRESETS } from './presets';
@@ -62,24 +63,7 @@ export function SessionScreen() {
 
       {runner.status === 'active' && (
         <>
-          <div className={styles.progress}>
-            <span aria-hidden="true">
-              {runner.index + 1}/{runner.total}
-            </span>
-            <div
-              className={styles.progressBar}
-              role="progressbar"
-              aria-label={`Item ${runner.index + 1} of ${runner.total}`}
-              aria-valuenow={runner.index + 1}
-              aria-valuemin={0}
-              aria-valuemax={runner.total}
-            >
-              <div
-                className={styles.progressFill}
-                style={{ width: `${((runner.index + 1) / Math.max(runner.total, 1)) * 100}%` }}
-              />
-            </div>
-          </div>
+          <SessionProgress index={runner.index} total={runner.total} />
 
           {runner.exercise ? (
             <ExerciseView key={runner.exercise.id} exercise={runner.exercise} runner={runner} />

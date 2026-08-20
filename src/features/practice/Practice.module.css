@@ -22,6 +22,39 @@
   transition: width var(--transition-base);
 }
 
+/* One pip per item, for a session short enough to count. Same height and track
+   position as the bar it replaces, so the header does not shift when a long
+   session falls back to the continuous version. */
+.progressPips {
+  display: flex;
+  flex: 1;
+  gap: 3px;
+  align-items: center;
+  height: 6px;
+}
+
+.progressPip {
+  flex: 1;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-border);
+  transition: background-color var(--transition-base);
+}
+
+.progressPip[data-state='done'] {
+  background: var(--color-accent);
+}
+
+/*
+ * The pip you are on is taller as well as coloured, so "where am I" survives
+ * both a colour-vision difference and the reduced-motion path — the transition
+ * is a nicety, never the signal.
+ */
+.progressPip[data-state='current'] {
+  height: 10px;
+  background: var(--color-accent);
+}
+
 .card {
   display: flex;
   flex-direction: column;

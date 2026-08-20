@@ -25,8 +25,8 @@
   font-size: var(--text-base);
   font-weight: 500;
   transition:
-    transform 120ms ease,
-    background-color 120ms ease;
+    transform var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
 .button:active {

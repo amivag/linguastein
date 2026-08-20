@@ -1,8 +1,10 @@
 # Task: make it feel good to use
 
-**Status:** ready to start — no prerequisites; the constraints it must respect
-all already exist
+**Status:** in progress — §4.1 (the motion scale) and §4.4 (the earned summary)
+have landed. §4.2, §4.3, §4.5 and §4.6 remain.
 **Written:** 2026-08-20
+**Revised:** 2026-08-20 — the two landed sections record what was actually built
+and the two constraints that shaped it.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** `src/styles`, `src/components`, `src/features` and the preferences
 record. No content, no dataset, no scheduler. If a change here needs a change in
@@ -41,21 +43,21 @@ Not opinion — this is what is in the tree:
 
 | Measure                                | Now                                              |
 | -------------------------------------- | ------------------------------------------------ |
-| Motion tokens in `primitives.css`      | **one** (`--transition-fast: 120ms ease`)        |
-| Easing curves defined                  | 0 — `ease` is the browser default                |
+| Motion tokens in `primitives.css`      | 3 durations, 2 curves, 3 composed pairs (§4.1)    |
+| Easing curves defined                  | `--ease-out`, `--ease-spring` (§4.1)              |
 | `prefers-reduced-motion` handling      | already global, in `global.css`                  |
 | Colour roles for feedback              | `--color-success`, `--color-danger`, `--color-accent` |
 | Colour role for celebration or reward  | none                                             |
-| End-of-session reward                  | a bare `correct/answered` fraction               |
+| End-of-session reward                  | the fraction, plus what moved (§4.4)             |
 | Streak, of any kind, anywhere          | none                                             |
 | Sound, other than TTS                  | none                                             |
 | Haptics                                | none                                             |
 
-Two of these are unusually good news. `prefers-reduced-motion` is already
-respected globally, so motion can be added without each component re-solving
-accessibility. And there is exactly one motion token, so there is no accumulated
-mess to unpick — the scale can be designed once, before components start
-inventing their own.
+`prefers-reduced-motion` being already global is the load-bearing one: motion can
+be added without each component re-solving accessibility, which is why §4.1 could
+be a scale rather than a negotiation. The scale itself landed before any component
+had invented much of its own, so there was no accumulated mess to unpick — the
+remaining sections inherit it.
 
 ---
 
@@ -103,16 +105,23 @@ straightforward once these are settled.
 Each item is independently shippable. Do them one at a time and run the a11y
 suite between; do not land a sweeping restyle as one commit.
 
-### 4.1 A motion scale (do this first)
+### 4.1 A motion scale — landed
 
-Add durations and easings to `primitives.css` beside the spacing and type
-scales — a fast, a base and a slow duration, plus a standard easing and one
-with a slight overshoot for things that should feel physical. Themes are
-colour-only, so this belongs in primitives and nowhere else.
+`--duration-fast|base|slow`, `--ease-out`, `--ease-spring`, and three composed
+`--transition-*` pairs, so a component names an intent rather than reassembling a
+duration and a curve and getting one half wrong.
 
-Doing this first means every later step reaches for a token instead of typing
-`180ms cubic-bezier(...)` inline, which is how a codebase ends up with eleven
-slightly different transitions.
+The drift it replaced was already there in miniature: `--transition-fast` used
+twice, `120ms ease` typed out three times, and one lone `200ms ease` on the
+progress bar — four spellings of two ideas. `--transition-fast` kept its name and
+meaning, so nothing needed rewriting to adopt it.
+
+`tests/a11y/motion.test.ts` is what makes it stick. It fails on any hard-coded
+duration or easing outside `primitives.css` (naming the file), on a theme that
+mentions motion at all, and if the global `prefers-reduced-motion` collapse is
+ever deleted — that block is the reason a component may add motion without
+thinking about accessibility, so it is asserted rather than assumed. Both guards
+were verified by breaking them on purpose.
 
 ### 4.2 Answer feedback with weight
 
@@ -131,17 +140,32 @@ ten-item session; segmented pips, one per item, filling as you go, tell a learne
 where they are at a glance and make the last two items feel close. Keep the
 accessible name and value the progressbar already exposes.
 
-### 4.4 An earned end-of-session summary
+### 4.4 An earned end-of-session summary — landed
 
-The biggest single win, and the least risky. Replace the bare fraction with what
-actually happened: which words moved up a stage, what is now scheduled sooner,
-how many sentences were read. All of it is derivable from data already stored.
+`SessionOutcomeSummary` reports which words moved up a stage, which slipped back,
+and when the set returns. All derived from progress the session was already
+writing, so it cost one snapshot per answer and no new storage.
 
-Two hard requirements. A study session must show its own honest version — what
-was reviewed, and that nothing was recorded — rather than a dimmed copy of the
-practice one. And a bad session must not be spun; "4 of 10" is information a
-learner can use, and hiding it is a small lie that makes every good result
-worthless.
+Both hard requirements hold, and both are tested: a study session gets **no panel
+at all** — it records nothing, so a summary would contradict the line above it —
+and the fraction still shows whatever it was.
+
+Three things worth not undoing:
+
+- **It renders nothing when nothing moved.** A session where every item held its
+  stage is a normal session; an empty panel announcing that reads as a failure.
+- **A lapse is named, not softened.** It is the more useful half of the report.
+- **The interval is coarse** — "tomorrow", "in about a week". Stated to the hour
+  it invites treating the schedule as a deadline, which is the opposite of how
+  spacing works.
+
+Two React Compiler rules shaped the implementation, and both rejected the obvious
+approach: reading `progressRef.current` inside a `useMemo` is a ref read during
+render, and `useEffect(() => setNow(Date.now()), [])` is `setState` in an effect.
+So the stage change *and* the days-until-due are accumulated in the answer
+handler, where a clock read is legitimate, and the component renders purely from
+whole days. `SessionOutcome` carries `nextDueInDays` rather than a timestamp
+deliberately, not incidentally.
 
 ### 4.5 Home that knows what day it is
 
@@ -195,11 +219,11 @@ the least valuable if the earlier ones landed well.
 
 ## 6. Definition of done
 
-- [ ] A motion scale exists in `primitives.css`, and components use it rather
-      than inline values
+- [x] A motion scale exists in `primitives.css`, and components use it rather
+      than inline values — enforced by `tests/a11y/motion.test.ts`
 - [ ] Answer feedback has weight, without changing what `role="status"` announces
 - [ ] Session progress reads as progress, with the progressbar contract intact
-- [ ] End of session says what was achieved; study mode says its honest version
+- [x] End of session says what was achieved; study mode says its honest version
 - [ ] Home leads with what is due
 - [ ] Sound and haptics exist, off by default, behind preferences
 - [ ] No new hard-coded colour anywhere; any new role passes contrast in every

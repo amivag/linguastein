@@ -37,7 +37,30 @@
      48px is the usable size for a one-handed practice loop). */
   --tap-target: 48px;
 
-  --transition-fast: 120ms ease;
+  /*
+   * Motion.
+   *
+   * Three durations and two curves, because the alternative is what this file
+   * replaced: `--transition-fast` used twice, `120ms ease` typed out three
+   * times, and one lone `200ms ease` on the progress bar. Nothing here is a
+   * flourish — motion's job is to say *what just happened*, and it is never the
+   * only thing saying it. `global.css` collapses all of it under
+   * `prefers-reduced-motion`, so a component never has to.
+   */
+  --duration-fast: 120ms; /* a state echoing a touch: hover, focus, colour */
+  --duration-base: 200ms; /* something actually moving: progress, a reveal */
+  --duration-slow: 320ms; /* something arriving: a panel, a summary */
+
+  /* Quick to leave, slow to settle — the shape of a thing responding. */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  /* Overshoots by a hair, for what should feel physical rather than animated. */
+  --ease-spring: cubic-bezier(0.2, 0.9, 0.3, 1.3);
+
+  /* Duration and curve travel together, so a component names an intent rather
+     than reassembling the pair and getting one half of it wrong. */
+  --transition-fast: var(--duration-fast) var(--ease-out);
+  --transition-base: var(--duration-base) var(--ease-out);
+  --transition-spring: var(--duration-base) var(--ease-spring);
 }
 
 @media (min-width: 768px) {

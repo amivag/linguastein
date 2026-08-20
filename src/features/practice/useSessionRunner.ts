@@ -14,7 +14,12 @@ import {
   type Exercise,
   type GradeResult,
 } from '../../domain/exercises';
-import { recordAttempt, type ItemProgress, type ReviewGrade } from '../../domain/progress';
+import {
+  recordAttempt,
+  type ItemProgress,
+  type ItemStatus,
+  type ReviewGrade,
+} from '../../domain/progress';
 import {
   composeSession,
   planSession,
@@ -30,6 +35,47 @@ export interface SessionStats {
   readonly correct: number;
 }
 
+/** One item whose scheduling stage changed during the session. */
+export interface StageChange {
+  readonly itemId: ItemId;
+  readonly text: string;
+  readonly from: ItemStatus;
+  readonly to: ItemStatus;
+}
+
+/**
+ * What the session actually achieved, as opposed to how many questions went by.
+ *
+ * A fraction tells a learner nothing they can act on. Which words moved up a
+ * stage, and which slipped back, is the thing worth being told — and it is all
+ * derived from progress the session was already writing, so reporting it costs
+ * one snapshot per answer and no new storage.
+ *
+ * Empty in study mode, because nothing is recorded there and a summary implying
+ * otherwise would contradict the sentence printed beneath it.
+ */
+export interface SessionOutcome {
+  readonly advanced: readonly StageChange[];
+  readonly lapsed: readonly StageChange[];
+  /**
+   * Whole days until the soonest of these items comes back.
+   *
+   * Days, resolved when the answer landed, rather than a timestamp the screen
+   * turns into "tomorrow" at render time — reading a clock during render is
+   * impure, and the difference between the two is imperceptible on a results
+   * screen. Coarse on purpose: an interval stated to the hour invites treating
+   * the schedule as a deadline, which is the opposite of how spacing works.
+   */
+  readonly nextDueInDays?: number;
+}
+
+const STAGE_ORDER: readonly ItemStatus[] = ['new', 'learning', 'review', 'mastered'];
+
+/** Positive when the second stage is further along than the first. */
+function stageDelta(from: ItemStatus, to: ItemStatus): number {
+  return STAGE_ORDER.indexOf(to) - STAGE_ORDER.indexOf(from);
+}
+
 export interface SessionRunner {
   readonly status: SessionStatus;
   readonly exercise: Exercise | null;
@@ -37,6 +83,7 @@ export interface SessionRunner {
   readonly index: number;
   readonly total: number;
   readonly stats: SessionStats;
+  readonly outcome: SessionOutcome;
   /** False in study mode: nothing is written and no score is reported. */
   readonly tracked: boolean;
   readonly lastResult: GradeResult | null;
@@ -59,6 +106,8 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
   const [index, setIndex] = useState(0);
   const [stats, setStats] = useState<SessionStats>({ answered: 0, correct: 0 });
   const [lastResult, setLastResult] = useState<GradeResult | null>(null);
+  const [changes, setChanges] = useState<readonly StageChange[]>([]);
+  const [nextDueInDays, setNextDueInDays] = useState<number | undefined>(undefined);
   const [generation, setGeneration] = useState(0);
 
   const tracked = config.mode !== 'study';
@@ -99,6 +148,8 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
       setIndex(0);
       setStats({ answered: 0, correct: 0 });
       setLastResult(null);
+      setChanges([]);
+      setNextDueInDays(undefined);
       setStatus(composed.length === 0 ? 'empty' : 'active');
     })();
 
@@ -154,6 +205,7 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
       // one — flipping through cards must not reschedule what it showed.
       if (tracked) {
         const now = Date.now();
+        const before = progressRef.current.get(item.id)?.status ?? 'new';
         const { progress, attempt } = recordAttempt(
           progressRef.current.get(item.id),
           {
@@ -169,6 +221,27 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
         progressRef.current.set(item.id, progress);
         void storage.progress.put(progress);
         void storage.attempts.append(attempt);
+
+        // One entry per item, keeping the *net* move across a session that saw
+        // the same item twice: reporting a word as both advanced and lapsed
+        // would be two true statements adding up to a false impression.
+        // Soonest return among the items actually answered — a skipped item keeps
+        // whatever schedule it already had, so counting it would be a promise
+        // this session did not make.
+        if (progress.dueAt !== undefined) {
+          const days = Math.round((progress.dueAt - now) / 86_400_000);
+          setNextDueInDays((current) => (current === undefined ? days : Math.min(current, days)));
+        }
+
+        const delta = stageDelta(before, progress.status);
+        if (delta !== 0) {
+          setChanges((current) => {
+            const others = current.filter((change) => change.itemId !== item.id);
+            const from = current.find((change) => change.itemId === item.id)?.from ?? before;
+            if (stageDelta(from, progress.status) === 0) return others;
+            return [...others, { itemId: item.id, text: item.text, from, to: progress.status }];
+          });
+        }
       }
 
       // Counted either way; the screen presents it as a score only when tracked.
@@ -218,6 +291,21 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     setIndex((current) => Math.max(0, current - 1));
   }, []);
 
+  /**
+   * Derived, never stored, like everything else about progress. Both halves are
+   * accumulated as answers land rather than read back from the progress ref: a
+   * ref read during render is what the React Compiler rules forbid, and the
+   * scheduler's own numbers are the ones worth reporting.
+   */
+  const outcome = useMemo<SessionOutcome>(
+    () => ({
+      advanced: changes.filter((change) => stageDelta(change.from, change.to) > 0),
+      lapsed: changes.filter((change) => stageDelta(change.from, change.to) < 0),
+      ...(nextDueInDays !== undefined ? { nextDueInDays } : {}),
+    }),
+    [changes, nextDueInDays],
+  );
+
   const restart = useCallback(() => setGeneration((value) => value + 1), []);
 
   return {
@@ -227,6 +315,7 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     index,
     total: steps.length,
     stats,
+    outcome,
     tracked,
     lastResult,
     submitAnswer,

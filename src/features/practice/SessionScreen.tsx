@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
+import { SessionOutcomeSummary } from './SessionOutcomeSummary';
 import { ExerciseView } from './ExerciseView';
 import styles from './Practice.module.css';
 import { buildSessionConfig, PRESETS } from './presets';
@@ -99,6 +100,8 @@ export function SessionScreen() {
 
       {runner.status === 'complete' && (
         <section className={styles.summaryScreen}>
+          {/* The score stays, good or bad. "4 of 10" is information a learner can
+              act on, and hiding it would make every good result worth nothing. */}
           <p className={styles.summaryScore}>
             {runner.tracked ? `${runner.stats.correct}/${runner.stats.answered}` : runner.total}
           </p>
@@ -107,6 +110,12 @@ export function SessionScreen() {
               ? 'Session complete. Progress saved on this device.'
               : `${runner.total === 1 ? 'Card' : 'Cards'} reviewed. Studying is not scored, so nothing was recorded.`}
           </p>
+
+          {/* Only where there is something real to report. A study session has
+              nothing to say here by design, and an empty panel saying so would
+              be worse than no panel. */}
+          {runner.tracked && <SessionOutcomeSummary outcome={runner.outcome} />}
+
           <Button variant="primary" block large onClick={runner.restart}>
             {runner.tracked ? 'Practise again' : 'Study again'}
           </Button>

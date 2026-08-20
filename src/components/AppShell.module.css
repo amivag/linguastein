@@ -68,7 +68,7 @@
   color: var(--color-accent-contrast);
   font-weight: 600;
   text-decoration: none;
-  transition: transform 120ms ease;
+  transition: transform var(--transition-fast);
 }
 
 .skipLink:focus-visible {

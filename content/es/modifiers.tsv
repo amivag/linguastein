@@ -1,6 +1,10 @@
 # Spanish adjectives, adverbs and function words — authoring source for core-es.
 # Columns: id	lemma	gloss (en)	pos	level	topics	extra surface forms (optional)
-# Only adjectives become word cards, so only those rows carry an id. Leave it off
+# Adjectives and numerals become word cards, so only those rows carry an id. A
+# numeral no sentence uses yet carries `-` instead: every card needs an example,
+# so it stays a lexeme until one exists. Never type a Spanish numeral here — the
+# build checks each against `src/languages/es/numerals.ts` and refuses a spelling
+# that module would not produce. Leave the id off
 # a new row: the build assigns one and writes it back.
 # Adjectives are listed in the masculine singular; the build derives the other
 # surface forms so that "cansada" in a sentence still links to this lexeme.
@@ -159,22 +163,44 @@ nada	nothing	PRON	a1	core
 alguien	someone	PRON	a2	core	
 nadie	nobody	PRON	a2	core	
 cada	each, every	DET	a1	core	
-uno	one	NUM	a1	numbers	
-dos	two	NUM	a1	numbers	
-tres	three	NUM	a1	numbers	
-cuatro	four	NUM	a1	numbers	
-cinco	five	NUM	a1	numbers	
-seis	six	NUM	a1	numbers	
-siete	seven	NUM	a1	numbers	
-ocho	eight	NUM	a1	numbers	
-nueve	nine	NUM	a1	numbers	
-diez	ten	NUM	a1	numbers	
-once	eleven	NUM	a1	numbers	
-doce	twelve	NUM	a1	numbers	
-veinte	twenty	NUM	a1	numbers	
-treinta	thirty	NUM	a1	numbers	
-cien	a hundred	NUM	a1	numbers	
-mil	a thousand	NUM	a1	numbers	
+-	cero	zero	NUM	a1	numbers	
+600079	uno	one	NUM	a1	numbers	
+600080	dos	two	NUM	a1	numbers	
+600081	tres	three	NUM	a1	numbers	
+600082	cuatro	four	NUM	a1	numbers	
+600083	cinco	five	NUM	a1	numbers	
+600084	seis	six	NUM	a1	numbers	
+600085	siete	seven	NUM	a1	numbers	
+600086	ocho	eight	NUM	a1	numbers	
+600087	nueve	nine	NUM	a1	numbers	
+600088	diez	ten	NUM	a1	numbers	
+600089	once	eleven	NUM	a1	numbers	
+600090	doce	twelve	NUM	a1	numbers	
+-	trece	thirteen	NUM	a1	numbers	
+-	catorce	fourteen	NUM	a1	numbers	
+-	quince	fifteen	NUM	a1	numbers	
+-	dieciséis	sixteen	NUM	a1	numbers	
+-	diecisiete	seventeen	NUM	a1	numbers	
+-	dieciocho	eighteen	NUM	a1	numbers	
+-	diecinueve	nineteen	NUM	a1	numbers	
+600091	veinte	twenty	NUM	a1	numbers	
+600092	treinta	thirty	NUM	a1	numbers	
+-	cuarenta	forty	NUM	a1	numbers	
+-	cincuenta	fifty	NUM	a1	numbers	
+-	sesenta	sixty	NUM	a1	numbers	
+-	setenta	seventy	NUM	a1	numbers	
+-	ochenta	eighty	NUM	a1	numbers	
+-	noventa	ninety	NUM	a1	numbers	
+600093	cien	a hundred	NUM	a1	numbers	
+-	doscientos	two hundred	NUM	a2	numbers	
+-	trescientos	three hundred	NUM	a2	numbers	
+-	cuatrocientos	four hundred	NUM	a2	numbers	
+-	quinientos	five hundred	NUM	a2	numbers	
+-	seiscientos	six hundred	NUM	a2	numbers	
+-	setecientos	seven hundred	NUM	a2	numbers	
+-	ochocientos	eight hundred	NUM	a2	numbers	
+-	novecientos	nine hundred	NUM	a2	numbers	
+600094	mil	a thousand	NUM	a1	numbers	
 600063	medio	half	ADJ	a1	numbers	media
 # Words the sentences already used but the lexicon did not carry. New adjectives
 # go below the existing ones: word-card ids are positional within the adjectives.

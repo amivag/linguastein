@@ -1010,6 +1010,22 @@
 {"ref":"core-es:item:600060","lang":"en","text":"green","type":"natural"}
 {"ref":"core-es:item:600061","lang":"en","text":"yellow","type":"natural"}
 {"ref":"core-es:item:600062","lang":"en","text":"grey","type":"natural"}
+{"ref":"core-es:item:600079","lang":"en","text":"one","type":"natural"}
+{"ref":"core-es:item:600080","lang":"en","text":"two","type":"natural"}
+{"ref":"core-es:item:600081","lang":"en","text":"three","type":"natural"}
+{"ref":"core-es:item:600082","lang":"en","text":"four","type":"natural"}
+{"ref":"core-es:item:600083","lang":"en","text":"five","type":"natural"}
+{"ref":"core-es:item:600084","lang":"en","text":"six","type":"natural"}
+{"ref":"core-es:item:600085","lang":"en","text":"seven","type":"natural"}
+{"ref":"core-es:item:600086","lang":"en","text":"eight","type":"natural"}
+{"ref":"core-es:item:600087","lang":"en","text":"nine","type":"natural"}
+{"ref":"core-es:item:600088","lang":"en","text":"ten","type":"natural"}
+{"ref":"core-es:item:600089","lang":"en","text":"eleven","type":"natural"}
+{"ref":"core-es:item:600090","lang":"en","text":"twelve","type":"natural"}
+{"ref":"core-es:item:600091","lang":"en","text":"twenty","type":"natural"}
+{"ref":"core-es:item:600092","lang":"en","text":"thirty","type":"natural"}
+{"ref":"core-es:item:600093","lang":"en","text":"a hundred","type":"natural"}
+{"ref":"core-es:item:600094","lang":"en","text":"a thousand","type":"natural"}
 {"ref":"core-es:item:600063","lang":"en","text":"half","type":"natural"}
 {"ref":"core-es:item:600064","lang":"en","text":"favourite","type":"natural"}
 {"ref":"core-es:item:600065","lang":"en","text":"delicious","type":"natural"}
@@ -1656,6 +1672,7 @@
 {"ref":"core-es:lexeme:alguien","lang":"en","text":"someone"}
 {"ref":"core-es:lexeme:nadie","lang":"en","text":"nobody"}
 {"ref":"core-es:lexeme:cada","lang":"en","text":"each, every"}
+{"ref":"core-es:lexeme:cero","lang":"en","text":"zero"}
 {"ref":"core-es:lexeme:uno","lang":"en","text":"one"}
 {"ref":"core-es:lexeme:dos","lang":"en","text":"two"}
 {"ref":"core-es:lexeme:tres","lang":"en","text":"three"}
@@ -1668,9 +1685,30 @@
 {"ref":"core-es:lexeme:diez","lang":"en","text":"ten"}
 {"ref":"core-es:lexeme:once","lang":"en","text":"eleven"}
 {"ref":"core-es:lexeme:doce","lang":"en","text":"twelve"}
+{"ref":"core-es:lexeme:trece","lang":"en","text":"thirteen"}
+{"ref":"core-es:lexeme:catorce","lang":"en","text":"fourteen"}
+{"ref":"core-es:lexeme:quince","lang":"en","text":"fifteen"}
+{"ref":"core-es:lexeme:dieciseis","lang":"en","text":"sixteen"}
+{"ref":"core-es:lexeme:diecisiete","lang":"en","text":"seventeen"}
+{"ref":"core-es:lexeme:dieciocho","lang":"en","text":"eighteen"}
+{"ref":"core-es:lexeme:diecinueve","lang":"en","text":"nineteen"}
 {"ref":"core-es:lexeme:veinte","lang":"en","text":"twenty"}
 {"ref":"core-es:lexeme:treinta","lang":"en","text":"thirty"}
+{"ref":"core-es:lexeme:cuarenta","lang":"en","text":"forty"}
+{"ref":"core-es:lexeme:cincuenta","lang":"en","text":"fifty"}
+{"ref":"core-es:lexeme:sesenta","lang":"en","text":"sixty"}
+{"ref":"core-es:lexeme:setenta","lang":"en","text":"seventy"}
+{"ref":"core-es:lexeme:ochenta","lang":"en","text":"eighty"}
+{"ref":"core-es:lexeme:noventa","lang":"en","text":"ninety"}
 {"ref":"core-es:lexeme:cien","lang":"en","text":"a hundred"}
+{"ref":"core-es:lexeme:doscientos","lang":"en","text":"two hundred"}
+{"ref":"core-es:lexeme:trescientos","lang":"en","text":"three hundred"}
+{"ref":"core-es:lexeme:cuatrocientos","lang":"en","text":"four hundred"}
+{"ref":"core-es:lexeme:quinientos","lang":"en","text":"five hundred"}
+{"ref":"core-es:lexeme:seiscientos","lang":"en","text":"six hundred"}
+{"ref":"core-es:lexeme:setecientos","lang":"en","text":"seven hundred"}
+{"ref":"core-es:lexeme:ochocientos","lang":"en","text":"eight hundred"}
+{"ref":"core-es:lexeme:novecientos","lang":"en","text":"nine hundred"}
 {"ref":"core-es:lexeme:mil","lang":"en","text":"a thousand"}
 {"ref":"core-es:lexeme:medio","lang":"en","text":"half"}
 {"ref":"core-es:lexeme:favorito","lang":"en","text":"favourite"}

@@ -2,7 +2,7 @@
  * Editorial sign-off (`content/es/reviewed.tsv`).
  *
  * The pack is machine-generated and ships `review: unreviewed`. Review has to be
- * incremental — nobody reads 1,027 items in one sitting — so sign-off is per
+ * incremental — nobody reads a thousand items in one sitting — so sign-off is per
  * item, and it has to be hard to claim by accident: an id deliberately survives
  * a typo fix, so approval must be pinned to the wording that was actually read.
  *
@@ -20,6 +20,15 @@ let pack: ScratchPack;
 
 function signOff(...rows: string[]): void {
   pack.write(REVIEWED, `# scratch\n${rows.join('\n')}\n`);
+}
+
+/**
+ * How many items the build says it counted. Read back from the output rather
+ * than hard-coded: these tests are about the sign-off machinery, and pinning the
+ * pack's size here only made them fail every time content grew.
+ */
+function signedOff(output: string): string {
+  return /(\d+\/\d+) items signed off/.exec(output)?.[1] ?? 'no count in output';
 }
 
 /** The sentence item with this local id, as the built pack holds it. */
@@ -44,7 +53,7 @@ describe('an unreviewed pack', () => {
 
     expect(ok).toBe(true);
     expect(item('000001')?.provenance).toBeUndefined();
-    expect(output).toContain('0/1027 items signed off');
+    expect(signedOff(output)).toMatch(/^0\/\d+$/);
     expect(output).toContain('unreviewed');
   });
 });
@@ -57,7 +66,7 @@ describe('signing an item off', () => {
     expect(ok).toBe(true);
     expect(item('000001')?.provenance).toEqual({ source: 'generated', review: 'reviewed' });
     expect(item('000002')?.provenance).toBeUndefined();
-    expect(output).toContain('1/1027 items signed off');
+    expect(signedOff(output)).toMatch(/^1\/\d+$/);
   });
 });
 

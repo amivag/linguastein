@@ -20,7 +20,12 @@ import { PASSAGE_KINDS } from '../src/domain/content/model.ts';
 import { conjugate } from '../src/languages/es/conjugation.ts';
 import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
 import { adjectiveForms, pluralOf } from '../src/languages/es/morphology.ts';
-import { NUMERAL_RULES, type NumeralRule } from '../src/languages/es/numerals.ts';
+import {
+  MAX_CARDINAL,
+  NUMERAL_RULES,
+  spellCardinal,
+  type NumeralRule,
+} from '../src/languages/es/numerals.ts';
 
 // Overridable so a test can build a scratch copy of the sources without
 // touching the checked-in pack.
@@ -309,6 +314,35 @@ if (topicRows.length > 0) {
   }
 }
 
+/**
+ * A `NUM` lemma must be exactly what `numerals.ts` spells.
+ *
+ * The whole point of that module is that a human never types a Spanish numeral,
+ * and a card row is still a place one could be typed — `dieciseis` without its
+ * accent would look right in a diff and teach a misspelling. So the source and
+ * the generator are cross-checked, the same way a verb's declared regularity is
+ * cross-checked against `irregulars.ts`.
+ *
+ * Membership, not identity: the row carries no digit to compare against, so this
+ * proves the lemma is a real numeral spelled the way the module spells it. Which
+ * number it *means* is then fixed by the English gloss beside it.
+ */
+const numeralSpellings = new Set<string>();
+for (let n = 0; n <= 1000; n++) numeralSpellings.add(spellCardinal(n));
+for (const n of [100_000, 1_000_000, MAX_CARDINAL]) {
+  for (const word of spellCardinal(n).split(' ')) numeralSpellings.add(word);
+}
+
+for (const modifier of modifiers) {
+  if (modifier.pos !== 'NUM') continue;
+  if (!numeralSpellings.has(modifier.lemma)) {
+    problems.push(
+      `${modifier.lemma}: tagged NUM but numerals.ts never spells it — ` +
+        `check the accent, or use the spelling the module produces`,
+    );
+  }
+}
+
 for (const verb of verbs) {
   const declared = verb.regularity === 'irregular';
   const known = Object.hasOwn(IRREGULAR_VERBS, verb.lemma);
@@ -343,13 +377,13 @@ if (problems.length > 0) {
  */
 const LEDGER_FILE = 'id-ledger.tsv';
 
-type IdKind = 'sentence' | 'noun-card' | 'adjective-card' | 'passage';
+type IdKind = 'sentence' | 'noun-card' | 'modifier-card' | 'passage';
 
 /** One range per kind, so appending a noun cannot renumber an adjective. */
 const ID_RANGES: Record<IdKind, { first: number; last: number }> = {
   sentence: { first: 1, last: 499_999 },
   'noun-card': { first: 500_001, last: 599_999 },
-  'adjective-card': { first: 600_001, last: 699_999 },
+  'modifier-card': { first: 600_001, last: 699_999 },
   passage: { first: 700_001, last: 799_999 },
 };
 
@@ -424,11 +458,17 @@ for (const noun of nouns) {
   claimId(noun.row, 'noun-card', noun.lemma, nextNounCardId);
 }
 
-// Only adjectives become word cards, so only those rows carry an id.
-const nextAdjectiveCardId = allocatorFor('adjective-card');
+// Only these parts of speech become word cards, so only those rows carry an id.
+// A determiner or a preposition is learned in sentences, not off a card.
+const CARD_POS = new Set(['ADJ', 'NUM']);
+
+const nextModifierCardId = allocatorFor('modifier-card');
 for (const modifier of modifiers) {
-  if (modifier.pos !== 'ADJ') continue;
-  claimId(modifier.row, 'adjective-card', modifier.lemma, nextAdjectiveCardId);
+  // `-` in the id column, same as on a noun: keep the lexeme and its gloss, skip
+  // the card. Until numerals arrived no modifier row had ever used the sentinel,
+  // so this loop silently issued ids to rows that then had no card to own them.
+  if (modifier.row.noCard || !CARD_POS.has(modifier.pos)) continue;
+  claimId(modifier.row, 'modifier-card', modifier.lemma, nextModifierCardId);
 }
 
 const nextPassageId = allocatorFor('passage');
@@ -1229,7 +1269,7 @@ if (passageProblems.length > 0) {
   process.exit(1);
 }
 
-// ── vocabulary items (one card per noun and adjective) ──────────────────────
+// ── vocabulary items (one card per noun, adjective and numeral) ─────────────
 
 const examplesByLexeme = new Map<string, string[]>();
 for (const item of sentenceItems) {
@@ -1255,11 +1295,13 @@ const vocabularySources = [
       register: noun.register,
     })),
   ...modifiers
-    .filter((modifier) => modifier.pos === 'ADJ')
+    .filter((modifier) => !modifier.row.noCard && CARD_POS.has(modifier.pos))
     .map((modifier) => ({
       id: itemId(modifier.row),
       lemma: modifier.lemma,
-      pos: 'ADJ',
+      // Carried through rather than assumed: a numeral card must not claim to be
+      // an adjective, or its lexeme link points at a word that does not exist.
+      pos: modifier.pos,
       level: modifier.level,
       topics: modifier.topics,
       regions: [] as string[],
@@ -1603,9 +1645,15 @@ console.log(
   `  example coverage: ${allLexemes.length - uncovered.length}/${allLexemes.length} lexemes ` +
     `appear in at least one sentence`,
 );
+// Numerals are counted apart rather than folded into "modifiers": 22 of them
+// ship without an example sentence, and a single number jumping from 2 to 24
+// reads as a regression when it is a new closed set arriving. It is still a real
+// gap — `doscientos` deserves a sentence — so it stays in the report.
+const numeralGap = byPos('NUM');
 console.log(
   `  without an example: ${byPos('VERB')} verbs, ${byPos('NOUN')} nouns, ` +
-    `${uncovered.length - byPos('VERB') - byPos('NOUN')} modifiers`,
+    `${uncovered.length - byPos('VERB') - byPos('NOUN') - numeralGap} modifiers` +
+    (numeralGap > 0 ? `, ${numeralGap} numerals` : ''),
 );
 
 if (topicRows.length > 0) {

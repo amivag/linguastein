@@ -7,7 +7,7 @@ engine is language-agnostic by design.
 phone, offline, with no account.
 
 Status: **v0.1**. The architecture, engine and practice loop are in place, with a
-generated A1–A2 Spanish pack of 1,027 practisable items awaiting editorial review
+generated A1–A2 Spanish pack of 1,043 practisable items awaiting editorial review
 (see [`docs/spec`](docs/spec) for the product specification).
 
 ## Quick start
@@ -73,7 +73,7 @@ Four sections behind a tab bar (a rail on wider screens):
 | Section  | What it is                                                         |
 | -------- | ------------------------------------------------------------------ |
 | Practice | quick sessions and the six practice presets                        |
-| Browse   | search and filter all 1,027 items; dictate the search with the mic |
+| Browse   | search and filter all 1,043 items, by thematic category or facet; dictate the search with the mic |
 | Progress | what has been practised, accuracy, weak items, recent sessions     |
 | Settings | language, audio and voice, appearance, data — in grouped sections  |
 
@@ -101,7 +101,7 @@ from a dataset passes through the validation boundary in
 breaking a session.
 
 The shipped `core-es` pack covers A1–A2: **117 verbs** with generated forms,
-**358 nouns**, **196 modifiers** and **592 example sentences** — 1,027 practisable
+**358 nouns**, **218 modifiers** and **592 example sentences** — 1,043 practisable
 items in total.
 
 Humans author compact TSV in `content/es/`; `npm run build:data` derives

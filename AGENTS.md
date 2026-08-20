@@ -99,10 +99,20 @@ that. `npm run review:data` finds the rows worth a reviewer's attention, and
 stops raising a finding once every item in it is signed off.
 
 A row whose id column holds `-` contributes a lexeme and its meaning but no word
-card. Use it where a noun and an adjective share a surface form — the noun `frío`
+card. Two things use it. A noun and an adjective sharing a surface form — the noun `frío`
 and the adjective `frío` would otherwise be two identical cards splitting one
-word into two ids. The word stays practisable in sentences and inspectable when
-tapped. No two items may carry the same text, and the build checks this across
+word into two ids. And a word no sentence uses yet: every word card must have an
+example sentence to show it in, so `dieciséis` is a lexeme with a gloss until one
+exists, and becomes a card the day it does — with no edit to its own row. The
+word stays practisable in sentences and inspectable when tapped either way.
+
+Numerals are generated, not authored. `content/es/modifiers.tsv` carries the
+`NUM` rows, but the build cross-checks every lemma against
+`src/languages/es/numerals.ts` and refuses a spelling that module would not
+produce, so `dieciseis` without its accent fails rather than shipping. Numbers
+above the card set are not rows at all — `spellCardinal` composes them, which is
+why 1042 is askable without existing anywhere. See
+[docs/tasks/numerals.md](docs/tasks/numerals.md). No two items may carry the same text, and the build checks this across
 sentences and word cards together.
 
 Passages group several sentences into one connected text (a paragraph or a

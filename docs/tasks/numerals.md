@@ -1,8 +1,8 @@
 # Task: numbers as a system, not as vocabulary
 
-**Status:** in progress — §3 (the module) and §5 (the pattern records) have
-landed. §4 and §6 remain: the bounded number cards, the exercise generator and
-the drill.
+**Status:** in progress — §3 (the module), §4.1 (the number cards) and §5 (the
+pattern records) have landed. §4.2 and §6 remain: the exercise generator and the
+drill.
 **Written:** 2026-08-20
 **Revised:** 2026-08-20 — `src/languages/es/numerals.ts` exists and is tested at
 100%. §3.2 is new: it records what building it turned up, including one rule the
@@ -157,19 +157,35 @@ forces a split, and the split turns out to be pedagogically right anyway.
 
 ### 4.1 Bounded: number cards with real ids
 
-The number words worth memorising _as words_ are a small closed set: 0–20, the
-tens, the hundreds, `mil`, `millón`. Give those rows ids in `modifiers.tsv` — the
-mechanism already exists, it is just that the `NUM` rows were left without one —
-and they become word cards, scheduled like anything else.
+**Landed, with one constraint the brief missed.** The `NUM` rows in
+`modifiers.tsv` now cover 0–20, the tens, the hundreds and `mil` — 38 lemmas —
+and the rows are **generated** by `spellCardinal`, not typed. The build
+cross-checks every `NUM` lemma against the module and refuses a spelling it would
+not produce, so `dieciseis` without its accent fails instead of shipping.
 
-Two collisions to expect, both already anticipated by existing conventions:
+The constraint: **every word card must have an example sentence** to show it in
+(`shipped-packs.test.ts`). Only 16 of the 38 numerals appear in any sentence, so
+those 16 are cards and the other 22 carry `-` — a lexeme and a gloss, no card.
+`dieciséis` is still inspectable when tapped and still a valid drill answer; what
+it lacks is a card of its own. Write a sentence using it and the card appears with
+no edit to the numeral row, which is what the second test in
+`tests/data/numeral-cards.test.ts` demonstrates.
 
-- **`segundo`** is already a noun card (`500206`, "second" the time unit). The
-  ordinal `segundo` would duplicate its text, and the build forbids that. Use the
-  `-` id convention: one card, and the other sense stays inspectable when tapped.
-- **`uno` and `un`** are already separate rows (`NUM` and `DET`). Keep them that
-  way. They are genuinely different words, and merging them would hide the
-  apocopation rule the drill is trying to teach.
+Do not "fix" this by exempting numerals from that invariant. The 22 missing
+sentences are a content gap that belongs to
+[`dataset-expansion.md`](dataset-expansion.md) — the build's coverage report
+names them on their own line so the count is not mistaken for a regression —
+and `doscientos` genuinely deserves a sentence.
+
+Two further notes:
+
+- The id kind is now **`modifier-card`**, not `adjective-card`: the range always
+  meant "modifier word cards", and calling a numeral an adjective in the one file
+  whose job is to record what an id refers to would be a lie. Only the kind label
+  changed; every existing id kept its number.
+- **`uno` and `un`** stay separate rows (`NUM` and `DET`). Merging them would hide
+  the apocopation rule the drill is meant to teach. The `segundo` collision this
+  section used to warn about does not arise, because ordinals get no cards.
 
 ### 4.2 Unbounded: the drill
 
@@ -300,9 +316,11 @@ gets silence plus an explanation, which is deliberate.
 - [x] `rulesFor` returns the rules a number exercises
 - [x] A rule with no matching pattern record fails the typecheck, which is
       earlier and harder to skip than the build-time check first asked for
-- [ ] The bounded number words carry ids and appear as word cards
-- [ ] The `segundo` collision is resolved via the `-` convention, not by renaming
-      either sense
+- [x] The bounded number words carry ids and appear as word cards — 16 of 38,
+      the rest deferred behind `-` until a sentence can show them
+- [x] The source cannot drift from the generator: a `NUM` lemma the module would
+      not spell fails the build
+- [ ] The 22 deferred numerals get an example sentence each (dataset work)
 - [ ] A numeral exercise generator exists, with the three kinds in §6
 - [ ] The drill records attempts against pattern ids, or §4.2's fallback with the
       reason written down

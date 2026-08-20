@@ -1,6 +1,7 @@
-/** Tapping a word inside a phrase opens its meaning, grammar and forms. */
+/** Tapping a word — inside a phrase, or a word card — opens its meaning,
+ *  grammar and forms. */
 
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
@@ -28,6 +29,35 @@ describe('word inspection', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
+  it('keeps the way out in the header rather than at the end of the entry', async () => {
+    const user = userEvent.setup();
+    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+
+    await user.click(await screen.findByRole('button', { name: 'About “Tengo”' }));
+    const panel = await screen.findByRole('dialog', { name: 'About Tengo' });
+
+    // The header is outside the scrolling region, so a verb with nine forms and
+    // four examples cannot push the way out below the fold. jsdom has no layout
+    // to measure, but the structure the layout rests on is checkable.
+    const close = within(panel).getByRole('button', { name: 'Close' });
+    expect(close.closest('header')).toBe(panel.querySelector('header'));
+
+    await user.click(close);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('names the form in the phrase rather than only tinting it', async () => {
+    const user = userEvent.setup();
+    renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
+
+    await user.click(await screen.findByRole('button', { name: 'About “Tengo”' }));
+    const panel = await screen.findByRole('dialog', { name: 'About Tengo' });
+
+    // Colour is never the only signal: the current card carries the fact as text.
+    const marker = within(panel).getByText('the form in this phrase');
+    expect(marker.closest('li')).toHaveTextContent('tengo');
+  });
+
   it('leaves punctuation inert', async () => {
     renderWithServices(<SessionScreen />, { route: '/session?preset=flashcards&size=items:1' });
 
@@ -42,10 +72,38 @@ describe('word inspection', () => {
     const choices = await screen.findAllByRole('button', { name: /beer|water|bread|coffee/ });
     expect(screen.queryByRole('button', { name: /^About/ })).not.toBeInTheDocument();
 
+    // On a word card the meaning *is* the answer, so the card being one word
+    // makes the lock matter more, not less. It lifts when the answer is in.
     await user.click(choices[0]!);
-    // Vocabulary items carry no tokens, so nothing becomes tappable — but the
-    // answer state is what gates it, not the exercise being over.
     expect(await screen.findByRole('button', { name: 'Continue' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /^About “(cerveza|agua|pan|café)”$/ }),
+    ).toBeInTheDocument();
+  });
+
+  /**
+   * A word card carries a lexeme and no tokens, so there is no token to look up
+   * and it used to render as inert text: the gloss, part of speech and gender
+   * the dataset holds for it could not be reached from the card at all.
+   */
+  it('opens a word card itself, gender and all', async () => {
+    const user = userEvent.setup();
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&type=word&size=items:1&order=sequential',
+    });
+
+    await user.click(await screen.findByRole('button', { name: 'About “cerveza”' }));
+
+    const panel = await screen.findByRole('dialog', { name: 'About cerveza' });
+    expect(panel).toHaveTextContent('beer');
+    expect(panel).toHaveTextContent('noun');
+    // Which of el or la it takes — the one piece of grammar a noun card has.
+    expect(panel).toHaveTextContent('feminine');
+    // Not "from cerveza": the card is already the lemma.
+    expect(panel).not.toHaveTextContent('from cerveza');
+
+    await user.click(within(panel).getByRole('button', { name: 'Close' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('keeps the details below the card shut until the answer is in', async () => {

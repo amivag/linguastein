@@ -65,6 +65,35 @@ export function isInspectable(token: Token): boolean {
   return token.pos !== 'PUNCT' && normalise(token.text).length > 0;
 }
 
+/**
+ * The reserved id a word card is inspected under.
+ *
+ * A vocabulary item has no tokens — the card *is* the word — so there is
+ * nothing to find by id. Naming that case keeps one selection state, one
+ * `onSelect` signature and one sheet across both kinds of card, and a `#`
+ * cannot collide with the `t1`-style ids the dataset build issues.
+ */
+export const WHOLE_ITEM_TOKEN: TokenId = '#item';
+
+/**
+ * True for an item that is itself one inspectable word.
+ *
+ * Asked of the item alone, because the text has to decide whether a word is
+ * tappable before anything has been looked up. A word card carries its lexeme
+ * and no tokens; the dataset issues one lexeme per card, which is what the `-`
+ * id convention for a shared surface form (the noun `frío` beside the adjective)
+ * exists to protect.
+ */
+export function isInspectableItem(item: LearningItem): boolean {
+  return (
+    item.type === 'word' && (item.tokens ?? []).length === 0 && (item.lexemes?.length ?? 0) > 0
+  );
+}
+
+/**
+ * Everything known about one token of a phrase — or, under
+ * {@link WHOLE_ITEM_TOKEN}, about a card that is a single word.
+ */
 export function inspectToken(
   repository: ContentRepository,
   item: LearningItem,
@@ -72,9 +101,55 @@ export function inspectToken(
   language: LanguageTag,
   options: InspectOptions = {},
 ): WordInfo | null {
+  if (tokenId === WHOLE_ITEM_TOKEN) return inspectItem(repository, item, language, options);
+
   const token = (item.tokens ?? []).find((candidate) => candidate.id === tokenId);
   if (!token || !isInspectable(token)) return null;
+  return describeWord(repository, item, token, language, options);
+}
 
+/**
+ * A word card as its own entry: meaning, part of speech, gender and the
+ * sentences that use it.
+ *
+ * Nothing new is derived. The item's lexeme becomes a token and the same
+ * assembly runs over it, so a word card and a word inside a phrase are
+ * explained by one code path rather than two that drift. Gender travels as
+ * morphology because that is what a noun's `feminine` is, and the sheet already
+ * reads grammar from there; the meaning arrives through the existing lexeme →
+ * word-item gloss fallback, which is exactly this item's own translation.
+ */
+export function inspectItem(
+  repository: ContentRepository,
+  item: LearningItem,
+  language: LanguageTag,
+  options: InspectOptions = {},
+): WordInfo | null {
+  if (!isInspectableItem(item)) return null;
+
+  const lexemeId = item.lexemes?.[0];
+  if (lexemeId === undefined) return null;
+  const lexeme = repository.getLexeme(lexemeId);
+
+  const token: Token = {
+    id: WHOLE_ITEM_TOKEN,
+    text: item.text,
+    lexeme: lexemeId,
+    ...(lexeme ? { lemma: lexeme.lemma, pos: lexeme.pos } : {}),
+    ...(lexeme?.gender ? { morph: { gender: lexeme.gender } } : {}),
+  };
+
+  return describeWord(repository, item, token, language, options);
+}
+
+function describeWord(
+  repository: ContentRepository,
+  item: LearningItem,
+  token: Token,
+  language: LanguageTag,
+  options: InspectOptions,
+): WordInfo {
+  const tokenId = token.id;
   const lexemeId = token.lexeme;
   const lexeme = lexemeId ? repository.getLexeme(lexemeId) : undefined;
   const pos = token.pos ?? lexeme?.pos;

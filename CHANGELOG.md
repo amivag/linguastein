@@ -94,6 +94,13 @@ learner state, and are not called out individually until 0.1.0 is tagged.
   tap-to-build stay silent until answered, where the audio would say the missing
   word or read the parts out in order. Tap-to-build also shows the sentence once
   checked, so there is finally something to hear and to open words from.
+- A word card can be opened like a word inside a phrase. A vocabulary item
+  carries a lexeme and no tokens — the card *is* the word — so `cerveza` rendered
+  as inert text and the gloss, part of speech, gender and example sentences the
+  dataset already held for it were unreachable from the card. `inspectItem`
+  derives the same entry from the item's own lexeme, so a word card and a word
+  inside a phrase are explained by one code path rather than two that drift. On a
+  graded card it stays shut until answered, where the meaning is the answer.
 
 ### Known gaps
 

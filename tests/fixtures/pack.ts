@@ -107,10 +107,28 @@ export const ITEMS: readonly LearningItem[] = [
     register: 'colloquial',
     address: 'tu',
   }),
-  item('004', 'cerveza', { type: 'word', topics: ['food-drink'] }),
-  item('005', 'agua', { type: 'word', topics: ['food-drink'] }),
-  item('006', 'pan', { type: 'word', topics: ['food-drink'] }),
-  item('007', 'café', { type: 'word', topics: ['food-drink'] }),
+  // Word cards carry a lexeme and no tokens, exactly as the generated pack does
+  // for all 451 of its own — which is what makes the card itself inspectable.
+  item('004', 'cerveza', {
+    type: 'word',
+    topics: ['food-drink'],
+    lexemes: [id<LexemeId>('test-es:lexeme:cerveza')],
+  }),
+  item('005', 'agua', {
+    type: 'word',
+    topics: ['food-drink'],
+    lexemes: [id<LexemeId>('test-es:lexeme:agua')],
+  }),
+  item('006', 'pan', {
+    type: 'word',
+    topics: ['food-drink'],
+    lexemes: [id<LexemeId>('test-es:lexeme:pan')],
+  }),
+  item('007', 'café', {
+    type: 'word',
+    topics: ['food-drink'],
+    lexemes: [id<LexemeId>('test-es:lexeme:cafe')],
+  }),
 ];
 
 const verbForm = (local: string, form: string): VerbForm => ({
@@ -198,7 +216,33 @@ export const TEST_PACK: ContentPack = {
   items: ITEMS,
   passages: PASSAGES,
   audio: AUDIO,
-  lexemes: [{ id: id<LexemeId>('test-es:lexeme:tener'), lemma: 'tener', pos: 'VERB', level: 'a1' }],
+  lexemes: [
+    { id: id<LexemeId>('test-es:lexeme:tener'), lemma: 'tener', pos: 'VERB', level: 'a1' },
+    // Gender is the thing a learner needs from a Spanish noun and the only
+    // grammar a word card has, so the nouns carry theirs.
+    {
+      id: id<LexemeId>('test-es:lexeme:cerveza'),
+      lemma: 'cerveza',
+      pos: 'NOUN',
+      level: 'a1',
+      gender: 'feminine',
+    },
+    { id: id<LexemeId>('test-es:lexeme:agua'), lemma: 'agua', pos: 'NOUN', level: 'a1' },
+    {
+      id: id<LexemeId>('test-es:lexeme:pan'),
+      lemma: 'pan',
+      pos: 'NOUN',
+      level: 'a1',
+      gender: 'masculine',
+    },
+    {
+      id: id<LexemeId>('test-es:lexeme:cafe'),
+      lemma: 'café',
+      pos: 'NOUN',
+      level: 'a1',
+      gender: 'masculine',
+    },
+  ],
   senses: [],
   verbForms: [
     verbForm('tener-1s', 'tengo'),

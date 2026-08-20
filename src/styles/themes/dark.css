@@ -14,8 +14,11 @@
 [data-theme='dark'] {
   color-scheme: dark;
 
-  --color-bg: #0f1115;
-  --color-surface: #171a21;
+  --color-bg: #0f1117;
+  /* The wash at the top of the page. Lifted rather than tinted: a dark theme
+     has room to go up, and going down would only look like a shadow. */
+  --color-bg-tint: #151824;
+  --color-surface: #171a22;
   --color-surface-raised: #1f232c;
   --color-surface-sunken: #0d1014;
   --color-border: #2a2f3a;
@@ -25,8 +28,15 @@
   --color-text-muted: #9aa3b2;
   /* Same indigo identity as the light theme, lifted until it carries a near
      black label and reads as a link on the page background. */
-  --color-accent: #7f9cff;
+  --color-accent: #8aa2ff;
   --color-accent-contrast: #0b1030;
+  /* The accent at panel strength — the one tint every accent-flavoured surface
+     uses, rather than each one mixing its own. */
+  --color-accent-soft: #1c2140;
+  /* The warm second accent. Bright here, where a dark amber would disappear;
+     the light theme takes the opposite route for the same hue. */
+  --color-highlight: #ffb454;
+  --color-highlight-soft: #2a2113;
   --color-success: #5fd18c;
   --color-danger: #ff6b6b;
 

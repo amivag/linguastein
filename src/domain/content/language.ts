@@ -20,9 +20,38 @@ export interface LanguageOption {
   readonly englishName: string;
 }
 
+/**
+ * Languages the app can name.
+ *
+ * Not a list of what is available to learn — that is derived from the packs
+ * actually loaded (`courseOptions`). This is only how a language tag is spelled
+ * for a human, so an added pack shows "Français" rather than "fr" without
+ * anything else being touched. Spanish is first because it is what ships.
+ */
 export const TARGET_LANGUAGES: readonly LanguageOption[] = [
   { tag: 'es', nativeName: 'Español', englishName: 'Spanish' },
+  { tag: 'fr', nativeName: 'Français', englishName: 'French' },
+  { tag: 'de', nativeName: 'Deutsch', englishName: 'German' },
+  { tag: 'it', nativeName: 'Italiano', englishName: 'Italian' },
+  { tag: 'pt', nativeName: 'Português', englishName: 'Portuguese' },
+  { tag: 'nl', nativeName: 'Nederlands', englishName: 'Dutch' },
+  { tag: 'el', nativeName: 'Ελληνικά', englishName: 'Greek' },
 ];
+
+/**
+ * How to spell a language tag for a learner, falling back to the tag itself.
+ *
+ * The fallback is the point: an unknown language must still be selectable and
+ * still name itself in the UI, or adding a pack would mean editing this file
+ * before the pack could be used at all.
+ */
+export function languageOption(tag: LanguageTag): LanguageOption {
+  const base = baseLanguage(tag);
+  const known =
+    TARGET_LANGUAGES.find((option) => option.tag === tag) ??
+    TARGET_LANGUAGES.find((option) => option.tag === base);
+  return known ?? { tag, nativeName: tag, englishName: tag };
+}
 
 /** English is only the first supported reference language, never a structural requirement. */
 export const REFERENCE_LANGUAGES: readonly LanguageOption[] = [

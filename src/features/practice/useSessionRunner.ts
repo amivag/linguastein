@@ -78,6 +78,10 @@ function stageDelta(from: ItemStatus, to: ItemStatus): number {
 
 export interface SessionRunner {
   readonly status: SessionStatus;
+  /** Epoch ms the session became active; 0 while it is still being planned. */
+  readonly startedAt: number;
+  /** How long it took, once finished. Null while it is still running. */
+  readonly durationMs: number | null;
   readonly exercise: Exercise | null;
   readonly item: LearningItem | null;
   readonly index: number;
@@ -109,11 +113,21 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
   const [changes, setChanges] = useState<readonly StageChange[]>([]);
   const [nextDueInDays, setNextDueInDays] = useState<number | undefined>(undefined);
   const [generation, setGeneration] = useState(0);
+  // State rather than a ref: the timer renders from it, and reading a ref
+  // during render is what the React Compiler rules forbid.
+  const [startedAt, setStartedAt] = useState(0);
+  /**
+   * How long the session took, frozen when it ended.
+   *
+   * Kept for every session, not only tracked ones: a study session is not
+   * scored, but the time it took is still a fact about it, and the summary says
+   * so rather than pretending the clock stopped existing.
+   */
+  const [durationMs, setDurationMs] = useState<number | null>(null);
 
   const tracked = config.mode !== 'study';
 
   const progressRef = useRef(new Map<ItemId, ItemProgress>());
-  const startedAtRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -142,7 +156,8 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
         study: config.mode === 'study',
       });
 
-      startedAtRef.current = Date.now();
+      setStartedAt(Date.now());
+      setDurationMs(null);
       setSessionId(plan.id);
       setSteps(composed);
       setIndex(0);
@@ -190,11 +205,15 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
       const next = current + 1;
       if (next >= steps.length) {
         setStatus('complete');
+        // Stopped here rather than in an effect watching `status`: advancing is
+        // the event that ends the session, an event handler may read the clock,
+        // and the React Compiler rules forbid setting state from an effect.
+        if (startedAt > 0) setDurationMs(Date.now() - startedAt);
         return current;
       }
       return next;
     });
-  }, [steps.length]);
+  }, [steps.length, startedAt]);
 
   const persist = useCallback(
     (grade: ReviewGrade, correct: boolean | undefined, latencyMs: number | undefined) => {
@@ -258,13 +277,13 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     if (status !== 'complete' || !tracked) return;
     void storage.sessions.put({
       id: sessionId,
-      startedAt: startedAtRef.current,
+      startedAt,
       endedAt: Date.now(),
       planned: steps.length,
       completed: stats.answered,
       correct: stats.correct,
     });
-  }, [status, tracked, sessionId, steps.length, stats, storage]);
+  }, [status, tracked, sessionId, startedAt, steps.length, stats, storage]);
 
   const submitAnswer = useCallback(
     (answer: Answer): GradeResult | null => {
@@ -310,6 +329,8 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
 
   return {
     status,
+    startedAt,
+    durationMs,
     exercise,
     item,
     index,

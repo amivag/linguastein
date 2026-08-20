@@ -1,9 +1,18 @@
+import type { ReactNode } from 'react';
 import styles from './Practice.module.css';
 
 interface SessionProgressProps {
   /** Zero-based position of the item on screen. */
   readonly index: number;
   readonly total: number;
+  /**
+   * Rendered at the end of the row — the elapsed-time readout.
+   *
+   * A slot rather than a prop of its own, so the clock can tick inside its own
+   * component: passing the elapsed *value* down would re-render the practice
+   * card once a second for the sake of one changing span.
+   */
+  readonly trailing?: ReactNode;
 }
 
 /**
@@ -29,7 +38,7 @@ const PIP_LIMIT = 20;
  * what a screen reader and an agent read, and the segments are decoration on
  * top. Nothing here is the only signal for anything.
  */
-export function SessionProgress({ index, total }: SessionProgressProps) {
+export function SessionProgress({ index, total, trailing }: SessionProgressProps) {
   const position = index + 1;
   const segmented = total > 1 && total <= PIP_LIMIT;
 
@@ -64,6 +73,7 @@ export function SessionProgress({ index, total }: SessionProgressProps) {
           />
         )}
       </div>
+      {trailing}
     </div>
   );
 }

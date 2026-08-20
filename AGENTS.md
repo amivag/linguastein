@@ -37,10 +37,17 @@ These are load-bearing. Breaking one is a design change, not a refactor.
    Translations are separate records resolved through a fallback chain.
 7. **Randomness is injected** (`src/utils/random.ts`) so sessions are
    reproducible under a seed.
+8. **A course is a scope, not a partition.** One target language, narrowed to one
+   CEFR level, derived from the packs actually loaded (`domain/content/course.ts`).
+   Level is a _ceiling_ — `a2` means "a2 and below" — and the whole thing reduces
+   to an `ItemFilter`, so nothing downstream needs to know courses exist.
+   Progress is untouched by it: records reference item ids, which carry their
+   pack, so switching course can never invalidate what has been practised.
 
 ## Layout
 
 ```text
+src/app/         composition root, routing, the current course (`course.ts`)
 src/domain/      the engine (content, exercises, sessions, progress)
 src/languages/   language-specific morphology — build-time, not engine
 src/data/        dataset loading + the zod validation boundary
@@ -48,12 +55,59 @@ src/storage/     IndexedDB and in-memory LearnerStorage
 src/audio/       audio service + TTS seam
 src/ai/          AI seam and learner-context builder (no vendor, no network)
 src/features/    screens: home, browse, read, progress, practice, settings, sharing
-src/components/  shared UI: AppShell, AppNav, Button, ThemeToggle, VoiceInput,
-                 TokenizedText and WordInfoSheet (used by practice and reading)
+src/components/  shared UI: AppShell, AppNav, Button, CourseBar, ThemeToggle,
+                 VoiceInput, TokenizedText, WordInfoSheet and useWordSelection
+                 (used by practice, reading, browse and progress alike)
 src/styles/      primitives + one file per theme
 content/es/      hand-authored dataset sources (TSV)
 public/packs/    GENERATED datasets — never edit by hand
 ```
+
+## Courses and the URL
+
+Every screen lives under `/<language>/<level>` — `/es/a1/browse`,
+`/es/all/read/700001`, `/es/a2/session?preset=verbs`. `/` is a redirect, not a
+screen: it sends the learner to the course they left, from the stored
+`targetLanguage` and `level`.
+
+The path is the source of truth, exactly as the query string is for a session.
+The preference exists only to decide where `/` lands. Build a course-scoped link
+with `coursePath` and a session link with `sessionPath(course, …)` — never by
+concatenation, for the reason `session-url.ts` records: a hand-spelled prefix is
+one that can go stale.
+
+A language or level that is not loaded resolves to the widest real course rather
+than an error, so a stale bookmark degrades instead of breaking. Paths written
+before courses existed (`/session?…`, `/read/700001`) redirect into a course and
+keep their query string.
+
+`courseOptions(repository)` derives what is on offer from the packs themselves,
+so a second language pack appears in the picker — and in the URL — with no code
+change. `tests/fixtures/pack.ts` ships a small French pack for exactly this:
+anything that assumes one language or one pack fails there.
+
+## What a session practises
+
+Three things narrow it, and they are deliberately different kinds of thing:
+
+- the **course** (path) — the standing context: which packs, which levels
+- the **focus** (`?focus=`, stored as a preference) — which items to _lead with_
+- the **filter** (`?topic=`, `?type=`, …) — an explicit narrowing a learner picked
+
+A focus is a bias, never a filter. `SESSION_FOCUSES` reorders the four buckets
+the planner already sorts into — due, weak, new, the rest — so "the ones I keep
+getting wrong" cannot hand back an empty session on the day nothing is weak. Do
+not turn one into a filter; that is the whole reason it is expressed as an
+ordering.
+
+The stored focus and topics are written _into the session link_ by whoever starts
+the session, rather than read from preferences by the session screen. A session
+that is not fully described by its URL cannot be reloaded, shared or scripted —
+and a shared link must not practise the sharer's categories on someone else's
+device.
+
+`maxNewItems` still caps unseen material in an open-ended session, except under
+`focus=fresh`, where new material is exactly what was asked for.
 
 ## Datasets
 
@@ -142,13 +196,21 @@ The app is driven through the accessibility tree by screen readers and by
 automated agents alike, so the same rules serve both:
 
 - every control has a stable accessible name (`tests/a11y/agent-surface.test.tsx`
-  fails otherwise)
+  fails otherwise), and a name has to be _pickable_: a screen showing several
+  phrases passes `contextLabel` to `TokenizedText` so its words are named
+  `About “Tengo” in “Tengo que trabajar.”` rather than offering four controls
+  called the same thing
 - state is exposed as ARIA — `role="status"` for results, `aria-expanded` on
-  word buttons, `role="progressbar"` for session position — never colour alone
+  word buttons, `aria-pressed` on the course and category chips,
+  `role="progressbar"` for session position — never colour alone
+- a value that changes every second is not a live region. The session timer is
+  `role="timer"` with its reading in the accessible name and no `aria-live`; the
+  total is announced once, on the summary, where it is news
 - each screen has exactly one `<h1>`, one `<main>` and a matching document title
-- session state lives in the URL (`/session?preset=verbs&size=items:10&due=1`), so
-  a session can be resumed, shared or scripted. `src/features/practice/session-url.ts`
-  owns both directions — build links with `sessionPath` rather than by hand, so a
+- session state lives in the URL
+  (`/es/a1/session?preset=verbs&size=items:10&due=1`), so a session can be
+  resumed, shared or scripted. `src/features/practice/session-url.ts` owns both
+  directions — build links with `sessionPath` rather than by hand, so a
   parameter cannot be written that the screen does not read
 - colour contrast is asserted against every file in `src/styles/themes/` by
   `tests/a11y/contrast.test.ts`; use `--color-border-strong` for interactive

@@ -57,6 +57,31 @@
   flex: 0 0 auto;
 }
 
+/*
+ * Growing the selection. Pinned with the header rather than scrolling with the
+ * body: it is how you change *what* the sheet is about, so it must not be
+ * something you have to scroll back up to find.
+ */
+.span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.spanLabel {
+  flex: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .body {
   display: grid;
   align-content: start;
@@ -71,8 +96,11 @@
 }
 
 .word {
+  font-family: var(--font-display);
   font-size: var(--text-xl);
-  font-weight: 700;
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
   overflow-wrap: anywhere;
 }
 
@@ -129,7 +157,9 @@
 
 .current {
   border-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  /* The one accent tint, from the role token: a hand-mixed percentage here is
+     how the same idea came out four different shades across the app. */
+  background: var(--color-accent-soft);
 }
 
 .formLabel {
@@ -147,6 +177,26 @@
 
 .examples li {
   display: grid;
+}
+
+/* One row per word of the phrase: the word, then what it is. */
+.words {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.words li {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, auto) 1fr;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.wordItem {
+  font-weight: 600;
 }
 
 /* Arriving, not appearing: the sheet comes from the edge it is attached to.

@@ -1,4 +1,5 @@
 export * from './annotation';
+export * from './course';
 export * from './ids';
 export * from './inspect';
 export * from './language';

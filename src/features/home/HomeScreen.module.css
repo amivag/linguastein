@@ -1,20 +1,58 @@
+/*
+ * Three counts, three cards.
+ *
+ * They were one panel of grey numbers, which gave equal weight to three things
+ * that are not equal: what is waiting for you, what is still unmet, and what you
+ * have finished. Each carries its own tint now, from the role tokens rather than
+ * a mix invented here — and the tint is never the only thing saying which is
+ * which, since each card is labelled.
+ */
 .stats {
-  display: flex;
-  gap: var(--space-4);
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
 }
 
 .stat {
   display: grid;
   gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+/* Due is the one with a claim on the next few minutes. */
+.statDue {
+  border-color: transparent;
+  background: var(--color-accent-soft);
+}
+
+/* New material: warm, because it is an invitation rather than an obligation. */
+.statNew {
+  border-color: transparent;
+  background: var(--color-highlight-soft);
 }
 
 .statValue {
-  font-size: var(--text-xl);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.statDue .statValue {
+  color: var(--color-accent);
+}
+
+.statNew .statValue {
+  color: var(--color-highlight);
+}
+
+.statDone .statValue {
+  color: var(--color-success);
 }
 
 .statLabel {
@@ -22,12 +60,29 @@
   font-size: var(--text-sm);
 }
 
+/*
+ * A section rule, not just a small grey word: the label sits on a line that runs
+ * out to the edge, which is what separates two stacks of buttons without adding
+ * another box around each of them.
+ */
 .sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   margin-top: var(--space-2);
   color: var(--color-text-muted);
+  font-family: var(--font-display);
   font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-label);
+}
+
+.sectionTitle::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
 }
 
 .quick {
@@ -51,8 +106,10 @@
 }
 
 .presetLabel {
+  font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: 600;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .presetDescription {

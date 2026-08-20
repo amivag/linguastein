@@ -327,3 +327,234 @@ export const POS_LABELS: Record<PartOfSpeech, string> = {
   PUNCT: 'punctuation',
   X: 'other',
 };
+
+/* ------------------------------------------------------------------------- *
+ * Phrases
+ *
+ * A word is not the only thing a learner points at. `tener que`, `hay que`, `a
+ * la derecha` mean something as a unit that their parts do not, and the dataset
+ * already knows it: an `Annotation` spans several tokens and can carry the skill
+ * the pattern belongs to. Until now nothing could ask about a span, so that data
+ * was only reachable one word at a time.
+ * ------------------------------------------------------------------------- */
+
+/** One word of a selected phrase, summarised rather than fully inspected. */
+export interface PhraseWord {
+  readonly token: Token;
+  readonly lemma?: string;
+  readonly posLabel?: string;
+  readonly gloss?: string;
+  readonly grammar?: string;
+}
+
+export interface PhraseInfo {
+  readonly tokens: readonly Token[];
+  /** The selected words as they read, spacing and punctuation included. */
+  readonly text: string;
+  /** Patterns the selection takes part in, the ones covering all of it first. */
+  readonly constructions: readonly WordConstruction[];
+  /**
+   * Word by word. A phrase has to explain its parts as well as itself, because
+   * "you have to" does not tell anyone which of those three words is `que`.
+   */
+  readonly words: readonly PhraseWord[];
+  /** What the whole phrase this sits in means, as context. */
+  readonly context?: string;
+  /** Other phrases built on the same pattern. */
+  readonly examples: readonly WordExample[];
+}
+
+/** Words of an item in order, skipping punctuation — what a span may contain. */
+function inspectableTokens(item: LearningItem): readonly Token[] {
+  return (item.tokens ?? []).filter(isInspectable);
+}
+
+/**
+ * The selection with one more word on the given side, or unchanged at the edge.
+ *
+ * Punctuation is stepped over rather than selected: a span running to the end of
+ * a sentence should read `Tengo que trabajar`, not `Tengo que trabajar .`.
+ */
+export function expandSpan(
+  item: LearningItem,
+  selected: readonly TokenId[],
+  direction: 'before' | 'after',
+): readonly TokenId[] {
+  const words = inspectableTokens(item);
+  const positions = selected
+    .map((tokenId) => words.findIndex((token) => token.id === tokenId))
+    .filter((index) => index >= 0);
+  if (positions.length === 0) return selected;
+
+  const next = direction === 'before' ? Math.min(...positions) - 1 : Math.max(...positions) + 1;
+  const token = words[next];
+  if (!token) return selected;
+
+  const ordered = new Set([...selected, token.id]);
+  return words.filter((entry) => ordered.has(entry.id)).map((entry) => entry.id);
+}
+
+/** The word that would be added on that side, for naming the control. */
+export function nextInSpan(
+  item: LearningItem,
+  selected: readonly TokenId[],
+  direction: 'before' | 'after',
+): Token | undefined {
+  const expanded = expandSpan(item, selected, direction);
+  if (expanded.length === selected.length) return undefined;
+  const added = expanded.find((tokenId) => !selected.includes(tokenId));
+  return inspectableTokens(item).find((token) => token.id === added);
+}
+
+/**
+ * Everything known about a run of words: the pattern they form, what each of
+ * them is, and the sentence they sit in.
+ *
+ * A one-token span is deliberately *not* handled here — inspectToken says more
+ * about a single word (its other forms, other phrases using it) and the sheet
+ * asks for whichever fits the selection.
+ */
+export function inspectSpan(
+  repository: ContentRepository,
+  item: LearningItem,
+  selected: readonly TokenId[],
+  language: LanguageTag,
+  options: InspectOptions = {},
+): PhraseInfo | null {
+  const chosen = new Set(selected);
+  const all = item.tokens ?? [];
+  const positions = all.flatMap((token, index) => (chosen.has(token.id) ? [index] : []));
+  if (positions.length === 0) return null;
+
+  /*
+   * The run as it is written, not only the words that were tapped.
+   *
+   * A span is grown one *word* at a time, so the tokens between its ends are
+   * punctuation — and dropping them made a selection across a comma read
+   * `Hola cómo` where the sentence says `Hola, ¿cómo`. The breakdown below still
+   * lists only words, because a comma has nothing to explain.
+   */
+  const tokens = all
+    .slice(Math.min(...positions), Math.max(...positions) + 1)
+    .filter((token) => chosen.has(token.id) || !isInspectable(token));
+
+  const words = tokens.filter(isInspectable);
+  const constructions = spanConstructions(repository, item, chosen, language);
+  const skill = constructions.find((construction) => construction.skill)?.skill;
+
+  return {
+    tokens,
+    text: joinTokens(tokens),
+    constructions,
+    words: words.map((token) => describePhraseWord(repository, token, language)),
+    examples: skill
+      ? examplesOfSkill(repository, skill, item.id, language, options.maxExamples ?? 3)
+      : [],
+    ...optional('context', repository.translationOf(item.id, language)?.text),
+  };
+}
+
+/**
+ * Patterns touching the selection, the ones that cover all of it first.
+ *
+ * Overlap rather than an exact match, because a learner selecting `que
+ * trabajar` out of `Tengo que trabajar` is asking about the same construction as
+ * one who selected the whole thing — and refusing to answer unless the selection
+ * matched the annotation's boundaries exactly would make the feature a guessing
+ * game about where those boundaries are.
+ */
+function spanConstructions(
+  repository: ContentRepository,
+  item: LearningItem,
+  selected: ReadonlySet<TokenId>,
+  language: LanguageTag,
+): readonly WordConstruction[] {
+  const scored: { construction: WordConstruction; covers: boolean }[] = [];
+
+  for (const annotation of item.annotations ?? []) {
+    const shared = annotation.tokens.filter((token) => selected.has(token));
+    if (shared.length === 0) continue;
+
+    const skill = annotation.skill ? repository.getSkill(annotation.skill) : undefined;
+    const label = annotation.label ?? skill?.label;
+    if (!label) continue;
+
+    const gloss = annotation.skill
+      ? repository.translationOf(annotation.skill, language)?.text
+      : undefined;
+
+    scored.push({
+      construction: {
+        label,
+        ...(annotation.skill ? { skill: annotation.skill } : {}),
+        ...optional('gloss', gloss),
+      },
+      covers: shared.length === selected.size,
+    });
+  }
+
+  return scored
+    .sort((a, b) => Number(b.covers) - Number(a.covers))
+    .map((entry) => entry.construction);
+}
+
+function describePhraseWord(
+  repository: ContentRepository,
+  token: Token,
+  language: LanguageTag,
+): PhraseWord {
+  const lexeme = token.lexeme ? repository.getLexeme(token.lexeme) : undefined;
+  const pos = token.pos ?? lexeme?.pos;
+  const lemma = token.lemma ?? lexeme?.lemma;
+
+  return {
+    token,
+    ...(lemma ? { lemma } : {}),
+    ...(pos ? { posLabel: POS_LABELS[pos] } : {}),
+    ...(token.lexeme ? optional('gloss', glossOf(repository, token.lexeme, language)) : {}),
+    ...optional('grammar', describeMorphology(token.morph)),
+  };
+}
+
+function examplesOfSkill(
+  repository: ContentRepository,
+  skill: SkillId,
+  exclude: ItemId,
+  language: LanguageTag,
+  limit: number,
+): readonly WordExample[] {
+  return repository
+    .itemsOfSkill(skill)
+    .filter((candidate) => candidate.id !== exclude)
+    .slice(0, limit)
+    .map((candidate) => ({
+      id: candidate.id,
+      text: candidate.text,
+      ...optional('translation', repository.translationOf(candidate.id, language)?.text),
+    }));
+}
+
+const NO_SPACE_BEFORE = new Set(['.', ',', '!', '?', ';', ':', '»', ')']);
+const NO_SPACE_AFTER = new Set(['¿', '¡', '«', '(']);
+
+/**
+ * Whether a space belongs between two tokens, so `¿Dónde está el baño?` reads
+ * correctly. Order is data; spacing is derived (Rule 3).
+ *
+ * Here rather than in the component because the same decision has to be made
+ * without a DOM — for a share payload, an AI prompt or an accessible name — and
+ * two spellings of it would eventually disagree.
+ */
+export function needsSpaceBefore(previous: string | undefined, current: string): boolean {
+  if (previous === undefined) return false;
+  if (NO_SPACE_BEFORE.has(current)) return false;
+  return !NO_SPACE_AFTER.has(previous);
+}
+
+/** Tokens as running text. */
+export function joinTokens(tokens: readonly Token[]): string {
+  return tokens.reduce((text, token, index) => {
+    const spaced = needsSpaceBefore(tokens[index - 1]?.text, token.text);
+    return `${text}${spaced ? ' ' : ''}${token.text}`;
+  }, '');
+}

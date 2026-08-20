@@ -15,6 +15,24 @@ export type SessionMode = (typeof SESSION_MODES)[number];
 export const ORDERINGS = ['sequential', 'random', 'smart'] as const;
 export type Ordering = (typeof ORDERINGS)[number];
 
+/**
+ * Which of the things worth practising to reach for first.
+ *
+ * A bias, never a filter. A learner who says "the stuff I keep getting wrong"
+ * has told you what to lead with, not what to refuse to show them — and a focus
+ * that filtered would hand back an empty session on the good day when nothing
+ * is struggling, which reads as a broken app rather than as praise.
+ *
+ * - `balanced`   — due, then weak, then a little new material (spec §5.2)
+ * - `struggling` — the hardest first, worst first, and new material last
+ * - `due`        — clear the review queue before anything else
+ * - `fresh`      — new material first, and uncapped: it is what was asked for
+ */
+export const SESSION_FOCUSES = ['balanced', 'struggling', 'due', 'fresh'] as const;
+export type SessionFocus = (typeof SESSION_FOCUSES)[number];
+
+export const DEFAULT_SESSION_FOCUS: SessionFocus = 'balanced';
+
 export type SessionSize =
   | { readonly kind: 'items'; readonly count: number }
   | { readonly kind: 'time'; readonly minutes: number }
@@ -31,6 +49,8 @@ export interface SessionConfig {
   readonly pronunciationLocale: LanguageTag;
   /** Practice only items that are due for review. */
   readonly dueOnly?: boolean;
+  /** Which items to lead with. Only meaningful under `smart` ordering. */
+  readonly focus?: SessionFocus;
   /** Cap on unseen items mixed into a smart session. */
   readonly maxNewItems?: number;
   /** Set for reproducible sessions (tests, shared links). */

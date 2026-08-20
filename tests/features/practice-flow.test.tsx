@@ -11,10 +11,11 @@ describe('HomeScreen', () => {
   it('offers quick sessions and practice presets', async () => {
     renderWithServices(<HomeScreen />);
 
-    expect(await screen.findByRole('heading', { name: 'Test Spanish' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Español' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '5 min' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Flashcards/ })).toBeInTheDocument();
-    expect(screen.getByText(/7 items/)).toBeInTheDocument();
+    // The scope the buttons above will practise, stated where it is chosen.
+    expect(screen.getByText(/Español · 7 items in scope/)).toBeInTheDocument();
   });
 });
 

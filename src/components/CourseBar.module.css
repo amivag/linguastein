@@ -1,0 +1,79 @@
+/*
+ * The course scope, as a row of chips.
+ *
+ * Selection is an attribute rather than a class, for the reason
+ * `hover-states.test.ts` records: `[aria-pressed='true']:hover` outranks
+ * `.level:hover` outright, so no state can end up wearing another state's text
+ * colour on its background.
+ */
+
+.bar {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.compact {
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.language select {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.level {
+  display: flex;
+  min-height: var(--tap-target);
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+}
+
+.level:hover {
+  background: var(--color-surface-sunken);
+}
+
+.level[aria-pressed='true'] {
+  border-color: transparent;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.level[aria-pressed='true']:hover {
+  background: color-mix(in srgb, var(--color-accent) 88%, var(--color-text));
+}
+
+/* Present but quiet: the count is what makes a level a decision rather than a
+   label, and it is the number that changes when a pack grows. */
+.levelCount {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.note {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}

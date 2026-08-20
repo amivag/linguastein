@@ -1,8 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
+import { CourseBar } from '../../components/CourseBar';
+import { TokenizedText } from '../../components/TokenizedText';
+import { useWordSelection } from '../../components/useWordSelection';
+import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
   inferMastery,
   summarise,
@@ -12,6 +17,7 @@ import {
   type ProgressSummary,
 } from '../../domain/progress';
 import type { SessionRecord } from '../../domain/sessions';
+import { formatDuration } from '../practice/duration';
 import { sessionPath } from '../practice/session-url';
 import styles from './ProgressScreen.module.css';
 
@@ -33,23 +39,36 @@ const MASTERY_LABELS: Record<MasteryRecord['status'], string> = {
 /** What the learner has actually done — the counterpart to the practice loop. */
 export function ProgressScreen() {
   const { services, preferences } = useServices();
+  const { course, filter, path } = useCourse();
   const navigate = useNavigate();
   const [data, setData] = useState<Loaded | null>(null);
+  const words = useWordSelection();
+
+  // Progress is stored per item id and never per course, so a course switch
+  // cannot lose anything. What it does change is which of it is being reported:
+  // an A1 learner's accuracy should not be diluted by the A2 items they have
+  // not met, and "142 of 1043" is the wrong denominator for the course they are
+  // actually in.
+  const scope = useMemo(() => {
+    const items = services.repository.query(filter);
+    return { total: items.length, ids: new Set(items.map((item) => item.id)) };
+  }, [services.repository, filter]);
 
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const [progress, sessions] = await Promise.all([
+      const [stored, sessions] = await Promise.all([
         services.storage.progress.all(),
         services.storage.sessions.recent(5),
       ]);
       if (cancelled) return;
 
+      const progress = stored.filter((entry) => scope.ids.has(entry.itemId));
       const correct = progress.reduce((total, item) => total + item.correct, 0);
       const attempts = progress.reduce((total, item) => total + item.attempts, 0);
 
       setData({
-        summary: summarise(progress, services.repository.itemCount, Date.now()),
+        summary: summarise(progress, scope.total, Date.now()),
         weakest: [...progress]
           .filter((item) => item.attempts > 0)
           .sort((a, b) => b.difficulty - a.difficulty)
@@ -62,19 +81,22 @@ export function ProgressScreen() {
     return () => {
       cancelled = true;
     };
-  }, [services]);
+  }, [services, scope]);
 
   if (!data) return <AppShell title="Progress">{null}</AppShell>;
 
   const { summary, weakest, sessions, accuracy, mastery } = data;
   const started = summary.seen > 0;
+  const openItem = words.item ? services.repository.getItem(words.item) : undefined;
 
   return (
     <AppShell title="Progress">
+      <CourseBar compact />
+
       {!started && (
         <section className={styles.empty}>
           <p>No practice recorded yet.</p>
-          <Button variant="primary" block large onClick={() => void navigate('/')}>
+          <Button variant="primary" block large onClick={() => void navigate(path())}>
             Start a session
           </Button>
         </section>
@@ -112,7 +134,7 @@ export function ProgressScreen() {
             />
           </div>
           <p className={styles.caption}>
-            {summary.seen} of {summary.total} items in this pack
+            {summary.seen} of {summary.total} items in this course
           </p>
 
           {summary.due > 0 && (
@@ -122,7 +144,7 @@ export function ProgressScreen() {
               large
               onClick={() =>
                 void navigate(
-                  sessionPath({
+                  sessionPath(course, {
                     preset: 'quick',
                     // Exactly the due items, all of them: the label is a promise,
                     // and every attempt persists as it happens, so a long queue
@@ -171,7 +193,14 @@ export function ProgressScreen() {
                   );
                   return (
                     <li key={record.itemId} className={styles.row}>
-                      <span lang="es">{item.text}</span>
+                      {/* "Sentences to revisit" is exactly where a learner
+                          wants to ask which word is the problem. */}
+                      <TokenizedText
+                        item={item}
+                        onSelect={(token) => words.open(item.id, token)}
+                        selected={words.tokensFor(item.id)}
+                        contextLabel={item.text}
+                      />
                       {translation && <span className={styles.muted}>{translation.text}</span>}
                     </li>
                   );
@@ -189,6 +218,10 @@ export function ProgressScreen() {
                     <span>{new Date(session.startedAt).toLocaleDateString()}</span>
                     <span className={styles.muted}>
                       {session.correct}/{session.completed} correct
+                      {/* The record has always carried both ends; there was
+                          simply nowhere showing how long a session took. */}
+                      {session.endedAt !== undefined &&
+                        ` · ${formatDuration(session.endedAt - session.startedAt)}`}
                     </span>
                   </li>
                 ))}
@@ -196,6 +229,15 @@ export function ProgressScreen() {
             </section>
           )}
         </>
+      )}
+
+      {openItem && (
+        <WordInfoSheet
+          item={openItem}
+          tokenIds={words.tokens}
+          onChange={words.set}
+          onClose={words.close}
+        />
       )}
     </AppShell>
   );

@@ -5,6 +5,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import type { Course } from '../../src/domain/content';
 import {
   parseSessionUrl,
   sessionPath,
@@ -13,6 +14,8 @@ import {
 
 const parse = (path: string): SessionUrl =>
   parseSessionUrl(new URLSearchParams(path.slice(path.indexOf('?') + 1)));
+
+const COURSE: Course = { language: 'es', level: 'a1' };
 
 describe('sessionPath', () => {
   it('round-trips everything a session can express', () => {
@@ -33,13 +36,23 @@ describe('sessionPath', () => {
       seed: 42,
     } as const;
 
-    expect(parse(sessionPath(input))).toEqual(input);
+    expect(parse(sessionPath(COURSE, input))).toEqual(input);
   });
 
   it('omits what was not asked for, so a plain link stays readable', () => {
-    expect(sessionPath({ preset: 'listen', size: { kind: 'time', minutes: 5 } })).toBe(
-      '/session?preset=listen&size=time%3A5',
+    expect(sessionPath(COURSE, { preset: 'listen', size: { kind: 'time', minutes: 5 } })).toBe(
+      '/es/a1/session?preset=listen&size=time%3A5',
     );
+  });
+
+  /**
+   * The course is the path, not the query. A session that dropped it would
+   * replan against every pack loaded the moment the link was reopened.
+   */
+  it('hangs the session off the course it belongs to', () => {
+    expect(
+      sessionPath({ language: 'fr', level: 'all' }, { preset: 'quick', size: { kind: 'all' } }),
+    ).toBe('/fr/all/session?preset=quick&size=all');
   });
 });
 

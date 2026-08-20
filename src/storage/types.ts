@@ -4,18 +4,45 @@
  * of a remote store without the app noticing.
  */
 
-import type { ItemId, LanguageTag } from '../domain/content';
+import type { ItemId, LanguageTag, LevelScope } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
-import type { SessionRecord } from '../domain/sessions';
+import type { SessionFocus, SessionRecord } from '../domain/sessions';
 import type { ThemePreference } from '../styles/themes';
 
 export interface Preferences {
+  /** What is being learned. With the level below it, this is the current course. */
   readonly targetLanguage: LanguageTag;
+  /**
+   * How far up the course the learner is working, as a ceiling rather than a
+   * partition: `a2` includes A1 content. Remembered so `/` can reopen the
+   * course they left, which is the only reason it is stored — the URL is the
+   * source of truth once a screen is open.
+   */
+  readonly level: LevelScope;
   readonly referenceLanguage: LanguageTag;
+  /**
+   * Categories the learner wants to practise, or empty for everything.
+   *
+   * A standing choice rather than a per-session one: "I am working on food and
+   * travel" stays true across sessions, and having to re-pick it before every
+   * Quick session is how a preference that exists goes unused. It is written
+   * into the session link all the same, so a session remains fully described by
+   * its URL.
+   */
+  readonly focusTopics: readonly string[];
+  /** Which items a session leads with. A bias, never a filter. */
+  readonly focus: SessionFocus;
   readonly pronunciationLocale: LanguageTag;
   /** Chosen speech voice name; empty means "pick the best match automatically". */
   readonly voiceName: string;
   readonly autoPlayAudio: boolean;
+  /**
+   * Whether a session shows how long it has been running. On by default: it
+   * answers a question learners have and imposes nothing — there is no limit and
+   * no penalty — but a visible clock is a distraction for some people, so it is
+   * theirs to switch off.
+   */
+  readonly showTimer: boolean;
   readonly slowAudio: boolean;
   readonly showRomanisationHints: boolean;
   readonly theme: ThemePreference;

@@ -47,7 +47,7 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 
 ```text
 src/
-├── app/          composition root, routing, services context
+├── app/          composition root, routing, the current course, services context
 ├── domain/       the engine — pure, framework-free, fully tested
 │   ├── content/  language model: items, lexemes, forms, skills, translations
 │   ├── exercises/exercise generation and grading
@@ -58,8 +58,9 @@ src/
 ├── storage/      IndexedDB and in-memory implementations of learner storage
 ├── audio/        audio service, TTS and speech-recognition seams
 ├── ai/           AI provider seam and learner-context builder
-├── features/     screens: home, browse, progress, practice, settings, sharing
-├── components/   shared UI: AppShell, AppNav, Button, ThemeToggle, VoiceInput
+├── features/     screens: home, browse, read, progress, practice, settings, sharing
+├── components/   shared UI: AppShell, AppNav, Button, CourseBar, ThemeToggle,
+│                 VoiceInput, TokenizedText, WordInfoSheet
 ├── styles/       primitives + one CSS file per theme
 └── utils/        small helpers (RNG, clipboard)
 
@@ -74,17 +75,46 @@ dist/             build output (git-ignored)
 
 ## The app
 
-Four sections behind a tab bar (a rail on wider screens):
+Five sections behind a tab bar (a rail on wider screens):
 
 | Section  | What it is                                                                                        |
 | -------- | ------------------------------------------------------------------------------------------------- |
-| Practice | quick sessions and the six practice presets                                                       |
+| Practice | quick sessions, the six presets, and what to practise: categories and a focus                     |
+| Read     | connected texts and dialogues, every word tappable                                                |
 | Browse   | search and filter all 1,043 items, by thematic category or facet; dictate the search with the mic |
 | Progress | what has been practised, accuracy, weak items, recent sessions                                    |
-| Settings | language, audio and voice, appearance, data — in grouped sections                                 |
+| Settings | course, audio and voice, practice, appearance, data — in grouped sections                         |
 
 A running session hides the chrome and fills the screen, so practice stays the
 focus rather than the navigation.
+
+### Courses are in the URL
+
+Every screen lives under a course — one target language, narrowed to one CEFR
+level:
+
+```text
+/es/a1              practice, scoped to A1
+/es/a1/browse       browse, scoped to A1
+/es/all/read/700001 one passage, unnarrowed
+/es/a2/session?preset=verbs&size=items:10&focus=struggling
+```
+
+A level is a ceiling, not a chapter: A2 keeps A1 material in rotation, because
+practising it is review rather than regression. `/` redirects to the course you
+left. Only Spanish A1–A2 ships, but the courses on offer are derived from the
+packs actually loaded, so a second language pack appears in the picker — and in
+the URL — with no code change.
+
+### Asking what something means
+
+Tap a word for its meaning, grammar, the pattern it belongs to, its other forms
+and other phrases that use it. Grow the selection a word at a time and you get
+what the _run_ of words means — `tener que` is not `tener` — with a word-by-word
+breakdown beneath it. Available in practice, reading, Browse, Progress and the
+example sentences under a card. A cloze question opens up before it is answered,
+since its answer is the blank rather than any word on the card; a multiple-choice
+question does not, because the meaning of the sentence is what it is asking.
 
 ## Architecture in one page
 

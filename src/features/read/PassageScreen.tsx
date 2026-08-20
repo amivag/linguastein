@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { TokenizedText } from '../../components/TokenizedText';
 import { UsageBadges } from '../../components/UsageBadges';
+import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
-import type { ItemId, TokenId } from '../../domain/content';
 import { sessionPath } from '../practice/session-url';
 import styles from './Read.module.css';
 
@@ -20,10 +21,11 @@ import styles from './Read.module.css';
 export function PassageScreen() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
+  const { course, path } = useCourse();
   const { services, preferences } = useServices();
 
   const [showTranslations, setShowTranslations] = useState(false);
-  const [selected, setSelected] = useState<{ item: ItemId; token: TokenId } | null>(null);
+  const words = useWordSelection();
 
   const passage = services.repository.passageByLocalId(id);
   const sentences = useMemo(
@@ -35,7 +37,7 @@ export function PassageScreen() {
     return (
       <AppShell title="Read" onBack="history">
         <p className={styles.empty}>That text is not in this pack.</p>
-        <Button block onClick={() => void navigate('/read')}>
+        <Button block onClick={() => void navigate(path('read'))}>
           Back to reading
         </Button>
       </AppShell>
@@ -54,7 +56,7 @@ export function PassageScreen() {
       ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
     });
 
-  const selectedItem = selected ? sentences.find((item) => item.id === selected.item) : undefined;
+  const openItem = words.item ? sentences.find((item) => item.id === words.item) : undefined;
 
   return (
     <AppShell title={passage.title} onBack="history">
@@ -92,8 +94,9 @@ export function PassageScreen() {
               <TokenizedText
                 item={item}
                 className={styles.lineText}
-                onSelect={(token) => setSelected({ item: item.id, token })}
-                selected={selected?.item === item.id ? selected.token : null}
+                onSelect={(token) => words.open(item.id, token)}
+                selected={words.tokensFor(item.id)}
+                contextLabel={item.text}
               />
               {showTranslations && translation && (
                 <p className={styles.lineMeaning}>{translation.text}</p>
@@ -116,17 +119,20 @@ export function PassageScreen() {
         block
         large
         onClick={() =>
-          void navigate(sessionPath({ preset: 'quick', size: { kind: 'all' }, passage: id }))
+          void navigate(
+            sessionPath(course, { preset: 'quick', size: { kind: 'all' }, passage: id }),
+          )
         }
       >
         Practise these sentences
       </Button>
 
-      {selectedItem && selected && (
+      {openItem && (
         <WordInfoSheet
-          item={selectedItem}
-          tokenId={selected.token}
-          onClose={() => setSelected(null)}
+          item={openItem}
+          tokenIds={words.tokens}
+          onChange={words.set}
+          onClose={words.close}
         />
       )}
     </AppShell>

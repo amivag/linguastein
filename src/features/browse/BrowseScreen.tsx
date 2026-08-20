@@ -1,15 +1,18 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
+import { CourseBar } from '../../components/CourseBar';
+import { TokenizedText } from '../../components/TokenizedText';
 import { UsageBadges } from '../../components/UsageBadges';
+import { useWordSelection } from '../../components/useWordSelection';
 import { VoiceInput } from '../../components/VoiceInput';
+import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
-  CEFR_LEVELS,
   FILTERABLE_REGIONS,
   REGISTERS,
-  type CefrLevel,
   type ItemFilter,
   type ItemType,
   type Register,
@@ -36,22 +39,26 @@ const SESSION_CAP = 20;
  */
 export function BrowseScreen() {
   const { services, preferences } = useServices();
+  const { course, filter: courseScope } = useCourse();
   const navigate = useNavigate();
 
   const [search, setSearch] = useState('');
   const [type, setType] = useState<ItemType | 'all'>('all');
-  const [level, setLevel] = useState<CefrLevel | 'all'>('all');
   const [topic, setTopic] = useState('all');
   const [register, setRegister] = useState<Register | 'all'>('all');
   const [region, setRegion] = useState('all');
   const [limit, setLimit] = useState(PAGE_SIZE);
+  const words = useWordSelection();
 
-  const facets = useMemo(() => services.repository.facets(), [services.repository]);
-
-  // Counted over the whole pack, not the current filter: a category's size is a
-  // property of the pack, and recounting per filter would make every tile read
-  // 0 as soon as a search narrowed the results.
-  const topics = useMemo(() => services.repository.topics(), [services.repository]);
+  // Counted over the course, not the current filter: a category's size is a
+  // property of what is in scope, and recounting per search would make every
+  // tile read 0 as soon as a search narrowed the results. Level is part of the
+  // scope rather than one more select here — it is the course, and the bar above
+  // owns it.
+  const topics = useMemo(
+    () => services.repository.topics(courseScope),
+    [services.repository, courseScope],
+  );
   const topicLabels = useMemo(
     () => new Map(topics.map((entry) => [entry.id, entry.label])),
     [topics],
@@ -60,21 +67,28 @@ export function BrowseScreen() {
 
   // One filter object drives both the list and the session link, so what a
   // learner sees here is exactly what "Practise these" practises.
+  //
+  // The course scope is deliberately *not* folded in here: it is carried by the
+  // session's path rather than its query, and duplicating it would write
+  // `?level=a1` into every link the screen produces.
   const filter = useMemo<ItemFilter>(
     () => ({
       ...(search.trim() ? { search: search.trim() } : {}),
       ...(type === 'all' ? {} : { types: [type] }),
-      ...(level === 'all' ? {} : { levels: [level] }),
       ...(topic === 'all' ? {} : { topics: [topic] }),
       ...(register === 'all' ? {} : { registers: [register] }),
       ...(region === 'all' ? {} : { usableIn: region }),
     }),
-    [search, type, level, topic, register, region],
+    [search, type, topic, register, region],
   );
 
-  const results = useMemo(() => services.repository.query(filter), [services.repository, filter]);
+  const results = useMemo(
+    () => services.repository.query({ ...courseScope, ...filter }),
+    [services.repository, courseScope, filter],
+  );
 
   const shown = results.slice(0, limit);
+  const openItem = words.item ? services.repository.getItem(words.item) : undefined;
   // Never offer a longer session than the filter actually found.
   const size: SessionSize = { kind: 'items', count: Math.min(results.length, SESSION_CAP) };
 
@@ -84,6 +98,7 @@ export function BrowseScreen() {
           stacked sections spaced like separate parts of the page is how the
           filters came to occupy more of it than the results did. */}
       <div className={styles.toolbar}>
+        <CourseBar compact />
         <div className={styles.search}>
           <label className="visually-hidden" htmlFor="browse-search">
             Search Spanish or English
@@ -111,9 +126,13 @@ export function BrowseScreen() {
 
         <CategoryPicker
           topics={topics}
-          selected={topic}
-          onSelect={(next) => {
-            setTopic(next);
+          selected={topic === 'all' ? [] : [topic]}
+          // Browse filters by one category at a time, so pressing a tile
+          // replaces the selection — and pressing the selected one clears it,
+          // which is how the picker undoes itself without reaching for the
+          // neighbouring select.
+          onToggle={(next) => {
+            setTopic(next === topic ? 'all' : next);
             setLimit(PAGE_SIZE);
           }}
           action={
@@ -149,18 +168,6 @@ export function BrowseScreen() {
               {TYPES.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className={styles.filter}>
-            <span className="visually-hidden">Level</span>
-            <select value={level} onChange={(event) => setLevel(event.target.value as CefrLevel)}>
-              <option value="all">Any level</option>
-              {CEFR_LEVELS.filter((option) => facets.levels.includes(option)).map((option) => (
-                <option key={option} value={option}>
-                  {option.toUpperCase()}
                 </option>
               ))}
             </select>
@@ -209,9 +216,16 @@ export function BrowseScreen() {
           );
           return (
             <li key={item.id} className={styles.result}>
-              <span className={styles.target} lang="es">
-                {item.text}
-              </span>
+              {/* Tappable here too. Browse is where you come to look something
+                  up, so it was the worst place in the app not to be able to
+                  ask what a word in the result means. */}
+              <TokenizedText
+                item={item}
+                className={styles.target}
+                onSelect={(token) => words.open(item.id, token)}
+                selected={words.tokensFor(item.id)}
+                contextLabel={item.text}
+              />
               {translation && <span className={styles.meaning}>{translation.text}</span>}
               <span className={styles.meta}>
                 {item.level?.toUpperCase()}
@@ -238,19 +252,30 @@ export function BrowseScreen() {
         </Button>
       )}
 
+      {openItem && (
+        <WordInfoSheet
+          item={openItem}
+          tokenIds={words.tokens}
+          onChange={words.set}
+          onClose={words.close}
+        />
+      )}
+
       {results.length > 0 && (
         <div className={styles.actions}>
           <Button
             variant="primary"
             block
             large
-            onClick={() => void navigate(sessionPath({ preset: 'quick', size, filter }))}
+            onClick={() => void navigate(sessionPath(course, { preset: 'quick', size, filter }))}
           >
             Practise these
           </Button>
           <Button
             block
-            onClick={() => void navigate(sessionPath({ preset: 'flashcards', size, filter }))}
+            onClick={() =>
+              void navigate(sessionPath(course, { preset: 'flashcards', size, filter }))
+            }
           >
             Study these
           </Button>

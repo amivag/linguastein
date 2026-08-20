@@ -57,6 +57,20 @@ const PAIRS: readonly [string, string, number, string][] = [
   ['--color-border-strong', '--color-surface', 3, 'button and input outlines'],
   ['--color-border-strong', '--color-bg', 3, 'controls on the page background'],
   ['--color-border', '--color-surface', 1.2, 'decorative separators'],
+  // The tinted wash at the top of the page is behind ordinary content, so it is
+  // held to the same bar as the page itself.
+  ['--color-text', '--color-bg-tint', 4.5, 'text on the page wash'],
+  ['--color-text-muted', '--color-bg-tint', 4.5, 'labels on the page wash'],
+  ['--color-border-strong', '--color-bg-tint', 3, 'controls on the page wash'],
+  // Accent- and warm-tinted panels carry body text, so they are backgrounds
+  // with a contract rather than decoration.
+  ['--color-text', '--color-accent-soft', 4.5, 'text on an accent-tinted panel'],
+  ['--color-text', '--color-highlight-soft', 4.5, 'text on a warm-tinted panel'],
+  // The second accent is used as text and as an icon, in both themes — which is
+  // the hard half of adding a warm hue to a light palette.
+  ['--color-highlight', '--color-surface', 4.5, 'the warm accent on a card'],
+  ['--color-highlight', '--color-bg', 4.5, 'the warm accent on the page'],
+  ['--color-highlight', '--color-highlight-soft', 4.5, 'the warm accent on its own panel'],
 ];
 
 /** Every role a theme must define; the app breaks silently without them. */

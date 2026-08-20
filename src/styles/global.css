@@ -18,12 +18,22 @@ body,
   height: 100%;
 }
 
+/*
+ * The page has a light source.
+ *
+ * One flat fill was the single biggest reason the app read as austere: nothing
+ * on the screen suggested a top or a bottom. The wash is two theme tokens a hair
+ * apart and fixed to the viewport, so scrolling does not drag a visible band
+ * around and the sticky header always sits on the same colour it started on.
+ */
 body {
   background: var(--color-bg);
+  background-image: linear-gradient(180deg, var(--color-bg-tint), var(--color-bg) 24rem);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  line-height: 1.5;
+  line-height: var(--leading-body);
   -webkit-font-smoothing: antialiased;
   /* Avoid iOS double-tap zoom on practice buttons. */
   touch-action: manipulation;
@@ -35,6 +45,21 @@ input,
 select {
   font: inherit;
   color: inherit;
+}
+
+/*
+ * Headings are display type, not body type set larger: the display face,
+ * negative tracking and a tighter leading, all from the scale in
+ * `primitives.css`. A screen's own stylesheet overrides the size; none of them
+ * has to restate the face.
+ */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-heading);
 }
 
 button {

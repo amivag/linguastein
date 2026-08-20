@@ -4,9 +4,18 @@ import styles from './CategoryPicker.module.css';
 
 interface CategoryPickerProps {
   readonly topics: readonly TopicFacet[];
-  /** Currently selected topic id, or `all` for no narrowing. */
-  readonly selected: string;
-  readonly onSelect: (topic: string) => void;
+  /** Currently selected topic ids; empty means no narrowing. */
+  readonly selected: readonly string[];
+  /**
+   * A tile was pressed. Whether that adds to the selection or replaces it is
+   * the caller's decision — Browse filters by one category, practice
+   * preferences by several — and keeping it there is what lets both use this
+   * one picker instead of two that drift.
+   */
+  readonly onToggle: (topic: string) => void;
+  /** Heading and `aria-labelledby` target; unique per instance on a screen. */
+  readonly id?: string;
+  readonly title?: string;
   /**
    * The compact control for this same state — Browse's topic `<select>`. It sits
    * beside the heading rather than in the row of filters below, so the two
@@ -38,15 +47,22 @@ interface Group {
  * declared before its content exists, and offering a tile that leads to nothing
  * is worse than not offering it yet.
  */
-export function CategoryPicker({ topics, selected, onSelect, action }: CategoryPickerProps) {
+export function CategoryPicker({
+  topics,
+  selected,
+  onToggle,
+  action,
+  id = 'browse-categories',
+  title = 'Categories',
+}: CategoryPickerProps) {
   const groups = groupTopics(topics.filter((topic) => topic.count > 0));
   if (groups.length === 0) return null;
 
   return (
-    <section className={styles.picker} aria-labelledby="browse-categories">
+    <section className={styles.picker} aria-labelledby={id}>
       <div className={styles.bar}>
-        <h2 className={styles.heading} id="browse-categories">
-          Categories
+        <h2 className={styles.heading} id={id}>
+          {title}
         </h2>
         {action && <div className={styles.action}>{action}</div>}
       </div>
@@ -57,7 +73,7 @@ export function CategoryPicker({ topics, selected, onSelect, action }: CategoryP
             {group.label && <h3 className={styles.groupHeading}>{group.label}</h3>}
             <ul className={styles.tiles}>
               {group.topics.map((topic) => {
-                const pressed = topic.id === selected;
+                const pressed = selected.includes(topic.id);
                 return (
                   <li key={topic.id}>
                     <button
@@ -71,9 +87,7 @@ export function CategoryPicker({ topics, selected, onSelect, action }: CategoryP
                       // The button *is* the state, so it carries it rather than
                       // relying on the highlight a colour-only style would give.
                       aria-pressed={pressed}
-                      // Pressing the selected tile clears it, so the picker can
-                      // undo itself without reaching for the neighbouring select.
-                      onClick={() => onSelect(pressed ? 'all' : topic.id)}
+                      onClick={() => onToggle(topic.id)}
                     >
                       <span className={styles.label}>{topic.label}</span>
                       <span className={styles.count}>{topic.count}</span>

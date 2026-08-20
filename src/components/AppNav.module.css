@@ -82,6 +82,8 @@
   }
 
   .active {
-    background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    /* The one accent tint, from the role token rather than a percentage picked
+       here — the same panel colour the stat cards and the sheet use. */
+    background: var(--color-accent-soft);
   }
 }

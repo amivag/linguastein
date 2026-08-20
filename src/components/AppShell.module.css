@@ -28,13 +28,16 @@
   margin-inline: calc(var(--space-4) * -1);
   margin-bottom: var(--space-4);
   padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
-  background: var(--color-bg);
+  /* The top of the page wash, which is where the header always is: the wash is
+     fixed to the viewport, so the two cannot drift apart on scroll. */
+  background: var(--color-bg-tint);
 }
 
 .title {
   flex: 1;
-  font-size: var(--text-lg);
-  font-weight: 600;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-display);
 }
 
 .back {

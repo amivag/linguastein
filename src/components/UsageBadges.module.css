@@ -19,7 +19,7 @@
 /* Address is the choice with social consequences, so it carries the accent. */
 .address {
   border-color: transparent;
-  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  background: var(--color-accent-soft);
   font-weight: 600;
 }
 

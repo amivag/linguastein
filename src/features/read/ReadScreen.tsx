@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
+import { CourseBar } from '../../components/CourseBar';
 import { UsageBadges } from '../../components/UsageBadges';
-import type { PassageKind } from '../../domain/content';
+import { CEFR_LEVELS, type PassageKind } from '../../domain/content';
 import styles from './Read.module.css';
 
 const KINDS: readonly { readonly id: PassageKind | 'all'; readonly label: string }[] = [
@@ -19,15 +21,27 @@ const KINDS: readonly { readonly id: PassageKind | 'all'; readonly label: string
  */
 export function ReadScreen() {
   const { services, preferences } = useServices();
+  const { filter, path } = useCourse();
   const [kind, setKind] = useState<PassageKind | 'all'>('all');
 
   const passages = useMemo(() => {
-    const all = services.repository.allPassages();
-    return kind === 'all' ? all : all.filter((passage) => passage.kind === kind);
-  }, [services.repository, kind]);
+    // A passage carries its own level, so the course narrows this list the same
+    // way it narrows the pack: a B1 text has no business appearing in an A1
+    // course just because its sentences are individually practisable.
+    const ceiling = filter.levels?.length
+      ? Math.max(...filter.levels.map((level) => CEFR_LEVELS.indexOf(level)))
+      : undefined;
+    return services.repository.allPassages().filter((passage) => {
+      if (kind !== 'all' && passage.kind !== kind) return false;
+      if (filter.packs?.length && !filter.packs.includes(passage.pack)) return false;
+      if (ceiling === undefined) return true;
+      return passage.level !== undefined && CEFR_LEVELS.indexOf(passage.level) <= ceiling;
+    });
+  }, [services.repository, kind, filter]);
 
   return (
     <AppShell title="Read">
+      <CourseBar compact />
       <p className={styles.intro}>
         Short texts and conversations built from words you already practise. Tap any word for its
         meaning.
@@ -61,7 +75,7 @@ export function ReadScreen() {
           );
           return (
             <li key={passage.id}>
-              <Link className={styles.card} to={`/read/${localId(passage.id)}`}>
+              <Link className={styles.card} to={path(`read/${localId(passage.id)}`)}>
                 <span className={styles.cardTitle} lang="es">
                   {passage.title}
                 </span>

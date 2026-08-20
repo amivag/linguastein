@@ -9,8 +9,10 @@ import type { ContentRepository, ItemId, LearningItem } from '../content';
 import { isDue, type ItemProgress, type Timestamp } from '../progress/types';
 import { seededRng, shuffle, systemRng, type Rng } from '../../utils/random';
 import {
+  DEFAULT_SESSION_FOCUS,
   ESTIMATED_MS_PER_ITEM,
   type SessionConfig,
+  type SessionFocus,
   type SessionPlan,
   type SessionSize,
 } from './types';
@@ -70,38 +72,75 @@ function order(
     case 'random':
       return shuffle(items, rng);
     case 'smart':
-      return smartOrder(items, progress, now, rng, config.maxNewItems);
+      return smartOrder(
+        items,
+        progress,
+        now,
+        rng,
+        config.focus ?? DEFAULT_SESSION_FOCUS,
+        config.maxNewItems,
+      );
   }
 }
 
+type Bucket = 'due' | 'weak' | 'fresh' | 'rest';
+
+/**
+ * Which bucket each focus leads with.
+ *
+ * Every focus is a permutation of the same four groups rather than its own
+ * algorithm, which is what keeps a focus from being able to empty a session: the
+ * groups it deprioritises are still there, just later. `balanced` is spec §5.2
+ * unchanged.
+ *
+ * `struggling` puts new material dead last on purpose — meeting new words is the
+ * opposite of consolidating the ones already going wrong.
+ */
+const BUCKET_ORDER: Record<SessionFocus, readonly Bucket[]> = {
+  balanced: ['due', 'weak', 'fresh', 'rest'],
+  struggling: ['weak', 'due', 'rest', 'fresh'],
+  due: ['due', 'weak', 'rest', 'fresh'],
+  fresh: ['fresh', 'due', 'weak', 'rest'],
+};
+
 /**
  * Weak and due items first, a controlled number of new items mixed in, then
- * everything else — the shape spec §5.2 describes, kept simple on purpose.
+ * everything else — the shape spec §5.2 describes, reordered by the focus the
+ * learner picked.
  */
 function smartOrder(
   items: readonly LearningItem[],
   progress: ReadonlyMap<ItemId, ItemProgress>,
   now: Timestamp,
   rng: Rng,
+  focus: SessionFocus,
   maxNewItems = Number.POSITIVE_INFINITY,
 ): readonly LearningItem[] {
-  const due: LearningItem[] = [];
-  const weak: LearningItem[] = [];
-  const fresh: LearningItem[] = [];
-  const rest: LearningItem[] = [];
+  const buckets: Record<Bucket, LearningItem[]> = { due: [], weak: [], fresh: [], rest: [] };
 
   for (const item of items) {
     const state = progress.get(item.id);
-    if (!state || state.status === 'new') fresh.push(item);
-    else if (isDue(state, now)) due.push(item);
-    else if (state.difficulty >= 0.5) weak.push(item);
-    else rest.push(item);
+    if (!state || state.status === 'new') buckets.fresh.push(item);
+    else if (isDue(state, now)) buckets.due.push(item);
+    else if (state.difficulty >= 0.5) buckets.weak.push(item);
+    else buckets.rest.push(item);
   }
 
-  return [
-    ...shuffle(due, rng),
-    ...shuffle(weak, rng),
-    ...shuffle(fresh, rng).slice(0, maxNewItems),
-    ...shuffle(rest, rng),
-  ];
+  // Asked for the hardest, get the hardest: within the weak group, difficulty
+  // decides the order rather than the shuffle. Deterministic either way.
+  if (focus === 'struggling') {
+    buckets.weak.sort(
+      (a, b) => (progress.get(b.id)?.difficulty ?? 0) - (progress.get(a.id)?.difficulty ?? 0),
+    );
+  }
+
+  // The cap exists so "10 minutes of practice" cannot become ten first
+  // encounters. Under `fresh` that is exactly what was asked for, so it lifts.
+  const newCap = focus === 'fresh' ? Number.POSITIVE_INFINITY : maxNewItems;
+
+  return BUCKET_ORDER[focus].flatMap((bucket) => {
+    if (bucket === 'fresh') return shuffle(buckets.fresh, rng).slice(0, newCap);
+    if (bucket === 'weak' && focus === 'struggling') return buckets.weak;
+    return shuffle(buckets[bucket], rng);
+  });
 }

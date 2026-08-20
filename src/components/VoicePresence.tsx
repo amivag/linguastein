@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useCourse } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
 import { Button } from './Button';
@@ -72,6 +73,7 @@ export function VoicePresence() {
  */
 function VoiceMenu({ onClose }: { readonly onClose: () => void }) {
   const menuRef = useFocusTrap<HTMLDivElement>(onClose);
+  const { path } = useCourse();
 
   return (
     <div className={styles.overlay}>
@@ -93,7 +95,7 @@ function VoiceMenu({ onClose }: { readonly onClose: () => void }) {
 
         <VoiceSettings variant="panel" />
 
-        <Link className={styles.link} to="/settings" onClick={onClose}>
+        <Link className={styles.link} to={path('settings')} onClick={onClose}>
           All settings
         </Link>
       </div>

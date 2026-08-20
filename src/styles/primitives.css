@@ -21,13 +21,51 @@
   --radius-md: 14px;
   --radius-lg: 22px;
 
-  /* Typography */
+  /*
+   * Typography.
+   *
+   * Two faces, both resolved from what the device already has: no webfont, so
+   * nothing here can fail to load on a plane, and the offline-first contract
+   * stays intact.
+   *
+   * `--font-sans` is the interface. `--font-display` is for the things a
+   * learner actually looks at — a phrase on a card, a big number, a screen
+   * title — and is a genuinely different face on every platform that ships one:
+   * the rounded system face on Apple, the display cut of Segoe on Windows 11,
+   * and a graceful fall back to the interface face elsewhere. It is what stops
+   * the app reading as a settings screen with Spanish in it.
+   */
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display:
+    ui-rounded, 'SF Pro Rounded', 'Segoe UI Variable Display', 'Segoe UI Variable', Avenir,
+    'Nunito Sans', var(--font-sans);
+
+  --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.25rem;
   --text-xl: 1.5rem;
   --text-2xl: 2rem;
+  --text-3xl: 2.75rem;
+
+  /*
+   * Tracking. Type set large needs less of it and type set small needs more —
+   * the single default is what made every heading look like body text that
+   * happened to be bigger.
+   */
+  --tracking-display: -0.02em;
+  --tracking-tight: -0.01em;
+  --tracking-label: 0.06em;
+
+  /* Line height by role: tight for display, comfortable for prose. */
+  --leading-display: 1.15;
+  --leading-heading: 1.25;
+  --leading-body: 1.5;
+
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 800;
 
   /* Layout: one readable column that widens with the viewport rather than
      stretching text to unreadable line lengths on a desktop monitor. */
@@ -70,6 +108,7 @@
     --text-lg: 1.35rem;
     --text-xl: 1.7rem;
     --text-2xl: 2.25rem;
+    --text-3xl: 3rem;
   }
 }
 
@@ -77,6 +116,7 @@
   :root {
     --content-width: 840px;
     --text-2xl: 2.5rem;
+    --text-3xl: 3.25rem;
   }
 }
 

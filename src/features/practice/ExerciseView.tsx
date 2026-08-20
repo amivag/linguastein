@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useServices } from '../../app/services-context';
 import { Button, type ButtonVariant } from '../../components/Button';
 import type { Exercise, GradeResult } from '../../domain/exercises';
 import { isSelfRated } from '../../domain/exercises';
+
 import type { TokenId } from '../../domain/content';
 import { REVIEW_GRADES, type ReviewGrade } from '../../domain/progress';
 import { AudioControls } from './AudioControls';
@@ -10,6 +12,7 @@ import { ItemDetails } from './ItemDetails';
 import { SpeakCheck } from './SpeakCheck';
 import styles from './Practice.module.css';
 import { TokenizedText } from '../../components/TokenizedText';
+import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import type { SessionRunner } from './useSessionRunner';
 
@@ -40,9 +43,10 @@ const GRADE_LABELS: Record<ReviewGrade, string> = {
  * content model never changes shape to accommodate an interaction (Rule 2).
  */
 export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
+  const { services } = useServices();
   const [revealed, setRevealed] = useState(false);
   const [built, setBuilt] = useState<readonly string[]>([]);
-  const [selectedToken, setSelectedToken] = useState<TokenId | null>(null);
+  const words = useWordSelection();
   // Which choice was tapped, so the feedback can mark that one rather than
   // painting every distractor red.
   const [chosen, setChosen] = useState<string | null>(null);
@@ -71,7 +75,19 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   // their translations — each spell it out, so both stay shut until the answer
   // is in. Self-rated cards reveal on the learner's own terms.
   const answerLocked = !isSelfRated(exercise.kind) && !answered;
-  const selectWord = answerLocked ? undefined : setSelectedToken;
+  const selectWord = answerLocked ? undefined : (tokenId: TokenId) => words.open(item.id, tokenId);
+
+  /**
+   * A cloze is the one graded card whose prompt can be opened up before it is
+   * answered. Its answer is the missing word, and that word is rendered as the
+   * blank rather than as a button — so the rest of the sentence gives nothing
+   * away, and "what does *sé* mean, and why is it *que* here" is answerable at
+   * the moment the question is being read rather than only afterwards.
+   */
+  const clozeSelect =
+    exercise.kind === 'cloze-choice'
+      ? (tokenId: TokenId) => words.open(item.id, tokenId)
+      : undefined;
 
   // Playback speaks the item's own text, so it hands over any card whose answer
   // is that text or a word missing from it. Multiple choice is the exception:
@@ -79,6 +95,8 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   // the card is not already showing — and an audio-first app should let you
   // hear the phrase before you commit to a meaning, not only afterwards.
   const audioLocked = answerLocked && exercise.kind !== 'multiple-choice';
+
+  const openItem = words.item ? services.repository.getItem(words.item) : undefined;
 
   return (
     <section ref={cardRef} className={styles.card} tabIndex={-1} aria-labelledby={headingId}>
@@ -91,7 +109,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             item={item}
             className={styles.prompt}
             onSelect={selectWord}
-            selected={selectedToken}
+            selected={words.tokensFor(item.id)}
           />
           <AudioControls item={item} autoPlay />
           <p className={styles.hint}>Listen, then say it aloud.</p>
@@ -112,7 +130,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             item={item}
             className={styles.prompt}
             onSelect={selectWord}
-            selected={selectedToken}
+            selected={words.tokensFor(item.id)}
           />
           <AudioControls item={item} />
           {revealed && exercise.translation ? (
@@ -135,7 +153,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
                 item={item}
                 className={styles.prompt}
                 onSelect={selectWord}
-                selected={selectedToken}
+                selected={words.tokensFor(item.id)}
               />
               <AudioControls item={item} autoPlay />
               <SpeakCheck expected={exercise.answer} />
@@ -150,13 +168,25 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
 
       {(exercise.kind === 'multiple-choice' || exercise.kind === 'cloze-choice') && (
         <>
-          {/* Once answered, the full sentence is shown and its words open up. */}
+          {/* Once answered, the full sentence is shown and its words open up.
+              Before that, a cloze still shows its own sentence — with the blank
+              in place of the answer — so the words around the gap are tappable
+              while the question is live. Multiple choice cannot do the same: the
+              meaning of the sentence *is* what it is asking. */}
           {answered ? (
             <TokenizedText
               item={item}
               className={styles.prompt}
               onSelect={selectWord}
-              selected={selectedToken}
+              selected={words.tokensFor(item.id)}
+            />
+          ) : exercise.kind === 'cloze-choice' ? (
+            <TokenizedText
+              item={item}
+              className={styles.prompt}
+              onSelect={clozeSelect}
+              selected={words.tokensFor(item.id)}
+              blankTokenId={exercise.blankTokenId}
             />
           ) : (
             <p className={styles.prompt} lang="es">
@@ -232,7 +262,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
                 item={item}
                 className={styles.prompt}
                 onSelect={selectWord}
-                selected={selectedToken}
+                selected={words.tokensFor(item.id)}
               />
               <AudioControls item={item} />
             </>
@@ -264,10 +294,19 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           looked up afterwards. */}
       <UsageBadges register={item.register} address={item.address} regions={item.regions} />
 
-      {!answerLocked && <ItemDetails item={item} />}
+      {!answerLocked && (
+        <ItemDetails item={item} onSelectWord={words.open} selectedTokens={words.tokensFor} />
+      )}
 
-      {selectedToken && (
-        <WordInfoSheet item={item} tokenId={selectedToken} onClose={() => setSelectedToken(null)} />
+      {/* Resolved from the repository rather than assumed to be this card's
+          item: the example sentences below open their own words too. */}
+      {openItem && (
+        <WordInfoSheet
+          item={openItem}
+          tokenIds={words.tokens}
+          onChange={words.set}
+          onClose={words.close}
+        />
       )}
     </section>
   );

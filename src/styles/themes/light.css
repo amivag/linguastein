@@ -9,14 +9,18 @@
 [data-theme='light'] {
   color-scheme: light;
 
-  --color-bg: #f7f8fa;
+  /* The page, and the wash at the top of it. The two are a hair apart on
+     purpose: enough for the screen to have a light source, not enough to read
+     as a coloured band. */
+  --color-bg: #f6f6fb;
+  --color-bg-tint: #eceefb;
   --color-surface: #ffffff;
   --color-surface-raised: #ffffff;
   /* Recessed into a card: rows you pick from, answer slots, tracks. A light
      theme cannot raise anything above white, so depth has to go downwards. */
-  --color-surface-sunken: #e9ecf1;
-  --color-border: #e2e5ea;
-  --color-border-strong: #7e858f;
+  --color-surface-sunken: #ebecf4;
+  --color-border: #e3e4ef;
+  --color-border-strong: #7b8296;
   --color-text: #14161a;
   --color-text-muted: #5c6472;
   /* An accent on a white page has to be dark enough to carry white text and to
@@ -24,8 +28,22 @@
      while it is light and turns to mud once it is dark. Indigo sits far from
      both the success green and the danger red, and shares the cool cast of the
      greys above. */
-  --color-accent: #3b4ecc;
+  --color-accent: #4338ca;
   --color-accent-contrast: #ffffff;
+  /* The accent at panel strength. It replaces a dozen hand-written
+     `color-mix(accent 14%)` values, which is what made the same tint come out
+     four slightly different shades across the app. */
+  --color-accent-soft: #e8eafc;
+  /*
+   * The second accent: warm, and deliberately not a semantic.
+   *
+   * It exists because a single hue plus grey is what made the app read as
+   * austere, and it is amber rather than another blue so the two never look
+   * like a gradient of one idea. Dark enough to be text on the page — which is
+   * the whole difficulty with a warm accent in a light theme.
+   */
+  --color-highlight: #9a4a06;
+  --color-highlight-soft: #fdf0dd;
   --color-success: #0b6b3a;
   --color-danger: #b3261e;
 

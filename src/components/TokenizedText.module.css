@@ -15,6 +15,31 @@
 }
 
 .selected {
-  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  background: var(--color-accent-soft);
   border-bottom-color: var(--color-accent);
+}
+
+/*
+ * A selected run is one highlight, not several.
+ *
+ * Only its outer corners are rounded and the inner sides bleed into the space
+ * between words, so `tener que` reads as a single selected phrase rather than as
+ * two words that happen to be lit at the same time. The shape is decoration —
+ * `aria-expanded` on each word is what actually reports the state.
+ */
+.selected[data-edge='start'] {
+  border-radius: 4px 0 0 4px;
+  box-shadow: 4px 0 0 var(--color-accent-soft);
+}
+
+.selected[data-edge='middle'] {
+  border-radius: 0;
+  box-shadow:
+    -4px 0 0 var(--color-accent-soft),
+    4px 0 0 var(--color-accent-soft);
+}
+
+.selected[data-edge='end'] {
+  border-radius: 0 4px 4px 0;
+  box-shadow: -4px 0 0 var(--color-accent-soft);
 }

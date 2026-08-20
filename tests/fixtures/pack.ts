@@ -97,9 +97,20 @@ export const ITEMS: readonly LearningItem[] = [
       { locale: 'es-MX', src: 'audio/es-MX/001.mp3' },
     ],
   }),
+  // Tokenised as well, and deliberately without a lexeme on its verb: the
+  // generated pack tokenises every sentence, so a list showing two of them has
+  // two tokens called `t1` — which is what makes an item-scoped selection
+  // testable. No lexeme keeps it out of the cloze generator, so adding the
+  // tokens does not quietly change which exercise the composer picks for it.
   item('002', 'Tengo que irme.', {
     topics: ['everyday'],
     lexemes: [id<LexemeId>('test-es:lexeme:tener')],
+    tokens: [
+      { id: 't1', text: 'Tengo', pos: 'VERB' },
+      { id: 't2', text: 'que', pos: 'SCONJ' },
+      { id: 't3', text: 'irme', pos: 'VERB' },
+      { id: 't4', text: '.', pos: 'PUNCT' },
+    ],
   }),
   // Carries usage marking: casual, and addressed to someone as tú.
   item('003', '¿Tienes tiempo?', {
@@ -262,4 +273,58 @@ export const TEST_PACK: ContentPack = {
 
 export function testRepository(): ContentRepository {
   return ContentRepository.from([TEST_PACK]);
+}
+
+export const TEST_PACK_FR_ID = id<PackId>('test-fr');
+
+/**
+ * A second language, in a second pack.
+ *
+ * Deliberately tiny and deliberately not Spanish: the point is that nothing in
+ * the app may assume one target language or one pack. It carries a level the
+ * Spanish pack does not (`b1`), so a course's levels have to come from its own
+ * content rather than from whatever the repository has seen.
+ */
+export const TEST_PACK_FR: ContentPack = {
+  manifest: {
+    id: TEST_PACK_FR_ID,
+    name: 'Test French',
+    targetLanguage: 'fr',
+    version: '1.0.0',
+    files: [{ kind: 'items', path: 'items.jsonl' }],
+    topics: [{ id: 'greetings', label: 'Greetings', group: 'People' }],
+  },
+  items: [
+    {
+      id: id<ItemId>('test-fr:item:001'),
+      pack: TEST_PACK_FR_ID,
+      type: 'sentence',
+      text: 'Je dois travailler.',
+      level: 'a1',
+      topics: ['greetings'],
+    },
+    {
+      id: id<ItemId>('test-fr:item:002'),
+      pack: TEST_PACK_FR_ID,
+      type: 'word',
+      text: 'bonjour',
+      level: 'b1',
+      topics: ['greetings'],
+    },
+  ],
+  lexemes: [],
+  senses: [],
+  verbForms: [],
+  skills: [],
+  translations: [
+    { ref: 'test-fr:item:001', lang: 'en', text: 'I have to work.' },
+    { ref: 'test-fr:item:002', lang: 'en', text: 'hello' },
+  ],
+  passages: [],
+  audio: [],
+};
+
+/** Both packs, for anything that has to hold with more than one language loaded. */
+export function multilingualRepository(): ContentRepository {
+  return ContentRepository.from([TEST_PACK, TEST_PACK_FR]);
 }

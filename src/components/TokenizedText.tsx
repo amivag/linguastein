@@ -1,6 +1,7 @@
 import {
   isInspectable,
   isInspectableItem,
+  needsSpaceBefore,
   WHOLE_ITEM_TOKEN,
   type LearningItem,
   type TokenId,
@@ -12,7 +13,25 @@ interface TokenizedTextProps {
   readonly className?: string | undefined;
   /** Omitted (or undefined) makes the text inert — words are then not tappable. */
   readonly onSelect?: ((tokenId: TokenId) => void) | undefined;
-  readonly selected?: TokenId | null | undefined;
+  /** Tokens currently open in the sheet; several when a phrase is selected. */
+  readonly selected?: readonly TokenId[] | undefined;
+  /**
+   * The token a cloze exercise has blanked out. Rendered as the blank and left
+   * inert, so the rest of the sentence can be inspected without the card handing
+   * over the answer it is about to grade.
+   */
+  readonly blankTokenId?: TokenId | undefined;
+  /**
+   * The phrase to name in each word's accessible name, for a screen that shows
+   * several at once.
+   *
+   * A list of sentences all containing `Tengo` otherwise offers a row of
+   * controls called "About “Tengo”" that neither a screen reader nor an agent
+   * can tell apart — the same problem the per-line play buttons in a passage
+   * solved by naming their line. A practice card shows one phrase and passes
+   * nothing, keeping its names short.
+   */
+  readonly contextLabel?: string | undefined;
 }
 
 /**
@@ -26,10 +45,23 @@ interface TokenizedTextProps {
  * text, which left the gloss, gender and example sentences the dataset holds
  * for it with nowhere to be opened from — so the whole text becomes the one
  * word to tap.
+ *
+ * Selection is a list rather than a single id: `tener que` means something its
+ * two words do not, and the dataset annotates exactly that. A selected run is
+ * marked as one continuous highlight, with the outer edges rounded, so it reads
+ * as one thing rather than as two words that happen to be lit.
  */
-export function TokenizedText({ item, className, onSelect, selected }: TokenizedTextProps) {
+export function TokenizedText({
+  item,
+  className,
+  onSelect,
+  selected,
+  blankTokenId,
+  contextLabel,
+}: TokenizedTextProps) {
   const tokens = item.tokens ?? [];
   const wholeItem = tokens.length === 0 && isInspectableItem(item);
+  const open = selected ?? [];
 
   if (!onSelect || (tokens.length === 0 && !wholeItem)) {
     return (
@@ -46,7 +78,7 @@ export function TokenizedText({ item, className, onSelect, selected }: Tokenized
           text={item.text}
           tokenId={WHOLE_ITEM_TOKEN}
           onSelect={onSelect}
-          selected={selected}
+          selected={open.includes(WHOLE_ITEM_TOKEN)}
         />
       </p>
     );
@@ -55,12 +87,14 @@ export function TokenizedText({ item, className, onSelect, selected }: Tokenized
   return (
     <p className={className} lang="es">
       {tokens.map((token, index) => {
-        const spaced = index > 0 && needsSpace(tokens[index - 1]?.text, token.text);
-        if (!isInspectable(token)) {
+        const spaced = needsSpaceBefore(tokens[index - 1]?.text, token.text);
+        const blanked = token.id === blankTokenId;
+
+        if (blanked || !isInspectable(token)) {
           return (
             <span key={token.id}>
               {spaced ? ' ' : ''}
-              {token.text}
+              {blanked ? '___' : token.text}
             </span>
           );
         }
@@ -71,7 +105,11 @@ export function TokenizedText({ item, className, onSelect, selected }: Tokenized
               text={token.text}
               tokenId={token.id}
               onSelect={onSelect}
-              selected={selected}
+              selected={open.includes(token.id)}
+              context={contextLabel}
+              // Only the ends of a run are rounded, so a two-word selection
+              // does not look like two separate one-word selections.
+              edge={edgeOf(open, tokens, index)}
             />
           </span>
         );
@@ -80,39 +118,59 @@ export function TokenizedText({ item, className, onSelect, selected }: Tokenized
   );
 }
 
+type Edge = 'single' | 'start' | 'middle' | 'end';
+
+/** Where this token sits within a selected run, for the highlight's shape. */
+function edgeOf(
+  open: readonly TokenId[],
+  tokens: readonly { readonly id: TokenId }[],
+  index: number,
+): Edge {
+  const isOpen = (position: number) => {
+    const id = tokens[position]?.id;
+    return id !== undefined && open.includes(id);
+  };
+  if (!isOpen(index)) return 'single';
+  const before = isOpen(index - 1);
+  const after = isOpen(index + 1);
+  if (before && after) return 'middle';
+  if (before) return 'end';
+  if (after) return 'start';
+  return 'single';
+}
+
 interface WordButtonProps {
   readonly text: string;
   readonly tokenId: TokenId;
   readonly onSelect: (tokenId: TokenId) => void;
-  readonly selected?: TokenId | null | undefined;
+  readonly selected: boolean;
+  readonly edge?: Edge;
+  readonly context?: string | undefined;
 }
 
 /**
  * One word you can open. Its accessible name is the contract screen readers and
  * agents pick a word by, so both shapes of text name a word the same way.
  */
-function WordButton({ text, tokenId, onSelect, selected }: WordButtonProps) {
-  const open = selected === tokenId;
-
+function WordButton({
+  text,
+  tokenId,
+  onSelect,
+  selected,
+  edge = 'single',
+  context,
+}: WordButtonProps) {
   return (
     <button
       type="button"
-      className={`${styles.token} ${open ? styles.selected : ''}`}
+      className={`${styles.token} ${selected ? styles.selected : ''}`}
+      data-edge={selected ? edge : undefined}
       onClick={() => onSelect(tokenId)}
-      aria-label={`About “${text}”`}
-      aria-expanded={open}
+      aria-label={context ? `About “${text}” in “${context}”` : `About “${text}”`}
+      aria-expanded={selected}
       aria-haspopup="dialog"
     >
       {text}
     </button>
   );
-}
-
-const NO_SPACE_BEFORE = new Set(['.', ',', '!', '?', ';', ':', '»', ')']);
-const NO_SPACE_AFTER = new Set(['¿', '¡', '«', '(']);
-
-function needsSpace(previous: string | undefined, current: string): boolean {
-  if (previous === undefined) return false;
-  if (NO_SPACE_BEFORE.has(current)) return false;
-  return !NO_SPACE_AFTER.has(previous);
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
+import { CourseBar } from '../../components/CourseBar';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { VoiceSettings } from '../../components/VoiceSettings';
 import { REFERENCE_LANGUAGES } from '../../domain/content';
@@ -36,6 +37,16 @@ export function SettingsScreen() {
         <h2 className={styles.groupTitle} id="group-language">
           Language
         </h2>
+        {/* The same control the course bar offers everywhere else, so there is
+            one way to change course rather than two that can disagree. */}
+        <div className={styles.field}>
+          <span className={styles.label}>Learning</span>
+          <CourseBar />
+          <span className={styles.hint}>
+            A level is a ceiling, not a chapter: choosing A2 keeps A1 material in rotation as
+            review.
+          </span>
+        </div>
         <label className={styles.field}>
           <span className={styles.label}>Reference language</span>
           <select
@@ -62,6 +73,24 @@ export function SettingsScreen() {
             in either place is the same change — there is nothing here that the
             menu cannot reach, and nothing in the menu that stops here. */}
         <VoiceSettings />
+      </section>
+
+      <section className={styles.group} aria-labelledby="group-practice">
+        <h2 className={styles.groupTitle} id="group-practice">
+          Practice
+        </h2>
+        <label className={styles.toggle}>
+          <input
+            type="checkbox"
+            checked={preferences.showTimer}
+            onChange={(event) => updatePreferences({ showTimer: event.target.checked })}
+          />
+          <span>Show elapsed time</span>
+        </label>
+        <span className={styles.hint}>
+          How long the session has been running. There is no limit and no penalty — switch it off if
+          a clock is a distraction.
+        </span>
       </section>
 
       <section className={styles.group} aria-labelledby="group-appearance">

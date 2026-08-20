@@ -6,7 +6,7 @@
 
 import type { ContentRepository, ItemFilter, LexemeId } from '../../domain/content';
 import type { ExerciseKind } from '../../domain/exercises';
-import type { Ordering, SessionConfig, SessionSize } from '../../domain/sessions';
+import type { Ordering, SessionConfig, SessionFocus, SessionSize } from '../../domain/sessions';
 import type { Preferences } from '../../storage';
 
 export const PRESET_IDS = [
@@ -110,6 +110,17 @@ export interface BuildConfigOptions {
   readonly ordering?: Ordering;
   readonly seed?: number;
   readonly dueOnly?: boolean;
+  readonly focus?: SessionFocus;
+  /**
+   * The course: which packs and which levels are in play at all.
+   *
+   * Separate from `scope` because the two mean different things to the new-item
+   * cap below. A course is the standing context — being in one is not a
+   * deliberate choice of set — whereas a scope is a learner pointing at
+   * something specific. Folding the course into `scope` would make every
+   * session look hand-picked and switch the cap off everywhere.
+   */
+  readonly courseScope?: ItemFilter;
   /** Narrows the preset further, e.g. to the sentences of one passage. */
   readonly scope?: ItemFilter;
 }
@@ -127,7 +138,7 @@ export function buildSessionConfig(preset: Preset, options: BuildConfigOptions):
 
   return {
     mode: preset.mode,
-    filter: { ...preset.filter(options.repository), ...options.scope },
+    filter: { ...preset.filter(options.repository), ...options.courseScope, ...options.scope },
     size: options.size,
     ordering: options.ordering ?? preset.ordering,
     exerciseKinds: preset.exerciseKinds,
@@ -135,6 +146,7 @@ export function buildSessionConfig(preset: Preset, options: BuildConfigOptions):
     pronunciationLocale: options.preferences.pronunciationLocale,
     ...(scoped ? {} : { maxNewItems: NEW_ITEM_CAP }),
     ...(options.dueOnly ? { dueOnly: true } : {}),
+    ...(options.focus ? { focus: options.focus } : {}),
     ...(options.seed !== undefined ? { seed: options.seed } : {}),
   };
 }

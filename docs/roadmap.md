@@ -13,8 +13,19 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - Session planner: filters, sequential / random / smart ordering, item- and
   time-based sizing, seeded determinism
 - Sessions fully described by their URL — preset, size, passage, the faceted
-  filters, review-only, ordering and seed — built and parsed in one place, so a
-  session can be filtered from Browse, resumed, shared or scripted
+  filters, review-only, focus, ordering and seed — built and parsed in one place,
+  so a session can be filtered from Browse, resumed, shared or scripted
+- Courses: one target language narrowed to one CEFR level, in the path
+  (`/es/a1/browse`), derived from the packs actually loaded. Level is a ceiling
+  rather than a chapter, so A2 keeps A1 material in rotation, and every count,
+  list and session plan narrows to the course. A second language pack needs no
+  code change; a French fixture pack in the suite keeps that honest
+- Practice focus: a standing choice of categories plus one of balanced / shaky /
+  reviews / new material. A bias on the planner's existing buckets, never a
+  filter, so it cannot produce an empty session — and written into the session
+  link rather than read from preferences by the session screen
+- An elapsed-time readout during a session, with the total and per-card pace on
+  the summary. No limit, no countdown, no penalty, and switchable off
 - Review what is due: the due count on Home and Progress starts a session of
   exactly those items
 - Progress model + FSRS scheduling behind a `Scheduler` seam, exercise
@@ -22,8 +33,12 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   word- and pattern-level mastery
 - IndexedDB storage with an in-memory fallback and identical contract tests
 - Audio service with pre-generated-audio-first resolution and a TTS seam
-- Word inspection: tap any word in a phrase for its meaning, grammar, the
-  pattern it belongs to, its other forms and other phrases that use it
+- Word and phrase inspection: tap any word for its meaning, grammar, the pattern
+  it belongs to, its other forms and other phrases that use it — or grow the
+  selection a word at a time for the pattern a run of words forms, a word-by-word
+  breakdown and other phrases built the same way. Available in practice (a cloze
+  included, before it is answered), reading, Browse, Progress and the example
+  sentences under a card
 - Copy / share, including "copy as AI prompt"
 - Mobile-first UI: home, session, settings
 - Dataset authoring pipeline: TSV sources → generated pack, with a Spanish
@@ -112,13 +127,12 @@ The dataset work is briefed in full for a fresh session:
    because progress references stable ids and an integer cannot have one — a
    closed set of number cards, plus an unbounded drill scored against pattern
    ids. Briefed in full in [docs/tasks/numerals.md](tasks/numerals.md).
-5. **Game feel** — the app is clean, correct and slightly austere. A motion scale
-   (there is exactly one motion token today), answer feedback with weight, session
-   progress that reads as progress, and an end-of-session summary that says what
-   was achieved rather than printing a fraction. Deliberately excludes the usual
-   mechanics: no resettable streak, no reward that overstates the evidence, and
-   nothing where motion is the only signal. Briefed in
-   [docs/tasks/game-feel.md](tasks/game-feel.md).
+5. **Game feel** — mostly landed. The motion scale, segmented session progress,
+   the earned end-of-session summary, and now a palette with a second accent, a
+   page wash and a display type scale are all in. What remains is §4.2, §4.5 and
+   §4.6 of [docs/tasks/game-feel.md](tasks/game-feel.md) — and the constraints
+   still bind: no resettable streak, no reward that overstates the evidence, and
+   nothing where motion or colour is the only signal.
 6. **Situations as communicative functions** — "ordering food", "asking for
    directions". A second axis to topics rather than more topic slugs: `restaurant`
    is what a sentence is _about_, ordering food is what a learner is _trying to
@@ -134,7 +148,11 @@ The dataset work is briefed in full for a fresh session:
    shows the forms; practising them directly is the next step.
 8. **Word-level progress** — inspection knows which lexeme a tapped word maps
    to, so "words I keep looking up" is a natural weak-item signal to feed back
-   into session planning.
+   into session planning. Two smaller gaps of the same shape: the "words &
+   patterns" rows on Progress are lexemes and skills rather than items, so there
+   is nothing to tap them open with yet (inspection is entered through an item),
+   and the sentences named in the end-of-session summary are inline in a
+   paragraph rather than tokenised.
 9. **Offline dataset caching** — verify precache coverage and add a visible
    "available offline" state.
 10. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.

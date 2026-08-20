@@ -51,6 +51,8 @@ function stubRunner(exercise: Exercise, answered: boolean): SessionRunner {
 
   return {
     status: 'active',
+    startedAt: 0,
+    durationMs: null,
     exercise,
     item: exercise.item,
     index: 0,

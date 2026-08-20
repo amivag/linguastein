@@ -23,7 +23,7 @@ describe('navigation', () => {
   });
 
   it('marks the current section for screen readers, not just with colour', async () => {
-    renderWithServices(<BrowseScreen />, { route: '/browse' });
+    renderWithServices(<BrowseScreen />, { route: '/es/all/browse' });
 
     const nav = await screen.findByRole('navigation', { name: 'Main' });
     expect(within(nav).getByRole('link', { name: 'Browse' })).toHaveAttribute(
@@ -98,6 +98,10 @@ describe('progress', () => {
     // Mastery is reported for the word and the pattern, not only the sentence.
     expect(screen.getByText('Words & patterns')).toBeInTheDocument();
     expect(screen.getByText('tener que + infinitivo')).toBeInTheDocument();
-    expect(screen.getByText('Tengo que trabajar.')).toBeInTheDocument();
+    // The sentence renders as tappable words: "which word is the problem" is
+    // exactly the question this list provokes.
+    expect(
+      screen.getByRole('button', { name: 'About “Tengo” in “Tengo que trabajar.”' }),
+    ).toBeInTheDocument();
   });
 });

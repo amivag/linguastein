@@ -94,7 +94,11 @@ describe('a passage', () => {
     const user = userEvent.setup();
     renderPassage('700001');
 
-    await user.click(await screen.findByRole('button', { name: 'About “Tengo”' }));
+    // A passage shows several sentences, so each word names the line it is in —
+    // otherwise two lines both containing `Tengo` offer two identical controls.
+    await user.click(
+      await screen.findByRole('button', { name: 'About “Tengo” in “Tengo que trabajar.”' }),
+    );
 
     const dialog = await screen.findByRole('dialog');
     expect(within(dialog).getByText('to have')).toBeInTheDocument();

@@ -1,18 +1,20 @@
 import { NavLink } from 'react-router-dom';
+import { useCourse } from '../app/course';
 import styles from './AppNav.module.css';
 
 interface NavItem {
-  readonly to: string;
+  /** Screen segment under the course prefix; empty is the course home. */
+  readonly screen: string;
   readonly label: string;
   readonly icon: string;
 }
 
 const ITEMS: readonly NavItem[] = [
-  { to: '/', label: 'Practice', icon: '◎' },
-  { to: '/read', label: 'Read', icon: '☰' },
-  { to: '/browse', label: 'Browse', icon: '⌕' },
-  { to: '/progress', label: 'Progress', icon: '▦' },
-  { to: '/settings', label: 'Settings', icon: '⚙' },
+  { screen: '', label: 'Practice', icon: '◎' },
+  { screen: 'read', label: 'Read', icon: '☰' },
+  { screen: 'browse', label: 'Browse', icon: '⌕' },
+  { screen: 'progress', label: 'Progress', icon: '▦' },
+  { screen: 'settings', label: 'Settings', icon: '⚙' },
 ];
 
 /**
@@ -22,14 +24,18 @@ const ITEMS: readonly NavItem[] = [
  * coloured.
  */
 export function AppNav() {
+  const { path } = useCourse();
+
   return (
     <nav className={styles.nav} aria-label="Main">
       <ul className={styles.list}>
         {ITEMS.map((item) => (
-          <li key={item.to}>
+          <li key={item.screen}>
             <NavLink
-              to={item.to}
-              end={item.to === '/'}
+              to={path(item.screen)}
+              // The course home is a prefix of every other destination, so it
+              // has to match exactly or it would light up on all of them.
+              end={item.screen === ''}
               className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
             >
               <span className={styles.icon} aria-hidden="true">

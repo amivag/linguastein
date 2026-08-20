@@ -14,16 +14,24 @@
 
 import {
   CEFR_LEVELS,
+  coursePath,
   FILTERABLE_REGIONS,
   ITEM_TYPES,
   REGISTERS,
   type CefrLevel,
+  type Course,
   type ItemFilter,
   type ItemType,
   type LanguageTag,
   type Register,
 } from '../../domain/content';
-import { ORDERINGS, type Ordering, type SessionSize } from '../../domain/sessions';
+import {
+  ORDERINGS,
+  SESSION_FOCUSES,
+  type Ordering,
+  type SessionFocus,
+  type SessionSize,
+} from '../../domain/sessions';
 import { formatSize, isPresetId, parseSize, type PresetId } from './presets';
 
 /**
@@ -38,6 +46,8 @@ export interface SessionUrl {
   /** Passage *local* id, e.g. `mercado`; scopes the session to its sentences. */
   readonly passage?: string;
   readonly dueOnly?: boolean;
+  /** Which items to lead with. Absent means the planner's balanced default. */
+  readonly focus?: SessionFocus;
   readonly ordering?: Ordering;
   /** Set for a reproducible session — the same link plans the same set. */
   readonly seed?: number;
@@ -45,8 +55,17 @@ export interface SessionUrl {
 
 export type SessionUrlInput = Partial<SessionUrl> & { readonly preset: PresetId };
 
-/** Builds `/session?…`. The inverse of {@link parseSessionUrl}. */
-export function sessionPath(input: SessionUrlInput): string {
+/**
+ * Builds `/<language>/<level>/session?…`. The inverse of {@link parseSessionUrl}
+ * plus the course the session belongs to.
+ *
+ * The course is a separate argument rather than another field of the input
+ * because it is not part of the query at all: it is the path a session hangs
+ * off, every caller already knows it from `useCourse`, and taking it positionally
+ * means a caller cannot forget it and silently practise another language's
+ * content.
+ */
+export function sessionPath(course: Course, input: SessionUrlInput): string {
   const params = new URLSearchParams();
   params.set('preset', input.preset);
   params.set('size', formatSize(input.size ?? { kind: 'items', count: 10 }));
@@ -61,15 +80,17 @@ export function sessionPath(input: SessionUrlInput): string {
 
   if (input.passage) params.set('passage', input.passage);
   if (input.dueOnly) params.set('due', '1');
+  if (input.focus && input.focus !== 'balanced') params.set('focus', input.focus);
   if (input.ordering) params.set('order', input.ordering);
   if (input.seed !== undefined) params.set('seed', String(input.seed));
 
-  return `/session?${params.toString()}`;
+  return `${coursePath(course, 'session')}?${params.toString()}`;
 }
 
 export function parseSessionUrl(params: URLSearchParams): SessionUrl {
   const preset = params.get('preset');
   const passage = params.get('passage');
+  const focus = params.get('focus');
   const ordering = params.get('order');
   const seed = Number(params.get('seed'));
 
@@ -79,6 +100,7 @@ export function parseSessionUrl(params: URLSearchParams): SessionUrl {
     filter: parseFilter(params),
     ...(passage ? { passage } : {}),
     ...(isTruthy(params.get('due')) ? { dueOnly: true } : {}),
+    ...(isFocus(focus) ? { focus } : {}),
     ...(isOrdering(ordering) ? { ordering } : {}),
     ...(params.has('seed') && Number.isFinite(seed) ? { seed } : {}),
   };
@@ -115,6 +137,11 @@ function list<T extends string>(value: string | null, allowed: readonly T[]): re
     if (match) seen.add(match);
   }
   return [...seen];
+}
+
+function isFocus(value: string | null): value is SessionFocus {
+  // `balanced` is never written, so reading it back is a no-op either way.
+  return value !== null && (SESSION_FOCUSES as readonly string[]).includes(value);
 }
 
 function isOrdering(value: string | null): value is Ordering {

@@ -1,10 +1,13 @@
 import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { SessionOutcomeSummary } from './SessionOutcomeSummary';
 import { SessionProgress } from './SessionProgress';
+import { formatDuration, spokenDuration } from './duration';
+import { SessionTimer } from './SessionTimer';
 import { ExerciseView } from './ExerciseView';
 import styles from './Practice.module.css';
 import { buildSessionConfig, PRESETS } from './presets';
@@ -15,6 +18,7 @@ import { useSessionRunner } from './useSessionRunner';
 export function SessionScreen() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const { filter: courseScope, path } = useCourse();
   const { services, preferences } = useServices();
 
   // The URL is the source of truth for a session; rebuilding the config on
@@ -38,13 +42,15 @@ export function SessionScreen() {
         repository,
         preferences,
         size: url.size,
+        courseScope,
         scope,
         ...(url.ordering ? { ordering: url.ordering } : {}),
         ...(url.dueOnly ? { dueOnly: true } : {}),
+        ...(url.focus ? { focus: url.focus } : {}),
         ...(url.seed !== undefined ? { seed: url.seed } : {}),
       }),
     };
-  }, [search, repository, preferences]);
+  }, [search, repository, preferences, courseScope]);
 
   const runner = useSessionRunner(config);
 
@@ -55,7 +61,7 @@ export function SessionScreen() {
       {runner.status === 'empty' && (
         <section className={styles.summaryScreen}>
           <p>Nothing to practise here yet.</p>
-          <Button variant="primary" block large onClick={() => void navigate('/')}>
+          <Button variant="primary" block large onClick={() => void navigate(path())}>
             Back to home
           </Button>
         </section>
@@ -63,7 +69,11 @@ export function SessionScreen() {
 
       {runner.status === 'active' && (
         <>
-          <SessionProgress index={runner.index} total={runner.total} />
+          <SessionProgress
+            index={runner.index}
+            total={runner.total}
+            trailing={preferences.showTimer ? <SessionTimer startedAt={runner.startedAt} /> : null}
+          />
 
           {runner.exercise ? (
             <ExerciseView key={runner.exercise.id} exercise={runner.exercise} runner={runner} />
@@ -95,6 +105,22 @@ export function SessionScreen() {
               : `${runner.total === 1 ? 'Card' : 'Cards'} reviewed. Studying is not scored, so nothing was recorded.`}
           </p>
 
+          {/* The total, announced once — here it is news, whereas a clock
+              announcing itself every second during the session would not be.
+              Reported for a study session too: it was not scored, but the time
+              it took is still a fact about it. */}
+          {runner.durationMs !== null && (
+            <p className={styles.hint} aria-label={`Took ${spokenDuration(runner.durationMs)}`}>
+              <span aria-hidden="true">{formatDuration(runner.durationMs)}</span>
+              {runner.stats.answered > 0 && (
+                <span aria-hidden="true">
+                  {' · '}
+                  {formatDuration(runner.durationMs / runner.stats.answered)} per card
+                </span>
+              )}
+            </p>
+          )}
+
           {/* Only where there is something real to report. A study session has
               nothing to say here by design, and an empty panel saying so would
               be worse than no panel. */}
@@ -103,7 +129,7 @@ export function SessionScreen() {
           <Button variant="primary" block large onClick={runner.restart}>
             {runner.tracked ? 'Practise again' : 'Study again'}
           </Button>
-          <Button block onClick={() => void navigate('/')}>
+          <Button block onClick={() => void navigate(path())}>
             Home
           </Button>
         </section>

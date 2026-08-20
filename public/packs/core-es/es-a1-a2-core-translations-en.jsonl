@@ -1709,6 +1709,13 @@
 {"ref":"core-es:skill:preterite","lang":"en","text":"the simple past: completed actions"}
 {"ref":"core-es:skill:imperfect","lang":"en","text":"how things used to be"}
 {"ref":"core-es:skill:imperative","lang":"en","text":"telling someone to do something"}
+{"ref":"core-es:skill:numerals-teens","lang":"en","text":"the teens, written as one word"}
+{"ref":"core-es:skill:numerals-twenties","lang":"en","text":"the twenties, written as one word"}
+{"ref":"core-es:skill:numerals-y-joining","lang":"en","text":"y joins tens to units, and never hundreds to tens"}
+{"ref":"core-es:skill:numerals-apocopation","lang":"en","text":"uno shortens to un before a masculine noun"}
+{"ref":"core-es:skill:numerals-hundreds-agreement","lang":"en","text":"the hundreds agree in gender"}
+{"ref":"core-es:skill:numerals-cien-ciento","lang":"en","text":"cien alone, ciento in a compound"}
+{"ref":"core-es:skill:numerals-mil-millon","lang":"en","text":"a thousand is never un mil; a million is a noun"}
 {"ref":"core-es:passage:700001","lang":"en","text":"An ordinary morning","type":"natural"}
 {"ref":"core-es:passage:700002","lang":"en","text":"My flat","type":"natural"}
 {"ref":"core-es:passage:700003","lang":"en","text":"A day at the office","type":"natural"}

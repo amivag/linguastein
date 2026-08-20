@@ -1,7 +1,8 @@
 # Task: numbers as a system, not as vocabulary
 
-**Status:** in progress — §3 (the module) has landed, fully covered. §4–§6
-remain: number cards, pattern records, the exercise generator and the drill.
+**Status:** in progress — §3 (the module) and §5 (the pattern records) have
+landed. §4 and §6 remain: the bounded number cards, the exercise generator and
+the drill.
 **Written:** 2026-08-20
 **Revised:** 2026-08-20 — `src/languages/es/numerals.ts` exists and is tested at
 100%. §3.2 is new: it records what building it turned up, including one rule the
@@ -209,10 +210,22 @@ infinitivo`, `estar + gerundio`, and so on), so this needs no new record kind:
 | `numerals-cien-ciento`        | cien mil / ciento treinta  | a2    |
 | `numerals-mil-millon`         | mil / un millón de         | a2    |
 
-Derive them from the same rule enum `rulesFor` returns, so a rule cannot exist in
-the module without a record to practise it against, or the reverse. The build
-should fail on a mismatch — the same relationship `irregulars.ts` has with the
-`irregular` tag today.
+**Landed.** The records are derived from the same rule enum `rulesFor` returns,
+and the ids are `core-es:skill:numerals-<rule>`.
+
+The mismatch guard turned out to be stronger than the runtime check this section
+originally asked for. The build's label table is typed
+`Record<NumeralRule, …>`, so adding a rule to `numerals.ts` without giving it a
+label fails the **typecheck**, naming the missing rule — earlier than the build
+and impossible to skip, since `npm run check` typechecks `scripts/` too. A
+runtime version would only have repeated it more weakly.
+
+One thing worth not "fixing": these records are emitted **unconditionally**,
+unlike every other skill in the build, which ships only when an item uses it. The
+drill's targets are generated — 1042 exists in no pack — so nothing will ever
+mark a numeral skill used, and a usage filter would silently drop the feature.
+`tests/data/numeral-skills.test.ts` pins that, along with every rule being
+reachable from a real number, so the pack cannot ship dead curriculum.
 
 ---
 
@@ -285,7 +298,8 @@ gets silence plus an explanation, which is deliberate.
 - [x] `numerals.ts` spells every cardinal 0–999,999,999 and the ordinals in
       scope, with agreement — 100% covered, every integer 0–1000 pinned
 - [x] `rulesFor` returns the rules a number exercises
-- [ ] The build fails if a rule has no matching pattern record
+- [x] A rule with no matching pattern record fails the typecheck, which is
+      earlier and harder to skip than the build-time check first asked for
 - [ ] The bounded number words carry ids and appear as word cards
 - [ ] The `segundo` collision is resolved via the `-` convention, not by renaming
       either sense

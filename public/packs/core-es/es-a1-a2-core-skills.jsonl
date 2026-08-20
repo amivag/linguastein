@@ -11,3 +11,10 @@
 {"id":"core-es:skill:preterite","kind":"grammar","label":"pretérito indefinido","level":"a2"}
 {"id":"core-es:skill:imperfect","kind":"grammar","label":"pretérito imperfecto","level":"a2"}
 {"id":"core-es:skill:imperative","kind":"grammar","label":"imperativo","level":"a1"}
+{"id":"core-es:skill:numerals-teens","kind":"pattern","label":"dieciséis, diecisiete…","level":"a1"}
+{"id":"core-es:skill:numerals-twenties","kind":"pattern","label":"veintiuno, veintidós…","level":"a1"}
+{"id":"core-es:skill:numerals-y-joining","kind":"pattern","label":"treinta y uno / ciento uno","level":"a1"}
+{"id":"core-es:skill:numerals-apocopation","kind":"pattern","label":"veintiún libros","level":"a2"}
+{"id":"core-es:skill:numerals-hundreds-agreement","kind":"pattern","label":"doscientas casas","level":"a2"}
+{"id":"core-es:skill:numerals-cien-ciento","kind":"pattern","label":"cien mil / ciento treinta","level":"a2"}
+{"id":"core-es:skill:numerals-mil-millon","kind":"pattern","label":"mil / un millón de","level":"a2"}

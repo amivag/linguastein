@@ -20,6 +20,7 @@ import { PASSAGE_KINDS } from '../src/domain/content/model.ts';
 import { conjugate } from '../src/languages/es/conjugation.ts';
 import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
 import { adjectiveForms, pluralOf } from '../src/languages/es/morphology.ts';
+import { NUMERAL_RULES, type NumeralRule } from '../src/languages/es/numerals.ts';
 
 // Overridable so a test can build a scratch copy of the sources without
 // touching the checked-in pack.
@@ -972,6 +973,54 @@ const IMPERATIVE_SKILL = {
   level: 'a1',
 };
 
+/**
+ * The numeral rules as practisable skills, one per rule in `numerals.ts`.
+ *
+ * Typed as a `Record<NumeralRule, …>`, so adding a rule to the module without
+ * giving it a label fails the typecheck. That is a stronger guarantee than a
+ * runtime check in this script and it fires earlier — `npm run check` catches it
+ * before the build ever runs.
+ */
+const NUMERAL_SKILLS: Record<NumeralRule, { label: string; gloss: string; level: string }> = {
+  teens: {
+    label: 'dieciséis, diecisiete…',
+    gloss: 'the teens, written as one word',
+    level: 'a1',
+  },
+  twenties: {
+    label: 'veintiuno, veintidós…',
+    gloss: 'the twenties, written as one word',
+    level: 'a1',
+  },
+  'y-joining': {
+    label: 'treinta y uno / ciento uno',
+    gloss: 'y joins tens to units, and never hundreds to tens',
+    level: 'a1',
+  },
+  apocopation: {
+    label: 'veintiún libros',
+    gloss: 'uno shortens to un before a masculine noun',
+    level: 'a2',
+  },
+  'hundreds-agreement': {
+    label: 'doscientas casas',
+    gloss: 'the hundreds agree in gender',
+    level: 'a2',
+  },
+  'cien-ciento': {
+    label: 'cien mil / ciento treinta',
+    gloss: 'cien alone, ciento in a compound',
+    level: 'a2',
+  },
+  'mil-millon': {
+    label: 'mil / un millón de',
+    gloss: 'a thousand is never un mil; a million is a noun',
+    level: 'a2',
+  },
+};
+
+const numeralSkillId = (rule: NumeralRule): string => `${NS}skill:numerals-${rule}`;
+
 const usedSkills = new Set<string>();
 
 /** Lexeme id → the regions that word belongs to, for propagating onto phrases. */
@@ -1350,13 +1399,27 @@ const skillRecords: SkillRecord[] = [
     label: skill.label,
     level: skill.level,
   })),
-].filter((skill) => usedSkills.has(skill.id));
+]
+  .filter((skill) => usedSkills.has(skill.id))
+  // Numeral skills are declared rather than discovered. Every other skill here
+  // is emitted only if an item uses it, but the numeral drill's targets are
+  // generated on demand — 1042 exists in no pack — so nothing would ever mark
+  // these used, and the attempts the drill records need them to exist.
+  .concat(
+    NUMERAL_RULES.map((rule) => ({
+      id: numeralSkillId(rule),
+      kind: 'pattern',
+      label: NUMERAL_SKILLS[rule].label,
+      level: NUMERAL_SKILLS[rule].level,
+    })),
+  );
 
 const skillGlosses = new Map<string, string>([
   ...PATTERNS.map((pattern) => [pattern.skill, pattern.gloss] as const),
   ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL].map(
     (skill) => [skill.id, skill.gloss] as const,
   ),
+  ...NUMERAL_RULES.map((rule) => [numeralSkillId(rule), NUMERAL_SKILLS[rule].gloss] as const),
 ]);
 
 interface TranslationRecord {
@@ -1502,7 +1565,10 @@ console.log(
 );
 console.log(`  ${verbForms.length} verb forms`);
 console.log(`  ${sentenceItems.length} sentences · ${vocabularyItems.length} word cards`);
-console.log(`  ${skillRecords.length} skills · ${translations.length} translations`);
+console.log(
+  `  ${skillRecords.length} skills · ${translations.length} translations` +
+    ` (${NUMERAL_RULES.length} numeral rules, declared rather than discovered)`,
+);
 
 const totalItems = sentenceItems.length + vocabularyItems.length;
 const reviewedShare = totalItems === 0 ? 0 : Math.round((reviewedCount / totalItems) * 100);

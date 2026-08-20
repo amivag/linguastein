@@ -1,0 +1,23 @@
+# Nothing here is for indexing or for training. Honoured only by crawlers that
+# choose to; the Cloudflare Access policy in front of this project is the part
+# that does not rely on goodwill. See docs/deploy.md.
+User-agent: *
+Disallow: /
+
+# Named separately because some of these are training opt-outs rather than
+# crawl directives, and are only read under their own token.
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: meta-externalagent
+User-agent: PerplexityBot
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: cohere-ai
+User-agent: Diffbot
+Disallow: /

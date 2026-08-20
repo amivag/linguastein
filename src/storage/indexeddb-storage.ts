@@ -12,11 +12,11 @@ import type { SessionRecord } from '../domain/sessions';
 import { DEFAULT_PREFERENCES, mergePreferences } from './preferences';
 import type { LearnerStorage, Preferences } from './types';
 
-const DB_NAME = 'lingo';
+const DB_NAME = 'linguastein';
 const DB_VERSION = 1;
 const PREFERENCES_KEY = 'preferences';
 
-interface LingoDB extends DBSchema {
+interface LinguasteinDB extends DBSchema {
   progress: {
     key: string;
     value: ItemProgress;
@@ -38,8 +38,8 @@ interface LingoDB extends DBSchema {
   };
 }
 
-export async function openLingoDB(): Promise<IDBPDatabase<LingoDB>> {
-  return openDB<LingoDB>(DB_NAME, DB_VERSION, {
+export async function openLinguasteinDB(): Promise<IDBPDatabase<LinguasteinDB>> {
+  return openDB<LinguasteinDB>(DB_NAME, DB_VERSION, {
     upgrade(db, oldVersion) {
       if (oldVersion < 1) {
         const progress = db.createObjectStore('progress', { keyPath: 'itemId' });
@@ -59,7 +59,7 @@ export async function openLingoDB(): Promise<IDBPDatabase<LingoDB>> {
   });
 }
 
-export function createIndexedDbStorage(db: IDBPDatabase<LingoDB>): LearnerStorage {
+export function createIndexedDbStorage(db: IDBPDatabase<LinguasteinDB>): LearnerStorage {
   return {
     progress: {
       async get(itemId) {

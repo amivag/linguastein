@@ -29,8 +29,8 @@ import {
 
 // Overridable so a test can build a scratch copy of the sources without
 // touching the checked-in pack.
-const CONTENT_DIR = resolve(process.env['LINGO_CONTENT_DIR'] ?? 'content/es');
-const PACKS_DIR = resolve(process.env['LINGO_PACKS_DIR'] ?? 'public/packs');
+const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? 'content/es');
+const PACKS_DIR = resolve(process.env['LINGUASTEIN_PACKS_DIR'] ?? 'public/packs');
 const OUT_DIR = join(PACKS_DIR, 'core-es');
 const PACK_ID = 'core-es';
 const NS = `${PACK_ID}:`;
@@ -303,7 +303,9 @@ if (topicRows.length > 0) {
   for (const passage of passageRows) check(passage.topics, `passages.tsv (${passage.key})`);
 
   for (const [topic, where] of seen) {
-    problems.push(`unknown topic "${topic}" in ${where} — add it to ${TOPICS_FILE} or fix the typo`);
+    problems.push(
+      `unknown topic "${topic}" in ${where} — add it to ${TOPICS_FILE} or fix the typo`,
+    );
   }
 
   const duplicated = topicRows

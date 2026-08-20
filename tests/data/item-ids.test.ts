@@ -27,7 +27,7 @@ function itemsByText(): Map<string, string> {
 }
 
 beforeAll(() => {
-  pack = createScratchPack('lingo-ids');
+  pack = createScratchPack('linguastein-ids');
   pack.build();
 }, 120_000);
 

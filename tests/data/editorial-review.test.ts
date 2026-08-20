@@ -39,7 +39,7 @@ function item(id: string): { provenance?: { review: string } } | undefined {
 }
 
 beforeAll(() => {
-  pack = createScratchPack('lingo-review');
+  pack = createScratchPack('linguastein-review');
 }, 120_000);
 
 afterAll(() => {

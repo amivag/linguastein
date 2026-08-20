@@ -84,8 +84,8 @@ fix means being deliberate about how the old copy is replaced.
 injects it, with the short commit and build time, through `define`; `src/app/version.ts`
 is the only module that reads those globals. Nothing imports `package.json` at
 runtime, and no constant is hand-copied, so the string in Settings cannot drift
-from the package that produced it. Override `LINGO_BUILD_COMMIT` or
-`LINGO_BUILD_TIME` for a reproducible build.
+from the package that produced it. Override `LINGUASTEIN_BUILD_COMMIT` or
+`LINGUASTEIN_BUILD_TIME` for a reproducible build.
 
 **JS and CSS.** Content-hashed by Vite (`index-Bmm2NiPE.js`), so a changed file is
 a new URL and can be cached forever. Nothing extra is needed here, and adding a

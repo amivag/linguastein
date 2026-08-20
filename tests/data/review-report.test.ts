@@ -25,7 +25,7 @@ function cardId(text: string): string {
 const signOff = (text: string) => [cardId(text), text, 'A. Editor', '2026-08-18'].join('\t');
 
 beforeAll(() => {
-  pack = createScratchPack('lingo-report');
+  pack = createScratchPack('linguastein-report');
 
   // `car` is already a marked regional pair (coche/carro); an unmarked third
   // word with the same meaning is the shape that teaches a dialect as universal.

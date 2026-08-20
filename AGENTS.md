@@ -192,7 +192,7 @@ import `package.json` at runtime or copy the number into a constant.
 
 Releasing is: bump `version`, move the `Unreleased` section of
 [CHANGELOG.md](CHANGELOG.md) under the new number, commit, tag. Settings shows
-`Lingo <version> (<commit>)`, which is what a bug report should quote.
+`Linguastein <version> (<commit>)`, which is what a bug report should quote.
 
 Content packs version separately in their own `pack.json` — a dataset can ship
 without an app release, and does.

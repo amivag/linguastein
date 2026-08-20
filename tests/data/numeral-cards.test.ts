@@ -135,7 +135,7 @@ describe('the no-card sentinel on a modifier row', () => {
   let pack: ScratchPack;
 
   beforeAll(() => {
-    pack = createScratchPack('lingo-numeral-cards');
+    pack = createScratchPack('linguastein-numeral-cards');
   }, 120_000);
 
   afterAll(() => {

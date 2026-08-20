@@ -96,7 +96,7 @@ describe('agent surface', () => {
   it('describes where you are through the document title', async () => {
     renderWithServices(<HomeScreen />);
     await screen.findByRole('heading', { level: 1 });
-    expect(document.title).toBe('Test Spanish · Lingo');
+    expect(document.title).toBe('Test Spanish · Linguastein');
   });
 
   it('keeps session state in the URL so an agent can resume or share it', async () => {

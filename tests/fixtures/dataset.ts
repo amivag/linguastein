@@ -95,7 +95,7 @@ export interface ScratchPack {
 
 /**
  * Copies `content/es` into a temporary workspace and points the dataset scripts
- * at it via `LINGO_CONTENT_DIR` / `LINGO_PACKS_DIR`.
+ * at it via `LINGUASTEIN_CONTENT_DIR` / `LINGUASTEIN_PACKS_DIR`.
  *
  * The caller decides when to build: some suites build once in `beforeAll` and
  * read the result, others edit a source first to assert the build rejects it.
@@ -106,7 +106,7 @@ export function createScratchPack(prefix: string): ScratchPack {
   const packs = join(workspace, 'packs');
   cpSync(join(repoRoot, 'content/es'), content, { recursive: true });
 
-  const env = { LINGO_CONTENT_DIR: content, LINGO_PACKS_DIR: packs };
+  const env = { LINGUASTEIN_CONTENT_DIR: content, LINGUASTEIN_PACKS_DIR: packs };
   const path = (file: string) => join(content, file);
   const read = (file: string) => readFileSync(path(file), 'utf8');
 

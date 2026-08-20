@@ -28,7 +28,7 @@ function generate(...args: string[]): string {
 function generateFrom(packs: string | undefined, ...args: string[]): string {
   return runScript('scripts/generate-audio.ts', {
     args: ['--out', out, '--raw', ...args],
-    env: { LINGO_NOW: '2026-01-01', ...(packs ? { LINGO_PACKS_DIR: packs } : {}) },
+    env: { LINGUASTEIN_NOW: '2026-01-01', ...(packs ? { LINGUASTEIN_PACKS_DIR: packs } : {}) },
   });
 }
 
@@ -45,7 +45,7 @@ function ledgerRows(): string[][] {
 const clips = (voice = 'v1'): string[] => readdirSync(join(out, 'es-ES', voice));
 
 beforeEach(() => {
-  out = mkdtempSync(join(tmpdir(), 'lingo-audio-'));
+  out = mkdtempSync(join(tmpdir(), 'linguastein-audio-'));
 });
 
 afterEach(() => {
@@ -121,7 +121,7 @@ describe('audio generation', { timeout: 120_000 }, () => {
    * readings of one word. Hence a scratch pack with the collision planted in it.
    */
   it('synthesises identical text once, and records it for both items', () => {
-    const packs = mkdtempSync(join(tmpdir(), 'lingo-audio-pack-'));
+    const packs = mkdtempSync(join(tmpdir(), 'linguastein-audio-pack-'));
     try {
       cpSync(join(repoRoot, 'public/packs'), packs, { recursive: true });
       const vocabulary = join(packs, 'core-es', 'es-a1-a2-core-vocabulary.jsonl');

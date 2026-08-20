@@ -1,11 +1,11 @@
 # Changelog
 
-Notable changes to Lingo, newest first. Format follows
+Notable changes to Linguastein, newest first. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 [semver](https://semver.org/).
 
 The version in `package.json` is the single source of truth: the build injects it,
-Settings displays it as `Lingo <version> (<commit>)`, and that is the string a bug
+Settings displays it as `Linguastein <version> (<commit>)`, and that is the string a bug
 report should quote. Content packs version independently — `core-es` carries its
 own version in `pack.json`, shown next to the app's.
 
@@ -15,8 +15,9 @@ in the pack's own counts.
 
 ## Unreleased
 
-0.1.0 is in preparation and has not been tagged. Everything below is what a first
-release would contain.
+`0.1.0-alpha.1` — an alpha, untagged. Everything below is what a first release
+would contain. Breaking changes are expected between alphas, including to stored
+learner state, and are not called out individually until 0.1.0 is tagged.
 
 ### Added
 
@@ -46,9 +47,24 @@ release would contain.
 - Dark and light themes on a token system, held to WCAG 2.2 AA by axe and
   contrast tests in CI.
 - Optional speech-input pronunciation check on speaking exercises.
+- Deployment on Cloudflare Pages from a private repository, gated behind an email
+  one-time-code, with an SPA fallback, `robots.txt` and `X-Robots-Tag` opt-outs
+  for crawlers and model training, and a Node pin for the builder. Rationale and
+  setup in [docs/deploy.md](docs/deploy.md).
 
 ### Changed
 
+- Renamed from Lingo to **Linguastein**, including the IndexedDB database and the
+  `linguastein.theme` key. Local practice history from a pre-rename build is
+  orphaned rather than migrated — done now, while the only device affected is a
+  development one.
+- Relicensed from MIT to **AGPL-3.0-only** for the code and **CC BY-SA 4.0** for
+  the datasets, copyright amivag. Free and open with attribution, but a modified
+  version served to others must publish its source. Contribution sign-off is now
+  required ([CONTRIBUTING.md](CONTRIBUTING.md)) so a future commercial licence
+  stays possible.
+- Production sourcemaps are off, so the deployed bundle no longer carries the
+  original TypeScript.
 - "Reset progress" now asks for confirmation before erasing learner history. It
   is irreversible and there is no server copy, so a single mis-tap should not be
   enough.

@@ -1,0 +1,24 @@
+Linguastein — content licence
+
+The Spanish language datasets in this repository are licensed separately from the
+code, because a software licence maps badly onto TSV rows and prose passages.
+
+    content/es/**        dataset authoring sources
+    public/packs/**      generated, shipped content packs
+
+Copyright (c) 2026 amivag
+
+Licensed under the Creative Commons Attribution-ShareAlike 4.0 International
+licence (SPDX: CC-BY-SA-4.0).
+
+    Summary:    https://creativecommons.org/licenses/by-sa/4.0/
+    Legal code: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+In short: you may share and adapt this content, including commercially, provided
+you credit amivag, link to the licence, state whether you changed anything, and
+release your adaptation under CC BY-SA 4.0 as well.
+
+Everything else in the repository — all code — is AGPL-3.0-only. See LICENSE.
+
+As with the code, the ShareAlike condition binds everyone except the copyright
+holder, who may also offer this content under separate commercial terms.

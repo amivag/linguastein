@@ -27,7 +27,7 @@ export const THEME_OPTIONS: readonly ThemeOption[] = [
 ];
 
 /** Key shared with the pre-paint script in index.html. Keep both in sync. */
-export const THEME_STORAGE_KEY = 'lingo.theme';
+export const THEME_STORAGE_KEY = 'linguastein.theme';
 
 export function isThemePreference(value: unknown): value is ThemePreference {
   return typeof value === 'string' && (THEME_PREFERENCES as readonly string[]).includes(value);

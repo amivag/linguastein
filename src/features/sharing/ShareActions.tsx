@@ -57,7 +57,7 @@ export function ShareActions({ item }: ShareActionsProps) {
           </Button>
         ))}
         {canShare() && (
-          <Button block onClick={() => void shareText(item.text, 'Lingo')}>
+          <Button block onClick={() => void shareText(item.text, 'Linguastein')}>
             Share…
           </Button>
         )}

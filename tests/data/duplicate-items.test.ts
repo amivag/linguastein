@@ -25,7 +25,7 @@ function buildError(): string {
 }
 
 beforeAll(() => {
-  pack = createScratchPack('lingo-dupes');
+  pack = createScratchPack('linguastein-dupes');
   pack.build();
 }, 120_000);
 

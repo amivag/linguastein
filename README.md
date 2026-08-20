@@ -1,4 +1,4 @@
-# Lingo — Spanish practice
+# Linguastein — Spanish practice
 
 A free, mobile-first, local-first language practice app. Spanish first, but the
 engine is language-agnostic by design.
@@ -6,9 +6,14 @@ engine is language-agnostic by design.
 **See it, hear it, repeat it, reveal it, review it** — in two minutes, on a
 phone, offline, with no account.
 
-Status: **v0.1**. The architecture, engine and practice loop are in place, with a
-generated A1–A2 Spanish pack of 1,043 practisable items awaiting editorial review
-(see [`docs/spec`](docs/spec) for the product specification).
+Status: **0.1.0-alpha.1 — alpha.** The architecture, engine and practice loop are
+in place, with a generated A1–A2 Spanish pack of 1,043 practisable items awaiting
+editorial review (see [`docs/spec`](docs/spec) for the product specification).
+
+Alpha means what it says: anything may change drastically, including the data
+model, the stored shape of learner progress and the exercise mix. There is no
+migration promise between alpha builds — practice history from an earlier one may
+simply be discarded. Do not treat a streak here as durable yet.
 
 ## Quick start
 
@@ -60,7 +65,8 @@ src/
 
 content/es/      dataset authoring sources (TSV) — the human-edited input
 public/packs/    generated, shipped content packs (JSONL + manifest)
-docs/             architecture notes, dataset format, product spec
+public/_*         Cloudflare Pages routing and headers; robots.txt sits alongside
+docs/             architecture notes, dataset format, deployment, product spec
 tests/            unit and component tests, mirroring src/
 scripts/          dataset validation CLI
 dist/             build output (git-ignored)
@@ -70,12 +76,12 @@ dist/             build output (git-ignored)
 
 Four sections behind a tab bar (a rail on wider screens):
 
-| Section  | What it is                                                         |
-| -------- | ------------------------------------------------------------------ |
-| Practice | quick sessions and the six practice presets                        |
+| Section  | What it is                                                                                        |
+| -------- | ------------------------------------------------------------------------------------------------- |
+| Practice | quick sessions and the six practice presets                                                       |
 | Browse   | search and filter all 1,043 items, by thematic category or facet; dictate the search with the mic |
-| Progress | what has been practised, accuracy, weak items, recent sessions     |
-| Settings | language, audio and voice, appearance, data — in grouped sections  |
+| Progress | what has been practised, accuracy, weak items, recent sessions                                    |
+| Settings | language, audio and voice, appearance, data — in grouped sections                                 |
 
 A running session hides the chrome and fills the screen, so practice stays the
 focus rather than the navigation.
@@ -178,7 +184,7 @@ cached on first play, and all learner state lives in IndexedDB on the device.
 
 ## Versions and updates
 
-The app reports its own version in Settings → Data as `Lingo <version> (<commit>)`,
+The app reports its own version in Settings → Data as `Linguastein <version> (<commit>)`,
 alongside the version of each loaded content pack — content ships independently of
 the app. `package.json` is the source of truth; the build injects it. Changes are
 recorded in [CHANGELOG.md](CHANGELOG.md).
@@ -189,6 +195,38 @@ rather than taking one — being thrown back to the start of a session mid-answe
 worse than running a few minutes behind. Details, including the two files that
 must not be HTTP-cached: [docs/architecture.md](docs/architecture.md#updates-and-caching).
 
-## License
+## Deploying
 
-MIT — see [LICENSE](LICENSE).
+Hosted on Cloudflare Pages, built from a private repository and gated behind an
+email one-time-code so nothing is publicly reachable or crawlable. Every push to
+`main` republishes; every branch gets a preview URL to open on a phone. Setup and
+the reasoning behind the choice: [docs/deploy.md](docs/deploy.md).
+
+## Licence
+
+Two licences, because code and language content are different things:
+
+| What                            | Licence       | File                               |
+| ------------------------------- | ------------- | ---------------------------------- |
+| All code                        | AGPL-3.0-only | [LICENSE](LICENSE)                 |
+| `content/**`, `public/packs/**` | CC BY-SA 4.0  | [LICENSE-CONTENT](LICENSE-CONTENT) |
+
+Copyright (c) 2026 amivag.
+
+Free and open, with attribution required. The AGPL adds one condition that matters
+for a web app: anyone who modifies Linguastein and lets other people use it — over
+a network included — has to publish their source under the same licence. Commercial
+use is allowed; closed commercial use is not.
+
+That condition binds everyone except the copyright holder. Linguastein may
+therefore be offered commercially in future, under separate terms, alongside this
+licence. The commitment that goes with that: the basic practice loop stays free,
+and the app stays respectful of the person using it — no account, no tracking,
+learner state on the device.
+
+Keeping that option open is also why [CONTRIBUTING.md](CONTRIBUTING.md) asks
+contributors to sign off on their patches.
+
+**On model training:** no open licence prevents it, this one included. Scrapers do
+not read licences. The repository being private is the only real control — see
+[docs/deploy.md](docs/deploy.md).

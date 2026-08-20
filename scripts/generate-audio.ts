@@ -47,12 +47,12 @@ import {
 } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 
-const PACKS_DIR = resolve(process.env['LINGO_PACKS_DIR'] ?? 'public/packs');
+const PACKS_DIR = resolve(process.env['LINGUASTEIN_PACKS_DIR'] ?? 'public/packs');
 const PACK_DIR = join(PACKS_DIR, 'core-es');
-const CONTENT_DIR = resolve(process.env['LINGO_CONTENT_DIR'] ?? 'content/es');
+const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? 'content/es');
 
 /** Overridable so a test can pin the date the ledger records. */
-const TODAY = process.env['LINGO_NOW'] ?? new Date().toISOString().slice(0, 10);
+const TODAY = process.env['LINGUASTEIN_NOW'] ?? new Date().toISOString().slice(0, 10);
 
 // ── options ─────────────────────────────────────────────────────────────────
 
@@ -413,19 +413,19 @@ function sapiVoices(): SapiVoice[] {
  * config line instead of a new provider. Placeholders: {out} {voice} {locale}
  * {textFile}; the text also arrives on stdin.
  *
- *   LINGO_TTS_COMMAND="piper --model {voice} --output_file {out}"
+ *   LINGUASTEIN_TTS_COMMAND="piper --model {voice} --output_file {out}"
  */
 const commandProvider: BatchProvider = {
   id: 'command',
   unavailable: () =>
-    process.env['LINGO_TTS_COMMAND']
+    process.env['LINGUASTEIN_TTS_COMMAND']
       ? undefined
-      : 'set LINGO_TTS_COMMAND to the synthesis command, e.g. "piper --model {voice} --output_file {out}"',
+      : 'set LINGUASTEIN_TTS_COMMAND to the synthesis command, e.g. "piper --model {voice} --output_file {out}"',
   synthesise({ text, out, voice, locale }) {
     mkdirSync(dirname(out), { recursive: true });
     const textFile = `${out}.txt`;
     writeFileSync(textFile, text, 'utf8');
-    const template = process.env['LINGO_TTS_COMMAND'] ?? '';
+    const template = process.env['LINGUASTEIN_TTS_COMMAND'] ?? '';
     const parts = template
       .split(' ')
       .filter((part) => part.length > 0)
@@ -437,7 +437,7 @@ const commandProvider: BatchProvider = {
           .replaceAll('{textFile}', textFile),
       );
     const [command, ...args] = parts;
-    if (!command) throw new Error('LINGO_TTS_COMMAND is empty');
+    if (!command) throw new Error('LINGUASTEIN_TTS_COMMAND is empty');
     const result = spawnSync(command, args, { input: text, stdio: ['pipe', 'pipe', 'pipe'] });
     if (result.status !== 0) {
       throw new Error(`${command} failed: ${result.stderr?.toString() ?? 'no stderr'}`);
@@ -470,7 +470,7 @@ const TRIM_AND_NORMALISE = [
  * bigger files carrying no more speech. Pinning the rate also stops two voices
  * with different native rates from landing in the pack at different qualities.
  */
-const SPEECH_RATE_HZ = process.env['LINGO_AUDIO_RATE'] ?? '24000';
+const SPEECH_RATE_HZ = process.env['LINGUASTEIN_AUDIO_RATE'] ?? '24000';
 
 function postProcess(wav: string, out: string): void {
   execFileSync(

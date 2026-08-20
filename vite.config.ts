@@ -15,7 +15,7 @@ const pkg = JSON.parse(
  * commit is worth strictly less than a build that fails.
  */
 function buildCommit(): string {
-  if (process.env['LINGO_BUILD_COMMIT']) return process.env['LINGO_BUILD_COMMIT'];
+  if (process.env['LINGUASTEIN_BUILD_COMMIT']) return process.env['LINGUASTEIN_BUILD_COMMIT'];
   try {
     return execFileSync('git', ['rev-parse', '--short', 'HEAD'], {
       stdio: ['ignore', 'pipe', 'ignore'],
@@ -30,14 +30,14 @@ export default defineConfig({
   /**
    * Build identity, injected rather than imported: importing `package.json` would
    * pull the whole manifest into the bundle, and a hand-copied constant would
-   * drift from the package that produced it. `LINGO_BUILD_*` overrides keep the
-   * values reproducible where that matters (tests, release pipelines).
+   * drift from the package that produced it. `LINGUASTEIN_BUILD_*` overrides
+   * keep the values reproducible where that matters (tests, release pipelines).
    */
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
     __BUILD_COMMIT__: JSON.stringify(buildCommit()),
     __BUILD_TIME__: JSON.stringify(
-      process.env['LINGO_BUILD_TIME'] ?? new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+      process.env['LINGUASTEIN_BUILD_TIME'] ?? new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
     ),
   },
   plugins: [
@@ -46,8 +46,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/*.svg'],
       manifest: {
-        name: 'Lingo — Spanish Practice',
-        short_name: 'Lingo',
+        name: 'Linguastein — Spanish Practice',
+        short_name: 'Linguastein',
         description: 'Mobile-first Spanish practice: listen, repeat, reveal, review.',
         lang: 'en',
         start_url: '/',
@@ -75,7 +75,7 @@ export default defineConfig({
             urlPattern: ({ request }) => request.destination === 'audio',
             handler: 'CacheFirst',
             options: {
-              cacheName: 'lingo-audio',
+              cacheName: 'linguastein-audio',
               expiration: { maxEntries: 500, maxAgeSeconds: 60 * 60 * 24 * 90 },
               cacheableResponse: { statuses: [0, 200] },
             },
@@ -92,7 +92,13 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    /**
+     * Off deliberately. A sourcemap hands every visitor the original TypeScript,
+     * which defeats the point of keeping the repository private. Debug a deployed
+     * build by reproducing it locally (`npm run build && npm run preview`), where
+     * maps cost nothing.
+     */
+    sourcemap: false,
     target: 'es2022',
   },
   test: {

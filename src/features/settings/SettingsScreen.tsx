@@ -184,7 +184,7 @@ export function SettingsScreen() {
           {/* The string a bug report should quote, and the pack version beside it:
               content ships and updates independently of the app. */}
           <p className={styles.hint}>
-            Lingo {buildLabel()}
+            Linguastein {buildLabel()}
             {buildDate() && ` · built ${buildDate()}`}
           </p>
           <p className={styles.hint}>

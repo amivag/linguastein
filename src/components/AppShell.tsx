@@ -24,7 +24,7 @@ export function AppShell({ title, children, onBack, action, showNav = true }: Ap
   const back = onBack === 'history' ? () => void navigate(-1) : onBack;
 
   useEffect(() => {
-    document.title = `${title} · Lingo`;
+    document.title = `${title} · Linguastein`;
   }, [title]);
 
   return (

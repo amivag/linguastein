@@ -34,12 +34,12 @@
 000030	Tengo sueño.	I'm sleepy.	a1	health
 000031	Tengo miedo.	I'm afraid.	a1	feelings
 000032	Tengo prisa.	I'm in a hurry.	a1	core
-000033	Tengo treinta años.	I'm thirty years old.	a1	people	Age is expressed with tener, not ser
+000033	Tengo treinta años.	I'm thirty years old.	a1	people,numbers	Age is expressed with tener, not ser
 000034	¿Cuántos años tienes?	How old are you?	a1	people
 000035	No tengo tiempo hoy.	I don't have time today.	a1	time
 000036	Tenemos que esperar.	We have to wait.	a1	core
 000037	¿Tienes tiempo esta tarde?	Do you have time this afternoon?	a1	time
-000038	Mi hermana tiene dos hijos.	My sister has two children.	a1	family
+000038	Mi hermana tiene dos hijos.	My sister has two children.	a1	family,numbers
 000039	Soy profesor.	I'm a teacher.	a1	work	No article before professions
 000040	Ella es médica.	She is a doctor.	a1	work
 000041	Somos amigos.	We are friends.	a1	social
@@ -91,19 +91,19 @@
 000087	Hace mucho calor.	It's very hot.	a1	weather
 000088	Hace buen tiempo.	The weather is nice.	a1	weather
 000089	¿Qué hora es?	What time is it?	a1	time
-000090	Son las tres.	It's three o'clock.	a1	time
-000091	Es la una y media.	It's half past one.	a1	time
+000090	Son las tres.	It's three o'clock.	a1	time,clock
+000091	Es la una y media.	It's half past one.	a1	time,clock
 000092	¿A qué hora empieza?	What time does it start?	a1	time
-000093	La clase empieza a las nueve.	The class starts at nine.	a1	school
-000094	Termino a las seis.	I finish at six.	a1	work
+000093	La clase empieza a las nueve.	The class starts at nine.	a1	school,clock
+000094	Termino a las seis.	I finish at six.	a1	work,clock
 000095	Me levanto temprano.	I get up early.	a1	daily-routine
-000096	Me despierto a las siete.	I wake up at seven.	a1	daily-routine
+000096	Me despierto a las siete.	I wake up at seven.	a1	daily-routine,clock
 000097	Desayuno en casa.	I have breakfast at home.	a1	daily-routine
-000098	Salgo de casa a las ocho.	I leave home at eight.	a1	daily-routine
+000098	Salgo de casa a las ocho.	I leave home at eight.	a1	daily-routine,clock
 000099	Vuelvo a casa por la tarde.	I come home in the afternoon.	a1	daily-routine
 000100	Ceno con mi familia.	I have dinner with my family.	a1	daily-routine
-000101	Me acuesto a las once.	I go to bed at eleven.	a1	daily-routine
-000102	Duermo ocho horas.	I sleep eight hours.	a1	health
+000101	Me acuesto a las once.	I go to bed at eleven.	a1	daily-routine,clock
+000102	Duermo ocho horas.	I sleep eight hours.	a1	health,numbers
 000103	No dormí bien anoche.	I didn't sleep well last night.	a2	health
 000104	Trabajo en una oficina.	I work in an office.	a1	work
 000105	¿Dónde trabajas?	Where do you work?	a1	work
@@ -113,7 +113,7 @@
 000109	Escribo un correo a mi jefe.	I'm writing an email to my boss.	a1	work
 000110	Escucho música en el tren.	I listen to music on the train.	a1	music
 000111	Veo la televisión por la noche.	I watch television in the evening.	a1	entertainment
-000112	Hablo con mi madre los domingos.	I talk to my mother on Sundays.	a1	family
+000112	Hablo con mi madre los domingos.	I talk to my mother on Sundays.	a1	family,days-of-week
 000113	Vivo en Madrid.	I live in Madrid.	a1	city
 000114	¿Dónde vives?	Where do you live?	a1	city
 000115	Vivimos cerca del centro.	We live near the centre.	a1	city

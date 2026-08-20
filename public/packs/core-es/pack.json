@@ -16,6 +16,188 @@
     "es-ES",
     "es-MX"
   ],
+  "topics": [
+    {
+      "id": "numbers",
+      "label": "Numbers",
+      "group": "Foundations"
+    },
+    {
+      "id": "clock",
+      "label": "Telling the time",
+      "group": "Foundations"
+    },
+    {
+      "id": "days-of-week",
+      "label": "Days of the week",
+      "group": "Foundations"
+    },
+    {
+      "id": "months",
+      "label": "Months",
+      "group": "Foundations"
+    },
+    {
+      "id": "time",
+      "label": "Time",
+      "group": "Foundations"
+    },
+    {
+      "id": "colours",
+      "label": "Colours",
+      "group": "Foundations"
+    },
+    {
+      "id": "questions",
+      "label": "Asking questions",
+      "group": "Foundations"
+    },
+    {
+      "id": "place",
+      "label": "Where things are",
+      "group": "Foundations"
+    },
+    {
+      "id": "grammar",
+      "label": "Grammar words",
+      "group": "Foundations"
+    },
+    {
+      "id": "greetings",
+      "label": "Greetings",
+      "group": "People"
+    },
+    {
+      "id": "family",
+      "label": "Family",
+      "group": "People"
+    },
+    {
+      "id": "people",
+      "label": "People",
+      "group": "People"
+    },
+    {
+      "id": "body",
+      "label": "The body",
+      "group": "People"
+    },
+    {
+      "id": "health",
+      "label": "Health",
+      "group": "People"
+    },
+    {
+      "id": "feelings",
+      "label": "Feelings",
+      "group": "People"
+    },
+    {
+      "id": "social",
+      "label": "Meeting people",
+      "group": "People"
+    },
+    {
+      "id": "home",
+      "label": "At home",
+      "group": "Everyday life"
+    },
+    {
+      "id": "daily-routine",
+      "label": "Daily routine",
+      "group": "Everyday life"
+    },
+    {
+      "id": "clothes",
+      "label": "Clothes",
+      "group": "Everyday life"
+    },
+    {
+      "id": "objects",
+      "label": "Everyday objects",
+      "group": "Everyday life"
+    },
+    {
+      "id": "food-drink",
+      "label": "Food and drink",
+      "group": "Everyday life"
+    },
+    {
+      "id": "restaurant",
+      "label": "Eating out",
+      "group": "Everyday life"
+    },
+    {
+      "id": "shopping",
+      "label": "Shopping",
+      "group": "Everyday life"
+    },
+    {
+      "id": "city",
+      "label": "In town",
+      "group": "Out in the world"
+    },
+    {
+      "id": "travel",
+      "label": "Travel",
+      "group": "Out in the world"
+    },
+    {
+      "id": "weather",
+      "label": "Weather",
+      "group": "Out in the world"
+    },
+    {
+      "id": "nature",
+      "label": "Nature",
+      "group": "Out in the world"
+    },
+    {
+      "id": "animals",
+      "label": "Animals",
+      "group": "Out in the world"
+    },
+    {
+      "id": "work",
+      "label": "Work",
+      "group": "Doing things"
+    },
+    {
+      "id": "school",
+      "label": "School and study",
+      "group": "Doing things"
+    },
+    {
+      "id": "sport",
+      "label": "Sport and exercise",
+      "group": "Doing things"
+    },
+    {
+      "id": "entertainment",
+      "label": "Going out",
+      "group": "Doing things"
+    },
+    {
+      "id": "music",
+      "label": "Music",
+      "group": "Doing things"
+    },
+    {
+      "id": "communication",
+      "label": "Talking and writing",
+      "group": "Doing things"
+    },
+    {
+      "id": "language",
+      "label": "Language",
+      "group": "Doing things"
+    },
+    {
+      "id": "core",
+      "label": "High-frequency words",
+      "group": "Everything else"
+    }
+  ],
   "provenance": {
     "source": "generated",
     "origin": "content/es",

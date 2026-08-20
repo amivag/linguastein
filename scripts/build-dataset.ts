@@ -118,6 +118,23 @@ interface SourceRow {
 
 const NO_CARD = '-';
 
+const TOPICS_FILE = 'topics.tsv';
+
+/**
+ * Below this many items a category is not worth opening, so the build names it.
+ * Not a failure: a category is often registered before its content exists, and
+ * failing here would make declaring one ahead of time impossible.
+ */
+const TOPIC_FLOOR = 8;
+
+/** One thematic category: its stable slug, how to show it, and where it sits. */
+interface TopicRow {
+  slug: string;
+  label: string;
+  /** Display group heading, e.g. `Foundations`. Empty groups sort last. */
+  group: string;
+}
+
 interface SourceFile {
   name: string;
   /** Every physical line, so comments and blank lines survive a write-back. */
@@ -240,9 +257,56 @@ const passageRows: PassageRow[] = existsSync(join(CONTENT_DIR, 'passages.tsv'))
     })
   : [];
 
+/**
+ * The thematic-category registry. Read in authoring order, because that order
+ * is what the category picker shows — sorting it here would silently discard a
+ * decision the source file makes on purpose.
+ *
+ * Not read through `readRows`: the file carries no ids, so registering it for
+ * id write-back would only give the allocator a file it must never touch.
+ */
+const topicRows: TopicRow[] = existsSync(join(CONTENT_DIR, TOPICS_FILE))
+  ? readSource(TOPICS_FILE).rows.map((row) => {
+      const [slug, label, group] = row.fields;
+      return { slug: slug!, label: label ?? slug!, group: group ?? '' };
+    })
+  : [];
+
 // ── guards ──────────────────────────────────────────────────────────────────
 
 const problems: string[] = [];
+
+/**
+ * Topics are a controlled vocabulary, not free text. Without this check
+ * `colours` and `colors` both quietly exist, each holding half the content and
+ * neither looking wrong in a diff — and a category picker built from whatever
+ * the items happen to say would show both.
+ */
+if (topicRows.length > 0) {
+  const registered = new Set(topicRows.map((topic) => topic.slug));
+  const seen = new Map<string, string>();
+
+  const check = (topics: string[], where: string): void => {
+    for (const topic of topics) if (!registered.has(topic)) seen.set(topic, where);
+  };
+
+  for (const verb of verbs) check(verb.topics, `verbs.tsv (${verb.lemma})`);
+  for (const noun of nouns) check(noun.topics, `nouns.tsv (${noun.lemma})`);
+  for (const modifier of modifiers) check(modifier.topics, `modifiers.tsv (${modifier.lemma})`);
+  for (const sentence of sentences) check(sentence.topics, `${sentence.source} (${sentence.text})`);
+  for (const passage of passageRows) check(passage.topics, `passages.tsv (${passage.key})`);
+
+  for (const [topic, where] of seen) {
+    problems.push(`unknown topic "${topic}" in ${where} — add it to ${TOPICS_FILE} or fix the typo`);
+  }
+
+  const duplicated = topicRows
+    .map((topic) => topic.slug)
+    .filter((slug, index, all) => all.indexOf(slug) !== index);
+  for (const slug of new Set(duplicated)) {
+    problems.push(`${TOPICS_FILE}: "${slug}" is registered more than once`);
+  }
+}
 
 for (const verb of verbs) {
   const declared = verb.regularity === 'irregular';
@@ -1395,6 +1459,18 @@ const manifest = {
   levels: ['a1', 'a2'],
   referenceLanguages: ['en'],
   pronunciationLocales: ['es-ES', 'es-MX'],
+  // Declared rather than inferred from the items: a category the pack means to
+  // offer should still be nameable when it is briefly empty, and the app needs
+  // a label and an order that no amount of scanning items could supply.
+  ...(topicRows.length > 0
+    ? {
+        topics: topicRows.map((topic) => ({
+          id: topic.slug,
+          label: topic.label,
+          ...(topic.group ? { group: topic.group } : {}),
+        })),
+      }
+    : {}),
   provenance: { source: 'generated', origin: 'content/es', review: 'unreviewed', revision: 1 },
   files: files.map((file) => ({ kind: file.kind, path: file.path })),
 };
@@ -1465,3 +1541,25 @@ console.log(
   `  without an example: ${byPos('VERB')} verbs, ${byPos('NOUN')} nouns, ` +
     `${uncovered.length - byPos('VERB') - byPos('NOUN')} modifiers`,
 );
+
+if (topicRows.length > 0) {
+  const perTopic = new Map(topicRows.map((topic) => [topic.slug, 0]));
+  for (const item of [...sentenceItems, ...vocabularyItems]) {
+    for (const topic of item.topics ?? []) perTopic.set(topic, (perTopic.get(topic) ?? 0) + 1);
+  }
+
+  const thin = [...perTopic].filter(([, count]) => count < TOPIC_FLOOR);
+  console.log(
+    `\n  categories: ${perTopic.size} registered, ` +
+      `${[...perTopic.values()].filter((count) => count > 0).length} with content`,
+  );
+  // Named rather than counted: a category the picker offers and that then shows
+  // three items is worse than one it does not offer at all, so the thin ones
+  // have to be readable in the build output rather than merely tallied.
+  if (thin.length > 0) {
+    console.log(
+      `  under ${TOPIC_FLOOR} items: ` +
+        thin.map(([slug, count]) => `${slug} (${count})`).join(', '),
+    );
+  }
+}

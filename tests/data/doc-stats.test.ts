@@ -38,21 +38,35 @@ const read = (doc: string) => readFileSync(join(repoRoot, doc), 'utf8');
 
 /**
  * A claim in the docs: the label as written, and the number it should carry.
+ *
+ * A pattern must start with a digit. A bare `[\d,]+` also matches a lone comma,
+ * so ordinary prose — "items already carry `skills`" after a clause ending in a
+ * comma — was read as a claim that there are "," items and failed the check.
  * `sentences` is quoted both bare and as "example sentences", so the pattern
  * allows an optional qualifier.
  */
 const CLAIMS: readonly { label: string; pattern: RegExp; expected: number }[] = [
-  { label: 'verbs', pattern: /\*{0,2}([\d,]+) verbs/g, expected: actual.verbs },
-  { label: 'nouns', pattern: /\*{0,2}([\d,]+) nouns/g, expected: actual.nouns },
-  { label: 'modifiers', pattern: /\*{0,2}([\d,]+) modifiers/g, expected: actual.modifiers },
+  { label: 'verbs', pattern: /\*{0,2}(\d[\d,]*) verbs/g, expected: actual.verbs },
+  { label: 'nouns', pattern: /\*{0,2}(\d[\d,]*) nouns/g, expected: actual.nouns },
+  { label: 'modifiers', pattern: /\*{0,2}(\d[\d,]*) modifiers/g, expected: actual.modifiers },
   {
     label: 'sentences',
-    pattern: /\*{0,2}([\d,]+) (?:example )?sentences/g,
+    pattern: /\*{0,2}(\d[\d,]*) (?:example )?sentences/g,
     expected: actual.sentences,
   },
   // Wrapped across a line break in the README, so the gap may contain a newline.
-  { label: 'items', pattern: /([\d,]+)\s+(?:practisable\s+)?items/g, expected: totalItems },
+  { label: 'items', pattern: /(\d[\d,]*)\s+(?:practisable\s+)?items/g, expected: totalItems },
 ];
+
+describe('the claim patterns themselves', () => {
+  // The bug this replaces: `[\d,]+` matched the comma in "uses it, items
+  // already carry skills", so a sentence with no number in it was read as
+  // claiming there are "," items. Prose must never register as a claim.
+  it.each(CLAIMS)('$label ignores a comma with no digits', ({ pattern }) => {
+    const prose = 'it depends, items already carry meaning, verbs and nouns, modifiers, sentences';
+    expect([...prose.matchAll(new RegExp(pattern.source, 'g'))]).toEqual([]);
+  });
+});
 
 describe('content counts quoted in the docs', () => {
   for (const doc of DOCS) {

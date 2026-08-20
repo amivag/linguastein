@@ -23,6 +23,7 @@ content/es/            ← humans edit this (TSV, one row per lemma or sentence)
 ├── sentences-*.tsv        id, spanish, english, level, topics, note, register, address,
 │                          regions, passage, speaker
 ├── passages.tsv           id, key, kind, title (es), title (en), level, topics
+├── topics.tsv             slug, label (en), group (en) — the topic vocabulary
 └── id-ledger.tsv          GENERATED — every item id ever issued, active or retired
 
         │  npm run build:data
@@ -48,7 +49,8 @@ plurals and adjective agreement, stable ids, sentence tokenisation, token →
 lexeme links, grammar-pattern annotations, and translation records for items,
 lexemes and skills. It also reports coverage — which lemmas appear in no
 sentence — and refuses to run when a verb is tagged `irregular` without an entry
-in the irregularity table. CI re-runs it and fails on any diff.
+in the irregularity table, or a row uses a topic that `topics.tsv` does not
+declare. CI re-runs it and fails on any diff.
 
 Ambiguous surface forms are resolved by the words on either side: `el trabajo`
 is the noun and `trabajo en una oficina` is the verb, `canta muy mal` is the
@@ -302,6 +304,7 @@ whether a person has checked it.
   "levels": ["a1"],
   "referenceLanguages": ["en"],
   "pronunciationLocales": ["es-ES", "es-MX"],
+  "topics": [{ "id": "numbers", "label": "Numbers", "group": "Foundations" }],
   "files": [
     { "kind": "items", "path": "es-a1-core-phrases.jsonl" },
     { "kind": "translations", "path": "es-a1-core-translations-en.jsonl" }
@@ -311,6 +314,14 @@ whether a person has checked it.
 
 `kind` is one of `items`, `lexemes`, `senses`, `verb-forms`, `skills`,
 `translations`, `passages`. A pack may list several files of the same kind.
+
+`topics` is the pack's thematic categories, built from `content/es/topics.tsv`.
+It is declared here rather than inferred from the items because scanning items
+yields slugs and nothing else — no label, no order, and no way to say a category
+exists but is still empty. Array order is the order a picker shows, and a group's
+position is where its first topic appears, so `topics.tsv` is sorted by hand and
+never alphabetically. A slug is referenced by content and by links
+(`?topic=clock`), so renaming one is a breaking change; change the label instead.
 
 ## Validation
 

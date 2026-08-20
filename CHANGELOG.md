@@ -28,6 +28,13 @@ release would contain.
 - Sessions fully described by their URL, so one can be resumed, shared or driven
   by an agent.
 - Browse, reading view with passages, progress, and grouped settings.
+- Browsing and practising by thematic category. Topics are a controlled
+  vocabulary declared in `content/es/topics.tsv` and shipped in the pack
+  manifest with a label and display group, so the build rejects an unregistered
+  topic and the picker can show "Days of the week" rather than `days-of-week`.
+  Numbers, telling the time, days of the week, months and colours became real
+  categories in the process — mostly by classifying sentences that already
+  existed.
 - Generated `core-es` A1–A2 pack, built from TSV sources with stable item ids and
   editorial sign-off machinery. Marked `source: generated, review: unreviewed`.
 - Offline-capable installable PWA: app shell and datasets precached, audio cached

@@ -1,0 +1,52 @@
+# Thematic categories for core-es — the controlled vocabulary for the `topics`
+# column of every other source file.
+#
+# Columns: slug	label (en)	group (en)
+#
+# The build fails on a topic used in a source file but missing here, which is
+# what stops `colours` and `colors` from both quietly existing. It reports
+# registered topics nothing uses rather than failing, so a category can be
+# declared before the content that fills it.
+#
+# Order is authoring order, not alphabetical: this file *is* the order the
+# category picker shows, and a group's position is where its first topic
+# appears. Foundations lead because they are what a beginner asks for by name.
+#
+# A slug is referenced by content and by session links (`/browse?topic=clock`),
+# so renaming one is a breaking change — change the label instead.
+numbers	Numbers	Foundations
+clock	Telling the time	Foundations
+days-of-week	Days of the week	Foundations
+months	Months	Foundations
+time	Time	Foundations
+colours	Colours	Foundations
+questions	Asking questions	Foundations
+place	Where things are	Foundations
+grammar	Grammar words	Foundations
+greetings	Greetings	People
+family	Family	People
+people	People	People
+body	The body	People
+health	Health	People
+feelings	Feelings	People
+social	Meeting people	People
+home	At home	Everyday life
+daily-routine	Daily routine	Everyday life
+clothes	Clothes	Everyday life
+objects	Everyday objects	Everyday life
+food-drink	Food and drink	Everyday life
+restaurant	Eating out	Everyday life
+shopping	Shopping	Everyday life
+city	In town	Out in the world
+travel	Travel	Out in the world
+weather	Weather	Out in the world
+nature	Nature	Out in the world
+animals	Animals	Out in the world
+work	Work	Doing things
+school	School and study	Doing things
+sport	Sport and exercise	Doing things
+entertainment	Going out	Doing things
+music	Music	Doing things
+communication	Talking and writing	Doing things
+language	Language	Doing things
+core	High-frequency words	Everything else

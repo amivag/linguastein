@@ -243,6 +243,14 @@ export const packVoiceSchema = z
   })
   .loose();
 
+export const packTopicSchema = z
+  .object({
+    id: z.string().min(1),
+    label: z.string().min(1),
+    group: z.string().optional(),
+  })
+  .loose();
+
 export const packManifestSchema = z
   .object({
     id: packId,
@@ -254,6 +262,7 @@ export const packManifestSchema = z
     levels: z.array(level).optional(),
     referenceLanguages: z.array(languageTag).optional(),
     pronunciationLocales: z.array(languageTag).optional(),
+    topics: z.array(packTopicSchema).optional(),
     voices: z.array(packVoiceSchema).optional(),
     files: z.array(packFileSchema),
     provenance: provenanceSchema.optional(),

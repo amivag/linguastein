@@ -50,3 +50,47 @@ describe.each(VARIANT_CONTROLS)('%s', (file, token) => {
     expect(tinting.length).toBeGreaterThan(0);
   });
 });
+
+/**
+ * The selected-category tile takes the other route out of the same trap: its
+ * state is an attribute, so `[aria-pressed='true']:hover` outranks `.tile:hover`
+ * and no custom property is needed. What still has to hold is that background
+ * and text colour are always set *together* — a rule that repaints one without
+ * the other is how a control ends up with the wrong pair, which is the failure
+ * the tests above exist to prevent.
+ */
+describe('CategoryPicker.module.css', () => {
+  const css = withoutComments(
+    readFileSync(resolve(process.cwd(), 'src/features/browse/CategoryPicker.module.css'), 'utf8'),
+  );
+
+  /** Declaration block of the rule whose selector contains `needle`. */
+  function block(needle: string): string {
+    const rule = css.split('}').find((part) => part.includes(needle) && part.includes('{'));
+    return rule?.slice(rule.indexOf('{') + 1) ?? '';
+  }
+
+  it('sets a text colour wherever it sets the selected background', () => {
+    const selected = block("[aria-pressed='true']");
+    expect(selected).toMatch(/background:/);
+    expect(selected).toMatch(/color:/);
+  });
+
+  it('exposes selection as ARIA state rather than a class', () => {
+    // A `.selected` class would tie with `.tile:hover` on specificity, which is
+    // exactly the bug the controls above needed a custom property to escape.
+    expect(css).toContain("[aria-pressed='true']");
+    expect(css).not.toMatch(/\.selected\b/);
+  });
+
+  it('gives the selected tile its own hover, so it cannot fall back to the unselected one', () => {
+    expect(css).toContain("[aria-pressed='true']:hover");
+  });
+
+  it('keeps every colour on a role token', () => {
+    const literals = [...css.matchAll(/(?:background|color|border-color)\s*:\s*([^;}]+)/g)]
+      .map(([, value]) => value!.trim())
+      .filter((value) => !value.includes('var(--color-') && value !== 'inherit');
+    expect(literals).toEqual([]);
+  });
+});

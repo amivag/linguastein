@@ -239,6 +239,23 @@ export interface Passage {
   readonly provenance?: Provenance;
 }
 
+/**
+ * A thematic category the pack offers, declared rather than inferred.
+ *
+ * Scanning items for distinct topic strings gives you slugs and nothing else —
+ * no label, no order, and no way to say a category exists but is still empty.
+ * Declaring them also makes the pack the single source of the controlled
+ * vocabulary its content is validated against.
+ */
+export interface PackTopic {
+  /** Stable slug, as used in item `topics` and in a session or browse link. */
+  readonly id: string;
+  /** What a learner sees. */
+  readonly label: string;
+  /** Heading it is shown under, e.g. `Foundations`. */
+  readonly group?: string;
+}
+
 /** A published, independently versioned collection of content (spec §10, §20). */
 export interface PackManifest {
   readonly id: PackId;
@@ -250,6 +267,8 @@ export interface PackManifest {
   readonly levels?: readonly CefrLevel[];
   readonly referenceLanguages?: readonly LanguageTag[];
   readonly pronunciationLocales?: readonly LanguageTag[];
+  /** Thematic categories this pack offers, in the order they should be shown. */
+  readonly topics?: readonly PackTopic[];
   /** Voices this pack ships clips for, so they can be listed, credited and chosen. */
   readonly voices?: readonly PackVoice[];
   readonly files: readonly PackFile[];

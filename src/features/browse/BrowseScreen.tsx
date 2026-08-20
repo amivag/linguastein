@@ -17,6 +17,7 @@ import {
 import type { SessionSize } from '../../domain/sessions';
 import { sessionPath } from '../practice/session-url';
 import styles from './BrowseScreen.module.css';
+import { CategoryPicker } from './CategoryPicker';
 
 const TYPES: readonly { id: ItemType | 'all'; label: string }[] = [
   { id: 'all', label: 'Everything' },
@@ -46,6 +47,16 @@ export function BrowseScreen() {
   const [limit, setLimit] = useState(PAGE_SIZE);
 
   const facets = useMemo(() => services.repository.facets(), [services.repository]);
+
+  // Counted over the whole pack, not the current filter: a category's size is a
+  // property of the pack, and recounting per filter would make every tile read
+  // 0 as soon as a search narrowed the results.
+  const topics = useMemo(() => services.repository.topics(), [services.repository]);
+  const topicLabels = useMemo(
+    () => new Map(topics.map((entry) => [entry.id, entry.label])),
+    [topics],
+  );
+  const labelFor = (id: string) => topicLabels.get(id) ?? id.replace(/-/g, ' ');
 
   // One filter object drives both the list and the session link, so what a
   // learner sees here is exactly what "Practise these" practises.
@@ -93,6 +104,15 @@ export function BrowseScreen() {
           }}
         />
       </div>
+
+      <CategoryPicker
+        topics={topics}
+        selected={topic}
+        onSelect={(next) => {
+          setTopic(next);
+          setLimit(PAGE_SIZE);
+        }}
+      />
 
       <div className={styles.filters}>
         <label className={styles.filter}>
@@ -151,11 +171,16 @@ export function BrowseScreen() {
           <span className="visually-hidden">Topic</span>
           <select value={topic} onChange={(event) => setTopic(event.target.value)}>
             <option value="all">Any topic</option>
-            {facets.topics.map((option) => (
-              <option key={option} value={option}>
-                {option.replace(/-/g, ' ')}
-              </option>
-            ))}
+            {/* Registry order, matching the picker. Sorting by slug put
+                "Telling the time" between "In town" and "Clothes" — an order
+                that only made sense before the labels existed. */}
+            {topics
+              .filter((option) => option.count > 0)
+              .map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
           </select>
         </label>
       </div>
@@ -178,7 +203,7 @@ export function BrowseScreen() {
               {translation && <span className={styles.meaning}>{translation.text}</span>}
               <span className={styles.meta}>
                 {item.level?.toUpperCase()}
-                {item.topics?.length ? ` · ${item.topics.join(', ').replace(/-/g, ' ')}` : ''}
+                {item.topics?.length ? ` · ${item.topics.map(labelFor).join(', ')}` : ''}
               </span>
               <UsageBadges
                 compact

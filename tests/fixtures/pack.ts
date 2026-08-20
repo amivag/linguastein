@@ -32,6 +32,13 @@ const manifest: PackManifest = {
     { kind: 'passages', path: 'passages.jsonl' },
     { kind: 'audio', path: 'audio-es-ES.jsonl' },
   ],
+  // Deliberately partial: `everyday` is used by items but not declared, and
+  // `colours` is declared but unused, so both fallback paths stay exercised.
+  topics: [
+    { id: 'food-drink', label: 'Food and drink', group: 'Everyday life' },
+    { id: 'work', label: 'Work', group: 'Doing things' },
+    { id: 'colours', label: 'Colours', group: 'Foundations' },
+  ],
   voices: [
     { id: 'ana', locale: 'es-ES', label: 'Ana', review: 'reviewed' },
     { id: 'luis', locale: 'es-ES', label: 'Luis', review: 'unreviewed' },

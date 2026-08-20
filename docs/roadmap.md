@@ -38,6 +38,10 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   592 sentences — 1,027 practisable items, 99% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
+- Thematic categories: a controlled topic vocabulary declared in
+  `content/es/topics.tsv` and shipped in the pack manifest with a label and
+  display group, a build gate that rejects an unregistered topic, and a category
+  picker on Browse that both browses and practises a category
 - Reference-language architecture (English is the first, not the only)
 - WCAG 2.2 AA accessibility, enforced by axe and contrast tests in CI
 - Switchable dark/light themes on a modular, extensible token system
@@ -100,15 +104,40 @@ The dataset work is briefed in full for a fresh session:
    item id. Briefed in full in
    [docs/tasks/canonical-audio.md](tasks/canonical-audio.md).
 
-4. **Verb practice depth** — surface `VerbForm` records directly (person and
+4. **Numbers as a system** — `spellCardinal(1042)` gives `mil cuarenta y dos`
+   from rules in `src/languages/es/numerals.ts`, the way verb forms already come
+   from the conjugator. A learner's actual question is "how do I say 1042?", and
+   no number of authored rows answers it: the value is in the joining rules, the
+   solid teens, apocopation and hundreds agreement. Two ways to practise it,
+   because progress references stable ids and an integer cannot have one — a
+   closed set of number cards, plus an unbounded drill scored against pattern
+   ids. Briefed in full in [docs/tasks/numerals.md](tasks/numerals.md).
+5. **Game feel** — the app is clean, correct and slightly austere. A motion scale
+   (there is exactly one motion token today), answer feedback with weight, session
+   progress that reads as progress, and an end-of-session summary that says what
+   was achieved rather than printing a fraction. Deliberately excludes the usual
+   mechanics: no resettable streak, no reward that overstates the evidence, and
+   nothing where motion is the only signal. Briefed in
+   [docs/tasks/game-feel.md](tasks/game-feel.md).
+6. **Situations as communicative functions** — "ordering food", "asking for
+   directions". A second axis to topics rather than more topic slugs: `restaurant`
+   is what a sentence is *about*, ordering food is what a learner is *trying to
+   do*, and the two diverge. `SKILL_KINDS` already declares `function` and nothing
+   uses it, items already carry `skills`, and mastery already derives per-skill
+   strength — so "you can order food" becomes evidence rather than a filter. Two
+   prerequisites: `sessionPath` does not serialise `skills`, so such a session
+   cannot yet be linked, shared or scripted; and skills are currently derived from
+   grammar annotations only, with no way for a row to declare one. Should reference
+   the six situational dialogues that already exist rather than re-authoring them.
+7. **Verb practice depth** — surface `VerbForm` records directly (person and
    tense drills), not only cloze inside sentences. Word inspection already
    shows the forms; practising them directly is the next step.
-5. **Word-level progress** — inspection knows which lexeme a tapped word maps
+8. **Word-level progress** — inspection knows which lexeme a tapped word maps
    to, so "words I keep looking up" is a natural weak-item signal to feed back
    into session planning.
-6. **Offline dataset caching** — verify precache coverage and add a visible
+9. **Offline dataset caching** — verify precache coverage and add a visible
    "available offline" state.
-7. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
+10. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
 
 ## Later (architecture allows, code does not attempt)
 

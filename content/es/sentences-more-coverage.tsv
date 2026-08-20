@@ -14,13 +14,13 @@
 000451	Trabajo con la computadora todos los días.	I work with the computer every day.	a1	work
 000452	Mi celular está en la mesa.	My mobile is on the table.	a1	objects
 000453	No encuentro mi celular.	I can't find my mobile.	a1	objects
-000454	Compré dos boletos para el tren.	I bought two tickets for the train.	a2	travel
+000454	Compré dos boletos para el tren.	I bought two tickets for the train.	a2	travel,numbers
 000455	El boleto de autobús cuesta poco.	The bus ticket doesn't cost much.	a1	travel
-000456	El camión llega a las ocho.	The bus arrives at eight.	a2	travel		colloquial
+000456	El camión llega a las ocho.	The bus arrives at eight.	a2	travel,clock		colloquial
 000457	Voy en camión al centro.	I go into town by bus.	a2	travel		colloquial
 000458	No tengo plata para el taxi.	I haven't got the money for a taxi.	a2	shopping		colloquial
 000459	Gano poca plata en este trabajo.	I earn little money in this job.	a2	work		colloquial
-000460	No me queda pasta hasta el lunes.	I've no cash left until Monday.	a2	shopping		colloquial
+000460	No me queda pasta hasta el lunes.	I've no cash left until Monday.	a2	shopping,days-of-week		colloquial
 000461	Necesito pasta para el fin de semana.	I need cash for the weekend.	a2	shopping		colloquial
 000462	Busco mis lentes.	I'm looking for my glasses.	a1	clothes
 000463	Los lentes están debajo del libro.	The glasses are under the book.	a1	clothes
@@ -40,10 +40,10 @@
 000475	Somos pobres pero felices.	We're poor but happy.	a2	feelings
 000476	¿Estás listo?	Are you ready?	a1	core
 000477	Mi vecino es muy simpático.	My neighbour is very nice.	a2	social
-000478	El sábado estoy libre.	I'm free on Saturday.	a1	social
+000478	El sábado estoy libre.	I'm free on Saturday.	a1	social,days-of-week
 000479	El vaso está lleno.	The glass is full.	a2	home
-000480	La tienda está abierta hasta las nueve.	The shop is open until nine.	a1	shopping
-000481	El museo está cerrado los lunes.	The museum is closed on Mondays.	a1	city
+000480	La tienda está abierta hasta las nueve.	The shop is open until nine.	a1	shopping,clock
+000481	El museo está cerrado los lunes.	The museum is closed on Mondays.	a1	city,days-of-week
 000482	Es la última vez.	It's the last time.	a1	core
 000483	Vivimos en la misma calle.	We live on the same street.	a1	city
 000484	Su camisa es roja.	His shirt is red.	a1	colours
@@ -59,7 +59,7 @@
 000492	No como carne y tampoco pescado.	I don't eat meat, or fish either.	a2	food-drink
 000493	Quiero menos azúcar en el café.	I want less sugar in my coffee.	a1	food-drink
 000494	Casi siempre desayuno en casa.	I almost always have breakfast at home.	a1	daily-routine
-000495	Vivo solo desde enero.	I've lived alone since January.	a1	home
+000495	Vivo solo desde enero.	I've lived alone since January.	a1	home,months
 000496	Hasta pronto.	See you soon.	a1	greetings
 000497	Hablo bastante bien el español.	I speak Spanish quite well.	a2	communication
 000498	¿Cuándo llega el tren?	When does the train arrive?	a1	travel
@@ -72,11 +72,11 @@
 000505	No hay nadie en la oficina.	There's nobody in the office.	a2	work
 000506	Le doy el libro a mi hermana.	I give the book to my sister.	a1	family
 000507	Solo tengo uno.	I've only got one.	a1	numbers
-000508	Son las doce.	It's twelve o'clock.	a1	time
-000509	La maleta cuesta cien euros.	The suitcase costs a hundred euros.	a1	shopping
-000510	Mil gracias.	Thanks a million.	a1	greetings		colloquial
+000508	Son las doce.	It's twelve o'clock.	a1	time,clock
+000509	La maleta cuesta cien euros.	The suitcase costs a hundred euros.	a1	shopping,numbers
+000510	Mil gracias.	Thanks a million.	a1	greetings,numbers		colloquial
 000511	¿Por qué no vamos al cine?	Why don't we go to the cinema?	a1	social
 000512	Puedo ayudar con la cena.	I can help with dinner.	a1	home
 000513	Hace mal tiempo hoy.	The weather is bad today.	a1	weather
 000514	Es una mala idea.	It's a bad idea.	a1	core
-000515	Estudiamos juntos los sábados.	We study together on Saturdays.	a2	school
+000515	Estudiamos juntos los sábados.	We study together on Saturdays.	a2	school,days-of-week

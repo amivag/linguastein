@@ -5,23 +5,23 @@
 000137	Mi tío y mi tía tienen un bebé.	My uncle and aunt have a baby.	a1	family
 000138	La señora del piso de arriba es muy amable.	The lady from the flat upstairs is very kind.	a2	social
 000139	El señor pregunta mi nombre.	The gentleman asks my name.	a1	social
-000140	Mi esposo cocina los domingos.	My husband cooks on Sundays.	a1	family
+000140	Mi esposo cocina los domingos.	My husband cooks on Sundays.	a1	family,days-of-week
 000141	Mi esposa trabaja en un hospital.	My wife works at a hospital.	a1	family
 000142	Mi novio canta muy mal.	My boyfriend sings very badly.	a1	family
 000143	Esa niña es amiga de mi hija.	That girl is a friend of my daughter.	a1	family
 000144	Hay mucha gente en la plaza.	There are a lot of people in the square.	a1	city
 000145	Me duele la cabeza y el cuello.	My head and neck hurt.	a1	body
-000146	Tengo los ojos verdes y el pelo negro.	I have green eyes and black hair.	a1	body
+000146	Tengo los ojos verdes y el pelo negro.	I have green eyes and black hair.	a1	body,colours
 000147	Me lavo la cara y los dientes.	I wash my face and brush my teeth.	a1	daily-routine
 000148	Me duele el brazo derecho.	My right arm hurts.	a1	body
 000149	Tengo un dedo roto en la mano.	I have a broken finger on my hand.	a2	body
 000150	Me duelen las piernas y la espalda.	My legs and back hurt.	a2	body
 000151	El médico mira mi oreja.	The doctor looks at my ear.	a1	health
 000152	El corazón es un músculo fuerte.	The heart is a strong muscle.	a2	body
-000153	Tiene la piel muy blanca.	He has very fair skin.	a2	body
+000153	Tiene la piel muy blanca.	He has very fair skin.	a2	body,colours
 000154	La salud es lo más importante.	Health is the most important thing.	a2	health
 000155	Necesito una medicina para el dolor.	I need medicine for the pain.	a1	health
-000156	El almuerzo es a la una y la cena a las nueve.	Lunch is at one and dinner at nine.	a1	food-drink
+000156	El almuerzo es a la una y la cena a las nueve.	Lunch is at one and dinner at nine.	a1	food-drink,clock
 000157	Quiero un jugo de naranja.	I'd like an orange juice.	a1	food-drink
 000158	Bebemos vino con la comida.	We drink wine with the meal.	a1	food-drink
 000159	Como un huevo y queso en el desayuno.	I eat an egg and cheese for breakfast.	a1	food-drink
@@ -35,9 +35,9 @@
 000167	El camarero trae el menú y una servilleta.	The waiter brings the menu and a napkin.	a2	restaurant
 000168	Dejamos una propina en la mesa.	We leave a tip on the table.	a2	restaurant
 000169	Vivo en un apartamento pequeño.	I live in a small apartment.	a1	home
-000170	Mi piso tiene dos dormitorios.	My flat has two bedrooms.	a1	home
+000170	Mi piso tiene dos dormitorios.	My flat has two bedrooms.	a1	home,numbers
 000171	Comemos en el comedor y descansamos en la sala.	We eat in the dining room and rest in the living room.	a1	home
-000172	Hay cuatro sillas alrededor de la mesa.	There are four chairs around the table.	a1	home
+000172	Hay cuatro sillas alrededor de la mesa.	There are four chairs around the table.	a1	home,numbers
 000173	El espejo está en la pared.	The mirror is on the wall.	a1	home
 000174	La lámpara del armario no funciona.	The wardrobe light doesn't work.	a2	home
 000175	Necesito un cuchillo, un tenedor y una cuchara.	I need a knife, a fork and a spoon.	a1	home
@@ -46,7 +46,7 @@
 000178	El suelo de la cocina está limpio.	The kitchen floor is clean.	a1	home
 000179	La farmacia está al lado de la iglesia.	The pharmacy is next to the church.	a1	city
 000180	Vamos al cine o al teatro esta noche.	We're going to the cinema or the theatre tonight.	a1	city
-000181	El taxi llega al aeropuerto en veinte minutos.	The taxi gets to the airport in twenty minutes.	a1	travel
+000181	El taxi llega al aeropuerto en veinte minutos.	The taxi gets to the airport in twenty minutes.	a1	travel,numbers
 000182	Voy en bicicleta al trabajo.	I cycle to work.	a1	travel
 000183	Miro el mapa para encontrar el camino.	I look at the map to find the way.	a1	travel
 000184	La tienda está en la esquina, cerca del puente.	The shop is on the corner, near the bridge.	a2	city
@@ -57,26 +57,26 @@
 000189	Escribo con un bolígrafo, no con un lápiz.	I write with a pen, not a pencil.	a1	school
 000190	Necesito papel para el examen.	I need paper for the exam.	a1	school
 000191	No sé la respuesta de esta pregunta.	I don't know the answer to this question.	a1	school
-000192	El profesor enseña dos idiomas.	The teacher teaches two languages.	a1	school
+000192	El profesor enseña dos idiomas.	The teacher teaches two languages.	a1	school,numbers
 000193	¿Cuál es tu número de teléfono?	What's your phone number?	a1	communication
 000194	Esta letra es difícil de leer.	This letter is hard to read.	a2	language
 000195	Espera un segundo, por favor.	Wait a second, please.	a1	time			tu
-000196	El mes de mayo tiene treinta y un días.	The month of May has thirty-one days.	a1	time
+000196	El mes de mayo tiene treinta y un días.	The month of May has thirty-one days.	a1	time,months,numbers
 000197	¿Cuál es la fecha de hoy?	What's today's date?	a1	time
-000198	Mi cumpleaños es en abril.	My birthday is in April.	a1	time
-000199	Las vacaciones empiezan en julio.	The holidays start in July.	a1	travel
+000198	Mi cumpleaños es en abril.	My birthday is in April.	a1	time,months
+000199	Las vacaciones empiezan en julio.	The holidays start in July.	a1	travel,months
 000200	Descansamos un rato después de comer.	We rest for a while after eating.	a2	daily-routine
-000201	El lunes y el martes trabajo en casa.	On Monday and Tuesday I work at home.	a1	work
-000202	El miércoles tengo clase de español.	On Wednesday I have a Spanish class.	a1	school
-000203	El jueves vamos al mercado.	On Thursday we go to the market.	a1	shopping
-000204	El viernes salgo con mis amigos.	On Friday I go out with my friends.	a1	social
-000205	En febrero hace mucho frío.	In February it's very cold.	a1	weather
-000206	Marzo y abril son meses de primavera.	March and April are spring months.	a1	time
-000207	En junio y julio hace calor.	In June and July it's hot.	a1	weather
-000208	Septiembre y octubre son meses de otoño.	September and October are autumn months.	a1	time
-000209	En noviembre y diciembre llueve mucho.	In November and December it rains a lot.	a1	weather
+000201	El lunes y el martes trabajo en casa.	On Monday and Tuesday I work at home.	a1	work,days-of-week
+000202	El miércoles tengo clase de español.	On Wednesday I have a Spanish class.	a1	school,days-of-week
+000203	El jueves vamos al mercado.	On Thursday we go to the market.	a1	shopping,days-of-week
+000204	El viernes salgo con mis amigos.	On Friday I go out with my friends.	a1	social,days-of-week
+000205	En febrero hace mucho frío.	In February it's very cold.	a1	weather,months
+000206	Marzo y abril son meses de primavera.	March and April are spring months.	a1	time,months
+000207	En junio y julio hace calor.	In June and July it's hot.	a1	weather,months
+000208	Septiembre y octubre son meses de otoño.	September and October are autumn months.	a1	time,months
+000209	En noviembre y diciembre llueve mucho.	In November and December it rains a lot.	a1	weather,months
 000210	Por la noche se ven la luna y las estrellas.	At night you can see the moon and the stars.	a2	nature
-000211	Hay nubes grises y va a llover.	There are grey clouds and it's going to rain.	a1	weather
+000211	Hay nubes grises y va a llover.	There are grey clouds and it's going to rain.	a1	weather,colours
 000212	La lluvia y la nieve son normales en invierno.	Rain and snow are normal in winter.	a2	weather
 000213	En el bosque hay árboles muy altos.	In the forest there are very tall trees.	a2	nature
 000214	Un pájaro canta en el jardín.	A bird is singing in the garden.	a1	animals
@@ -90,7 +90,7 @@
 000222	Uso el ordenador para trabajar.	I use the computer for work.	a1	objects
 000223	La pantalla del móvil está rota.	The phone screen is broken.	a2	objects
 000224	Te mando un mensaje esta tarde.	I'll send you a message this afternoon.	a1	communication
-000225	Leo el periódico y una revista los domingos.	I read the newspaper and a magazine on Sundays.	a2	communication
+000225	Leo el periódico y una revista los domingos.	I read the newspaper and a magazine on Sundays.	a2	communication,days-of-week
 000226	Pon la fruta en la bolsa.	Put the fruit in the bag.	a1	shopping			tu
 000227	Esta cosa no sirve para nada.	This thing is useless.	a2	core		colloquial		
 000228	La vida en esta ciudad es tranquila.	Life in this city is calm.	a2	city

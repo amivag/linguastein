@@ -93,6 +93,47 @@ describe('ContentRepository', () => {
   });
 });
 
+describe('thematic categories', () => {
+  const repository = testRepository();
+
+  it('keeps the order the pack declared, not alphabetical order', () => {
+    // `colours` is declared last despite sorting first, and the picker's
+    // grouping is built straight from this order.
+    expect(repository.topics().map((topic) => topic.id)).toEqual([
+      'food-drink',
+      'work',
+      'colours',
+      'everyday',
+    ]);
+  });
+
+  it('carries the label and group a slug alone could not supply', () => {
+    const [food] = repository.topics();
+    expect(food).toMatchObject({ id: 'food-drink', label: 'Food and drink', group: 'Everyday life' });
+  });
+
+  it('counts the items in each category', () => {
+    const counts = new Map(repository.topics().map((topic) => [topic.id, topic.count]));
+    expect(counts.get('food-drink')).toBe(4);
+    expect(counts.get('work')).toBe(1);
+  });
+
+  it('reports a declared but empty category as zero rather than dropping it', () => {
+    // A category may be registered before the content that fills it, so the
+    // count is what tells a picker to hide it — its absence never does.
+    expect(repository.topics().find((topic) => topic.id === 'colours')?.count).toBe(0);
+  });
+
+  it('still surfaces a topic the registry does not declare', () => {
+    // Content outliving its registry entry must stay browsable, so an
+    // undeclared topic falls back to its slug as a label.
+    expect(repository.topics().find((topic) => topic.id === 'everyday')).toMatchObject({
+      label: 'everyday',
+      count: 2,
+    });
+  });
+});
+
 describe('usage filters', () => {
   const repository = testRepository();
 

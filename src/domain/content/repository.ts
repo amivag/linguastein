@@ -22,6 +22,7 @@ import type {
   LearningItem,
   Lexeme,
   PackManifest,
+  PackTopic,
   PackVoice,
   Passage,
   Register,
@@ -30,6 +31,11 @@ import type {
   Translation,
   VerbForm,
 } from './model';
+
+/** A declared category plus how many items currently carry it. */
+export interface TopicFacet extends PackTopic {
+  readonly count: number;
+}
 
 export interface ItemFilter {
   readonly packs?: readonly PackId[];
@@ -312,6 +318,40 @@ export class ContentRepository {
       if (search && !normalise(item.text).includes(search)) return false;
       return true;
     });
+  }
+
+  /**
+   * The thematic categories of the loaded packs, with a count of the items in
+   * each, in the order the packs declare them.
+   *
+   * Counts are part of the result rather than a caller's job: a picker has to
+   * be able to hide a category that is registered but empty, and computing
+   * that separately from the labels is how the two drift apart.
+   */
+  topics(filter: ItemFilter = {}): readonly TopicFacet[] {
+    const counts = new Map<string, number>();
+    for (const item of this.query(filter)) {
+      for (const topic of item.topics ?? EMPTY) counts.set(topic, (counts.get(topic) ?? 0) + 1);
+    }
+
+    const declared = [...this.packsById.values()].flatMap((manifest) => manifest.topics ?? EMPTY);
+    const seen = new Set<string>();
+    const facets: TopicFacet[] = [];
+
+    for (const topic of declared) {
+      if (seen.has(topic.id)) continue;
+      seen.add(topic.id);
+      facets.push({ ...topic, count: counts.get(topic.id) ?? 0 });
+    }
+
+    // A pack that declares no registry, or content tagged with a topic the
+    // registry has since dropped, still has to be browsable — so fall back to
+    // the slug as its own label rather than making the category disappear.
+    for (const [id, count] of [...counts].sort(([a], [b]) => a.localeCompare(b))) {
+      if (!seen.has(id)) facets.push({ id, label: id.replace(/-/g, ' '), count });
+    }
+
+    return facets;
   }
 
   /** Distinct values available for building filter UIs. */

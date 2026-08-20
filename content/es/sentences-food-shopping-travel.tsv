@@ -1,7 +1,7 @@
 # Food, shopping and travel.
 # Columns: id	spanish	english	level	topics	note	register	address	regions
 000265	Una cerveza, por favor.	A beer, please.	a1	restaurant
-000266	Dos cafés con leche, por favor.	Two white coffees, please.	a1	restaurant
+000266	Dos cafés con leche, por favor.	Two white coffees, please.	a1	restaurant,numbers
 000267	Un vaso de agua, por favor.	A glass of water, please.	a1	restaurant
 000268	¿Me trae la carta?	Could you bring me the menu?	a1	restaurant	Formal usted form of traer	formal	usted	
 000269	¿Qué me recomienda?	What do you recommend?	a2	restaurant		formal	usted	
@@ -14,7 +14,7 @@
 000276	¿Me trae la cuenta?	Could you bring me the bill?	a1	restaurant		formal	usted	
 000277	¿Puedo pagar con tarjeta?	Can I pay by card?	a1	shopping
 000278	La cuenta, por favor.	The bill, please.	a1	restaurant
-000279	El desayuno es a las ocho.	Breakfast is at eight.	a1	food-drink
+000279	El desayuno es a las ocho.	Breakfast is at eight.	a1	food-drink,clock
 000280	Como fruta cada mañana.	I eat fruit every morning.	a1	food-drink
 000281	Bebo mucha agua.	I drink a lot of water.	a1	food-drink
 000282	No como carne.	I don't eat meat.	a1	food-drink
@@ -23,7 +23,7 @@
 000285	El pescado está muy caliente.	The fish is very hot.	a1	food-drink
 000286	Necesito sal y aceite.	I need salt and oil.	a1	food-drink
 000287	Compro pan en la panadería.	I buy bread at the bakery.	a1	shopping
-000288	Almuerzo a la una.	I have lunch at one.	a1	food-drink
+000288	Almuerzo a la una.	I have lunch at one.	a1	food-drink,clock
 000289	Vamos a cenar fuera esta noche.	We're going out for dinner tonight.	a1	restaurant
 000290	Probé un postre delicioso.	I tried a delicious dessert.	a2	restaurant
 000291	¿Cuánto cuesta?	How much does it cost?	a1	shopping
@@ -37,14 +37,14 @@
 000299	¿Dónde está la caja?	Where is the till?	a1	shopping
 000300	Voy al supermercado.	I'm going to the supermarket.	a1	shopping
 000301	Necesito comprar verduras.	I need to buy vegetables.	a1	shopping
-000302	La tienda abre a las diez.	The shop opens at ten.	a1	shopping
-000303	El mercado cierra a las dos.	The market closes at two.	a1	shopping
+000302	La tienda abre a las diez.	The shop opens at ten.	a1	shopping,clock
+000303	El mercado cierra a las dos.	The market closes at two.	a1	shopping,clock
 000304	No tengo dinero suficiente.	I don't have enough money.	a1	shopping
-000305	Pagué veinte euros.	I paid twenty euros.	a2	shopping
-000306	Me gusta esta camiseta azul.	I like this blue t-shirt.	a1	clothes
-000307	Busco un abrigo negro.	I'm looking for a black coat.	a1	clothes
+000305	Pagué veinte euros.	I paid twenty euros.	a2	shopping,numbers
+000306	Me gusta esta camiseta azul.	I like this blue t-shirt.	a1	clothes,colours
+000307	Busco un abrigo negro.	I'm looking for a black coat.	a1	clothes,colours
 000308	Estos zapatos son muy cómodos.	These shoes are very comfortable.	a2	clothes
-000309	Llevo una camisa blanca.	I'm wearing a white shirt.	a1	clothes	llevar means to wear as well as to carry
+000309	Llevo una camisa blanca.	I'm wearing a white shirt.	a1	clothes,colours	llevar means to wear as well as to carry
 000310	¿Dónde está la estación?	Where is the station?	a1	travel
 000311	¿Dónde está el baño?	Where is the bathroom?	a1	travel
 000312	¿Cómo llego al centro?	How do I get to the centre?	a1	travel
@@ -55,7 +55,7 @@
 000317	Está a la izquierda.	It's on the left.	a1	travel
 000318	Voy en autobús.	I go by bus.	a1	travel
 000319	Prefiero ir en tren.	I prefer to go by train.	a1	travel
-000320	El avión sale a las seis.	The plane leaves at six.	a1	travel
+000320	El avión sale a las seis.	The plane leaves at six.	a1	travel,clock
 000321	El tren llega tarde.	The train is arriving late.	a1	travel
 000322	¿A qué hora sale el próximo autobús?	What time does the next bus leave?	a1	travel
 000323	Un billete a Madrid, por favor.	A ticket to Madrid, please.	a1	travel
@@ -66,11 +66,11 @@
 000328	¿Hay wifi en el hotel?	Is there wifi at the hotel?	a1	travel
 000329	Mi maleta es esta.	My suitcase is this one.	a1	travel
 000330	He perdido mi pasaporte.	I've lost my passport.	a2	travel
-000331	Vamos de vacaciones en agosto.	We go on holiday in August.	a1	travel
+000331	Vamos de vacaciones en agosto.	We go on holiday in August.	a1	travel,months
 000332	Viajo por trabajo.	I travel for work.	a1	travel
 000333	Me encanta viajar.	I love travelling.	a1	travel
 000334	El hotel está en el centro.	The hotel is in the centre.	a1	travel
-000335	La playa está a diez minutos.	The beach is ten minutes away.	a1	travel
+000335	La playa está a diez minutos.	The beach is ten minutes away.	a1	travel,numbers
 000336	Fuimos en coche hasta la montaña.	We drove up to the mountain.	a2	travel
 000337	El viaje fue muy largo.	The journey was very long.	a2	travel
 000338	Visitamos un museo muy interesante.	We visited a very interesting museum.	a2	travel

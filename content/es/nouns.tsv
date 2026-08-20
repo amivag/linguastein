@@ -313,25 +313,25 @@
 500304	equipo	team	m		a2	sport
 500305	partido	match, game	m		a2	sport
 500306	ejercicio	exercise	m		a2	sport
-500307	lunes	Monday	m	lunes	a1	time
-500308	martes	Tuesday	m	martes	a1	time
-500309	miércoles	Wednesday	m	miércoles	a1	time
-500310	jueves	Thursday	m	jueves	a1	time
-500311	viernes	Friday	m	viernes	a1	time
-500312	sábado	Saturday	m		a1	time
-500313	domingo	Sunday	m		a1	time
-500314	enero	January	m		a1	time
-500315	febrero	February	m		a1	time
-500316	marzo	March	m		a1	time
-500317	abril	April	m		a1	time
-500318	mayo	May	m		a1	time
-500319	junio	June	m		a1	time
-500320	julio	July	m		a1	time
-500321	agosto	August	m		a1	time
-500322	septiembre	September	m		a1	time
-500323	octubre	October	m		a1	time
-500324	noviembre	November	m		a1	time
-500325	diciembre	December	m		a1	time
+500307	lunes	Monday	m	lunes	a1	time,days-of-week
+500308	martes	Tuesday	m	martes	a1	time,days-of-week
+500309	miércoles	Wednesday	m	miércoles	a1	time,days-of-week
+500310	jueves	Thursday	m	jueves	a1	time,days-of-week
+500311	viernes	Friday	m	viernes	a1	time,days-of-week
+500312	sábado	Saturday	m		a1	time,days-of-week
+500313	domingo	Sunday	m		a1	time,days-of-week
+500314	enero	January	m		a1	time,months
+500315	febrero	February	m		a1	time,months
+500316	marzo	March	m		a1	time,months
+500317	abril	April	m		a1	time,months
+500318	mayo	May	m		a1	time,months
+500319	junio	June	m		a1	time,months
+500320	julio	July	m		a1	time,months
+500321	agosto	August	m		a1	time,months
+500322	septiembre	September	m		a1	time,months
+500323	octubre	October	m		a1	time,months
+500324	noviembre	November	m		a1	time,months
+500325	diciembre	December	m		a1	time,months
 500326	primavera	spring	f		a1	time
 500327	verano	summer	m		a1	time
 500328	otoño	autumn	m		a1	time

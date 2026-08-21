@@ -1,0 +1,174 @@
+/*
+ * The overlay is a flex column pinned to the viewport, so the sheet can be sent
+ * to the bottom edge on a phone and re-anchored on a pointer device by changing
+ * where the column justifies — rather than by two different position schemes.
+ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-sheet);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: var(--backdrop);
+  animation: fade var(--transition-base);
+}
+
+/*
+ * Fixed header, fixed pinned row, scrolling body — never a scrolling sheet.
+ * A word with nine forms and four examples must not be able to push either the
+ * word itself or the close button off the screen.
+ */
+.sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(var(--sheet-width), 100%);
+  max-height: 82dvh;
+  margin-inline: auto;
+  overflow: hidden;
+  /* No outline. The shadow above the sheet is what separates it from the page,
+     and it reads in both themes where a 1px line only read in the light one. */
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+  animation: rise var(--transition-slow);
+}
+
+.narrow {
+  --sheet-width: 420px;
+}
+
+.wide {
+  --sheet-width: 640px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+  padding: var(--space-4) var(--space-3) var(--space-2) var(--space-4);
+}
+
+/*
+ * The drag handle a phone sheet is expected to have.
+ *
+ * Honest about being decoration — the sheet is not draggable — but it is the one
+ * shape that says "this came up from the bottom and goes back down", which is
+ * what makes a sheet legible as a sheet rather than as a page that jumped.
+ * Removed below, once the sheet stops being one.
+ */
+.grip {
+  position: absolute;
+  top: var(--space-2);
+  left: 50%;
+  width: var(--space-6);
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  transform: translateX(-50%);
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+}
+
+/* A row that changes what the sheet is about, between the header and the body
+   and scrolling with neither. */
+.pinned {
+  flex: 0 0 auto;
+  padding: 0 var(--space-4) var(--space-3);
+}
+
+.body {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  /* A flick that runs out of sheet must not carry on scrolling the page
+     underneath it, which on a phone reads as the page jumping. */
+  overscroll-behavior: contain;
+  padding: var(--space-1) var(--space-4) max(var(--space-5), env(safe-area-inset-bottom));
+}
+
+/*
+ * Arriving, not appearing. `global.css` collapses both under
+ * prefers-reduced-motion, so neither carries information on its own.
+ *
+ * No fill mode, deliberately: the resting state is the state in the rules
+ * above, so a page that never gets to run the animation — a background tab, a
+ * renderer that is not compositing — shows the sheet where it belongs rather
+ * than stranded at the keyframe it started from.
+ */
+@keyframes rise {
+  from {
+    transform: translateY(2rem);
+    opacity: 0;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * Once there is room, a sheet stops being a sheet: a slab across the bottom of
+ * a large screen is neither in reach nor in view. It becomes a panel, hanging
+ * from the header for a control that lives there and centred for one that does
+ * not — and the grip goes, because nothing about it slid up any more.
+ */
+@media (min-width: 768px) {
+  .sheet {
+    max-height: min(80dvh, 680px);
+    border-radius: var(--radius-xl);
+    animation-name: drop;
+  }
+
+  .grip {
+    display: none;
+  }
+
+  /* Named `anchorHeader` rather than `header`: this file already has a `.header`
+     for the sheet's own, and CSS Modules would have handed both the same
+     generated class — so an anchored overlay would have inherited the header's
+     padding and every sheet header would have been positioned like an overlay. */
+  .overlay.anchorHeader {
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: calc(var(--tap-target) + var(--space-5)) var(--space-4) var(--space-4);
+  }
+
+  .overlay.anchorHeader .sheet {
+    margin-inline: 0;
+  }
+
+  .overlay.anchorCenter {
+    justify-content: center;
+    padding: var(--space-5) var(--space-4);
+  }
+}
+
+/* A second name rather than a redefinition of `rise`: same-name keyframes
+   declared inside a media query win globally on some engines, which is a trap
+   worth eight lines to avoid. */
+@keyframes drop {
+  from {
+    transform: translateY(-0.75rem);
+    opacity: 0;
+  }
+}

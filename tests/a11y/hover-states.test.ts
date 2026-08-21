@@ -12,14 +12,17 @@
  * itself; the palette behind it is checked in `contrast.test.ts`.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join, relative, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+
+const SRC = resolve(process.cwd(), 'src');
 
 /** Stylesheet, and the property every one of its backgrounds must flow through. */
 const VARIANT_CONTROLS: readonly [file: string, token: string][] = [
   ['src/components/Button.module.css', '--button-bg'],
   ['src/components/ThemeToggle.module.css', '--control-bg'],
+  ['src/components/Chip.module.css', '--chip-bg'],
 ];
 
 function withoutComments(css: string): string {
@@ -51,46 +54,69 @@ describe.each(VARIANT_CONTROLS)('%s', (file, token) => {
   });
 });
 
+/** Every stylesheet under `src`, so a rule cannot be escaped by moving a file. */
+function stylesheets(directory = SRC): string[] {
+  return readdirSync(directory).flatMap((entry) => {
+    const path = join(directory, entry);
+    if (statSync(path).isDirectory()) return stylesheets(path);
+    return path.endsWith('.css') ? [relative(SRC, path).replaceAll('\\', '/')] : [];
+  });
+}
+
 /**
- * The selected-category tile takes the other route out of the same trap: its
- * state is an attribute, so `[aria-pressed='true']:hover` outranks `.tile:hover`
- * and no custom property is needed. What still has to hold is that background
- * and text colour are always set *together* — a rule that repaints one without
- * the other is how a control ends up with the wrong pair, which is the failure
- * the tests above exist to prevent.
+ * The other route out of the same trap: a control whose state is an *attribute*,
+ * so `[aria-pressed='true']:hover` outranks `.chip:hover` outright and no custom
+ * property is needed to keep the two apart.
+ *
+ * Discovered rather than listed. This used to name `CategoryPicker.module.css`,
+ * and when the tile it described moved into the shared `Chip` the assertions
+ * would have kept passing against a file that no longer styled a control —
+ * which is the failure mode a path-pinned test has. Any stylesheet that styles a
+ * pressed control is now held to the rule, and a new one is covered the moment
+ * it appears.
  */
-describe('CategoryPicker.module.css', () => {
-  const css = withoutComments(
-    readFileSync(resolve(process.cwd(), 'src/features/browse/CategoryPicker.module.css'), 'utf8'),
-  );
+const PRESSED = stylesheets().filter((file) =>
+  withoutComments(readFileSync(join(SRC, file), 'utf8')).includes("[aria-pressed='true']"),
+);
 
-  /** Declaration block of the rule whose selector contains `needle`. */
-  function block(needle: string): string {
-    const rule = css.split('}').find((part) => part.includes(needle) && part.includes('{'));
-    return rule?.slice(rule.indexOf('{') + 1) ?? '';
-  }
-
-  it('sets a text colour wherever it sets the selected background', () => {
-    const selected = block("[aria-pressed='true']");
-    expect(selected).toMatch(/background:/);
-    expect(selected).toMatch(/color:/);
+describe('controls whose selected state is an ARIA attribute', () => {
+  it('finds them at all', () => {
+    // A silent zero would make every assertion below vacuously true.
+    expect(PRESSED.length).toBeGreaterThan(0);
   });
 
-  it('exposes selection as ARIA state rather than a class', () => {
-    // A `.selected` class would tie with `.tile:hover` on specificity, which is
-    // exactly the bug the controls above needed a custom property to escape.
-    expect(css).toContain("[aria-pressed='true']");
-    expect(css).not.toMatch(/\.selected\b/);
-  });
+  describe.each(PRESSED)('%s', (file) => {
+    const css = withoutComments(readFileSync(join(SRC, file), 'utf8'));
 
-  it('gives the selected tile its own hover, so it cannot fall back to the unselected one', () => {
-    expect(css).toContain("[aria-pressed='true']:hover");
-  });
+    /** Declaration block of the rule whose selector contains `needle`. */
+    function block(needle: string): string {
+      const rule = css.split('}').find((part) => part.includes(needle) && part.includes('{'));
+      return rule?.slice(rule.indexOf('{') + 1) ?? '';
+    }
 
-  it('keeps every colour on a role token', () => {
-    const literals = [...css.matchAll(/(?:background|color|border-color)\s*:\s*([^;}]+)/g)]
-      .map(([, value]) => value!.trim())
-      .filter((value) => !value.includes('var(--color-') && value !== 'inherit');
-    expect(literals).toEqual([]);
+    it('sets a text colour wherever it sets the selected background', () => {
+      // A rule that repaints one without the other is how a control ends up
+      // with the wrong pair — the failure the tests above exist to prevent.
+      const selected = block("[aria-pressed='true']");
+      expect(selected).toMatch(/background|--\w[\w-]*-bg/);
+      expect(selected).toMatch(/color:/);
+    });
+
+    it('exposes selection as ARIA state rather than a class', () => {
+      // A `.selected` class would tie with `.chip:hover` on specificity, which
+      // is exactly the bug the controls above needed a custom property to escape.
+      expect(css).not.toMatch(/\.selected\b/);
+    });
+
+    it('gives the selected control its own hover, so it cannot fall back', () => {
+      expect(css).toContain("[aria-pressed='true']:hover");
+    });
+
+    it('keeps every colour on a role token', () => {
+      const literals = [...css.matchAll(/(?:background|color|border-color)\s*:\s*([^;}]+)/g)]
+        .map(([, value]) => value!.trim())
+        .filter((value) => !/var\(--(color-|\w[\w-]*-bg)/.test(value) && value !== 'inherit');
+      expect(literals).toEqual([]);
+    });
   });
 });

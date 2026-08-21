@@ -1,0 +1,100 @@
+/*
+ * A filled pill, with no outline at rest.
+ *
+ * Worth recording why that is allowed, because the house rule used to read as
+ * "interactive boundaries take `--color-border-strong`" and this looks like a
+ * departure from it. WCAG 1.4.11 does not require a control to *have* a visible
+ * boundary — its Understanding document is explicit that the criterion applies
+ * to a boundary indicator if one exists, and asks for 3:1 then. What identifies
+ * a chip is its label, which `contrast.test.ts` holds at 4.5:1 against every
+ * surface a chip sits on, and its fill.
+ *
+ * That distinction is the whole design language in one control: a boundary is
+ * drawn where it is the only thing carrying information — a `<select>`, a text
+ * field — and nowhere else. A dozen outlined pills in a row are a dozen
+ * boundaries competing, and the only question a learner is asking is which one
+ * is on.
+ *
+ * Selection is an *attribute*, so `[aria-pressed='true']:hover` outranks
+ * `.chip:hover` and the two states cannot cross. Background flows through
+ * `--chip-bg` all the same, so hover always tints whatever the chip is actually
+ * painted with rather than a colour guessed at by a second rule.
+ */
+
+.chip {
+  --chip-bg: var(--color-surface-raised);
+
+  display: inline-flex;
+  min-height: var(--tap-target);
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--chip-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  /*
+   * Deliberately not transitioning colour. A filter should answer instantly;
+   * only the press is animated, because that is confirming a touch rather than
+   * reporting a result.
+   */
+  transition: scale var(--transition-fast);
+}
+
+.chip:active {
+  scale: 0.96;
+}
+
+/*
+ * Selected: the accent at full strength.
+ *
+ * The jump from a near-page-coloured surface to the accent is a large *lightness*
+ * change in both themes, not only a hue change, so which chip is on survives a
+ * colour-vision difference. The bolder label is the third signal, and
+ * `aria-pressed` is the one that does not depend on sight at all.
+ */
+.chip[aria-pressed='true'] {
+  --chip-bg: var(--color-accent);
+
+  color: var(--color-accent-contrast);
+  font-weight: var(--weight-bold);
+}
+
+/* The warm variant: a chip that offers rather than filters. */
+.accent {
+  --chip-bg: var(--color-highlight-soft);
+
+  color: var(--color-highlight);
+  font-weight: var(--weight-semibold);
+}
+
+.label {
+  white-space: nowrap;
+}
+
+/* The count is the difference between a category worth opening and a dead end,
+   so it is quieter than the label but never hidden. It is `aria-hidden` in the
+   component: both call sites spell the whole name out, because "Numbers27" is
+   what concatenating two adjacent spans actually produces. */
+.count {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-medium);
+  opacity: 0.7;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* Both states tint their own fill, so neither can inherit the other's. The
+     mix moves towards the text colour, which darkens under a light theme and
+     lightens under a dark one — visible either way. */
+  .chip:hover {
+    background: color-mix(in srgb, var(--chip-bg) 90%, var(--color-text));
+  }
+
+  .chip[aria-pressed='true']:hover {
+    background: color-mix(in srgb, var(--chip-bg) 88%, var(--color-text));
+  }
+}

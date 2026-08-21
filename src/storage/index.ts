@@ -1,11 +1,11 @@
-import { createIndexedDbStorage, openLinguasteinDB } from './indexeddb-storage';
+import { createIndexedDbStorage, openAppDatabase } from './indexeddb-storage';
 import { createMemoryStorage } from './memory-storage';
 import type { LearnerStorage } from './types';
 
 export * from './memory-storage';
 export * from './preferences';
 export * from './types';
-export { createIndexedDbStorage, openLinguasteinDB };
+export { createIndexedDbStorage, openAppDatabase };
 
 /**
  * Opens persistent storage, falling back to memory when IndexedDB is blocked.
@@ -14,7 +14,7 @@ export { createIndexedDbStorage, openLinguasteinDB };
 export async function createStorage(): Promise<LearnerStorage> {
   if (typeof indexedDB === 'undefined') return createMemoryStorage();
   try {
-    return createIndexedDbStorage(await openLinguasteinDB());
+    return createIndexedDbStorage(await openAppDatabase());
   } catch (error) {
     console.warn('IndexedDB unavailable, falling back to in-memory storage', error);
     return createMemoryStorage();

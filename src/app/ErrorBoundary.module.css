@@ -1,0 +1,52 @@
+/*
+ * The screen of last resort. Centred, quiet, and built only from tokens — an
+ * error screen that itself looked broken would be its own bug report.
+ */
+
+.screen {
+  display: grid;
+  place-content: center;
+  justify-items: start;
+  gap: var(--space-4);
+  min-height: 100%;
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding: var(--space-5) var(--space-4);
+  color: var(--color-text);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-display);
+}
+
+/*
+ * Styled here rather than through the shared `Button`. The boundary catches a
+ * throw from the component layer, so its own fallback must not import from that
+ * layer — otherwise the thing that failed is also the thing offering the way out.
+ */
+.action {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  box-shadow: 0 2px 0 var(--color-accent-edge);
+  color: var(--color-accent-contrast);
+  font-weight: var(--weight-bold);
+}
+
+.action:active {
+  translate: 0 2px;
+  box-shadow: 0 0 0 var(--color-accent-edge);
+}
+
+/* The message itself: worth quoting in a bug report, so it is legible rather
+   than hidden, but quieter than the sentence explaining what happened. */
+.detail {
+  color: var(--color-text-muted);
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Segoe UI Mono', Menlo, monospace;
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}

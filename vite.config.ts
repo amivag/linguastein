@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
+// With the extension: Vite's future native config loader refuses an
+// extensionless import, and it already warns about one today.
+import { APP } from './src/app/identity.ts';
 
 const pkg = JSON.parse(
   readFileSync(fileURLToPath(new URL('./package.json', import.meta.url)), 'utf8'),
@@ -15,14 +18,11 @@ const pkg = JSON.parse(
  * commit is worth strictly less than a build that fails.
  */
 /**
- * The app is served from a project page — `amivag.github.io/linguastein/` — not
- * from a domain root. Every absolute path the build emits has to carry this, so
- * it is declared once and reused: Vite's `base`, the manifest's `start_url`,
- * `scope` and icon paths, and the router's basename by way of
- * `import.meta.env.BASE_URL`. Set in development too, so a base-path mistake
- * shows up locally instead of only once deployed.
+ * Base path, name and machine id all come from `src/app/identity.ts` — the one
+ * module a new project edits. It is plain data with no imports precisely so a
+ * config file can read it: nothing here may touch the DOM.
  */
-const BASE = '/linguastein/';
+const BASE = APP.basePath;
 
 function buildCommit(): string {
   if (process.env['LINGUASTEIN_BUILD_COMMIT']) return process.env['LINGUASTEIN_BUILD_COMMIT'];
@@ -52,13 +52,33 @@ export default defineConfig({
     ),
   },
   plugins: [
+    /**
+     * Identity into the HTML shell.
+     *
+     * `index.html` cannot import TypeScript, so its pre-paint theme script used
+     * to carry a duplicate of the storage key with a comment asking whoever read
+     * it to keep the two in sync. That is a contract no test can check. The
+     * placeholders below are replaced from `identity.ts` at build *and* dev time,
+     * so there is one spelling of the key and one of the name.
+     */
+    {
+      name: 'app-identity-html',
+      transformIndexHtml: {
+        order: 'pre' as const,
+        handler: (html: string) =>
+          html
+            .replaceAll('%APP_ID%', APP.id)
+            .replaceAll('%APP_NAME%', APP.name)
+            .replaceAll('%APP_TAGLINE%', APP.tagline),
+      },
+    },
     react(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/*.svg'],
       manifest: {
-        name: 'Linguastein — Spanish Practice',
-        short_name: 'Linguastein',
+        name: `${APP.name} — ${APP.tagline}`,
+        short_name: APP.name,
         description: 'Mobile-first Spanish practice: listen, repeat, reveal, review.',
         lang: 'en',
         start_url: BASE,
@@ -86,7 +106,7 @@ export default defineConfig({
             urlPattern: ({ request }) => request.destination === 'audio',
             handler: 'CacheFirst',
             options: {
-              cacheName: 'linguastein-audio',
+              cacheName: `${APP.id}-audio`,
               expiration: { maxEntries: 500, maxAgeSeconds: 60 * 60 * 24 * 90 },
               cacheableResponse: { statuses: [0, 200] },
             },
@@ -116,6 +136,21 @@ export default defineConfig({
     globals: false,
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/**/*.test.{ts,tsx}'],
+    /**
+     * Longer than vitest's 5s default, and not a way of hiding slow code.
+     *
+     * The component tests drive real pointer events through `user-event`, some of
+     * them into focus-trapped dialogs, and a few inject latency deliberately to
+     * open a race worth testing. Alone they take five or six seconds; sixty-odd
+     * jsdom environments in parallel push the slowest past the ceiling, and they
+     * fail as timeouts that look like flakes and are not — the same test passes
+     * the moment it runs on its own.
+     *
+     * Raising it costs nothing on a green run and only delays the report on a
+     * genuinely hung test. It is set here rather than per file so that the next
+     * component test to grow does not have to rediscover this.
+     */
+    testTimeout: 15_000,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

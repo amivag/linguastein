@@ -5,7 +5,7 @@ import {
   createIndexedDbStorage,
   createMemoryStorage,
   DEFAULT_PREFERENCES,
-  openLinguasteinDB,
+  openAppDatabase,
   type LearnerStorage,
 } from '../../src/storage';
 import { id } from '../fixtures/pack';
@@ -16,7 +16,7 @@ const ITEM = id<ItemId>('test-es:item:001');
 // identical behaviour whether or not IndexedDB is available.
 const implementations: readonly [string, () => Promise<LearnerStorage>][] = [
   ['memory', () => Promise.resolve(createMemoryStorage())],
-  ['indexeddb', async () => createIndexedDbStorage(await openLinguasteinDB())],
+  ['indexeddb', async () => createIndexedDbStorage(await openAppDatabase())],
 ];
 
 describe.each(implementations)('%s storage', (_name, create) => {

@@ -16,13 +16,14 @@
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/icons/icon.svg" />
-    <title>Linguastein — Spanish Practice</title>
+    <title>%APP_NAME% — %APP_TAGLINE%</title>
     <script>
       // Resolve the theme before first paint, so there is no flash of the wrong
-      // one. Key and values match src/styles/themes.ts.
+      // one. `%APP_ID%` is substituted by the build from src/app/identity.ts, so
+      // this key cannot drift from the one src/styles/themes.ts derives.
       (function () {
         try {
-          var stored = localStorage.getItem('linguastein.theme') || 'system';
+          var stored = localStorage.getItem('%APP_ID%.theme') || 'system';
           var dark =
             stored === 'dark' ||
             (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);

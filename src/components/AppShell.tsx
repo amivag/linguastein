@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { documentTitle } from '../app/identity';
 import { AppNav } from './AppNav';
 import { Icon } from './Icon';
 import { UpdateBanner } from './UpdateBanner';
@@ -29,7 +30,7 @@ export function AppShell({ title, children, onBack, action, showNav = true }: Ap
   const back = onBack === 'history' ? () => void navigate(-1) : onBack;
 
   useEffect(() => {
-    document.title = `${title} · Linguastein`;
+    document.title = documentTitle(title);
   }, [title]);
 
   return (

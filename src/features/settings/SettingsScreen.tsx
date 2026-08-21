@@ -7,6 +7,7 @@ import { CourseBar } from '../../components/CourseBar';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { VoiceSettings } from '../../components/VoiceSettings';
 import { REFERENCE_LANGUAGES } from '../../domain/content';
+import { APP } from '../../app/identity';
 import { buildDate, buildLabel } from '../../app/version';
 import { Icon } from '../../components/Icon';
 import styles from './SettingsScreen.module.css';
@@ -155,7 +156,7 @@ export function SettingsScreen() {
           {/* The string a bug report should quote, and the pack version beside it:
               content ships and updates independently of the app. */}
           <p className={styles.hint}>
-            Linguastein {buildLabel()}
+            {APP.name} {buildLabel()}
             {buildDate() && ` · built ${buildDate()}`}
           </p>
           <p className={styles.hint}>

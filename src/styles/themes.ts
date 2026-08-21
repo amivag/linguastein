@@ -7,6 +7,8 @@
  * all read from this list, so nothing else needs touching.
  */
 
+import { storageKey } from '../app/identity';
+
 export const THEME_PREFERENCES = ['system', 'dark', 'light'] as const;
 export type ThemePreference = (typeof THEME_PREFERENCES)[number];
 
@@ -33,8 +35,16 @@ export const THEME_OPTIONS: readonly ThemeOption[] = [
   { id: 'dark', label: 'Dark', icon: 'themeDark' },
 ];
 
-/** Key shared with the pre-paint script in index.html. Keep both in sync. */
-export const THEME_STORAGE_KEY = 'linguastein.theme';
+/**
+ * Where the resolved preference is cached for the pre-paint script.
+ *
+ * Derived rather than typed out. It used to be a literal here *and* a literal in
+ * `index.html`, with a comment asking the reader to keep them in sync — which is
+ * a contract no test could check and nothing would report breaking. `index.html`
+ * now carries a `%APP_ID%` placeholder that the build substitutes from the same
+ * constant, so there is one spelling and it cannot drift.
+ */
+export const THEME_STORAGE_KEY = storageKey('theme');
 
 export function isThemePreference(value: unknown): value is ThemePreference {
   return typeof value === 'string' && (THEME_PREFERENCES as readonly string[]).includes(value);

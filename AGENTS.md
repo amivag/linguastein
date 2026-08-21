@@ -17,9 +17,30 @@ npm run build          # production PWA build
 `npm run check` is the gate. If it passes, the change is landable; if it fails,
 fix it rather than working around it.
 
+## This repository is also a skeleton
+
+Other applications are scaffolded from it, so the base — structure, tooling,
+design system, test harness — is kept app-agnostic on purpose.
+[docs/skeleton.md](docs/skeleton.md) is the map: what is generic, what is this
+app, and the order to do things in when starting a new project. Read it before
+adding a dependency or moving a layer.
+
+Two consequences for ordinary work here:
+
+- **App identity lives in one file.** `src/app/identity.ts` holds the name, the
+  machine id and the base path; the IndexedDB database, the `localStorage`
+  prefix, document titles, the PWA manifest, the service-worker cache names and
+  `index.html` (through a build-time `%APP_ID%` substitution) all derive from it.
+  Never type the app's name into a component.
+- **Prefer a rule that bites to a rule that is written down.** Where an
+  architectural decision can be expressed as a lint rule or a test that reads the
+  source, express it that way — the list below is enforced, not merely stated.
+
 ## Architecture rules
 
-These are load-bearing. Breaking one is a design change, not a refactor.
+These are load-bearing. Breaking one is a design change, not a refactor. Rules
+1, 5 and the icon seam are enforced by `eslint.config.js`; a violation fails
+`npm run lint` rather than waiting for review.
 
 1. **Content, exercises and learner state are separate systems.** `src/domain`
    is pure TypeScript — no React, no DOM, no fetch, no vendor SDKs.
@@ -240,6 +261,10 @@ automated agents alike, so the same rules serve both:
   decoration — but see rule 1 of the design language: almost nothing draws one
 - `tests/a11y/design-language.test.ts` enumerates every remaining border and
   fails on a new one, and refuses a hard-coded colour outside a theme file
+- a render that throws is caught by `src/app/ErrorBoundary.tsx` and reported as
+  an `role="alert"` screen with a reload, rather than as a blank page. It clears
+  no stored state and phones nothing home; `onError` is the seam if a project
+  ever wants reporting
 
 Run `npx vitest run tests/a11y` after any UI change.
 
@@ -261,6 +286,15 @@ Three pieces decide what a learner sees, and they are separable on purpose:
 
 Recognition is the weakest retrieval mode and the most flattering; prefer
 production wherever the data supports it.
+
+A choice a learner can eliminate without knowing any Spanish is not a choice.
+`distractors()` in `domain/exercises/generators.ts` ranks candidates by how much
+they resemble the answer — surface form first (a question is offered against
+questions; the lone `?` in a list of four _is_ the answer), then item type,
+level, theme and comparable length. It is a score, not a cascade of filters, and
+deliberately so: questions are thin in any pack, and a hard "same topic and same
+form" filter would starve the choices, which is easier still. Do not promote
+theme back above form — that is the bug this replaced.
 
 A graded card hides what it is grading, and nothing else. Every word of every
 phrase is tappable on every screen, practice included — the alternative made the

@@ -6,17 +6,18 @@
  */
 
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
+import { APP } from '../app/identity';
 import type { ItemId } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionRecord } from '../domain/sessions';
 import { DEFAULT_PREFERENCES, mergePreferences } from './preferences';
 import type { LearnerStorage, Preferences } from './types';
 
-const DB_NAME = 'linguastein';
+const DB_NAME = APP.id;
 const DB_VERSION = 1;
 const PREFERENCES_KEY = 'preferences';
 
-interface LinguasteinDB extends DBSchema {
+interface AppDatabase extends DBSchema {
   progress: {
     key: string;
     value: ItemProgress;
@@ -38,8 +39,8 @@ interface LinguasteinDB extends DBSchema {
   };
 }
 
-export async function openLinguasteinDB(): Promise<IDBPDatabase<LinguasteinDB>> {
-  return openDB<LinguasteinDB>(DB_NAME, DB_VERSION, {
+export async function openAppDatabase(): Promise<IDBPDatabase<AppDatabase>> {
+  return openDB<AppDatabase>(DB_NAME, DB_VERSION, {
     upgrade(db, oldVersion) {
       if (oldVersion < 1) {
         const progress = db.createObjectStore('progress', { keyPath: 'itemId' });
@@ -59,7 +60,7 @@ export async function openLinguasteinDB(): Promise<IDBPDatabase<LinguasteinDB>> 
   });
 }
 
-export function createIndexedDbStorage(db: IDBPDatabase<LinguasteinDB>): LearnerStorage {
+export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerStorage {
   return {
     progress: {
       async get(itemId) {

@@ -10,6 +10,7 @@ import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { courseOptions, coursePath, resolveCourse } from '../domain/content';
 import { mergePreferences, type Preferences } from '../storage';
 import { applyTheme } from '../styles/themes';
+import { ErrorBoundary } from './ErrorBoundary';
 import { createServices, type AppServices } from './services';
 import { ServicesContext, useServices } from './services-context';
 
@@ -103,47 +104,57 @@ export function App() {
   if (!services || !preferences) return <Splash message="Loading…" />;
 
   return (
-    <ServicesContext value={{ services, preferences, updatePreferences }}>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <Routes>
-          {/* Every screen lives inside a course, so what is being studied is
-              legible in the address bar and travels with a shared link. */}
-          <Route path="/:language/:level" element={<HomeScreen />} />
-          <Route path="/:language/:level/browse" element={<BrowseScreen />} />
-          <Route path="/:language/:level/read" element={<ReadScreen />} />
-          <Route path="/:language/:level/read/:id" element={<PassageScreen />} />
-          <Route path="/:language/:level/progress" element={<ProgressScreen />} />
-          <Route path="/:language/:level/session" element={<SessionScreen />} />
-          <Route path="/:language/:level/settings" element={<SettingsScreen />} />
+    /*
+      Inside the services provider and outside the router, deliberately.
 
-          {/* Outside the course routes: the design system is a property of the
+      Inside, so the boundary is mounted for the whole of the app that can throw.
+      Outside the router, because a throw during routing must still be caught —
+      and because the way out is a reload rather than a navigation, so the
+      boundary has no use for router context.
+    */
+    <ServicesContext value={{ services, preferences, updatePreferences }}>
+      <ErrorBoundary>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
+          <Routes>
+            {/* Every screen lives inside a course, so what is being studied is
+              legible in the address bar and travels with a shared link. */}
+            <Route path="/:language/:level" element={<HomeScreen />} />
+            <Route path="/:language/:level/browse" element={<BrowseScreen />} />
+            <Route path="/:language/:level/read" element={<ReadScreen />} />
+            <Route path="/:language/:level/read/:id" element={<PassageScreen />} />
+            <Route path="/:language/:level/progress" element={<ProgressScreen />} />
+            <Route path="/:language/:level/session" element={<SessionScreen />} />
+            <Route path="/:language/:level/settings" element={<SettingsScreen />} />
+
+            {/* Outside the course routes: the design system is a property of the
               app, not of what is being studied. `useCourse` resolves to the
               widest real course when the path carries none, so the navigation
               still points somewhere sensible. */}
-          <Route
-            path="/design"
-            element={
-              <Suspense fallback={<Splash message="Loading the design system…" />}>
-                <StyleGuideScreen />
-              </Suspense>
-            }
-          />
+            <Route
+              path="/design"
+              element={
+                <Suspense fallback={<Splash message="Loading the design system…" />}>
+                  <StyleGuideScreen />
+                </Suspense>
+              }
+            />
 
-          {/* Links written before courses existed, kept working: the query
+            {/* Links written before courses existed, kept working: the query
               string is what carries a shared session, so it has to survive the
               hop rather than being dropped at the door. */}
-          {LEGACY_SCREENS.map((screen) => (
-            <Route
-              key={screen}
-              path={`/${screen}`}
-              element={<CourseRedirect screen={screen} keepSearch />}
-            />
-          ))}
-          <Route path="/read/:id" element={<LegacyPassageRedirect />} />
+            {LEGACY_SCREENS.map((screen) => (
+              <Route
+                key={screen}
+                path={`/${screen}`}
+                element={<CourseRedirect screen={screen} keepSearch />}
+              />
+            ))}
+            <Route path="/read/:id" element={<LegacyPassageRedirect />} />
 
-          <Route path="*" element={<CourseRedirect />} />
-        </Routes>
-      </BrowserRouter>
+            <Route path="*" element={<CourseRedirect />} />
+          </Routes>
+        </BrowserRouter>
+      </ErrorBoundary>
     </ServicesContext>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { buildLearnerContext, type LearnerContext } from '../../ai';
 import { useServices } from '../../app/services-context';
+import { APP } from '../../app/identity';
 import { Button } from '../../components/Button';
 import type { LearningItem } from '../../domain/content';
 import { canShare, copyToClipboard, shareText } from '../../utils/clipboard';
@@ -68,7 +69,7 @@ export function ShareActions({ item }: ShareActionsProps) {
           </Button>
         ))}
         {canShare() && (
-          <Button block onClick={() => void shareText(item.text, 'Linguastein')}>
+          <Button block onClick={() => void shareText(item.text, APP.name)}>
             Share…
           </Button>
         )}

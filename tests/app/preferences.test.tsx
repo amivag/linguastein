@@ -89,41 +89,31 @@ async function bootApp() {
 
 const tile = (name: RegExp) => screen.getByRole('button', { name });
 
-/**
- * Longer than vitest's 5s default, and deliberately.
- *
- * Two of these tests inject 900ms of write latency on purpose, then drive real
- * pointer events through a modal sheet to reach the tiles — `user-event` spends
- * real milliseconds doing that, and the picker became a focus-trapped dialog
- * rather than an inline panel, which added more. Against the default budget the
- * first test failed intermittently at ~5.1s inside a 66-file parallel run: not a
- * race in the code, just a test whose honest wall-clock had grown past the
- * ceiling. The injected latency is what gives the race a chance to happen, so
- * shortening *that* to fit would quietly stop testing anything.
+/*
+ * These two are among the slowest tests in the suite: 900ms of deliberately
+ * injected write latency, plus real pointer events into a modal sheet. The
+ * budget that makes them survive a parallel run is `testTimeout` in
+ * `vite.config.ts`, set once for every test rather than per file. The `waitFor`
+ * windows below are separate — they bound the assertion, not the test.
  */
-const SLOW_TEST_MS = 20_000;
 
 describe('changing several preferences in a row', () => {
-  it(
-    'keeps every one of them, not just the last to be written',
-    async () => {
-      const user = userEvent.setup();
-      const storage = await bootApp();
+  it('keeps every one of them, not just the last to be written', async () => {
+    const user = userEvent.setup();
+    const storage = await bootApp();
 
-      await user.click(screen.getByRole('button', { name: /Change what to practise/ }));
-      await user.click(tile(/^Food and drink/));
-      await user.click(tile(/^Work/));
+    await user.click(screen.getByRole('button', { name: /Change what to practise/ }));
+    await user.click(tile(/^Food and drink/));
+    await user.click(tile(/^Work/));
 
-      // Both, in the order they were picked.
-      await waitFor(
-        async () => {
-          expect((await storage.preferences.read()).focusTopics).toEqual(['food-drink', 'work']);
-        },
-        { timeout: 8000 },
-      );
-    },
-    SLOW_TEST_MS,
-  );
+    // Both, in the order they were picked.
+    await waitFor(
+      async () => {
+        expect((await storage.preferences.read()).focusTopics).toEqual(['food-drink', 'work']);
+      },
+      { timeout: 8000 },
+    );
+  });
 
   it('shows the change before the write has landed', async () => {
     const user = userEvent.setup();
@@ -140,25 +130,21 @@ describe('changing several preferences in a row', () => {
     );
   });
 
-  it(
-    'keeps changes to different preferences from clobbering each other',
-    async () => {
-      const user = userEvent.setup();
-      const storage = await bootApp();
+  it('keeps changes to different preferences from clobbering each other', async () => {
+    const user = userEvent.setup();
+    const storage = await bootApp();
 
-      await user.click(screen.getByRole('button', { name: /Change what to practise/ }));
-      await user.click(tile(/^Work/));
-      await user.click(screen.getByRole('button', { name: /^Shaky items/ }));
+    await user.click(screen.getByRole('button', { name: /Change what to practise/ }));
+    await user.click(tile(/^Work/));
+    await user.click(screen.getByRole('button', { name: /^Shaky items/ }));
 
-      await waitFor(
-        async () => {
-          const stored = await storage.preferences.read();
-          expect(stored.focusTopics).toEqual(['work']);
-          expect(stored.focus).toBe('struggling');
-        },
-        { timeout: 8000 },
-      );
-    },
-    SLOW_TEST_MS,
-  );
+    await waitFor(
+      async () => {
+        const stored = await storage.preferences.read();
+        expect(stored.focusTopics).toEqual(['work']);
+        expect(stored.focus).toBe('struggling');
+      },
+      { timeout: 8000 },
+    );
+  });
 });

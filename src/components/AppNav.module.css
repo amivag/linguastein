@@ -1,12 +1,31 @@
-/* Phone: a tab bar within thumb reach, above the home indicator. */
+/*
+ * Phone: a tab bar within thumb reach, above the home indicator.
+ *
+ * Frosted rather than outlined. The 1px line across the top of the bar was the
+ * app's most visible border, and it was doing a job the blur does better: the
+ * content behind it stays readable *as* content, so the bar reads as a layer
+ * over the page rather than as a panel cut out of it. `--color-chrome` is mixed
+ * heavily towards itself so the label contrast the theme test checks stays
+ * honest — see the note in `dark.css`.
+ */
 .nav {
   position: fixed;
   inset: auto 0 0 0;
-  z-index: 5;
-  border-top: 1px solid var(--color-border);
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-  backdrop-filter: blur(12px);
+  z-index: var(--z-nav);
+  background: color-mix(in srgb, var(--color-chrome) 88%, transparent);
+  backdrop-filter: blur(var(--blur-chrome));
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/*
+ * A platform without `backdrop-filter` would get 88% of the chrome colour and
+ * whatever is behind it showing through the other 12% — legible, but not by
+ * enough for a label. Fall back to opaque there rather than translucent.
+ */
+@supports not (backdrop-filter: blur(1px)) {
+  .nav {
+    background: var(--color-chrome);
+  }
 }
 
 .list {
@@ -25,55 +44,98 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  min-height: 56px;
-  padding: var(--space-2) var(--space-1);
+  min-height: var(--nav-height);
+  padding: var(--space-2) var(--space-1) var(--space-1);
   color: var(--color-text-muted);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-.icon {
-  font-size: var(--text-lg);
-  line-height: 1;
+/*
+ * The pill behind the icon, which is what actually marks the active tab.
+ *
+ * It is a separate element from the icon so it can grow into the tint without
+ * the glyph moving: the icon stays exactly where it is on every tab, active or
+ * not, so switching sections does not shuffle the row. Position survives a
+ * colour-vision difference because the pill is a *shape* appearing, not a hue
+ * changing.
+ */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-7);
+  height: var(--space-6);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  transition:
+    background-color var(--transition-fast),
+    scale var(--transition-spring);
 }
 
 .label {
-  font-size: 0.7rem;
+  font-size: var(--text-xs);
   letter-spacing: 0.02em;
 }
 
 .active {
   color: var(--color-accent);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
+}
+
+.active .pill {
+  background: var(--color-accent-soft);
+}
+
+/* A tap that lands: the pill dips under the finger and springs back. The route
+   has already changed by then, so it is confirming rather than reporting. */
+.link:active .pill {
+  scale: 0.88;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .link:hover {
     color: var(--color-text);
   }
+
+  .link:hover .pill {
+    background: var(--color-surface-sunken);
+  }
+
+  .active:hover .pill {
+    background: var(--color-accent-soft);
+  }
 }
 
-/* Tablet and desktop: a rail down the left, so vertical space goes to content. */
+/*
+ * Tablet and desktop: a rail down the left, so vertical space goes to content.
+ * Its width is `--rail-width`, which is also what `AppShell` reserves — one
+ * token rather than the same number written in two files.
+ */
 @media (min-width: 768px) {
   .nav {
     inset: 0 auto 0 0;
-    width: 96px;
-    border-top: 0;
-    border-right: 1px solid var(--color-border);
+    width: var(--rail-width);
     padding-bottom: 0;
+    /* Nothing scrolls behind a rail, so it needs neither the frost nor the
+       translucency. Fully transparent rather than tinted: a rail painted even
+       slightly differently from the page reads as a vertical seam down the left
+       of every screen, and the active tab's pill is what marks the column. */
+    background: transparent;
+    backdrop-filter: none;
   }
 
   .list {
     grid-auto-flow: row;
     grid-auto-rows: max-content;
-    gap: var(--space-2);
+    gap: var(--space-1);
     padding-top: var(--space-6);
   }
 
   .link {
     gap: var(--space-1);
     min-height: 64px;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     margin-inline: var(--space-2);
   }
 
@@ -81,9 +143,18 @@
     font-size: var(--text-sm);
   }
 
+  /* On the rail the whole tab is the target, so the tint fills it rather than
+     hugging the icon — the pill would read as a stray dot in a column. */
   .active {
-    /* The one accent tint, from the role token rather than a percentage picked
-       here — the same panel colour the stat cards and the sheet use. */
     background: var(--color-accent-soft);
+  }
+
+  .active .pill {
+    background: transparent;
+  }
+
+  .link:hover .pill,
+  .active:hover .pill {
+    background: transparent;
   }
 }

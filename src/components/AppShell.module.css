@@ -16,25 +16,37 @@
  * The negative inline margin bleeds it into the shell's gutters so content
  * scrolls behind the header rather than up its sides, and the padding puts the
  * contents back where they were.
+ *
+ * Frosted, like the tab bar. It used to be painted in `--color-bg-tint` — the
+ * exact colour of the page wash behind it — which meant a phrase scrolling up
+ * under it vanished at a hard line. Blurring instead keeps the page visible as
+ * something that is passing underneath, which is what tells a learner mid-list
+ * that they are scrolling rather than that the list ended.
  */
 .header {
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: var(--z-header);
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   min-height: var(--tap-target);
   margin-inline: calc(var(--space-4) * -1);
   margin-bottom: var(--space-4);
   padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
-  /* The top of the page wash, which is where the header always is: the wash is
-     fixed to the viewport, so the two cannot drift apart on scroll. */
-  background: var(--color-bg-tint);
+  background: color-mix(in srgb, var(--color-chrome) 78%, transparent);
+  backdrop-filter: blur(var(--blur-chrome));
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .header {
+    background: var(--color-chrome);
+  }
 }
 
 .title {
   flex: 1;
+  min-width: 0;
   font-size: var(--text-xl);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-display);
@@ -49,21 +61,18 @@
   margin-left: calc(var(--space-3) * -1);
   background: none;
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   color: var(--color-text-muted);
-  font-size: var(--text-xl);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-.action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--tap-target);
-  height: var(--tap-target);
-  background: none;
-  border: 0;
-  color: var(--color-text-muted);
-  font-size: var(--text-lg);
+@media (hover: hover) and (pointer: fine) {
+  .back:hover {
+    background: var(--color-surface-sunken);
+    color: var(--color-text);
+  }
 }
 
 .main {
@@ -79,12 +88,12 @@
   left: var(--space-4);
   top: 0;
   transform: translateY(-120%);
-  z-index: 20;
+  z-index: var(--z-skip-link);
   padding: var(--space-2) var(--space-3);
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   background: var(--color-accent);
   color: var(--color-accent-contrast);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   text-decoration: none;
   transition: transform var(--transition-fast);
 }
@@ -97,17 +106,22 @@
   outline: none;
 }
 
-/* Room for the tab bar on a phone, for the rail once it moves to the side. */
+/*
+ * Room for the tab bar on a phone, for the rail once it moves to the side.
+ * Both figures come from the tokens the nav is *drawn* with, so a taller bar
+ * cannot end up overlapping the last button on the page — which is what the two
+ * hand-written numbers here used to allow.
+ */
 .withNav {
-  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  padding-bottom: calc(var(--nav-height) + var(--space-3) + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 768px) {
   .withNav {
     padding-bottom: var(--space-5);
-    padding-left: calc(96px + var(--space-4));
+    padding-left: calc(var(--rail-width) + var(--space-4));
     /* The rail sits inside the centred box, so widen it by the rail width to
        keep the content itself centred in the space that is left. */
-    max-width: calc(var(--content-width) + 96px);
+    max-width: calc(var(--content-width) + var(--rail-width));
   }
 }

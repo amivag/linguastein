@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppNav } from './AppNav';
+import { Icon } from './Icon';
 import { UpdateBanner } from './UpdateBanner';
 import { VoicePresence } from './VoicePresence';
 import styles from './AppShell.module.css';
@@ -39,7 +40,7 @@ export function AppShell({ title, children, onBack, action, showNav = true }: Ap
       <header className={styles.header}>
         {back && (
           <button type="button" className={styles.back} onClick={back} aria-label="Go back">
-            <span aria-hidden="true">←</span>
+            <Icon name="back" size="lg" />
           </button>
         )}
         <h1 className={styles.title}>{title}</h1>

@@ -1,10 +1,12 @@
 # Task: make it feel good to use
 
-**Status:** in progress — §4.1 (motion scale), §4.3 (segmented progress) and
-§4.4 (the earned summary) have landed. §4.2, §4.5 and §4.6 remain.
+**Status:** in progress — §4.1 (motion scale), §4.2 (answer feedback), §4.3
+(segmented progress) and §4.4 (the earned summary) have landed. §4.5 and §4.6
+remain.
 **Written:** 2026-08-20
-**Revised:** 2026-08-20 — the two landed sections record what was actually built
-and the two constraints that shaped it.
+**Revised:** 2026-08-21 — §4.2 landed as part of the design-language pass; see
+[docs/design-language.md](../design-language.md), which now owns the visual rules
+this task was working towards.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** `src/styles`, `src/components`, `src/features` and the preferences
 record. No content, no dataset, no scheduler. If a change here needs a change in
@@ -123,15 +125,27 @@ ever deleted — that block is the reason a component may add motion without
 thinking about accessibility, so it is asserted rather than assumed. Both guards
 were verified by breaking them on purpose.
 
-### 4.2 Answer feedback with weight
+### 4.2 Answer feedback with weight — landed
 
-Right now an answer is correct or it is not, and the difference is a colour and
-a line of text. Give the answered option a short settle — a small scale, a
-border that firms up — so the tap feels received. Keep `role="status"` exactly as
-it is; this is additive.
+The graded option settles by a hair and its ring firms up from nothing
+(`@keyframes grade` in `Button.module.css`); the verdict band does the same
+(`@keyframes settle` in `Practice.module.css`). `role="status"` is untouched.
 
-The wrong-answer case deserves more thought than the right one. It should feel
-like information, not like a buzzer.
+Three things worth not undoing:
+
+- **The end state is identical with motion off.** The animation carries nothing —
+  the fill, the ring and the icon are all present either way — which is what
+  makes it additive rather than informative.
+- **Nothing waits for it.** Feedback overlaps the transition to the next card; it
+  does not gate it. Latency is the enemy of fun, and a 200ms flourish in a loop
+  this tight would be felt as slowness rather than as polish.
+- **Right and wrong get the same weight.** The wrong answer is information, not a
+  buzzer, so it does not shake, flash or take longer.
+
+The verdict tints also became roles in the same pass — `--color-success-soft` and
+`--color-danger-soft` — because the card, the graded option and the summary were
+each mixing their own percentage and "correct" was coming out three shades of
+green.
 
 ### 4.3 Session progress that reads as progress — landed
 
@@ -240,7 +254,7 @@ the least valuable if the earlier ones landed well.
 
 - [x] A motion scale exists in `primitives.css`, and components use it rather
       than inline values — enforced by `tests/a11y/motion.test.ts`
-- [ ] Answer feedback has weight, without changing what `role="status"` announces
+- [x] Answer feedback has weight, without changing what `role="status"` announces
 - [x] Session progress reads as progress, with the progressbar contract intact
 - [x] End of session says what was achieved; study mode says its honest version
 - [ ] Home leads with what is due

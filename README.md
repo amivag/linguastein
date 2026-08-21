@@ -67,7 +67,8 @@ src/
 content/es/      dataset authoring sources (TSV) — the human-edited input
 public/packs/    generated, shipped content packs (JSONL + manifest)
 public/robots.txt crawl and training opt-outs for the deployed site
-docs/             architecture notes, dataset format, deployment, product spec
+docs/             architecture notes, the design language, dataset format,
+                  deployment, product spec
 tests/            unit and component tests, mirroring src/
 scripts/          dataset validation CLI
 dist/             build output (git-ignored)
@@ -172,7 +173,23 @@ Installing a Spanish voice:
 - **Android** — Settings → Accessibility → Text-to-speech output → install the
   Spanish voice data
 
-## Themes and layout
+## Design, themes and layout
+
+Six rules, written down in [`docs/design-language.md`](docs/design-language.md)
+and enforced by four test files: depth rather than outlines, soft geometry,
+overlay rather than push, one display voice, colour that means something, and
+motion that confirms without informing. The whole app draws three borders, each
+enumerated with the reason it earns one — a test fails on a fourth.
+
+**`/design` in the running app is the live version of all of it**: every colour
+role, token, icon and control the build is actually using, read out of the loaded
+stylesheets rather than from a list someone has to keep current. Add a token and
+it appears there; switch theme and every value re-reads. It is code-split, so it
+costs nothing until it is opened, and it is linked from Settings.
+
+Icons are [Lucide](https://lucide.dev) (ISC), behind a seam in
+`src/components/icons.ts` — one 24px grid, one stroke weight, tree-shaken per
+glyph, and `currentColor` throughout, so no icon can be off-palette.
 
 Dark and light, switchable from the header or Settings, defaulting to the OS
 setting and following it live. Themes are one CSS file each plus a registry
@@ -181,8 +198,10 @@ theme is asserted in tests, so a new theme cannot ship below WCAG AA.
 
 The layout is one readable column that widens with the viewport (phone →
 tablet → desktop), with hover styles applied only where a pointer can hover and
-tap targets that stay at least 44px. The word panel is a bottom sheet on a
-phone and a centred dialog on a larger screen.
+tap targets that stay at least 44px. Navigation is a tab bar within thumb reach
+on a phone and a rail on the left once there is room — always visible, never a
+hamburger. Any panel that expands is a sheet on a phone and a centred dialog on a
+larger screen, so the height of a screen is never a function of what is open.
 
 ## Accessibility
 

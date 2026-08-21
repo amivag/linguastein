@@ -55,10 +55,13 @@ src/storage/     IndexedDB and in-memory LearnerStorage
 src/audio/       audio service + TTS seam
 src/ai/          AI seam and learner-context builder (no vendor, no network)
 src/features/    screens: home, browse, read, progress, practice, settings, sharing
-src/components/  shared UI: AppShell, AppNav, Button, CourseBar, ThemeToggle,
-                 VoiceInput, TokenizedText, WordInfoSheet and useWordSelection
-                 (used by practice, reading, browse and progress alike)
-src/styles/      primitives + one file per theme
+src/components/  shared UI: AppShell, AppNav, Button, Chip, Sheet, Icon, CourseBar,
+                 ThemeToggle, VoiceInput, TokenizedText, WordInfoSheet and
+                 useWordSelection (used by practice, reading, browse and progress
+                 alike). `icons.ts` is the icon-set seam
+src/features/design/  the live style guide at /design
+src/styles/      primitives, shared surface recipes, the token reader, and one
+                 file per theme
 content/es/      hand-authored dataset sources (TSV)
 public/packs/    GENERATED datasets — never edit by hand
 ```
@@ -232,8 +235,11 @@ automated agents alike, so the same rules serve both:
   directions — build links with `sessionPath` rather than by hand, so a
   parameter cannot be written that the screen does not read
 - colour contrast is asserted against every file in `src/styles/themes/` by
-  `tests/a11y/contrast.test.ts`; use `--color-border-strong` for interactive
-  boundaries and `--color-border` for decoration
+  `tests/a11y/contrast.test.ts`. Where a boundary is drawn at all it uses
+  `--color-border-strong` (3:1) for a control and `--color-border` for
+  decoration — but see rule 1 of the design language: almost nothing draws one
+- `tests/a11y/design-language.test.ts` enumerates every remaining border and
+  fails on a new one, and refuses a hard-coded colour outside a theme file
 
 Run `npx vitest run tests/a11y` after any UI change.
 
@@ -306,6 +312,62 @@ appears.
 
 `<html>` always carries a resolved `data-theme`; the pre-paint script in
 `index.html` and the key in `themes.ts` must stay in sync.
+
+## The design language
+
+[docs/design-language.md](docs/design-language.md) is the written version;
+**`/design` in the running app is the live one** — every token, icon and control,
+read out of the stylesheets the build is actually using, so it cannot drift.
+Open it before styling anything.
+
+Six rules, and four test files enforce them:
+
+1. **Depth, not outlines.** A border is drawn only where it is the _only_ thing
+   identifying a control. There are exactly two such places — native form fields
+   and the rule between lines of a passage — and both are enumerated in
+   `tests/a11y/design-language.test.ts`, which fails on a border anywhere else.
+   WCAG 1.4.11 asks for 3:1 on a boundary _if one exists_; it does not require
+   one, and a filled control with a 4.5:1 label is identified by its label.
+2. **Soft geometry.** `--radius-pill` for controls that select, container radii
+   for things that hold.
+3. **Overlay, never push.** A control that expands opens over the page, through
+   `Sheet` — never as a panel in normal flow. The height of a screen must not be
+   a function of which disclosures are open. Only `Sheet.module.css` may pin a
+   full-viewport overlay, and that is asserted.
+4. **One display voice.** Spanish in `--font-display` and set large; the
+   furniture small and quiet.
+5. **Colour means something.** Accent = the app acting, highlight = new
+   material, success/danger = verdicts. Tints are roles (`--color-*-soft`), never
+   a per-component `color-mix`. No hex or `rgb()` outside `src/styles/themes/`.
+6. **Motion confirms, never informs.** Name an intent (`var(--transition-fast)`),
+   never a duration and a curve.
+
+Shared material lives in `src/styles/surfaces.module.css` — `card`,
+`cardPrimary`, `cardInteractive`, `well`, `sectionLabel`, `listReset` — composed
+into a screen's own classes with `composes`. One trap: CSS Modules only allows
+`composes` on a rule whose selector is a single local class, so
+`.filter select { composes: … }` is a build error. Native elements are styled by
+element in `global.css` instead.
+
+## Icons
+
+The set is **Lucide** (ISC), and `src/components/icons.ts` is the only file
+allowed to know that — the same seam rule `src/app/services.ts` applies to TTS
+and storage. Adding an icon is one line there; nothing else may import from
+`lucide-react`.
+
+Names are **semantic, never pictorial**: `listen`, not `ear`. A pictorial name is
+how two screens end up illustrating one idea with different glyphs, and how a
+better drawing becomes unadoptable because six call sites hard-coded the old
+one's name.
+
+Size and stroke come from `--icon-*` tokens applied in CSS rather than through the
+vendor's `size` prop, so a call site cannot invent a pixel size. Icons are
+`aria-hidden` by default: they sit inside controls that already have names, and a
+second name makes a screen reader read the button twice. When an icon _replaces_
+visible text, the control needs an explicit `aria-label` — dropping a glyph from
+a label silently shortens the accessible name, which is how "Add “que” after"
+briefly became "que".
 
 ## Conventions
 

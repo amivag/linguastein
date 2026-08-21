@@ -21,6 +21,85 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 
 ### Added
 
+- **A design language, written down and enforced.** The app read as a form: 138
+  border declarations across 24 stylesheets, outlining every card, panel, row,
+  badge, banner and button. Six rules replace that — depth rather than outlines,
+  soft geometry, overlay rather than push, one display voice, colour that means
+  something, motion that confirms without informing. Three borders are left, each
+  enumerated with the reason it earns its place: native form fields, whose
+  boundary genuinely is the only thing identifying them, and the rule between
+  lines of a passage. `tests/a11y/design-language.test.ts` fails on a fourth, and
+  on a hard-coded colour outside a theme file. The reasoning, including why
+  Tailwind was considered and declined, is in
+  [docs/design-language.md](docs/design-language.md).
+- **The design system, at `/design`, showing itself.** Every colour role, token,
+  icon and control the build is actually drawing with — read out of the loaded
+  stylesheets rather than from a list someone has to remember to update. Add a
+  token and it appears; rename a role and the old name goes; switch theme and
+  every value re-reads. A token matching no group lands in "Everything else", so
+  nothing can be silently missing. Code-split, so a learner who never opens it
+  never downloads it. Reachable from Settings.
+- **An icon set, behind a seam.** Lucide (ISC): one 24px grid, one stroke weight,
+  tree-shaken per glyph, and `currentColor` throughout so an icon belongs to
+  whatever it sits in. `src/components/icons.ts` is the only file allowed to know
+  the vendor, the same rule TTS and storage already follow, and names are
+  semantic — `listen`, not `ear` — so a better drawing can replace an old one
+  without touching a call site. It replaces the unicode glyphs and emoji the
+  chrome was built from, which rendered as a flat outline on one platform and a
+  full-colour cartoon on another. About 8.6 kB gzipped for the whole redesign,
+  icons included.
+- **`Sheet`, `Chip` and shared surface recipes.** Three components that existed
+  as near-copies: the overlay VoicePresence and WordInfoSheet each hand-rolled,
+  the pill CourseBar and CategoryPicker each drew, and "a card" written out in six
+  stylesheets with three radii between them. Each copy was missing a different
+  part — a viewport cap, a selected-hover rule, an animation fill mode.
+
+### Changed
+
+- **A control that expands now opens over the page, never inside it.** Opening
+  the practising panel used to push the quick-session buttons, all six presets and
+  the rest of Home down by around four hundred pixels, so narrowing _what_ you
+  practise moved the button you were reaching for off the screen. It is a sheet on
+  a phone and a panel on a pointer device, and the height of a screen is no longer
+  a function of which disclosures happen to be open.
+- **Answer feedback has weight.** The graded option settles and its ring firms up
+  from nothing; the verdict band does the same. Additive only — `role="status"`
+  still announces the result, the end state is identical with motion off, and
+  nothing waits for the animation, because latency is the enemy of fun. Right and
+  wrong get the same weight: a wrong answer is information, not a buzzer. This
+  closes §4.2 of [docs/tasks/game-feel.md](docs/tasks/game-feel.md).
+- **The navigation is an anchor rather than a strip.** Frosted, so content reads
+  as passing underneath rather than vanishing at a hard line, and the active tab
+  wears a filled pill behind its icon — a shape appearing rather than a hue
+  changing, so position survives a colour-vision difference. Its height and the
+  rail's width are single tokens that `AppShell` reserves space from; they used to
+  be four hand-written numbers describing two things, which is how a taller bar
+  ends up overlapping the last button on a page.
+- **New colour roles, all contrast-checked in every theme.** Verdict tints
+  (`--color-success-soft`, `--color-danger-soft`) so "correct" is one green rather
+  than three hand-mixed percentages; `--color-track` for a bar that reports
+  position, held to 3:1 against the fill; `--color-chrome` for the header and tab
+  bar; `--color-accent-edge` for the band a filled button presses down onto. Plus
+  a three-step elevation scale per theme, which is what carries the hierarchy the
+  borders used to.
+- **Word cards say what their buttons do.** Growing a phrase was labelled by its
+  contents — `que ＋` and `＋ que` — so the accessible name depended on a
+  fullwidth plus sign being read out, and two controls differed only by which side
+  the glyph fell on. They are `Add “que” after` and `Add “que” before` now.
+
+### Fixed
+
+- A `<div>` wrapping the practising sheet collected a grid `gap` even with nothing
+  but a fixed child in it, growing the page by 12px on open — the exact failure
+  the sheet exists to prevent, reintroduced by the markup around it.
+  `aria-controls` points at the dialog itself now, which is also the more accurate
+  relationship to describe.
+- The style guide read its token values one theme behind. `applyTheme` runs in an
+  effect in `App` and a child's effects run first, so keying the read on the theme
+  _preference_ meant the page rendered the previous palette; under
+  `theme: 'system'` it would not have noticed an OS switch at all. It observes
+  `data-theme` on the document instead — the thing the values actually depend on.
+
 - **Word kinds: pull up the verbs, or the nouns, and study the batch.** A part of
   speech is a filter dimension now, in Browse and in a session link
   (`?pos=verb,noun`), so "everything that uses a verb" or "the nouns" is a set you

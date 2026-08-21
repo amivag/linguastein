@@ -33,13 +33,63 @@
   /* The accent at panel strength — the one tint every accent-flavoured surface
      uses, rather than each one mixing its own. */
   --color-accent-soft: #1c2140;
+  /*
+   * The lower edge of a pressed control.
+   *
+   * A filled button is drawn with a solid band beneath it and moves down onto
+   * that band when pressed, so the press is felt rather than only tinted. It is
+   * a shade of the accent rather than a shadow because a shadow under a
+   * saturated fill reads as blur; contrast is not asserted, as no text ever sits
+   * on it.
+   */
+  --color-accent-edge: #5266bd;
   /* The warm second accent. Bright here, where a dark amber would disappear;
      the light theme takes the opposite route for the same hue. */
   --color-highlight: #ffb454;
   --color-highlight-soft: #2a2113;
   --color-success: #5fd18c;
+  /* Verdict tints, as roles rather than a `color-mix` invented per component —
+     which is what made the same "correct" green come out three shades across
+     the card, the option and the summary. */
+  --color-success-soft: #16351f;
   --color-danger: #ff6b6b;
+  --color-danger-soft: #3a1a1c;
 
-  --shadow-card: 0 8px 24px rgb(0 0 0 / 35%);
+  /*
+   * Chrome that content scrolls behind: the header and the navigation.
+   *
+   * Declared opaque and mixed towards transparent at the call site, so the
+   * contrast test has a real colour to check. The mix is deliberately heavy
+   * (over 90%), which is what makes the opaque value an honest proxy for what
+   * a learner actually reads text against.
+   */
+  --color-chrome: #141721;
+
+  /* The recessed groove a progress bar or a meter fills. Held to 3:1 against
+     the accent that fills it, so position is legible without relying on the
+     label beside it. */
+  --color-track: #252a35;
+
+  /*
+   * Elevation.
+   *
+   * Depth is what replaced the 1px outline around every box, so the scale is
+   * three steps with distinct jobs: `sm` for something resting on the page,
+   * `md` for a card that holds the screen's subject, `lg` for something
+   * genuinely above it — a sheet or a popover. `inset` is the opposite
+   * direction: a slot, a track, a row you pick from.
+   *
+   * A dark theme cannot cast a visible shadow onto a dark page, so these are
+   * deep and diffuse and the *surface* tokens do most of the lifting. Do not
+   * compensate by darkening them further; that reads as a smudge.
+   */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 35%);
+  --shadow-lg: 0 -8px 48px rgb(0 0 0 / 55%);
+  --shadow-inset: inset 0 1px 2px rgb(0 0 0 / 30%);
+  /* The one coloured shadow, under the primary action only: it is the single
+     place the app raises its voice, so it stays rare by being hard to reach. */
+  --shadow-accent: 0 6px 20px rgb(138 162 255 / 22%);
+
   --backdrop: rgb(0 0 0 / 55%);
 }

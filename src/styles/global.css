@@ -42,9 +42,49 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
   color: inherit;
+}
+
+/*
+ * Native form controls, styled once by element rather than per screen.
+ *
+ * Four stylesheets each wrote out the same six declarations for a `<select>`,
+ * and one of them used a different radius. They cannot share a recipe through
+ * `composes` either — CSS Modules only allows composition on a rule whose
+ * selector is a single local class, and `.filter select` is not one — so the
+ * honest place for "what a field looks like in this app" is here, at the element.
+ * A screen still overrides the shape where it wants a pill.
+ *
+ * This is also the one control the design language keeps a border on, and the
+ * reason is specific: a field has no fill and no label inside it, so the
+ * boundary genuinely *is* how a learner knows it is a control. WCAG 1.4.11
+ * applies squarely, which is why it is `--color-border-strong` at 3:1 rather
+ * than the decorative weight.
+ */
+select,
+textarea,
+input:not([type='checkbox'], [type='radio']) {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+textarea {
+  padding-block: var(--space-2);
+}
+
+/* Checkbox and radio keep the platform's own control, tinted to the accent:
+   re-drawing them costs the native focus, keyboard and assistive behaviour, and
+   buys a slightly different square. */
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--color-accent);
 }
 
 /*
@@ -70,9 +110,39 @@ a {
   color: var(--color-accent);
 }
 
+/*
+ * The focus ring.
+ *
+ * Two rings rather than one: the accent, and a gap in the page colour outside
+ * it. An `outline-offset` alone shows whatever is behind the control, so a
+ * focused chip inside a tinted panel had its ring sitting on the tint and lost
+ * most of its contrast. The outer ring means the indicator is legible against
+ * anything — which is what WCAG 2.4.11 is actually asking for.
+ */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-bg);
+}
+
+/*
+ * Text the learner selects is usually Spanish they are about to look up, so the
+ * selection uses the accent tint rather than the browser default — which in a
+ * dark theme is a saturated blue that fights every other colour on the card.
+ */
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-text);
+}
+
+/*
+ * Scrollbars inside panels, on the platforms that let us ask. Thin and in the
+ * page's own greys: a default chrome-coloured bar down the side of a category
+ * pane is the loudest thing on that screen.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
 }
 
 .visually-hidden {

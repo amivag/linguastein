@@ -4,6 +4,10 @@
  * Themes may only override the colour roles declared in `themes/*.css`. These
  * values stay constant across themes so a new theme cannot accidentally change
  * spacing, rhythm or tap-target sizes.
+ *
+ * The design language these serve is written down in
+ * `docs/design-language.md`. Read it before adding a token: most of what looks
+ * like a missing primitive is a rule about which existing one to reach for.
  */
 
 :root {
@@ -16,10 +20,20 @@
   --space-6: 32px;
   --space-7: 48px;
 
-  /* Shape */
+  /*
+   * Shape.
+   *
+   * Soft geometry is half the design language: `--radius-pill` for controls
+   * that *select* (chips, levels, badges) and the container radii for things
+   * that *hold*. `--radius-xs` exists for a highlight drawn behind text, where
+   * anything larger reads as a button.
+   */
+  --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
 
   /*
    * Typography.
@@ -61,6 +75,9 @@
   --leading-display: 1.15;
   --leading-heading: 1.25;
   --leading-body: 1.5;
+  /* Reading a passage, where the line is long and the eye has to return to the
+     right one. Deliberately looser than `--leading-body`. */
+  --leading-prose: 1.6;
 
   --weight-medium: 500;
   --weight-semibold: 600;
@@ -71,9 +88,50 @@
      stretching text to unreadable line lengths on a desktop monitor. */
   --content-width: 640px;
 
+  /*
+   * The navigation's own size, in one place.
+   *
+   * It was a `72px` in the shell's bottom padding and a `56px` row height in the
+   * nav, plus a `96px` rail width written out in both files — four numbers
+   * describing two things, which is how a taller tab bar ends up overlapping the
+   * last button on the page. The shell reserves space from the same tokens the
+   * nav is drawn with.
+   */
+  --nav-height: 60px;
+  --rail-width: 104px;
+
   /* Comfortable thumb target on a phone (WCAG 2.5.8 asks for 24px minimum;
      48px is the usable size for a one-handed practice loop). */
   --tap-target: 48px;
+
+  /*
+   * Icon sizes, matched to the type they sit beside rather than free-chosen.
+   * `--icon-md` is the default: it optically matches `--text-base` at Lucide's
+   * 24px grid and 2px stroke.
+   */
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 32px;
+  /* Lucide draws on a 24px grid, so a stroke has to scale with the box or a
+     16px icon looks bolder than a 32px one. */
+  --icon-stroke: 2;
+
+  /*
+   * Stacking, declared once and in reading order.
+   *
+   * Three files used to each pick a `z-index: 5` and rely on document order to
+   * break the tie, which is why the sheet's backdrop sat *under* the tab bar.
+   */
+  --z-raised: 1;
+  --z-nav: 20;
+  --z-header: 30;
+  --z-sheet: 40;
+  --z-skip-link: 50;
+
+  /* Chrome that content scrolls behind. One value, so the header and the tab bar
+     cannot frost by different amounts. */
+  --blur-chrome: 16px;
 
   /*
    * Motion.

@@ -71,6 +71,23 @@ const PAIRS: readonly [string, string, number, string][] = [
   ['--color-highlight', '--color-surface', 4.5, 'the warm accent on a card'],
   ['--color-highlight', '--color-bg', 4.5, 'the warm accent on the page'],
   ['--color-highlight', '--color-highlight-soft', 4.5, 'the warm accent on its own panel'],
+  // Verdict tints. A learner reads *both* the verdict word and the expected
+  // answer off these, so each panel is checked against its own hue and against
+  // body text.
+  ['--color-success', '--color-success-soft', 4.5, 'a correct verdict on its panel'],
+  ['--color-text', '--color-success-soft', 4.5, 'body text on a correct verdict'],
+  ['--color-danger', '--color-danger-soft', 4.5, 'an incorrect verdict on its panel'],
+  ['--color-text', '--color-danger-soft', 4.5, 'body text on an incorrect verdict'],
+  // The header and the tab bar. Declared opaque and mixed towards transparent
+  // where they are used, so this is a proxy rather than the literal painted
+  // colour — an honest one only while that mix stays above ~90%.
+  ['--color-text', '--color-chrome', 4.5, 'a title in the header'],
+  ['--color-text-muted', '--color-chrome', 4.5, 'an inactive tab label'],
+  ['--color-accent', '--color-chrome', 4.5, 'the active tab'],
+  ['--color-border-strong', '--color-chrome', 3, 'a control in the header'],
+  // A progress bar carries session position, so the fill has to be legible
+  // against its own groove (WCAG 1.4.11 non-text contrast).
+  ['--color-accent', '--color-track', 3, 'a progress bar against its track'],
 ];
 
 /** Every role a theme must define; the app breaks silently without them. */

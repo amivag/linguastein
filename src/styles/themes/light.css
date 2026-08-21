@@ -34,6 +34,10 @@
      `color-mix(accent 14%)` values, which is what made the same tint come out
      four slightly different shades across the app. */
   --color-accent-soft: #e8eafc;
+  /* The band a filled button sits on and presses down onto — see the note in
+     `dark.css`. Darker than the fill in this theme, lighter in that one; both
+     read as the same gesture. */
+  --color-accent-edge: #2c2490;
   /*
    * The second accent: warm, and deliberately not a semantic.
    *
@@ -45,8 +49,30 @@
   --color-highlight: #9a4a06;
   --color-highlight-soft: #fdf0dd;
   --color-success: #0b6b3a;
+  /* Verdict tints as roles, matching `dark.css`: pale here, deep there, and the
+     same job in both. */
+  --color-success-soft: #dcf5e6;
   --color-danger: #b3261e;
+  --color-danger-soft: #fde4e1;
 
-  --shadow-card: 0 6px 18px rgb(20 22 26 / 8%);
+  /* Chrome that content scrolls behind. Opaque here and mixed towards
+     transparent at the call site — see the note in `dark.css`. */
+  --color-chrome: #fbfbfe;
+
+  /* The groove a progress bar fills, held to 3:1 against the accent. */
+  --color-track: #dfe1ee;
+
+  /*
+   * Elevation. A light theme has nowhere to go above white, so the shadow is
+   * the only thing that raises a card — which makes this scale carry more of
+   * the design language here than it does in the dark theme. Cool-tinted rather
+   * than neutral black, so it belongs to the same grey family as the page.
+   */
+  --shadow-sm: 0 1px 2px rgb(20 22 26 / 6%);
+  --shadow-md: 0 6px 18px rgb(20 22 26 / 8%);
+  --shadow-lg: 0 -8px 48px rgb(20 22 26 / 18%);
+  --shadow-inset: inset 0 1px 2px rgb(20 22 26 / 8%);
+  --shadow-accent: 0 6px 20px rgb(67 56 202 / 24%);
+
   --backdrop: rgb(20 22 26 / 40%);
 }

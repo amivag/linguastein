@@ -1,0 +1,291 @@
+/*
+ * The style guide's own layout.
+ *
+ * Deliberately thin: everything the page *shows* is drawn by the real component
+ * or by a token, and what is here is only the scaffolding around it. A style
+ * guide that reimplemented a button to display one would be showing a drawing of
+ * the design system rather than the design system.
+ */
+
+.lede {
+  color: var(--color-text-muted);
+  text-wrap: pretty;
+}
+
+.themeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.themeLabel {
+  composes: sectionLabel from '../../styles/surfaces.module.css';
+}
+
+.section {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+}
+
+/* How many of a thing there are is part of what the section says: forty-nine
+   icons is a different fact from "some icons". */
+.sectionCount {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-medium);
+}
+
+.note {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-wrap: pretty;
+}
+
+.note code,
+.iconName {
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Segoe UI Mono', Menlo, monospace;
+  font-size: 0.9em;
+}
+
+/* ── the design language ────────────────────────────────────────────────── */
+
+.rules {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-2);
+}
+
+.rule {
+  composes: card from '../../styles/surfaces.module.css';
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+
+.ruleIcon {
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+.ruleTitle {
+  display: block;
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-tight);
+}
+
+.ruleBody {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-wrap: pretty;
+}
+
+/* ── tokens ─────────────────────────────────────────────────────────────── */
+
+.tokens {
+  composes: listReset from '../../styles/surfaces.module.css';
+  composes: well from '../../styles/surfaces.module.css';
+
+  display: grid;
+  padding: var(--space-2);
+  gap: 2px;
+}
+
+.token {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--space-6);
+}
+
+.tokenName {
+  overflow: hidden;
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Segoe UI Mono', Menlo, monospace;
+  font-size: var(--text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The resolved value, which is the half that changes with the theme. Truncated
+   rather than wrapped: a font stack is six lines long and nobody reads it here. */
+.tokenValue {
+  max-width: 11rem;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Segoe UI Mono', Menlo, monospace;
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * A colour swatch keeps a faint ring, and this is the one place in the app where
+ * that is right: a swatch has no label inside it and no fill of its own to speak
+ * of — it *is* the fill — so `--color-surface` against `--color-surface` would
+ * otherwise show nothing at all.
+ */
+.swatch {
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+
+.swatchEmpty {
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+}
+
+.typeSample {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-display);
+  line-height: 1;
+}
+
+.spaceBar {
+  height: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+}
+
+.radiusBox {
+  width: var(--space-6);
+  height: var(--space-6);
+  background: var(--color-accent-soft);
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+}
+
+/* ── icons ──────────────────────────────────────────────────────────────── */
+
+.icons {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: var(--space-2);
+}
+
+.iconCell {
+  composes: card from '../../styles/surfaces.module.css';
+
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+}
+
+.iconName {
+  overflow: hidden;
+  width: 100%;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+}
+
+/* ── component demos ────────────────────────────────────────────────────── */
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.chips {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.surfaces {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-2);
+}
+
+.demoCard {
+  composes: card from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+}
+
+.demoCardPrimary {
+  composes: cardPrimary from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+}
+
+.demoInteractive {
+  composes: cardInteractive from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.demoWell {
+  composes: well from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+}
+
+.themeList {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.themeItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunken);
+  font-size: var(--text-sm);
+}

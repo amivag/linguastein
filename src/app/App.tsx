@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { BrowseScreen } from '../features/browse/BrowseScreen';
 import { HomeScreen } from '../features/home/HomeScreen';
@@ -12,6 +12,19 @@ import { mergePreferences, type Preferences } from '../storage';
 import { applyTheme } from '../styles/themes';
 import { createServices, type AppServices } from './services';
 import { ServicesContext, useServices } from './services-context';
+
+/**
+ * The style guide, split out of the main bundle.
+ *
+ * It renders every component in the app plus every icon in the set, so bundling
+ * it into the entry chunk would make a learner who never opens it pay for all of
+ * it. Lazy is the whole reason it can afford to be exhaustive.
+ */
+const StyleGuideScreen = lazy(() =>
+  import('../features/design/StyleGuideScreen').then((module) => ({
+    default: module.StyleGuideScreen,
+  })),
+);
 
 type BootState =
   | { readonly phase: 'loading' }
@@ -102,6 +115,19 @@ export function App() {
           <Route path="/:language/:level/progress" element={<ProgressScreen />} />
           <Route path="/:language/:level/session" element={<SessionScreen />} />
           <Route path="/:language/:level/settings" element={<SettingsScreen />} />
+
+          {/* Outside the course routes: the design system is a property of the
+              app, not of what is being studied. `useCourse` resolves to the
+              widest real course when the path carries none, so the navigation
+              still points somewhere sensible. */}
+          <Route
+            path="/design"
+            element={
+              <Suspense fallback={<Splash message="Loading the design system…" />}>
+                <StyleGuideScreen />
+              </Suspense>
+            }
+          />
 
           {/* Links written before courses existed, kept working: the query
               string is what carries a shared session, so it has to survive the

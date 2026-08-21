@@ -3,6 +3,7 @@ import { useServices } from '../../app/services-context';
 import { SLOW_RATE } from '../../audio';
 import { Button } from '../../components/Button';
 import type { LearningItem } from '../../domain/content';
+import { Icon } from '../../components/Icon';
 import styles from './Practice.module.css';
 
 interface AudioControlsProps {
@@ -54,13 +55,13 @@ export function AudioControls({ item, autoPlay = false }: AudioControlsProps) {
   return (
     <div className={styles.audio}>
       <Button variant="primary" onClick={() => play(1)} aria-label="Play audio">
-        🔊 Play
+        <Icon name="speak" /> Play
       </Button>
       <Button onClick={() => play(SLOW_RATE)} aria-label="Play slowly">
-        🐢 Slow
+        <Icon name="slow" /> Slow
       </Button>
       <Button onClick={() => play(1, 3)} aria-label="Play three times">
-        ↻ ×3
+        <Icon name="again" /> ×3
       </Button>
     </div>
   );

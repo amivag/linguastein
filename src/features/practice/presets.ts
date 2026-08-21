@@ -4,6 +4,7 @@
  * factory; the planner and the engine know nothing about presets.
  */
 
+import type { IconName } from '../../components/Icon';
 import type { ContentRepository, ItemFilter } from '../../domain/content';
 import type { ExerciseKind } from '../../domain/exercises';
 import type { Ordering, SessionConfig, SessionFocus, SessionSize } from '../../domain/sessions';
@@ -23,6 +24,16 @@ export interface Preset {
   readonly id: PresetId;
   readonly label: string;
   readonly description: string;
+  /**
+   * The glyph Home shows beside the name.
+   *
+   * It lives with the preset rather than in a lookup table on the screen, for
+   * the same reason the label does: adding a seventh preset should be one entry
+   * in this file, not one here and one in a map somewhere that a reviewer has to
+   * notice is missing. `mode` already says whether the preset records anything,
+   * so the screen tints the icon from that and does not need a second flag.
+   */
+  readonly icon: IconName;
   readonly exerciseKinds: readonly ExerciseKind[];
   readonly mode: SessionConfig['mode'];
   readonly ordering: Ordering;
@@ -34,6 +45,7 @@ export const PRESETS: Record<PresetId, Preset> = {
     id: 'quick',
     label: 'Quick practice',
     description: 'Listen, repeat and recall — mixed',
+    icon: 'quick',
     // The set the composer may draw on; it picks per item by memory strength.
     exerciseKinds: [
       'multiple-choice',
@@ -50,6 +62,7 @@ export const PRESETS: Record<PresetId, Preset> = {
     id: 'listen',
     label: 'Listen & repeat',
     description: 'Hear it, say it back, check yourself',
+    icon: 'listen',
     exerciseKinds: ['listen-repeat'],
     mode: 'practice',
     ordering: 'smart',
@@ -59,6 +72,7 @@ export const PRESETS: Record<PresetId, Preset> = {
     id: 'speaking',
     label: 'Think & say',
     description: 'Say the Spanish before you reveal it',
+    icon: 'record',
     exerciseKinds: ['think-say'],
     mode: 'practice',
     ordering: 'smart',
@@ -68,6 +82,7 @@ export const PRESETS: Record<PresetId, Preset> = {
     id: 'flashcards',
     label: 'Flashcards',
     description: 'See it, say it, reveal the meaning',
+    icon: 'study',
     exerciseKinds: ['reveal'],
     mode: 'study',
     /**
@@ -85,6 +100,7 @@ export const PRESETS: Record<PresetId, Preset> = {
     id: 'verbs',
     label: 'Verbs',
     description: 'Useful forms inside natural sentences',
+    icon: 'grammar',
     exerciseKinds: [
       'cloze-choice',
       'multiple-choice',
@@ -103,6 +119,7 @@ export const PRESETS: Record<PresetId, Preset> = {
     id: 'vocabulary',
     label: 'Vocabulary',
     description: 'Words, with examples in context',
+    icon: 'word',
     exerciseKinds: ['multiple-choice', 'think-say', 'reveal', 'listen-repeat'],
     mode: 'practice',
     ordering: 'smart',

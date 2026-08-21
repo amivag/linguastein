@@ -81,7 +81,9 @@ describe('web speech recognition', () => {
   });
 
   it('listens once per press rather than continuously', () => {
-    createWebSpeechRecognitionProvider().listen('es-ES').catch(() => {});
+    createWebSpeechRecognitionProvider()
+      .listen('es-ES')
+      .catch(() => {});
     expect(nth(0).continuous).toBe(false);
     expect(nth(0).started).toBe(true);
   });

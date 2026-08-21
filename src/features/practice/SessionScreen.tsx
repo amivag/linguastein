@@ -9,6 +9,7 @@ import { SessionProgress } from './SessionProgress';
 import { formatDuration, spokenDuration } from './duration';
 import { SessionTimer } from './SessionTimer';
 import { ExerciseView } from './ExerciseView';
+import { Icon } from '../../components/Icon';
 import styles from './Practice.module.css';
 import { buildSessionConfig, PRESETS } from './presets';
 import { parseSessionUrl } from './session-url';
@@ -83,10 +84,10 @@ export function SessionScreen() {
 
           <div className={styles.footer}>
             <Button variant="ghost" onClick={runner.previous} disabled={runner.index === 0}>
-              ← Previous
+              <Icon name="previous" /> Previous
             </Button>
             <Button variant="ghost" onClick={runner.next}>
-              Skip →
+              Skip <Icon name="skip" />
             </Button>
           </div>
         </>

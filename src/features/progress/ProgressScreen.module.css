@@ -1,24 +1,31 @@
 .stats {
+  composes: listReset from '../../styles/surfaces.module.css';
+
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-2);
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
 .stat {
+  composes: card from '../../styles/surfaces.module.css';
+
   display: grid;
   gap: 2px;
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
+}
+
+/* One glyph per figure. Four numbers in four identical boxes is a table; the
+   icon is what lets a learner find the one they came for without reading. */
+.statIcon {
+  color: var(--color-text-muted);
 }
 
 .statValue {
+  font-family: var(--font-display);
   font-size: var(--text-xl);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
 }
 
 .statLabel {
@@ -26,12 +33,18 @@
   font-size: var(--text-sm);
 }
 
+/*
+ * Two segments in one groove: mastered, then merely seen.
+ *
+ * `--color-track` rather than the separator colour it used to borrow. A meter is
+ * not decoration — the fill has to be legible against the groove, which is what
+ * the 3:1 pair in `contrast.test.ts` now holds it to.
+ */
 .bar {
   display: flex;
   height: 10px;
-  border-radius: 999px;
-  /* Same reason as the session progress track: visible on either background. */
-  background: var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-track);
   overflow: hidden;
 }
 
@@ -55,30 +68,49 @@
 }
 
 .sectionTitle {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  composes: sectionLabel from '../../styles/surfaces.module.css';
 }
 
 .list {
+  composes: listReset from '../../styles/surfaces.module.css';
+
   display: grid;
   gap: var(--space-2);
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
 .row {
+  composes: card from '../../styles/surfaces.module.css';
+
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
+}
+
+.rowLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* The direction of travel, as a glyph as well as a place in the list: a learner
+   glancing at this should not have to read two headings to tell which half of
+   the screen they are looking at. */
+.rowIconUp {
+  color: var(--color-success);
+}
+
+.rowIconDown {
+  color: var(--color-highlight);
+}
+
+/* Large and quiet: an empty state should look deliberate rather than broken,
+   and the glyph is what stops one sentence in the middle of a page reading as a
+   failed load. */
+.emptyIcon {
+  color: var(--color-border-strong);
 }
 
 .empty {
@@ -87,6 +119,7 @@
   padding: var(--space-6) 0;
   text-align: center;
   color: var(--color-text-muted);
+  justify-items: center;
 }
 
 @media (min-width: 768px) {

@@ -5,6 +5,7 @@ import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
+import { Icon } from '../../components/Icon';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { summarise, type ProgressSummary } from '../../domain/progress';
 import { DEFAULT_SESSION_MINUTES, type SessionSize } from '../../domain/sessions';
@@ -60,16 +61,19 @@ export function HomeScreen() {
 
       <div className={styles.stats}>
         <div className={`${styles.stat} ${styles.statDue}`}>
+          <Icon name="due" size="sm" className={styles.statIcon} />
           <span className={styles.statValue}>{summary?.due ?? '—'}</span>
           <span className={styles.statLabel}>due</span>
         </div>
         <div className={`${styles.stat} ${styles.statNew}`}>
+          <Icon name="new" size="sm" className={styles.statIcon} />
           <span className={styles.statValue}>
             {summary ? summary.total - summary.seen : scope.total}
           </span>
           <span className={styles.statLabel}>new</span>
         </div>
         <div className={`${styles.stat} ${styles.statDone}`}>
+          <Icon name="mastered" size="sm" className={styles.statIcon} />
           <span className={styles.statValue}>{summary?.mastered ?? '—'}</span>
           <span className={styles.statLabel}>mastered</span>
         </div>
@@ -93,6 +97,7 @@ export function HomeScreen() {
             )
           }
         >
+          <Icon name="play" />
           Review {summary.due} due
         </Button>
       )}
@@ -123,8 +128,20 @@ export function HomeScreen() {
               className={styles.preset}
               onClick={() => start(id, { kind: 'items', count: 10 })}
             >
-              <span className={styles.presetLabel}>{preset.label}</span>
-              <span className={styles.presetDescription}>{preset.description}</span>
+              <span
+                className={`${styles.presetIcon} ${
+                  // A study preset records nothing, so it does not wear the
+                  // colour the app uses for what feeds the scheduler.
+                  preset.mode === 'study' ? styles.presetIconStudy : ''
+                }`}
+              >
+                <Icon name={preset.icon} size="lg" />
+              </span>
+              <span className={styles.presetText}>
+                <span className={styles.presetLabel}>{preset.label}</span>
+                <span className={styles.presetDescription}>{preset.description}</span>
+              </span>
+              <Icon name="next" size="sm" className={styles.presetChevron} />
             </Button>
           );
         })}
@@ -133,7 +150,10 @@ export function HomeScreen() {
       {/* The item count moved to the course bar, where it belongs: it is a
           property of the scope, and stating it twice invited the two to
           disagree. */}
-      <p className={styles.footerNote}>Offline · progress stays on this device</p>
+      <p className={styles.footerNote}>
+        <Icon name="check" size="sm" />
+        Offline · progress stays on this device
+      </p>
     </AppShell>
   );
 }

@@ -1,22 +1,37 @@
+/*
+ * Every word is tappable on every screen, so the affordance has to be present on
+ * hundreds of words at once without turning a page of Spanish into a page of
+ * links. A 2px dotted rule under each word did turn it into one.
+ *
+ * It is a 1px underline in the accent now, offset clear of the descenders and
+ * held at low opacity until the word is touched: present enough to say "these
+ * are tappable", quiet enough that a paragraph still reads as a paragraph.
+ */
+
 .token {
   padding: 0;
   border: 0;
-  border-bottom: 2px dotted var(--color-border-strong);
+  border-radius: var(--radius-xs);
   background: none;
   color: inherit;
   font: inherit;
   line-height: inherit;
-  border-radius: 4px;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--transition-fast);
 }
 
 .token:hover,
 .token:focus-visible {
-  border-bottom-color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
 }
 
 .selected {
   background: var(--color-accent-soft);
-  border-bottom-color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
 }
 
 /*
@@ -28,7 +43,7 @@
  * `aria-expanded` on each word is what actually reports the state.
  */
 .selected[data-edge='start'] {
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--radius-xs) 0 0 var(--radius-xs);
   box-shadow: 4px 0 0 var(--color-accent-soft);
 }
 
@@ -40,6 +55,6 @@
 }
 
 .selected[data-edge='end'] {
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
   box-shadow: -4px 0 0 var(--color-accent-soft);
 }

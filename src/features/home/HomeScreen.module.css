@@ -5,7 +5,7 @@
  * that are not equal: what is waiting for you, what is still unmet, and what you
  * have finished. Each carries its own tint now, from the role tokens rather than
  * a mix invented here — and the tint is never the only thing saying which is
- * which, since each card is labelled.
+ * which, since each card is labelled and each carries its own icon.
  */
 .stats {
   display: grid;
@@ -13,25 +13,47 @@
   gap: var(--space-2);
 }
 
+/*
+ * No outline. A card is a card because it is a lighter surface with a shadow
+ * under it, and three outlined boxes in a row was the app's most obvious tell
+ * that it had been assembled rather than designed.
+ */
 .stat {
   display: grid;
   gap: var(--space-1);
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Due is the one with a claim on the next few minutes. */
 .statDue {
-  border-color: transparent;
   background: var(--color-accent-soft);
 }
 
 /* New material: warm, because it is an invitation rather than an obligation. */
 .statNew {
-  border-color: transparent;
   background: var(--color-highlight-soft);
+}
+
+/* The icon sits above the number, in the card's own colour: a third signal
+   after the tint and the label, and the one that survives a screenshot at
+   thumbnail size. */
+.statIcon {
+  color: var(--color-text-muted);
+}
+
+.statDue .statIcon {
+  color: var(--color-accent);
+}
+
+.statNew .statIcon {
+  color: var(--color-highlight);
+}
+
+.statDone .statIcon {
+  color: var(--color-success);
 }
 
 .statValue {
@@ -61,28 +83,24 @@
 }
 
 /*
- * A section rule, not just a small grey word: the label sits on a line that runs
- * out to the edge, which is what separates two stacks of buttons without adding
- * another box around each of them.
+ * A section label.
+ *
+ * It used to be a small grey word with a 1px rule running out to the edge.
+ * The rule is gone: the gap above the label does the separating, and the label
+ * being display type in caps is enough to read as a heading. One less line on a
+ * screen that had a dozen.
  */
 .sectionTitle {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
+  gap: var(--space-2);
+  margin-top: var(--space-3);
   color: var(--color-text-muted);
   font-family: var(--font-display);
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: var(--tracking-label);
-}
-
-.sectionTitle::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--color-border);
 }
 
 .quick {
@@ -96,13 +114,45 @@
   gap: var(--space-2);
 }
 
+/*
+ * A preset is a card you press, so it is laid out like a row in a list rather
+ * than like a button: an icon in a tinted tile, the name, what it does, and a
+ * chevron saying it goes somewhere. That shape is what six identical grey
+ * rectangles were not.
+ */
 .preset {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-1);
-  padding: var(--space-4);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
   text-align: left;
+}
+
+.presetIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* A study preset records nothing, so it is tinted warm rather than in the
+   accent: the app's own colour is reserved for what actually feeds the
+   scheduler, and the difference is worth being able to see before you press. */
+.presetIconStudy {
+  background: var(--color-highlight-soft);
+  color: var(--color-highlight);
+}
+
+.presetText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
 }
 
 .presetLabel {
@@ -118,7 +168,15 @@
   font-weight: 400;
 }
 
+.presetChevron {
+  color: var(--color-text-muted);
+}
+
 .footerNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   margin-top: auto;
   padding-top: var(--space-5);
   color: var(--color-text-muted);

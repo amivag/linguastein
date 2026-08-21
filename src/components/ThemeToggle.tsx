@@ -1,5 +1,6 @@
 import { useServices } from '../app/services-context';
 import { THEME_OPTIONS, type ThemePreference } from '../styles/themes';
+import { Icon } from './Icon';
 import styles from './ThemeToggle.module.css';
 
 interface ThemeToggleProps {
@@ -30,7 +31,7 @@ export function ThemeToggle({ variant = 'full' }: ThemeToggleProps) {
         onClick={() => choose(next.id)}
         aria-label={`Theme: ${active.label}. Switch to ${next.label}`}
       >
-        <span aria-hidden="true">{active.icon}</span>
+        <Icon name={active.icon} size="lg" />
       </button>
     );
   }
@@ -46,7 +47,7 @@ export function ThemeToggle({ variant = 'full' }: ThemeToggleProps) {
           className={`${styles.option} ${current === option.id ? styles.active : ''}`}
           onClick={() => choose(option.id)}
         >
-          <span aria-hidden="true">{option.icon}</span> {option.label}
+          <Icon name={option.icon} /> {option.label}
         </button>
       ))}
     </div>

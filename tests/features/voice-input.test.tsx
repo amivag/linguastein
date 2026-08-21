@@ -10,11 +10,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import {
-  SPEECH_ABORTED,
-  type SpeechRecognitionProvider,
-  type SpeechResult,
-} from '../../src/audio';
+import { SPEECH_ABORTED, type SpeechRecognitionProvider, type SpeechResult } from '../../src/audio';
 import { VoiceInput } from '../../src/components/VoiceInput';
 import { renderWithServices, testServices } from '../fixtures/services';
 

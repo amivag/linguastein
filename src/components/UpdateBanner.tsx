@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { applyUpdate, useUpdateReady } from '../app/updates';
 import { Button } from './Button';
+import { Icon } from './Icon';
 import styles from './UpdateBanner.module.css';
 
 interface UpdateBannerProps {
@@ -25,7 +26,9 @@ export function UpdateBanner({ onReload = applyUpdate }: UpdateBannerProps) {
 
   return (
     <div className={styles.banner} role="status">
-      <p className={styles.message}>A new version is ready.</p>
+      <p className={styles.message}>
+        <Icon name="update" size="sm" className={styles.icon} />A new version is ready.
+      </p>
       <div className={styles.actions}>
         <Button variant="ghost" onClick={() => setDismissed(true)}>
           Later

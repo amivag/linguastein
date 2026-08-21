@@ -13,13 +13,11 @@
   flex: 1 1 30%;
 }
 
+/* Chrome comes from `global.css`; the width is the only part that is this
+   screen's business, since these sit in a flex row. */
 .filter select {
   width: 100%;
-  min-height: var(--tap-target);
-  padding: 0 var(--space-2);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
+  padding-inline: var(--space-2);
 }
 
 .count {
@@ -28,31 +26,33 @@
 }
 
 .list {
+  composes: listReset from '../../styles/surfaces.module.css';
+
   display: grid;
   gap: var(--space-2);
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
+/*
+ * A passage in the list.
+ *
+ * It used to darken its border on hover, which is a boundary changing colour —
+ * the weakest affordance there is. It lifts now: the shared recipe gives it the
+ * hover translate and the deeper shadow, so a pressable card behaves the same
+ * way here as it does in Browse.
+ */
 .card {
-  display: grid;
-  gap: 2px;
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: inherit;
-  text-decoration: none;
-}
+  composes: cardInteractive from '../../styles/surfaces.module.css';
 
-.card:hover {
-  border-color: var(--color-border-strong);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 var(--space-3);
+  padding: var(--space-3) var(--space-4);
 }
 
 .cardTitle {
   font-size: var(--text-lg);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .cardMeaning {
@@ -64,10 +64,25 @@
   font-size: var(--text-sm);
 }
 
+/* The chevron spans both text rows, so it centres on the card rather than
+   sitting against its first line. */
+.cardChevron {
+  grid-row: 1 / -1;
+  grid-column: 2;
+  color: var(--color-text-muted);
+}
+
 .empty {
-  padding: var(--space-5) 0;
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+  padding: var(--space-6) 0;
   color: var(--color-text-muted);
   text-align: center;
+}
+
+.emptyIcon {
+  color: var(--color-border-strong);
 }
 
 /* ── one passage ────────────────────────────────────────────────────────── */
@@ -84,15 +99,22 @@
 }
 
 .lines {
+  composes: listReset from '../../styles/surfaces.module.css';
+
   display: grid;
   gap: var(--space-3);
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
-/* A reading column rather than a list of cards: the text should look like a
-   text, so only the speaker label and the play button sit outside the flow. */
+/*
+ * A reading column rather than a list of cards: the text should look like a
+ * text, so only the speaker label and the play button sit outside the flow.
+ *
+ * The rule between lines is one of the few borders left in the app, and it is
+ * the kind the design language keeps: it separates two runs of prose that are
+ * otherwise the same colour and the same size, which is a job nothing else can
+ * do. `--color-border` rather than the strong one, because it is decoration and
+ * not the boundary of a control.
+ */
 .line {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -110,13 +132,13 @@
   grid-column: 1 / -1;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .lineText {
   margin: 0;
   font-size: var(--text-lg);
-  line-height: 1.6;
+  line-height: var(--leading-prose);
 }
 
 .lineMeaning {
@@ -125,19 +147,30 @@
   color: var(--color-text-muted);
 }
 
+/* A round glyph button, the shape "play this" has everywhere else. */
 .linePlay {
   grid-row: span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: var(--tap-target);
   min-height: var(--tap-target);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: inherit;
+  align-self: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
   cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-.linePlay:hover {
-  border-color: var(--color-border-strong);
+@media (hover: hover) and (pointer: fine) {
+  .linePlay:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
 }
 
 @media (min-width: 768px) {

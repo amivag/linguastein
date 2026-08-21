@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useServices } from '../app/services-context';
 import { SPEECH_ABORTED } from '../audio';
 import type { LanguageTag } from '../domain/content';
+import { Icon } from '../components/Icon';
 import styles from './VoiceInput.module.css';
 
 interface VoiceInputProps {
@@ -55,7 +56,7 @@ export function VoiceInput({ label, locale, onResult }: VoiceInputProps) {
         aria-pressed={listening}
         aria-label={listening ? 'Stop listening' : label}
       >
-        <span aria-hidden="true">{listening ? '■' : '🎙'}</span>
+        <Icon name={listening ? 'stop' : 'record'} size="lg" />
       </button>
       {/* One live region, always mounted, so a change to it is announced.
           Listening is only announced: the mic itself shows that state, and

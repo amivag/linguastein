@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useCourse } from '../app/course';
 import { useServices } from '../app/services-context';
 import { coursePath, type LevelScope } from '../domain/content';
+import { Chip } from './Chip';
 import styles from './CourseBar.module.css';
 
 interface CourseBarProps {
@@ -71,19 +72,17 @@ export function CourseBar({ compact = false }: CourseBarProps) {
           const pressed = entry.level === course.level;
           return (
             <li key={entry.level}>
-              <button
-                type="button"
-                className={styles.level}
+              <Chip
                 // A level is a ceiling, so the count is what it *includes* —
                 // spelled out because the label and count are adjacent spans
                 // and the computed name would otherwise read "A2168".
                 aria-label={`${entry.label}, ${entry.count} ${entry.count === 1 ? 'item' : 'items'}`}
-                aria-pressed={pressed}
+                pressed={pressed}
+                count={entry.count}
                 onClick={() => go(course.language, entry.level)}
               >
-                <span className={styles.levelLabel}>{entry.label}</span>
-                <span className={styles.levelCount}>{entry.count}</span>
-              </button>
+                {entry.label}
+              </Chip>
             </li>
           );
         })}

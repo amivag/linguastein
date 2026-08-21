@@ -45,10 +45,11 @@
   min-height: var(--tap-target);
 }
 
+/* Larger than the platform default, because it is a thumb target. The tint
+   comes from `global.css`, which sets `accent-color` for every checkbox. */
 .toggle input {
   width: 22px;
   height: 22px;
-  accent-color: var(--color-accent);
 }
 
 .actions {

@@ -4,33 +4,57 @@
  * `Button.module.css` for the specificity trap this avoids.
  */
 
+/*
+ * A segmented control, not three separate buttons.
+ *
+ * The three options used to be three outlined boxes with gaps between them,
+ * which reads as three unrelated actions rather than one choice with three
+ * settings. They sit in a shared sunken track now: the group is the boundary,
+ * so none of the options needs one.
+ */
 .group {
+  /* The track is a background on this control like any other, so it goes through
+     `--control-bg` too — `hover-states.test.ts` asserts that every background in
+     this file does, and the group is not an exception to the rule it protects.
+     Each option redeclares the property, so nothing inherits the track colour. */
+  --control-bg: var(--color-surface-sunken);
+
   display: grid;
   grid-auto-flow: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+  background: var(--control-bg);
+  box-shadow: var(--shadow-inset);
 }
 
 .option {
-  --control-bg: var(--color-surface-raised);
+  --control-bg: transparent;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: var(--tap-target);
+  min-height: calc(var(--tap-target) - var(--space-2));
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-border-strong);
+  border: 0;
   border-radius: var(--radius-md);
   background: var(--control-bg);
-  transition: background-color var(--transition-fast);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
+/* The chosen option is the one thing lifted out of the track, so the selection
+   reads as a physical position as well as a colour. */
 .active {
-  --control-bg: var(--color-accent);
+  --control-bg: var(--color-surface);
 
-  border-color: transparent;
-  color: var(--color-accent-contrast);
-  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
 }
 
 .compact {
@@ -42,10 +66,12 @@
   width: var(--tap-target);
   height: var(--tap-target);
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: var(--control-bg);
   color: var(--color-text-muted);
-  font-size: var(--text-lg);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -54,6 +80,7 @@
     background: color-mix(in srgb, var(--control-bg) 90%, var(--color-text));
   }
 
+  .option:hover,
   .compact:hover {
     color: var(--color-text);
   }

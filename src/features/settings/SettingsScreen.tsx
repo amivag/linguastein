@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
@@ -7,6 +8,7 @@ import { ThemeToggle } from '../../components/ThemeToggle';
 import { VoiceSettings } from '../../components/VoiceSettings';
 import { REFERENCE_LANGUAGES } from '../../domain/content';
 import { buildDate, buildLabel } from '../../app/version';
+import { Icon } from '../../components/Icon';
 import styles from './SettingsScreen.module.css';
 
 /**
@@ -40,7 +42,10 @@ export function SettingsScreen() {
         {/* The same control the course bar offers everywhere else, so there is
             one way to change course rather than two that can disagree. */}
         <div className={styles.field}>
-          <span className={styles.label}>Learning</span>
+          <span className={styles.label}>
+            <Icon name="language" size="sm" className={styles.labelIcon} />
+            Learning
+          </span>
           <CourseBar />
           <span className={styles.hint}>
             A level is a ceiling, not a chapter: choosing A2 keeps A1 material in rotation as
@@ -48,7 +53,10 @@ export function SettingsScreen() {
           </span>
         </div>
         <label className={styles.field}>
-          <span className={styles.label}>Reference language</span>
+          <span className={styles.label}>
+            <Icon name="explain" size="sm" className={styles.labelIcon} />
+            Reference language
+          </span>
           <select
             value={preferences.referenceLanguage}
             onChange={(event) => updatePreferences({ referenceLanguage: event.target.value })}
@@ -99,6 +107,7 @@ export function SettingsScreen() {
         </h2>
         <div className={styles.field}>
           <span className={styles.label} id="theme-label">
+            <Icon name="theme" size="sm" className={styles.labelIcon} />
             Theme
           </span>
           <ThemeToggle />
@@ -113,7 +122,10 @@ export function SettingsScreen() {
           Data
         </h2>
         <div className={styles.field}>
-          <span className={styles.label}>Content</span>
+          <span className={styles.label}>
+            <Icon name="topic" size="sm" className={styles.labelIcon} />
+            Content
+          </span>
           <p className={styles.hint}>
             {services.repository.itemCount} items in {services.repository.packs.length} pack(s).
             {errors.length > 0 && ` ${errors.length} dataset error(s) were skipped.`}
@@ -121,7 +133,25 @@ export function SettingsScreen() {
         </div>
 
         <div className={styles.field}>
-          <span className={styles.label}>Version</span>
+          <span className={styles.label}>
+            <Icon name="theme" size="sm" className={styles.labelIcon} />
+            Design system
+          </span>
+          <p className={styles.hint}>
+            Every colour role, token, icon and control this build is drawing with, read from the
+            stylesheets themselves.
+          </p>
+          <Link className={styles.link} to="/design">
+            Open the design system
+            <Icon name="next" size="sm" />
+          </Link>
+        </div>
+
+        <div className={styles.field}>
+          <span className={styles.label}>
+            <Icon name="explain" size="sm" className={styles.labelIcon} />
+            Version
+          </span>
           {/* The string a bug report should quote, and the pack version beside it:
               content ships and updates independently of the app. */}
           <p className={styles.hint}>
@@ -149,7 +179,13 @@ export function SettingsScreen() {
           </>
         ) : (
           <Button block onClick={() => setReset('confirming')}>
-            {reset === 'cleared' ? 'Progress cleared ✓' : 'Reset progress'}
+            {reset === 'cleared' ? (
+              <>
+                <Icon name="check" /> Progress cleared
+              </>
+            ) : (
+              'Reset progress'
+            )}
           </Button>
         )}
       </section>

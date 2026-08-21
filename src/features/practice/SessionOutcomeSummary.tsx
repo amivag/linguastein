@@ -1,3 +1,4 @@
+import { Icon } from '../../components/Icon';
 import type { SessionOutcome } from './useSessionRunner';
 import styles from './Practice.module.css';
 
@@ -32,9 +33,12 @@ export function SessionOutcomeSummary({ outcome }: SessionOutcomeSummaryProps) {
     <div className={styles.outcome}>
       {advanced.length > 0 && (
         <p className={styles.outcomeLine}>
-          <strong>{advanced.length}</strong>{' '}
-          {advanced.length === 1 ? 'word moved up' : 'words moved up'}:{' '}
-          <span lang="es">{list(advanced.map((change) => change.text))}</span>
+          <Icon name="improving" size="sm" className={styles.outcomeIconUp} />
+          <span>
+            <strong>{advanced.length}</strong>{' '}
+            {advanced.length === 1 ? 'word moved up' : 'words moved up'}:{' '}
+            <span lang="es">{list(advanced.map((change) => change.text))}</span>
+          </span>
         </p>
       )}
 
@@ -42,12 +46,20 @@ export function SessionOutcomeSummary({ outcome }: SessionOutcomeSummaryProps) {
           screen can tell you, and softening it would waste the information. */}
       {lapsed.length > 0 && (
         <p className={styles.outcomeLine}>
-          <strong>{lapsed.length}</strong> to see again sooner:{' '}
-          <span lang="es">{list(lapsed.map((change) => change.text))}</span>
+          <Icon name="slipping" size="sm" className={styles.outcomeIconDown} />
+          <span>
+            <strong>{lapsed.length}</strong> to see again sooner:{' '}
+            <span lang="es">{list(lapsed.map((change) => change.text))}</span>
+          </span>
         </p>
       )}
 
-      {returning && <p className={styles.outcomeLine}>Back for review {returning}.</p>}
+      {returning && (
+        <p className={styles.outcomeLine}>
+          <Icon name="due" size="sm" className={styles.outcomeIconDue} />
+          <span>Back for review {returning}.</span>
+        </p>
+      )}
     </div>
   );
 }

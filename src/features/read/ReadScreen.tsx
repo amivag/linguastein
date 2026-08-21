@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
+import { Icon } from '../../components/Icon';
 import { CourseBar } from '../../components/CourseBar';
 import { UsageBadges } from '../../components/UsageBadges';
 import { CEFR_LEVELS, type PassageKind } from '../../domain/content';
@@ -86,13 +87,19 @@ export function ReadScreen() {
                   {passage.level ? ` · ${passage.level.toUpperCase()}` : ''}
                 </span>
                 <UsageBadges compact regions={passage.regions} />
+                <Icon name="next" size="sm" className={styles.cardChevron} />
               </Link>
             </li>
           );
         })}
       </ul>
 
-      {passages.length === 0 && <p className={styles.empty}>No texts in this pack yet.</p>}
+      {passages.length === 0 && (
+        <p className={styles.empty}>
+          <Icon name="read" size="xl" className={styles.emptyIcon} />
+          No texts in this pack yet.
+        </p>
+      )}
     </AppShell>
   );
 }

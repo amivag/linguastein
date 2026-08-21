@@ -3,6 +3,7 @@ import { useServices } from '../../app/services-context';
 import { SPEECH_ABORTED } from '../../audio';
 import { Button } from '../../components/Button';
 import { bestAlternative, type SpeechComparison } from '../../domain/exercises';
+import { Icon } from '../../components/Icon';
 import styles from './SpeakCheck.module.css';
 
 interface SpeakCheckProps {
@@ -77,7 +78,7 @@ export function SpeakCheck({ expected }: SpeakCheckProps) {
         aria-pressed={listening}
         aria-label={listening ? 'Stop listening' : 'Check my pronunciation'}
       >
-        <span aria-hidden="true">{listening ? '■' : '🎙'}</span> {listening ? 'Stop' : 'Say it'}
+        <Icon name={listening ? 'stop' : 'record'} /> {listening ? 'Stop' : 'Say it'}
       </Button>
 
       <p role="status" className={styles.result}>

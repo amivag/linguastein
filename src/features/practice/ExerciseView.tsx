@@ -10,6 +10,7 @@ import { AudioControls } from './AudioControls';
 import { UsageBadges } from '../../components/UsageBadges';
 import { ItemDetails } from './ItemDetails';
 import { SpeakCheck } from './SpeakCheck';
+import { Icon } from '../../components/Icon';
 import styles from './Practice.module.css';
 import { TokenizedText } from '../../components/TokenizedText';
 import { useWordSelection } from '../../components/useWordSelection';
@@ -320,8 +321,8 @@ function Verdict({ result }: { readonly result: GradeResult | null }) {
       role="status"
       className={`${styles.verdict} ${correct ? styles.verdictCorrect : styles.verdictIncorrect}`}
     >
-      <span className={styles.verdictIcon} aria-hidden="true">
-        {correct ? '✓' : '✗'}
+      <span className={styles.verdictIcon}>
+        <Icon name={correct ? 'correct' : 'incorrect'} size="lg" />
       </span>
       {correct ? (
         <span lang="es">¡Correcto!</span>
@@ -355,7 +356,13 @@ function ChoiceMarker({
 
   return (
     <span className={`${styles.choiceMarker} ${state}`} aria-hidden="true">
-      {variant === 'correct' ? '✓' : variant === 'incorrect' ? '✗' : position + 1}
+      {variant === 'correct' ? (
+        <Icon name="check" size="sm" />
+      ) : variant === 'incorrect' ? (
+        <Icon name="close" size="sm" />
+      ) : (
+        position + 1
+      )}
     </span>
   );
 }

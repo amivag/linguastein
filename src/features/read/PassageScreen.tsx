@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
+import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
 import { TokenizedText } from '../../components/TokenizedText';
 import { UsageBadges } from '../../components/UsageBadges';
@@ -71,7 +72,7 @@ export function PassageScreen() {
 
       <div className={styles.passageActions}>
         <Button onClick={() => speak(sentences.map((item) => item.text).join(' '))}>
-          🔊 Listen
+          <Icon name="speak" /> Listen
         </Button>
         <Button
           onClick={() => setShowTranslations((shown) => !shown)}
@@ -107,7 +108,7 @@ export function PassageScreen() {
                 onClick={() => speak(item.text)}
                 aria-label={`Listen to “${item.text}”`}
               >
-                🔊
+                <Icon name="speak" size="lg" />
               </button>
             </li>
           );

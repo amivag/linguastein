@@ -1,10 +1,10 @@
 /*
  * The course scope, as a row of chips.
  *
- * Selection is an attribute rather than a class, for the reason
- * `hover-states.test.ts` records: `[aria-pressed='true']:hover` outranks
- * `.level:hover` outright, so no state can end up wearing another state's text
- * colour on its background.
+ * The chips themselves are `Chip` — one component rather than the two
+ * near-identical copies this file and `CategoryPicker` used to carry. What is
+ * left here is only the layout, and the `<select>` that appears once a second
+ * language is loaded.
  */
 
 .bar {
@@ -18,13 +18,10 @@
   align-items: center;
 }
 
+/* Chrome from `global.css`, which is also where the reason a field keeps its
+   border is recorded. A pill here so it matches the level chips beside it. */
 .language select {
-  min-height: var(--tap-target);
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text);
+  border-radius: var(--radius-pill);
 }
 
 .levels {
@@ -34,43 +31,6 @@
   padding: 0;
   margin: 0;
   list-style: none;
-}
-
-.level {
-  display: flex;
-  min-height: var(--tap-target);
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0 var(--space-4);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
-  font-weight: 600;
-}
-
-.level:hover {
-  background: var(--color-surface-sunken);
-}
-
-.level[aria-pressed='true'] {
-  border-color: transparent;
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
-}
-
-.level[aria-pressed='true']:hover {
-  background: color-mix(in srgb, var(--color-accent) 88%, var(--color-text));
-}
-
-/* Present but quiet: the count is what makes a level a decision rather than a
-   label, and it is the number that changes when a pack grows. */
-.levelCount {
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-  font-weight: 400;
-  opacity: 0.75;
 }
 
 .note {

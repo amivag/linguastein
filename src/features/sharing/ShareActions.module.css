@@ -1,28 +1,41 @@
+/*
+ * A disclosure for the things you rarely want: copy a link, export progress.
+ *
+ * The rule above it is gone — the space separates it from the screen's own
+ * actions well enough — and the marker it drew in `::after` is a real icon now.
+ * A fullwidth plus sign rendered at whatever size the device's fallback font
+ * happened to pick, which is exactly the inconsistency the icon set exists to
+ * remove.
+ */
+
 .details {
-  border-top: 1px solid var(--color-border);
-  padding-top: var(--space-3);
+  padding-top: var(--space-2);
 }
 
 .summary {
-  min-height: var(--tap-target);
   display: flex;
   align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
   list-style: none;
+  cursor: pointer;
 }
 
 .summary::-webkit-details-marker {
   display: none;
 }
 
-.summary::after {
-  content: '＋';
+/* The marker turns rather than swapping shape: one glyph in two positions, so
+   open and closed are the same object rather than two different ones. */
+.marker {
   margin-left: auto;
+  transition: rotate var(--transition-fast);
 }
 
-.details[open] .summary::after {
-  content: '−';
+.details[open] .marker {
+  rotate: 180deg;
 }
 
 .actions {

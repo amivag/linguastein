@@ -19,10 +19,11 @@
 .progressBar {
   flex: 1;
   height: 6px;
-  border-radius: 999px;
-  /* The track sits on the page, where a raised surface would vanish under a
-     light theme; a separator colour reads against both backgrounds. */
-  background: var(--color-border);
+  border-radius: var(--radius-pill);
+  /* `--color-track` rather than the separator colour it used to borrow: a bar
+     that reports position is not decoration, and the fill has to be legible
+     against the groove (3:1, asserted in `contrast.test.ts`). */
+  background: var(--color-track);
   overflow: hidden;
 }
 
@@ -46,8 +47,8 @@
 .progressPip {
   flex: 1;
   height: 100%;
-  border-radius: 999px;
-  background: var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-track);
   transition: background-color var(--transition-base);
 }
 
@@ -65,15 +66,22 @@
   background: var(--color-accent);
 }
 
+/*
+ * The card the whole session happens on.
+ *
+ * `cardPrimary`, not `card`: there is exactly one of these on the screen and it
+ * is the screen's subject, so it is lifted further than a row in a list. No
+ * outline — the shadow and the lighter surface are what raise it, and a 1px line
+ * around the one object on the page was the clearest case of a border doing
+ * nothing.
+ */
 .card {
+  composes: cardPrimary from '../../styles/surfaces.module.css';
+
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   padding: var(--space-5) var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
 }
 
 .prompt {
@@ -95,22 +103,36 @@
   color: var(--color-success);
 }
 
-/* The verdict is the one thing a learner must not miss, so it is a band across
-   the card rather than a line of small print: colour, an icon and a size step,
-   any one of which carries the result on its own.
-   The silhouette is deliberately neither a choice nor a button — flat down the
-   right, with a bar down the left — so the stack cannot read as one more thing
-   to press. */
+/*
+ * The verdict is the one thing a learner must not miss, so it is a band across
+ * the card rather than a line of small print: colour, an icon and a size step,
+ * any one of which carries the result on its own.
+ *
+ * The silhouette is deliberately neither a choice nor a button — a full tint
+ * with no press affordance — so the stack cannot read as one more thing to
+ * press. The tint is `--color-*-soft`, the same role the graded options use, so
+ * "correct" is one green in this app rather than three.
+ *
+ * It settles in rather than appearing: a short spring on the scale, which is
+ * additive to the `role="status"` announcement and carries nothing on its own.
+ */
 .verdict {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border: 0;
-  border-left: 4px solid;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-radius: var(--radius-md);
   font-size: var(--text-lg);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
+  animation: settle var(--transition-spring);
+}
+
+@keyframes settle {
+  from {
+    scale: 0.96;
+    opacity: 0;
+  }
 }
 
 .verdictIcon {
@@ -118,38 +140,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  /* Knocked out of the badge in the card's own colour. */
-  color: var(--color-surface);
-  font-size: var(--text-base);
 }
 
 .verdictCorrect {
-  border-color: var(--color-success);
-  background: color-mix(in srgb, var(--color-success) 12%, transparent);
+  background: var(--color-success-soft);
   color: var(--color-success);
 }
 
-.verdictCorrect .verdictIcon {
-  background: var(--color-success);
-}
-
 .verdictIncorrect {
-  border-color: var(--color-danger);
-  background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+  background: var(--color-danger-soft);
   color: var(--color-danger);
-}
-
-.verdictIncorrect .verdictIcon {
-  background: var(--color-danger);
 }
 
 /* The expected answer is read, not just glanced at, so it stays in body text. */
 .verdictAnswer {
   color: var(--color-text);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .hint {
@@ -168,6 +174,11 @@
   gap: var(--space-2);
 }
 
+/*
+ * The letter in front of an option. A filled circle rather than an outlined
+ * one: it is the same shape in all three states — waiting, right, wrong — so
+ * only the colour and the glyph inside it change, and the row never reflows.
+ */
 .choiceMarker {
   flex: none;
   display: inline-flex;
@@ -175,23 +186,21 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-raised);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 /* Once graded the marker states the outcome, so the result does not rest on
    the fill colour alone. */
 .choiceMarkerCorrect {
-  border-color: transparent;
   background: var(--color-success);
   color: var(--color-surface);
 }
 
 .choiceMarkerIncorrect {
-  border-color: transparent;
   background: var(--color-danger);
   color: var(--color-surface);
 }
@@ -202,12 +211,16 @@
   gap: var(--space-2);
 }
 
+/*
+ * The slot the tapped words land in. A recessed well says "put things here"
+ * where the dashed outline it replaced said "this is provisional" — and the
+ * inset shadow means an empty slot still looks like a slot.
+ */
 .built {
+  composes: well from '../../styles/surfaces.module.css';
+
   min-height: var(--tap-target);
   padding: var(--space-3);
-  border: 1px dashed var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-sunken);
   font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: var(--weight-medium);
@@ -233,14 +246,14 @@
   flex: 1;
 }
 
-/* Reference material, not part of the interactive stack — ruled off so the eye
-   stops at the last control. */
+/* Reference material, not part of the interactive stack. The rule that used to
+   separate it is gone — the space and the smaller, muted type say the same
+   thing without adding a line across the card. */
 .details {
   display: grid;
   gap: var(--space-2);
   margin-top: var(--space-2);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
@@ -257,6 +270,14 @@
   gap: var(--space-4);
   padding: var(--space-6) var(--space-4);
   text-align: center;
+  justify-items: center;
+}
+
+/* The one moment the app is allowed to be pleased with itself. Still a number
+   rather than a fanfare: what it reports has to be worth being told, which is
+   the constraint the whole end-of-session panel is written under. */
+.summaryIcon {
+  color: var(--color-highlight);
 }
 
 .summaryScore {
@@ -271,16 +292,19 @@
 /* The earned half of the results screen. Left-aligned against the centred score
    above it: these are sentences to read, not a number to glance at. */
 .outcome {
+  composes: card from '../../styles/surfaces.module.css';
+
   display: grid;
   gap: var(--space-2);
+  width: 100%;
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
   text-align: left;
 }
 
 .outcomeLine {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
@@ -288,4 +312,18 @@
 /* The count carries the weight; the words it names are the detail. */
 .outcomeLine strong {
   color: var(--color-text);
+}
+
+/* A lapse is named, not softened — it is the more useful half of the report —
+   so it gets its own colour rather than being folded in with the gains. */
+.outcomeIconUp {
+  color: var(--color-success);
+}
+
+.outcomeIconDown {
+  color: var(--color-highlight);
+}
+
+.outcomeIconDue {
+  color: var(--color-text-muted);
 }

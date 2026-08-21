@@ -1,31 +1,60 @@
 .mic {
+  --mic-bg: var(--color-surface-raised);
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: var(--tap-target);
   height: var(--tap-target);
   flex-shrink: 0;
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--mic-bg);
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-/* Listening is ARIA state, not a class: the attribute outranks `.mic`, so the
-   live mic cannot be repainted back to its resting colours by a later rule. */
+/*
+ * Listening is ARIA state, not a class: the attribute outranks `.mic`, so the
+ * live mic cannot be repainted back to its resting colours by a later rule.
+ *
+ * A live microphone is the one control in the app that is doing something while
+ * you are not touching it, so it pulses — slowly, and as a ring around the
+ * button rather than on it, so the glyph itself stays still and legible.
+ * `global.css` collapses the animation under prefers-reduced-motion, and the
+ * fill change plus `aria-pressed` carry the state without it.
+ */
 .mic[aria-pressed='true'] {
-  border-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
-  color: var(--color-text);
+  --mic-bg: var(--color-accent);
+
+  color: var(--color-accent-contrast);
+  /* The composed pair, not a duration plus a named curve: `motion.test.ts`
+     refuses the second spelling, and it is right to — a component that names a
+     curve is a component that can name the wrong one. */
+  animation: listening var(--transition-slow) infinite alternate;
 }
 
-.mic[aria-pressed='true']:hover {
-  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+@keyframes listening {
+  to {
+    box-shadow: 0 0 0 6px var(--color-accent-soft);
+  }
 }
 
-/* Carries the failure text. While listening the same region is `visually-hidden`
-   instead: the mic already shows that state, and a second flex item appearing
-   beside the search field would squeeze it on every dictation. */
 .status {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mic:hover {
+    background: color-mix(in srgb, var(--mic-bg) 90%, var(--color-text));
+    color: var(--color-text);
+  }
+
+  .mic[aria-pressed='true']:hover {
+    background: color-mix(in srgb, var(--mic-bg) 88%, var(--color-text));
+    color: var(--color-accent-contrast);
+  }
 }

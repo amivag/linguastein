@@ -3,6 +3,7 @@ import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
 import { PRONUNCIATION_LOCALES } from '../domain/content';
 import { Button } from './Button';
+import { Icon } from '../components/Icon';
 import styles from './VoiceSettings.module.css';
 
 /** Sample the "Test voice" button speaks — short, and in the target language. */
@@ -66,11 +67,11 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
       <p className={styles.status} role="status">
         {silent ? (
           <>
-            <span aria-hidden="true">🔇</span> Silent — no {locale} voice on this device
+            <Icon name="silent" size="sm" /> Silent — no {locale} voice on this device
           </>
         ) : (
           <>
-            <span aria-hidden="true">🔊</span> Speaking as{' '}
+            <Icon name="speak" size="sm" /> Speaking as{' '}
             <strong>{active?.name ?? 'the device default'}</strong>
             {active && <span className={styles.tag}> {active.locale}</span>}
           </>
@@ -137,8 +138,8 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
       {silent ? (
         <p className={styles.hint}>
           Nothing is spoken — the app stays quiet rather than reading Spanish with a voice from
-          another language. Add a Spanish voice in your operating system’s speech settings, or use
-          a dataset that ships reviewed audio.
+          another language. Add a Spanish voice in your operating system’s speech settings, or use a
+          dataset that ships reviewed audio.
         </p>
       ) : (
         <>
@@ -150,8 +151,8 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
           </div>
           {variant === 'page' && (
             <p className={styles.hint}>
-              {voices.length} voice(s) installed for {locale}. These come from your device, not
-              from the app; reviewed audio in a dataset always takes priority over them.
+              {voices.length} voice(s) installed for {locale}. These come from your device, not from
+              the app; reviewed audio in a dataset always takes priority over them.
             </p>
           )}
         </>

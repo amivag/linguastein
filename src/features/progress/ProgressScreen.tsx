@@ -5,6 +5,7 @@ import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
+import { Icon } from '../../components/Icon';
 import { TokenizedText } from '../../components/TokenizedText';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
@@ -95,8 +96,10 @@ export function ProgressScreen() {
 
       {!started && (
         <section className={styles.empty}>
+          <Icon name="progress" size="xl" className={styles.emptyIcon} />
           <p>No practice recorded yet.</p>
           <Button variant="primary" block large onClick={() => void navigate(path())}>
+            <Icon name="play" />
             Start a session
           </Button>
         </section>
@@ -105,22 +108,24 @@ export function ProgressScreen() {
       {started && (
         <>
           <ul className={styles.stats} aria-label="Overall progress">
-            <li className={styles.stat}>
-              <span className={styles.statValue}>{summary.seen}</span>
-              <span className={styles.statLabel}>items practised</span>
-            </li>
-            <li className={styles.stat}>
-              <span className={styles.statValue}>{summary.mastered}</span>
-              <span className={styles.statLabel}>mastered</span>
-            </li>
-            <li className={styles.stat}>
-              <span className={styles.statValue}>{summary.due}</span>
-              <span className={styles.statLabel}>due now</span>
-            </li>
-            <li className={styles.stat}>
-              <span className={styles.statValue}>{accuracy === null ? '—' : `${accuracy}%`}</span>
-              <span className={styles.statLabel}>accuracy</span>
-            </li>
+            {(
+              [
+                { icon: 'study', value: summary.seen, label: 'items practised' },
+                { icon: 'mastered', value: summary.mastered, label: 'mastered' },
+                { icon: 'due', value: summary.due, label: 'due now' },
+                {
+                  icon: 'accuracy',
+                  value: accuracy === null ? '—' : `${accuracy}%`,
+                  label: 'accuracy',
+                },
+              ] as const
+            ).map((entry) => (
+              <li key={entry.label} className={styles.stat}>
+                <Icon name={entry.icon} size="sm" className={styles.statIcon} />
+                <span className={styles.statValue}>{entry.value}</span>
+                <span className={styles.statLabel}>{entry.label}</span>
+              </li>
+            ))}
           </ul>
 
           <div className={styles.bar} aria-hidden="true">
@@ -155,6 +160,7 @@ export function ProgressScreen() {
                 )
               }
             >
+              <Icon name="play" />
               Review {summary.due} due
             </Button>
           )}
@@ -165,7 +171,16 @@ export function ProgressScreen() {
               <ul className={styles.list}>
                 {mastery.map((record) => (
                   <li key={record.id} className={styles.row}>
-                    <span lang="es">{record.label}</span>
+                    <span className={styles.rowLabel}>
+                      <Icon
+                        name={record.status === 'strong' ? 'improving' : 'slipping'}
+                        size="sm"
+                        className={
+                          record.status === 'strong' ? styles.rowIconUp : styles.rowIconDown
+                        }
+                      />
+                      <span lang="es">{record.label}</span>
+                    </span>
                     <span className={styles.muted}>
                       {MASTERY_LABELS[record.status]} · seen in {record.encounters}{' '}
                       {record.encounters === 1 ? 'sentence' : 'sentences'}

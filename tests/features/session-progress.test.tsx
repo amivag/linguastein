@@ -88,7 +88,10 @@ describe('what the pip states look like', () => {
   it('paints done and current differently from to-come', () => {
     expect(block("data-state='done'")).toMatch(/background:\s*var\(--color-accent\)/);
     expect(block("data-state='current'")).toMatch(/background:\s*var\(--color-accent\)/);
-    expect(block('.progressPip {')).toMatch(/background:\s*var\(--color-border\)/);
+    // `--color-track`, not the separator colour it used to borrow: a bar that
+    // reports position is not decoration, and `contrast.test.ts` now holds the
+    // accent to 3:1 against this groove so the fill is legible in both themes.
+    expect(block('.progressPip {')).toMatch(/background:\s*var\(--color-track\)/);
   });
 
   it('distinguishes the current pip by more than colour', () => {

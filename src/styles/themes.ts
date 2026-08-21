@@ -16,14 +16,21 @@ export type ThemeId = Exclude<ThemePreference, 'system'>;
 export interface ThemeOption {
   readonly id: ThemePreference;
   readonly label: string;
-  /** Shown next to the label; decorative, so it stays out of the a11y tree. */
-  readonly icon: string;
+  /**
+   * Shown next to the label; decorative, so it stays out of the a11y tree.
+   *
+   * A name from the icon set rather than a glyph. It is typed as a plain string
+   * because this module is imported by the contrast test and by the pre-paint
+   * path, and neither should have to pull in React to know a theme exists —
+   * `Icon` validates the name at the call site.
+   */
+  readonly icon: 'themeSystem' | 'themeLight' | 'themeDark';
 }
 
 export const THEME_OPTIONS: readonly ThemeOption[] = [
-  { id: 'system', label: 'System', icon: '◐' },
-  { id: 'light', label: 'Light', icon: '☀' },
-  { id: 'dark', label: 'Dark', icon: '☾' },
+  { id: 'system', label: 'System', icon: 'themeSystem' },
+  { id: 'light', label: 'Light', icon: 'themeLight' },
+  { id: 'dark', label: 'Dark', icon: 'themeDark' },
 ];
 
 /** Key shared with the pre-paint script in index.html. Keep both in sync. */

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Chip } from '../../components/Chip';
 import type { TopicFacet } from '../../domain/content';
 import styles from './CategoryPicker.module.css';
 
@@ -76,22 +77,20 @@ export function CategoryPicker({
                 const pressed = selected.includes(topic.id);
                 return (
                   <li key={topic.id}>
-                    <button
-                      type="button"
-                      className={styles.tile}
+                    <Chip
                       // Spelled out rather than left to concatenation: the label
                       // and the count are adjacent inline spans, so the computed
                       // name would be "Numbers27" — technically present, useless
                       // to a screen reader and to an agent matching on a name.
                       aria-label={`${topic.label}, ${topic.count} ${topic.count === 1 ? 'item' : 'items'}`}
-                      // The button *is* the state, so it carries it rather than
+                      // The chip *is* the state, so it carries it rather than
                       // relying on the highlight a colour-only style would give.
-                      aria-pressed={pressed}
+                      pressed={pressed}
+                      count={topic.count}
                       onClick={() => onToggle(topic.id)}
                     >
-                      <span className={styles.label}>{topic.label}</span>
-                      <span className={styles.count}>{topic.count}</span>
-                    </button>
+                      {topic.label}
+                    </Chip>
                   </li>
                 );
               })}

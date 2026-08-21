@@ -2,6 +2,10 @@
  * A slim strip under the header, in normal flow: it may appear mid-session, and
  * anything overlaying the answer buttons would be worse than the stale build it
  * is offering to replace.
+ *
+ * Tinted rather than outlined. It is the app speaking about itself rather than
+ * about the material, and the accent panel says that where a grey box with a
+ * line round it said only "another box".
  */
 .banner {
   display: flex;
@@ -10,13 +14,19 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-soft);
 }
 
 .message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   font-size: var(--text-sm);
+}
+
+.icon {
+  color: var(--color-accent);
 }
 
 .actions {

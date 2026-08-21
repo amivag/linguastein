@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
+import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
 import { TokenizedText } from '../../components/TokenizedText';
@@ -297,6 +298,7 @@ export function BrowseScreen() {
           verb word cards. */}
       {results.length === 0 && (
         <p className={styles.empty}>
+          <Icon name="browse" size="xl" className={styles.emptyIcon} />
           {search.trim()
             ? 'Nothing matches that yet. Try a shorter search.'
             : 'Nothing in this course matches those filters yet. Try widening one.'}

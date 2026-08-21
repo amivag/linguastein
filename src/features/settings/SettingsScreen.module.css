@@ -1,22 +1,33 @@
+/*
+ * One setting per card, and no outline on any of them.
+ *
+ * Settings is where a bordered look does the most damage: eleven outlined boxes
+ * down a page is the exact silhouette of a form, which is what the app should
+ * least resemble on the screen a learner visits least.
+ */
 .field {
+  composes: card from '../../styles/surfaces.module.css';
+
   display: grid;
   gap: var(--space-2);
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
 }
 
 .field select {
-  min-height: var(--tap-target);
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-raised);
+  width: 100%;
 }
 
 .label {
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-semibold);
+}
+
+/* The glyph beside a setting's name: eleven cards of grey text are hard to scan,
+   and the icon is what lets a learner find "voice" without reading "language". */
+.labelIcon {
+  color: var(--color-accent);
 }
 
 .hint {
@@ -25,20 +36,20 @@
 }
 
 .toggle {
+  composes: card from '../../styles/surfaces.module.css';
+
   display: flex;
   align-items: center;
   gap: var(--space-3);
   min-height: var(--tap-target);
   padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
 }
 
+/* Larger than the platform default, because it is a thumb target; the tint is
+   set for every checkbox in `global.css`. */
 .toggle input {
   width: 22px;
   height: 22px;
-  accent-color: var(--color-accent);
 }
 
 .group {
@@ -57,10 +68,24 @@
 }
 
 .groupTitle {
+  composes: sectionLabel from '../../styles/surfaces.module.css';
+
   margin-top: var(--space-2);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+}
+
+/* The one link on the screen, laid out as the row it is rather than as a word in
+   a paragraph: the chevron says it goes somewhere, which a coloured word does
+   not once it is surrounded by other coloured words. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
 }

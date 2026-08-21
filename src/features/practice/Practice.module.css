@@ -104,25 +104,54 @@
 }
 
 /*
- * The verdict is the one thing a learner must not miss, so it is a band across
- * the card rather than a line of small print: colour, an icon and a size step,
- * any one of which carries the result on its own.
+ * What happened, and what to do next — one region.
  *
- * The silhouette is deliberately neither a choice nor a button — a full tint
- * with no press affordance — so the stack cannot read as one more thing to
- * press. The tint is `--color-*-soft`, the same role the graded options use, so
- * "correct" is one green in this app rather than three.
+ * The card had become six full-width rounded rectangles in a column: four
+ * options, the verdict, the button. The verdict was the worst of it, wearing the
+ * same tint and the same radius as the graded option immediately above, so it
+ * read as a fifth answer.
  *
- * It settles in rather than appearing: a short spring on the scale, which is
- * additive to the `role="status"` announcement and carries nothing on its own.
+ * This bleeds to the card's inline edges, which nothing else on the card does.
+ * That is the separation: a different *kind* of thing, legible before any colour
+ * is involved and at any zoom. The negative margin is the card's own inline
+ * padding, so the two cannot drift apart.
+ *
+ * Recessed and neutral rather than tinted. A tinted band would sit directly
+ * under a success-tinted correct answer and the two would read as one green
+ * mass; the colour belongs on the verdict *line*, where it is one thing rather
+ * than two. The extra space above is what replaces a rule — the design language
+ * separates with space, and a seventh horizontal stroke was the problem.
+ */
+.outcomeBar {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  margin-inline: calc(var(--space-4) * -1);
+  padding: var(--space-4);
+  background: var(--color-surface-sunken);
+  box-shadow: var(--shadow-inset);
+}
+
+/*
+ * The verdict is the one thing a learner must not miss: colour, an icon and a
+ * size step, any one of which carries the result on its own.
+ *
+ * A line rather than a panel, and `inline-flex` so it hugs its own text. Full
+ * width was what made it a row in a list; hugging its content makes it a
+ * sentence about what just happened. The band behind it supplies the region.
+ *
+ * It settles in rather than appearing: a short spring on the scale, additive to
+ * the `role="status"` announcement and carrying nothing on its own.
  */
 .verdict {
-  display: flex;
+  display: inline-flex;
+  /* `justify-self`, not just `inline-flex`: a grid item stretches to its column
+     and blockifies an inline-level display, so `inline-flex` alone still spanned
+     the full band — which is the shape being avoided. */
+  justify-self: start;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border: 0;
-  border-radius: var(--radius-md);
+  gap: var(--space-2);
+  margin: 0;
   font-size: var(--text-lg);
   font-weight: var(--weight-bold);
   animation: settle var(--transition-spring);
@@ -143,12 +172,10 @@
 }
 
 .verdictCorrect {
-  background: var(--color-success-soft);
   color: var(--color-success);
 }
 
 .verdictIncorrect {
-  background: var(--color-danger-soft);
   color: var(--color-danger);
 }
 

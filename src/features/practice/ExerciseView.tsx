@@ -211,7 +211,6 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
               );
             })}
           </div>
-          {answered && <Verdict result={runner.lastResult} />}
         </>
       )}
 
@@ -255,7 +254,6 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
               Check
             </Button>
           </div>
-          {answered && <Verdict result={runner.lastResult} />}
           {/* The sentence itself, once it can no longer give the answer away:
               the parts above are the learner's attempt, not a phrase to hear
               or to take words out of. */}
@@ -287,9 +285,26 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
         </div>
       ) : (
         answered && (
-          <Button variant="primary" block large onClick={runner.next}>
-            Continue
-          </Button>
+          /*
+            What happened, and what to do about it — one region rather than two
+            more rows in the stack.
+
+            The screen had become six full-width rounded rectangles in a column:
+            four options, the verdict, the button. The verdict wore the same tint
+            and the same radius as the graded option above it, so it read as a
+            fifth answer, and the button read as a sixth. Neither was separable
+            from the question by looking.
+
+            This bleeds to the card's edges, which nothing else on the card does,
+            so it is a different *kind* of thing before it is a different colour.
+          */
+          <div className={styles.outcomeBar}>
+            <Verdict result={runner.lastResult} />
+            <Button variant="primary" block large onClick={runner.next}>
+              Continue
+              <Icon name="forward" />
+            </Button>
+          </div>
         )
       )}
 
@@ -325,6 +340,10 @@ function Verdict({ result }: { readonly result: GradeResult | null }) {
   if (result === null) return null;
   const correct = result.correct;
 
+  // No panel of its own any more: the band around it carries the region, so this
+  // is a line of coloured type with an icon. A full-width tinted rectangle at the
+  // same radius as the options above it read as a fifth answer — which is exactly
+  // what the original left-bar silhouette had been shaped to avoid.
   return (
     <p
       role="status"

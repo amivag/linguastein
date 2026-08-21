@@ -1,0 +1,44 @@
+/*
+ * Icons take their size and stroke from the primitives, in CSS rather than
+ * through the vendor's `size` prop: a CSS `width` overrides the `width`
+ * attribute Lucide renders, so the token wins and a call site cannot quietly
+ * introduce a nineteenth pixel size.
+ *
+ * `stroke-width` scales with the box for the same reason it is a token — Lucide
+ * draws on a 24px grid, so a fixed 2px stroke looks heavy at 16px and thin at
+ * 32px. The values below keep the *optical* weight constant.
+ */
+
+.icon {
+  display: inline-block;
+  flex: none;
+  /* An icon belongs to whatever it sits in. Never a colour of its own. */
+  color: inherit;
+  stroke-width: var(--icon-stroke);
+  /* Align to the text it sits beside rather than to the line box, which is what
+     leaves a glyph floating a pixel high next to its label. */
+  vertical-align: -0.125em;
+}
+
+.sm {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  stroke-width: calc(var(--icon-stroke) * 1.15);
+}
+
+.md {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+.lg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  stroke-width: calc(var(--icon-stroke) * 0.9);
+}
+
+.xl {
+  width: var(--icon-xl);
+  height: var(--icon-xl);
+  stroke-width: calc(var(--icon-stroke) * 0.75);
+}

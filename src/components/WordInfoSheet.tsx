@@ -11,8 +11,9 @@ import {
   type WordInfo,
 } from '../domain/content';
 import { Button } from './Button';
+import { Icon } from './Icon';
+import { Sheet } from './Sheet';
 import { UsageBadges } from './UsageBadges';
-import { useFocusTrap } from './useFocusTrap';
 import styles from './WordInfoSheet.module.css';
 
 interface WordInfoSheetProps {
@@ -69,8 +70,6 @@ export function WordInfoSheet({
       ? inspectSpan(services.repository, item, tokenIds, language, { meanings })
       : null;
 
-  const sheetRef = useFocusTrap<HTMLElement>(onClose);
-
   if (!word && !phrase) return null;
 
   const text = word ? word.token.text : (phrase?.text ?? '');
@@ -82,43 +81,30 @@ export function WordInfoSheet({
     });
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
-      <section
-        ref={sheetRef}
-        className={styles.sheet}
-        role="dialog"
-        aria-modal="true"
-        tabIndex={-1}
-        aria-label={`About ${text}`}
-      >
-        <header className={styles.header}>
-          <div className={styles.heading}>
-            <p className={styles.word} lang="es">
-              {text}
-            </p>
-            {word && <Lemma info={word} />}
-            {phrase && <p className={styles.lemma}>{phrase.words.length} words</p>}
-          </div>
-          <div className={styles.actions}>
-            <Button variant="ghost" icon onClick={speak} aria-label="Pronounce">
-              🔊
-            </Button>
-            <Button variant="ghost" icon onClick={onClose} aria-label="Close">
-              ✕
-            </Button>
-          </div>
-        </header>
-
-        <SpanControls item={item} tokenIds={tokenIds} onChange={onChange} />
-
-        <div className={styles.body}>
-          {!meanings && <p className={styles.withheld}>Meanings unlock once you answer.</p>}
-          {word && <WordBody info={word} meanings={meanings} />}
-          {phrase && <PhraseBody info={phrase} meanings={meanings} />}
+    <Sheet
+      title={`About ${text}`}
+      width="wide"
+      onClose={onClose}
+      heading={
+        <div className={styles.heading}>
+          <h2 className={styles.word} lang="es">
+            {text}
+          </h2>
+          {word && <Lemma info={word} />}
+          {phrase && <p className={styles.lemma}>{phrase.words.length} words</p>}
         </div>
-      </section>
-    </div>
+      }
+      actions={
+        <Button variant="ghost" icon onClick={speak} aria-label="Pronounce">
+          <Icon name="speak" />
+        </Button>
+      }
+      pinned={<SpanControls item={item} tokenIds={tokenIds} onChange={onChange} />}
+    >
+      {!meanings && <p className={styles.withheld}>Meanings unlock once you answer.</p>}
+      {word && <WordBody info={word} meanings={meanings} />}
+      {phrase && <PhraseBody info={phrase} meanings={meanings} />}
+    </Sheet>
   );
 }
 
@@ -152,14 +138,29 @@ function SpanControls({
   return (
     <div className={styles.span}>
       <span className={styles.spanLabel}>Phrase</span>
+      {/*
+        The name says what the button *does*, not only which word it names.
+        These used to be labelled by their contents — "＋ que" and "que ＋" —
+        which meant the accessible name depended on a fullwidth plus sign being
+        read out, and left two controls whose names differed only by the side the
+        glyph fell on. With the glyph now `aria-hidden`, the label has to carry
+        it: "Add “que” before" is what a screen reader and an agent both need,
+        and it is the same string whichever way the phrase grows.
+      */}
       {before && (
-        <Button onClick={() => onChange(expandSpan(item, tokenIds, 'before'))}>
-          {`＋ ${before.text}`}
+        <Button
+          aria-label={`Add “${before.text}” before`}
+          onClick={() => onChange(expandSpan(item, tokenIds, 'before'))}
+        >
+          <Icon name="add" size="sm" /> {before.text}
         </Button>
       )}
       {after && (
-        <Button onClick={() => onChange(expandSpan(item, tokenIds, 'after'))}>
-          {`${after.text} ＋`}
+        <Button
+          aria-label={`Add “${after.text}” after`}
+          onClick={() => onChange(expandSpan(item, tokenIds, 'after'))}
+        >
+          {after.text} <Icon name="add" size="sm" />
         </Button>
       )}
       {shrinkable && first !== undefined && (

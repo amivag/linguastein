@@ -36,16 +36,16 @@ describe('selecting a phrase', () => {
     const panel = await openTengo(user);
 
     // The control says which word it would add, so it cannot mislead.
-    expect(within(panel).getByRole('button', { name: 'que ＋' })).toBeInTheDocument();
+    expect(within(panel).getByRole('button', { name: 'Add “que” after' })).toBeInTheDocument();
     // Nothing before the first word, so no control for it.
-    expect(within(panel).queryByRole('button', { name: /＋ / })).not.toBeInTheDocument();
+    expect(within(panel).queryByRole('button', { name: /before$/ })).not.toBeInTheDocument();
   });
 
   it('explains the pattern once the phrase is selected', async () => {
     const user = userEvent.setup();
     const panel = await openTengo(user);
 
-    await user.click(within(panel).getByRole('button', { name: 'que ＋' }));
+    await user.click(within(panel).getByRole('button', { name: 'Add “que” after' }));
 
     const phrase = await screen.findByRole('dialog', { name: 'About Tengo que' });
     expect(phrase).toHaveTextContent('tener que + infinitivo');
@@ -58,7 +58,7 @@ describe('selecting a phrase', () => {
   it('reports every selected word as expanded, not just the first', async () => {
     const user = userEvent.setup();
     const panel = await openTengo(user);
-    await user.click(within(panel).getByRole('button', { name: 'que ＋' }));
+    await user.click(within(panel).getByRole('button', { name: 'Add “que” after' }));
 
     await screen.findByRole('dialog', { name: 'About Tengo que' });
     for (const word of ['Tengo', 'que']) {
@@ -76,7 +76,7 @@ describe('selecting a phrase', () => {
   it('shrinks back to one word', async () => {
     const user = userEvent.setup();
     const panel = await openTengo(user);
-    await user.click(within(panel).getByRole('button', { name: 'que ＋' }));
+    await user.click(within(panel).getByRole('button', { name: 'Add “que” after' }));
 
     const phrase = await screen.findByRole('dialog', { name: 'About Tengo que' });
     await user.click(within(phrase).getByRole('button', { name: 'One word' }));
@@ -96,7 +96,7 @@ describe('selecting a phrase', () => {
     // `Tengo que trabajar .` would be nonsense, so the last word has no
     // control after it at all.
     expect(within(panel).queryByRole('button', { name: /＋$/ })).not.toBeInTheDocument();
-    expect(within(panel).getByRole('button', { name: '＋ que' })).toBeInTheDocument();
+    expect(within(panel).getByRole('button', { name: 'Add “que” before' })).toBeInTheDocument();
   });
 
   it('leaves a word card without span controls, having nothing to grow into', async () => {
@@ -213,7 +213,7 @@ describe('inspection outside a practice card', () => {
       screen.getByRole('button', { name: 'About “Tengo” in “Tengo que trabajar.”' }),
     );
     const panel = await screen.findByRole('dialog', { name: 'About Tengo' });
-    await user.click(within(panel).getByRole('button', { name: 'que ＋' }));
+    await user.click(within(panel).getByRole('button', { name: 'Add “que” after' }));
 
     expect(await screen.findByRole('dialog', { name: 'About Tengo que' })).toHaveTextContent(
       'tener que + infinitivo',

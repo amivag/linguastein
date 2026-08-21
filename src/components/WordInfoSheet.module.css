@@ -1,98 +1,16 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.backdrop {
-  position: absolute;
-  inset: 0;
-  border: 0;
-  background: var(--backdrop);
-  animation: fade var(--transition-base);
-}
-
 /*
- * The sheet itself does not scroll: it is a column of a fixed header and a
- * scrolling body, so the word being explained and the way out of the dialog
- * stay put however long the entry runs.
+ * Only the entry's own content lives here now.
+ *
+ * The overlay, the backdrop, the sheet, the pinned span row, the scroll
+ * containment and the `rise`/`fade`/`drop` keyframes all moved into
+ * `Sheet.module.css`, which two files used to each carry a copy of — with two
+ * different corner radii and only one of them capping its height on a large
+ * screen.
  */
-.sheet {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: min(640px, 100%);
-  margin-inline: auto;
-  max-height: 82dvh;
-  overflow: hidden;
-  border-top: 1px solid var(--color-border);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
-  animation: rise var(--transition-slow);
-}
-
-.header {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  flex: 0 0 auto;
-  padding: var(--space-4) var(--space-4) var(--space-3);
-  border-bottom: 1px solid var(--color-border);
-}
 
 .heading {
   flex: 1;
   min-width: 0;
-  padding-top: var(--space-1);
-}
-
-/* Two glyph buttons, kept together at the end of the line and off the word. */
-.actions {
-  display: flex;
-  gap: var(--space-1);
-  flex: 0 0 auto;
-}
-
-/*
- * Growing the selection. Pinned with the header rather than scrolling with the
- * body: it is how you change *what* the sheet is about, so it must not be
- * something you have to scroll back up to find.
- */
-.span {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex: 0 0 auto;
-  padding: var(--space-2) var(--space-4);
-  border-bottom: 1px solid var(--color-border);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-}
-
-.spanLabel {
-  flex: none;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.body {
-  display: grid;
-  align-content: start;
-  gap: var(--space-3);
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  /* A flick that runs out of sheet must not carry on scrolling the phrase
-     underneath it. */
-  overscroll-behavior: contain;
-  padding: var(--space-4) var(--space-4) max(var(--space-5), env(safe-area-inset-bottom));
 }
 
 .word {
@@ -115,74 +33,92 @@
   color: var(--color-success);
 }
 
+/*
+ * Growing the selection. A row of buttons that scrolls sideways rather than
+ * wrapping, so a long phrase cannot make the pinned area taller than the entry
+ * underneath it.
+ */
+.span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.spanLabel {
+  flex: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
 /* Sits where the meaning would be, so the entry reads as one held back rather
    than one that is short. Muted rather than warning-coloured: nothing is wrong,
    and a live question is not an error state. */
 .withheld {
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid var(--color-border);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
 
+/*
+ * Each block of the entry — forms, examples, the pattern.
+ *
+ * It was separated by a 1px rule per block, which on a verb with nine forms and
+ * four examples meant five horizontal lines down one small sheet. The space is
+ * what separates them now, and the uppercase title is what marks the start.
+ */
 .block {
   display: grid;
   gap: var(--space-2);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--color-border);
-}
-
-/* A word with no gloss leads with a block, and its rule would sit a padding's
-   width under the header's own. One line is enough. */
-.body > .block:first-child {
-  padding-top: 0;
-  border-top: 0;
+  padding-top: var(--space-2);
 }
 
 .blockTitle {
+  composes: sectionLabel from '../styles/surfaces.module.css';
+
   margin: 0;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
 .forms {
+  composes: listReset from '../styles/surfaces.module.css';
+
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: var(--space-2);
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
+/* A form is a fact to read, not a control to press, so it is a recessed tile
+   rather than an outlined box — which also stops nine of them reading as nine
+   buttons. */
 .forms li {
   display: flex;
   flex-direction: column;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
 }
 
+/* The form the learner is actually looking at. Tinted *and* bolder, so which
+   one it is does not rest on the tint alone. */
 .current {
-  border-color: var(--color-accent);
-  /* The one accent tint, from the role token: a hand-mixed percentage here is
-     how the same idea came out four different shades across the app. */
   background: var(--color-accent-soft);
+  font-weight: var(--weight-semibold);
 }
 
 .formLabel {
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+  font-weight: 400;
 }
 
 .examples {
+  composes: listReset from '../styles/surfaces.module.css';
+
   display: grid;
   gap: var(--space-2);
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
 .examples li {
@@ -191,11 +127,10 @@
 
 /* One row per word of the phrase: the word, then what it is. */
 .words {
+  composes: listReset from '../styles/surfaces.module.css';
+
   display: grid;
   gap: var(--space-2);
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
 .words li {
@@ -206,46 +141,5 @@
 }
 
 .wordItem {
-  font-weight: 600;
-}
-
-/* Arriving, not appearing: the sheet comes from the edge it is attached to.
-   `global.css` collapses both of these under prefers-reduced-motion.
-
-   No fill mode: the resting state is the state in the rules above, so a page
-   that never gets to run the animation — a background tab, a renderer that is
-   not compositing — shows the sheet where it belongs rather than stranded at
-   the keyframe it started from. */
-@keyframes rise {
-  from {
-    transform: translateY(2rem);
-    opacity: 0;
-  }
-}
-
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-}
-
-/* A bottom sheet on a phone becomes a centred dialog once there is room for
-   one — the same markup, positioned for the pointer in use. */
-@media (min-width: 768px) {
-  .overlay {
-    justify-content: center;
-    align-items: center;
-    padding: var(--space-5);
-  }
-
-  .sheet {
-    width: min(560px, 100%);
-    max-height: min(80dvh, 720px);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-  }
-
-  .header {
-    padding-top: var(--space-5);
-  }
+  font-weight: var(--weight-semibold);
 }

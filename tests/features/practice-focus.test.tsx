@@ -93,6 +93,64 @@ describe('the practising summary', () => {
   });
 });
 
+/**
+ * Where the panel is *drawn*, which is a design-language rule rather than a
+ * detail: a control that expands must open over the page, never grow inside it.
+ *
+ * Both assertions come from real regressions. The picker was an inline panel,
+ * and opening it pushed the quick-session buttons, all six presets and the rest
+ * of Home down by around four hundred pixels — so narrowing what you practise
+ * moved the button you were reaching for off the screen. Moving it into a sheet
+ * fixed that, and then a `<div id={panelId}>` wrapper around the sheet brought a
+ * smaller version of it back: the section is a grid, so a flow child collects a
+ * `gap` even when its only content is fixed, and the page grew by 12px on open.
+ *
+ * jsdom computes no layout, so neither can be measured here. What can be
+ * asserted is the structure that caused them: the panel is a modal dialog, and
+ * `aria-controls` resolves to that dialog rather than to a wrapper around it.
+ */
+describe('where the panel opens', () => {
+  it('opens a modal dialog rather than expanding the page', async () => {
+    const user = userEvent.setup();
+    homeWith({});
+    await screen.findByRole('heading', { level: 1 });
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await user.click(panel());
+
+    const dialog = screen.getByRole('dialog', { name: 'What to practise' });
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+  });
+
+  it('points aria-controls at the dialog itself, with nothing in between', async () => {
+    const user = userEvent.setup();
+    homeWith({});
+    await screen.findByRole('heading', { level: 1 });
+
+    const toggle = panel();
+    await user.click(toggle);
+
+    const controls = toggle.getAttribute('aria-controls');
+    expect(controls).toBeTruthy();
+    // The element the control names *is* the dialog. A wrapper here would be a
+    // flow element inside a grid, which is what reintroduced the 12px shift.
+    expect(document.getElementById(controls!)).toBe(screen.getByRole('dialog'));
+  });
+
+  it('closes without leaving the dialog in the accessibility tree', async () => {
+    const user = userEvent.setup();
+    homeWith({});
+    await screen.findByRole('heading', { level: 1 });
+
+    await user.click(panel());
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+
+    // Rendered only while open: a hidden panel whose twelve category buttons
+    // stay in the tree is twelve stops a screen reader walks through for nothing.
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+});
+
 describe('choosing what to practise', () => {
   it('stores the focus, so it holds for the next session too', async () => {
     const user = userEvent.setup();

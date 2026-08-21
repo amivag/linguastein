@@ -1,5 +1,5 @@
 /*
- * What to practise. Collapsed it is one row; open it is a panel.
+ * What to practise. On the screen it is one row; changing it happens in a sheet.
  *
  * Selection is exposed as `aria-pressed` rather than a class, so
  * `[aria-pressed='true']:hover` outranks the plain hover rule and no state can
@@ -21,51 +21,61 @@
 .title {
   margin: 0;
   font-size: var(--text-base);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
-/* The summary *is* the control: reading the current choice and changing it are
-   the same gesture, which is what keeps the collapsed state useful. */
+/*
+ * The summary *is* the control: reading the current choice and changing it are
+ * the same gesture, which is what keeps the collapsed state useful.
+ *
+ * Recessed rather than outlined. A field you press to open something is the one
+ * shape a sunken surface says exactly — and it distinguishes this from the
+ * raised buttons in the same column, which is the distinction the outline was
+ * failing to make.
+ */
 .toggle {
+  --toggle-bg: var(--color-surface-sunken);
+
   display: flex;
   min-height: var(--tap-target);
   flex: 1;
+  min-width: 0;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-2);
   padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--toggle-bg);
+  box-shadow: var(--shadow-inset);
   color: var(--color-text);
   font: inherit;
   text-align: left;
+  transition: background-color var(--transition-fast);
 }
 
-.toggle:hover {
-  background: var(--color-surface-sunken);
+@media (hover: hover) and (pointer: fine) {
+  .toggle:hover {
+    background: color-mix(in srgb, var(--toggle-bg) 92%, var(--color-text));
+  }
+}
+
+.tuneIcon {
+  color: var(--color-accent);
 }
 
 .summary {
+  flex: 1;
   overflow: hidden;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .chevron {
-  flex: none;
   color: var(--color-text-muted);
 }
 
-.panel {
-  display: grid;
-  gap: var(--space-4);
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-}
+/* ── inside the sheet ───────────────────────────────────────────────────── */
 
 .modes {
   display: grid;
@@ -80,38 +90,58 @@
   margin-bottom: var(--space-2);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
 }
 
+/*
+ * A row you pick from, not an action you take. The recessed fill is what says
+ * so, and the icon gives each focus a silhouette — four rows of two lines of
+ * grey text is a list nobody reads before pressing the first one.
+ */
 .mode {
-  display: grid;
+  --mode-bg: var(--color-surface-sunken);
+
+  display: flex;
   min-height: var(--tap-target);
-  gap: var(--space-1);
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-border-strong);
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 0;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
+  background: var(--mode-bg);
   color: var(--color-text);
   font: inherit;
   text-align: left;
-}
-
-.mode:hover {
-  background: var(--color-surface-sunken);
+  transition: background-color var(--transition-fast);
 }
 
 .mode[aria-pressed='true'] {
-  border-color: transparent;
-  background: var(--color-accent);
+  --mode-bg: var(--color-accent);
+
   color: var(--color-accent-contrast);
 }
 
-.mode[aria-pressed='true']:hover {
-  background: color-mix(in srgb, var(--color-accent) 88%, var(--color-text));
+.modeIcon {
+  color: var(--color-accent);
+}
+
+/* Once the row is filled with the accent the icon has to leave it, or it
+   disappears into its own background. */
+.mode[aria-pressed='true'] .modeIcon {
+  color: var(--color-accent-contrast);
+}
+
+.modeText {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
 }
 
 .modeLabel {
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 /* Each focus says what it will actually do, because "balanced" and "shaky
@@ -121,18 +151,20 @@
   opacity: 0.85;
 }
 
-.clear {
-  min-height: var(--tap-target);
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
+/* The tick is the second signal, so which focus is chosen does not rest on the
+   fill colour alone. */
+.modeCheck {
+  color: var(--color-accent-contrast);
 }
 
-.clear:hover {
-  background: var(--color-surface-sunken);
+@media (hover: hover) and (pointer: fine) {
+  .mode:hover {
+    background: color-mix(in srgb, var(--mode-bg) 92%, var(--color-text));
+  }
+
+  .mode[aria-pressed='true']:hover {
+    background: color-mix(in srgb, var(--mode-bg) 88%, var(--color-text));
+  }
 }
 
 .note {

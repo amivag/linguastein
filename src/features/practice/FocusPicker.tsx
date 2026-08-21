@@ -1,16 +1,28 @@
 import { useId, useState } from 'react';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
+import { Button } from '../../components/Button';
+import { Icon } from '../../components/Icon';
+import { Sheet } from '../../components/Sheet';
 import { SESSION_FOCUSES, type SessionFocus } from '../../domain/sessions';
+import type { IconName } from '../../components/Icon';
 import { CategoryPicker } from '../browse/CategoryPicker';
 import styles from './FocusPicker.module.css';
 
 /** What each focus promises, in the order a learner is likely to want them. */
-const FOCUS_LABELS: Record<SessionFocus, { label: string; description: string }> = {
-  balanced: { label: 'Balanced', description: 'Reviews first, a little new material mixed in' },
-  struggling: { label: 'Shaky items', description: 'The ones going wrong, hardest first' },
-  due: { label: 'Reviews', description: 'Clear what is due before anything else' },
-  fresh: { label: 'New material', description: 'Unseen items first, and uncapped' },
+const FOCUS_LABELS: Record<SessionFocus, { label: string; description: string; icon: IconName }> = {
+  balanced: {
+    label: 'Balanced',
+    description: 'Reviews first, a little new material mixed in',
+    icon: 'shuffle',
+  },
+  struggling: {
+    label: 'Shaky items',
+    description: 'The ones going wrong, hardest first',
+    icon: 'memory',
+  },
+  due: { label: 'Reviews', description: 'Clear what is due before anything else', icon: 'due' },
+  fresh: { label: 'New material', description: 'Unseen items first, and uncapped', icon: 'new' },
 };
 
 /**
@@ -22,9 +34,13 @@ const FOCUS_LABELS: Record<SessionFocus, { label: string; description: string }>
  * choice is written into the session link all the same, so a session stays fully
  * described by its URL and can still be shared or scripted.
  *
- * Collapsed by default, and summarised while collapsed: the category pane is
- * tall, and this must not be the first thing between a learner and the button
- * they came to press.
+ * The screen shows only the summary; changing it happens in a sheet.
+ *
+ * That is the point, and it used to be an inline panel: opening it pushed the
+ * "Quick session" buttons, the six presets and the whole rest of Home down by
+ * something like four hundred pixels, so the act of narrowing what you practise
+ * moved the button you were about to press off the screen. The page's height is
+ * no longer a function of whether this is open.
  */
 export function FocusPicker() {
   const { services, preferences, updatePreferences } = useServices();
@@ -76,26 +92,35 @@ export function FocusPicker() {
         <button
           type="button"
           className={styles.toggle}
+          // Still `aria-expanded`, and still pointing at the panel it opens: a
+          // dialog is what the control reveals, so the relationship a screen
+          // reader is told about is unchanged by where the panel is drawn.
           aria-expanded={open}
           aria-controls={panelId}
-          onClick={() => setOpen((current) => !current)}
+          aria-haspopup="dialog"
+          onClick={() => setOpen(true)}
         >
+          <Icon name="tune" size="sm" className={styles.tuneIcon} />
           {/* The name says what the control does as well as what it currently
               says, so "Everything · balanced" is not the whole of what a screen
               reader hears when it lands on a button. */}
           <span className="visually-hidden">Change what to practise: </span>
           <span className={styles.summary}>{summary}</span>
-          <span className={styles.chevron} aria-hidden="true">
-            {open ? '▴' : '▾'}
-          </span>
+          <Icon name="expand" size="sm" className={styles.chevron} />
         </button>
       </div>
 
-      {/* Rendered only while open. A hidden panel whose controls stay in the
-          accessibility tree is a screen reader walking through twelve category
-          buttons that are not on the screen. */}
+      {/*
+        Rendered only while open. A hidden panel whose controls stay in the
+        accessibility tree is a screen reader walking through twelve category
+        buttons that are not on the screen.
+
+        No wrapper element around the sheet: this section is a grid, and a flow
+        child collects a `gap` even when its only content is fixed — which
+        pushed the rest of Home down by 12px on open. The id goes on the dialog.
+      */}
       {open && (
-        <div className={styles.panel} id={panelId}>
+        <Sheet id={panelId} title="What to practise" width="wide" onClose={() => setOpen(false)}>
           <fieldset className={styles.modes}>
             <legend className={styles.legend}>Lead with</legend>
             {SESSION_FOCUSES.map((focus) => {
@@ -108,8 +133,14 @@ export function FocusPicker() {
                   aria-pressed={pressed}
                   onClick={() => updatePreferences({ focus })}
                 >
-                  <span className={styles.modeLabel}>{FOCUS_LABELS[focus].label}</span>
-                  <span className={styles.modeDescription}>{FOCUS_LABELS[focus].description}</span>
+                  <Icon name={FOCUS_LABELS[focus].icon} size="lg" className={styles.modeIcon} />
+                  <span className={styles.modeText}>
+                    <span className={styles.modeLabel}>{FOCUS_LABELS[focus].label}</span>
+                    <span className={styles.modeDescription}>
+                      {FOCUS_LABELS[focus].description}
+                    </span>
+                  </span>
+                  {pressed && <Icon name="check" size="sm" className={styles.modeCheck} />}
                 </button>
               );
             })}
@@ -127,20 +158,16 @@ export function FocusPicker() {
           />
 
           {chosen.length > 0 && (
-            <button
-              type="button"
-              className={styles.clear}
-              onClick={() => updatePreferences({ focusTopics: [] })}
-            >
+            <Button block onClick={() => updatePreferences({ focusTopics: [] })}>
               Practise everything
-            </button>
+            </Button>
           )}
 
           <p className={styles.note}>
             A focus decides what comes first, not what is allowed: nothing is held back, so a
             session is never empty because you were doing well.
           </p>
-        </div>
+        </Sheet>
       )}
     </section>
   );

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { useCourse } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
-import { Button } from './Button';
-import { useFocusTrap } from './useFocusTrap';
+import { Icon } from './Icon';
+import { Sheet } from './Sheet';
 import { VoiceSettings } from './VoiceSettings';
 import styles from './VoicePresence.module.css';
 
@@ -57,7 +57,10 @@ export function VoicePresence() {
         aria-expanded={open}
         aria-label={label}
       >
-        <span aria-hidden="true">{available ? '🔊' : '🔇'}</span>
+        {/* Two glyphs from the set rather than two emoji: an emoji is a font the
+            device chooses, so the same "muted" state was a flat outline on one
+            platform and a full-colour cartoon on another. */}
+        <Icon name={available ? 'speak' : 'unknown'} />
         <span className={styles.tag} aria-hidden="true">
           {locale}
         </span>
@@ -70,35 +73,23 @@ export function VoicePresence() {
 /**
  * A popover under the header on a pointer device, a bottom sheet on a phone —
  * the same dialog, put where the hand is.
+ *
+ * The overlay, the backdrop, the arrival animation and the scroll containment
+ * all come from `Sheet` now. This file used to carry its own copy, which is how
+ * two sheets in the same app ended up with two different corner radii and only
+ * one of them capped at the viewport height. `anchor="header"` is the one thing
+ * that is genuinely local: the chip that opens it lives up there.
  */
 function VoiceMenu({ onClose }: { readonly onClose: () => void }) {
-  const menuRef = useFocusTrap<HTMLDivElement>(onClose);
   const { path } = useCourse();
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
-      <div
-        ref={menuRef}
-        className={styles.menu}
-        role="dialog"
-        aria-modal="true"
-        tabIndex={-1}
-        aria-label="Voice"
-      >
-        <header className={styles.header}>
-          <h2 className={styles.title}>Voice</h2>
-          <Button variant="ghost" icon onClick={onClose} aria-label="Close">
-            ✕
-          </Button>
-        </header>
+    <Sheet title="Voice" onClose={onClose} anchor="header">
+      <VoiceSettings variant="panel" />
 
-        <VoiceSettings variant="panel" />
-
-        <Link className={styles.link} to={path('settings')} onClick={onClose}>
-          All settings
-        </Link>
-      </div>
-    </div>
+      <Link className={styles.link} to={path('settings')} onClick={onClose}>
+        All settings
+      </Link>
+    </Sheet>
   );
 }

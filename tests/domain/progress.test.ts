@@ -7,6 +7,7 @@ import {
   type ItemProgress,
   type Scheduler,
 } from '../../src/domain/progress';
+import { seededRng } from '../../src/utils/random';
 import { id } from '../fixtures/pack';
 
 const ITEM = id<ItemId>('test-es:item:001');
@@ -40,7 +41,52 @@ describe('the scheduler seam', () => {
   });
 });
 
+describe('an attempt’s identity', () => {
+  /**
+   * The id used to be the item and the clock joined together — a value
+   * `recordAttempt` could compute on its own, which meant two answers to one
+   * item inside the same millisecond shared an id and the store's `put` replaced
+   * the first with the second. Answering twice in a millisecond is rare;
+   * silently losing the first answer when it happens is not acceptable, and no
+   * later migration can recover a row that was overwritten.
+   */
+  it('distinguishes two attempts on one item at the same instant', () => {
+    const input = { itemId: ITEM, exerciseKind: 'reveal' as const, grade: 'good' as const };
+    // One rng, drawn from twice — a fresh seeded rng would (correctly) repeat.
+    const rng = seededRng(7);
+
+    const first = recordAttempt(undefined, input, NOW, undefined, rng);
+    const second = recordAttempt(first.progress, input, NOW, undefined, rng);
+
+    expect(second.attempt.id).not.toBe(first.attempt.id);
+  });
+
+  it('stays reproducible under a seed', () => {
+    const input = { itemId: ITEM, exerciseKind: 'reveal' as const, grade: 'good' as const };
+
+    expect(recordAttempt(undefined, input, NOW, undefined, seededRng(7)).attempt.id).toBe(
+      recordAttempt(undefined, input, NOW, undefined, seededRng(7)).attempt.id,
+    );
+  });
+});
+
 describe('recordAttempt', () => {
+  /**
+   * `lastReviewedAt` says when the learner last saw the item; this says when the
+   * row was last written. They coincide today and will not once anything else
+   * touches a record — and it is the field a merge of two devices compares, so
+   * it has to be written from the start rather than invented afterwards.
+   */
+  it('stamps when the record was written', () => {
+    const { progress } = recordAttempt(
+      undefined,
+      { itemId: ITEM, exerciseKind: 'reveal', grade: 'good' },
+      NOW,
+    );
+
+    expect(progress.updatedAt).toBe(NOW);
+  });
+
   it('produces progress and an attempt record together', () => {
     const { progress, attempt } = recordAttempt(
       undefined,

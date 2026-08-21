@@ -5,23 +5,29 @@
  * is migrated, never dropped.
  */
 
-import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
+import {
+  openDB,
+  type DBSchema,
+  type IDBPDatabase,
+  type IDBPTransaction,
+  type StoreNames,
+} from 'idb';
 import { APP } from '../app/identity';
-import type { ItemId } from '../domain/content';
-import type { Attempt, ItemProgress } from '../domain/progress';
+import { LEVEL_SCOPE_ALL, packIdOf, type Course, type ItemId } from '../domain/content';
+import type { Attempt, ItemProgress, Timestamp } from '../domain/progress';
 import type { SessionRecord } from '../domain/sessions';
 import { DEFAULT_PREFERENCES, mergePreferences } from './preferences';
 import type { LearnerStorage, Preferences } from './types';
 
 const DB_NAME = APP.id;
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const PREFERENCES_KEY = 'preferences';
 
 interface AppDatabase extends DBSchema {
   progress: {
     key: string;
     value: ItemProgress;
-    indexes: { 'by-due': number; 'by-status': string };
+    indexes: { 'by-due': number; 'by-status': string; 'by-pack': string };
   };
   attempts: {
     key: string;
@@ -39,9 +45,20 @@ interface AppDatabase extends DBSchema {
   };
 }
 
+/**
+ * The records as they were before version 2, which is what a migration actually
+ * reads: a progress row had no `updatedAt` and no `packId`, and a session row
+ * carried no course. Spelled out rather than cast away, so the compiler checks
+ * the migration against the shape it is really handling.
+ */
+type LegacyProgress = Omit<ItemProgress, 'updatedAt'> & { readonly updatedAt?: Timestamp };
+type LegacySession = Omit<SessionRecord, 'course'> & { readonly course?: Course };
+
+type UpgradeTransaction = IDBPTransaction<AppDatabase, StoreNames<AppDatabase>[], 'versionchange'>;
+
 export async function openAppDatabase(): Promise<IDBPDatabase<AppDatabase>> {
   return openDB<AppDatabase>(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion) {
+    async upgrade(db, oldVersion, _newVersion, tx) {
       if (oldVersion < 1) {
         const progress = db.createObjectStore('progress', { keyPath: 'itemId' });
         progress.createIndex('by-due', 'dueAt');
@@ -56,8 +73,57 @@ export async function openAppDatabase(): Promise<IDBPDatabase<AppDatabase>> {
 
         db.createObjectStore('meta');
       }
+
+      if (oldVersion < 2) await upgradeToV2(tx, oldVersion);
     },
   });
+}
+
+/**
+ * Version 2: a progress row learns which pack it belongs to and when it was last
+ * written, and a session row learns which course it was.
+ *
+ * The backfill is the point of it, and it runs inside the version-change
+ * transaction rather than after it. An IndexedDB index is built from a stored key
+ * path and nothing else, so a record missing that path is *absent* from the index
+ * — a row left without `packId` would disappear from every per-pack query, which
+ * reads exactly like lost history. Either the bump and the backfill both happen
+ * or neither does.
+ */
+async function upgradeToV2(tx: UpgradeTransaction, oldVersion: number): Promise<void> {
+  const progress = tx.objectStore('progress');
+  if (!progress.indexNames.contains('by-pack')) progress.createIndex('by-pack', 'packId');
+
+  // A database the branch above created a moment ago has nothing to backfill.
+  if (oldVersion < 1) return;
+
+  for (const record of (await progress.getAll()) as readonly LegacyProgress[]) {
+    const packId = packIdOf(record.itemId);
+    await progress.put({
+      ...record,
+      ...(packId ? { packId } : {}),
+      // The row's own last review is the only evidence of when it was written.
+      // Deliberately not `Date.now()`: stamping every old row as "just now" would
+      // make a merge prefer whichever device happened to migrate last.
+      updatedAt: record.updatedAt ?? record.lastReviewedAt ?? 0,
+    });
+  }
+
+  const sessions = tx.objectStore('sessions');
+  const stored = (await tx.objectStore('meta').get(PREFERENCES_KEY)) as
+    Partial<Preferences> | undefined;
+  // Which course a past session was practised in is recorded nowhere, so the
+  // learner's own stored language is the best evidence available — and `all` is
+  // not a claim that the session was unnarrowed, it is the absence of one.
+  const course: Course = {
+    language: stored?.targetLanguage ?? DEFAULT_PREFERENCES.targetLanguage,
+    level: LEVEL_SCOPE_ALL,
+  };
+
+  for (const record of (await sessions.getAll()) as readonly LegacySession[]) {
+    if (record.course) continue;
+    await sessions.put({ ...record, course });
+  }
 }
 
 export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerStorage {
@@ -106,9 +172,23 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
       async put(record) {
         await db.put('sessions', record);
       },
-      async recent(limit) {
-        const all = await db.getAllFromIndex('sessions', 'by-time');
-        return all.reverse().slice(0, limit);
+      async recent(limit, language) {
+        // A cursor walked back from the newest, rather than every row read and
+        // reversed: narrowing by language has to happen *before* the limit or a
+        // page of five comes back short, and reading the whole table to hand
+        // back five rows is a cost that grows with every session ever practised.
+        const records: SessionRecord[] = [];
+        let cursor = await db
+          .transaction('sessions')
+          .store.index('by-time')
+          .openCursor(null, 'prev');
+
+        while (cursor && records.length < limit) {
+          if (!language || cursor.value.course.language === language) records.push(cursor.value);
+          cursor = await cursor.continue();
+        }
+
+        return records;
       },
       async clear() {
         await db.clear('sessions');

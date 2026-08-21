@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useServices } from '../../app/services-context';
-import type { ItemId, LearningItem } from '../../domain/content';
+import type { Course, ItemId, LearningItem } from '../../domain/content';
 import {
   gradeExercise,
   type Answer,
@@ -100,7 +100,13 @@ export interface SessionRunner {
   restart(): void;
 }
 
-export function useSessionRunner(config: SessionConfig): SessionRunner {
+/**
+ * `course` is here only because the session *record* needs it. The config
+ * already says which packs and levels to plan from, but a finished session is
+ * counts and timestamps: nothing in the row can say afterwards which language it
+ * was, and the screen is the last place that knows.
+ */
+export function useSessionRunner(config: SessionConfig, course: Course): SessionRunner {
   const { services } = useServices();
   const { repository, storage, exercises } = services;
 
@@ -277,13 +283,14 @@ export function useSessionRunner(config: SessionConfig): SessionRunner {
     if (status !== 'complete' || !tracked) return;
     void storage.sessions.put({
       id: sessionId,
+      course,
       startedAt,
       endedAt: Date.now(),
       planned: steps.length,
       completed: stats.answered,
       correct: stats.correct,
     });
-  }, [status, tracked, sessionId, startedAt, steps.length, stats, storage]);
+  }, [status, tracked, sessionId, course, startedAt, steps.length, stats, storage]);
 
   const submitAnswer = useCallback(
     (answer: Answer): GradeResult | null => {

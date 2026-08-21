@@ -1,0 +1,90 @@
+/*
+ * Study: a page of sheets to open.
+ *
+ * Depth rather than outlines (design rule 1), so a tile is a filled surface with
+ * no border — `cardInteractive` already owns what a tappable card looks like, and
+ * composing it means this screen cannot drift from the ones that came first.
+ */
+
+.intro {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0 0 var(--space-5);
+  max-width: 46ch;
+}
+
+.section {
+  margin-bottom: var(--space-6);
+}
+
+.sectionLabel {
+  composes: sectionLabel from '../../styles/surfaces.module.css';
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+}
+
+.sectionNote {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: calc(-1 * var(--space-2)) 0 var(--space-3);
+}
+
+.tiles {
+  composes: listReset from '../../styles/surfaces.module.css';
+  display: grid;
+  /* Two up on a phone, more as there is room. `auto-fill` rather than a media
+     query so the count follows the space instead of a guess about the device. */
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: var(--space-3);
+}
+
+.tile {
+  composes: cardInteractive from '../../styles/surfaces.module.css';
+  display: grid;
+  /* The count sits on the title's row, hard right; the note runs full width
+     under both. Named areas rather than nesting, so a tile without a note does
+     not need a different rule. */
+  grid-template-areas:
+    'icon title count'
+    'note note note';
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  min-height: var(--tap-target);
+  color: inherit;
+  text-decoration: none;
+}
+
+.tileIcon {
+  grid-area: icon;
+  color: var(--color-text-muted);
+  /* Optical: the glyph reads high against a baseline-aligned cap height. */
+  align-self: center;
+}
+
+.tileTitle {
+  grid-area: title;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  /* A category label can be long — "Sport and exercise" — and a tile that grows
+     is better than one that clips. */
+  overflow-wrap: break-word;
+}
+
+.tileCount {
+  grid-area: count;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.tileNote {
+  grid-area: note;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-body);
+}

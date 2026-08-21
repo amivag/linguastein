@@ -17,20 +17,29 @@ describe('navigation', () => {
     renderWithServices(<HomeScreen />);
 
     const nav = await screen.findByRole('navigation', { name: 'Main' });
-    for (const label of ['Practice', 'Read', 'Browse', 'Progress', 'Settings']) {
+    // Two sections, not five verbs: Study is the material and Test is the
+    // grading. Browse and Read are sheets reached from Study rather than
+    // destinations of their own.
+    for (const label of ['Study', 'Test', 'Progress', 'Settings']) {
       expect(within(nav).getByRole('link', { name: label })).toBeInTheDocument();
     }
   });
 
+  /**
+   * A sheet is inside Study, so Study stays marked while you are on one.
+   * `NavLink` sets `aria-current` from its own path match, which cannot know
+   * that — so without the section owning `browse`, a learner on a sheet is told
+   * they are nowhere.
+   */
   it('marks the current section for screen readers, not just with colour', async () => {
     renderWithServices(<BrowseScreen />, { route: '/es/all/browse' });
 
     const nav = await screen.findByRole('navigation', { name: 'Main' });
-    expect(within(nav).getByRole('link', { name: 'Browse' })).toHaveAttribute(
+    expect(within(nav).getByRole('link', { name: 'Study' })).toHaveAttribute(
       'aria-current',
       'page',
     );
-    expect(within(nav).getByRole('link', { name: 'Practice' })).not.toHaveAttribute('aria-current');
+    expect(within(nav).getByRole('link', { name: 'Test' })).not.toHaveAttribute('aria-current');
   });
 
   it('hides the chrome during a practice session', async () => {

@@ -4,7 +4,7 @@
  * extended without invalidating what the learner has done.
  */
 
-import type { ItemId, SkillId } from '../content';
+import { packIdOf, type ItemId, type PackId, type SkillId } from '../content';
 import type { ExerciseKind } from '../exercises/types';
 
 export const ITEM_STATUSES = ['new', 'learning', 'review', 'mastered'] as const;
@@ -18,6 +18,21 @@ export type Timestamp = number;
 
 export interface ItemProgress {
   readonly itemId: ItemId;
+  /**
+   * The pack the item belongs to, derived from its id rather than new
+   * information — `packIdOf('core-es:item:000123')`.
+   *
+   * Stored because an IndexedDB index is built from a stored key path and
+   * nothing else: "how much of the French course have I done?" cannot be asked
+   * of a value computed in memory, and answering it by materialising every item
+   * id in the course is what every screen does today. The record still
+   * *references* only the item (architecture rule 4) — this is the same fact,
+   * written where the database can group by it.
+   *
+   * Absent only where the id does not parse, which is also the one case where
+   * there is no honest answer.
+   */
+  readonly packId?: PackId;
   readonly status: ItemStatus;
   readonly attempts: number;
   readonly correct: number;
@@ -37,6 +52,13 @@ export interface ItemProgress {
   readonly hintsUsed: number;
   /** Consecutive non-`again` grades; gates the learning → review → mastered status. */
   readonly streak: number;
+  /**
+   * When this record was last written. Distinct from `lastReviewedAt`, which is
+   * a statement about the learner: this one is about the row, and it is what a
+   * merge of two devices has to compare. Nothing can reconstruct it afterwards,
+   * which is why it is here before there is anything to merge.
+   */
+  readonly updatedAt: Timestamp;
 }
 
 export interface Attempt {
@@ -64,9 +86,19 @@ export interface SkillProgress {
   readonly lastReviewedAt?: Timestamp;
 }
 
-export function newItemProgress(itemId: ItemId): ItemProgress {
+/**
+ * A record for an item nothing has been recorded against yet.
+ *
+ * `now` defaults to 0 rather than reading a clock — this module is pure, and a
+ * fresh record only reaches storage through `recordAttempt`, which stamps
+ * `updatedAt` with the attempt's own clock. Epoch zero is also the right answer
+ * for a merge: a row nobody has written loses to one somebody has.
+ */
+export function newItemProgress(itemId: ItemId, now: Timestamp = 0): ItemProgress {
+  const packId = packIdOf(itemId);
   return {
     itemId,
+    ...(packId ? { packId } : {}),
     status: 'new',
     attempts: 0,
     correct: 0,
@@ -74,6 +106,7 @@ export function newItemProgress(itemId: ItemId): ItemProgress {
     difficulty: 0.3,
     hintsUsed: 0,
     streak: 0,
+    updatedAt: now,
   };
 }
 

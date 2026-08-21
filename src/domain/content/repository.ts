@@ -5,6 +5,7 @@
  * detail of the data layer.
  */
 
+import { byLetter, initialLetter } from './alphabet';
 import type { PartOfSpeech } from './annotation';
 import { STUDYABLE_POS } from './annotation';
 import type { ItemId, LexemeId, PackId, PassageId, SenseId, SkillId, VerbFormId } from './ids';
@@ -45,6 +46,18 @@ export interface PosFacet {
   readonly count: number;
 }
 
+/** A letter of the alphabet plus how many items in scope file under it. */
+export interface InitialFacet {
+  readonly letter: string;
+  readonly count: number;
+}
+
+/** A region plus how many items in scope are specifically marked for it. */
+export interface RegionFacet {
+  readonly locale: LanguageTag;
+  readonly count: number;
+}
+
 export interface ItemFilter {
   readonly packs?: readonly PackId[];
   /**
@@ -81,6 +94,15 @@ export interface ItemFilter {
   readonly skills?: readonly SkillId[];
   /** Case/diacritic-insensitive substring match on the target-language text. */
   readonly search?: string;
+  /**
+   * Items filing under one letter — `C` for both `café` and `Cerveza`.
+   *
+   * A bucket rather than a prefix, and normalised through `initialLetter` on the
+   * way in, so a link saying `initial=c` and a chip saying `Ç` mean what the
+   * content means. Not a substitute for {@link search}: `A` is where a learner
+   * starts reading a list, not something they typed.
+   */
+  readonly initial?: string;
 }
 
 const EMPTY: readonly never[] = [];
@@ -176,6 +198,23 @@ export class ContentRepository {
 
   getSkill(id: SkillId): Skill | undefined {
     return this.skillsById.get(id);
+  }
+
+  /** Skills in load order, for a picker that offers what the packs actually teach. */
+  allSkills(): readonly Skill[] {
+    return [...this.skillsById.values()];
+  }
+
+  /**
+   * Resolves the local part of a skill id — `preterite` for
+   * `core-es:skill:preterite` — so a link can say `?skill=preterite` rather than
+   * carrying a pack namespace a shared URL would outlive.
+   *
+   * The same first-match-wins caveat as {@link passageByLocalId}: with several
+   * packs loaded a route is only unambiguous while local ids are.
+   */
+  skillByLocalId(local: string): Skill | undefined {
+    return this.allSkills().find((skill) => skill.id.endsWith(`:skill:${local}`));
   }
 
   getVerbForm(id: VerbFormId): VerbForm | undefined {
@@ -315,6 +354,7 @@ export class ContentRepository {
 
   query(filter: ItemFilter = {}): readonly LearningItem[] {
     const search = filter.search ? normalise(filter.search) : undefined;
+    const initial = filter.initial ? initialLetter(filter.initial) : undefined;
     return this.allItems().filter((item) => {
       if (filter.packs?.length && !filter.packs.includes(item.pack)) return false;
       if (filter.ids && !filter.ids.includes(item.id)) return false;
@@ -335,6 +375,7 @@ export class ContentRepository {
       if (filter.pos?.length && !this.exemplifies(item, filter.pos)) return false;
       if (filter.skills?.length && !overlaps(item.skills, filter.skills)) return false;
       if (search && !normalise(item.text).includes(search)) return false;
+      if (initial && initialLetter(item.text) !== initial) return false;
       return true;
     });
   }
@@ -379,6 +420,29 @@ export class ContentRepository {
   }
 
   /**
+   * The letters the content in scope actually starts with, in the order the
+   * language collates them — `Ñ` after N for Spanish, from the collator rather
+   * than from an alphabet typed out here.
+   *
+   * Derived and counted like {@link topics} and {@link partsOfSpeech}, for the
+   * same reason: an A–Z row printed in full is twenty-six taps of which a third
+   * lead nowhere, and a pack that grows its first K gets the chip with no code
+   * change. Counted over whatever scope it is given, so the counts describe the
+   * course rather than the search a learner is halfway through typing.
+   */
+  initials(filter: ItemFilter = {}, locale?: LanguageTag): readonly InitialFacet[] {
+    const counts = new Map<string, number>();
+    for (const item of this.query(filter)) {
+      const letter = initialLetter(item.text);
+      counts.set(letter, (counts.get(letter) ?? 0) + 1);
+    }
+    const order = byLetter(locale);
+    return [...counts]
+      .map(([letter, count]): InitialFacet => ({ letter, count }))
+      .sort((a, b) => order(a.letter, b.letter));
+  }
+
+  /**
    * The thematic categories of the loaded packs, with a count of the items in
    * each, in the order the packs declare them.
    *
@@ -410,6 +474,35 @@ export class ContentRepository {
     }
 
     return facets;
+  }
+
+  /**
+   * Regions the content in scope is *specifically* marked for, and how many
+   * items each has.
+   *
+   * Counted on declared regions rather than on what `usableIn` would return,
+   * which is the whole point: region-neutral content is usable everywhere, so
+   * filtering to Argentina passes almost the entire pack and a caller counting
+   * that way would find every region equally populous. What a picker needs to
+   * know is where there is something *particular to* a place — otherwise it
+   * offers a filter that silently does nothing, which reads to a learner as
+   * "all of this is Argentinian".
+   *
+   * A locale is reported when content covering it exists, so `papa` marked
+   * `es-419` counts towards Mexico and Argentina alike, exactly as it counts
+   * when the filter runs.
+   */
+  regions(filter: ItemFilter = {}, offered: readonly LanguageTag[]): readonly RegionFacet[] {
+    const counts = new Map<LanguageTag, number>();
+    for (const item of this.query(filter)) {
+      if (!item.regions?.length) continue;
+      for (const locale of offered) {
+        if (isUsableIn(item.regions, locale)) counts.set(locale, (counts.get(locale) ?? 0) + 1);
+      }
+    }
+    return offered
+      .map((locale) => ({ locale, count: counts.get(locale) ?? 0 }))
+      .filter((facet) => facet.count > 0);
   }
 
   /** Distinct values available for building filter UIs. */
@@ -455,4 +548,27 @@ export function normalise(text: string): string {
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim();
+}
+
+/**
+ * Punctuation, as one definition rather than one per caller.
+ *
+ * Three places already split a phrase into words — speech comparison, exercise
+ * generation and grading — and each carried its own character class. A `¿`
+ * missing from one of them is a learner told they were wrong, so the set is
+ * written once.
+ */
+const PUNCTUATION = /[.,!?;:¡¿"“”«»()…—–]/g;
+
+/** True for a token that is punctuation and nothing else, such as a bare `,`. */
+export function isPunctuation(text: string): boolean {
+  return text.trim().length > 0 && text.replace(PUNCTUATION, '').trim().length === 0;
+}
+
+/** The words of a phrase, punctuation dropped. Case and accents are untouched. */
+export function splitWords(text: string): readonly string[] {
+  return text
+    .replace(PUNCTUATION, ' ')
+    .split(/\s+/)
+    .filter((word) => word.length > 0);
 }

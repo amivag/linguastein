@@ -21,6 +21,30 @@ const config = (overrides: Partial<SessionConfig> = {}): SessionConfig => ({
 const plan = (overrides: Partial<SessionConfig> = {}, progress = new Map<ItemId, ItemProgress>()) =>
   planSession({ repository, config: config(overrides), progress, now: NOW });
 
+describe('a session’s identity', () => {
+  /**
+   * Every session record is keyed by this, so a clock alone is not an identity:
+   * two devices starting a session in the same millisecond would collide, and
+   * whichever synced second would replace the other's history.
+   */
+  it('distinguishes two sessions planned at the same instant', () => {
+    expect(plan().id).not.toBe(plan().id);
+  });
+
+  /**
+   * The suffix is drawn from the rng *after* the ordering, so it cannot change
+   * which items a seed deals — and a seeded session still reproduces exactly,
+   * which is the property the whole planner is built around.
+   */
+  it('stays reproducible under a seed, ordering included', () => {
+    const first = plan({ ordering: 'random', seed: 42 });
+    const second = plan({ ordering: 'random', seed: 42 });
+
+    expect(second.id).toBe(first.id);
+    expect(second.itemIds).toEqual(first.itemIds);
+  });
+});
+
 describe('planSession', () => {
   it('keeps pack order for sequential sessions', () => {
     expect(plan().itemIds).toEqual(repository.allItems().map((item) => item.id));

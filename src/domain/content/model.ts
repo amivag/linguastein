@@ -24,8 +24,34 @@ import type { Provenance, ReviewState } from './provenance';
 export const CEFR_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'] as const;
 export type CefrLevel = (typeof CEFR_LEVELS)[number];
 
-export const REGISTERS = ['neutral', 'colloquial', 'formal', 'vulgar'] as const;
+/**
+ * How a phrase is pitched. Ordered from most to least widely usable, which is
+ * the order a picker should offer them in.
+ *
+ * `slang` is not a synonym for `colloquial` and the distinction is the one a
+ * learner most needs: `vale` is casual and completely standard, while `chido` is
+ * slang and marks the speaker as Mexican — saying the second in a job interview
+ * lands very differently from saying the first. Nor is it `vulgar`, which is
+ * about offence rather than about being in-group.
+ */
+export const REGISTERS = ['neutral', 'colloquial', 'slang', 'formal', 'vulgar'] as const;
 export type Register = (typeof REGISTERS)[number];
+
+/**
+ * What a learner sees for each register.
+ *
+ * A table beside the values rather than a conditional at the one call site that
+ * needed it: `colloquial` has always been shown as "casual", spelled as an
+ * inline ternary in the Browse select, so a second place that listed registers
+ * would have disagreed with the first about what they are called.
+ */
+export const REGISTER_LABELS: Record<Register, string> = {
+  neutral: 'neutral',
+  colloquial: 'casual',
+  slang: 'slang',
+  formal: 'formal',
+  vulgar: 'vulgar',
+};
 
 /**
  * Who a phrase addresses. Spanish forces this choice in almost every sentence

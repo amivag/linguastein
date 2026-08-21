@@ -4,7 +4,7 @@
  * engine then derives each interaction as the learner reaches it.
  */
 
-import type { ItemFilter, ItemId, LanguageTag } from '../content';
+import type { Course, ItemFilter, ItemId, LanguageTag } from '../content';
 import type { ExerciseKind } from '../exercises/types';
 import type { Timestamp } from '../progress/types';
 
@@ -68,6 +68,16 @@ export interface SessionPlan {
 
 export interface SessionRecord {
   readonly id: string;
+  /**
+   * The course it was practised in.
+   *
+   * Progress records carry their item ids and so can be attributed to a course
+   * after the fact; a session record holds counts and timestamps and cannot.
+   * Without this field "recent sessions" is the one panel on a course-scoped
+   * screen that shows another language's history, and no later migration can
+   * work out which language a row belonged to.
+   */
+  readonly course: Course;
   readonly startedAt: Timestamp;
   readonly endedAt?: Timestamp;
   readonly planned: number;

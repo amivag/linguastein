@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
@@ -23,6 +24,7 @@ const KINDS: readonly { readonly id: PassageKind | 'all'; readonly label: string
 export function ReadScreen() {
   const { services, preferences } = useServices();
   const { filter, path } = useCourse();
+  const navigate = useNavigate();
   const [kind, setKind] = useState<PassageKind | 'all'>('all');
 
   const passages = useMemo(() => {
@@ -41,7 +43,7 @@ export function ReadScreen() {
   }, [services.repository, kind, filter]);
 
   return (
-    <AppShell title="Read">
+    <AppShell title="Read" onBack={() => void navigate(path('study'))}>
       <CourseBar compact />
       <p className={styles.intro}>
         Short texts and conversations built from words you already practise. Tap any word for its

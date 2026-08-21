@@ -11,6 +11,7 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
+import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { PassageScreen } from '../../src/features/read/PassageScreen';
@@ -60,6 +61,21 @@ describe('agent surface', () => {
     const { container } = renderWithServices(<ReadScreen />, { route: '/read' });
     await screen.findByRole('heading', { level: 1 });
     await expectEveryControlNamed(container);
+  });
+
+  it('names every control on the browse screen, including each result’s play button', async () => {
+    const { container } = renderWithServices(<BrowseScreen />, { route: '/browse' });
+    // The play buttons arrive with voice discovery, so the tree is only complete
+    // once one of them is there — checking names before that would pass by
+    // finding nothing.
+    await screen.findAllByRole('button', { name: /^Listen to/ }, { timeout: 5_000 });
+    await expectEveryControlNamed(container);
+
+    // A letter chip named "C" says nothing about what pressing it does, and a
+    // play button per row has to say which row — the same rule a passage's
+    // lines are held to below.
+    expect(screen.getByRole('button', { name: 'Starting with C, 2 items' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Listen to “cerveza”' })).toBeInTheDocument();
   });
 
   it('names every control in a passage, including each line’s play button', async () => {

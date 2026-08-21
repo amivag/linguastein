@@ -62,8 +62,15 @@ export function createMemoryStorage(
         sessions = [record, ...sessions.filter((existing) => existing.id !== record.id)];
         return Promise.resolve();
       },
-      recent: (limit) =>
-        Promise.resolve([...sessions].sort((a, b) => b.startedAt - a.startedAt).slice(0, limit)),
+      recent: (limit, language) =>
+        Promise.resolve(
+          [...sessions]
+            // Narrowed before the limit, exactly as the cursor-based
+            // implementation does it, or the two disagree about what a page is.
+            .filter((record) => !language || record.course.language === language)
+            .sort((a, b) => b.startedAt - a.startedAt)
+            .slice(0, limit),
+        ),
       clear: () => {
         sessions = [];
         return Promise.resolve();

@@ -245,6 +245,7 @@ describe('the session the choice starts', () => {
       difficulty: 0.5,
       hintsUsed: 0,
       streak: 1,
+      updatedAt: 0,
       dueAt: 0,
     });
 

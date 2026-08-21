@@ -41,7 +41,16 @@ describe('inspectToken', () => {
   it('offers the other forms of the same verb, marking the current one', () => {
     const forms = inspect('t1')?.forms ?? [];
 
-    expect(forms.map((form) => form.form)).toEqual(['tengo', 'tienes', 'tiene', 'tenemos']);
+    expect(forms.map((form) => form.form)).toEqual([
+      'tengo',
+      'tienes',
+      'tiene',
+      'tenemos',
+      'tuve',
+      'tuvo',
+      'teniendo',
+      'tenido',
+    ]);
     expect(forms.filter((form) => form.current).map((form) => form.form)).toEqual(['tengo']);
   });
 
@@ -114,7 +123,16 @@ describe('inspectItem', () => {
     const info = inspectItem(repository, card, 'en');
 
     expect(info?.gloss).toBe('to have');
-    expect(info?.forms.map((form) => form.form)).toEqual(['tengo', 'tienes', 'tiene', 'tenemos']);
+    expect(info?.forms.map((form) => form.form)).toEqual([
+      'tengo',
+      'tienes',
+      'tiene',
+      'tenemos',
+      'tuve',
+      'tuvo',
+      'teniendo',
+      'tenido',
+    ]);
     expect(info?.examples.map((example) => example.text)).toEqual([
       'Tengo que trabajar.',
       'Tengo que irme.',

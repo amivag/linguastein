@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
+import type { SkillId } from '../../domain/content';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { SessionOutcomeSummary } from './SessionOutcomeSummary';
@@ -19,7 +20,7 @@ import { useSessionRunner } from './useSessionRunner';
 export function SessionScreen() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const { filter: courseScope, path } = useCourse();
+  const { course, filter: courseScope, path } = useCourse();
   const { services, preferences } = useServices();
 
   // The URL is the source of truth for a session; rebuilding the config on
@@ -35,7 +36,18 @@ export function SessionScreen() {
     const passageItems = url.passage
       ? (repository.passageByLocalId(url.passage)?.items ?? [])
       : undefined;
-    const scope = { ...url.filter, ...(passageItems ? { ids: passageItems } : {}) };
+    // `?skill=preterite` narrows to the items a skill is attached to. A slug no
+    // loaded pack declares resolves to nothing and drops out, so a stale link
+    // widens to a broader session rather than planning an empty one — a facet
+    // like every other, not an id allow-list.
+    const skills = (url.skills ?? [])
+      .map((slug) => repository.skillByLocalId(slug)?.id)
+      .filter((id): id is SkillId => id !== undefined);
+    const scope = {
+      ...url.filter,
+      ...(passageItems ? { ids: passageItems } : {}),
+      ...(skills.length ? { skills } : {}),
+    };
 
     return {
       preset: chosen,
@@ -53,7 +65,7 @@ export function SessionScreen() {
     };
   }, [search, repository, preferences, courseScope]);
 
-  const runner = useSessionRunner(config);
+  const runner = useSessionRunner(config, course);
 
   return (
     <AppShell title={preset.label} onBack="history" showNav={false}>

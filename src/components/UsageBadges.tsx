@@ -75,6 +75,11 @@ const REGISTER: Record<
     title: 'Everyday speech: fine with friends, too casual for formal writing',
     tone: 'register',
   },
+  slang: {
+    label: 'slang',
+    title: 'In-group speech: marks where you are from, and can date you',
+    tone: 'register',
+  },
   formal: {
     label: 'formal',
     title: 'Polite or professional: service, officials, people you have just met',

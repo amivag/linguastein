@@ -3,7 +3,7 @@
  * themselves; audio-first ones are self-rated by the learner (spec §4.2).
  */
 
-import { normalise } from '../content';
+import { normalise, splitWords } from '../content';
 import type { ReviewGrade } from '../progress';
 import type { Exercise } from './types';
 
@@ -31,13 +31,14 @@ export function gradeExercise(exercise: Exercise, answer: Answer): GradeResult |
     }
     case 'tap-to-build': {
       const built = Array.isArray(answer.value) ? answer.value : [answer.value];
-      const correct =
-        built.length === exercise.solution.length &&
-        built.every((word, index) => normalise(word) === normalise(exercise.solution[index] ?? ''));
+      const correct = sameWords(built, exercise.solution);
+      // The sentence as it is actually written, rather than the solution joined
+      // by spaces: the words are what was graded, but `Abre la boca , por favor .`
+      // is not how anyone would show someone what they should have built.
       return {
         correct,
         grade: correct ? gradeFromLatency(answer) : 'again',
-        expected: exercise.solution.join(' '),
+        expected: exercise.item.text,
       };
     }
     case 'listen-repeat':
@@ -46,6 +47,19 @@ export function gradeExercise(exercise: Exercise, answer: Answer): GradeResult |
       // Self-rated: the learner supplies the grade directly.
       return null;
   }
+}
+
+/**
+ * Word-for-word equality, ignoring case, accents and punctuation.
+ *
+ * Word order is what tap-to-build asks for, so it is the only thing it grades.
+ * A comma is not a tile a learner is offered any more, and marking someone
+ * wrong for one they were never given was the bug this closes.
+ */
+function sameWords(built: readonly string[], solution: readonly string[]): boolean {
+  const left = built.flatMap((part) => splitWords(normalise(part)));
+  const right = solution.flatMap((part) => splitWords(normalise(part)));
+  return left.length === right.length && left.every((word, index) => word === right[index]);
 }
 
 /** Fast and unhinted answers count as `easy`; hesitant ones as `hard`. */

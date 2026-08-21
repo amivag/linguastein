@@ -30,6 +30,7 @@ async function storageWithHistory() {
   });
   await storage.sessions.put({
     id: 'session-1',
+    course: { language: 'es', level: 'all' },
     startedAt: 1_700_000_000_000,
     endedAt: 1_700_000_060_000,
     planned: 1,

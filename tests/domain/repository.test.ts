@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { id, testRepository } from '../fixtures/pack';
+import { id, TEST_PACK, testRepository } from '../fixtures/pack';
+import { ContentRepository } from '../../src/domain/content';
 import type { ItemId, LexemeId } from '../../src/domain/content';
 
 describe('ContentRepository', () => {
@@ -153,6 +154,42 @@ describe('usage filters', () => {
     const everywhere = repository.query({ usableIn: 'es-MX' });
     expect(everywhere.length).toBe(repository.itemCount);
   });
+
+  /**
+   * The count a region picker needs is *not* what the filter returns.
+   *
+   * Region-neutral content is usable everywhere, so the assertion above is the
+   * whole problem: filtering to Mexico passes the entire pack. A picker counting
+   * that way finds every region equally full and offers Argentina as a live
+   * option when nothing in the pack is Argentinian — a filter that silently does
+   * nothing, which reads as "all of this is Argentinian".
+   */
+  it('counts only what is specifically marked for a region', () => {
+    const offered = ['es-ES', 'es-419', 'es-MX', 'es-AR'];
+    const facets = repository.regions({}, offered);
+
+    // The fixture marks nothing by region, so a picker built from this offers
+    // nothing rather than five options that all mean "everything".
+    expect(facets).toEqual([]);
+  });
+
+  it('reports a macro-region against the locales it covers', () => {
+    const marked = ContentRepository.from([
+      {
+        ...TEST_PACK,
+        items: TEST_PACK.items.map((item, index) =>
+          index === 0 ? { ...item, regions: ['es-419'] } : item,
+        ),
+      },
+    ]);
+
+    // `papa` marked `es-419` is the word a learner aiming at Mexico wants, so it
+    // counts towards Mexico — exactly as it counts when the filter runs.
+    expect(marked.regions({}, ['es-419', 'es-MX', 'es-ES'])).toEqual([
+      { locale: 'es-419', count: 1 },
+      { locale: 'es-MX', count: 1 },
+    ]);
+  });
 });
 
 /**
@@ -192,5 +229,83 @@ describe('word kinds', () => {
     expect(repository.partsOfSpeech({ topics: ['food-drink'] })).toEqual([
       { pos: 'NOUN', count: 4 },
     ]);
+  });
+});
+
+/**
+ * Letters: the alphabetical way into a long list, counted from the pack itself
+ * for the reason the categories are — a row of every letter offers taps that
+ * lead nowhere, and one that is derived grows a K the day a K word exists.
+ */
+describe('letters', () => {
+  const repository = testRepository();
+
+  it('narrows to the items filing under one letter', () => {
+    expect(repository.query({ initial: 'c' }).map((item) => item.text)).toEqual([
+      'cerveza',
+      'café',
+    ]);
+  });
+
+  it('takes the letter as a bucket, not as a prefix', () => {
+    // `¿Tienes tiempo?` files under T, so a T that missed it would be a letter
+    // index disagreeing with the list it indexes.
+    expect(repository.query({ initial: 'T' })).toHaveLength(3);
+    // Whatever a link happens to carry means the letter it starts with.
+    expect(repository.query({ initial: 'café' })).toHaveLength(2);
+  });
+
+  it('lists the letters in scope, collated in the language and counted', () => {
+    expect(repository.initials({}, 'es')).toEqual([
+      { letter: 'A', count: 1 },
+      { letter: 'C', count: 2 },
+      { letter: 'P', count: 1 },
+      { letter: 'T', count: 3 },
+    ]);
+  });
+
+  it('counts within the scope it is given, like the categories do', () => {
+    expect(repository.initials({ types: ['word'] }, 'es')).toEqual([
+      { letter: 'A', count: 1 },
+      { letter: 'C', count: 2 },
+      { letter: 'P', count: 1 },
+    ]);
+  });
+});
+
+/**
+ * Skills are how the pack names a tense: `preterite` and `imperfect` are
+ * attached to the sentences that use them, so resolving a slug to a skill is
+ * what turns "practise the past" into a query. Local ids for the reason
+ * passages use them — a URL should not carry a pack namespace it will outlive.
+ */
+describe('skills', () => {
+  const repository = testRepository();
+
+  it('lists what the loaded packs teach', () => {
+    expect(repository.allSkills().map((skill) => skill.label)).toEqual(['tener que + infinitivo']);
+  });
+
+  it('resolves the local part of a skill id, as a route carries it', () => {
+    expect(repository.skillByLocalId('tener-que')?.id).toBe('test-es:skill:tener-que');
+    expect(repository.skillByLocalId('nope')).toBeUndefined();
+  });
+
+  it('does not match a local id by suffix alone', () => {
+    // `que` ends `tener-que`, but it is not the local id — `endsWith` has to be
+    // anchored on the `:skill:` separator or a short slug matches the wrong row.
+    expect(repository.skillByLocalId('que')).toBeUndefined();
+  });
+
+  it('narrows to the items a skill is attached to', () => {
+    const skill = repository.skillByLocalId('tener-que');
+    expect(skill).toBeDefined();
+    expect(repository.query({ skills: [skill!.id] }).map((item) => item.text)).toEqual([
+      'Tengo que trabajar.',
+    ]);
+  });
+
+  it('treats an empty skill list as no constraint, like every other facet', () => {
+    expect(repository.query({ skills: [] }).length).toBe(repository.query().length);
   });
 });

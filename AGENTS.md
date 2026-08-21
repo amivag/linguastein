@@ -51,7 +51,12 @@ These are load-bearing. Breaking one is a design change, not a refactor. Rules
 3. **Store semantic data, derive presentation.** Tokens carry ids and order;
    character offsets are computed at render time.
 4. **Progress references stable ids only** (`core-es:item:000123`), so datasets
-   can change without invalidating what a learner has done.
+   can change without invalidating what a learner has done. A record also stores
+   the `packId` that id already contains — that is the one permitted
+   denormalisation, and only because an IndexedDB index is built from a stored
+   key path: without it, "how much of this course have I done?" can be answered
+   only by materialising every item id in the course. Derived facts may be
+   stored where a query needs them; content may not.
 5. **No vendor above a seam.** TTS, speech recognition, storage, dataset source
    and AI all sit behind interfaces chosen once in `src/app/services.ts`.
 6. **English is the first reference language, not a structural requirement.**
@@ -75,7 +80,7 @@ src/data/        dataset loading + the zod validation boundary
 src/storage/     IndexedDB and in-memory LearnerStorage
 src/audio/       audio service + TTS seam
 src/ai/          AI seam and learner-context builder (no vendor, no network)
-src/features/    screens: home, browse, read, progress, practice, settings, sharing
+src/features/    screens: home, study, browse, read, progress, practice, settings, sharing
 src/components/  shared UI: AppShell, AppNav, Button, Chip, Sheet, Icon, CourseBar,
                  ThemeToggle, VoiceInput, TokenizedText, WordInfoSheet and
                  useWordSelection (used by practice, reading, browse and progress
@@ -86,6 +91,42 @@ src/styles/      primitives, shared surface recipes, the token reader, and one
 content/es/      hand-authored dataset sources (TSV)
 public/packs/    GENERATED datasets — never edit by hand
 ```
+
+## Study and Test
+
+There are two sections, and the split is the domain's rather than the nav's
+invention: `mode: 'study'` records nothing and only `mode: 'practice'` feeds the
+scheduler. **Study** (`/study`) is the material — sheets of words, phrases,
+sentences, texts and grammar patterns; **Test** (the course home) is where a
+session starts. Browse and Read are sheets _inside_ Study, not destinations of
+their own: `AppNav` gives the Study item an `owns` list so the section stays
+marked while a learner is on one, and both keep working as deep links.
+
+Nothing on Study is a hard-coded list. Word kinds, categories and grammar
+patterns are counted from the packs over the current course, so a second
+language grows tiles with no edit — and a tile whose count is zero is not
+offered, the same rule the categories and the letters already follow.
+
+**Count a tile with the filter the tile links to.** This is easy to get wrong and
+was: the word tiles were counted with `partsOfSpeech`, which counts every item
+_exemplifying_ a part of speech — sentences included — while the tile links to a
+sheet of word cards. That advertised 546 verbs where the sheet lists none.
+
+## Browse's URL, and the filter spelling
+
+A study sheet is a thing you link to, so Browse's filters live in the query
+string (`?type=word&pos=noun&topic=body&sort=az`) rather than in component
+state. `features/browse/browse-url.ts` owns both directions, exactly as
+`session-url.ts` does for a session.
+
+The facet spelling itself belongs to neither: `writeItemFilter` and
+`parseItemFilter` are exported from `session-url.ts` and used by both, so
+`?pos=verb` cannot come to mean one thing in a sheet and another in a session.
+Add a facet there, not in a screen.
+
+`sort` is the exception and deliberately so — it narrows nothing, so it stays in
+Browse's URL and never travels into a session link, where `ordering` is the
+session's own business.
 
 ## Courses and the URL
 
@@ -140,6 +181,24 @@ spelling "the verbs" that way meant enumerating every verb lexeme in the pack at
 the call site. Which kinds a picker offers comes from `partsOfSpeech(scope)` — the
 packs' own counts, empty ones dropped — narrowed to `STUDYABLE_POS`, because `de`
 and `el` are not a category anyone asks for.
+
+A letter (`?initial=c`) is a filter too, and a sort is not. Browse offers both
+and they are different kinds of thing: the letter changes which items exist, so it
+belongs in `ItemFilter` and in the link, while `ItemSort` only decides the order
+the list is dealt in on that screen and is deliberately not written into a session
+— see `ordering` below for why a session's order has to be asked for. What
+"alphabetical" means is defined once, in `domain/content/alphabet.ts`: leading
+punctuation is stepped over so `¿Qué hora es?` files under Q, accents fold, and
+`ñ` is a letter rather than an n. Do not re-derive any of that at a call site — a
+letter index and a sort that disagree are two alphabets.
+
+A **skill** (`?skill=preterite,imperfect`) is how a session asks for a tense or a
+pattern, and it is the only way to: `ItemFilter` has no morphological field, but
+the four grammar skills are attached to items, so the skill _is_ the tense.
+Skills travel as local ids for the reason passages do — a shared link should not
+carry a pack namespace it will outlive — and are resolved to `SkillId`s by the
+screen, since `session-url.ts` deliberately parses without the repository. A slug
+no loaded pack declares widens the session rather than emptying it.
 
 `ordering` is the session's, not the preset author's taste: `sequential` means
 pack order and must be _asked for_, since a preset that defaults to it deals the

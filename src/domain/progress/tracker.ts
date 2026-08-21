@@ -3,6 +3,7 @@
  * it never computes progress itself.
  */
 
+import { systemRng, token, type Rng } from '../../utils/random';
 import type { ItemId } from '../content';
 import type { ExerciseKind } from '../exercises/types';
 import { fsrsScheduler } from './fsrs';
@@ -31,25 +32,39 @@ export interface RecordedAttempt {
   readonly attempt: Attempt;
 }
 
+/**
+ * `rng` is here for the attempt's id and nothing else.
+ *
+ * The id used to be the item and the clock joined together, which is a value
+ * this function could compute on its own — and two attempts on one item inside
+ * the same millisecond therefore shared one id, so the store's `put` replaced
+ * the first with the second. An id that a merge has to trust cannot be a pure
+ * function of what it identifies. Injected rather than ambient, like all
+ * randomness here, so a test can pin it.
+ */
 export function recordAttempt(
   current: ItemProgress | undefined,
   input: AttemptInput,
   now: Timestamp,
   scheduler: Scheduler = fsrsScheduler,
+  rng: Rng = systemRng,
 ): RecordedAttempt {
-  const previous = current ?? newItemProgress(input.itemId);
+  const previous = current ?? newItemProgress(input.itemId, now);
   const reviewed = scheduler.review(previous, input.grade, now);
 
   const progress: ItemProgress = {
     ...reviewed,
     hintsUsed: previous.hintsUsed + (input.hintsUsed ?? 0),
+    updatedAt: now,
     ...(input.latencyMs !== undefined
       ? { averageLatencyMs: smoothLatency(previous.averageLatencyMs, input.latencyMs) }
       : {}),
   };
 
   const attempt: Attempt = {
-    id: `${input.itemId}@${now}`,
+    // Time-ordered so a log stays readable, and unique so two of them can be
+    // merged; see the `rng` note above for why the clock alone was not enough.
+    id: `${now.toString(36)}-${token(rng)}`,
     itemId: input.itemId,
     exerciseKind: input.exerciseKind,
     grade: input.grade,

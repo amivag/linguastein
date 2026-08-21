@@ -5,9 +5,9 @@
  * exercise types plug in without touching the session planner or the UI.
  */
 
-import type { ContentRepository, LanguageTag, LearningItem } from '../content';
-import { normalise } from '../content';
-import { type Rng, sample, shuffle } from '../../utils/random';
+import type { ContentRepository, LanguageTag, LearningItem, Morphology } from '../content';
+import { isPunctuation, normalise, splitWords } from '../content';
+import { type Rng, shuffle } from '../../utils/random';
 import type {
   ClozeChoiceExercise,
   Choice,
@@ -99,8 +99,9 @@ export const thinkSayGenerator: ExerciseGenerator<'think-say'> = {
 
 /**
  * Meaning recognition: show the Spanish, choose the reference-language meaning.
- * Distractors come from other items of the same type and level so they stay
- * plausible (spec §4.4).
+ * Distractors are ranked to look like the answer — same surface form, same kind
+ * of item, same theme — so the only thing separating them is what they mean
+ * (spec §4.4).
  */
 export const multipleChoiceGenerator: ExerciseGenerator<'multiple-choice'> = {
   kind: 'multiple-choice',
@@ -252,38 +253,98 @@ interface Distractor {
   readonly text: string;
 }
 
+/**
+ * How a choice looks before it is read: is it a question, and how long is it.
+ *
+ * These are what a learner answers by when they answer without knowing any
+ * Spanish. `¿Tiene fiebre?` offered against three statements is not a question
+ * about meaning — the only option ending in `?` wins — and the one long answer
+ * among three short ones is found the same way. So the choices are matched on
+ * surface before they are matched on anything else.
+ */
+interface Surface {
+  /** The sentence's final mark: `?`, `!` or `.` for everything else. */
+  readonly force: string;
+  readonly words: number;
+}
+
+function surfaceOf(text: string): Surface {
+  const last = text.trim().slice(-1);
+  return {
+    force: last === '?' || last === '!' ? last : '.',
+    words: splitWords(text).length,
+  };
+}
+
+/** Close enough in length that neither stands out in a list of four. */
+function comparableLength(a: number, b: number): boolean {
+  return Math.abs(a - b) <= 2;
+}
+
+/**
+ * Ranks a candidate against the item being asked about, most misleading feature
+ * first: surface form, then item type, then level, then theme, then length.
+ *
+ * The weights are powers of two, so each feature outranks every feature below it
+ * combined: a strict priority order, written as a score rather than as nested
+ * filters so that it degrades instead of starving. Questions are a small
+ * fraction of any pack and thinner still inside one topic, so "a question from
+ * this topic" often cannot fill four choices — and falling to "a question from
+ * anywhere" keeps the card honest, where falling to "anything from this topic"
+ * hands the answer over.
+ */
+function comparability(
+  item: LearningItem,
+  target: Surface,
+  candidate: LearningItem,
+  text: string,
+): number {
+  const surface = surfaceOf(text);
+  let score = 0;
+  if (surface.force === target.force) score += 16;
+  if (candidate.type === item.type) score += 8;
+  if (candidate.level === item.level) score += 4;
+  if (overlaps(item.topics, candidate.topics)) score += 2;
+  if (comparableLength(surface.words, target.words)) score += 1;
+  return score;
+}
+
 function distractors(
   item: LearningItem,
   context: GenerationContext,
   count: number,
 ): readonly Distractor[] {
   const pool = context.distractorPool ?? context.repository.query();
-  const sameShape = pool.filter(
-    (candidate) =>
-      candidate.id !== item.id && candidate.type === item.type && candidate.level === item.level,
-  );
-  /**
-   * Sharing a theme is what makes a choice a question rather than a spot-the-odd-
-   * one-out. `uno` offered against "June", "name" and "hot" is answered without
-   * knowing any Spanish; against `dos`, `diez` and `mil` it has to be read.
-   *
-   * A preference, not a filter: a thin topic would otherwise starve the choices
-   * and leave a two-option question, which is easier still.
-   */
-  const sameTopic = sameShape.filter((candidate) => overlaps(item.topics, candidate.topics));
-  const fallback = pool.filter((candidate) => candidate.id !== item.id);
-  const ordered =
-    sameTopic.length >= count ? sameTopic : sameShape.length >= count ? sameShape : fallback;
+  const answer = translationOf(item, context)?.text ?? item.text;
+  const target = surfaceOf(answer);
 
-  const seen = new Set([normalise(translationOf(item, context)?.text ?? item.text)]);
+  /**
+   * Shuffled first, then sorted by rank. `Array.prototype.sort` is stable, so
+   * equally comparable candidates keep the shuffled order and the same item
+   * asks a different question next time.
+   */
+  const ranked = shuffle(pool, context.rng)
+    .flatMap((candidate) => {
+      if (candidate.id === item.id) return [];
+      const translation = context.repository.translationOf(candidate.id, context.referenceLanguage);
+      if (!translation) return [];
+      return [
+        {
+          item: candidate,
+          text: translation.text,
+          score: comparability(item, target, candidate, translation.text),
+        },
+      ];
+    })
+    .sort((a, b) => b.score - a.score);
+
+  const seen = new Set([normalise(answer)]);
   const found: Distractor[] = [];
-  for (const candidate of sample(ordered, Math.max(count * 4, count), context.rng)) {
-    const translation = context.repository.translationOf(candidate.id, context.referenceLanguage);
-    if (!translation) continue;
-    const key = normalise(translation.text);
+  for (const candidate of ranked) {
+    const key = normalise(candidate.text);
     if (seen.has(key)) continue;
     seen.add(key);
-    found.push({ item: candidate, text: translation.text });
+    found.push({ item: candidate.item, text: candidate.text });
     if (found.length === count) break;
   }
   return found;
@@ -294,29 +355,88 @@ interface BlankCandidate {
   readonly alternatives: readonly string[];
 }
 
-/** Picks a verb token whose lexeme has other known forms to use as choices. */
+/**
+ * How good a rival conjugation is as a choice, most misleading first — the same
+ * shape of score as {@link comparability}, and for the same reason.
+ *
+ * A blank is only a question about grammar if every option could grammatically
+ * stand in the gap. Offering `hablando` and `hablad` against `hablo` is not a
+ * question about the present tense: two of the three are eliminable from their
+ * shape alone, which is exactly the failure `distractors()` was rewritten to
+ * avoid. So the finite/gerund/participle class matters most, then mood.
+ *
+ * The third term is what makes the card *teach* something. A distractor that
+ * differs from the answer on one axis only asks about that axis: hold the person
+ * and vary the tense and the learner is answering "when", hold the tense and
+ * vary the person and they are answering "who". Vary both at once and the card
+ * isolates nothing, which is what sampling at random produced.
+ *
+ * A score rather than a filter cascade, deliberately: a pack may hold few forms
+ * for a verb, and a hard "same class and same mood" filter would starve the
+ * choices — and too few choices hands the answer over just as surely.
+ */
+function formComparability(answer: Morphology, candidate: Morphology): number {
+  let score = 0;
+  if (answer.verbForm === candidate.verbForm) score += 16;
+  if (answer.mood === candidate.mood) score += 8;
+
+  const tenseDiffers = answer.tense !== candidate.tense;
+  const agreementDiffers = answer.person !== candidate.person || answer.number !== candidate.number;
+  if (Number(tenseDiffers) + Number(agreementDiffers) === 1) score += 4;
+
+  return score;
+}
+
+/**
+ * Picks a verb token whose lexeme has other known forms to use as choices, and
+ * ranks those forms so the card grades grammar rather than shape.
+ */
 function blankCandidate(item: LearningItem, context: GenerationContext): BlankCandidate | null {
   const tokens = item.tokens ?? [];
   for (const token of tokens) {
     if (token.pos !== 'VERB' && token.pos !== 'AUX') continue;
     if (!token.lexeme) continue;
-    const alternatives = context.repository
-      .verbFormsOf(token.lexeme)
-      .map((form) => form.form)
-      .filter((form) => normalise(form) !== normalise(token.text));
-    const unique = [...new Set(alternatives)];
-    if (unique.length >= 2) {
-      return { token, alternatives: sample(unique, 3, context.rng) };
+
+    const answer = token.morph ?? {};
+    /**
+     * Shuffled before it is sorted, like the distractor pool: `sort` is stable,
+     * so equally plausible forms keep the shuffled order and the same sentence
+     * asks a different question next time.
+     */
+    const ranked = shuffle(context.repository.verbFormsOf(token.lexeme), context.rng)
+      .filter((form) => normalise(form.form) !== normalise(token.text))
+      .map((form) => ({ text: form.form, score: formComparability(answer, form.morph) }))
+      .sort((a, b) => b.score - a.score);
+
+    const unique: string[] = [];
+    const seen = new Set([normalise(token.text)]);
+    for (const form of ranked) {
+      const key = normalise(form.text);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(form.text);
+      if (unique.length === 3) break;
     }
+
+    if (unique.length >= 2) return { token, alternatives: unique };
   }
   return null;
 }
 
+/**
+ * The words a sentence is built from — punctuation is not one of them.
+ *
+ * A comma is a tile you have to remember to place and a full stop is a tile you
+ * cannot get wrong, so dealing them graded punctuation rather than word order:
+ * `Abre la boca por favor` was marked wrong for the `,` left in the tray. Word
+ * order is the skill, so the tiles are words and the grading follows.
+ */
 function words(item: LearningItem): readonly string[] {
   const tokens = item.tokens;
-  if (tokens?.length) return tokens.map((token) => token.text);
-  return item.text
-    .replace(/[.,!?;:¡¿]/g, '')
-    .split(/\s+/)
-    .filter((word) => word.length > 0);
+  if (tokens?.length) {
+    return tokens
+      .filter((token) => token.pos !== 'PUNCT' && !isPunctuation(token.text))
+      .map((token) => token.text);
+  }
+  return splitWords(item.text);
 }

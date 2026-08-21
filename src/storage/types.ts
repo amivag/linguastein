@@ -65,7 +65,15 @@ export interface AttemptStore {
 
 export interface SessionStore {
   put(record: SessionRecord): Promise<void>;
-  recent(limit: number): Promise<readonly SessionRecord[]>;
+  /**
+   * The newest sessions, optionally only those of one target language.
+   *
+   * Language rather than course: a level is a ceiling, so a session practised at
+   * A1 is part of the history an A2 learner is looking at. Narrowing happens
+   * here rather than after the call because filtering a page of five would
+   * return fewer than five.
+   */
+  recent(limit: number, language?: LanguageTag): Promise<readonly SessionRecord[]>;
   clear(): Promise<void>;
 }
 
@@ -80,6 +88,11 @@ export interface LearnerStorage {
   readonly attempts: AttemptStore;
   readonly sessions: SessionStore;
   readonly preferences: PreferencesStore;
-  /** Wipes all learner data — used by "reset progress" and by tests. */
+  /**
+   * Wipes all learner data, preferences included — which is why "reset progress"
+   * in Settings clears the three record stores by hand instead: nobody asking to
+   * forget their history is also asking to pick their voice and theme again.
+   * This is the tests' reset, and the one a future "delete everything" would use.
+   */
   clearAll(): Promise<void>;
 }

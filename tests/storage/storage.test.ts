@@ -12,6 +12,16 @@ import { id } from '../fixtures/pack';
 
 const ITEM = id<ItemId>('test-es:item:001');
 
+/** A finished session, minus the course each case supplies. */
+const session = (recordId: string) => ({
+  id: recordId,
+  startedAt: 1_700_000_000_000,
+  endedAt: 1_700_000_060_000,
+  planned: 2,
+  completed: 2,
+  correct: 2,
+});
+
 // The same contract must hold for both implementations, so a learner gets
 // identical behaviour whether or not IndexedDB is available.
 const implementations: readonly [string, () => Promise<LearnerStorage>][] = [
@@ -65,10 +75,36 @@ describe.each(implementations)('%s storage', (_name, create) => {
     expect((await storage.preferences.read()).pronunciationLocale).toBe('es-MX');
   });
 
+  /**
+   * A progress row knows its pack without being told, because the item id says
+   * so. Stored rather than derived at the call site: an IndexedDB index is built
+   * from a stored key path, so "how much of this course have I done?" cannot be
+   * asked of a value that only exists in memory.
+   */
+  it('derives the pack from the item id', async () => {
+    await storage.progress.put(newItemProgress(ITEM));
+
+    expect((await storage.progress.get(ITEM))?.packId).toBe('test-es');
+  });
+
+  /**
+   * A session row carries its course because nothing else can work out what it
+   * was — and the narrowing happens before the limit, so a page of two is two.
+   */
+  it('keeps one language out of another language’s history', async () => {
+    await storage.sessions.put({ ...session('es-1'), course: { language: 'es', level: 'a1' } });
+    await storage.sessions.put({ ...session('fr-1'), course: { language: 'fr', level: 'all' } });
+
+    expect((await storage.sessions.recent(10, 'es')).map((record) => record.id)).toEqual(['es-1']);
+    expect((await storage.sessions.recent(10, 'fr')).map((record) => record.id)).toEqual(['fr-1']);
+    expect(await storage.sessions.recent(10)).toHaveLength(2);
+  });
+
   it('clears everything on reset', async () => {
     await storage.progress.put(newItemProgress(ITEM));
     await storage.sessions.put({
       id: 's1',
+      course: { language: 'es', level: 'all' },
       startedAt: 1,
       planned: 5,
       completed: 5,

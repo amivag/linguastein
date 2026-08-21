@@ -36,7 +36,8 @@
 }
 
 /* Chrome comes from `global.css`. What is this screen's business is that four of
-   these share a grid row and the fifth sits in the picker's header. */
+   these share a grid row, and that two sit elsewhere: topic in the picker's
+   header, sort on the line that counts the results. */
 .filter select {
   width: 100%;
   padding-inline: var(--space-2);
@@ -49,9 +50,25 @@
   max-width: 100%;
 }
 
+/* How many there are, and what order they are in: the list's header, on one
+   line. A sort control of its own above the results would be a second toolbar
+   with one thing in it, and another row between the filters and the content. */
+.listBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .count {
+  margin-right: auto;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+/* Sizes to its own labels rather than to the line, like the topic select does. */
+.sort select {
+  width: auto;
+  max-width: 100%;
 }
 
 .results {
@@ -65,8 +82,45 @@
   composes: card from '../../styles/surfaces.module.css';
 
   display: grid;
-  gap: 2px;
+  grid-template-columns: 1fr auto;
+  gap: 0 var(--space-2);
+  align-items: center;
   padding: var(--space-3) var(--space-4);
+}
+
+/* The row's text, stacked. It is wrapped rather than laid out beside the play
+   button directly so that a two-line meaning cannot push the button out of the
+   row, and so the button sits against the whole entry rather than one line. */
+.body {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+/* A round glyph button, the shape "play this" has everywhere else in the app.
+   Transparent at rest: forty of these down a page is a column of buttons if each
+   one carries a fill, and the row is the object here, not its controls. */
+.play {
+  display: inline-flex;
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .play:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
 }
 
 .target {
@@ -109,4 +163,14 @@
   display: grid;
   gap: var(--space-2);
   margin-top: var(--space-4);
+}
+
+/* Style, as a row of toggles rather than a select, because it is the one facet a
+   learner wants two of at once. Wraps rather than scrolls: five short words fit
+   on two lines on the narrowest phone, and a horizontal scroller hides options
+   behind a gesture nobody knows is available. */
+.registers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }

@@ -155,11 +155,11 @@ describe('course-scoped navigation', () => {
     renderWithServices(courseRoutes({ '': <HomeScreen /> }), { route: '/es/a1' });
 
     const nav = await screen.findByRole('navigation', { name: 'Main' });
-    expect(within(nav).getByRole('link', { name: 'Browse' })).toHaveAttribute(
+    expect(within(nav).getByRole('link', { name: 'Study' })).toHaveAttribute(
       'href',
-      '/es/a1/browse',
+      '/es/a1/study',
     );
-    expect(within(nav).getByRole('link', { name: 'Practice' })).toHaveAttribute('href', '/es/a1');
+    expect(within(nav).getByRole('link', { name: 'Test' })).toHaveAttribute('href', '/es/a1');
   });
 
   it('points a passage link at the course it was found in', async () => {

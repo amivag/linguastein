@@ -8,7 +8,7 @@
  * "close" band between right and wrong.
  */
 
-import { normalise } from '../content';
+import { normalise, splitWords } from '../content';
 
 export type SpeechVerdict = 'match' | 'close' | 'different';
 
@@ -85,9 +85,6 @@ export function bestAlternative(
   return best;
 }
 
-function words(text: string): string[] {
-  return normalise(text)
-    .replace(/[.,!?;:¡¿"'()]/g, ' ')
-    .split(/\s+/)
-    .filter((word) => word.length > 0);
+function words(text: string): readonly string[] {
+  return splitWords(normalise(text));
 }

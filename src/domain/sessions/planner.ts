@@ -7,7 +7,7 @@
 
 import type { ContentRepository, ItemId, LearningItem } from '../content';
 import { isDue, type ItemProgress, type Timestamp } from '../progress/types';
-import { seededRng, shuffle, systemRng, type Rng } from '../../utils/random';
+import { seededRng, shuffle, systemRng, token, type Rng } from '../../utils/random';
 import {
   DEFAULT_SESSION_FOCUS,
   ESTIMATED_MS_PER_ITEM,
@@ -40,7 +40,12 @@ export function planSession(input: PlanInput): SessionPlan {
   const limited = ordered.slice(0, capacity(config.size, ordered.length));
 
   return {
-    id: `session-${now.toString(36)}`,
+    // Drawn from the rng *after* the ordering, so adding a unique suffix cannot
+    // change which items a given seed deals — and a seeded plan still gets the
+    // same id twice. The clock alone is not an identity: two devices starting a
+    // session in the same millisecond would collide, and every session record
+    // is keyed by it.
+    id: `session-${now.toString(36)}-${token(rng)}`,
     config,
     itemIds: limited.map((item) => item.id),
     createdAt: now,

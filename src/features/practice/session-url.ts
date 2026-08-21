@@ -16,6 +16,7 @@ import {
   CEFR_LEVELS,
   coursePath,
   FILTERABLE_REGIONS,
+  initialLetter,
   ITEM_TYPES,
   posFromSlug,
   posSlug,
@@ -48,6 +49,14 @@ export interface SessionUrl {
   readonly filter: ItemFilter;
   /** Passage *local* id, e.g. `mercado`; scopes the session to its sentences. */
   readonly passage?: string;
+  /**
+   * Skill *local* ids, e.g. `preterite` — "practise the past tense".
+   *
+   * Local rather than full ids for the reason {@link ContentRepository.skillByLocalId}
+   * records, and outside `filter` for the reason `passage` is: resolving one
+   * needs the repository, and this module deliberately parses without it.
+   */
+  readonly skills?: readonly string[];
   readonly dueOnly?: boolean;
   /** Which items to lead with. Absent means the planner's balanced default. */
   readonly focus?: SessionFocus;
@@ -73,16 +82,10 @@ export function sessionPath(course: Course, input: SessionUrlInput): string {
   params.set('preset', input.preset);
   params.set('size', formatSize(input.size ?? { kind: 'items', count: 10 }));
 
-  const filter = input.filter ?? {};
-  if (filter.search) params.set('q', filter.search);
-  if (filter.types?.length) params.set('type', filter.types.join(','));
-  if (filter.pos?.length) params.set('pos', filter.pos.map(posSlug).join(','));
-  if (filter.levels?.length) params.set('level', filter.levels.join(','));
-  if (filter.topics?.length) params.set('topic', filter.topics.join(','));
-  if (filter.registers?.length) params.set('register', filter.registers.join(','));
-  if (filter.usableIn) params.set('region', filter.usableIn);
+  writeItemFilter(params, input.filter ?? {});
 
   if (input.passage) params.set('passage', input.passage);
+  if (input.skills?.length) params.set('skill', input.skills.join(','));
   if (input.dueOnly) params.set('due', '1');
   if (input.focus && input.focus !== 'balanced') params.set('focus', input.focus);
   if (input.ordering) params.set('order', input.ordering);
@@ -98,11 +101,17 @@ export function parseSessionUrl(params: URLSearchParams): SessionUrl {
   const ordering = params.get('order');
   const seed = Number(params.get('seed'));
 
+  // Not validated against the loaded packs — that needs the repository, and an
+  // unknown slug resolving to nothing is the same "degrade to broader, never
+  // empty" outcome the rest of this module is built on.
+  const skills = slugs(params.get('skill'));
+
   return {
     preset: isPresetId(preset) ? preset : 'quick',
     size: parseSize(params.get('size')),
-    filter: parseFilter(params),
+    filter: parseItemFilter(params),
     ...(passage ? { passage } : {}),
+    ...(skills.length ? { skills } : {}),
     ...(isTruthy(params.get('due')) ? { dueOnly: true } : {}),
     ...(isFocus(focus) ? { focus } : {}),
     ...(isOrdering(ordering) ? { ordering } : {}),
@@ -110,7 +119,32 @@ export function parseSessionUrl(params: URLSearchParams): SessionUrl {
   };
 }
 
-function parseFilter(params: URLSearchParams): ItemFilter {
+/**
+ * Writes the faceted narrowing into a query string, and {@link parseItemFilter}
+ * reads it back.
+ *
+ * Exported as a pair because a session link is not the only thing that carries a
+ * filter: Browse is a view of the same facets, and if it spelled them itself
+ * then `?pos=verb` would mean one thing in a session and another in a sheet, or
+ * one of the two would grow a facet the other could not read. The same argument
+ * that keeps `sessionPath` and `parseSessionUrl` in one file, one level down.
+ *
+ * `ids` is deliberately absent: it is an allow-list resolved from a passage, not
+ * something a learner picks, and spelling five hundred item ids into a URL is
+ * not a link anyone can share.
+ */
+export function writeItemFilter(params: URLSearchParams, filter: ItemFilter): void {
+  if (filter.search) params.set('q', filter.search);
+  if (filter.types?.length) params.set('type', filter.types.join(','));
+  if (filter.pos?.length) params.set('pos', filter.pos.map(posSlug).join(','));
+  if (filter.levels?.length) params.set('level', filter.levels.join(','));
+  if (filter.topics?.length) params.set('topic', filter.topics.join(','));
+  if (filter.registers?.length) params.set('register', filter.registers.join(','));
+  if (filter.usableIn) params.set('region', filter.usableIn);
+  if (filter.initial) params.set('initial', filter.initial);
+}
+
+export function parseItemFilter(params: URLSearchParams): ItemFilter {
   const search = params.get('q')?.trim();
   const types = list(params.get('type'), ITEM_TYPES as readonly ItemType[]);
   // Several on purpose — `?pos=verb,noun` is a batch of word kinds, and the
@@ -118,14 +152,16 @@ function parseFilter(params: URLSearchParams): ItemFilter {
   const pos = parts(params.get('pos'));
   const levels = list(params.get('level'), CEFR_LEVELS as readonly CefrLevel[]);
   const registers = list(params.get('register'), REGISTERS as readonly Register[]);
-  const topics = (params.get('topic') ?? '')
-    .split(',')
-    .map((value) => value.trim())
-    .filter((value) => value.length > 0 && value !== 'all');
+  const topics = slugs(params.get('topic'));
   const region = params.get('region');
+  // Normalised rather than validated: `initial=c` is a letter, and so is
+  // `initial=café` in the only sense this filter has, so both plan the C's
+  // instead of one of them planning nothing.
+  const initial = params.get('initial')?.trim();
 
   return {
     ...(search ? { search } : {}),
+    ...(initial ? { initial: initialLetter(initial) } : {}),
     ...(types.length ? { types } : {}),
     ...(pos.length ? { pos } : {}),
     ...(levels.length ? { levels } : {}),
@@ -133,6 +169,20 @@ function parseFilter(params: URLSearchParams): ItemFilter {
     ...(topics.length ? { topics } : {}),
     ...(isRegion(region) ? { usableIn: region } : {}),
   };
+}
+
+/**
+ * Comma-separated content slugs — topics and skills — which are pack vocabulary
+ * rather than domain enums, so there is no `allowed` list to check them against.
+ * `all` is dropped as the same "no constraint" spelling the level scope uses.
+ */
+function slugs(value: string | null): readonly string[] {
+  const seen = new Set<string>();
+  for (const part of (value ?? '').split(',')) {
+    const slug = part.trim();
+    if (slug.length > 0 && slug !== 'all') seen.add(slug);
+  }
+  return [...seen];
 }
 
 /** Comma-separated values, keeping only those the domain recognises. */

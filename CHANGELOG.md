@@ -21,6 +21,70 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 
 ### Added
 
+- **Two sections: Study and Test.** The nav offered five verbs — Practice, Read,
+  Browse — that gave no clue which of the two things a learner was about to do,
+  and every entry point on the home screen started a session: six ways to be
+  graded and none to be taught. `/study` is now the material, and the split is
+  the domain's own rather than a new invention — `mode: 'study'` records nothing
+  and only `mode: 'practice'` feeds the scheduler, so every link on that screen
+  leads somewhere that cannot reschedule what it showed you. Browse and Read are
+  sheets _inside_ Study rather than destinations of their own; both keep working
+  as deep links, and the section stays marked while you are on one. Nothing on
+  the screen is a hard-coded list: the word kinds, the categories and the
+  grammar patterns are counted from the packs, so a second language grows tiles
+  with no edit, and a tile that would lead nowhere is not offered — which is what
+  hides the seven numeral skills no item carries.
+- **A study sheet is a thing you can link to.** Browse's filters were component
+  state, which made a filtered sheet the one view in the app with no address: no
+  bookmarking "the nouns", no sharing it, nothing to restore after a reload,
+  nothing for Study to put on a tile, and no way for an agent to drive it. They
+  live in the query string now (`?type=word&pos=noun&topic=body&sort=az`), read
+  and written through the same pair a session link uses, so `?pos=verb` cannot
+  come to mean one thing in a sheet and another in a session.
+- **Style is a filter you can pick two of.** "Formal or casual, just not slang"
+  was not expressible: `ItemFilter.registers` has always been a list and the link
+  has always carried `?register=a,b`, but the control was a single select. It is
+  a row of chips now, each carrying its own count, so a style with nothing in it
+  reads `0` rather than looking like a live option. `slang` joins the register
+  vocabulary, because it is neither `colloquial` nor `vulgar` — `vale` is casual
+  and completely standard where `chido` marks the speaker as Mexican.
+- **The region filter stops pretending.** Argentina and Colombia were offered
+  while no item was marked for either, and because region-neutral content passes
+  every region check, choosing one returned almost the whole pack and looked like
+  it had worked. Only regions the packs actually mark something for are listed
+  now, each with its count, counted on _declared_ regions rather than on what the
+  filter would return — the difference being the whole point.
+- **Practise one grammar pattern, or one tense.** `?skill=preterite` narrows a
+  session to the items a skill is attached to, so "the past tense" and "the
+  `me gusta` pattern" are things a session can be asked for. The repository has
+  supported the filter since skills existed; nothing could reach it — no preset
+  set it and the URL did not carry it, which is the same "a link can hold a
+  filter nothing reads" bug the session URL was centralised to prevent, in the
+  other direction. Skills travel as their local id (`preterite`, not
+  `core-es:skill:preterite`) for the reason passages do: a shared link should not
+  carry a pack namespace it will outlive. A slug no loaded pack declares resolves
+  to nothing and widens the session rather than emptying it.
+- **Browse alphabetically, both ways round.** A row of letters sits above the
+  results, and the list can be ordered pack order, A to Z or Z to A from the line
+  that counts it. Only the letters the course has content under are offered,
+  counted from the packs themselves exactly as the categories are, so the Spanish
+  pack shows 23 of them and no K, and a pack that grows its first one gets the
+  chip with no code change. The two controls are deliberately different kinds of
+  thing: a letter narrows _which_ items there are, so it belongs to the filter and
+  travels into the session link (`?initial=c`), while a sort only decides the
+  order they are dealt in here — `ordering` is a session's own business, asked for
+  rather than inherited. Both agree on what alphabetical means, from one
+  definition in `domain/content/alphabet.ts`: `¿Qué hora es?` files under Q rather
+  than under its punctuation, `está` under E, and `ñ` is a letter of its own
+  rather than an n. An index and an order that disagree are two alphabets.
+- **A play button on every Browse result.** Browse is where you go to look a word
+  up, and it could show you Spanish without ever saying it. Each row has one now,
+  named after its own phrase — `Listen to “cerveza”` — so a screen reader or an
+  agent picks a row rather than one of forty identically-named controls. It plays
+  the _item_ rather than reading its text, so a recording the pack ships is
+  preferred over the device's voice. Where there is nothing to hear, because
+  neither exists for that item, the button is absent rather than dead: forty
+  controls that do nothing is worse than none.
 - **A design language, written down and enforced.** The app read as a form: 138
   border declarations across 24 stylesheets, outlining every card, panel, row,
   badge, banner and button. Six rules replace that — depth rather than outlines,
@@ -56,6 +120,19 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 
 ### Changed
 
+- **Learner records now carry the three things nothing could work out later.**
+  Stored state is at database version 2, migrated inside the version-change
+  transaction rather than after it. A progress row keeps the `packId` its item id
+  already contains, because an IndexedDB index is built from a stored key path and
+  a row missing one is absent from the index rather than merely incomplete — which
+  reads like lost history. It also keeps `updatedAt`, which is a fact about the
+  row rather than about the learner and is what any future merge of two devices
+  has to compare. And an attempt's id is no longer the item and the clock joined
+  together: that was a value the tracker could compute on its own, so two answers
+  to one item inside the same millisecond shared an id and the second silently
+  replaced the first. Session ids gained the same treatment, drawn from the
+  session's own rng _after_ the ordering so a seeded session still deals the same
+  items and still reproduces its id exactly.
 - **A control that expands now opens over the page, never inside it.** Opening
   the practising panel used to push the quick-session buttons, all six presets and
   the rest of Home down by around four hundred pixels, so narrowing _what_ you
@@ -89,6 +166,45 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 
 ### Fixed
 
+- **Recent sessions showed another language's history.** Every other panel on
+  Progress is narrowed to the course, because a progress row carries an item id
+  and an item id carries its pack. A finished session is counts and timestamps,
+  so there was nothing in the row to narrow by — a French session listed under
+  Spanish, and no migration could ever have worked out which was which. A session
+  record now says which course it was practised in, and the screen asks for that
+  language. Narrowing happens inside the store, before the limit, so a page of
+  five is five; rows written before this stamp the language the learner had
+  stored, which is the only evidence there is.
+- **A cloze offered choices you could rule out without knowing any Spanish.**
+  `cloze-choice` sampled three of a verb's two dozen forms at random, so a blank
+  for `hablo` could be offered against `hablando` and `hablad` — two shapes that
+  cannot stand in the gap at all. The choices are ranked now, by the same kind of
+  weighted score the multiple-choice distractors already used: the finite,
+  gerund or participle class first, then mood, then a preference for forms that
+  differ from the answer on _one_ axis only. That last term is what makes the
+  card teach something — hold the person and vary the tense and the learner is
+  answering "when"; vary both at once and the card isolates nothing.
+
+- **Multiple choice gave the answer away by punctuation.** `¿Tiene fiebre?`
+  offered against three statements is answered by whoever spots the only option
+  ending in `?`, with no Spanish involved — and that was true of every one of the
+  pack's 76 question cards. Distractors are ranked by how much they look like the
+  answer before anything else: same sentence form first, then item type, level,
+  theme and comparable length, as a score rather than nested filters so a thin
+  topic degrades to "a question from anywhere" instead of falling back to
+  statements. Across all 1043 cards, choice lists mixing questions with statements
+  went from 212 to none, and the number where one answer is visibly longer than
+  the rest from 125 to 21 — with fewer off-topic distractors than before, not more.
+- **Tap-to-build marked a correct sentence wrong over a comma.** The tiles
+  included one for `,` and one for `.`, so `Abre la boca por favor` — the right
+  words in the right order — failed for punctuation the exercise never set out to
+  teach. Punctuation is not a tile any more and not graded; the answer is still
+  shown as the sentence is actually written.
+- **A sentence that says a word twice could not be built at all.** Tiles were
+  tracked by their text, so the second `la` of `Veo la televisión por la noche.`
+  went dead the moment the first was placed — leaving 46 of the pack's 592
+  sentences impossible to finish, and graded wrong every time they came up. They
+  are tracked by position now.
 - A `<div>` wrapping the practising sheet collected a grid `gap` even with nothing
   but a fixed child in it, growing the page by 12px on open — the exact failure
   the sheet exists to prevent, reintroduced by the markup around it.

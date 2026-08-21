@@ -120,6 +120,29 @@ describe('Browse → session', () => {
     expect(new URLSearchParams(where().split('?')[1]).get('pos')).toBe('noun');
   });
 
+  /**
+   * A letter is a filter like the others, so it has to reach the session: a
+   * learner who pulled up the C words and pressed "Practise these" has said
+   * which items they mean.
+   */
+  it('carries the letter an A to Z jump was made with', async () => {
+    const user = userEvent.setup();
+    renderWithServices(
+      <>
+        <BrowseScreen />
+        <Where />
+      </>,
+      { route: '/browse' },
+    );
+
+    await user.click(await screen.findByRole('button', { name: 'Starting with C, 2 items' }));
+    await user.click(screen.getByRole('button', { name: 'Practise these' }));
+
+    const url = new URLSearchParams(where().split('?')[1]);
+    expect(url.get('initial')).toBe('C');
+    expect(url.get('size')).toBe('items:2');
+  });
+
   it('plans the word kind the link names', async () => {
     renderWithServices(<SessionScreen />, {
       route: '/session?preset=quick&size=items:10&pos=verb',
@@ -138,6 +161,41 @@ describe('a filtered session', () => {
 
     // Four words carry that topic; the three sentences must not be planned.
     expect(await screen.findByText('1/4')).toBeInTheDocument();
+  });
+
+  it('plans only the letter the link names', async () => {
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=quick&size=items:10&initial=c',
+    });
+
+    // `cerveza` and `café`, and neither of the T sentences. Lowercase in the
+    // link on purpose: a hand-typed or stale letter is normalised rather than
+    // dropped, which would silently plan the whole pack.
+    expect(await screen.findByText('1/2')).toBeInTheDocument();
+  });
+
+  /**
+   * A skill is the only thing in the pack that names a tense, so `?skill=` is
+   * what makes "practise the preterite" expressible. The repository has
+   * supported the filter all along; nothing could ask for it.
+   */
+  it('plans only the items carrying the skill the link names', async () => {
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=quick&size=items:10&skill=tener-que',
+    });
+
+    // One of the seven items carries it, so the whole pack must not be planned.
+    expect(await screen.findByText('1/1')).toBeInTheDocument();
+  });
+
+  it('widens rather than emptying when no loaded pack declares the skill', async () => {
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=quick&size=items:10&skill=from-another-pack',
+    });
+
+    // The rule the whole module is built on: a stale link degrades to a broader
+    // session, never to a blank screen that reads as a broken app.
+    expect(await screen.findByText('1/7')).toBeInTheDocument();
   });
 });
 

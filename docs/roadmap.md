@@ -57,6 +57,9 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   `content/es/topics.tsv` and shipped in the pack manifest with a label and
   display group, a build gate that rejects an unregistered topic, and a category
   picker on Browse that both browses and practises a category
+- An alphabetical way into the pack on Browse: a letter index derived from the
+  initials the loaded packs actually have, a pack-order/A–Z/Z–A sort, and a play
+  button on every result
 - Reference-language architecture (English is the first, not the only)
 - WCAG 2.2 AA accessibility, enforced by axe and contrast tests in CI
 - Switchable dark/light themes on a modular, extensible token system

@@ -7,6 +7,7 @@ import type {
   ItemId,
   LearningItem,
   LexemeId,
+  Morphology,
   PackId,
   PackManifest,
   Passage,
@@ -142,12 +143,27 @@ export const ITEMS: readonly LearningItem[] = [
   }),
 ];
 
-const verbForm = (local: string, form: string): VerbForm => ({
+/**
+ * One form of `tener`, with the morphology it actually has.
+ *
+ * Spelled out per form rather than defaulted, because a pack where every form
+ * claims to be the same person and tense is not a shape any real pack has — and
+ * it is the shape that let `cloze-choice` sample distractors across moods
+ * without a test noticing. A finite present answer has to be able to find a
+ * gerund in this table for the ranking to be worth asserting.
+ */
+const verbForm = (local: string, form: string, morph: Morphology): VerbForm => ({
   id: id<VerbFormId>(`test-es:form:${local}`),
   lexeme: id<LexemeId>('test-es:lexeme:tener'),
   form,
-  morph: { tense: 'present', mood: 'indicative', verbForm: 'finite' },
+  morph,
 });
+
+const finite = (
+  person: 1 | 2 | 3,
+  number: 'singular' | 'plural',
+  tense: Morphology['tense'] = 'present',
+): Morphology => ({ person, number, tense, mood: 'indicative', verbForm: 'finite' });
 
 export const TRANSLATIONS: readonly Translation[] = [
   { ref: 'test-es:item:001', lang: 'en', text: 'I have to work.' },
@@ -255,11 +271,18 @@ export const TEST_PACK: ContentPack = {
     },
   ],
   senses: [],
+  // Eight forms across four shapes, so a distractor ranking has something to
+  // rank: same tense different person, same person different tense, and two
+  // non-finite forms that must never be offered against a finite blank.
   verbForms: [
-    verbForm('tener-1s', 'tengo'),
-    verbForm('tener-2s', 'tienes'),
-    verbForm('tener-3s', 'tiene'),
-    verbForm('tener-1p', 'tenemos'),
+    verbForm('tener-1s', 'tengo', finite(1, 'singular')),
+    verbForm('tener-2s', 'tienes', finite(2, 'singular')),
+    verbForm('tener-3s', 'tiene', finite(3, 'singular')),
+    verbForm('tener-1p', 'tenemos', finite(1, 'plural')),
+    verbForm('tener-1s-pret', 'tuve', finite(1, 'singular', 'preterite')),
+    verbForm('tener-3s-pret', 'tuvo', finite(3, 'singular', 'preterite')),
+    verbForm('tener-ger', 'teniendo', { verbForm: 'gerund' }),
+    verbForm('tener-part', 'tenido', { verbForm: 'participle' }),
   ],
   skills: [
     {

@@ -31,6 +31,7 @@ describe('sessionPath', () => {
         usableIn: 'es-MX',
       },
       passage: 'mercado',
+      skills: ['preterite'],
       dueOnly: true,
       ordering: 'random',
       seed: 42,
@@ -102,5 +103,37 @@ describe('parseSessionUrl', () => {
 
   it('ignores the "all" sentinel the Browse selects use for "no filter"', () => {
     expect(parse('/session?preset=quick&topic=all').filter.topics).toBeUndefined();
+    expect(parse('/session?preset=quick&skill=all').skills).toBeUndefined();
+  });
+
+  /**
+   * Skills are the one way to ask for a tense — the pack attaches
+   * `preterite` and `imperfect` to the sentences that use them — so the link
+   * has to carry them or "practise the past" is unreachable.
+   */
+  it('reads the skills a session was scoped to', () => {
+    expect(parse('/session?preset=quick&skill=preterite').skills).toEqual(['preterite']);
+    expect(parse('/session?preset=quick&skill=preterite,imperfect').skills).toEqual([
+      'preterite',
+      'imperfect',
+    ]);
+  });
+
+  /**
+   * Unlike a type or a level, a skill slug is pack vocabulary rather than a
+   * domain enum, so this module cannot tell a typo from a slug a pack it has
+   * never seen declares. It keeps both and lets the screen resolve them, which
+   * is the same division of labour `passage` uses.
+   */
+  it('keeps a skill slug it cannot validate, and leaves resolution to the screen', () => {
+    expect(parse('/session?preset=quick&skill=not-a-skill').skills).toEqual(['not-a-skill']);
+  });
+
+  it('does not confuse a skill with a topic of the same name', () => {
+    const url = parse('/session?preset=quick&skill=imperative&topic=work');
+
+    expect(url.skills).toEqual(['imperative']);
+    expect(url.filter.topics).toEqual(['work']);
+    expect(url.filter.skills).toBeUndefined();
   });
 });

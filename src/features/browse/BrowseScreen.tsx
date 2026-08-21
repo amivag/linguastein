@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
+import { Chip } from '../../components/Chip';
 import { CourseBar } from '../../components/CourseBar';
 import { TokenizedText } from '../../components/TokenizedText';
 import { UsageBadges } from '../../components/UsageBadges';
@@ -13,17 +14,25 @@ import { VoiceInput } from '../../components/VoiceInput';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
   FILTERABLE_REGIONS,
+  ITEM_SORTS,
   POS_LABELS,
+  REGISTER_LABELS,
   REGISTERS,
+  regionLabel,
+  sortItems,
   type ItemFilter,
+  type ItemSort,
   type ItemType,
+  type LearningItem,
   type PartOfSpeech,
   type Register,
 } from '../../domain/content';
 import type { SessionSize } from '../../domain/sessions';
 import { sessionPath } from '../practice/session-url';
+import { browsePath, parseBrowseUrl } from './browse-url';
 import styles from './BrowseScreen.module.css';
 import { CategoryPicker } from './CategoryPicker';
+import { LetterIndex } from './LetterIndex';
 
 const TYPES: readonly { id: ItemType | 'all'; label: string }[] = [
   { id: 'all', label: 'Everything' },
@@ -31,6 +40,17 @@ const TYPES: readonly { id: ItemType | 'all'; label: string }[] = [
   { id: 'phrase', label: 'Phrases' },
   { id: 'sentence', label: 'Sentences' },
 ];
+
+/**
+ * How the list can be ordered. The pack's own order is the default, because it
+ * is a teaching order — the first words a beginner meets come first — and
+ * alphabetical order is a way of *finding* something, not of being taught it.
+ */
+const SORT_LABELS: Record<ItemSort, string> = {
+  pack: 'Pack order',
+  az: 'A to Z',
+  za: 'Z to A',
+};
 
 const PAGE_SIZE = 40;
 /** Longest session offered from a filter, however much the filter matched. */
@@ -49,22 +69,128 @@ function posLabel(pos: PartOfSpeech): string {
 }
 
 /**
+ * The narrowing as the controls hold it: one value each, with `all` for "not
+ * narrowed".
+ *
+ * A separate shape from `ItemFilter` because the two answer different questions.
+ * A filter says what is in scope and is plural — a session link may ask for
+ * `?pos=verb,noun`. A select says which single option is showing, and needs a
+ * spelling for "none of them" that a filter expresses by absence.
+ */
+interface Facets {
+  readonly search: string;
+  readonly type: ItemType | 'all';
+  readonly pos: PartOfSpeech | 'all';
+  readonly topic: string;
+  readonly registers: readonly Register[];
+  readonly region: string;
+  readonly initial: string;
+  readonly sort: ItemSort;
+}
+
+/**
+ * One filter object drives the list, the query string and the session link, so
+ * what a learner sees is exactly what "Practise these" practises.
+ *
+ * The course scope is deliberately not folded in: it is carried by the path
+ * rather than the query, and duplicating it would write `?level=a1` into every
+ * link the screen produces. Nor is `sort` — which items there are is the
+ * filter's answer, and what order they are dealt in is the list's own business.
+ */
+/** Adds or removes one value — what pressing a multi-select chip means. */
+function toggle<T>(values: readonly T[], value: T): readonly T[] {
+  return values.includes(value) ? values.filter((entry) => entry !== value) : [...values, value];
+}
+
+function filterOf(facets: Facets): ItemFilter {
+  return {
+    ...(facets.search.trim() ? { search: facets.search.trim() } : {}),
+    ...(facets.type === 'all' ? {} : { types: [facets.type] }),
+    ...(facets.pos === 'all' ? {} : { pos: [facets.pos] }),
+    ...(facets.topic === 'all' ? {} : { topics: [facets.topic] }),
+    ...(facets.registers.length ? { registers: facets.registers } : {}),
+    ...(facets.region === 'all' ? {} : { usableIn: facets.region }),
+    ...(facets.initial ? { initial: facets.initial } : {}),
+  };
+}
+
+/**
  * Free browsing of the whole pack — the "study mode" half of spec §4.2, and
  * the place to look something up rather than practise it.
  */
 export function BrowseScreen() {
   const { services, preferences } = useServices();
-  const { course, filter: courseScope } = useCourse();
+  const { course, filter: courseScope, path } = useCourse();
   const navigate = useNavigate();
 
-  const [search, setSearch] = useState('');
-  const [type, setType] = useState<ItemType | 'all'>('all');
-  const [pos, setPos] = useState<PartOfSpeech | 'all'>('all');
-  const [topic, setTopic] = useState('all');
-  const [register, setRegister] = useState<Register | 'all'>('all');
-  const [region, setRegion] = useState('all');
+  const [params, setParams] = useSearchParams();
+
+  /**
+   * The query string is what the sheet is showing, exactly as it is for a
+   * session. These were `useState`, which made a filtered sheet the one thing in
+   * the app you could not link to: no bookmarking "the nouns", no sharing it, no
+   * agent driving it, and a reload dropped you back to the whole pack. It also
+   * meant Home could not offer a category as a destination, because there was no
+   * address to send anyone to.
+   *
+   * Read through the same pair a session link uses, so `?pos=verb` cannot come
+   * to mean two things.
+   */
+  const { filter, sort } = useMemo(() => parseBrowseUrl(params), [params]);
+
+  // The selects are single-choice; the filter is plural because a link may carry
+  // `?pos=verb,noun`. Reading the first value keeps a hand-written batch working
+  // — the sheet lists all of it, and the control shows the first of them —
+  // rather than dropping what it cannot display.
+  const search = filter.search ?? '';
+  const type = filter.types?.[0] ?? 'all';
+  const pos = filter.pos?.[0] ?? 'all';
+  const topic = filter.topics?.[0] ?? 'all';
+  const registers = filter.registers ?? [];
+  const region = filter.usableIn ?? 'all';
+  const initial = filter.initial ?? '';
+
+  // Pagination is not part of the address: "show me 80 of them" is a thing you
+  // did to this list, not a thing the link means, and it resets whenever the
+  // filter changes anyway.
   const [limit, setLimit] = useState(PAGE_SIZE);
+
+  const facets: Facets = { search, type, pos, topic, registers, region, initial, sort };
+
+  /**
+   * Rewrites the query and starts the list from the top again.
+   *
+   * `replace` rather than `push`: typing four letters into the search box must
+   * not put four entries in the history for Back to walk out of one at a time.
+   */
+  const update = (patch: Partial<Facets>) => {
+    const next = { ...facets, ...patch };
+    // Through `browsePath` rather than assembled here, so the sheet's own links
+    // and the ones Study builds cannot come to disagree.
+    setParams(browsePath(course, { filter: filterOf(next), sort: next.sort }).split('?')[1] ?? '', {
+      replace: true,
+    });
+    setLimit(PAGE_SIZE);
+  };
   const words = useWordSelection();
+  const locale = preferences.pronunciationLocale;
+
+  // Voice discovery is asynchronous, so what can be heard is re-read once the
+  // provider is ready rather than assumed on the first render — the approach
+  // `AudioControls` takes, for the same reason.
+  const [voicesReady, setVoicesReady] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    void services.audio.ready().then(() => {
+      if (!cancelled) setVoicesReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [services.audio]);
+
+  // Leaving the screen must not leave a word still talking.
+  useEffect(() => () => services.audio.stop(), [services.audio]);
 
   // Counted over the course, not the current filter: a category's size is a
   // property of what is in scope, and recounting per search would make every
@@ -87,38 +213,78 @@ export function BrowseScreen() {
     () => services.repository.partsOfSpeech(courseScope),
     [services.repository, courseScope],
   );
-  const labelFor = (id: string) => topicLabels.get(id) ?? id.replace(/-/g, ' ');
-
-  // One filter object drives both the list and the session link, so what a
-  // learner sees here is exactly what "Practise these" practises.
-  //
-  // The course scope is deliberately *not* folded in here: it is carried by the
-  // session's path rather than its query, and duplicating it would write
-  // `?level=a1` into every link the screen produces.
-  const filter = useMemo<ItemFilter>(
-    () => ({
-      ...(search.trim() ? { search: search.trim() } : {}),
-      ...(type === 'all' ? {} : { types: [type] }),
-      ...(pos === 'all' ? {} : { pos: [pos] }),
-      ...(topic === 'all' ? {} : { topics: [topic] }),
-      ...(register === 'all' ? {} : { registers: [register] }),
-      ...(region === 'all' ? {} : { usableIn: region }),
-    }),
-    [search, type, pos, topic, register, region],
+  // The letters the course has content under, collated in the language being
+  // studied rather than in the browser's own.
+  const letters = useMemo(
+    () => services.repository.initials(courseScope, course.language),
+    [services.repository, courseScope, course.language],
+  );
+  /**
+   * How many items each style and each region actually has, counted over the
+   * course like every other facet on this screen.
+   *
+   * A count is what makes a chip a decision rather than a label. It also tells
+   * the truth about a filter that cannot bite: a region with no content marked
+   * for it is dropped entirely, and a style with none reads `0` rather than
+   * looking like a live option.
+   */
+  const registerFacets = useMemo(
+    () =>
+      REGISTERS.map((value) => ({
+        value,
+        label: REGISTER_LABELS[value],
+        count: services.repository.query({ ...courseScope, registers: [value] }).length,
+      })),
+    [services.repository, courseScope],
+  );
+  const regions = useMemo(
+    () =>
+      services.repository
+        .regions(
+          courseScope,
+          FILTERABLE_REGIONS.map((option) => option.locale),
+        )
+        .map((facet) => ({
+          ...facet,
+          label:
+            FILTERABLE_REGIONS.find((option) => option.locale === facet.locale)?.label ??
+            regionLabel(facet.locale),
+        })),
+    [services.repository, courseScope],
   );
 
+  const labelFor = (id: string) => topicLabels.get(id) ?? id.replace(/-/g, ' ');
+
+  // Sorting is the list's business and not the session's: which items "Practise
+  // these" plans is the filter's answer, and what order it deals them in is
+  // `ordering`, which a session has to be asked for. So the sort stays here
+  // rather than being written into the link.
   const results = useMemo(
-    () => services.repository.query({ ...courseScope, ...filter }),
-    [services.repository, courseScope, filter],
+    () =>
+      sortItems(services.repository.query({ ...courseScope, ...filter }), sort, course.language),
+    [services.repository, courseScope, filter, sort, course.language],
   );
 
   const shown = results.slice(0, limit);
   const openItem = words.item ? services.repository.getItem(words.item) : undefined;
+
+  // `play` rather than `speak`: the pack's own recording of an item beats the
+  // device reading its text, and the audio service already knows to prefer one
+  // over the other. It stops whatever was playing first, so tapping down a list
+  // does not stack four voices.
+  const play = (item: LearningItem) =>
+    void services.audio.play(item, {
+      locale,
+      ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
+    });
   // Never offer a longer session than the filter actually found.
   const size: SessionSize = { kind: 'items', count: Math.min(results.length, SESSION_CAP) };
 
   return (
-    <AppShell title="Browse">
+    // Back to Study rather than to history: a sheet is reached from there, and
+    // a learner who followed three category tiles should not have to tap Back
+    // three times to leave.
+    <AppShell title="Browse" onBack={() => void navigate(path('study'))}>
       {/* Search, categories and the narrowing selects are one block: three
           stacked sections spaced like separate parts of the page is how the
           filters came to occupy more of it than the results did. */}
@@ -135,19 +301,28 @@ export function BrowseScreen() {
             value={search}
             placeholder="Search a word or phrase…"
             onChange={(event) => {
-              setSearch(event.target.value);
-              setLimit(PAGE_SIZE);
+              update({ search: event.target.value });
             }}
           />
           <VoiceInput
             label="Search by voice"
             locale={preferences.pronunciationLocale}
             onResult={(text) => {
-              setSearch(text);
-              setLimit(PAGE_SIZE);
+              update({ search: text });
             }}
           />
         </div>
+
+        {/* Beside the search field, because the two are the same question asked
+            in the two ways a learner has it: "where is this word" and "what is
+            in here, starting from somewhere". */}
+        <LetterIndex
+          letters={letters}
+          selected={initial}
+          onToggle={(letter) => {
+            update({ initial: letter === initial ? '' : letter });
+          }}
+        />
 
         <CategoryPicker
           topics={topics}
@@ -157,8 +332,7 @@ export function BrowseScreen() {
           // which is how the picker undoes itself without reaching for the
           // neighbouring select.
           onToggle={(next) => {
-            setTopic(next === topic ? 'all' : next);
-            setLimit(PAGE_SIZE);
+            update({ topic: next === topic ? 'all' : next });
           }}
           action={
             <label className={`${styles.filter} ${styles.topic}`}>
@@ -166,8 +340,7 @@ export function BrowseScreen() {
               <select
                 value={topic}
                 onChange={(event) => {
-                  setTopic(event.target.value);
-                  setLimit(PAGE_SIZE);
+                  update({ topic: event.target.value });
                 }}
               >
                 <option value="all">Any topic</option>
@@ -189,7 +362,10 @@ export function BrowseScreen() {
         <div className={styles.filters}>
           <label className={styles.filter}>
             <span className="visually-hidden">Type</span>
-            <select value={type} onChange={(event) => setType(event.target.value as ItemType)}>
+            <select
+              value={type}
+              onChange={(event) => update({ type: event.target.value as ItemType })}
+            >
               {TYPES.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.label}
@@ -209,8 +385,7 @@ export function BrowseScreen() {
               <select
                 value={pos}
                 onChange={(event) => {
-                  setPos(event.target.value as PartOfSpeech | 'all');
-                  setLimit(PAGE_SIZE);
+                  update({ pos: event.target.value as PartOfSpeech | 'all' });
                 }}
               >
                 <option value="all">Any word kind</option>
@@ -224,41 +399,75 @@ export function BrowseScreen() {
           )}
 
           <label className={styles.filter}>
-            <span className="visually-hidden">Register</span>
-            <select
-              value={register}
-              onChange={(event) => setRegister(event.target.value as Register | 'all')}
-            >
-              <option value="all">Any register</option>
-              {REGISTERS.map((option) => (
-                <option key={option} value={option}>
-                  {option === 'colloquial' ? 'casual' : option}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className={styles.filter}>
             <span className="visually-hidden">Region</span>
-            <select value={region} onChange={(event) => setRegion(event.target.value)}>
+            <select value={region} onChange={(event) => update({ region: event.target.value })}>
               {/* Region-neutral content always passes, so this narrows rather
-                than excludes: it drops what is not said where you are aiming. */}
+                than excludes: it drops what is not said where you are aiming.
+
+                Only regions the packs actually mark something for are offered.
+                Argentina and Colombia were on this list while no item carried
+                either, and because unmarked content passes every region check,
+                choosing one returned almost the whole pack and looked like it
+                had worked — a filter that silently does nothing is worse than
+                one that is absent. Same rule as the categories and the letters. */}
               <option value="all">Anywhere</option>
-              {FILTERABLE_REGIONS.map((option) => (
+              {regions.map((option) => (
                 <option key={option.locale} value={option.locale}>
-                  {option.label}
+                  {option.label} ({option.count})
                 </option>
               ))}
             </select>
           </label>
         </div>
+
+        {/* Chips rather than a select, because style is the one facet a learner
+            wants two of at once: "formal or casual, just not slang". The filter
+            has always been plural (`ItemFilter.registers`) and the link has
+            always carried `?register=a,b` — only the control could not say it. */}
+        <div className={styles.registers} role="group" aria-label="Style">
+          {registerFacets.map(({ value, label, count }) => (
+            <Chip
+              key={value}
+              pressed={registers.includes(value)}
+              count={count}
+              onClick={() => update({ registers: toggle(registers, value) })}
+            >
+              {label}
+            </Chip>
+          ))}
+        </div>
       </div>
 
-      <p className={styles.count} role="status">
-        {results.length} {results.length === 1 ? 'item' : 'items'}
-      </p>
+      {/* The list's own header. Sorting sits here rather than among the filters
+          because it narrows nothing — and because this line already exists, so
+          the one control that only reorders costs the screen no height. The
+          toolbar above it is the tallest thing on this page already; a fifth
+          select would have pushed the results another row further down. */}
+      <div className={styles.listBar}>
+        <p className={styles.count} role="status">
+          {results.length} {results.length === 1 ? 'item' : 'items'}
+        </p>
 
-      <ul className={styles.results}>
+        <label className={`${styles.filter} ${styles.sort}`}>
+          <span className="visually-hidden">Sort</span>
+          <select
+            value={sort}
+            onChange={(event) => update({ sort: event.target.value as ItemSort })}
+          >
+            {ITEM_SORTS.map((option) => (
+              <option key={option} value={option}>
+                {SORT_LABELS[option]}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      {/* Named, like a passage's lines are: a screen with a filter row, a
+          category pane and a letter index has four lists in it, and "which one
+          is the results" should not be a question a screen reader or an agent
+          has to answer by elimination. */}
+      <ul className={styles.results} aria-label="Results">
         {shown.map((item) => {
           const translation = services.repository.translationOf(
             item.id,
@@ -266,27 +475,47 @@ export function BrowseScreen() {
           );
           return (
             <li key={item.id} className={styles.result}>
-              {/* Tappable here too. Browse is where you come to look something
-                  up, so it was the worst place in the app not to be able to
-                  ask what a word in the result means. */}
-              <TokenizedText
-                item={item}
-                className={styles.target}
-                onSelect={(token) => words.open(item.id, token)}
-                selected={words.tokensFor(item.id)}
-                contextLabel={item.text}
-              />
-              {translation && <span className={styles.meaning}>{translation.text}</span>}
-              <span className={styles.meta}>
-                {item.level?.toUpperCase()}
-                {item.topics?.length ? ` · ${item.topics.map(labelFor).join(', ')}` : ''}
-              </span>
-              <UsageBadges
-                compact
-                register={item.register}
-                address={item.address}
-                regions={item.regions}
-              />
+              <div className={styles.body}>
+                {/* Tappable here too. Browse is where you come to look something
+                    up, so it was the worst place in the app not to be able to
+                    ask what a word in the result means. */}
+                <TokenizedText
+                  item={item}
+                  className={styles.target}
+                  onSelect={(token) => words.open(item.id, token)}
+                  selected={words.tokensFor(item.id)}
+                  contextLabel={item.text}
+                />
+                {translation && <span className={styles.meaning}>{translation.text}</span>}
+                <span className={styles.meta}>
+                  {item.level?.toUpperCase()}
+                  {item.topics?.length ? ` · ${item.topics.map(labelFor).join(', ')}` : ''}
+                </span>
+                <UsageBadges
+                  compact
+                  register={item.register}
+                  address={item.address}
+                  regions={item.regions}
+                />
+              </div>
+              {/* Hearing a word is half of knowing it, and reading a list of
+                  Spanish silently is how a learner arrives at a session having
+                  never heard any of it. Offered per row rather than as one
+                  control for the page: nothing else says *which* word.
+
+                  Absent rather than dead when there is nothing to play with —
+                  no recording in the pack and no voice on the device — because
+                  forty buttons that do nothing is worse than none. */}
+              {voicesReady && services.audio.canPlay(item, locale) && (
+                <button
+                  type="button"
+                  className={styles.play}
+                  onClick={() => play(item)}
+                  aria-label={`Listen to “${item.text}”`}
+                >
+                  <Icon name="speak" size="lg" />
+                </button>
+              )}
             </li>
           );
         })}

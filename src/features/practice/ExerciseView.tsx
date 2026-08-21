@@ -46,7 +46,10 @@ const GRADE_LABELS: Record<ReviewGrade, string> = {
 export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const { services } = useServices();
   const [revealed, setRevealed] = useState(false);
-  const [built, setBuilt] = useState<readonly string[]>([]);
+  // Tiles are held by position, never by text. `Veo la televisión por la noche.`
+  // deals two `la` tiles, and tracking them by word disabled both the moment one
+  // was used — leaving the sentence impossible to finish and marked wrong.
+  const [built, setBuilt] = useState<readonly number[]>([]);
   const words = useWordSelection();
   // Which choice was tapped, so the feedback can mark that one rather than
   // painting every distractor red.
@@ -70,6 +73,8 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
 
   const answered = runner.lastResult !== null;
   const item = exercise.item;
+  const parts = exercise.kind === 'tap-to-build' ? exercise.parts : [];
+  const builtWords = built.map((position) => parts[position] ?? '');
 
   // A card the engine grades must not display the answer it is about to grade.
   // The details below — notes, skills, example sentences with their translations
@@ -218,7 +223,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
         <>
           <p className={styles.promptSecondary}>{exercise.prompt}</p>
           <p className={styles.built} lang="es">
-            {built.join(' ') || ' '}
+            {builtWords.join(' ') || ' '}
           </p>
           {/*
             Raised, not `option`.
@@ -233,10 +238,10 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           <div className={styles.parts}>
             {exercise.parts.map((part, position) => (
               <Button
-                key={`${part}-${position}`}
+                key={position}
                 lang="es"
-                disabled={answered || built.includes(part)}
-                onClick={() => setBuilt((current) => [...current, part])}
+                disabled={answered || built.includes(position)}
+                onClick={() => setBuilt((current) => [...current, position])}
               >
                 {part}
               </Button>
@@ -249,7 +254,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             <Button
               variant="primary"
               disabled={answered || built.length === 0}
-              onClick={() => runner.submitAnswer({ value: built, latencyMs: elapsed() })}
+              onClick={() => runner.submitAnswer({ value: builtWords, latencyMs: elapsed() })}
             >
               Check
             </Button>

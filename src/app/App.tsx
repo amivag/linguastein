@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { BrowseScreen } from '../features/browse/BrowseScreen';
+import { StudyScreen } from '../features/study/StudyScreen';
 import { HomeScreen } from '../features/home/HomeScreen';
 import { ProgressScreen } from '../features/progress/ProgressScreen';
 import { PassageScreen } from '../features/read/PassageScreen';
@@ -119,6 +120,7 @@ export function App() {
             {/* Every screen lives inside a course, so what is being studied is
               legible in the address bar and travels with a shared link. */}
             <Route path="/:language/:level" element={<HomeScreen />} />
+            <Route path="/:language/:level/study" element={<StudyScreen />} />
             <Route path="/:language/:level/browse" element={<BrowseScreen />} />
             <Route path="/:language/:level/read" element={<ReadScreen />} />
             <Route path="/:language/:level/read/:id" element={<PassageScreen />} />

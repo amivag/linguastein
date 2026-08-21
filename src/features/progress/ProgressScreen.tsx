@@ -60,7 +60,10 @@ export function ProgressScreen() {
     void (async () => {
       const [stored, sessions] = await Promise.all([
         services.storage.progress.all(),
-        services.storage.sessions.recent(5),
+        // Narrowed by language, like everything else on this screen. Progress
+        // rows can be scoped after the fact because they carry item ids; a
+        // session row cannot, which is why it now records its course.
+        services.storage.sessions.recent(5, course.language),
       ]);
       if (cancelled) return;
 
@@ -82,7 +85,7 @@ export function ProgressScreen() {
     return () => {
       cancelled = true;
     };
-  }, [services, scope]);
+  }, [services, scope, course.language]);
 
   if (!data) return <AppShell title="Progress">{null}</AppShell>;
 

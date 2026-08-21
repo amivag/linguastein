@@ -205,10 +205,22 @@
   color: var(--color-surface);
 }
 
+/*
+ * The words to build the sentence from.
+ *
+ * Pills, because that is the shape of a thing that goes somewhere — and because
+ * it distinguishes them at a glance from the slot below, which is a rounded
+ * rectangle. Shape carries that difference as well as elevation does, and it
+ * survives being looked at from arm's length.
+ */
 .parts {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+}
+
+.parts button {
+  border-radius: var(--radius-pill);
 }
 
 /*

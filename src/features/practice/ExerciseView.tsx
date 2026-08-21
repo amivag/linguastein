@@ -221,12 +221,21 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           <p className={styles.built} lang="es">
             {built.join(' ') || ' '}
           </p>
+          {/*
+            Raised, not `option`.
+
+            `option` means "an answer recessed into the card", which is right for
+            a row of multiple-choice answers and wrong here: the slot above is
+            the recessed thing, and painting the words the same colour made the
+            two indistinguishable — a well you fill and the tiles you fill it
+            with, in one flat grey. A word here is an object you pick up, so it
+            sits on the surface.
+          */}
           <div className={styles.parts}>
             {exercise.parts.map((part, position) => (
               <Button
                 key={`${part}-${position}`}
                 lang="es"
-                variant="option"
                 disabled={answered || built.includes(part)}
                 onClick={() => setBuilt((current) => [...current, part])}
               >

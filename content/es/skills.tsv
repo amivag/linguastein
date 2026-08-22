@@ -13,3 +13,13 @@ handle-clothing-size	function	Hablar de la talla	Understand and respond to a siz
 ask-to-try-on	function	Pedir probarse una prenda	Ask to try on an item of clothing	a1	seek-clothing-item
 choose-clothing-purchase	function	Elegir una prenda	Choose an item and say you will take it	a1	ask-to-try-on
 ask-understand-item-price	function	Preguntar y entender el precio de una prenda	Ask for and understand an item's price	a1	choose-clothing-purchase
+confirm-hotel-reservation	function	Confirmar una reserva de hotel	Confirm that you have a hotel reservation	a1
+give-stay-details	function	Dar los detalles de la estancia	Give simple room and stay details	a1	confirm-hotel-reservation
+ask-whats-included	function	Preguntar qué está incluido	Ask what is included with the stay	a1	confirm-hotel-reservation
+understand-hotel-schedule	function	Entender un horario del hotel	Understand a simple hotel schedule	a1	ask-whats-included
+locate-hotel-facility	function	Localizar un servicio del hotel	Ask about and understand a hotel facility's location	a1	confirm-hotel-reservation
+open-social-planning	function	Abrir una conversación sobre planes	Open a conversation about what to do	a1
+suggest-social-activity	function	Proponer una actividad	Suggest a social activity	a1	open-social-planning
+respond-to-suggestion	function	Responder a una propuesta	Accept, decline or react to a suggestion	a1	suggest-social-activity
+coordinate-plan-time	function	Acordar la hora de un plan	Ask about and agree on a time	a1	suggest-social-activity
+confirm-social-plan	function	Confirmar un plan social	Confirm the agreed activity, time or place	a1	coordinate-plan-time

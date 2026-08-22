@@ -53,7 +53,7 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,
-  610 sentences — 1,061 practisable items, 99% of sentence words linked to a lexeme
+  622 sentences — 1,073 practisable items, 99% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -140,14 +140,16 @@ The dataset work is briefed in full for a fresh session:
    §4.6 of [docs/tasks/game-feel.md](tasks/game-feel.md) — and the constraints
    still bind: no resettable streak, no reward that overstates the evidence, and
    nothing where motion or colour is the only signal.
-6. **Situations as communicative functions** — landed for the café, directions and clothes-shopping missions.
+6. **Situations as communicative functions** — landed for the café, directions,
+   clothes-shopping, hotel and making-plans missions.
    `content/es/skills.tsv` now authors functions as a second axis to topics:
    `restaurant` is what a sentence is _about_, while ordering politely or
    understanding a price is what the learner is _trying to do_. Sentence rows
    attach those functions, session URLs preserve them, mastery derives evidence,
-   and the mission reports the capabilities it trains. Next: annotate the other
-   three situational missions with the same mechanism, then add additional transfer
-   contexts before treating a capability as reliable.
+   and the mission reports the capabilities it trains. The remaining mission,
+   describing a morning, is connected narration rather than a dialogue and needs
+   a capability model that preserves sequence and coherence. Continue adding
+   transfer contexts before treating any capability as reliable.
 7. **Verb practice depth** — surface `VerbForm` records directly (person and
    tense drills), not only cloze inside sentences. Word inspection already
    shows the forms; practising them directly is the next step.

@@ -24,6 +24,16 @@
 {"id":"core-es:skill:ask-to-try-on","kind":"function","label":"Pedir probarse una prenda","level":"a1","prerequisites":["core-es:skill:seek-clothing-item"]}
 {"id":"core-es:skill:choose-clothing-purchase","kind":"function","label":"Elegir una prenda","level":"a1","prerequisites":["core-es:skill:ask-to-try-on"]}
 {"id":"core-es:skill:ask-understand-item-price","kind":"function","label":"Preguntar y entender el precio de una prenda","level":"a1","prerequisites":["core-es:skill:choose-clothing-purchase"]}
+{"id":"core-es:skill:confirm-hotel-reservation","kind":"function","label":"Confirmar una reserva de hotel","level":"a1"}
+{"id":"core-es:skill:give-stay-details","kind":"function","label":"Dar los detalles de la estancia","level":"a1","prerequisites":["core-es:skill:confirm-hotel-reservation"]}
+{"id":"core-es:skill:ask-whats-included","kind":"function","label":"Preguntar qué está incluido","level":"a1","prerequisites":["core-es:skill:confirm-hotel-reservation"]}
+{"id":"core-es:skill:understand-hotel-schedule","kind":"function","label":"Entender un horario del hotel","level":"a1","prerequisites":["core-es:skill:ask-whats-included"]}
+{"id":"core-es:skill:locate-hotel-facility","kind":"function","label":"Localizar un servicio del hotel","level":"a1","prerequisites":["core-es:skill:confirm-hotel-reservation"]}
+{"id":"core-es:skill:open-social-planning","kind":"function","label":"Abrir una conversación sobre planes","level":"a1"}
+{"id":"core-es:skill:suggest-social-activity","kind":"function","label":"Proponer una actividad","level":"a1","prerequisites":["core-es:skill:open-social-planning"]}
+{"id":"core-es:skill:respond-to-suggestion","kind":"function","label":"Responder a una propuesta","level":"a1","prerequisites":["core-es:skill:suggest-social-activity"]}
+{"id":"core-es:skill:coordinate-plan-time","kind":"function","label":"Acordar la hora de un plan","level":"a1","prerequisites":["core-es:skill:suggest-social-activity"]}
+{"id":"core-es:skill:confirm-social-plan","kind":"function","label":"Confirmar un plan social","level":"a1","prerequisites":["core-es:skill:coordinate-plan-time"]}
 {"id":"core-es:skill:numerals-teens","kind":"pattern","label":"dieciséis, diecisiete…","level":"a1"}
 {"id":"core-es:skill:numerals-twenties","kind":"pattern","label":"veintiuno, veintidós…","level":"a1"}
 {"id":"core-es:skill:numerals-y-joining","kind":"pattern","label":"treinta y uno / ciento uno","level":"a1"}

@@ -7,7 +7,7 @@ engine is language-agnostic by design.
 phone, offline, with no account.
 
 Status: **0.1.0-alpha.1 — alpha.** The architecture, engine and practice loop are
-in place, with a generated A1–A2 Spanish pack of 1,061 practisable items awaiting
+in place, with a generated A1–A2 Spanish pack of 1,073 practisable items awaiting
 editorial review (see [`docs/spec`](docs/spec) for the product specification).
 
 Alpha means what it says: anything may change drastically, including the data
@@ -82,7 +82,7 @@ Five sections behind a tab bar (a rail on wider screens):
 | -------- | ------------------------------------------------------------------------------------------------- |
 | Practice | quick sessions, the six presets, and what to practise: categories and a focus                     |
 | Read     | connected texts and dialogues, every word tappable                                                |
-| Browse   | search and filter all 1,061 items, by thematic category or facet; dictate the search with the mic |
+| Browse   | search and filter all 1,073 items, by thematic category or facet; dictate the search with the mic |
 | Progress | what has been practised, accuracy, weak items, recent sessions                                    |
 | Settings | course, audio and voice, practice, appearance, data — in grouped sections                         |
 
@@ -138,7 +138,7 @@ from a dataset passes through the validation boundary in
 breaking a session.
 
 The shipped `core-es` pack covers A1–A2: **117 verbs** with generated forms,
-**358 nouns**, **218 modifiers** and **610 example sentences** — 1,061 practisable
+**358 nouns**, **218 modifiers** and **622 example sentences** — 1,073 practisable
 items in total.
 
 Humans author compact TSV in `content/es/`; `npm run build:data` derives

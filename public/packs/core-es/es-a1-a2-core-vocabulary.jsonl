@@ -144,7 +144,7 @@
 {"id":"core-es:item:500143","pack":"core-es","type":"word","text":"mercado","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:mercado"],"examples":["core-es:item:000203","core-es:item:000303","core-es:item:000533"]}
 {"id":"core-es:item:500144","pack":"core-es","type":"word","text":"supermercado","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:supermercado"],"examples":["core-es:item:000300","core-es:item:000445"]}
 {"id":"core-es:item:500145","pack":"core-es","type":"word","text":"restaurante","level":"a1","topics":["restaurant"],"lexemes":["core-es:lexeme:restaurante"],"examples":["core-es:item:000125","core-es:item:000255","core-es:item:000535"]}
-{"id":"core-es:item:500146","pack":"core-es","type":"word","text":"bar","level":"a1","topics":["restaurant"],"lexemes":["core-es:lexeme:bar"],"examples":["core-es:item:000132"]}
+{"id":"core-es:item:500146","pack":"core-es","type":"word","text":"bar","level":"a1","topics":["restaurant"],"lexemes":["core-es:lexeme:bar"],"examples":["core-es:item:000132","core-es:item:000615"]}
 {"id":"core-es:item:500147","pack":"core-es","type":"word","text":"hotel","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:hotel"],"examples":["core-es:item:000328","core-es:item:000334","core-es:item:000543"]}
 {"id":"core-es:item:500148","pack":"core-es","type":"word","text":"banco","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:banco"],"examples":["core-es:item:000084","core-es:item:000380","core-es:item:000503"]}
 {"id":"core-es:item:500149","pack":"core-es","type":"word","text":"farmacia","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:farmacia"],"examples":["core-es:item:000179","core-es:item:000503","core-es:item:000600"]}
@@ -204,7 +204,7 @@
 {"id":"core-es:item:500203","pack":"core-es","type":"word","text":"tiempo","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:tiempo"],"examples":["core-es:item:000035","core-es:item:000037","core-es:item:000080"]}
 {"id":"core-es:item:500204","pack":"core-es","type":"word","text":"hora","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:hora"],"examples":["core-es:item:000089","core-es:item:000092","core-es:item:000102"]}
 {"id":"core-es:item:500205","pack":"core-es","type":"word","text":"minuto","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:minuto"],"examples":["core-es:item:000181","core-es:item:000335","core-es:item:000602"]}
-{"id":"core-es:item:500206","pack":"core-es","type":"word","text":"segundo","level":"a2","topics":["time"],"lexemes":["core-es:lexeme:segundo"],"examples":["core-es:item:000195"]}
+{"id":"core-es:item:500206","pack":"core-es","type":"word","text":"segundo","level":"a2","topics":["time"],"lexemes":["core-es:lexeme:segundo"],"examples":["core-es:item:000195","core-es:item:000616"]}
 {"id":"core-es:item:500207","pack":"core-es","type":"word","text":"día","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:dia"],"examples":["core-es:item:000002","core-es:item:000107","core-es:item:000196"]}
 {"id":"core-es:item:500208","pack":"core-es","type":"word","text":"mañana","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:manana"],"examples":["core-es:item:000022","core-es:item:000066","core-es:item:000126"]}
 {"id":"core-es:item:500209","pack":"core-es","type":"word","text":"tarde","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:tarde"],"examples":["core-es:item:000003","core-es:item:000037","core-es:item:000072"]}
@@ -353,7 +353,7 @@
 {"id":"core-es:item:500353","pack":"core-es","type":"word","text":"lado","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:lado"],"examples":["core-es:item:000179"]}
 {"id":"core-es:item:500354","pack":"core-es","type":"word","text":"guitarra","level":"a2","topics":["music"],"lexemes":["core-es:lexeme:guitarra"],"examples":["core-es:item:000256"]}
 {"id":"core-es:item:500355","pack":"core-es","type":"word","text":"músculo","level":"a2","topics":["body"],"lexemes":["core-es:lexeme:musculo"],"examples":["core-es:item:000152"]}
-{"id":"core-es:item:500356","pack":"core-es","type":"word","text":"reserva","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:reserva"],"examples":["core-es:item:000325","core-es:item:000574"]}
+{"id":"core-es:item:500356","pack":"core-es","type":"word","text":"reserva","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:reserva"],"examples":["core-es:item:000325","core-es:item:000574","core-es:item:000611"]}
 {"id":"core-es:item:500357","pack":"core-es","type":"word","text":"lentes","level":"a1","topics":["clothes"],"regions":["es-419"],"lexemes":["core-es:lexeme:lentes"],"examples":["core-es:item:000462","core-es:item:000463"]}
 {"id":"core-es:item:500358","pack":"core-es","type":"word","text":"refrigerador","level":"a2","topics":["home"],"regions":["es-419"],"lexemes":["core-es:lexeme:refrigerador"],"examples":["core-es:item:000464","core-es:item:000465"]}
 {"id":"core-es:item:600001","pack":"core-es","type":"word","text":"bueno","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:bueno"],"examples":["core-es:item:000002","core-es:item:000003","core-es:item:000004"]}
@@ -428,7 +428,7 @@
 {"id":"core-es:item:600086","pack":"core-es","type":"word","text":"ocho","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:ocho"],"examples":["core-es:item:000098","core-es:item:000102","core-es:item:000279"]}
 {"id":"core-es:item:600087","pack":"core-es","type":"word","text":"nueve","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:nueve"],"examples":["core-es:item:000093","core-es:item:000156","core-es:item:000341"]}
 {"id":"core-es:item:600088","pack":"core-es","type":"word","text":"diez","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:diez"],"examples":["core-es:item:000302","core-es:item:000335","core-es:item:000342"]}
-{"id":"core-es:item:600089","pack":"core-es","type":"word","text":"once","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:once"],"examples":["core-es:item:000101","core-es:item:000528"]}
+{"id":"core-es:item:600089","pack":"core-es","type":"word","text":"once","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:once"],"examples":["core-es:item:000101","core-es:item:000528","core-es:item:000614"]}
 {"id":"core-es:item:600090","pack":"core-es","type":"word","text":"doce","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:doce"],"examples":["core-es:item:000508"]}
 {"id":"core-es:item:600091","pack":"core-es","type":"word","text":"veinte","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:veinte"],"examples":["core-es:item:000181","core-es:item:000305"]}
 {"id":"core-es:item:600092","pack":"core-es","type":"word","text":"treinta","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:treinta"],"examples":["core-es:item:000033","core-es:item:000196","core-es:item:000568"]}
@@ -447,6 +447,6 @@
 {"id":"core-es:item:600073","pack":"core-es","type":"word","text":"doble","level":"a2","topics":["travel"],"lexemes":["core-es:lexeme:doble"],"examples":["core-es:item:000326","core-es:item:000575"]}
 {"id":"core-es:item:600074","pack":"core-es","type":"word","text":"izquierdo","level":"a1","topics":["body"],"lexemes":["core-es:lexeme:izquierdo"],"examples":["core-es:item:000260"]}
 {"id":"core-es:item:600075","pack":"core-es","type":"word","text":"derecho","level":"a1","topics":["body"],"lexemes":["core-es:lexeme:derecho"],"examples":["core-es:item:000148"]}
-{"id":"core-es:item:600076","pack":"core-es","type":"word","text":"incluido","level":"a2","topics":["travel"],"lexemes":["core-es:lexeme:incluido"],"examples":["core-es:item:000327","core-es:item:000576"]}
+{"id":"core-es:item:600076","pack":"core-es","type":"word","text":"incluido","level":"a2","topics":["travel"],"lexemes":["core-es:lexeme:incluido"],"examples":["core-es:item:000327","core-es:item:000576","core-es:item:000613"]}
 {"id":"core-es:item:600077","pack":"core-es","type":"word","text":"claro","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:claro"],"examples":["core-es:item:000407","core-es:item:000566","core-es:item:000608"]}
 {"id":"core-es:item:600078","pack":"core-es","type":"word","text":"mío","level":"a2","topics":["grammar"],"lexemes":["core-es:lexeme:mio"],"examples":["core-es:item:000241"]}

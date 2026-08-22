@@ -596,6 +596,12 @@
 {"ref":"core-es:item:000577","lang":"en","text":"Yes, from seven to ten.","type":"natural"}
 {"ref":"core-es:item:000578","lang":"en","text":"Is there a restaurant in the hotel?","type":"natural"}
 {"ref":"core-es:item:000579","lang":"en","text":"Yes, it's on the first floor.","type":"natural"}
+{"ref":"core-es:item:000611","lang":"en","text":"Good evening, do you have a reservation?","type":"natural"}
+{"ref":"core-es:item:000612","lang":"en","text":"Yes, a room for three nights.","type":"natural"}
+{"ref":"core-es:item:000613","lang":"en","text":"Is breakfast included?","type":"natural"}
+{"ref":"core-es:item:000614","lang":"en","text":"Yes, from eight to eleven.","type":"natural"}
+{"ref":"core-es:item:000615","lang":"en","text":"Is there a bar in the hotel?","type":"natural"}
+{"ref":"core-es:item:000616","lang":"en","text":"Yes, it's on the second floor.","type":"natural"}
 {"ref":"core-es:item:000580","lang":"en","text":"Good morning, what's the matter?","type":"natural"}
 {"ref":"core-es:item:000581","lang":"en","text":"My stomach hurts a lot.","type":"natural"}
 {"ref":"core-es:item:000582","lang":"en","text":"Since when?","type":"natural"}
@@ -609,6 +615,12 @@
 {"ref":"core-es:item:000590","lang":"en","text":"What time does the film start?","type":"natural"}
 {"ref":"core-es:item:000591","lang":"en","text":"At nine. We can have dinner beforehand.","type":"natural"}
 {"ref":"core-es:item:000592","lang":"en","text":"All right, see you at seven.","type":"natural"}
+{"ref":"core-es:item:000617","lang":"en","text":"What shall we do this afternoon?","type":"natural"}
+{"ref":"core-es:item:000618","lang":"en","text":"Do you want to go to the park?","type":"natural"}
+{"ref":"core-es:item:000619","lang":"en","text":"Yes, the weather is nice.","type":"natural"}
+{"ref":"core-es:item:000620","lang":"en","text":"What time shall we meet?","type":"natural"}
+{"ref":"core-es:item:000621","lang":"en","text":"At six. We can have coffee afterwards.","type":"natural"}
+{"ref":"core-es:item:000622","lang":"en","text":"Perfect, see you in the park.","type":"natural"}
 {"ref":"core-es:item:500001","lang":"en","text":"person","type":"natural"}
 {"ref":"core-es:item:500002","lang":"en","text":"man","type":"natural"}
 {"ref":"core-es:item:500003","lang":"en","text":"woman","type":"natural"}
@@ -1778,6 +1790,16 @@
 {"ref":"core-es:skill:ask-to-try-on","lang":"en","text":"Ask to try on an item of clothing"}
 {"ref":"core-es:skill:choose-clothing-purchase","lang":"en","text":"Choose an item and say you will take it"}
 {"ref":"core-es:skill:ask-understand-item-price","lang":"en","text":"Ask for and understand an item's price"}
+{"ref":"core-es:skill:confirm-hotel-reservation","lang":"en","text":"Confirm that you have a hotel reservation"}
+{"ref":"core-es:skill:give-stay-details","lang":"en","text":"Give simple room and stay details"}
+{"ref":"core-es:skill:ask-whats-included","lang":"en","text":"Ask what is included with the stay"}
+{"ref":"core-es:skill:understand-hotel-schedule","lang":"en","text":"Understand a simple hotel schedule"}
+{"ref":"core-es:skill:locate-hotel-facility","lang":"en","text":"Ask about and understand a hotel facility's location"}
+{"ref":"core-es:skill:open-social-planning","lang":"en","text":"Open a conversation about what to do"}
+{"ref":"core-es:skill:suggest-social-activity","lang":"en","text":"Suggest a social activity"}
+{"ref":"core-es:skill:respond-to-suggestion","lang":"en","text":"Accept, decline or react to a suggestion"}
+{"ref":"core-es:skill:coordinate-plan-time","lang":"en","text":"Ask about and agree on a time"}
+{"ref":"core-es:skill:confirm-social-plan","lang":"en","text":"Confirm the agreed activity, time or place"}
 {"ref":"core-es:skill:numerals-teens","lang":"en","text":"the teens, written as one word"}
 {"ref":"core-es:skill:numerals-twenties","lang":"en","text":"the twenties, written as one word"}
 {"ref":"core-es:skill:numerals-y-joining","lang":"en","text":"y joins tens to units, and never hundreds to tens"}
@@ -1802,3 +1824,5 @@
 {"ref":"core-es:passage:700015","lang":"en","text":"Another café order","type":"natural"}
 {"ref":"core-es:passage:700016","lang":"en","text":"Another route through town","type":"natural"}
 {"ref":"core-es:passage:700017","lang":"en","text":"Another clothes purchase","type":"natural"}
+{"ref":"core-es:passage:700018","lang":"en","text":"Another hotel arrival","type":"natural"}
+{"ref":"core-es:passage:700019","lang":"en","text":"Different plans with friends","type":"natural"}

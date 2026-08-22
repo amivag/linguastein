@@ -75,5 +75,27 @@ describe('missions', () => {
       'choose-clothing-purchase',
       'ask-understand-item-price',
     ]);
+
+    const hotel = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'hotel-check-in')!;
+    expect(missionPassageForStage(hotel, 'understand')).toBe('700012');
+    expect(missionPassageForStage(hotel, 'use')).toBe('700018');
+    expect(hotel.capabilities).toEqual([
+      'confirm-hotel-reservation',
+      'give-stay-details',
+      'ask-whats-included',
+      'understand-hotel-schedule',
+      'locate-hotel-facility',
+    ]);
+
+    const plans = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'make-plans')!;
+    expect(missionPassageForStage(plans, 'understand')).toBe('700014');
+    expect(missionPassageForStage(plans, 'use')).toBe('700019');
+    expect(plans.capabilities).toEqual([
+      'open-social-planning',
+      'suggest-social-activity',
+      'respond-to-suggestion',
+      'coordinate-plan-time',
+      'confirm-social-plan',
+    ]);
   });
 });

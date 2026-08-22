@@ -112,12 +112,20 @@
 000573	Muchas gracias.	Thank you very much.	a1	greetings					calle	Turista	thank-for-help
 #
 # ── En el hotel (dialogue) ────────────────────────────────────────────────────
-000574	Buenas tardes, ¿tiene una reserva?	Good afternoon, do you have a reservation?	a1	travel		formal	usted		hotel	Recepcionista
-000575	Sí, una habitación doble para dos noches.	Yes, a double room for two nights.	a1	travel					hotel	Cliente
-000576	¿El desayuno está incluido en el precio?	Is breakfast included in the price?	a2	travel					hotel	Cliente
-000577	Sí, de siete a diez.	Yes, from seven to ten.	a1	travel		formal	usted		hotel	Recepcionista
-000578	¿Hay un restaurante en el hotel?	Is there a restaurant in the hotel?	a1	travel					hotel	Cliente
-000579	Sí, está en el primer piso.	Yes, it's on the first floor.	a1	travel		formal	usted		hotel	Recepcionista
+000574	Buenas tardes, ¿tiene una reserva?	Good afternoon, do you have a reservation?	a1	travel		formal	usted		hotel	Recepcionista	confirm-hotel-reservation
+000575	Sí, una habitación doble para dos noches.	Yes, a double room for two nights.	a1	travel					hotel	Cliente	confirm-hotel-reservation,give-stay-details
+000576	¿El desayuno está incluido en el precio?	Is breakfast included in the price?	a1	travel					hotel	Cliente	ask-whats-included
+000577	Sí, de siete a diez.	Yes, from seven to ten.	a1	travel		formal	usted		hotel	Recepcionista	ask-whats-included,understand-hotel-schedule
+000578	¿Hay un restaurante en el hotel?	Is there a restaurant in the hotel?	a1	travel					hotel	Cliente	locate-hotel-facility
+000579	Sí, está en el primer piso.	Yes, it's on the first floor.	a1	travel		formal	usted		hotel	Recepcionista	locate-hotel-facility
+#
+# ── Otra llegada al hotel (transfer dialogue) ────────────────────────────────
+000611	Buenas noches, ¿tiene una reserva?	Good evening, do you have a reservation?	a1	travel		formal	usted		hotel-reto	Recepcionista	confirm-hotel-reservation
+000612	Sí, una habitación para tres noches.	Yes, a room for three nights.	a1	travel					hotel-reto	Cliente	confirm-hotel-reservation,give-stay-details
+000613	¿El desayuno está incluido?	Is breakfast included?	a1	travel					hotel-reto	Cliente	ask-whats-included
+000614	Sí, de ocho a once.	Yes, from eight to eleven.	a1	travel		formal	usted		hotel-reto	Recepcionista	ask-whats-included,understand-hotel-schedule
+000615	¿Hay un bar en el hotel?	Is there a bar in the hotel?	a1	travel					hotel-reto	Cliente	locate-hotel-facility
+000616	Sí, está en el segundo piso.	Yes, it's on the second floor.	a1	travel		formal	usted		hotel-reto	Recepcionista	locate-hotel-facility
 #
 # ── En el médico (dialogue) ───────────────────────────────────────────────────
 000580	Buenos días, ¿qué le pasa?	Good morning, what's the matter?	a2	health		formal	usted		medico	Médica
@@ -129,9 +137,17 @@
 000586	Tiene que descansar y beber mucha agua.	You need to rest and drink a lot of water.	a2	health		formal	usted		medico	Médica
 #
 # ── ¿Qué hacemos esta noche? (dialogue) ───────────────────────────────────────
-000587	¿Qué hacemos esta noche?	What shall we do tonight?	a1	social					amigos	Ana
-000588	No sé. ¿Quieres ir al cine?	I don't know. Do you want to go to the cinema?	a1	social					amigos	Luis
-000589	Hay una película nueva muy buena.	There's a very good new film.	a1	entertainment					amigos	Ana
-000590	¿A qué hora empieza la película?	What time does the film start?	a1	time					amigos	Luis
-000591	A las nueve. Podemos cenar antes.	At nine. We can have dinner beforehand.	a1	social					amigos	Ana
-000592	Muy bien, nos vemos a las siete.	All right, see you at seven.	a1	social,clock					amigos	Luis
+000587	¿Qué hacemos esta noche?	What shall we do tonight?	a1	social					amigos	Ana	open-social-planning
+000588	No sé. ¿Quieres ir al cine?	I don't know. Do you want to go to the cinema?	a1	social					amigos	Luis	suggest-social-activity,respond-to-suggestion
+000589	Hay una película nueva muy buena.	There's a very good new film.	a1	entertainment					amigos	Ana	respond-to-suggestion
+000590	¿A qué hora empieza la película?	What time does the film start?	a1	time					amigos	Luis	coordinate-plan-time
+000591	A las nueve. Podemos cenar antes.	At nine. We can have dinner beforehand.	a1	social					amigos	Ana	coordinate-plan-time
+000592	Muy bien, nos vemos a las siete.	All right, see you at seven.	a1	social,clock					amigos	Luis	confirm-social-plan
+#
+# ── Otros planes con amigos (transfer dialogue) ──────────────────────────────
+000617	¿Qué hacemos esta tarde?	What shall we do this afternoon?	a1	social					planes-reto	Ana	open-social-planning
+000618	¿Quieres ir al parque?	Do you want to go to the park?	a1	social					planes-reto	Luis	suggest-social-activity
+000619	Sí, hace buen tiempo.	Yes, the weather is nice.	a1	social,weather					planes-reto	Ana	respond-to-suggestion
+000620	¿A qué hora nos vemos?	What time shall we meet?	a1	time					planes-reto	Luis	coordinate-plan-time
+000621	A las seis. Podemos tomar un café después.	At six. We can have coffee afterwards.	a1	social,restaurant					planes-reto	Ana	coordinate-plan-time
+000622	Perfecto, nos vemos en el parque.	Perfect, see you in the park.	a1	social					planes-reto	Luis	confirm-social-plan

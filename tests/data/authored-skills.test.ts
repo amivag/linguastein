@@ -21,7 +21,21 @@ const shoppingIds = [
   'core-es:skill:choose-clothing-purchase',
   'core-es:skill:ask-understand-item-price',
 ] as const;
-const ids = [...cafeIds, ...directionIds, ...shoppingIds];
+const hotelIds = [
+  'core-es:skill:confirm-hotel-reservation',
+  'core-es:skill:give-stay-details',
+  'core-es:skill:ask-whats-included',
+  'core-es:skill:understand-hotel-schedule',
+  'core-es:skill:locate-hotel-facility',
+] as const;
+const planIds = [
+  'core-es:skill:open-social-planning',
+  'core-es:skill:suggest-social-activity',
+  'core-es:skill:respond-to-suggestion',
+  'core-es:skill:coordinate-plan-time',
+  'core-es:skill:confirm-social-plan',
+] as const;
+const ids = [...cafeIds, ...directionIds, ...shoppingIds, ...hotelIds, ...planIds];
 
 describe('authored communicative skills', () => {
   let scratch: ScratchPack | undefined;
@@ -48,6 +62,8 @@ describe('authored communicative skills', () => {
     expect(skills.find((skill) => skill.id === shoppingIds[4])?.prerequisites).toEqual([
       shoppingIds[3],
     ]);
+    expect(skills.find((skill) => skill.id === hotelIds[3])?.prerequisites).toEqual([hotelIds[2]]);
+    expect(skills.find((skill) => skill.id === planIds[4])?.prerequisites).toEqual([planIds[3]]);
   });
 
   it('attaches the functions to the sentences that provide their evidence', () => {
@@ -97,6 +113,36 @@ describe('authored communicative skills', () => {
     ]);
     expect(shoppingTransfer.count).toBe(7);
     expect(shoppingIds.filter((id) => !shoppingTransfer.used.has(id))).toEqual([]);
+
+    const hotel = capabilitiesIn(['000574', '000575', '000576', '000577', '000578', '000579']);
+    expect(hotel.count).toBe(6);
+    expect(hotelIds.filter((id) => !hotel.used.has(id))).toEqual([]);
+
+    const hotelTransfer = capabilitiesIn([
+      '000611',
+      '000612',
+      '000613',
+      '000614',
+      '000615',
+      '000616',
+    ]);
+    expect(hotelTransfer.count).toBe(6);
+    expect(hotelIds.filter((id) => !hotelTransfer.used.has(id))).toEqual([]);
+
+    const plans = capabilitiesIn(['000587', '000588', '000589', '000590', '000591', '000592']);
+    expect(plans.count).toBe(6);
+    expect(planIds.filter((id) => !plans.used.has(id))).toEqual([]);
+
+    const plansTransfer = capabilitiesIn([
+      '000617',
+      '000618',
+      '000619',
+      '000620',
+      '000621',
+      '000622',
+    ]);
+    expect(plansTransfer.count).toBe(6);
+    expect(planIds.filter((id) => !plansTransfer.used.has(id))).toEqual([]);
   });
 
   it('rejects a sentence that names an undeclared function', () => {

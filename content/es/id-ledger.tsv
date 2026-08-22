@@ -611,6 +611,18 @@
 000608	sentence	active	Claro. Puede probarlo allí.
 000609	sentence	active	Me gusta. Me lo llevo. ¿Cuánto cuesta?
 000610	sentence	active	Cuarenta euros.
+000611	sentence	active	Buenas noches, ¿tiene una reserva?
+000612	sentence	active	Sí, una habitación para tres noches.
+000613	sentence	active	¿El desayuno está incluido?
+000614	sentence	active	Sí, de ocho a once.
+000615	sentence	active	¿Hay un bar en el hotel?
+000616	sentence	active	Sí, está en el segundo piso.
+000617	sentence	active	¿Qué hacemos esta tarde?
+000618	sentence	active	¿Quieres ir al parque?
+000619	sentence	active	Sí, hace buen tiempo.
+000620	sentence	active	¿A qué hora nos vemos?
+000621	sentence	active	A las seis. Podemos tomar un café después.
+000622	sentence	active	Perfecto, nos vemos en el parque.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1080,3 +1092,5 @@
 700015	passage	active	Otro pedido en la cafetería
 700016	passage	active	Otra ruta por la ciudad
 700017	passage	active	Otra compra de ropa
+700018	passage	active	Otra llegada al hotel
+700019	passage	active	Otros planes con amigos

@@ -2,6 +2,7 @@
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useLocation } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
@@ -9,13 +10,38 @@ import { renderWithServices, testServices } from '../fixtures/services';
 
 describe('HomeScreen', () => {
   it('offers quick sessions and practice presets', async () => {
+    const user = userEvent.setup();
     renderWithServices(<HomeScreen />);
 
-    expect(await screen.findByRole('heading', { name: 'Español' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: 'Español · All levels' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Today's mission")).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Begin mission/ })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /Free practice/ }));
     expect(screen.getByRole('button', { name: '5 min' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Flashcards/ })).toBeInTheDocument();
-    // The scope the buttons above will practise, stated where it is chosen.
-    expect(screen.getByText(/Español · 7 items in scope/)).toBeInTheDocument();
+    // The scope the mission and free-practice choices will draw from.
+    expect(screen.getByText(/7 items in your course/)).toBeInTheDocument();
+  });
+
+  it('starts the recommended mission from a real passage in the current course', async () => {
+    const user = userEvent.setup();
+    function Where() {
+      return <output data-testid="where">{useLocation().pathname}</output>;
+    }
+
+    renderWithServices(
+      <>
+        <HomeScreen />
+        <Where />
+      </>,
+      { route: '/es/a1' },
+    );
+
+    await user.click(await screen.findByRole('button', { name: /Begin mission/ }));
+    expect(screen.getByTestId('where')).toHaveTextContent('/es/all/read/700002');
   });
 });
 

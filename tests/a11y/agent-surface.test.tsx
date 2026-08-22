@@ -116,7 +116,7 @@ describe('agent surface', () => {
     await screen.findByRole('heading', { level: 1 });
     // The course names the screen: the language being studied, with the level
     // beside it in the bar below.
-    expect(document.title).toBe('Español · Linguastein');
+    expect(document.title).toBe('Español · All levels · Linguastein');
   });
 
   it('keeps session state in the URL so an agent can resume or share it', async () => {

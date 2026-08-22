@@ -207,6 +207,7 @@ describe('the session the choice starts', () => {
     homeWith({ focusTopics: ['food-drink'], focus: 'struggling' });
     await screen.findByRole('heading', { level: 1 });
 
+    await user.click(screen.getByRole('button', { name: /Free practice/ }));
     await user.click(screen.getByRole('button', { name: /Flashcards/ }));
 
     const where = screen.getByTestId('where').textContent ?? '';
@@ -219,6 +220,7 @@ describe('the session the choice starts', () => {
     homeWith({});
     await screen.findByRole('heading', { level: 1 });
 
+    await user.click(screen.getByRole('button', { name: /Free practice/ }));
     await user.click(screen.getByRole('button', { name: '5 min' }));
 
     const where = screen.getByTestId('where').textContent ?? '';

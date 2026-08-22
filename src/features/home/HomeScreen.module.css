@@ -1,111 +1,236 @@
-/*
- * Three counts, three cards.
- *
- * They were one panel of grey numbers, which gave equal weight to three things
- * that are not equal: what is waiting for you, what is still unmet, and what you
- * have finished. Each carries its own tint now, from the role tokens rather than
- * a mix invented here — and the tint is never the only thing saying which is
- * which, since each card is labelled and each carries its own icon.
- */
-.stats {
+.scopeNote {
+  margin-top: calc(var(--space-3) * -1);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.mission {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.eyebrow,
+.sectionTitle,
+.sheetTitle {
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.missionHeading {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.missionTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-heading);
+}
+
+.missionPhrase {
+  margin-top: var(--space-3);
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-style: italic;
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-heading);
+}
+
+.missionMeaning {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+.missionIcon,
+.freePracticeIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.missionFacts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.missionFacts span {
+  display: flex;
+  align-items: center;
   gap: var(--space-2);
 }
 
-/*
- * No outline. A card is a card because it is a lighter surface with a shadow
- * under it, and three outlined boxes in a row was the app's most obvious tell
- * that it had been assembled rather than designed.
- */
-.stat {
+.missionFacts svg {
+  color: var(--color-accent);
+}
+
+.sectionTitle {
+  margin-bottom: var(--space-3);
+  color: var(--color-text-muted);
+}
+
+.learningPath {
   display: grid;
-  gap: var(--space-1);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.learningPath li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
   padding: var(--space-3);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-sm);
 }
 
-/* Due is the one with a claim on the next few minutes. */
-.statDue {
+.learningPath .pathCurrent {
   background: var(--color-accent-soft);
 }
 
-/* New material: warm, because it is an invitation rather than an obligation. */
-.statNew {
-  background: var(--color-highlight-soft);
-}
-
-/* The icon sits above the number, in the card's own colour: a third signal
-   after the tint and the label, and the one that survives a screenshot at
-   thumbnail size. */
-.statIcon {
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-raised);
   color: var(--color-text-muted);
-}
-
-.statDue .statIcon {
-  color: var(--color-accent);
-}
-
-.statNew .statIcon {
-  color: var(--color-highlight);
-}
-
-.statDone .statIcon {
-  color: var(--color-success);
-}
-
-.statValue {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
   font-weight: var(--weight-black);
-  letter-spacing: var(--tracking-display);
-  line-height: var(--leading-display);
-  font-variant-numeric: tabular-nums;
 }
 
-.statDue .statValue {
-  color: var(--color-accent);
+.pathCurrent .stepNumber {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
 }
 
-.statNew .statValue {
-  color: var(--color-highlight);
+.learningPath strong,
+.learningPath small,
+.freePracticeText strong,
+.freePracticeText small,
+.preset strong,
+.preset small,
+.rhythmStat strong,
+.rhythmStat small {
+  display: block;
 }
 
-.statDone .statValue {
-  color: var(--color-success);
-}
-
-.statLabel {
-  color: var(--color-text-muted);
+.learningPath strong {
   font-size: var(--text-sm);
 }
 
-/*
- * A section label.
- *
- * It used to be a small grey word with a 1px rule running out to the edge.
- * The rule is gone: the gap above the label does the separating, and the label
- * being display type in caps is enough to read as a heading. One less line on a
- * screen that had a dozen.
- */
-.sectionTitle {
+.learningPath small,
+.freePracticeText small,
+.preset small,
+.rhythm small {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.rhythm {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.rhythmStat {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-top: var(--space-3);
-  color: var(--color-text-muted);
+}
+
+.rhythmStat svg {
+  color: var(--color-accent);
+}
+
+.rhythmWeek {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.rhythmDots {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+}
+
+.rhythmDots span {
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunken);
+}
+
+.rhythmDots span[data-active] {
+  background: var(--color-accent);
+}
+
+.freePractice {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  justify-content: stretch;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+}
+
+.freePracticeText {
+  min-width: 0;
+}
+
+.freePracticeText strong {
   font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-bold);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
+  font-size: var(--text-lg);
+}
+
+.advancedPractice {
+  padding-top: var(--space-7);
+}
+
+.practiceSheet {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.sheetTitle {
+  margin-bottom: var(--space-3);
+  color: var(--color-text-muted);
 }
 
 .quick {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-2);
 }
 
@@ -114,77 +239,38 @@
   gap: var(--space-2);
 }
 
-/*
- * A preset is a card you press, so it is laid out like a row in a list rather
- * than like a button: an icon in a tinted tile, the name, what it does, and a
- * chevron saying it goes somewhere. That shape is what six identical grey
- * rectangles were not.
- */
 .preset {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  align-items: center;
+  justify-content: stretch;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-lg);
   text-align: left;
 }
 
-.presetIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--space-7);
-  height: var(--space-7);
-  border-radius: var(--radius-md);
-  background: var(--color-accent-soft);
+.preset > svg:first-child {
   color: var(--color-accent);
 }
 
-/* A study preset records nothing, so it is tinted warm rather than in the
-   accent: the app's own colour is reserved for what actually feeds the
-   scheduler, and the difference is worth being able to see before you press. */
-.presetIconStudy {
-  background: var(--color-highlight-soft);
-  color: var(--color-highlight);
+@media (max-width: 420px) {
+  .mission {
+    padding: var(--space-4);
+  }
+
+  .learningPath {
+    gap: var(--space-1);
+  }
+
+  .learningPath li {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+    padding: var(--space-2);
+  }
+
+  .learningPath small {
+    display: none;
+  }
 }
 
-.presetText {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-
-.presetLabel {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-tight);
-}
-
-.presetDescription {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 400;
-}
-
-.presetChevron {
-  color: var(--color-text-muted);
-}
-
-.footerNote {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  margin-top: auto;
-  padding-top: var(--space-5);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  text-align: center;
-}
-
-/* Two columns once there is room; one thumb-sized column on a phone. */
 @media (min-width: 600px) {
   .presets {
     grid-template-columns: 1fr 1fr;

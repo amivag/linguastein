@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
@@ -6,7 +6,9 @@ import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon } from '../../components/Icon';
+import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
+import { levelLabel } from '../../domain/content';
 import { summarise, type ProgressSummary } from '../../domain/progress';
 import { DEFAULT_SESSION_MINUTES, type SessionSize } from '../../domain/sessions';
 import { FocusPicker } from '../practice/FocusPicker';
@@ -14,16 +16,20 @@ import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
 import { sessionPath } from '../practice/session-url';
 import styles from './HomeScreen.module.css';
 
-/** The two-tap entry point: pick how long, pick what (spec §3). */
+/**
+ * The course coach: one trustworthy next action, with the laboratory still one
+ * tap away for a learner who already knows what they want.
+ */
 export function HomeScreen() {
   const { services, preferences } = useServices();
-  const { course, option, filter } = useCourse();
+  const { course, option, filter, path } = useCourse();
   const navigate = useNavigate();
+  const practiceSheetId = useId();
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
+  const [practiceDays, setPracticeDays] = useState(0);
+  const [practiceOpen, setPracticeOpen] = useState(false);
 
-  // Every count on this screen is a count of the course, not of everything
-  // loaded: "12 due" has to mean twelve items this session could actually
-  // contain, or the button under it is lying about what it will practise.
+  // Every recommendation and count is scoped to the course in the URL.
   const scope = useMemo(() => {
     const items = services.repository.query(filter);
     return { total: items.length, ids: new Set(items.map((item) => item.id)) };
@@ -32,128 +38,251 @@ export function HomeScreen() {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const progress = await services.storage.progress.all();
-      if (!cancelled) {
-        const inScope = progress.filter((entry) => scope.ids.has(entry.itemId));
-        setSummary(summarise(inScope, scope.total, Date.now()));
-      }
+      const [progress, attempts] = await Promise.all([
+        services.storage.progress.all(),
+        services.storage.attempts.recent(1_000),
+      ]);
+      if (cancelled) return;
+
+      const now = Date.now();
+      const inScope = progress.filter((entry) => scope.ids.has(entry.itemId));
+      setSummary(summarise(inScope, scope.total, now));
+      setPracticeDays(daysPractisedThisWeek(attempts, now));
     })();
     return () => {
       cancelled = true;
     };
   }, [services, scope]);
 
-  // The standing choice is written *into the link* rather than read from
-  // preferences by the session screen: a session has to stay fully described by
-  // its URL, or a shared link would practise the sharer's categories on the
-  // recipient's device.
+  // Spanish starts with one authored communicative mission. Other packs still
+  // get a useful first passage rather than a Spanish id leaking across them.
+  const mission = useMemo(() => {
+    const preferred = services.repository.passageByLocalId('700009');
+    const inCourse = (candidate: NonNullable<typeof preferred>) =>
+      services.repository.itemsOfPassage(candidate.id).some((item) => scope.ids.has(item.id));
+    const passage =
+      (preferred && inCourse(preferred) ? preferred : undefined) ??
+      services.repository
+        .allPassages()
+        .filter(inCourse)
+        .sort((a, b) => Number(b.kind === 'dialogue') - Number(a.kind === 'dialogue'))[0];
+
+    if (!passage) return null;
+    const items = services.repository.itemsOfPassage(passage.id);
+    const localId = passage.id.split(':').at(-1) ?? '';
+    const atCafe = localId === '700009';
+    const titleTranslation = services.repository.translationOf(
+      passage.id,
+      preferences.referenceLanguage,
+    );
+    const phrase = items[atCafe ? 1 : 0];
+
+    return {
+      localId,
+      title: atCafe ? 'Order at a café' : (titleTranslation?.text ?? passage.title),
+      phrase: phrase?.text ?? passage.title,
+      phraseMeaning: phrase
+        ? services.repository.translationOf(phrase.id, preferences.referenceLanguage)?.text
+        : undefined,
+      lineCount: items.length,
+    };
+  }, [preferences.referenceLanguage, scope.ids, services.repository]);
+
+  // The standing focus is written into every free-practice link so the session
+  // remains reloadable and shareable rather than secretly reading preferences.
   const focused = {
     ...(preferences.focusTopics.length ? { filter: { topics: preferences.focusTopics } } : {}),
     ...(preferences.focus !== 'balanced' ? { focus: preferences.focus } : {}),
   };
 
-  const start = (preset: PresetId, size: SessionSize) =>
+  const start = (preset: PresetId, size: SessionSize) => {
+    setPracticeOpen(false);
     void navigate(sessionPath(course, { preset, size, ...focused }));
+  };
+
+  const due = summary?.due ?? 0;
+  const reviewDue = due > 0;
+  const startRecommended = () => {
+    if (reviewDue) {
+      void navigate(
+        sessionPath(course, {
+          preset: 'quick',
+          size: { kind: 'items', count: due },
+          dueOnly: true,
+        }),
+      );
+      return;
+    }
+
+    if (mission) {
+      void navigate(path(`read/${mission.localId}`));
+      return;
+    }
+
+    start('quick', { kind: 'time', minutes: 5 });
+  };
+
+  const title = `${option?.label ?? 'Practice'} · ${levelLabel(course.level)}`;
 
   return (
-    <AppShell title={option?.label ?? 'Practice'} action={<ThemeToggle variant="compact" />}>
-      <CourseBar />
-
-      <div className={styles.stats}>
-        <div className={`${styles.stat} ${styles.statDue}`}>
-          <Icon name="due" size="sm" className={styles.statIcon} />
-          <span className={styles.statValue}>{summary?.due ?? '—'}</span>
-          <span className={styles.statLabel}>due</span>
-        </div>
-        <div className={`${styles.stat} ${styles.statNew}`}>
-          <Icon name="new" size="sm" className={styles.statIcon} />
-          <span className={styles.statValue}>
-            {summary ? summary.total - summary.seen : scope.total}
+    <AppShell title={title} action={<ThemeToggle variant="compact" />}>
+      <section className={styles.mission} aria-labelledby="mission-title">
+        <p className={styles.eyebrow}>{reviewDue ? 'Ready for review' : "Today's mission"}</p>
+        <div className={styles.missionHeading}>
+          <div>
+            <h2 id="mission-title" className={styles.missionTitle}>
+              {reviewDue ? 'Keep it fresh' : (mission?.title ?? 'Build your foundation')}
+            </h2>
+            <p className={styles.missionPhrase} lang={course.language}>
+              {reviewDue
+                ? 'Repasa lo que ya sabes.'
+                : (mission?.phrase ?? 'Empieza con frases útiles.')}
+            </p>
+            {!reviewDue && mission?.phraseMeaning && (
+              <p className={styles.missionMeaning}>{mission.phraseMeaning}</p>
+            )}
+          </div>
+          <span className={styles.missionIcon} aria-hidden="true">
+            <Icon name={reviewDue ? 'memory' : 'speak'} size="xl" />
           </span>
-          <span className={styles.statLabel}>new</span>
         </div>
-        <div className={`${styles.stat} ${styles.statDone}`}>
-          <Icon name="mastered" size="sm" className={styles.statIcon} />
-          <span className={styles.statValue}>{summary?.mastered ?? '—'}</span>
-          <span className={styles.statLabel}>mastered</span>
-        </div>
-      </div>
 
-      {summary !== null && summary.due > 0 && (
-        <Button
-          variant="primary"
-          block
-          large
-          onClick={() =>
-            void navigate(
-              // Deliberately unfocused: the button names a number, and
-              // narrowing it by category would review fewer items than it
-              // promised.
-              sessionPath(course, {
-                preset: 'quick',
-                size: { kind: 'items', count: summary.due },
-                dueOnly: true,
-              }),
-            )
-          }
-        >
+        <div className={styles.missionFacts}>
+          <span>
+            <Icon name="passage" />
+            {reviewDue
+              ? `${due} ${due === 1 ? 'item' : 'items'} ready`
+              : `${mission?.lineCount ?? 8} useful lines`}
+          </span>
+          <span>
+            <Icon name="waveform" />
+            {reviewDue ? 'Adaptive recall' : 'Short exchange'}
+          </span>
+        </div>
+
+        <Button variant="primary" block large onClick={startRecommended}>
           <Icon name="play" />
-          Review {summary.due} due
+          {reviewDue ? `Review ${due} due` : 'Begin mission · 5 min'}
         </Button>
+      </section>
+
+      {!reviewDue && (
+        <section aria-labelledby="path-title">
+          <h2 id="path-title" className={styles.sectionTitle}>
+            Your learning path
+          </h2>
+          <ol className={styles.learningPath}>
+            <li className={styles.pathCurrent} aria-current="step">
+              <span className={styles.stepNumber}>1</span>
+              <span><strong>Understand</strong><small>Meet the phrases</small></span>
+            </li>
+            <li>
+              <span className={styles.stepNumber}>2</span>
+              <span><strong>Practise</strong><small>Build confidence</small></span>
+            </li>
+            <li>
+              <span className={styles.stepNumber}>3</span>
+              <span><strong>Use</strong><small>Speak it out</small></span>
+            </li>
+          </ol>
+        </section>
       )}
 
-      <FocusPicker />
+      <section className={styles.rhythm} aria-label="Learning rhythm">
+        <div className={styles.rhythmStat}>
+          <Icon name="due" />
+          <span><strong>{due}</strong><small>due today</small></span>
+        </div>
+        <div className={styles.rhythmWeek}>
+          <strong>{practiceDays} of 7 days</strong>
+          <span className={styles.rhythmDots} aria-hidden="true">
+            {Array.from({ length: 7 }, (_, index) => (
+              <span key={index} data-active={index < practiceDays || undefined} />
+            ))}
+          </span>
+          <small>this week</small>
+        </div>
+      </section>
 
-      <h2 className={styles.sectionTitle}>Quick session</h2>
-      <div className={styles.quick}>
-        {DEFAULT_SESSION_MINUTES.map((minutes) => (
-          <Button
-            key={minutes}
-            variant="primary"
-            onClick={() => start('quick', { kind: 'time', minutes })}
-          >
-            {minutes} min
-          </Button>
-        ))}
+      <Button
+        block
+        className={styles.freePractice}
+        onClick={() => setPracticeOpen(true)}
+        aria-expanded={practiceOpen}
+        aria-controls={practiceSheetId}
+      >
+        <span className={styles.freePracticeIcon}><Icon name="listen" size="lg" /></span>
+        <span className={styles.freePracticeText}>
+          <strong>Free practice</strong>
+          <small>Choose the time and training mode</small>
+        </span>
+        <Icon name="next" />
+      </Button>
+
+      <div className={styles.advancedPractice}>
+        <FocusPicker />
       </div>
 
-      <h2 className={styles.sectionTitle}>Practice</h2>
-      <div className={styles.presets}>
-        {PRESET_IDS.map((id) => {
-          const preset = PRESETS[id];
-          return (
-            <Button
-              key={id}
-              block
-              className={styles.preset}
-              onClick={() => start(id, { kind: 'items', count: 10 })}
-            >
-              <span
-                className={`${styles.presetIcon} ${
-                  // A study preset records nothing, so it does not wear the
-                  // colour the app uses for what feeds the scheduler.
-                  preset.mode === 'study' ? styles.presetIconStudy : ''
-                }`}
-              >
-                <Icon name={preset.icon} size="lg" />
-              </span>
-              <span className={styles.presetText}>
-                <span className={styles.presetLabel}>{preset.label}</span>
-                <span className={styles.presetDescription}>{preset.description}</span>
-              </span>
-              <Icon name="next" size="sm" className={styles.presetChevron} />
-            </Button>
-          );
-        })}
-      </div>
-
-      {/* The item count moved to the course bar, where it belongs: it is a
-          property of the scope, and stating it twice invited the two to
-          disagree. */}
-      <p className={styles.footerNote}>
-        <Icon name="check" size="sm" />
-        Offline · progress stays on this device
-      </p>
+      {practiceOpen && (
+        <Sheet id={practiceSheetId} title="Free practice" onClose={() => setPracticeOpen(false)}>
+          <div className={styles.practiceSheet}>
+            <div>
+              <h3 className={styles.sheetTitle}>Course</h3>
+              <p className={styles.scopeNote}>
+                {scope.total} {scope.total === 1 ? 'item' : 'items'} in your course
+              </p>
+              <CourseBar compact />
+            </div>
+            <div>
+              <h3 className={styles.sheetTitle}>Quick session</h3>
+              <div className={styles.quick}>
+                {DEFAULT_SESSION_MINUTES.map((minutes) => (
+                  <Button
+                    key={minutes}
+                    variant="primary"
+                    onClick={() => start('quick', { kind: 'time', minutes })}
+                  >
+                    {minutes} min
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className={styles.sheetTitle}>Practice mode</h3>
+              <div className={styles.presets}>
+                {PRESET_IDS.map((id) => {
+                  const preset = PRESETS[id];
+                  return (
+                    <Button
+                      key={id}
+                      block
+                      className={styles.preset}
+                      onClick={() => start(id, { kind: 'items', count: 10 })}
+                    >
+                      <Icon name={preset.icon} />
+                      <span><strong>{preset.label}</strong><small>{preset.description}</small></span>
+                      <Icon name="next" size="sm" />
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </Sheet>
+      )}
     </AppShell>
   );
+}
+
+function daysPractisedThisWeek(attempts: readonly { readonly at: number }[], now: number): number {
+  const current = new Date(now);
+  const start = new Date(current.getFullYear(), current.getMonth(), current.getDate());
+  const dayFromMonday = (start.getDay() + 6) % 7;
+  start.setDate(start.getDate() - dayFromMonday);
+
+  return new Set(
+    attempts
+      .filter((attempt) => attempt.at >= start.getTime() && attempt.at <= now)
+      .map((attempt) => new Date(attempt.at).toDateString()),
+  ).size;
 }

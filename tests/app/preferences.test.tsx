@@ -83,7 +83,7 @@ async function bootApp() {
   });
 
   render(<App />);
-  await screen.findByRole('heading', { level: 1, name: 'Español' });
+  await screen.findByRole('heading', { level: 1, name: /Español · A1/ });
   return storage;
 }
 

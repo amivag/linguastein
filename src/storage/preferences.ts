@@ -1,18 +1,17 @@
 import {
+  type CefrLevel,
   DEFAULT_PRONUNCIATION_LOCALE,
   DEFAULT_REFERENCE_LANGUAGE,
   DEFAULT_TARGET_LANGUAGE,
-  LEVEL_SCOPE_ALL,
 } from '../domain/content';
 import { DEFAULT_SESSION_FOCUS } from '../domain/sessions';
 import type { Preferences } from './types';
 
 export const DEFAULT_PREFERENCES: Preferences = {
   targetLanguage: DEFAULT_TARGET_LANGUAGE,
-  // The widest scope, not the lowest level: narrowing is something a learner
-  // opts into, and a default of `a1` would hide half the pack from a first
-  // session without ever having said so.
-  level: LEVEL_SCOPE_ALL,
+  // A new learner needs a coherent starting point, not every loaded item at
+  // once. `resolveCourse` widens safely when a future language has no A1 pack.
+  level: 'a1' satisfies CefrLevel,
   referenceLanguage: DEFAULT_REFERENCE_LANGUAGE,
   focusTopics: [],
   focus: DEFAULT_SESSION_FOCUS,

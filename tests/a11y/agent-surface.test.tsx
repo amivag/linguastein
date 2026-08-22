@@ -65,6 +65,7 @@ describe('agent surface', () => {
   });
 
   it('names every control on the browse screen, including each result’s play button', async () => {
+    const user = userEvent.setup();
     const { container } = renderWithServices(<BrowseScreen />, { route: '/browse' });
     // The play buttons arrive with voice discovery, so the tree is only complete
     // once one of them is there — checking names before that would pass by
@@ -75,6 +76,7 @@ describe('agent surface', () => {
     // A letter chip named "C" says nothing about what pressing it does, and a
     // play button per row has to say which row — the same rule a passage's
     // lines are held to below.
+    await user.click(screen.getByRole('button', { name: /^Filters:/ }));
     expect(screen.getByRole('button', { name: 'Starting with C, 2 items' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Listen to “cerveza”' })).toBeInTheDocument();
   });

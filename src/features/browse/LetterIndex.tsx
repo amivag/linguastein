@@ -8,15 +8,15 @@ interface LetterIndexProps {
   readonly selected: string;
   /**
    * A letter was pressed. Pressing the selected one again clears it, exactly as
-   * a category tile does — which is how the row undoes itself without a
-   * thirteenth control called "All".
+   * a category tile does. The explicit "Any" control also clears it, so the
+   * current scope is visible without relying on that shortcut.
    */
   readonly onToggle: (letter: string) => void;
 }
 
 /**
- * A to Z along one line: the way into the middle of a long list without knowing
- * what is in it.
+ * A compact alphabet grid: the way into the middle of a long list without
+ * knowing what is in it.
  *
  * Only the letters the pack has something for, which is what keeps this a row of
  * decisions rather than twenty-six taps of which a third are dead ends. The
@@ -24,9 +24,10 @@ interface LetterIndexProps {
  * of twenty-something single letters is a paragraph of digits, and with the empty
  * letters already dropped there is nothing left for it to warn about.
  *
- * One line that scrolls sideways rather than a block that wraps. The toolbar
- * above the results is already the tallest thing on this screen, and an index is
- * the one control here that is read along rather than down.
+ * The grid deliberately includes "Any". Together with the populated Spanish
+ * initials that makes balanced rows at the common breakpoints, gives the
+ * selection a visible reset, and avoids hiding letters behind a horizontal
+ * scrollbar.
  */
 export function LetterIndex({ letters, selected, onToggle }: LetterIndexProps) {
   // One letter is not a choice, and no letters means an empty course.
@@ -34,7 +35,18 @@ export function LetterIndex({ letters, selected, onToggle }: LetterIndexProps) {
 
   return (
     <section className={styles.index} aria-label="Letters">
+      <h2 className={styles.heading}>Starts with</h2>
       <ul className={styles.row}>
+        <li>
+          <Chip
+            className={styles.letter}
+            aria-label="Any starting letter"
+            pressed={selected === ''}
+            onClick={() => onToggle('')}
+          >
+            Any
+          </Chip>
+        </li>
         {letters.map(({ letter, count }) => (
           <li key={letter}>
             <Chip

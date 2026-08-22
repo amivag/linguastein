@@ -8,7 +8,7 @@
  * assert the promise and the plan agree.
  */
 
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
@@ -54,9 +54,11 @@ describe('Browse → session', () => {
       { route: '/browse' },
     );
 
-    await user.selectOptions(await screen.findByDisplayValue('Everything'), 'word');
-    await user.selectOptions(screen.getByDisplayValue('Any topic'), 'food-drink');
+    await user.click(await screen.findByRole('button', { name: /^Filters:/ }));
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Type' }), 'word');
+    await user.click(screen.getByRole('button', { name: /Food and drink/ }));
     expect(screen.getByText('4 items')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Close' }));
 
     await user.click(screen.getByRole('button', { name: 'Practise these' }));
 
@@ -113,8 +115,10 @@ describe('Browse → session', () => {
       { route: '/browse' },
     );
 
-    await user.selectOptions(await screen.findByDisplayValue('Any word kind'), 'NOUN');
+    await user.click(await screen.findByRole('button', { name: /^Filters:/ }));
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Word kind' }), 'NOUN');
     expect(screen.getByText('4 items')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Close' }));
 
     await user.click(screen.getByRole('button', { name: 'Practise these' }));
     expect(new URLSearchParams(where().split('?')[1]).get('pos')).toBe('noun');
@@ -135,7 +139,10 @@ describe('Browse → session', () => {
       { route: '/browse' },
     );
 
-    await user.click(await screen.findByRole('button', { name: 'Starting with C, 2 items' }));
+    await user.click(await screen.findByRole('button', { name: /^Filters:/ }));
+    const filters = within(screen.getByRole('dialog', { name: 'Filter results' }));
+    await user.click(filters.getByRole('button', { name: 'Starting with C, 2 items' }));
+    await user.click(filters.getByRole('button', { name: 'Close' }));
     await user.click(screen.getByRole('button', { name: 'Practise these' }));
 
     const url = new URLSearchParams(where().split('?')[1]);

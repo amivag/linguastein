@@ -3,50 +3,20 @@
   gap: var(--space-2);
 }
 
-/* Heading and the compact topic control on one line, so the block announces
-   itself and offers its shortcut in the height of a single row. */
-.bar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
+/* A plain section heading: the picker is already inside a disclosure sheet, so
+   a second compact topic control would be two controls for one decision. */
 .heading {
   margin: 0;
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
 }
 
-.action {
-  min-width: 0;
-  margin-left: auto;
-}
-
-/*
- * The confined area. Thirty-five tiles in six groups laid out in full made the
- * filters the tallest thing on the page and pushed the results themselves below
- * the fold, so they scroll inside a box instead: the page's shape is now a
- * constant rather than a function of how many categories the pack declares.
- *
- * `overscroll-behavior` keeps a flick that reaches the end of the list from
- * carrying on into the page behind it, which on a phone reads as the page
- * jumping when you were reading the list.
- *
- * No top padding — the group headings supply their own, so the first one sits
- * flush with the top edge and the sticky ones below cover the tiles passing
- * under them completely.
- *
- * Recessed rather than outlined: the inset shadow says "this is a well with
- * more in it than you can see", which is the one thing a fixed-height scroller
- * has to communicate, and a 1px line said nothing at all.
- */
+/* The sheet owns scrolling. A fixed-height scroller here hid earlier groups and
+   made a swipe choose between moving the category pane and moving the dialog. */
 .pane {
   display: grid;
-  max-height: 12.5rem;
   gap: var(--space-2);
   padding: 0 var(--space-3) var(--space-3);
-  overflow-y: auto;
-  overscroll-behavior: contain;
   border-radius: var(--radius-lg);
   background: var(--color-surface-sunken);
   box-shadow: var(--shadow-inset);
@@ -57,12 +27,7 @@
   gap: var(--space-2);
 }
 
-/* Pinned while its own tiles scroll past, so a list this long never leaves you
-   looking at chips without knowing which group you are in. */
 .groupHeading {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-raised);
   margin: 0;
   padding-block: var(--space-2) var(--space-1);
   background: var(--color-surface-sunken);

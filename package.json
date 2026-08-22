@@ -1,6 +1,6 @@
 {
   "name": "linguastein-app",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.4",
   "private": true,
   "type": "module",
   "description": "Mobile-first, local-first language practice app. Spanish first.",

@@ -9,12 +9,19 @@
 
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { renderWithServices } from '../fixtures/services';
 
 function letters() {
   return within(screen.getByRole('region', { name: 'Letters' }));
+}
+
+async function openLetters(user = userEvent.setup()) {
+  await user.click(screen.getByRole('button', { name: /^Filters:/ }));
+  return letters();
 }
 
 /** The target-language line of each result, in the order they are rendered. */
@@ -27,18 +34,20 @@ describe('the letter index', () => {
   it('offers the letters the course has content under, and no others', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
     await screen.findByRole('searchbox');
+    const index = await openLetters();
 
-    // A, C, P, T — the fixture has nothing under B, and a chip leading to an
-    // empty list is worse than not offering the letter.
+    // A, C, P, T — plus the explicit reset. The fixture has nothing under B,
+    // and a chip leading to an empty list is worse than not offering the letter.
     expect(
-      letters()
+      index
         .getAllByRole('button')
         .map((chip) => chip.textContent),
-    ).toEqual(['A', 'C', 'P', 'T']);
+    ).toEqual(['Any', 'A', 'C', 'P', 'T']);
   });
 
   it('names the size of a letter, since that is what decides the tap', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openLetters();
 
     // The count is in the accessible name rather than on the chip: twenty-six
     // pills each carrying a number is a paragraph of digits.
@@ -49,11 +58,15 @@ describe('the letter index', () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
 
-    const chip = letters().getByRole('button', { name: /Starting with C/ });
+    const index = await openLetters(user);
+    const chip = index.getByRole('button', { name: /Starting with C/ });
     await user.click(chip);
 
     expect(chip).toHaveAttribute('aria-pressed', 'true');
     expect(await screen.findByRole('status')).toHaveTextContent('2 items');
+    expect(
+      screen.getByRole('button', { name: 'Filters: Starts with C, 1 active' }),
+    ).toBeInTheDocument();
     expect(shown()).toEqual(['cerveza', 'café']);
   });
 
@@ -61,7 +74,8 @@ describe('the letter index', () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
 
-    await user.click(letters().getByRole('button', { name: /Starting with T/ }));
+    const index = await openLetters(user);
+    await user.click(index.getByRole('button', { name: /Starting with T/ }));
 
     // `¿Tienes tiempo?` is a T, which is where a learner reading it would look.
     expect(shown()).toContain('¿Tienes tiempo?');
@@ -72,12 +86,39 @@ describe('the letter index', () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
 
-    const chip = letters().getByRole('button', { name: /Starting with C/ });
+    const index = await openLetters(user);
+    const chip = index.getByRole('button', { name: /Starting with C/ });
     await user.click(chip);
     await user.click(chip);
 
     expect(chip).toHaveAttribute('aria-pressed', 'false');
     expect(await screen.findByRole('status')).toHaveTextContent('7 items');
+  });
+
+  it('also provides a visible reset for the current letter', async () => {
+    const user = userEvent.setup();
+    renderWithServices(<BrowseScreen />, { route: '/browse?initial=c' });
+
+    const index = await openLetters(user);
+    const any = index.getByRole('button', { name: 'Any starting letter' });
+    expect(any).toHaveAttribute('aria-pressed', 'false');
+    await user.click(any);
+
+    expect(any).toHaveAttribute('aria-pressed', 'true');
+    expect(await screen.findByRole('status')).toHaveTextContent('7 items');
+  });
+});
+
+describe('LetterIndex.module.css', () => {
+  const css = readFileSync(
+    resolve(process.cwd(), 'src/features/browse/LetterIndex.module.css'),
+    'utf8',
+  ).replace(/\/\*[\s\S]*?\*\//g, '');
+
+  it('lays letters out as a grid without a horizontal scroller', () => {
+    expect(css).toMatch(/grid-template-columns:/);
+    expect(css).not.toMatch(/overflow-x\s*:/);
+    expect(css).not.toMatch(/overscroll-behavior-x\s*:/);
   });
 });
 
@@ -123,7 +164,9 @@ describe('sorting', () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
 
-    await user.selectOptions(await screen.findByLabelText('Type'), 'word');
+    await user.click(await screen.findByRole('button', { name: /^Filters:/ }));
+    const filters = within(screen.getByRole('dialog', { name: 'Filter results' }));
+    await user.selectOptions(filters.getByLabelText('Type'), 'word');
     await user.selectOptions(screen.getByLabelText('Sort'), 'az');
 
     expect(shown()).toEqual(['agua', 'café', 'cerveza', 'pan']);

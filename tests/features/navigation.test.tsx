@@ -69,7 +69,9 @@ describe('browse', () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
 
     await screen.findByText('7 items');
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Type' }), 'word');
+    await user.click(screen.getByRole('button', { name: /^Filters:/ }));
+    const filters = within(screen.getByRole('dialog', { name: 'Filter results' }));
+    await user.selectOptions(filters.getByRole('combobox', { name: 'Type' }), 'word');
     expect(await screen.findByText('4 items')).toBeInTheDocument();
   });
 

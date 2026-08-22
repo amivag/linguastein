@@ -1,45 +1,38 @@
-/*
- * One line of the alphabet, scrolling sideways.
- *
- * Wrapped, twenty-something pills are three rows on a phone, above a search
- * field, a category pane and a row of selects — and the results the screen is
- * about would start below the fold again, which is the trap
- * `CategoryPicker.module.css` records climbing out of.
- *
- * Recessed for the same reason that pane is: the inset says there is more here
- * than you can see, which is the one thing a scroller has to communicate, and it
- * says it without adding another line to the screen.
- */
 .index {
   min-width: 0;
 }
 
-/* The list reset is written out rather than composed, as `CategoryPicker` writes
-   its own: this rule needs a padding of its own, and overriding a composed
-   `padding: 0` would be settled by stylesheet order instead of by intent. */
-.row {
-  composes: well from '../../styles/surfaces.module.css';
+.heading {
+  composes: sectionLabel from '../../styles/surfaces.module.css';
 
-  display: flex;
+  margin: 0 0 var(--space-2);
+}
+
+/* Twenty-four choices form two balanced rows on wider screens and three on a
+   phone. Nothing is clipped or requires a second scrolling direction. */
+.row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--space-1);
-  padding: var(--space-1) var(--space-2);
+  padding: 0;
   margin: 0;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
   list-style: none;
 }
 
-/*
- * A single character does not need a pill's worth of padding on each side, and
- * twenty-six of them will not fit if it gets one. The tap target is kept at full
- * size in both directions — a 24px-wide letter is a miss on a phone.
- *
- * Two classes deep on purpose: `.chip` sets `padding` as a shorthand, so a
- * single-class override here would win or lose on stylesheet order rather than
- * on intent.
- */
+.row li {
+  min-width: 0;
+}
+
 .row .letter {
-  min-width: var(--tap-target);
+  width: 100%;
+  min-width: 0;
+  min-height: var(--tap-target);
   justify-content: center;
-  padding-inline: var(--space-2);
+  padding-inline: var(--space-1);
+}
+
+@media (width <= 40rem) {
+  .row {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
 }

@@ -21,6 +21,11 @@ function categories() {
   return within(screen.getByRole('region', { name: 'Categories' }));
 }
 
+async function openFilters(user = userEvent.setup()) {
+  await user.click(screen.getByRole('button', { name: /^Filters:/ }));
+  return within(screen.getByRole('dialog', { name: 'Filter results' }));
+}
+
 /** Surfaces the router's current URL, since MemoryRouter never touches window. */
 function Where() {
   const location = useLocation();
@@ -30,6 +35,7 @@ function Where() {
 describe('browsing by category', () => {
   it('shows a tile per category, under the group heading the pack declared', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters();
 
     expect(categories().getByRole('button', { name: /Food and drink/ })).toBeInTheDocument();
     expect(categories().getByRole('heading', { name: 'Everyday life' })).toBeInTheDocument();
@@ -37,6 +43,7 @@ describe('browsing by category', () => {
 
   it('names the size of a category on its tile', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters();
 
     // The count is in the accessible name, not just the pixels: whether a
     // category is worth opening has to reach a screen reader and an agent too.
@@ -45,8 +52,9 @@ describe('browsing by category', () => {
     ).toBeInTheDocument();
   });
 
-  it('hides a category that has no content yet', () => {
+  it('hides a category that has no content yet', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters();
 
     // Declared in the fixture manifest, used by nothing. A tile leading to an
     // empty list is worse than not offering the category yet.
@@ -57,6 +65,7 @@ describe('browsing by category', () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
     expect(await screen.findByRole('status')).toHaveTextContent('7 items');
+    await openFilters(user);
 
     const tile = categories().getByRole('button', { name: /Food and drink/ });
     await user.click(tile);
@@ -65,37 +74,32 @@ describe('browsing by category', () => {
     expect(await screen.findByRole('status')).toHaveTextContent('4 items');
   });
 
-  it('keeps the compact topic control inside the categories block', () => {
+  it('keeps detailed choices out of the page until the filter sheet opens', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
 
-    // The select is the tiles' compact half, not a fifth entry in the row of
-    // narrowing filters: the pane scrolls, so this is what still names the
-    // chosen category when its tile is out of view.
-    expect(categories().getByRole('combobox', { name: 'Topic' })).toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Categories' })).not.toBeInTheDocument();
+    await openFilters();
+    expect(categories().getByRole('button', { name: /Food and drink/ })).toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: 'Topic' })).not.toBeInTheDocument();
   });
 
-  it('keeps the picker and the topic select on one piece of state', async () => {
+  it('summarises the selected category on the collapsed control', async () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters(user);
 
     await user.click(categories().getByRole('button', { name: /Food and drink/ }));
-    expect(screen.getByRole('combobox', { name: 'Topic' })).toHaveValue('food-drink');
+    await user.click(screen.getByRole('button', { name: 'Close' }));
 
-    // …and the other way round, so neither control can be the stale one.
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Topic' }), 'work');
-    expect(categories().getByRole('button', { name: /Food and drink/ })).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    );
-    expect(categories().getByRole('button', { name: /^Work/ })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    expect(
+      screen.getByRole('button', { name: 'Filters: Food and drink, 1 active' }),
+    ).toBeInTheDocument();
   });
 
   it('clears the category when its tile is pressed again', async () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters(user);
 
     const tile = categories().getByRole('button', { name: /Food and drink/ });
     await user.click(tile);
@@ -114,6 +118,7 @@ describe('browsing by category', () => {
       </>,
       { route: '/browse' },
     );
+    await openFilters(user);
 
     await user.click(categories().getByRole('button', { name: /Food and drink/ }));
     await user.click(screen.getByRole('button', { name: 'Practise these' }));
@@ -125,9 +130,9 @@ describe('browsing by category', () => {
 
   it('shows a category label rather than its slug', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters();
 
-    const topics = screen.getByRole('combobox', { name: 'Topic' });
-    expect(within(topics).getByRole('option', { name: 'Food and drink' })).toBeInTheDocument();
+    expect(categories().getByRole('button', { name: /Food and drink/ })).toBeInTheDocument();
   });
 });
 
@@ -150,17 +155,15 @@ describe('CategoryPicker.module.css', () => {
     return rule?.slice(rule.indexOf('{') + 1) ?? '';
   }
 
-  it('confines the tiles to a box of a fixed height, and scrolls the rest', () => {
+  it('leaves scrolling to the containing sheet', () => {
     const pane = block('.pane');
-    expect(pane).toMatch(/max-height:/);
-    expect(pane).toMatch(/overflow-y:\s*auto/);
+    expect(pane).not.toMatch(/max-height:/);
+    expect(pane).not.toMatch(/overflow-y:/);
   });
 
-  it('keeps a group heading visible while its own tiles scroll past', () => {
+  it('does not create sticky headings inside a second scroll surface', () => {
     const heading = block('.groupHeading');
-    expect(heading).toMatch(/position:\s*sticky/);
-    // Without a background of its own it would be a heading with tiles sliding
-    // through it, which is worse than no sticky heading at all.
+    expect(heading).not.toMatch(/position:\s*sticky/);
     expect(heading).toMatch(/background:/);
   });
 });
@@ -175,6 +178,7 @@ describe('CategoryPicker.module.css', () => {
 describe('browsing by word kind', () => {
   it('offers the kinds the pack has, and nothing it does not', async () => {
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters();
 
     const kinds = await screen.findByLabelText('Word kind');
     const offered = [...kinds.querySelectorAll('option')].map((option) => option.textContent);
@@ -186,6 +190,7 @@ describe('browsing by word kind', () => {
   it('narrows to one kind', async () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters(user);
 
     await user.selectOptions(await screen.findByLabelText('Word kind'), 'NOUN');
 
@@ -200,6 +205,7 @@ describe('browsing by word kind', () => {
   it('blames the filters, not a search, when the filters are what emptied it', async () => {
     const user = userEvent.setup();
     renderWithServices(<BrowseScreen />, { route: '/browse' });
+    await openFilters(user);
 
     await user.selectOptions(await screen.findByLabelText('Type'), 'word');
     await user.selectOptions(screen.getByLabelText('Word kind'), 'VERB');

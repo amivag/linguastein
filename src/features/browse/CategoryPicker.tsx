@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { Chip } from '../../components/Chip';
 import type { TopicFacet } from '../../domain/content';
 import styles from './CategoryPicker.module.css';
@@ -17,13 +16,6 @@ interface CategoryPickerProps {
   /** Heading and `aria-labelledby` target; unique per instance on a screen. */
   readonly id?: string;
   readonly title?: string;
-  /**
-   * The compact control for this same state — Browse's topic `<select>`. It sits
-   * beside the heading rather than in the row of filters below, so the two
-   * topic controls read as one filter and the chosen category stays legible
-   * once the pane has scrolled its tile out of view.
-   */
-  readonly action?: ReactNode;
 }
 
 /** Categories under one heading, in the order the pack declared them. */
@@ -40,9 +32,9 @@ interface Group {
  * filter state as that select rather than a parallel one, so the two cannot
  * disagree about what is selected.
  *
- * The tiles live in a box of a fixed height and scroll inside it: laid out in
- * full they were the tallest thing on the screen, and the results the page is
- * actually about started below the fold.
+ * Browse places the picker in its filter sheet, so the sheet owns scrolling.
+ * Keeping a second scroll region around the tiles made categories feel clipped
+ * and hid the rest of the filters on touch screens.
  *
  * Empty categories are dropped: the registry deliberately lets a category be
  * declared before its content exists, and offering a tile that leads to nothing
@@ -52,7 +44,6 @@ export function CategoryPicker({
   topics,
   selected,
   onToggle,
-  action,
   id = 'browse-categories',
   title = 'Categories',
 }: CategoryPickerProps) {
@@ -61,12 +52,9 @@ export function CategoryPicker({
 
   return (
     <section className={styles.picker} aria-labelledby={id}>
-      <div className={styles.bar}>
-        <h2 className={styles.heading} id={id}>
-          {title}
-        </h2>
-        {action && <div className={styles.action}>{action}</div>}
-      </div>
+      <h2 className={styles.heading} id={id}>
+        {title}
+      </h2>
 
       <div className={styles.pane}>
         {groups.map((group) => (

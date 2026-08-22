@@ -15,6 +15,19 @@ in the pack's own counts.
 
 ## Unreleased
 
+## 0.1.0-alpha.4 — 2026-08-22
+
+### Changed
+
+- **Browse filters stay out of the material's way.** Search remains immediately
+  available, while letter, content, category, usage and region filters now live
+  in one labelled sheet behind a compact active-filter summary.
+  This removes the duplicated topic control and the clipped nested category
+  scroller, hides empty style choices, and brings results back above the fold.
+  The letter index is now a balanced responsive grid with an explicit reset
+  inside the filter sheet instead of a clipped row with a horizontal scrollbar;
+  long filter sheets also offer their clear action at both the top and bottom.
+
 ## 0.1.0-alpha.3 — 2026-08-22
 
 ### Added

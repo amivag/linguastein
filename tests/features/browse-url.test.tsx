@@ -12,7 +12,7 @@
  * reads, is the bug this shape prevents.
  */
 
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
@@ -40,6 +40,11 @@ function browse(route: string) {
   );
 }
 
+async function openFilters(user = userEvent.setup()) {
+  await user.click(screen.getByRole('button', { name: /^Filters:/ }));
+  return within(screen.getByRole('dialog', { name: 'Filter results' }));
+}
+
 describe('a sheet the URL describes', () => {
   it('shows what the link asked for, not the whole pack', async () => {
     browse('/browse?type=word&pos=noun');
@@ -57,11 +62,29 @@ describe('a sheet the URL describes', () => {
 
   it('restores the controls from the link, so a reload looks the same', async () => {
     browse('/browse?type=word&pos=noun&topic=food-drink&sort=az');
+    const filters = await openFilters();
 
-    expect(await screen.findByRole('combobox', { name: /type/i })).toHaveValue('word');
-    expect(screen.getByRole('combobox', { name: /word kind/i })).toHaveValue('NOUN');
-    expect(screen.getByRole('combobox', { name: /topic/i })).toHaveValue('food-drink');
+    expect(filters.getByRole('combobox', { name: /type/i })).toHaveValue('word');
+    expect(filters.getByRole('combobox', { name: /word kind/i })).toHaveValue('NOUN');
+    expect(filters.getByRole('button', { name: /Food and drink/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
     expect(screen.getByRole('combobox', { name: /sort/i })).toHaveValue('az');
+  });
+
+  it('can clear a long active filter set from the top or the bottom', async () => {
+    const user = userEvent.setup();
+    browse('/browse?type=word&pos=noun&initial=c');
+    const filters = await openFilters(user);
+
+    expect(filters.getByRole('button', { name: 'Clear all filters' })).toBeInTheDocument();
+    expect(filters.getByRole('button', { name: 'Reset all filters' })).toBeInTheDocument();
+
+    await user.click(filters.getByRole('button', { name: 'Clear all filters' }));
+    expect(query().toString()).toBe('');
+    expect(filters.queryByRole('button', { name: 'Clear all filters' })).not.toBeInTheDocument();
+    expect(filters.queryByRole('button', { name: 'Reset all filters' })).not.toBeInTheDocument();
   });
 
   /**
@@ -72,10 +95,11 @@ describe('a sheet the URL describes', () => {
    */
   it('lists a batch of word kinds the single select cannot express', async () => {
     browse('/browse?pos=verb,noun');
+    const filters = await openFilters();
 
     const listed = await screen.findByRole('list', { name: 'Results' });
     expect(listed.children.length).toBeGreaterThan(4);
-    expect(screen.getByRole('combobox', { name: /word kind/i })).toHaveValue('VERB');
+    expect(filters.getByRole('combobox', { name: /word kind/i })).toHaveValue('VERB');
   });
 
   it('falls back to the whole pack when the link narrows to nothing it knows', async () => {
@@ -91,8 +115,9 @@ describe('changing a control rewrites the link', () => {
     const user = userEvent.setup();
     browse('/browse');
     await screen.findByRole('list', { name: 'Results' });
+    const filters = await openFilters(user);
 
-    await user.selectOptions(screen.getByRole('combobox', { name: /type/i }), 'word');
+    await user.selectOptions(filters.getByRole('combobox', { name: /type/i }), 'word');
 
     expect(query().get('type')).toBe('word');
   });
@@ -125,8 +150,9 @@ describe('changing a control rewrites the link', () => {
     const user = userEvent.setup();
     browse('/browse?type=word&topic=food-drink');
     await screen.findByRole('list', { name: 'Results' });
+    const filters = await openFilters(user);
 
-    await user.selectOptions(screen.getByRole('combobox', { name: /topic/i }), 'all');
+    await user.click(filters.getByRole('button', { name: /Food and drink/ }));
 
     expect(query().has('topic')).toBe(false);
     // The facet the learner did not touch has to survive the rewrite.
@@ -137,9 +163,11 @@ describe('changing a control rewrites the link', () => {
     const user = userEvent.setup();
     browse('/browse');
     await screen.findByRole('list', { name: 'Results' });
+    const filters = await openFilters(user);
 
-    await user.selectOptions(screen.getByRole('combobox', { name: /word kind/i }), 'NOUN');
+    await user.selectOptions(filters.getByRole('combobox', { name: /word kind/i }), 'NOUN');
     const sheet = query();
+    await user.click(screen.getByRole('button', { name: 'Close' }));
 
     await user.click(screen.getByRole('button', { name: /practise these/i }));
     const session = query();
@@ -156,18 +184,14 @@ describe('changing a control rewrites the link', () => {
  * control could not say it.
  */
 describe('style, which can be more than one', () => {
-  const styleChips = () =>
-    screen
-      .getAllByRole('button', { pressed: false })
-      .concat(screen.getAllByRole('button', { pressed: true }));
-
   it('reads several styles out of one link', async () => {
     browse('/browse?register=colloquial,formal');
     await screen.findByRole('list', { name: 'Results' });
+    const filters = await openFilters();
 
-    expect(screen.getByRole('button', { name: /casual/ })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /formal/ })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /neutral/ })).toHaveAttribute(
+    expect(filters.getByRole('button', { name: /casual/ })).toHaveAttribute('aria-pressed', 'true');
+    expect(filters.getByRole('button', { name: /formal/ })).toHaveAttribute('aria-pressed', 'true');
+    expect(filters.getByRole('button', { name: /neutral/ })).toHaveAttribute(
       'aria-pressed',
       'false',
     );
@@ -177,33 +201,35 @@ describe('style, which can be more than one', () => {
     const user = userEvent.setup();
     browse('/browse?register=colloquial');
     await screen.findByRole('list', { name: 'Results' });
+    const filters = await openFilters(user);
 
-    await user.click(screen.getByRole('button', { name: /formal/ }));
+    await user.click(filters.getByRole('button', { name: /neutral/ }));
 
-    expect(query().get('register')?.split(',').sort()).toEqual(['colloquial', 'formal']);
+    expect(query().get('register')?.split(',').sort()).toEqual(['colloquial', 'neutral']);
   });
 
   it('turns one off by pressing it again', async () => {
     const user = userEvent.setup();
     browse('/browse?register=colloquial,formal');
     await screen.findByRole('list', { name: 'Results' });
+    const filters = await openFilters(user);
 
-    await user.click(screen.getByRole('button', { name: /casual/ }));
+    await user.click(filters.getByRole('button', { name: /casual/ }));
 
     expect(query().get('register')).toBe('formal');
     // The last one off means no constraint, not an empty result.
-    await user.click(screen.getByRole('button', { name: /formal/ }));
+    await user.click(filters.getByRole('button', { name: /formal/ }));
     expect(query().has('register')).toBe(false);
   });
 
-  it('says how many each style has, so a dead end is visible before it is pressed', async () => {
+  it('drops styles that would lead to an empty result', async () => {
     browse('/browse');
     await screen.findByRole('list', { name: 'Results' });
+    const filters = await openFilters();
 
-    // Nothing in the fixture is slang, and a chip reading 0 is the honest way to
-    // say so — the same reason a category carries its count.
-    expect(styleChips().some((chip) => /slang/.test(chip.textContent ?? ''))).toBe(true);
-    expect(screen.getByRole('button', { name: /slang/ }).textContent).toMatch(/0/);
+    expect(
+      filters.queryAllByRole('button').some((chip) => /slang/.test(chip.textContent ?? '')),
+    ).toBe(false);
   });
 });
 

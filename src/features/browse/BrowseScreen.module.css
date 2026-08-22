@@ -23,31 +23,106 @@
   border-radius: var(--radius-pill);
 }
 
-/*
- * Four equal columns wherever the content box can hold them, which is one row
- * on any screen wider than a small phone. `flex: 1 1 30%` gave each select a
- * third of the row as a *minimum*, so four of them always wrapped to two rows
- * and five to two uneven ones.
- */
 .filters {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   gap: var(--space-2);
 }
 
-/* Chrome comes from `global.css`. What is this screen's business is that four of
-   these share a grid row, and that two sit elsewhere: topic in the picker's
-   header, sort on the line that counts the results. */
+.filter {
+  display: grid;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
 .filter select {
   width: 100%;
   padding-inline: var(--space-2);
 }
 
-/* The one select outside that row: it sizes to its own labels rather than to a
-   grid column, and gives way to the heading beside it on a narrow screen. */
-.topic select {
-  width: auto;
-  max-width: 100%;
+.filterToggle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  justify-content: stretch;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+}
+
+.filterToggleIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-target);
+  height: var(--tap-target);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.filterToggleText {
+  min-width: 0;
+}
+
+.filterToggleText strong,
+.filterToggleText small {
+  display: block;
+}
+
+.filterToggleText strong {
+  font-family: var(--font-display);
+}
+
+.filterToggleText small {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filterCount {
+  display: inline-flex;
+  min-width: var(--space-6);
+  height: var(--space-6);
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: var(--weight-bold);
+}
+
+.filterSheet {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.filterSheetActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: calc(-1 * var(--space-3));
+}
+
+.filterGroup {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.filterGroup legend {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
 /* How many there are, and what order they are in: the list's header, on one

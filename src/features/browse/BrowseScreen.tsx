@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
@@ -7,6 +7,7 @@ import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
 import { Chip } from '../../components/Chip';
 import { CourseBar } from '../../components/CourseBar';
+import { Sheet } from '../../components/Sheet';
 import { TokenizedText } from '../../components/TokenizedText';
 import { UsageBadges } from '../../components/UsageBadges';
 import { useWordSelection } from '../../components/useWordSelection';
@@ -154,6 +155,8 @@ export function BrowseScreen() {
   // did to this list, not a thing the link means, and it resets whenever the
   // filter changes anyway.
   const [limit, setLimit] = useState(PAGE_SIZE);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filterSheetId = useId();
 
   const facets: Facets = { search, type, pos, topic, registers, region, initial, sort };
 
@@ -255,6 +258,30 @@ export function BrowseScreen() {
 
   const labelFor = (id: string) => topicLabels.get(id) ?? id.replace(/-/g, ' ');
 
+  const activeFilterCount =
+    Number(type !== 'all') +
+    Number(pos !== 'all') +
+    Number(initial !== '') +
+    Number(topic !== 'all') +
+    registers.length +
+    Number(region !== 'all');
+  const filterSummary = [
+    type === 'all' ? undefined : TYPES.find((option) => option.id === type)?.label,
+    pos === 'all' ? undefined : posLabel(pos),
+    initial === '' ? undefined : initial === '#' ? 'Other initials' : `Starts with ${initial}`,
+    topic === 'all' ? undefined : labelFor(topic),
+    ...registers.map((value) => REGISTER_LABELS[value]),
+    region === 'all'
+      ? undefined
+      : (regions.find((option) => option.locale === region)?.label ?? regionLabel(region)),
+  ]
+    .filter((value): value is string => value !== undefined)
+    .join(' · ');
+
+  const clearFilters = () => {
+    update({ type: 'all', pos: 'all', initial: '', topic: 'all', registers: [], region: 'all' });
+  };
+
   // Sorting is the list's business and not the session's: which items "Practise
   // these" plans is the filter's answer, and what order it deals them in is
   // `ordering`, which a session has to be asked for. So the sort stays here
@@ -285,9 +312,9 @@ export function BrowseScreen() {
     // a learner who followed three category tiles should not have to tap Back
     // three times to leave.
     <AppShell title="Browse" onBack={() => void navigate(path('study'))}>
-      {/* Search, categories and the narrowing selects are one block: three
-          stacked sections spaced like separate parts of the page is how the
-          filters came to occupy more of it than the results did. */}
+      {/* Search stays ready to use. Every deliberate narrowing choice lives in
+          one overlay so results remain visible and the page never has nested
+          scroll regions. */}
       <div className={styles.toolbar}>
         <CourseBar compact />
         <div className={styles.search}>
@@ -313,130 +340,138 @@ export function BrowseScreen() {
           />
         </div>
 
-        {/* Beside the search field, because the two are the same question asked
-            in the two ways a learner has it: "where is this word" and "what is
-            in here, starting from somewhere". */}
-        <LetterIndex
-          letters={letters}
-          selected={initial}
-          onToggle={(letter) => {
-            update({ initial: letter === initial ? '' : letter });
-          }}
-        />
-
-        <CategoryPicker
-          topics={topics}
-          selected={topic === 'all' ? [] : [topic]}
-          // Browse filters by one category at a time, so pressing a tile
-          // replaces the selection — and pressing the selected one clears it,
-          // which is how the picker undoes itself without reaching for the
-          // neighbouring select.
-          onToggle={(next) => {
-            update({ topic: next === topic ? 'all' : next });
-          }}
-          action={
-            <label className={`${styles.filter} ${styles.topic}`}>
-              <span className="visually-hidden">Topic</span>
-              <select
-                value={topic}
-                onChange={(event) => {
-                  update({ topic: event.target.value });
-                }}
-              >
-                <option value="all">Any topic</option>
-                {/* Registry order, matching the picker. Sorting by slug put
-                  "Telling the time" between "In town" and "Clothes" — an order
-                  that only made sense before the labels existed. */}
-                {topics
-                  .filter((option) => option.count > 0)
-                  .map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  ))}
-              </select>
-            </label>
-          }
-        />
-
-        <div className={styles.filters}>
-          <label className={styles.filter}>
-            <span className="visually-hidden">Type</span>
-            <select
-              value={type}
-              onChange={(event) => update({ type: event.target.value as ItemType })}
-            >
-              {TYPES.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          {/* Verbs, nouns, adjectives — a whole word kind at once, which is what
-              makes "study a batch of the nouns" a thing you can point at. Kept
-              orthogonal to Type: with "Everything" it selects the sentences that
-              use a verb too, which is exactly what the Verbs preset practises,
-              and with "Words" it is the vocabulary list of that kind. */}
-          {wordKinds.length > 1 && (
-            <label className={styles.filter}>
-              <span className="visually-hidden">Word kind</span>
-              <select
-                value={pos}
-                onChange={(event) => {
-                  update({ pos: event.target.value as PartOfSpeech | 'all' });
-                }}
-              >
-                <option value="all">Any word kind</option>
-                {wordKinds.map((option) => (
-                  <option key={option.pos} value={option.pos}>
-                    {posLabel(option.pos)}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
-
-          <label className={styles.filter}>
-            <span className="visually-hidden">Region</span>
-            <select value={region} onChange={(event) => update({ region: event.target.value })}>
-              {/* Region-neutral content always passes, so this narrows rather
-                than excludes: it drops what is not said where you are aiming.
-
-                Only regions the packs actually mark something for are offered.
-                Argentina and Colombia were on this list while no item carried
-                either, and because unmarked content passes every region check,
-                choosing one returned almost the whole pack and looked like it
-                had worked — a filter that silently does nothing is worse than
-                one that is absent. Same rule as the categories and the letters. */}
-              <option value="all">Anywhere</option>
-              {regions.map((option) => (
-                <option key={option.locale} value={option.locale}>
-                  {option.label} ({option.count})
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        {/* Chips rather than a select, because style is the one facet a learner
-            wants two of at once: "formal or casual, just not slang". The filter
-            has always been plural (`ItemFilter.registers`) and the link has
-            always carried `?register=a,b` — only the control could not say it. */}
-        <div className={styles.registers} role="group" aria-label="Style">
-          {registerFacets.map(({ value, label, count }) => (
-            <Chip
-              key={value}
-              pressed={registers.includes(value)}
-              count={count}
-              onClick={() => update({ registers: toggle(registers, value) })}
-            >
-              {label}
-            </Chip>
-          ))}
-        </div>
+        <Button
+          block
+          className={styles.filterToggle}
+          aria-expanded={filtersOpen}
+          aria-controls={filterSheetId}
+          aria-haspopup="dialog"
+          aria-label={`Filters: ${filterSummary || 'Everything'}${activeFilterCount > 0 ? `, ${activeFilterCount} active` : ''}`}
+          onClick={() => setFiltersOpen(true)}
+        >
+          <span className={styles.filterToggleIcon}>
+            <Icon name="filter" />
+          </span>
+          <span className={styles.filterToggleText}>
+            <strong>Filters</strong>
+            <small>{filterSummary || 'Everything'}</small>
+          </span>
+          {activeFilterCount > 0 && <span className={styles.filterCount}>{activeFilterCount}</span>}
+          <Icon name="next" />
+        </Button>
       </div>
+
+      {filtersOpen && (
+        <Sheet
+          id={filterSheetId}
+          title="Filter results"
+          width="wide"
+          onClose={() => setFiltersOpen(false)}
+        >
+          <div className={styles.filterSheet}>
+            {activeFilterCount > 0 && (
+              <div className={styles.filterSheetActions}>
+                <Button variant="ghost" onClick={clearFilters}>
+                  Clear all filters
+                </Button>
+              </div>
+            )}
+
+            <fieldset className={styles.filterGroup}>
+              <legend>Content</legend>
+              <div className={styles.filters}>
+                <label className={styles.filter}>
+                  <span>Type</span>
+                  <select
+                    value={type}
+                    onChange={(event) => update({ type: event.target.value as ItemType })}
+                  >
+                    {TYPES.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                {wordKinds.length > 1 && (
+                  <label className={styles.filter}>
+                    <span>Word kind</span>
+                    <select
+                      value={pos}
+                      onChange={(event) => {
+                        update({ pos: event.target.value as PartOfSpeech | 'all' });
+                      }}
+                    >
+                      <option value="all">Any word kind</option>
+                      {wordKinds.map((option) => (
+                        <option key={option.pos} value={option.pos}>
+                          {posLabel(option.pos)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+
+                <label className={styles.filter}>
+                  <span>Region</span>
+                  <select
+                    value={region}
+                    onChange={(event) => update({ region: event.target.value })}
+                  >
+                    <option value="all">Anywhere</option>
+                    {regions.map((option) => (
+                      <option key={option.locale} value={option.locale}>
+                        {option.label} ({option.count})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <LetterIndex
+                letters={letters}
+                selected={initial}
+                onToggle={(letter) => {
+                  update({ initial: letter === initial ? '' : letter });
+                }}
+              />
+            </fieldset>
+
+            <CategoryPicker
+              topics={topics}
+              selected={topic === 'all' ? [] : [topic]}
+              onToggle={(next) => {
+                update({ topic: next === topic ? 'all' : next });
+              }}
+            />
+
+            <fieldset className={styles.filterGroup}>
+              <legend>Style</legend>
+              <div className={styles.registers}>
+                {registerFacets
+                  .filter(({ value, count }) => count > 0 || registers.includes(value))
+                  .map(({ value, label, count }) => (
+                    <Chip
+                      key={value}
+                      pressed={registers.includes(value)}
+                      count={count}
+                      onClick={() => update({ registers: toggle(registers, value) })}
+                    >
+                      {label}
+                    </Chip>
+                  ))}
+              </div>
+            </fieldset>
+
+            {activeFilterCount > 0 && (
+              <Button block onClick={clearFilters}>
+                Reset all filters
+              </Button>
+            )}
+          </div>
+        </Sheet>
+      )}
 
       {/* The list's own header. Sorting sits here rather than among the filters
           because it narrows nothing — and because this line already exists, so
@@ -463,10 +498,9 @@ export function BrowseScreen() {
         </label>
       </div>
 
-      {/* Named, like a passage's lines are: a screen with a filter row, a
-          category pane and a letter index has four lists in it, and "which one
-          is the results" should not be a question a screen reader or an agent
-          has to answer by elimination. */}
+      {/* Named, like a passage's lines are: the filter sheet contains several
+          lists, and "which one is the results" should not be a question a
+          screen reader or an agent has to answer by elimination. */}
       <ul className={styles.results} aria-label="Results">
         {shown.map((item) => {
           const translation = services.repository.translationOf(

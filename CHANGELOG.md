@@ -15,6 +15,16 @@ in the pack's own counts.
 
 ## Unreleased
 
+## 0.1.0-alpha.3 — 2026-08-22
+
+### Added
+
+- **An adaptive daily path.** Home keeps one obvious first action, then offers at
+  most two useful next steps from existing evidence: continue the mission after
+  due reviews, strengthen recall, or meet five new items. Learning rhythm
+  also reports when the current course was last practised, without a streak that
+  can be lost.
+
 ## 0.1.0-alpha.2 — 2026-08-22
 
 The first tagged alpha. Breaking changes are expected between alphas, including

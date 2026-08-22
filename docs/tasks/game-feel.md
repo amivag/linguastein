@@ -1,8 +1,8 @@
 # Task: make it feel good to use
 
 **Status:** in progress — §4.1 (motion scale), §4.2 (answer feedback), §4.3
-(segmented progress) and §4.4 (the earned summary) have landed. §4.5 and §4.6
-remain.
+(segmented progress), §4.4 (the earned summary) and §4.5 (adaptive Home) have
+landed. §4.6 remains.
 **Written:** 2026-08-20
 **Revised:** 2026-08-21 — §4.2 landed as part of the design-language pass; see
 [docs/design-language.md](../design-language.md), which now owns the visual rules
@@ -200,12 +200,14 @@ handler, where a clock read is legitimate, and the component renders purely from
 whole days. `SessionOutcome` carries `nextDueInDays` rather than a timestamp
 deliberately, not incidentally.
 
-### 4.5 Home that knows what day it is
+### 4.5 Home that knows what day it is — landed
 
-Home currently lists presets. It could lead with what is due, what was last
-practised, and one obvious next action — the same information, ordered by what a
-returning learner actually wants. Note the React Compiler constraint: do not call
-`Date.now()` during render. Read the clock in an effect or an event handler.
+Home leads with one trustworthy action, then at most two useful next steps. Due
+reviews no longer hide the current mission; a learner with history can ask for a
+bounded shaky-first session, and one with unseen material can ask for a bounded
+fresh-first session. Learning rhythm also names when this course was last
+practised. The clock is read in the existing storage effect rather than during
+render, preserving the React Compiler constraint.
 
 ### 4.6 Optional sound and haptics
 
@@ -257,7 +259,7 @@ the least valuable if the earlier ones landed well.
 - [x] Answer feedback has weight, without changing what `role="status"` announces
 - [x] Session progress reads as progress, with the progressbar contract intact
 - [x] End of session says what was achieved; study mode says its honest version
-- [ ] Home leads with what is due
+- [x] Home leads with what is due
 - [ ] Sound and haptics exist, off by default, behind preferences
 - [ ] No new hard-coded colour anywhere; any new role passes contrast in every
       theme

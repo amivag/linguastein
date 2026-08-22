@@ -89,28 +89,39 @@
   color: var(--color-text-muted);
 }
 
-.learningPath {
+.nextSteps {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
   padding: 0;
   list-style: none;
 }
 
-.learningPath li {
+.nextSteps li {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
-  padding: var(--space-3);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
 }
 
-.learningPath .pathCurrent {
+.nextAction {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  justify-content: stretch;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+}
+
+.nextActionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-target);
+  height: var(--tap-target);
+  border-radius: var(--radius-pill);
   background: var(--color-accent-soft);
+  color: var(--color-accent);
 }
 
 .stepNumber {
@@ -126,13 +137,8 @@
   font-weight: var(--weight-black);
 }
 
-.pathCurrent .stepNumber {
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
-}
-
-.learningPath strong,
-.learningPath small,
+.nextAction strong,
+.nextAction small,
 .freePracticeText strong,
 .freePracticeText small,
 .preset strong,
@@ -142,11 +148,12 @@
   display: block;
 }
 
-.learningPath strong {
-  font-size: var(--text-sm);
+.nextAction strong {
+  display: block;
+  font-family: var(--font-display);
 }
 
-.learningPath small,
+.nextAction small,
 .freePracticeText small,
 .preset small,
 .rhythm small {
@@ -156,7 +163,7 @@
 
 .rhythm {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--space-5);
   padding: var(--space-4);
@@ -169,6 +176,22 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+}
+
+.lastPractice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lastPractice span,
+.lastPractice strong,
+.lastPractice small {
+  display: block;
+}
+
+.lastPractice svg {
+  color: var(--color-accent);
 }
 
 .rhythmStat svg {
@@ -256,18 +279,13 @@
     padding: var(--space-4);
   }
 
-  .learningPath {
-    gap: var(--space-1);
+  .rhythm {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .learningPath li {
-    grid-template-columns: 1fr;
-    gap: var(--space-1);
-    padding: var(--space-2);
-  }
-
-  .learningPath small {
-    display: none;
+  .rhythmWeek {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 }
 

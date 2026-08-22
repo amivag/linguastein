@@ -75,6 +75,105 @@ describe('HomeScreen', () => {
     await user.click(await screen.findByRole('button', { name: /Continue transfer/ }));
     expect(screen.getByTestId('where')).toHaveTextContent('/es/all/mission/morning-routine/use');
   });
+
+  it('keeps the mission visible after due reviews and orders it as the next step', async () => {
+    const services = testServices();
+    const itemId = (await services.repository.allItems())[0]!.id;
+    await services.storage.progress.put({
+      itemId,
+      status: 'review',
+      attempts: 1,
+      correct: 1,
+      incorrect: 0,
+      difficulty: 0.5,
+      hintsUsed: 0,
+      streak: 1,
+      updatedAt: 0,
+      dueAt: 0,
+    });
+
+    renderWithServices(<HomeScreen />, { services });
+
+    expect(await screen.findByRole('button', { name: /Review 1 due/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Next steps' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Continue Describe your morning/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('starts a bounded new-material session from the daily path', async () => {
+    const user = userEvent.setup();
+    function Where() {
+      const location = useLocation();
+      return <output data-testid="where">{`${location.pathname}${location.search}`}</output>;
+    }
+
+    renderWithServices(
+      <>
+        <HomeScreen />
+        <Where />
+      </>,
+    );
+
+    await user.click(await screen.findByRole('button', { name: /Meet something new/ }));
+
+    expect(screen.getByTestId('where')).toHaveTextContent('preset=quick');
+    expect(screen.getByTestId('where')).toHaveTextContent('size=items%3A5');
+    expect(screen.getByTestId('where')).toHaveTextContent('focus=fresh');
+  });
+
+  it('starts a bounded weak-material session after the learner has history', async () => {
+    const services = testServices();
+    const itemId = (await services.repository.allItems())[0]!.id;
+    await services.storage.progress.put({
+      itemId,
+      status: 'learning',
+      attempts: 1,
+      correct: 0,
+      incorrect: 1,
+      difficulty: 0.8,
+      hintsUsed: 0,
+      streak: 0,
+      updatedAt: 0,
+      dueAt: Number.MAX_SAFE_INTEGER,
+    });
+    const user = userEvent.setup();
+    function Where() {
+      const location = useLocation();
+      return <output data-testid="where">{`${location.pathname}${location.search}`}</output>;
+    }
+
+    renderWithServices(
+      <>
+        <HomeScreen />
+        <Where />
+      </>,
+      { services },
+    );
+
+    await user.click(await screen.findByRole('button', { name: /Strengthen recall/ }));
+
+    expect(screen.getByTestId('where')).toHaveTextContent('size=items%3A5');
+    expect(screen.getByTestId('where')).toHaveTextContent('focus=struggling');
+  });
+
+  it('shows when the learner last practised this course', async () => {
+    const services = testServices();
+    const itemId = (await services.repository.allItems())[0]!.id;
+    await services.storage.attempts.append({
+      id: 'recent-attempt',
+      itemId,
+      exerciseKind: 'think-say',
+      grade: 'good',
+      correct: true,
+      at: Date.now(),
+    });
+
+    renderWithServices(<HomeScreen />, { services });
+
+    expect(await screen.findByText('Today')).toBeInTheDocument();
+    expect(screen.getByText('last practised')).toBeInTheDocument();
+  });
 });
 
 describe('SessionScreen', () => {

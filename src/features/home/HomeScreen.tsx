@@ -12,7 +12,11 @@ import { ThemeToggle } from '../../components/ThemeToggle';
 import { levelLabel } from '../../domain/content';
 import { summarise, type Attempt, type ProgressSummary } from '../../domain/progress';
 import { missionIsComplete, missionTransfers, missionsForCourse } from '../../domain/missions';
-import { DEFAULT_SESSION_MINUTES, type SessionSize } from '../../domain/sessions';
+import {
+  DEFAULT_SESSION_MINUTES,
+  type SessionFocus,
+  type SessionSize,
+} from '../../domain/sessions';
 import { FocusPicker } from '../practice/FocusPicker';
 import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
 import { sessionPath } from '../practice/session-url';
@@ -30,6 +34,7 @@ export function HomeScreen() {
   const practiceSheetId = useId();
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [practiceDays, setPracticeDays] = useState(0);
+  const [lastPractice, setLastPractice] = useState('Not yet');
   const [practisedIds, setPractisedIds] = useState<ReadonlySet<string>>(new Set());
   const [missionUseItems, setMissionUseItems] = useState<ReadonlyMap<string, ReadonlySet<string>>>(
     new Map(),
@@ -53,10 +58,12 @@ export function HomeScreen() {
 
       const now = Date.now();
       const inScope = progress.filter((entry) => scope.ids.has(entry.itemId));
+      const attemptsInScope = attempts.filter((attempt) => scope.ids.has(attempt.itemId));
       setSummary(summarise(inScope, scope.total, now));
       setPractisedIds(new Set(inScope.map((entry) => entry.itemId)));
       setMissionUseItems(indexMissionUseAttempts(attempts));
       setPracticeDays(daysPractisedThisWeek(attempts, now));
+      setLastPractice(describeLastPractice(attemptsInScope, now));
     })();
     return () => {
       cancelled = true;
@@ -172,8 +179,34 @@ export function HomeScreen() {
     void navigate(sessionPath(course, { preset, size, ...focused }));
   };
 
+  const startFocused = (focus: SessionFocus) => {
+    void navigate(
+      sessionPath(course, {
+        preset: 'quick',
+        size: { kind: 'items', count: 5 },
+        focus,
+        ...(preferences.focusTopics.length ? { filter: { topics: preferences.focusTopics } } : {}),
+      }),
+    );
+  };
+
   const due = summary?.due ?? 0;
   const reviewDue = due > 0;
+  const followUps: readonly ('mission' | 'reinforce' | 'fresh')[] = summary
+    ? [
+        ...(reviewDue && mission ? (['mission'] as const) : []),
+        ...(summary.seen > 0 ? (['reinforce'] as const) : []),
+        ...(summary.seen < summary.total ? (['fresh'] as const) : []),
+      ].slice(0, 2)
+    : [];
+
+  const continueMission = () => {
+    if (!mission) return;
+    void navigate(
+      mission.id ? missionPath(course, mission.id, mission.stage) : path(`read/${mission.localId}`),
+    );
+  };
+
   const startRecommended = () => {
     if (reviewDue) {
       void navigate(
@@ -187,11 +220,7 @@ export function HomeScreen() {
     }
 
     if (mission) {
-      void navigate(
-        mission.id
-          ? missionPath(course, mission.id, mission.stage)
-          : path(`read/${mission.localId}`),
-      );
+      continueMission();
       return;
     }
 
@@ -254,33 +283,57 @@ export function HomeScreen() {
         </Button>
       </section>
 
-      {!reviewDue && (
+      {followUps.length > 0 && (
         <section aria-labelledby="path-title">
           <h2 id="path-title" className={styles.sectionTitle}>
-            Your learning path
+            Next steps
           </h2>
-          <ol className={styles.learningPath}>
-            <li className={styles.pathCurrent} aria-current="step">
-              <span className={styles.stepNumber}>1</span>
-              <span>
-                <strong>Understand</strong>
-                <small>Meet the phrases</small>
-              </span>
-            </li>
-            <li>
-              <span className={styles.stepNumber}>2</span>
-              <span>
-                <strong>Practise</strong>
-                <small>Build confidence</small>
-              </span>
-            </li>
-            <li>
-              <span className={styles.stepNumber}>3</span>
-              <span>
-                <strong>Use</strong>
-                <small>Speak it out</small>
-              </span>
-            </li>
+          <ol className={styles.nextSteps}>
+            {followUps.map((action, index) => (
+              <li key={action}>
+                <span className={styles.stepNumber} aria-hidden="true">
+                  {index + 2}
+                </span>
+                {action === 'mission' ? (
+                  <Button className={styles.nextAction} onClick={continueMission}>
+                    <span className={styles.nextActionIcon} aria-hidden="true">
+                      <Icon name="speak" />
+                    </span>
+                    <span>
+                      <strong>Continue {mission?.title}</strong>
+                      <small>
+                        {mission?.stage === 'use'
+                          ? 'Use it in a new situation'
+                          : 'Build flexible, useful language'}
+                      </small>
+                    </span>
+                    <Icon name="next" />
+                  </Button>
+                ) : action === 'reinforce' ? (
+                  <Button className={styles.nextAction} onClick={() => startFocused('struggling')}>
+                    <span className={styles.nextActionIcon} aria-hidden="true">
+                      <Icon name="memory" />
+                    </span>
+                    <span>
+                      <strong>Strengthen recall</strong>
+                      <small>5 adaptive questions · your weakest material first</small>
+                    </span>
+                    <Icon name="next" />
+                  </Button>
+                ) : (
+                  <Button className={styles.nextAction} onClick={() => startFocused('fresh')}>
+                    <span className={styles.nextActionIcon} aria-hidden="true">
+                      <Icon name="new" />
+                    </span>
+                    <span>
+                      <strong>Meet something new</strong>
+                      <small>5 adaptive questions · new material first</small>
+                    </span>
+                    <Icon name="next" />
+                  </Button>
+                )}
+              </li>
+            ))}
           </ol>
         </section>
       )}
@@ -301,6 +354,13 @@ export function HomeScreen() {
             ))}
           </span>
           <small>this week</small>
+        </div>
+        <div className={styles.lastPractice}>
+          <Icon name="history" />
+          <span>
+            <strong>{lastPractice}</strong>
+            <small>last practised</small>
+          </span>
         </div>
       </section>
 
@@ -404,4 +464,21 @@ function daysPractisedThisWeek(attempts: readonly { readonly at: number }[], now
       .filter((attempt) => attempt.at >= start.getTime() && attempt.at <= now)
       .map((attempt) => new Date(attempt.at).toDateString()),
   ).size;
+}
+
+function describeLastPractice(attempts: readonly { readonly at: number }[], now: number): string {
+  const latest = attempts.reduce<number | null>(
+    (result, attempt) => (result === null || attempt.at > result ? attempt.at : result),
+    null,
+  );
+  if (latest === null) return 'Not yet';
+
+  const day = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  };
+  const daysAgo = Math.max(0, Math.round((day(now) - day(latest)) / 86_400_000));
+  if (daysAgo === 0) return 'Today';
+  if (daysAgo === 1) return 'Yesterday';
+  return `${daysAgo} days ago`;
 }

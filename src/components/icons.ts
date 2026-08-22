@@ -21,6 +21,7 @@ import {
   Flame,
   Gauge,
   GraduationCap,
+  History,
   Info,
   Languages,
   Layers,
@@ -148,6 +149,7 @@ export const ICONS = {
   // Progress and reward. Kept few on purpose: every icon here is a claim about
   // what a learner achieved, and the app only makes claims it can evidence.
   due: Clock,
+  history: History,
   streak: Flame,
   mastered: Trophy,
   improving: TrendingUp,

@@ -61,6 +61,11 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   directions, clothes, hotel stays, plans and routines. Learners can hear and
   produce them from meaning without generating fake stable ids or progress;
   the evidence-bearing palette sentences remain ordinary content items
+- An adaptive daily path on Home: one primary action followed by at most two
+  useful next steps. Due reviews lead without hiding the current mission;
+  returning learners can strengthen their weakest recall, new learners can request a
+  bounded fresh-material session, and course-scoped history says when they last
+  practised without turning attendance into a resettable streak
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,
@@ -145,10 +150,10 @@ The dataset work is briefed in full for a fresh session:
    because progress references stable ids and an integer cannot have one — a
    closed set of number cards, plus an unbounded drill scored against pattern
    ids. Briefed in full in [docs/tasks/numerals.md](tasks/numerals.md).
-5. **Game feel** — mostly landed. The motion scale, segmented session progress,
-   the earned end-of-session summary, and now a palette with a second accent, a
-   page wash and a display type scale are all in. What remains is §4.2, §4.5 and
-   §4.6 of [docs/tasks/game-feel.md](tasks/game-feel.md) — and the constraints
+5. **Game feel** — mostly landed. The motion scale, answer feedback, segmented
+   session progress, the earned end-of-session summary and the adaptive daily
+   path are all in. What remains is optional sound and haptics (§4.6 of
+   [docs/tasks/game-feel.md](tasks/game-feel.md)) — and the constraints
    still bind: no resettable streak, no reward that overstates the evidence, and
    nothing where motion or colour is the only signal.
 6. **Situations as communicative functions** — landed across all seven missions.

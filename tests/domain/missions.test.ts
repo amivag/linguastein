@@ -97,5 +97,16 @@ describe('missions', () => {
       'coordinate-plan-time',
       'confirm-social-plan',
     ]);
+
+    const routine = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'morning-routine')!;
+    expect(missionPassageForStage(routine, 'understand')).toBe('700001');
+    expect(missionPassageForStage(routine, 'use')).toBe('700020');
+    expect(routine.capabilities).toEqual([
+      'anchor-routine-in-time',
+      'describe-routine-actions',
+      'add-context-to-routine',
+      'sequence-routine-events',
+      'connect-routine-to-destination',
+    ]);
   });
 });

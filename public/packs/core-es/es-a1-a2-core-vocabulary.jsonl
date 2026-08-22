@@ -243,7 +243,7 @@
 {"id":"core-es:item:500243","pack":"core-es","type":"word","text":"pájaro","level":"a1","topics":["animals"],"lexemes":["core-es:lexeme:pajaro"],"examples":["core-es:item:000214"]}
 {"id":"core-es:item:500244","pack":"core-es","type":"word","text":"caballo","level":"a2","topics":["animals"],"lexemes":["core-es:lexeme:caballo"],"examples":["core-es:item:000215"]}
 {"id":"core-es:item:500245","pack":"core-es","type":"word","text":"vaca","level":"a2","topics":["animals"],"lexemes":["core-es:lexeme:vaca"],"examples":["core-es:item:000215"]}
-{"id":"core-es:item:500246","pack":"core-es","type":"word","text":"ropa","level":"a1","topics":["clothes"],"lexemes":["core-es:lexeme:ropa"],"examples":["core-es:item:000253","core-es:item:000423","core-es:item:000532"]}
+{"id":"core-es:item:500246","pack":"core-es","type":"word","text":"ropa","level":"a1","topics":["clothes"],"lexemes":["core-es:lexeme:ropa"],"examples":["core-es:item:000253","core-es:item:000423","core-es:item:000625"]}
 {"id":"core-es:item:500247","pack":"core-es","type":"word","text":"camisa","level":"a1","topics":["clothes"],"lexemes":["core-es:lexeme:camisa"],"examples":["core-es:item:000057","core-es:item:000263","core-es:item:000309"]}
 {"id":"core-es:item:500248","pack":"core-es","type":"word","text":"camiseta","level":"a1","topics":["clothes"],"lexemes":["core-es:lexeme:camiseta"],"examples":["core-es:item:000306"]}
 {"id":"core-es:item:500249","pack":"core-es","type":"word","text":"pantalón","level":"a1","topics":["clothes"],"lexemes":["core-es:lexeme:pantalon"],"examples":["core-es:item:000298"]}
@@ -406,7 +406,7 @@
 {"id":"core-es:item:600048","pack":"core-es","type":"word","text":"vacío","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:vacio"],"examples":["core-es:item:000465"]}
 {"id":"core-es:item:600049","pack":"core-es","type":"word","text":"abierto","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:abierto"],"examples":["core-es:item:000480"]}
 {"id":"core-es:item:600050","pack":"core-es","type":"word","text":"cerrado","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:cerrado"],"examples":["core-es:item:000481"]}
-{"id":"core-es:item:600051","pack":"core-es","type":"word","text":"primero","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:primero"],"examples":["core-es:item:000404","core-es:item:000579"]}
+{"id":"core-es:item:600051","pack":"core-es","type":"word","text":"primero","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:primero"],"examples":["core-es:item:000404","core-es:item:000624","core-es:item:000579"]}
 {"id":"core-es:item:600052","pack":"core-es","type":"word","text":"último","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ultimo"],"examples":["core-es:item:000482"]}
 {"id":"core-es:item:600053","pack":"core-es","type":"word","text":"mismo","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:mismo"],"examples":["core-es:item:000483"]}
 {"id":"core-es:item:600054","pack":"core-es","type":"word","text":"otro","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:otro"],"examples":["core-es:item:000234","core-es:item:000405","core-es:item:000435"]}
@@ -428,7 +428,7 @@
 {"id":"core-es:item:600086","pack":"core-es","type":"word","text":"ocho","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:ocho"],"examples":["core-es:item:000098","core-es:item:000102","core-es:item:000279"]}
 {"id":"core-es:item:600087","pack":"core-es","type":"word","text":"nueve","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:nueve"],"examples":["core-es:item:000093","core-es:item:000156","core-es:item:000341"]}
 {"id":"core-es:item:600088","pack":"core-es","type":"word","text":"diez","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:diez"],"examples":["core-es:item:000302","core-es:item:000335","core-es:item:000342"]}
-{"id":"core-es:item:600089","pack":"core-es","type":"word","text":"once","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:once"],"examples":["core-es:item:000101","core-es:item:000528","core-es:item:000614"]}
+{"id":"core-es:item:600089","pack":"core-es","type":"word","text":"once","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:once"],"examples":["core-es:item:000101","core-es:item:000626","core-es:item:000528"]}
 {"id":"core-es:item:600090","pack":"core-es","type":"word","text":"doce","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:doce"],"examples":["core-es:item:000508"]}
 {"id":"core-es:item:600091","pack":"core-es","type":"word","text":"veinte","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:veinte"],"examples":["core-es:item:000181","core-es:item:000305"]}
 {"id":"core-es:item:600092","pack":"core-es","type":"word","text":"treinta","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:treinta"],"examples":["core-es:item:000033","core-es:item:000196","core-es:item:000568"]}

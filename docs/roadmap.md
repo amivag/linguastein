@@ -47,13 +47,13 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   moves, and a deleted row's id is retired rather than reused
 - Passages: connected texts and dialogues as containers over sentences that stay
   individually practisable, with a reading view and passage-scoped sessions
-- A six-mission A1 communicative journey (Understand → Practise → Use), with the
-  café mission now testing transfer against a second dialogue rather than replaying
-  the exchange it taught
+- A six-mission A1 communicative journey (Understand → Practise → Use), with a
+  changed transfer context for every mission and a narration model alongside
+  the five dialogues
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,
-  622 sentences — 1,073 practisable items, 99% of sentence words linked to a lexeme
+  627 sentences — 1,078 practisable items, 99% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -140,16 +140,20 @@ The dataset work is briefed in full for a fresh session:
    §4.6 of [docs/tasks/game-feel.md](tasks/game-feel.md) — and the constraints
    still bind: no resettable streak, no reward that overstates the evidence, and
    nothing where motion or colour is the only signal.
-6. **Situations as communicative functions** — landed for the café, directions,
-   clothes-shopping, hotel and making-plans missions.
+6. **Situations as communicative functions** — landed across all six missions.
    `content/es/skills.tsv` now authors functions as a second axis to topics:
    `restaurant` is what a sentence is _about_, while ordering politely or
    understanding a price is what the learner is _trying to do_. Sentence rows
    attach those functions, session URLs preserve them, mastery derives evidence,
-   and the mission reports the capabilities it trains. The remaining mission,
-   describing a morning, is connected narration rather than a dialogue and needs
-   a capability model that preserves sequence and coherence. Continue adding
-   transfer contexts before treating any capability as reliable.
+   and the mission reports the capabilities it trains. Five missions use a
+   dialogue model; describing a morning adds a connected-narration model for
+   time, detail, sequence and destination. Every mission now has one changed
+   transfer context. Use records `think-say` attempts into the same FSRS schedule
+   as ordinary practice: speech results map to Good/Hard/Again, while reveal has
+   an explicit Not yet/Partly/Got it fallback. Home advances only after every
+   learner turn has transfer evidence, and a communicative function cannot be
+   labelled Reliable until its practised items span at least two passages. Add
+   further contexts to make that reliability broader than the minimum gate.
 7. **Verb practice depth** — surface `VerbForm` records directly (person and
    tense drills), not only cloze inside sentences. Word inspection already
    shows the forms; practising them directly is the next step.

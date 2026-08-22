@@ -34,6 +34,11 @@
 {"id":"core-es:skill:respond-to-suggestion","kind":"function","label":"Responder a una propuesta","level":"a1","prerequisites":["core-es:skill:suggest-social-activity"]}
 {"id":"core-es:skill:coordinate-plan-time","kind":"function","label":"Acordar la hora de un plan","level":"a1","prerequisites":["core-es:skill:suggest-social-activity"]}
 {"id":"core-es:skill:confirm-social-plan","kind":"function","label":"Confirmar un plan social","level":"a1","prerequisites":["core-es:skill:coordinate-plan-time"]}
+{"id":"core-es:skill:anchor-routine-in-time","kind":"function","label":"Situar una rutina en el tiempo","level":"a1"}
+{"id":"core-es:skill:describe-routine-actions","kind":"function","label":"Describir acciones cotidianas","level":"a1","prerequisites":["core-es:skill:anchor-routine-in-time"]}
+{"id":"core-es:skill:add-context-to-routine","kind":"function","label":"Añadir contexto a una rutina","level":"a1","prerequisites":["core-es:skill:describe-routine-actions"]}
+{"id":"core-es:skill:sequence-routine-events","kind":"function","label":"Ordenar los eventos de una rutina","level":"a1","prerequisites":["core-es:skill:describe-routine-actions"]}
+{"id":"core-es:skill:connect-routine-to-destination","kind":"function","label":"Conectar la rutina con un destino","level":"a1","prerequisites":["core-es:skill:sequence-routine-events"]}
 {"id":"core-es:skill:numerals-teens","kind":"pattern","label":"dieciséis, diecisiete…","level":"a1"}
 {"id":"core-es:skill:numerals-twenties","kind":"pattern","label":"veintiuno, veintidós…","level":"a1"}
 {"id":"core-es:skill:numerals-y-joining","kind":"pattern","label":"treinta y uno / ciento uno","level":"a1"}

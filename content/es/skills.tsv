@@ -23,3 +23,8 @@ suggest-social-activity	function	Proponer una actividad	Suggest a social activit
 respond-to-suggestion	function	Responder a una propuesta	Accept, decline or react to a suggestion	a1	suggest-social-activity
 coordinate-plan-time	function	Acordar la hora de un plan	Ask about and agree on a time	a1	suggest-social-activity
 confirm-social-plan	function	Confirmar un plan social	Confirm the agreed activity, time or place	a1	coordinate-plan-time
+anchor-routine-in-time	function	Situar una rutina en el tiempo	Anchor a personal routine with a day or time	a1
+describe-routine-actions	function	Describir acciones cotidianas	Describe the actions in a daily routine	a1	anchor-routine-in-time
+add-context-to-routine	function	Añadir contexto a una rutina	Add a simple circumstance, reason or detail	a1	describe-routine-actions
+sequence-routine-events	function	Ordenar los eventos de una rutina	Put routine events in a clear chronological sequence	a1	describe-routine-actions
+connect-routine-to-destination	function	Conectar la rutina con un destino	Say where the routine leads and what happens there	a1	sequence-routine-events

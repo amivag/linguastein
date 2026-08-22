@@ -35,7 +35,21 @@ const planIds = [
   'core-es:skill:coordinate-plan-time',
   'core-es:skill:confirm-social-plan',
 ] as const;
-const ids = [...cafeIds, ...directionIds, ...shoppingIds, ...hotelIds, ...planIds];
+const routineIds = [
+  'core-es:skill:anchor-routine-in-time',
+  'core-es:skill:describe-routine-actions',
+  'core-es:skill:add-context-to-routine',
+  'core-es:skill:sequence-routine-events',
+  'core-es:skill:connect-routine-to-destination',
+] as const;
+const ids = [
+  ...cafeIds,
+  ...directionIds,
+  ...shoppingIds,
+  ...hotelIds,
+  ...planIds,
+  ...routineIds,
+];
 
 describe('authored communicative skills', () => {
   let scratch: ScratchPack | undefined;
@@ -64,6 +78,9 @@ describe('authored communicative skills', () => {
     ]);
     expect(skills.find((skill) => skill.id === hotelIds[3])?.prerequisites).toEqual([hotelIds[2]]);
     expect(skills.find((skill) => skill.id === planIds[4])?.prerequisites).toEqual([planIds[3]]);
+    expect(skills.find((skill) => skill.id === routineIds[4])?.prerequisites).toEqual([
+      routineIds[3],
+    ]);
   });
 
   it('attaches the functions to the sentences that provide their evidence', () => {
@@ -143,6 +160,14 @@ describe('authored communicative skills', () => {
     ]);
     expect(plansTransfer.count).toBe(6);
     expect(planIds.filter((id) => !plansTransfer.used.has(id))).toEqual([]);
+
+    const routine = capabilitiesIn(['000516', '000517', '000518', '000519', '000520']);
+    expect(routine.count).toBe(5);
+    expect(routineIds.filter((id) => !routine.used.has(id))).toEqual([]);
+
+    const routineTransfer = capabilitiesIn(['000623', '000624', '000625', '000626', '000627']);
+    expect(routineTransfer.count).toBe(5);
+    expect(routineIds.filter((id) => !routineTransfer.used.has(id))).toEqual([]);
   });
 
   it('rejects a sentence that names an undeclared function', () => {

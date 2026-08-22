@@ -623,6 +623,11 @@
 000620	sentence	active	¿A qué hora nos vemos?
 000621	sentence	active	A las seis. Podemos tomar un café después.
 000622	sentence	active	Perfecto, nos vemos en el parque.
+000623	sentence	active	Los sábados empiezo el día a las nueve.
+000624	sentence	active	Primero, bebo café y como pan.
+000625	sentence	active	Después, limpio la casa y lavo la ropa.
+000626	sentence	active	A las once, salgo de casa y voy al parque.
+000627	sentence	active	Allí leo un libro.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1094,3 +1099,4 @@
 700017	passage	active	Otra compra de ropa
 700018	passage	active	Otra llegada al hotel
 700019	passage	active	Otros planes con amigos
+700020	passage	active	Una mañana de sábado

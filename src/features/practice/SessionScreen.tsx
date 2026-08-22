@@ -153,14 +153,18 @@ export function SessionScreen() {
               large
               onClick={() => void navigate(missionPath(course, activeMission.id, 'use'))}
             >
-              Continue to role-play <Icon name="forward" />
+              Continue to Use <Icon name="forward" />
             </Button>
           ) : (
             <Button variant="primary" block large onClick={runner.restart}>
               {runner.tracked ? 'Practise again' : 'Study again'}
             </Button>
           )}
-          {activeMission && <Button block onClick={runner.restart}>Practise again</Button>}
+          {activeMission && (
+            <Button block onClick={runner.restart}>
+              Practise again
+            </Button>
+          )}
           <Button block onClick={() => void navigate(path())}>
             Home
           </Button>

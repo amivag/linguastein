@@ -24,6 +24,8 @@ export interface MasteryRecord {
   readonly label: string;
   /** Distinct items practised that use this word or pattern. */
   readonly encounters: number;
+  /** Distinct authored passages those practised items belong to. */
+  readonly contexts: number;
   readonly attempts: number;
   readonly correct: number;
   /** 0–1: how reliably it is recalled, weighted by memory stability. */
@@ -48,6 +50,7 @@ export const ENCOUNTERS_FOR_STRENGTH = 6;
 
 interface Accumulator {
   encounters: number;
+  contexts: Set<string>;
   attempts: number;
   correct: number;
   due: number;
@@ -69,14 +72,23 @@ export function inferMastery(
 
     const strength = itemStrength(record);
     const due = isDue(record, now) ? 1 : 0;
+    // A standalone item is its own context. Passage items share the first
+    // authored container, which stops six memorised lines in one dialogue from
+    // masquerading as transfer across six situations.
+    const context = repository.passagesOfItem(item.id)[0]?.id ?? item.id;
 
-    for (const lexeme of item.lexemes ?? []) add(lexemes, lexeme, record, strength, due);
-    for (const skill of item.skills ?? []) add(skills, skill, record, strength, due);
+    for (const lexeme of item.lexemes ?? []) add(lexemes, lexeme, record, strength, due, context);
+    for (const skill of item.skills ?? []) add(skills, skill, record, strength, due, context);
   }
 
   return {
     lexemes: finalise(lexemes, (id) => repository.getLexeme(id)?.lemma ?? id, 'lexeme'),
-    skills: finalise(skills, (id) => repository.getSkill(id)?.label ?? id, 'skill'),
+    skills: finalise(
+      skills,
+      (id) => repository.getSkill(id)?.label ?? id,
+      'skill',
+      (id) => (repository.getSkill(id)?.kind === 'function' ? 2 : 1),
+    ),
   };
 }
 
@@ -86,15 +98,18 @@ function add<K>(
   record: ItemProgress,
   strength: number,
   due: number,
+  context: string,
 ): void {
   const entry = index.get(key) ?? {
     encounters: 0,
+    contexts: new Set(),
     attempts: 0,
     correct: 0,
     due: 0,
     strengthTotal: 0,
   };
   entry.encounters += 1;
+  entry.contexts.add(context);
   entry.attempts += record.attempts;
   entry.correct += record.correct;
   entry.due += due;
@@ -106,6 +121,7 @@ function finalise<K extends LexemeId | SkillId>(
   index: Map<K, Accumulator>,
   label: (id: K) => string,
   kind: MasteryKind,
+  minimumContexts: (id: K) => number = () => 1,
 ): ReadonlyMap<K, MasteryRecord> {
   const result = new Map<K, MasteryRecord>();
 
@@ -121,11 +137,12 @@ function finalise<K extends LexemeId | SkillId>(
       kind,
       label: label(id),
       encounters: entry.encounters,
+      contexts: entry.contexts.size,
       attempts: entry.attempts,
       correct: entry.correct,
       due: entry.due,
       strength,
-      status: statusFor(strength),
+      status: statusFor(strength, entry.contexts.size, minimumContexts(id)),
     });
   }
 
@@ -140,11 +157,15 @@ function itemStrength(record: ItemProgress): number {
   return round2(0.5 * accuracy + 0.5 * stability);
 }
 
-function statusFor(strength: number): MasteryRecord['status'] {
+function statusFor(
+  strength: number,
+  contexts: number,
+  minimumContexts: number,
+): MasteryRecord['status'] {
   // Every record here has been attempted, so there is no 'unseen' case: a word
   // met and forgotten is weak, not unknown.
   if (strength < 0.35) return 'weak';
-  if (strength < 0.7) return 'developing';
+  if (strength < 0.7 || contexts < minimumContexts) return 'developing';
   return 'strong';
 }
 

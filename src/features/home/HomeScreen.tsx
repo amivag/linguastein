@@ -10,12 +10,8 @@ import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { levelLabel } from '../../domain/content';
-import { inferMastery, summarise, type ProgressSummary } from '../../domain/progress';
-import {
-  missionCapabilitiesHaveEvidence,
-  missionIsComplete,
-  missionsForCourse,
-} from '../../domain/missions';
+import { summarise, type Attempt, type ProgressSummary } from '../../domain/progress';
+import { missionIsComplete, missionsForCourse } from '../../domain/missions';
 import { DEFAULT_SESSION_MINUTES, type SessionSize } from '../../domain/sessions';
 import { FocusPicker } from '../practice/FocusPicker';
 import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
@@ -35,8 +31,8 @@ export function HomeScreen() {
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [practiceDays, setPracticeDays] = useState(0);
   const [practisedIds, setPractisedIds] = useState<ReadonlySet<string>>(new Set());
-  const [practisedCapabilities, setPractisedCapabilities] = useState<ReadonlySet<string>>(
-    new Set(),
+  const [missionUseItems, setMissionUseItems] = useState<ReadonlyMap<string, ReadonlySet<string>>>(
+    new Map(),
   );
   const [practiceOpen, setPracticeOpen] = useState(false);
 
@@ -51,7 +47,7 @@ export function HomeScreen() {
     void (async () => {
       const [progress, attempts] = await Promise.all([
         services.storage.progress.all(),
-        services.storage.attempts.recent(1_000),
+        services.storage.attempts.recent(10_000),
       ]);
       if (cancelled) return;
 
@@ -59,13 +55,7 @@ export function HomeScreen() {
       const inScope = progress.filter((entry) => scope.ids.has(entry.itemId));
       setSummary(summarise(inScope, scope.total, now));
       setPractisedIds(new Set(inScope.map((entry) => entry.itemId)));
-      setPractisedCapabilities(
-        new Set(
-          [...inferMastery(services.repository, inScope, now).skills.keys()].map(
-            (id) => id.split(':').at(-1) ?? id,
-          ),
-        ),
-      );
+      setMissionUseItems(indexMissionUseAttempts(attempts));
       setPracticeDays(daysPractisedThisWeek(attempts, now));
     })();
     return () => {
@@ -85,9 +75,21 @@ export function HomeScreen() {
       return passage && inCourse(passage) ? [{ definition, passage }] : [];
     });
     const unfinished = authored.findIndex(({ definition, passage }) => {
-      const capabilities = definition.capabilities ?? [];
-      const complete = capabilities.length
-        ? missionCapabilitiesHaveEvidence(capabilities, practisedCapabilities)
+      const usePassage =
+        services.repository.passageByLocalId(definition.challengePassage ?? definition.passage) ??
+        passage;
+      const useItems = services.repository.itemsOfPassage(usePassage.id);
+      const learnerItems = useItems.filter(
+        (_, index) =>
+          definition.learnerSpeaker === undefined ||
+          usePassage.speakers?.[index] === definition.learnerSpeaker,
+      );
+      const useEvidence = missionUseItems.get(definition.id) ?? new Set<string>();
+      const complete = definition.capabilities?.length
+        ? missionIsComplete(
+            learnerItems.map((item) => item.id),
+            useEvidence,
+          )
         : missionIsComplete(passage.items, practisedIds);
       return !complete;
     });
@@ -122,14 +124,7 @@ export function HomeScreen() {
       position: selected ? authored.indexOf(selected) + 1 : 1,
       total: selected ? authored.length : 1,
     };
-  }, [
-    course,
-    practisedCapabilities,
-    practisedIds,
-    preferences.referenceLanguage,
-    scope.ids,
-    services,
-  ]);
+  }, [course, missionUseItems, practisedIds, preferences.referenceLanguage, scope.ids, services]);
 
   // The standing focus is written into every free-practice link so the session
   // remains reloadable and shareable rather than secretly reading preferences.
@@ -340,6 +335,20 @@ export function HomeScreen() {
       )}
     </AppShell>
   );
+}
+
+function indexMissionUseAttempts(
+  attempts: readonly Attempt[],
+): ReadonlyMap<string, ReadonlySet<string>> {
+  const result = new Map<string, Set<string>>();
+  for (const attempt of attempts) {
+    const mission = /^mission:([^:]+):use:/.exec(attempt.sessionId ?? '')?.[1];
+    if (!mission) continue;
+    const items = result.get(mission) ?? new Set<string>();
+    items.add(attempt.itemId);
+    result.set(mission, items);
+  }
+  return result;
 }
 
 function daysPractisedThisWeek(attempts: readonly { readonly at: number }[], now: number): number {

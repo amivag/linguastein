@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import type { ItemId, LexemeId, SkillId } from '../../src/domain/content';
+import {
+  ContentRepository,
+  type ContentPack,
+  type ItemId,
+  type LexemeId,
+  type PassageId,
+  type SkillId,
+} from '../../src/domain/content';
 import {
   ENCOUNTERS_FOR_STRENGTH,
   inferMastery,
@@ -7,12 +14,13 @@ import {
   weakest,
   type ItemProgress,
 } from '../../src/domain/progress';
-import { id, testRepository } from '../fixtures/pack';
+import { id, TEST_PACK, TEST_PACK_ID, testRepository } from '../fixtures/pack';
 
 const repository = testRepository();
 const NOW = 1_700_000_000_000;
 const TENER = id<LexemeId>('test-es:lexeme:tener');
 const TENER_QUE = id<SkillId>('test-es:skill:tener-que');
+const FUNCTION = id<SkillId>('test-es:skill:handle-situation');
 
 const record = (local: string, overrides: Partial<ItemProgress> = {}): ItemProgress => ({
   ...newItemProgress(id<ItemId>(`test-es:item:${local}`)),
@@ -23,6 +31,45 @@ const record = (local: string, overrides: Partial<ItemProgress> = {}): ItemProgr
 });
 
 const infer = (progress: readonly ItemProgress[]) => inferMastery(repository, progress, NOW);
+
+const contextualPack: ContentPack = {
+  ...TEST_PACK,
+  items: [
+    ...TEST_PACK.items,
+    ...Array.from({ length: 6 }, (_, index) => ({
+      id: id<ItemId>(`test-es:item:${String(index + 8).padStart(3, '0')}`),
+      pack: TEST_PACK_ID,
+      type: 'sentence' as const,
+      text: `Context line ${index + 1}`,
+      level: 'a1' as const,
+      skills: [FUNCTION],
+    })),
+  ],
+  passages: [
+    ...TEST_PACK.passages,
+    {
+      id: id<PassageId>('test-es:passage:700010'),
+      pack: TEST_PACK_ID,
+      kind: 'dialogue',
+      title: 'First context',
+      items: ['008', '009', '010'].map((local) => id<ItemId>(`test-es:item:${local}`)),
+      speakers: ['A', 'B', 'A'],
+    },
+    {
+      id: id<PassageId>('test-es:passage:700011'),
+      pack: TEST_PACK_ID,
+      kind: 'dialogue',
+      title: 'Transfer context',
+      items: ['011', '012', '013'].map((local) => id<ItemId>(`test-es:item:${local}`)),
+      speakers: ['A', 'B', 'A'],
+    },
+  ],
+  skills: [
+    ...TEST_PACK.skills,
+    { id: FUNCTION, kind: 'function', label: 'Handle the situation', level: 'a1' },
+  ],
+};
+const contextualRepository = ContentRepository.from([contextualPack]);
 
 describe('inferMastery', () => {
   it('reports nothing for a learner who has not practised', () => {
@@ -84,6 +131,23 @@ describe('inferMastery', () => {
     const mastery = infer(many).lexemes.get(TENER)!;
     expect(mastery.encounters).toBe(2);
     expect(mastery.strength).toBeLessThan(1);
+  });
+
+  it('does not call a communicative function reliable inside one memorised context', () => {
+    const oneContext = inferMastery(
+      contextualRepository,
+      ['008', '009', '010'].map((local) => record(local, { stability: 60 })),
+      NOW,
+    ).skills.get(FUNCTION)!;
+    const transferred = inferMastery(
+      contextualRepository,
+      ['008', '009', '010', '011', '012', '013'].map((local) => record(local, { stability: 60 })),
+      NOW,
+    ).skills.get(FUNCTION)!;
+
+    expect(oneContext).toMatchObject({ contexts: 1, status: 'developing' });
+    expect(oneContext.strength).toBeGreaterThanOrEqual(0.7);
+    expect(transferred).toMatchObject({ contexts: 2, status: 'strong' });
   });
 });
 

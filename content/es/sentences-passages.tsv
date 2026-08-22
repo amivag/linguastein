@@ -8,11 +8,18 @@
 # Each row is still an ordinary practisable item — the passage only orders them.
 #
 # ── Una mañana normal ─────────────────────────────────────────────────────────
-000516	Me despierto temprano, a las siete.	I wake up early, at seven.	a1	daily-routine,clock					mañana
-000517	Hace frío y no quiero salir de la cama.	It's cold and I don't want to get out of bed.	a1	daily-routine					mañana
-000518	Como pan con mantequilla y bebo un café.	I eat bread and butter and drink a coffee.	a1	food-drink					mañana
-000519	Salgo de casa a las ocho y voy al trabajo en autobús.	I leave home at eight and go to work by bus.	a1	daily-routine,clock					mañana
-000520	Llego a la oficina a las nueve.	I get to the office at nine.	a1	work,clock					mañana
+000516	Me despierto temprano, a las siete.	I wake up early, at seven.	a1	daily-routine,clock					mañana		anchor-routine-in-time,describe-routine-actions,sequence-routine-events
+000517	Hace frío y no quiero salir de la cama.	It's cold and I don't want to get out of bed.	a1	daily-routine					mañana		add-context-to-routine
+000518	Como pan con mantequilla y bebo un café.	I eat bread and butter and drink a coffee.	a1	food-drink					mañana		describe-routine-actions,sequence-routine-events
+000519	Salgo de casa a las ocho y voy al trabajo en autobús.	I leave home at eight and go to work by bus.	a1	daily-routine,clock					mañana		describe-routine-actions,sequence-routine-events,connect-routine-to-destination
+000520	Llego a la oficina a las nueve.	I get to the office at nine.	a1	work,clock					mañana		anchor-routine-in-time,connect-routine-to-destination
+#
+# ── Una mañana de sábado (transfer text) ─────────────────────────────────────
+000623	Los sábados empiezo el día a las nueve.	On Saturdays I start the day at nine.	a1	daily-routine,clock					otra-mañana		anchor-routine-in-time,describe-routine-actions,add-context-to-routine,sequence-routine-events
+000624	Primero, bebo café y como pan.	First, I drink coffee and eat bread.	a1	daily-routine,food-drink					otra-mañana		describe-routine-actions,sequence-routine-events
+000625	Después, limpio la casa y lavo la ropa.	Afterwards, I clean the house and wash the clothes.	a1	daily-routine,home					otra-mañana		describe-routine-actions,sequence-routine-events
+000626	A las once, salgo de casa y voy al parque.	At eleven, I leave home and go to the park.	a1	daily-routine,clock					otra-mañana		anchor-routine-in-time,describe-routine-actions,sequence-routine-events,connect-routine-to-destination
+000627	Allí leo un libro.	There I read a book.	a1	daily-routine,school					otra-mañana		add-context-to-routine,connect-routine-to-destination
 #
 # ── Mi piso ───────────────────────────────────────────────────────────────────
 000521	Vivo en un piso pequeño con dos dormitorios.	I live in a small flat with two bedrooms.	a1	home,numbers					piso

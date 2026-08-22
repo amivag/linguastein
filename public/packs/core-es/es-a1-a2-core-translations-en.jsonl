@@ -519,6 +519,11 @@
 {"ref":"core-es:item:000518","lang":"en","text":"I eat bread and butter and drink a coffee.","type":"natural"}
 {"ref":"core-es:item:000519","lang":"en","text":"I leave home at eight and go to work by bus.","type":"natural"}
 {"ref":"core-es:item:000520","lang":"en","text":"I get to the office at nine.","type":"natural"}
+{"ref":"core-es:item:000623","lang":"en","text":"On Saturdays I start the day at nine.","type":"natural"}
+{"ref":"core-es:item:000624","lang":"en","text":"First, I drink coffee and eat bread.","type":"natural"}
+{"ref":"core-es:item:000625","lang":"en","text":"Afterwards, I clean the house and wash the clothes.","type":"natural"}
+{"ref":"core-es:item:000626","lang":"en","text":"At eleven, I leave home and go to the park.","type":"natural"}
+{"ref":"core-es:item:000627","lang":"en","text":"There I read a book.","type":"natural"}
 {"ref":"core-es:item:000521","lang":"en","text":"I live in a small flat with two bedrooms.","type":"natural"}
 {"ref":"core-es:item:000522","lang":"en","text":"The kitchen is big and has a very tall window.","type":"natural"}
 {"ref":"core-es:item:000523","lang":"en","text":"My room is always clean.","type":"natural"}
@@ -1800,6 +1805,11 @@
 {"ref":"core-es:skill:respond-to-suggestion","lang":"en","text":"Accept, decline or react to a suggestion"}
 {"ref":"core-es:skill:coordinate-plan-time","lang":"en","text":"Ask about and agree on a time"}
 {"ref":"core-es:skill:confirm-social-plan","lang":"en","text":"Confirm the agreed activity, time or place"}
+{"ref":"core-es:skill:anchor-routine-in-time","lang":"en","text":"Anchor a personal routine with a day or time"}
+{"ref":"core-es:skill:describe-routine-actions","lang":"en","text":"Describe the actions in a daily routine"}
+{"ref":"core-es:skill:add-context-to-routine","lang":"en","text":"Add a simple circumstance, reason or detail"}
+{"ref":"core-es:skill:sequence-routine-events","lang":"en","text":"Put routine events in a clear chronological sequence"}
+{"ref":"core-es:skill:connect-routine-to-destination","lang":"en","text":"Say where the routine leads and what happens there"}
 {"ref":"core-es:skill:numerals-teens","lang":"en","text":"the teens, written as one word"}
 {"ref":"core-es:skill:numerals-twenties","lang":"en","text":"the twenties, written as one word"}
 {"ref":"core-es:skill:numerals-y-joining","lang":"en","text":"y joins tens to units, and never hundreds to tens"}
@@ -1826,3 +1836,4 @@
 {"ref":"core-es:passage:700017","lang":"en","text":"Another clothes purchase","type":"natural"}
 {"ref":"core-es:passage:700018","lang":"en","text":"Another hotel arrival","type":"natural"}
 {"ref":"core-es:passage:700019","lang":"en","text":"Different plans with friends","type":"natural"}
+{"ref":"core-es:passage:700020","lang":"en","text":"A Saturday morning","type":"natural"}

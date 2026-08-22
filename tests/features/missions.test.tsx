@@ -2,11 +2,12 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
+import type { SpeechRecognitionProvider } from '../../src/audio';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { missionPracticePath } from '../../src/features/missions/mission-url';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { MISSIONS } from '../../src/app/missions';
-import { renderWithServices } from '../fixtures/services';
+import { renderWithServices, testServices } from '../fixtures/services';
 
 function Where() {
   const location = useLocation();
@@ -57,22 +58,56 @@ describe('MissionScreen', () => {
 
   it('runs the Use stage as recall before reveal and reaches completion', async () => {
     const user = userEvent.setup();
-    renderWithServices(missionRoutes(), {
+    const { services } = renderWithServices(missionRoutes(), {
       route: '/es/all/mission/morning-routine/use',
     });
 
-    expect(await screen.findByText('I have to work.')).toBeInTheDocument();
+    await screen.findByText('I have to work.');
+    expect(screen.getByText('I have to work.')).toBeInTheDocument();
     expect(screen.queryByText('Tengo que trabajar.')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Reveal the line' }));
     expect(screen.getByText('Tengo que trabajar.')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Continue/ }));
+    expect(screen.queryByText('Transfer complete')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Got it' }));
 
     await user.click(screen.getByRole('button', { name: 'Reveal the line' }));
-    await user.click(screen.getByRole('button', { name: /Continue/ }));
+    await user.click(screen.getByRole('button', { name: 'Not yet' }));
 
-    expect(await screen.findByText('Mission complete')).toBeInTheDocument();
+    expect(await screen.findByText('Transfer complete')).toBeInTheDocument();
+    expect(
+      screen.getByText('2 transfer attempts recorded: 1 solid, 0 partial, 1 not yet.'),
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Finish mission' })).toBeInTheDocument();
+    expect(await services.storage.attempts.recent(10)).toHaveLength(2);
+    const progress = await services.storage.progress.all();
+    expect(progress.find((entry) => entry.itemId.endsWith(':item:001'))?.attempts).toBe(1);
+    expect(progress.find((entry) => entry.itemId.endsWith(':item:002'))?.incorrect).toBe(1);
+  });
+
+  it('turns a matching speech check into a recorded transfer grade', async () => {
+    const speech: SpeechRecognitionProvider = {
+      id: 'mission-test',
+      isAvailable: () => true,
+      supportsLanguage: () => true,
+      stop: () => {},
+      listen: () => Promise.resolve({ transcript: 'tengo que trabajar', confidence: 0.95 }),
+    };
+    const services = testServices({ speech });
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/all/mission/morning-routine/use',
+      services,
+    });
+
+    await user.click(await screen.findByRole('button', { name: 'Check my pronunciation' }));
+    expect(await screen.findByText(/That matched/)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Record result and continue/ }));
+
+    expect(await screen.findByText('I have to go.')).toBeInTheDocument();
+    const [attempt] = await services.storage.attempts.recent(1);
+    expect(attempt).toMatchObject({ grade: 'good', correct: true, exerciseKind: 'think-say' });
+    expect(attempt?.sessionId).toMatch(/^mission:morning-routine:use:/);
   });
 
   it('continues a finished tracked session into the Use stage', async () => {
@@ -90,7 +125,7 @@ describe('MissionScreen', () => {
     await screen.findByText('1/1');
     await user.click(screen.getByRole('button', { name: 'Reveal' }));
     await user.click(screen.getByRole('button', { name: 'Good' }));
-    await user.click(await screen.findByRole('button', { name: /Continue to role-play/ }));
+    await user.click(await screen.findByRole('button', { name: /Continue to Use/ }));
 
     expect(screen.getByTestId('where')).toHaveTextContent('/es/all/mission/morning-routine/use');
   });

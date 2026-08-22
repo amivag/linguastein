@@ -9,6 +9,8 @@ import styles from './SpeakCheck.module.css';
 interface SpeakCheckProps {
   /** The target-language text the learner is trying to say. */
   readonly expected: string;
+  /** Reports the recogniser's best comparison without deciding how a caller records it. */
+  readonly onComparison?: (comparison: SpeechComparison) => void;
 }
 
 type State =
@@ -35,7 +37,7 @@ const MESSAGES: Record<SpeechComparison['verdict'], string> = {
  * speaker to have finished, and background noise can stop it ever judging
  * that, so pressing again has to be able to end it.
  */
-export function SpeakCheck({ expected }: SpeakCheckProps) {
+export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
   const { services, preferences } = useServices();
   const { speech } = services;
   const [state, setState] = useState<State>({ phase: 'idle' });
@@ -56,6 +58,7 @@ export function SpeakCheck({ expected }: SpeakCheckProps) {
       const best = bestAlternative(expected, result.transcript, result.alternatives);
       if (mounted.current) {
         setState({ phase: 'heard', text: best.text, comparison: best.comparison });
+        onComparison?.(best.comparison);
       }
     } catch (error) {
       if (!mounted.current) return;
@@ -63,7 +66,7 @@ export function SpeakCheck({ expected }: SpeakCheckProps) {
       // Stopping on purpose is not a failed attempt to report on.
       setState(reason === SPEECH_ABORTED ? { phase: 'idle' } : { phase: 'failed', reason });
     }
-  }, [speech, preferences.pronunciationLocale, expected]);
+  }, [speech, preferences.pronunciationLocale, expected, onComparison]);
 
   if (!speech.isAvailable() || !speech.supportsLanguage(preferences.pronunciationLocale)) {
     return null;

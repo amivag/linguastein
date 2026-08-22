@@ -31,6 +31,7 @@ describe('sessionPath', () => {
         usableIn: 'es-MX',
       },
       passage: 'mercado',
+      mission: 'market-shopping',
       skills: ['preterite'],
       dueOnly: true,
       ordering: 'random',

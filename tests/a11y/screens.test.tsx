@@ -10,6 +10,7 @@ import { ProgressScreen } from '../../src/features/progress/ProgressScreen';
 import { PassageScreen } from '../../src/features/read/PassageScreen';
 import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
+import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { renderWithServices } from '../fixtures/services';
 import { expectNoViolations } from './axe';
 
@@ -59,6 +60,28 @@ describe('accessibility', () => {
       { route: '/read/700002' },
     );
     await screen.findByRole('heading', { level: 1 });
+    await expectNoViolations(container);
+  });
+
+  it('a mission has no WCAG violations', async () => {
+    const { container } = renderWithServices(
+      <Routes>
+        <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
+      </Routes>,
+      { route: '/es/all/mission/morning-routine/understand' },
+    );
+    await screen.findByRole('button', { name: 'Start practice' });
+    await expectNoViolations(container);
+  });
+
+  it('a mission role-play has no WCAG violations', async () => {
+    const { container } = renderWithServices(
+      <Routes>
+        <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
+      </Routes>,
+      { route: '/es/all/mission/morning-routine/use' },
+    );
+    await screen.findByRole('button', { name: 'Reveal the line' });
     await expectNoViolations(container);
   });
 

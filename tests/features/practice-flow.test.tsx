@@ -16,7 +16,7 @@ describe('HomeScreen', () => {
     expect(
       await screen.findByRole('heading', { name: 'Español · All levels' }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Today's mission")).toBeInTheDocument();
+    expect(screen.getByText('Mission 1 of 1')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Begin mission/ })).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /Free practice/ }));
@@ -26,7 +26,7 @@ describe('HomeScreen', () => {
     expect(screen.getByText(/7 items in your course/)).toBeInTheDocument();
   });
 
-  it('starts the recommended mission from a real passage in the current course', async () => {
+  it('starts the recommended mission journey in the current course', async () => {
     const user = userEvent.setup();
     function Where() {
       return <output data-testid="where">{useLocation().pathname}</output>;
@@ -41,7 +41,9 @@ describe('HomeScreen', () => {
     );
 
     await user.click(await screen.findByRole('button', { name: /Begin mission/ }));
-    expect(screen.getByTestId('where')).toHaveTextContent('/es/all/read/700002');
+    expect(screen.getByTestId('where')).toHaveTextContent(
+      '/es/all/mission/morning-routine/understand',
+    );
   });
 });
 

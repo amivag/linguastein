@@ -49,6 +49,8 @@ export interface SessionUrl {
   readonly filter: ItemFilter;
   /** Passage *local* id, e.g. `mercado`; scopes the session to its sentences. */
   readonly passage?: string;
+  /** Mission to continue after this practice set completes. */
+  readonly mission?: string;
   /**
    * Skill *local* ids, e.g. `preterite` — "practise the past tense".
    *
@@ -85,6 +87,7 @@ export function sessionPath(course: Course, input: SessionUrlInput): string {
   writeItemFilter(params, input.filter ?? {});
 
   if (input.passage) params.set('passage', input.passage);
+  if (input.mission) params.set('mission', input.mission);
   if (input.skills?.length) params.set('skill', input.skills.join(','));
   if (input.dueOnly) params.set('due', '1');
   if (input.focus && input.focus !== 'balanced') params.set('focus', input.focus);
@@ -97,6 +100,7 @@ export function sessionPath(course: Course, input: SessionUrlInput): string {
 export function parseSessionUrl(params: URLSearchParams): SessionUrl {
   const preset = params.get('preset');
   const passage = params.get('passage');
+  const mission = params.get('mission');
   const focus = params.get('focus');
   const ordering = params.get('order');
   const seed = Number(params.get('seed'));
@@ -111,6 +115,7 @@ export function parseSessionUrl(params: URLSearchParams): SessionUrl {
     size: parseSize(params.get('size')),
     filter: parseItemFilter(params),
     ...(passage ? { passage } : {}),
+    ...(mission ? { mission } : {}),
     ...(skills.length ? { skills } : {}),
     ...(isTruthy(params.get('due')) ? { dueOnly: true } : {}),
     ...(isFocus(focus) ? { focus } : {}),

@@ -17,6 +17,7 @@ import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { PassageScreen } from '../../src/features/read/PassageScreen';
 import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
+import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { renderWithServices } from '../fixtures/services';
 
 /** Accessible name as an agent would resolve it. */
@@ -92,6 +93,20 @@ describe('agent surface', () => {
     expect(
       screen.getByRole('button', { name: 'Listen to “Tengo que trabajar.”' }),
     ).toBeInTheDocument();
+  });
+
+  it('names every control in a mission and exposes its stage', async () => {
+    const { container } = renderWithServices(
+      <Routes>
+        <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
+      </Routes>,
+      { route: '/es/all/mission/morning-routine/understand' },
+    );
+
+    await screen.findByRole('button', { name: 'Start practice' });
+    await expectEveryControlNamed(container);
+    expect(screen.getByRole('list', { name: 'Mission journey' })).toBeInTheDocument();
+    expect(screen.getByText('Understand').closest('li')).toHaveAttribute('aria-current', 'step');
   });
 
   it('names every control in a practice session', async () => {

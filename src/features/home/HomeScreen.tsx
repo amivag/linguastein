@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
+import { MISSIONS } from '../../app/missions';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
@@ -10,10 +11,12 @@ import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { levelLabel } from '../../domain/content';
 import { summarise, type ProgressSummary } from '../../domain/progress';
+import { missionIsComplete, missionsForCourse } from '../../domain/missions';
 import { DEFAULT_SESSION_MINUTES, type SessionSize } from '../../domain/sessions';
 import { FocusPicker } from '../practice/FocusPicker';
 import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
 import { sessionPath } from '../practice/session-url';
+import { missionPath } from '../missions/mission-url';
 import styles from './HomeScreen.module.css';
 
 /**
@@ -27,6 +30,7 @@ export function HomeScreen() {
   const practiceSheetId = useId();
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [practiceDays, setPracticeDays] = useState(0);
+  const [practisedIds, setPractisedIds] = useState<ReadonlySet<string>>(new Set());
   const [practiceOpen, setPracticeOpen] = useState(false);
 
   // Every recommendation and count is scoped to the course in the URL.
@@ -47,6 +51,7 @@ export function HomeScreen() {
       const now = Date.now();
       const inScope = progress.filter((entry) => scope.ids.has(entry.itemId));
       setSummary(summarise(inScope, scope.total, now));
+      setPractisedIds(new Set(inScope.map((entry) => entry.itemId)));
       setPracticeDays(daysPractisedThisWeek(attempts, now));
     })();
     return () => {
@@ -54,39 +59,52 @@ export function HomeScreen() {
     };
   }, [services, scope]);
 
-  // Spanish starts with one authored communicative mission. Other packs still
-  // get a useful first passage rather than a Spanish id leaking across them.
+  // The next unfinished authored mission leads. A pack with no mission catalog
+  // still gets a useful first passage rather than Spanish sequencing leaking in.
   const mission = useMemo(() => {
-    const preferred = services.repository.passageByLocalId('700009');
-    const inCourse = (candidate: NonNullable<typeof preferred>) =>
+    const inCourse = (candidate: ReturnType<typeof services.repository.passageByLocalId>) =>
+      candidate !== undefined &&
       services.repository.itemsOfPassage(candidate.id).some((item) => scope.ids.has(item.id));
+
+    const authored = missionsForCourse(MISSIONS, course).flatMap((definition) => {
+      const passage = services.repository.passageByLocalId(definition.passage);
+      return passage && inCourse(passage) ? [{ definition, passage }] : [];
+    });
+    const unfinished = authored.findIndex(({ passage }) =>
+      !missionIsComplete(passage.items, practisedIds),
+    );
+    const selected = authored[unfinished >= 0 ? unfinished : Math.max(0, authored.length - 1)];
+
     const passage =
-      (preferred && inCourse(preferred) ? preferred : undefined) ??
+      selected?.passage ??
       services.repository
         .allPassages()
-        .filter(inCourse)
+        .filter((candidate) => inCourse(candidate))
         .sort((a, b) => Number(b.kind === 'dialogue') - Number(a.kind === 'dialogue'))[0];
 
     if (!passage) return null;
     const items = services.repository.itemsOfPassage(passage.id);
     const localId = passage.id.split(':').at(-1) ?? '';
-    const atCafe = localId === '700009';
     const titleTranslation = services.repository.translationOf(
       passage.id,
       preferences.referenceLanguage,
     );
-    const phrase = items[atCafe ? 1 : 0];
+    const phrase = items[selected?.definition.spotlight ?? 0];
 
     return {
+      id: selected?.definition.id,
       localId,
-      title: atCafe ? 'Order at a café' : (titleTranslation?.text ?? passage.title),
+      title: selected?.definition.title ?? titleTranslation?.text ?? passage.title,
       phrase: phrase?.text ?? passage.title,
       phraseMeaning: phrase
         ? services.repository.translationOf(phrase.id, preferences.referenceLanguage)?.text
         : undefined,
       lineCount: items.length,
+      estimatedMinutes: selected?.definition.estimatedMinutes ?? 5,
+      position: selected ? authored.indexOf(selected) + 1 : 1,
+      total: selected ? authored.length : 1,
     };
-  }, [preferences.referenceLanguage, scope.ids, services.repository]);
+  }, [course, practisedIds, preferences.referenceLanguage, scope.ids, services]);
 
   // The standing focus is written into every free-practice link so the session
   // remains reloadable and shareable rather than secretly reading preferences.
@@ -115,7 +133,9 @@ export function HomeScreen() {
     }
 
     if (mission) {
-      void navigate(path(`read/${mission.localId}`));
+      void navigate(
+        mission.id ? missionPath(course, mission.id) : path(`read/${mission.localId}`),
+      );
       return;
     }
 
@@ -127,7 +147,13 @@ export function HomeScreen() {
   return (
     <AppShell title={title} action={<ThemeToggle variant="compact" />}>
       <section className={styles.mission} aria-labelledby="mission-title">
-        <p className={styles.eyebrow}>{reviewDue ? 'Ready for review' : "Today's mission"}</p>
+        <p className={styles.eyebrow}>
+          {reviewDue
+            ? 'Ready for review'
+            : mission
+              ? `Mission ${mission.position} of ${mission.total}`
+              : "Today's mission"}
+        </p>
         <div className={styles.missionHeading}>
           <div>
             <h2 id="mission-title" className={styles.missionTitle}>
@@ -162,7 +188,9 @@ export function HomeScreen() {
 
         <Button variant="primary" block large onClick={startRecommended}>
           <Icon name="play" />
-          {reviewDue ? `Review ${due} due` : 'Begin mission · 5 min'}
+          {reviewDue
+            ? `Review ${due} due`
+            : `Begin mission · ${mission?.estimatedMinutes ?? 5} min`}
         </Button>
       </section>
 

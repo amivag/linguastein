@@ -1,0 +1,208 @@
+.journey {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.journey li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.journey li > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-raised);
+  font-weight: var(--weight-black);
+}
+
+.journey li[data-state='current'] {
+  background: var(--color-accent-soft);
+  color: var(--color-text);
+}
+
+.journey li[data-state='current'] > span {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.journey li[data-state='complete'] > span {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.brief,
+.roleCard,
+.complete {
+  composes: cardPrimary from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.brief h2,
+.roleCard h2,
+.complete h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  line-height: var(--leading-heading);
+}
+
+.brief > p:last-child,
+.coach,
+.complete > p:last-of-type {
+  color: var(--color-text-muted);
+}
+
+.eyebrow {
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.actions,
+.turnActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.turnActions > * {
+  flex: 1;
+}
+
+.lines {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-2);
+}
+
+.lines li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.speaker {
+  grid-column: 1 / -1;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.lineText {
+  font-size: var(--text-lg);
+  line-height: var(--leading-prose);
+}
+
+.meaning {
+  color: var(--color-text-muted);
+}
+
+.lines .meaning {
+  grid-column: 1;
+}
+
+.linePlay {
+  grid-column: 2;
+  grid-row: 2 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.roleProgress {
+  height: var(--space-2);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-track);
+}
+
+.roleProgress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-accent);
+  transition: width var(--transition-base);
+}
+
+.answer {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-success-soft);
+}
+
+.answer p {
+  color: var(--color-success);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+}
+
+.complete {
+  justify-items: center;
+  padding-block: var(--space-7);
+  text-align: center;
+}
+
+.complete > svg {
+  color: var(--color-highlight);
+}
+
+.empty {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
+  padding: var(--space-7) var(--space-4);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 420px) {
+  .journey {
+    gap: var(--space-1);
+  }
+
+  .journey li {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+
+  .brief,
+  .roleCard,
+  .complete {
+    padding: var(--space-4);
+  }
+}

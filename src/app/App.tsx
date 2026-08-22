@@ -8,6 +8,7 @@ import { PassageScreen } from '../features/read/PassageScreen';
 import { ReadScreen } from '../features/read/ReadScreen';
 import { SessionScreen } from '../features/practice/SessionScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
+import { MissionScreen } from '../features/missions/MissionScreen';
 import { courseOptions, coursePath, resolveCourse } from '../domain/content';
 import { mergePreferences, type Preferences } from '../storage';
 import { applyTheme } from '../styles/themes';
@@ -126,6 +127,10 @@ export function App() {
             <Route path="/:language/:level/read/:id" element={<PassageScreen />} />
             <Route path="/:language/:level/progress" element={<ProgressScreen />} />
             <Route path="/:language/:level/session" element={<SessionScreen />} />
+            <Route
+              path="/:language/:level/mission/:missionId/:stage"
+              element={<MissionScreen />}
+            />
             <Route path="/:language/:level/settings" element={<SettingsScreen />} />
 
             {/* Outside the course routes: the design system is a property of the

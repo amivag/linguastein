@@ -2,7 +2,9 @@ import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
+import { MISSIONS } from '../../app/missions';
 import type { SkillId } from '../../domain/content';
+import { missionById } from '../../domain/missions';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { SessionOutcomeSummary } from './SessionOutcomeSummary';
@@ -15,6 +17,8 @@ import styles from './Practice.module.css';
 import { buildSessionConfig, PRESETS } from './presets';
 import { parseSessionUrl } from './session-url';
 import { useSessionRunner } from './useSessionRunner';
+import { MissionJourney } from '../missions/MissionJourney';
+import { missionPath } from '../missions/mission-url';
 
 /** A session is fully described by the URL, so it survives a reload or a share. */
 export function SessionScreen() {
@@ -28,7 +32,7 @@ export function SessionScreen() {
   // query string is the dependency, so the plan changes only when the link does.
   const search = params.toString();
   const repository = services.repository;
-  const { preset, config } = useMemo(() => {
+  const { preset, config, mission } = useMemo(() => {
     const url = parseSessionUrl(new URLSearchParams(search));
     const chosen = PRESETS[url.preset];
     // `?passage=` practises exactly one text; facets narrow it further, since
@@ -51,6 +55,7 @@ export function SessionScreen() {
 
     return {
       preset: chosen,
+      mission: url.mission,
       config: buildSessionConfig(chosen, {
         repository,
         preferences,
@@ -66,6 +71,7 @@ export function SessionScreen() {
   }, [search, repository, preferences, courseScope]);
 
   const runner = useSessionRunner(config, course);
+  const activeMission = mission ? missionById(MISSIONS, course, mission) : undefined;
 
   return (
     <AppShell title={preset.label} onBack="history" showNav={false}>
@@ -82,6 +88,7 @@ export function SessionScreen() {
 
       {runner.status === 'active' && (
         <>
+          {activeMission && <MissionJourney current="practise" />}
           <SessionProgress
             index={runner.index}
             total={runner.total}
@@ -139,9 +146,21 @@ export function SessionScreen() {
               be worse than no panel. */}
           {runner.tracked && <SessionOutcomeSummary outcome={runner.outcome} />}
 
-          <Button variant="primary" block large onClick={runner.restart}>
-            {runner.tracked ? 'Practise again' : 'Study again'}
-          </Button>
+          {activeMission ? (
+            <Button
+              variant="primary"
+              block
+              large
+              onClick={() => void navigate(missionPath(course, activeMission.id, 'use'))}
+            >
+              Continue to role-play <Icon name="forward" />
+            </Button>
+          ) : (
+            <Button variant="primary" block large onClick={runner.restart}>
+              {runner.tracked ? 'Practise again' : 'Study again'}
+            </Button>
+          )}
+          {activeMission && <Button block onClick={runner.restart}>Practise again</Button>}
           <Button block onClick={() => void navigate(path())}>
             Home
           </Button>

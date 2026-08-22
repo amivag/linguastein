@@ -7,7 +7,7 @@ import styles from './Button.module.css';
  * screen with two things worth pressing, was two primary buttons.
  */
 export type ButtonVariant =
-  'default' | 'primary' | 'tonal' | 'option' | 'ghost' | 'correct' | 'incorrect';
+  'default' | 'primary' | 'tonal' | 'danger' | 'option' | 'ghost' | 'correct' | 'incorrect';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly variant?: ButtonVariant;

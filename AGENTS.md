@@ -287,6 +287,13 @@ declared before the content that fills it. A slug is referenced by content and b
 links (`?topic=clock`), so renaming one is a breaking change — change the label.
 Sort the file by hand, never alphabetically: its order is the UI's order.
 
+Communicative functions are skills, not topics. `content/es/skills.tsv` declares
+authored abilities such as ordering food, and sentence rows reference their local
+slugs in the `skills` column. A topic says what a sentence is about; a function
+says what the learner can accomplish with it. The build resolves both skill and
+prerequisite slugs and rejects undeclared ones. Grammar and morphology skills are
+still generated, so do not re-author them there.
+
 Content carries usage as data, not prose: `register`, `address` (tú/usted) and
 `regions`. `address` is derived from morphology where unambiguous and declared
 otherwise; third person is never guessed. When adding a word that differs by

@@ -566,6 +566,11 @@
 {"ref":"core-es:item:000596","lang":"en","text":"No, thank you. Just the tea.","type":"natural"}
 {"ref":"core-es:item:000597","lang":"en","text":"That's two euros.","type":"natural"}
 {"ref":"core-es:item:000598","lang":"en","text":"Here you are. Thank you very much.","type":"natural"}
+{"ref":"core-es:item:000599","lang":"en","text":"Excuse me, where is the bank?","type":"natural"}
+{"ref":"core-es:item:000600","lang":"en","text":"It's nearby. Turn left at the pharmacy.","type":"natural"}
+{"ref":"core-es:item:000601","lang":"en","text":"Is the bank far away?","type":"natural"}
+{"ref":"core-es:item:000602","lang":"en","text":"No, it's five minutes away.","type":"natural"}
+{"ref":"core-es:item:000603","lang":"en","text":"Perfect, thank you very much.","type":"natural"}
 {"ref":"core-es:item:000562","lang":"en","text":"Do you need any help?","type":"natural"}
 {"ref":"core-es:item:000563","lang":"en","text":"I'm looking for a black jacket.","type":"natural"}
 {"ref":"core-es:item:000564","lang":"en","text":"What size are you?","type":"natural"}
@@ -573,6 +578,13 @@
 {"ref":"core-es:item:000566","lang":"en","text":"Of course, it's over there.","type":"natural"}
 {"ref":"core-es:item:000567","lang":"en","text":"I'll take this one. How much is it?","type":"natural"}
 {"ref":"core-es:item:000568","lang":"en","text":"Thirty euros.","type":"natural"}
+{"ref":"core-es:item:000604","lang":"en","text":"Good afternoon, what are you looking for?","type":"natural"}
+{"ref":"core-es:item:000605","lang":"en","text":"I'm looking for a red dress.","type":"natural"}
+{"ref":"core-es:item:000606","lang":"en","text":"What size do you need?","type":"natural"}
+{"ref":"core-es:item:000607","lang":"en","text":"I don't know. Can I try this one on?","type":"natural"}
+{"ref":"core-es:item:000608","lang":"en","text":"Of course. You can try it on over there.","type":"natural"}
+{"ref":"core-es:item:000609","lang":"en","text":"I like it. I'll take it. How much is it?","type":"natural"}
+{"ref":"core-es:item:000610","lang":"en","text":"Forty euros.","type":"natural"}
 {"ref":"core-es:item:000569","lang":"en","text":"Excuse me, where is the station?","type":"natural"}
 {"ref":"core-es:item:000570","lang":"en","text":"It's very close. Carry on down this street.","type":"natural"}
 {"ref":"core-es:item:000571","lang":"en","text":"Is the square far?","type":"natural"}
@@ -1753,6 +1765,19 @@
 {"ref":"core-es:skill:preterite","lang":"en","text":"the simple past: completed actions"}
 {"ref":"core-es:skill:imperfect","lang":"en","text":"how things used to be"}
 {"ref":"core-es:skill:imperative","lang":"en","text":"telling someone to do something"}
+{"ref":"core-es:skill:order-food-drink","lang":"en","text":"Order food or a drink politely"}
+{"ref":"core-es:skill:handle-add-on","lang":"en","text":"Accept or decline an additional item"}
+{"ref":"core-es:skill:ask-understand-price","lang":"en","text":"Ask for and understand a simple price"}
+{"ref":"core-es:skill:close-service-exchange","lang":"en","text":"Close a service exchange politely"}
+{"ref":"core-es:skill:ask-for-directions","lang":"en","text":"Ask where a place is politely"}
+{"ref":"core-es:skill:follow-simple-directions","lang":"en","text":"Understand and follow simple directions"}
+{"ref":"core-es:skill:check-distance","lang":"en","text":"Ask about and understand a short distance"}
+{"ref":"core-es:skill:thank-for-help","lang":"en","text":"Thank someone for their help"}
+{"ref":"core-es:skill:seek-clothing-item","lang":"en","text":"Ask for a particular item of clothing"}
+{"ref":"core-es:skill:handle-clothing-size","lang":"en","text":"Understand and respond to a size question"}
+{"ref":"core-es:skill:ask-to-try-on","lang":"en","text":"Ask to try on an item of clothing"}
+{"ref":"core-es:skill:choose-clothing-purchase","lang":"en","text":"Choose an item and say you will take it"}
+{"ref":"core-es:skill:ask-understand-item-price","lang":"en","text":"Ask for and understand an item's price"}
 {"ref":"core-es:skill:numerals-teens","lang":"en","text":"the teens, written as one word"}
 {"ref":"core-es:skill:numerals-twenties","lang":"en","text":"the twenties, written as one word"}
 {"ref":"core-es:skill:numerals-y-joining","lang":"en","text":"y joins tens to units, and never hundreds to tens"}
@@ -1775,3 +1800,5 @@
 {"ref":"core-es:passage:700013","lang":"en","text":"At the doctor's","type":"natural"}
 {"ref":"core-es:passage:700014","lang":"en","text":"What shall we do tonight?","type":"natural"}
 {"ref":"core-es:passage:700015","lang":"en","text":"Another café order","type":"natural"}
+{"ref":"core-es:passage:700016","lang":"en","text":"Another route through town","type":"natural"}
+{"ref":"core-es:passage:700017","lang":"en","text":"Another clothes purchase","type":"natural"}

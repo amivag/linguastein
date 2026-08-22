@@ -1,0 +1,15 @@
+# Authored curriculum skills. Grammar and morphology skills remain generated.
+# Columns: slug	kind	label (es)	gloss (en)	level	prerequisites
+order-food-drink	function	Pedir comida o bebida	Order food or a drink politely	a1	
+handle-add-on	function	Responder a «¿Algo más?»	Accept or decline an additional item	a1	order-food-drink
+ask-understand-price	function	Preguntar y entender el precio	Ask for and understand a simple price	a1	order-food-drink
+close-service-exchange	function	Cerrar una interacción con cortesía	Close a service exchange politely	a1	order-food-drink
+ask-for-directions	function	Preguntar cómo llegar	Ask where a place is politely	a1	
+follow-simple-directions	function	Seguir indicaciones sencillas	Understand and follow simple directions	a1	ask-for-directions
+check-distance	function	Comprobar la distancia	Ask about and understand a short distance	a1	ask-for-directions
+thank-for-help	function	Dar las gracias por la ayuda	Thank someone for their help	a1	
+seek-clothing-item	function	Buscar una prenda concreta	Ask for a particular item of clothing	a1	
+handle-clothing-size	function	Hablar de la talla	Understand and respond to a size question	a1	seek-clothing-item
+ask-to-try-on	function	Pedir probarse una prenda	Ask to try on an item of clothing	a1	seek-clothing-item
+choose-clothing-purchase	function	Elegir una prenda	Choose an item and say you will take it	a1	ask-to-try-on
+ask-understand-item-price	function	Preguntar y entender el precio de una prenda	Ask for and understand an item's price	a1	choose-clothing-purchase

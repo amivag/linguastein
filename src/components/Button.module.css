@@ -104,6 +104,16 @@
   font-weight: var(--weight-semibold);
 }
 
+/* Reserved for an action whose consequence is destructive. Unlike the
+   incorrect-answer variant this is a choice, not a verdict, so it has no
+   grading animation and remains fully pressable. */
+.danger {
+  --button-bg: var(--color-danger-soft);
+
+  color: var(--color-danger);
+  font-weight: var(--weight-semibold);
+}
+
 /*
  * The hero: a large primary button, and the only thing in the app that carries a
  * coloured shadow.

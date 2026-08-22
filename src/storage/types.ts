@@ -92,10 +92,9 @@ export interface LearnerStorage {
   readonly sessions: SessionStore;
   readonly preferences: PreferencesStore;
   /**
-   * Wipes all learner data, preferences included — which is why "reset progress"
-   * in Settings clears the three record stores by hand instead: nobody asking to
-   * forget their history is also asking to pick their voice and theme again.
-   * This is the tests' reset, and the one a future "delete everything" would use.
+   * Wipes all learner data, preferences included. Settings uses this for a clean
+   * local reset; its narrower "reset progress" action clears the three history
+   * stores by hand so a learner can keep their voice and appearance choices.
    */
   clearAll(): Promise<void>;
 }

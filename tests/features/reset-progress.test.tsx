@@ -1,17 +1,19 @@
 /**
- * "Reset progress" is the only irreversible action in the app, and learner state
- * is local by design — there is no server copy to restore from. So it is worth
- * pinning both halves: that one tap cannot trigger it, and that when it does run
- * it clears the three learner stores and leaves preferences alone.
+ * Learner state is local by design — there is no server copy to restore from.
+ * Both reset scopes therefore need a confirmation, and they must differ in the
+ * one way their labels promise: progress-only keeps preferences; full reset
+ * restores a clean install.
  */
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import type { ItemId } from '../../src/domain/content';
 import { newItemProgress } from '../../src/domain/progress';
-import { createMemoryStorage } from '../../src/storage';
+import { createMemoryStorage, DEFAULT_PREFERENCES, type Preferences } from '../../src/storage';
+import { READING_SIZE_STORAGE_KEY } from '../../src/styles/reading-size';
+import { THEME_STORAGE_KEY } from '../../src/styles/themes';
 import { id } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
 
@@ -40,11 +42,12 @@ async function storageWithHistory() {
   return storage;
 }
 
-async function renderSettings() {
+async function renderSettings(updatePreferences?: (patch: Partial<Preferences>) => void) {
   const storage = await storageWithHistory();
   const view = renderWithServices(<SettingsScreen />, {
     services: testServices({ storage }),
     route: '/settings',
+    ...(updatePreferences ? { updatePreferences } : {}),
   });
   return { ...view, storage };
 }
@@ -59,6 +62,8 @@ async function stored(storage: Awaited<ReturnType<typeof storageWithHistory>>) {
 }
 
 describe('reset progress', () => {
+  beforeEach(() => localStorage.clear());
+
   it('does not erase anything on the first tap', async () => {
     const user = userEvent.setup();
     const { storage } = await renderSettings();
@@ -88,10 +93,10 @@ describe('reset progress', () => {
     const { storage } = await renderSettings();
 
     await user.click(screen.getByRole('button', { name: 'Reset progress' }));
-    await user.click(screen.getByRole('button', { name: 'Erase everything' }));
+    await user.click(screen.getByRole('button', { name: 'Erase learning history' }));
 
     expect(await stored(storage)).toEqual({ progress: 0, attempts: 0, sessions: 0 });
-    expect(await screen.findByRole('button', { name: /Progress cleared/ })).toBeInTheDocument();
+    expect(await screen.findByText('Learning history cleared.')).toBeInTheDocument();
   });
 
   it('keeps preferences, which are not history', async () => {
@@ -100,9 +105,50 @@ describe('reset progress', () => {
     await storage.preferences.write({ voiceName: 'Paulina' });
 
     await user.click(screen.getByRole('button', { name: 'Reset progress' }));
-    await user.click(screen.getByRole('button', { name: 'Erase everything' }));
+    await user.click(screen.getByRole('button', { name: 'Erase learning history' }));
 
-    await screen.findByRole('button', { name: /Progress cleared/ });
+    await screen.findByText('Learning history cleared.');
+    expect((await storage.preferences.read()).voiceName).toBe('Paulina');
+  });
+
+  it('clears history, preferences and pre-paint caches in a full local reset', async () => {
+    const user = userEvent.setup();
+    const updatePreferences = vi.fn();
+    const { storage } = await renderSettings(updatePreferences);
+    await storage.preferences.write({
+      targetLanguage: 'fr',
+      level: 'all',
+      voiceName: 'Paulina',
+      theme: 'dark',
+      readingSize: 'large',
+    });
+    localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+    localStorage.setItem(READING_SIZE_STORAGE_KEY, 'large');
+
+    await user.click(screen.getByRole('button', { name: 'Reset all local data' }));
+
+    expect(await stored(storage)).toEqual({ progress: 1, attempts: 1, sessions: 1 });
+    expect(screen.getByRole('alert')).toHaveTextContent('every app setting');
+
+    await user.click(screen.getByRole('button', { name: 'Erase all local data' }));
+
+    expect(await stored(storage)).toEqual({ progress: 0, attempts: 0, sessions: 0 });
+    expect(await storage.preferences.read()).toEqual(DEFAULT_PREFERENCES);
+    expect(updatePreferences).toHaveBeenCalledWith(DEFAULT_PREFERENCES);
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+    expect(localStorage.getItem(READING_SIZE_STORAGE_KEY)).toBeNull();
+    expect(await screen.findByText('All local data reset to app defaults.')).toBeInTheDocument();
+  });
+
+  it('leaves all local data intact when a full reset is cancelled', async () => {
+    const user = userEvent.setup();
+    const { storage } = await renderSettings();
+    await storage.preferences.write({ voiceName: 'Paulina' });
+
+    await user.click(screen.getByRole('button', { name: 'Reset all local data' }));
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(await stored(storage)).toEqual({ progress: 1, attempts: 1, sessions: 1 });
     expect((await storage.preferences.read()).voiceName).toBe('Paulina');
   });
 });

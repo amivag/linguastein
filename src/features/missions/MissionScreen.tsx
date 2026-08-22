@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MISSIONS } from '../../app/missions';
 import { useCourse } from '../../app/course';
@@ -10,11 +10,18 @@ import { TokenizedText } from '../../components/TokenizedText';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import { missionById, missionPassageForStage, type MissionStage } from '../../domain/missions';
-import type { LearningItem } from '../../domain/content';
+import type { LearningItem, SkillId } from '../../domain/content';
+import { inferMastery, type MasteryRecord } from '../../domain/progress';
 import { SpeakCheck } from '../practice/SpeakCheck';
-import { sessionPath } from '../practice/session-url';
 import { MissionJourney } from './MissionJourney';
+import { missionPracticePath } from './mission-url';
 import styles from './Mission.module.css';
+
+interface MissionCapability {
+  readonly id: SkillId;
+  readonly label: string;
+  readonly evidence?: MasteryRecord;
+}
 
 /** The reusable Understand → Practise → Use journey over one connected passage. */
 export function MissionScreen() {
@@ -44,6 +51,32 @@ export function MissionScreen() {
     [filter, services.repository],
   );
   const available = passage !== undefined && items.some((item) => courseIds.has(item.id));
+  const [skillMastery, setSkillMastery] = useState<ReadonlyMap<SkillId, MasteryRecord>>(new Map());
+
+  useEffect(() => {
+    if (!mission?.capabilities?.length) return;
+    let cancelled = false;
+    void services.storage.progress.all().then((progress) => {
+      if (!cancelled) setSkillMastery(inferMastery(services.repository, progress).skills);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [mission, services]);
+
+  const capabilities = useMemo(
+    () =>
+      (mission?.capabilities ?? []).flatMap((slug): readonly MissionCapability[] => {
+        const skill = services.repository.skillByLocalId(slug);
+        if (!skill || skill.kind !== 'function') return [];
+        const label =
+          services.repository.translationOf(skill.id, preferences.referenceLanguage)?.text ??
+          skill.label;
+        const evidence = skillMastery.get(skill.id);
+        return [{ id: skill.id, label, ...(evidence ? { evidence } : {}) }];
+      }),
+    [mission, preferences.referenceLanguage, services.repository, skillMastery],
+  );
 
   if (!mission || !passage || !available) {
     return (
@@ -66,19 +99,10 @@ export function MissionScreen() {
           missionId={mission.id}
           missionGoal={mission.goal}
           passageTitle={passage.title}
+          capabilities={capabilities}
           items={items}
           {...(passage.speakers ? { speakers: passage.speakers } : {})}
-          onPractise={() =>
-            void navigate(
-              sessionPath(course, {
-                preset: 'quick',
-                size: { kind: 'all' },
-                passage: mission.passage,
-                mission: mission.id,
-                ordering: 'sequential',
-              }),
-            )
-          }
+          onPractise={() => void navigate(missionPracticePath(course, mission))}
         />
       ) : (
         <UseStage
@@ -86,6 +110,7 @@ export function MissionScreen() {
           missionGoal={mission.goal}
           partner={mission.scenarioPartner}
           transfer={isTransfer}
+          capabilities={capabilities}
           {...(mission.learnerSpeaker ? { learnerSpeaker: mission.learnerSpeaker } : {})}
           items={items}
           {...(passage.speakers ? { speakers: passage.speakers } : {})}
@@ -111,6 +136,7 @@ export function MissionScreen() {
     missionId: id,
     missionGoal,
     passageTitle,
+    capabilities: stageCapabilities,
     items: stageItems,
     speakers,
     onPractise,
@@ -118,6 +144,7 @@ export function MissionScreen() {
     readonly missionId: string;
     readonly missionGoal: string;
     readonly passageTitle: string;
+    readonly capabilities: readonly MissionCapability[];
     readonly items: readonly LearningItem[];
     readonly speakers?: readonly string[];
     readonly onPractise: () => void;
@@ -134,6 +161,10 @@ export function MissionScreen() {
           <h2 id={`${id}-goal`}>{missionGoal}</h2>
           <p>First understand the whole exchange. Tap any word when you need help.</p>
         </section>
+
+        {stageCapabilities.length > 0 && (
+          <CapabilityList capabilities={stageCapabilities} variant="preview" />
+        )}
 
         <div className={styles.actions}>
           <Button onClick={() => void speakAll(stageItems)}>
@@ -191,6 +222,7 @@ export function MissionScreen() {
     missionGoal,
     partner,
     transfer,
+    capabilities: stageCapabilities,
     learnerSpeaker,
     items: stageItems,
     speakers,
@@ -200,6 +232,7 @@ export function MissionScreen() {
     readonly missionGoal: string;
     readonly partner: string;
     readonly transfer: boolean;
+    readonly capabilities: readonly MissionCapability[];
     readonly learnerSpeaker?: string;
     readonly items: readonly LearningItem[];
     readonly speakers?: readonly string[];
@@ -231,6 +264,9 @@ export function MissionScreen() {
               You produced {learnerTurns} useful {learnerTurns === 1 ? 'line' : 'lines'} in a
               connected situation. Practised phrases are already scheduled for review.
             </p>
+            {stageCapabilities.length > 0 && (
+              <CapabilityList capabilities={stageCapabilities} variant="evidence" />
+            )}
             <Button variant="primary" block large onClick={onFinish}>
               Finish mission
             </Button>
@@ -319,4 +355,42 @@ export function MissionScreen() {
       ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
     });
   }
+}
+
+function CapabilityList({
+  capabilities,
+  variant,
+}: {
+  readonly capabilities: readonly MissionCapability[];
+  readonly variant: 'preview' | 'evidence';
+}) {
+  return (
+    <section className={styles.capabilityPanel} aria-label="Mission capabilities">
+      <h3>{variant === 'preview' ? 'What you’ll be able to do' : 'Capability evidence'}</h3>
+      <ul className={styles.capabilities}>
+        {capabilities.map((capability) => (
+          <li key={capability.id}>
+            <Icon name={capability.evidence ? 'check' : 'forward'} size="sm" />
+            <span>{capability.label}</span>
+            {variant === 'evidence' && (
+              <strong>{capabilityEvidenceLabel(capability.evidence)}</strong>
+            )}
+          </li>
+        ))}
+      </ul>
+      {variant === 'evidence' && (
+        <p>
+          Based on retrieval during practice. Strength grows when you handle the same ability in new
+          situations.
+        </p>
+      )}
+    </section>
+  );
+}
+
+function capabilityEvidenceLabel(evidence: MasteryRecord | undefined): string {
+  if (!evidence) return 'Not tested';
+  if (evidence.status === 'strong') return 'Reliable';
+  if (evidence.status === 'developing') return 'Developing';
+  return 'First evidence';
 }

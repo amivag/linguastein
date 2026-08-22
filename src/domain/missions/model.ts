@@ -28,6 +28,8 @@ export interface MissionDefinition {
    * the same useful language so Use is not an exact replay of Understand.
    */
   readonly challengePassage?: string;
+  /** Local ids of communicative-function skills this mission gathers evidence for. */
+  readonly capabilities?: readonly string[];
   /** Which line gives Home a useful preview. */
   readonly spotlight: number;
   readonly estimatedMinutes: number;
@@ -39,6 +41,17 @@ export interface MissionDefinition {
 
 export function missionPassageForStage(mission: MissionDefinition, stage: MissionStage): string {
   return stage === 'use' && mission.challengePassage ? mission.challengePassage : mission.passage;
+}
+
+/** A mission advances once each named real-world capability has retrieval evidence. */
+export function missionCapabilitiesHaveEvidence(
+  capabilities: readonly string[],
+  evidencedCapabilities: ReadonlySet<string>,
+): boolean {
+  return (
+    capabilities.length > 0 &&
+    capabilities.every((capability) => evidencedCapabilities.has(capability))
+  );
 }
 
 /** Missions that belong in a course, in their authored dependency order. */

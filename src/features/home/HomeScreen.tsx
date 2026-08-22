@@ -10,8 +10,12 @@ import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { levelLabel } from '../../domain/content';
-import { summarise, type ProgressSummary } from '../../domain/progress';
-import { missionIsComplete, missionsForCourse } from '../../domain/missions';
+import { inferMastery, summarise, type ProgressSummary } from '../../domain/progress';
+import {
+  missionCapabilitiesHaveEvidence,
+  missionIsComplete,
+  missionsForCourse,
+} from '../../domain/missions';
 import { DEFAULT_SESSION_MINUTES, type SessionSize } from '../../domain/sessions';
 import { FocusPicker } from '../practice/FocusPicker';
 import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
@@ -31,6 +35,9 @@ export function HomeScreen() {
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [practiceDays, setPracticeDays] = useState(0);
   const [practisedIds, setPractisedIds] = useState<ReadonlySet<string>>(new Set());
+  const [practisedCapabilities, setPractisedCapabilities] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
   const [practiceOpen, setPracticeOpen] = useState(false);
 
   // Every recommendation and count is scoped to the course in the URL.
@@ -52,6 +59,13 @@ export function HomeScreen() {
       const inScope = progress.filter((entry) => scope.ids.has(entry.itemId));
       setSummary(summarise(inScope, scope.total, now));
       setPractisedIds(new Set(inScope.map((entry) => entry.itemId)));
+      setPractisedCapabilities(
+        new Set(
+          [...inferMastery(services.repository, inScope, now).skills.keys()].map(
+            (id) => id.split(':').at(-1) ?? id,
+          ),
+        ),
+      );
       setPracticeDays(daysPractisedThisWeek(attempts, now));
     })();
     return () => {
@@ -70,9 +84,13 @@ export function HomeScreen() {
       const passage = services.repository.passageByLocalId(definition.passage);
       return passage && inCourse(passage) ? [{ definition, passage }] : [];
     });
-    const unfinished = authored.findIndex(({ passage }) =>
-      !missionIsComplete(passage.items, practisedIds),
-    );
+    const unfinished = authored.findIndex(({ definition, passage }) => {
+      const capabilities = definition.capabilities ?? [];
+      const complete = capabilities.length
+        ? missionCapabilitiesHaveEvidence(capabilities, practisedCapabilities)
+        : missionIsComplete(passage.items, practisedIds);
+      return !complete;
+    });
     const selected = authored[unfinished >= 0 ? unfinished : Math.max(0, authored.length - 1)];
 
     const passage =
@@ -104,7 +122,14 @@ export function HomeScreen() {
       position: selected ? authored.indexOf(selected) + 1 : 1,
       total: selected ? authored.length : 1,
     };
-  }, [course, practisedIds, preferences.referenceLanguage, scope.ids, services]);
+  }, [
+    course,
+    practisedCapabilities,
+    practisedIds,
+    preferences.referenceLanguage,
+    scope.ids,
+    services,
+  ]);
 
   // The standing focus is written into every free-practice link so the session
   // remains reloadable and shareable rather than secretly reading preferences.
@@ -133,9 +158,7 @@ export function HomeScreen() {
     }
 
     if (mission) {
-      void navigate(
-        mission.id ? missionPath(course, mission.id) : path(`read/${mission.localId}`),
-      );
+      void navigate(mission.id ? missionPath(course, mission.id) : path(`read/${mission.localId}`));
       return;
     }
 
@@ -202,15 +225,24 @@ export function HomeScreen() {
           <ol className={styles.learningPath}>
             <li className={styles.pathCurrent} aria-current="step">
               <span className={styles.stepNumber}>1</span>
-              <span><strong>Understand</strong><small>Meet the phrases</small></span>
+              <span>
+                <strong>Understand</strong>
+                <small>Meet the phrases</small>
+              </span>
             </li>
             <li>
               <span className={styles.stepNumber}>2</span>
-              <span><strong>Practise</strong><small>Build confidence</small></span>
+              <span>
+                <strong>Practise</strong>
+                <small>Build confidence</small>
+              </span>
             </li>
             <li>
               <span className={styles.stepNumber}>3</span>
-              <span><strong>Use</strong><small>Speak it out</small></span>
+              <span>
+                <strong>Use</strong>
+                <small>Speak it out</small>
+              </span>
             </li>
           </ol>
         </section>
@@ -219,7 +251,10 @@ export function HomeScreen() {
       <section className={styles.rhythm} aria-label="Learning rhythm">
         <div className={styles.rhythmStat}>
           <Icon name="due" />
-          <span><strong>{due}</strong><small>due today</small></span>
+          <span>
+            <strong>{due}</strong>
+            <small>due today</small>
+          </span>
         </div>
         <div className={styles.rhythmWeek}>
           <strong>{practiceDays} of 7 days</strong>
@@ -239,7 +274,9 @@ export function HomeScreen() {
         aria-expanded={practiceOpen}
         aria-controls={practiceSheetId}
       >
-        <span className={styles.freePracticeIcon}><Icon name="listen" size="lg" /></span>
+        <span className={styles.freePracticeIcon}>
+          <Icon name="listen" size="lg" />
+        </span>
         <span className={styles.freePracticeText}>
           <strong>Free practice</strong>
           <small>Choose the time and training mode</small>
@@ -288,7 +325,10 @@ export function HomeScreen() {
                       onClick={() => start(id, { kind: 'items', count: 10 })}
                     >
                       <Icon name={preset.icon} />
-                      <span><strong>{preset.label}</strong><small>{preset.description}</small></span>
+                      <span>
+                        <strong>{preset.label}</strong>
+                        <small>{preset.description}</small>
+                      </span>
                       <Icon name="next" size="sm" />
                     </Button>
                   );

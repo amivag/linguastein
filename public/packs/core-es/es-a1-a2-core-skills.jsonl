@@ -11,6 +11,19 @@
 {"id":"core-es:skill:preterite","kind":"grammar","label":"pretérito indefinido","level":"a2"}
 {"id":"core-es:skill:imperfect","kind":"grammar","label":"pretérito imperfecto","level":"a2"}
 {"id":"core-es:skill:imperative","kind":"grammar","label":"imperativo","level":"a1"}
+{"id":"core-es:skill:order-food-drink","kind":"function","label":"Pedir comida o bebida","level":"a1"}
+{"id":"core-es:skill:handle-add-on","kind":"function","label":"Responder a «¿Algo más?»","level":"a1","prerequisites":["core-es:skill:order-food-drink"]}
+{"id":"core-es:skill:ask-understand-price","kind":"function","label":"Preguntar y entender el precio","level":"a1","prerequisites":["core-es:skill:order-food-drink"]}
+{"id":"core-es:skill:close-service-exchange","kind":"function","label":"Cerrar una interacción con cortesía","level":"a1","prerequisites":["core-es:skill:order-food-drink"]}
+{"id":"core-es:skill:ask-for-directions","kind":"function","label":"Preguntar cómo llegar","level":"a1"}
+{"id":"core-es:skill:follow-simple-directions","kind":"function","label":"Seguir indicaciones sencillas","level":"a1","prerequisites":["core-es:skill:ask-for-directions"]}
+{"id":"core-es:skill:check-distance","kind":"function","label":"Comprobar la distancia","level":"a1","prerequisites":["core-es:skill:ask-for-directions"]}
+{"id":"core-es:skill:thank-for-help","kind":"function","label":"Dar las gracias por la ayuda","level":"a1"}
+{"id":"core-es:skill:seek-clothing-item","kind":"function","label":"Buscar una prenda concreta","level":"a1"}
+{"id":"core-es:skill:handle-clothing-size","kind":"function","label":"Hablar de la talla","level":"a1","prerequisites":["core-es:skill:seek-clothing-item"]}
+{"id":"core-es:skill:ask-to-try-on","kind":"function","label":"Pedir probarse una prenda","level":"a1","prerequisites":["core-es:skill:seek-clothing-item"]}
+{"id":"core-es:skill:choose-clothing-purchase","kind":"function","label":"Elegir una prenda","level":"a1","prerequisites":["core-es:skill:ask-to-try-on"]}
+{"id":"core-es:skill:ask-understand-item-price","kind":"function","label":"Preguntar y entender el precio de una prenda","level":"a1","prerequisites":["core-es:skill:choose-clothing-purchase"]}
 {"id":"core-es:skill:numerals-teens","kind":"pattern","label":"dieciséis, diecisiete…","level":"a1"}
 {"id":"core-es:skill:numerals-twenties","kind":"pattern","label":"veintiuno, veintidós…","level":"a1"}
 {"id":"core-es:skill:numerals-y-joining","kind":"pattern","label":"treinta y uno / ciento uno","level":"a1"}

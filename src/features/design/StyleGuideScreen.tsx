@@ -141,6 +141,7 @@ export function StyleGuideScreen() {
         <div className={styles.row}>
           <Button variant="primary">Primary</Button>
           <Button variant="tonal">Tonal</Button>
+          <Button variant="danger">Destructive</Button>
           <Button>Default</Button>
           <Button variant="ghost">Ghost</Button>
         </div>

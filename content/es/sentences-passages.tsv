@@ -1,6 +1,6 @@
 # Sentences that read as connected texts. The `passage` column groups them; see
 # passages.tsv for each passage's title and kind.
-# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
 #
 # These are written from vocabulary the pack already has, and deliberately reuse
 # it: the second mention of a word arrives while the first is still fresh, which
@@ -64,36 +64,52 @@
 000555	Pero mañana va a hacer sol.	But tomorrow it's going to be sunny.	a1	weather					lluvia
 #
 # ── En la cafetería (dialogue) ────────────────────────────────────────────────
-000556	Buenos días, ¿qué quiere tomar?	Good morning, what would you like?	a1	restaurant		formal	usted		cafeteria	Camarero
-000557	Un café con leche, por favor.	A coffee with milk, please.	a1	restaurant					cafeteria	Cliente
-000558	¿Algo más?	Anything else?	a1	restaurant		formal	usted		cafeteria	Camarero
-000559	Sí, una galleta. ¿Cuánto es?	Yes, a biscuit. How much is it?	a1	restaurant					cafeteria	Cliente
-000560	Tres euros.	Three euros.	a1	restaurant,numbers					cafeteria	Camarero
-000561	Gracias.	Thank you.	a1	greetings					cafeteria	Cliente
+000556	Buenos días, ¿qué quiere tomar?	Good morning, what would you like?	a1	restaurant		formal	usted		cafeteria	Camarero	order-food-drink
+000557	Un café con leche, por favor.	A coffee with milk, please.	a1	restaurant					cafeteria	Cliente	order-food-drink
+000558	¿Algo más?	Anything else?	a1	restaurant		formal	usted		cafeteria	Camarero	handle-add-on
+000559	Sí, una galleta. ¿Cuánto es?	Yes, a biscuit. How much is it?	a1	restaurant					cafeteria	Cliente	handle-add-on,ask-understand-price
+000560	Tres euros.	Three euros.	a1	restaurant,numbers					cafeteria	Camarero	ask-understand-price
+000561	Gracias.	Thank you.	a1	greetings					cafeteria	Cliente	close-service-exchange
 #
 # ── Otro pedido en la cafetería (transfer dialogue) ───────────────────────────
-000593	Buenas tardes. ¿Qué va a tomar?	Good afternoon. What are you going to have?	a1	restaurant		formal	usted		cafeteria-reto	Camarero
-000594	Un té con leche, por favor.	A tea with milk, please.	a1	restaurant					cafeteria-reto	Cliente
-000595	¿Quiere una galleta también?	Would you like a biscuit too?	a1	restaurant		formal	usted		cafeteria-reto	Camarero
-000596	No, gracias. Solo el té.	No, thank you. Just the tea.	a1	restaurant,greetings					cafeteria-reto	Cliente
-000597	Son dos euros.	That's two euros.	a1	restaurant,numbers					cafeteria-reto	Camarero
-000598	Aquí tiene. Muchas gracias.	Here you are. Thank you very much.	a1	restaurant,greetings					cafeteria-reto	Cliente
+000593	Buenas tardes. ¿Qué va a tomar?	Good afternoon. What are you going to have?	a1	restaurant		formal	usted		cafeteria-reto	Camarero	order-food-drink
+000594	Un té con leche, por favor.	A tea with milk, please.	a1	restaurant					cafeteria-reto	Cliente	order-food-drink
+000595	¿Quiere una galleta también?	Would you like a biscuit too?	a1	restaurant		formal	usted		cafeteria-reto	Camarero	handle-add-on
+000596	No, gracias. Solo el té.	No, thank you. Just the tea.	a1	restaurant,greetings					cafeteria-reto	Cliente	handle-add-on
+000597	Son dos euros.	That's two euros.	a1	restaurant,numbers					cafeteria-reto	Camarero	ask-understand-price
+000598	Aquí tiene. Muchas gracias.	Here you are. Thank you very much.	a1	restaurant,greetings					cafeteria-reto	Cliente	close-service-exchange
+#
+# ── Otra ruta por la ciudad (transfer dialogue) ──────────────────────────────
+000599	Perdón, ¿dónde está el banco?	Excuse me, where is the bank?	a1	travel,city		formal	usted		calle-reto	Turista	ask-for-directions
+000600	Está cerca. Gire a la izquierda en la farmacia.	It's nearby. Turn left at the pharmacy.	a1	travel		formal	usted		calle-reto	Señor	follow-simple-directions
+000601	¿El banco está lejos?	Is the bank far away?	a1	travel,city		formal	usted		calle-reto	Turista	check-distance
+000602	No, está a cinco minutos.	No, it's five minutes away.	a1	travel,numbers		formal	usted		calle-reto	Señor	check-distance
+000603	Perfecto, muchas gracias.	Perfect, thank you very much.	a1	greetings		formal	usted		calle-reto	Turista	thank-for-help
 #
 # ── En la tienda de ropa (dialogue) ───────────────────────────────────────────
-000562	¿Necesita ayuda?	Do you need any help?	a1	shopping		formal	usted		tienda	Dependienta
-000563	Busco una chaqueta negra.	I'm looking for a black jacket.	a1	clothes,colours					tienda	Cliente
-000564	¿Qué talla tiene?	What size are you?	a2	shopping		formal	usted		tienda	Dependienta
-000565	No sé. ¿Puedo probar esta?	I don't know. Can I try this one on?	a1	shopping					tienda	Cliente
-000566	Claro, está allí.	Of course, it's over there.	a1	shopping		formal	usted		tienda	Dependienta
-000567	Me llevo esta. ¿Cuánto cuesta?	I'll take this one. How much is it?	a2	shopping					tienda	Cliente
-000568	Treinta euros.	Thirty euros.	a1	shopping,numbers					tienda	Dependienta
+000562	¿Necesita ayuda?	Do you need any help?	a1	shopping		formal	usted		tienda	Dependienta	seek-clothing-item
+000563	Busco una chaqueta negra.	I'm looking for a black jacket.	a1	clothes,colours					tienda	Cliente	seek-clothing-item
+000564	¿Qué talla tiene?	What size are you?	a1	shopping		formal	usted		tienda	Dependienta	handle-clothing-size
+000565	No sé. ¿Puedo probar esta?	I don't know. Can I try this one on?	a1	shopping					tienda	Cliente	handle-clothing-size,ask-to-try-on
+000566	Claro, está allí.	Of course, it's over there.	a1	shopping		formal	usted		tienda	Dependienta	ask-to-try-on
+000567	Me llevo esta. ¿Cuánto cuesta?	I'll take this one. How much is it?	a1	shopping					tienda	Cliente	choose-clothing-purchase,ask-understand-item-price
+000568	Treinta euros.	Thirty euros.	a1	shopping,numbers					tienda	Dependienta	ask-understand-item-price
+#
+# ── Otra compra de ropa (transfer dialogue) ──────────────────────────────────
+000604	Buenas tardes, ¿qué busca?	Good afternoon, what are you looking for?	a1	shopping		formal	usted		tienda-reto	Dependienta	seek-clothing-item
+000605	Busco un vestido rojo.	I'm looking for a red dress.	a1	clothes,colours					tienda-reto	Cliente	seek-clothing-item
+000606	¿Qué talla necesita?	What size do you need?	a1	shopping		formal	usted		tienda-reto	Dependienta	handle-clothing-size
+000607	No sé. ¿Puedo probar este?	I don't know. Can I try this one on?	a1	shopping					tienda-reto	Cliente	handle-clothing-size,ask-to-try-on
+000608	Claro. Puede probarlo allí.	Of course. You can try it on over there.	a1	shopping		formal	usted		tienda-reto	Dependienta	ask-to-try-on
+000609	Me gusta. Me lo llevo. ¿Cuánto cuesta?	I like it. I'll take it. How much is it?	a1	shopping					tienda-reto	Cliente	choose-clothing-purchase,ask-understand-item-price
+000610	Cuarenta euros.	Forty euros.	a1	shopping,numbers					tienda-reto	Dependienta	ask-understand-item-price
 #
 # ── Perdona, ¿dónde está? (dialogue) ──────────────────────────────────────────
-000569	Perdón, ¿dónde está la estación?	Excuse me, where is the station?	a1	travel		formal	usted		calle	Turista
-000570	Está muy cerca. Siga por esta calle.	It's very close. Carry on down this street.	a2	travel		formal	usted		calle	Señora
-000571	¿Está lejos la plaza?	Is the square far?	a1	travel					calle	Turista
-000572	No, a diez minutos a la derecha.	No, ten minutes on the right.	a1	travel,numbers					calle	Señora
-000573	Muchas gracias.	Thank you very much.	a1	greetings					calle	Turista
+000569	Perdón, ¿dónde está la estación?	Excuse me, where is the station?	a1	travel		formal	usted		calle	Turista	ask-for-directions
+000570	Está muy cerca. Siga por esta calle.	It's very close. Carry on down this street.	a1	travel		formal	usted		calle	Señora	follow-simple-directions
+000571	¿Está lejos la plaza?	Is the square far?	a1	travel					calle	Turista	check-distance
+000572	No, a diez minutos a la derecha.	No, ten minutes on the right.	a1	travel,numbers					calle	Señora	follow-simple-directions,check-distance
+000573	Muchas gracias.	Thank you very much.	a1	greetings					calle	Turista	thank-for-help
 #
 # ── En el hotel (dialogue) ────────────────────────────────────────────────────
 000574	Buenas tardes, ¿tiene una reserva?	Good afternoon, do you have a reservation?	a1	travel		formal	usted		hotel	Recepcionista

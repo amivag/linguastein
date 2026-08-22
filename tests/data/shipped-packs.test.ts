@@ -176,6 +176,29 @@ describe('shipped packs', () => {
     expect(missing).toEqual([]);
   });
 
+  it('teaches every declared mission capability in both the lesson and transfer situation', async () => {
+    const { repository } = await loadAll();
+    const missing: string[] = [];
+
+    for (const mission of MISSIONS) {
+      if (!mission.capabilities?.length) continue;
+      for (const stage of ['understand', 'use'] as const) {
+        const passage = repository.passageByLocalId(missionPassageForStage(mission, stage));
+        const used = new Set(
+          passage ? repository.itemsOfPassage(passage.id).flatMap((item) => item.skills ?? []) : [],
+        );
+        for (const localId of mission.capabilities) {
+          const skill = repository.skillByLocalId(localId);
+          if (!skill || skill.kind !== 'function' || !used.has(skill.id)) {
+            missing.push(`${mission.id}/${stage}/${localId}`);
+          }
+        }
+      }
+    }
+
+    expect(missing).toEqual([]);
+  });
+
   it('name a speaker for every line of every dialogue', async () => {
     const { repository } = await loadAll();
     const wrong = repository

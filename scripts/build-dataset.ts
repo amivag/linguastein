@@ -16,7 +16,7 @@
 
 import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { PASSAGE_KINDS } from '../src/domain/content/model.ts';
+import { PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
 import { conjugate } from '../src/languages/es/conjugation.ts';
 import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
 import { adjectiveForms, pluralOf } from '../src/languages/es/morphology.ts';
@@ -83,6 +83,8 @@ interface SentenceRow {
   passage: string;
   /** Who says this line, for dialogues only. */
   speaker: string;
+  /** Authored skill slugs, resolved through skills.tsv. */
+  skills: string[];
   source: string;
   row: SourceRow;
 }
@@ -94,6 +96,14 @@ interface PassageRow {
   level: string;
   topics: string[];
   row: SourceRow;
+}
+interface AuthoredSkillRow {
+  slug: string;
+  kind: string;
+  label: string;
+  gloss: string;
+  level: string;
+  prerequisites: string[];
 }
 
 /**
@@ -125,6 +135,7 @@ interface SourceRow {
 const NO_CARD = '-';
 
 const TOPICS_FILE = 'topics.tsv';
+const SKILLS_FILE = 'skills.tsv';
 
 /**
  * Below this many items a category is not worth opening, so the build names it.
@@ -229,8 +240,19 @@ const sentences: SentenceRow[] = readdirSync(CONTENT_DIR)
   .sort()
   .flatMap((file) =>
     readRows(file).map((row) => {
-      const [text, translation, level, topics, note, register, address, regions, passage, speaker] =
-        row.fields;
+      const [
+        text,
+        translation,
+        level,
+        topics,
+        note,
+        register,
+        address,
+        regions,
+        passage,
+        speaker,
+        skills,
+      ] = row.fields;
       return {
         text: text!,
         translation: translation!,
@@ -242,6 +264,7 @@ const sentences: SentenceRow[] = readdirSync(CONTENT_DIR)
         regions: list(regions),
         passage: passage ?? '',
         speaker: speaker ?? '',
+        skills: list(skills),
         source: file,
         row,
       };
@@ -275,6 +298,21 @@ const topicRows: TopicRow[] = existsSync(join(CONTENT_DIR, TOPICS_FILE))
   ? readSource(TOPICS_FILE).rows.map((row) => {
       const [slug, label, group] = row.fields;
       return { slug: slug!, label: label ?? slug!, group: group ?? '' };
+    })
+  : [];
+
+/** Authored skills are semantic curriculum data, so they own stable slugs, not item ids. */
+const authoredSkillRows: AuthoredSkillRow[] = existsSync(join(CONTENT_DIR, SKILLS_FILE))
+  ? readSource(SKILLS_FILE).rows.map((row) => {
+      const [slug, kind, label, gloss, level, prerequisites] = row.fields;
+      return {
+        slug: slug!,
+        kind: kind!,
+        label: label!,
+        gloss: gloss!,
+        level: level!,
+        prerequisites: list(prerequisites),
+      };
     })
   : [];
 
@@ -313,6 +351,39 @@ if (topicRows.length > 0) {
     .filter((slug, index, all) => all.indexOf(slug) !== index);
   for (const slug of new Set(duplicated)) {
     problems.push(`${TOPICS_FILE}: "${slug}" is registered more than once`);
+  }
+}
+
+const authoredSkillSlugs = new Set(authoredSkillRows.map((skill) => skill.slug));
+for (const skill of authoredSkillRows) {
+  if (!(SKILL_KINDS as readonly string[]).includes(skill.kind)) {
+    problems.push(`${SKILLS_FILE}: "${skill.slug}" has unknown kind "${skill.kind}"`);
+  }
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(skill.slug)) {
+    problems.push(`${SKILLS_FILE}: "${skill.slug}" is not a stable kebab-case slug`);
+  }
+  for (const prerequisite of skill.prerequisites) {
+    if (!authoredSkillSlugs.has(prerequisite)) {
+      problems.push(
+        `${SKILLS_FILE}: "${skill.slug}" requires unknown authored skill "${prerequisite}"`,
+      );
+    }
+  }
+}
+
+for (const duplicate of authoredSkillRows
+  .map((skill) => skill.slug)
+  .filter((slug, index, all) => all.indexOf(slug) !== index)) {
+  problems.push(`${SKILLS_FILE}: "${duplicate}" is registered more than once`);
+}
+
+for (const sentence of sentences) {
+  for (const skill of sentence.skills) {
+    if (!authoredSkillSlugs.has(skill)) {
+      problems.push(
+        `unknown authored skill "${skill}" in ${sentence.source} (${sentence.text}) — add it to ${SKILLS_FILE} or fix the typo`,
+      );
+    }
   }
 }
 
@@ -1143,6 +1214,8 @@ const COMMAND_AUDIENCE: Record<string, { number: string; formality: string } | u
   ustedes: { number: 'plural', formality: 'formal' },
 };
 
+const authoredSkillId = (slug: string): string => `${NS}skill:${slug}`;
+
 const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
   const tokens = tokenise(sentence.text);
   retagCommand(tokens, sentence);
@@ -1163,6 +1236,11 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
   }
 
   const skills = new Set(annotations.map((annotation) => annotation.skill!).filter(Boolean));
+  for (const slug of sentence.skills) {
+    const id = authoredSkillId(slug);
+    skills.add(id);
+    usedSkills.add(id);
+  }
   for (const token of tokens) {
     const tense = token.morph?.['tense'];
     if (typeof tense === 'string' && TENSE_SKILLS[tense]) {
@@ -1435,9 +1513,10 @@ interface SkillRecord {
   kind: string;
   label: string;
   level: string;
+  prerequisites?: string[];
 }
 
-const skillRecords: SkillRecord[] = [
+const derivedSkillRecords: SkillRecord[] = [
   ...PATTERNS.map((pattern) => ({
     id: pattern.skill,
     kind: 'pattern',
@@ -1450,26 +1529,43 @@ const skillRecords: SkillRecord[] = [
     label: skill.label,
     level: skill.level,
   })),
-]
-  .filter((skill) => usedSkills.has(skill.id))
-  // Numeral skills are declared rather than discovered. Every other skill here
-  // is emitted only if an item uses it, but the numeral drill's targets are
-  // generated on demand — 1042 exists in no pack — so nothing would ever mark
-  // these used, and the attempts the drill records need them to exist.
-  .concat(
-    NUMERAL_RULES.map((rule) => ({
-      id: numeralSkillId(rule),
-      kind: 'pattern',
-      label: NUMERAL_SKILLS[rule].label,
-      level: NUMERAL_SKILLS[rule].level,
-    })),
-  );
+].filter((skill) => usedSkills.has(skill.id));
+
+const authoredSkillRecords: SkillRecord[] = authoredSkillRows
+  .map((skill) => ({
+    id: authoredSkillId(skill.slug),
+    kind: skill.kind,
+    label: skill.label,
+    level: skill.level,
+    ...(skill.prerequisites.length
+      ? { prerequisites: skill.prerequisites.map(authoredSkillId) }
+      : {}),
+  }))
+  .filter((skill) => usedSkills.has(skill.id));
+
+// Numeral skills are declared rather than discovered. Every other skill here
+// is emitted only if an item uses it, but the numeral drill's targets are
+// generated on demand — 1042 exists in no pack — so nothing would ever mark
+// these used, and the attempts the drill records need them to exist.
+const numeralSkillRecords: SkillRecord[] = NUMERAL_RULES.map((rule) => ({
+  id: numeralSkillId(rule),
+  kind: 'pattern',
+  label: NUMERAL_SKILLS[rule].label,
+  level: NUMERAL_SKILLS[rule].level,
+}));
+
+const skillRecords: SkillRecord[] = [
+  ...derivedSkillRecords,
+  ...authoredSkillRecords,
+  ...numeralSkillRecords,
+];
 
 const skillGlosses = new Map<string, string>([
   ...PATTERNS.map((pattern) => [pattern.skill, pattern.gloss] as const),
   ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL].map(
     (skill) => [skill.id, skill.gloss] as const,
   ),
+  ...authoredSkillRows.map((skill) => [authoredSkillId(skill.slug), skill.gloss] as const),
   ...NUMERAL_RULES.map((rule) => [numeralSkillId(rule), NUMERAL_SKILLS[rule].gloss] as const),
 ]);
 

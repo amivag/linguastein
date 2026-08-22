@@ -21,9 +21,10 @@ content/es/            ← humans edit this (TSV, one row per lemma or sentence)
 ├── nouns.tsv              id, lemma, gloss, gender, plural, level, topics, regions, register
 ├── modifiers.tsv          id, adjectives, adverbs, function words, extra forms
 ├── sentences-*.tsv        id, spanish, english, level, topics, note, register, address,
-│                          regions, passage, speaker
+│                          regions, passage, speaker, skills
 ├── passages.tsv           id, key, kind, title (es), title (en), level, topics
 ├── topics.tsv             slug, label (en), group (en) — the topic vocabulary
+├── skills.tsv             authored skill slug, kind, labels, level, prerequisites
 └── id-ledger.tsv          GENERATED — every item id ever issued, active or retired
 
         │  npm run build:data
@@ -57,6 +58,20 @@ is the noun and `trabajo en una oficina` is the verb, `canta muy mal` is the
 adverb and `mal tiempo` the adjective. Where neither side is decisive the token
 is left unlinked — `fue` is `ser` or `ir` and nothing nearby says which, so a
 missing lemma is preferred to a wrong one.
+
+### Authored communicative skills
+
+`content/es/skills.tsv` declares abilities that cannot be inferred from morphology,
+especially communicative functions. A topic says what material is about; a
+function says what the learner is trying to accomplish. For example,
+`restaurant` is a topic while `order-food-drink` is a function. Sentence rows
+attach one or more registered skill slugs in their `skills` column.
+
+The registry carries a stable kebab-case slug, a `SKILL_KINDS` kind, a
+target-language label, an English gloss, a CEFR level and optional prerequisite
+slugs. The build resolves slugs to namespaced ids, emits translations, and fails
+on unknown skills or prerequisites. Grammar and morphology skills remain derived;
+do not duplicate them in this file.
 
 ## File naming
 

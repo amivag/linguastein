@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
@@ -11,6 +11,10 @@ import { REFERENCE_LANGUAGES } from '../../domain/content';
 import { APP } from '../../app/identity';
 import { buildDate, buildLabel } from '../../app/version';
 import { Icon } from '../../components/Icon';
+import { Sheet } from '../../components/Sheet';
+import { DEFAULT_PREFERENCES } from '../../storage';
+import { THEME_STORAGE_KEY } from '../../styles/themes';
+import { READING_SIZE_STORAGE_KEY } from '../../styles/reading-size';
 import styles from './SettingsScreen.module.css';
 
 /**
@@ -18,11 +22,14 @@ import styles from './SettingsScreen.module.css';
  * is irreversible and there is nowhere to restore from: learner state is local
  * to the device by design, so a mis-tap is the whole history gone.
  */
-type ResetState = 'idle' | 'confirming' | 'cleared';
+type ResetTarget = 'progress' | 'all';
+type ResetResult = ResetTarget | null;
 
 export function SettingsScreen() {
   const { services, preferences, updatePreferences } = useServices();
-  const [reset, setReset] = useState<ResetState>('idle');
+  const navigate = useNavigate();
+  const [resetTarget, setResetTarget] = useState<ResetTarget | null>(null);
+  const [resetResult, setResetResult] = useState<ResetResult>(null);
 
   const resetProgress = async () => {
     await services.storage.progress.clear();
@@ -30,7 +37,20 @@ export function SettingsScreen() {
     await services.storage.sessions.clear();
     // Preferences are deliberately kept: nobody asking to clear their history
     // is also asking to have their voice and theme picked again.
-    setReset('cleared');
+    setResetTarget(null);
+    setResetResult('progress');
+  };
+
+  const resetAllLocalData = async () => {
+    await services.storage.clearAll();
+    clearPreferenceCaches();
+    // Update the live app as well as storage. Reloading should not be required
+    // to see that the reset worked, and the next route should be the same clean
+    // A1 course a new install opens.
+    updatePreferences(DEFAULT_PREFERENCES);
+    setResetTarget(null);
+    setResetResult('all');
+    void navigate(`/${DEFAULT_PREFERENCES.targetLanguage}/${DEFAULT_PREFERENCES.level}`);
   };
 
   const errors = services.datasetIssues.filter((issue) => issue.severity === 'error');
@@ -173,31 +193,76 @@ export function SettingsScreen() {
           </p>
         </div>
 
-        {reset === 'confirming' ? (
-          <>
-            {/* Announced, not just coloured: the warning is the only thing
-                standing between a tap and an unrecoverable delete. */}
-            <p className={styles.hint} role="alert">
-              This erases every attempt, session and review schedule stored on this device. It
-              cannot be undone.
-            </p>
-            <div className={styles.confirm}>
-              <Button onClick={() => setReset('idle')}>Cancel</Button>
-              <Button onClick={() => void resetProgress()}>Erase everything</Button>
-            </div>
-          </>
-        ) : (
-          <Button block onClick={() => setReset('confirming')}>
-            {reset === 'cleared' ? (
-              <>
-                <Icon name="check" /> Progress cleared
-              </>
-            ) : (
-              'Reset progress'
-            )}
+        <div className={styles.field}>
+          <span className={styles.label}>Learning history</span>
+          <p className={styles.hint}>
+            Clear attempts, sessions and review schedules while keeping your course and appearance
+            settings.
+          </p>
+          <Button block onClick={() => setResetTarget('progress')}>
+            Reset progress
           </Button>
+        </div>
+
+        <div className={styles.field}>
+          <span className={`${styles.label} ${styles.dangerLabel}`}>
+            <Icon name="delete" size="sm" />
+            Clean-install testing
+          </span>
+          <p className={styles.hint}>
+            Restore this device to the app defaults, including progress, course, theme, text size,
+            voice and practice preferences.
+          </p>
+          <Button variant="danger" block onClick={() => setResetTarget('all')}>
+            Reset all local data
+          </Button>
+        </div>
+
+        {resetResult && (
+          <p className={styles.resetStatus} role="status">
+            <Icon name="check" size="sm" />
+            {resetResult === 'progress'
+              ? 'Learning history cleared.'
+              : 'All local data reset to app defaults.'}
+          </p>
         )}
       </section>
+
+      {resetTarget && (
+        <Sheet
+          title={resetTarget === 'progress' ? 'Reset progress?' : 'Reset all local data?'}
+          onClose={() => setResetTarget(null)}
+        >
+          {/* Announced, not just coloured: the warning is the only thing
+              standing between a tap and an unrecoverable delete. */}
+          <p className={styles.resetWarning} role="alert">
+            {resetTarget === 'progress'
+              ? 'This erases every attempt, session and review schedule stored on this device. Your settings stay unchanged. It cannot be undone.'
+              : 'This erases all learning history and restores every app setting on this device to its default. It cannot be undone.'}
+          </p>
+          <div className={styles.confirm}>
+            <Button onClick={() => setResetTarget(null)}>Cancel</Button>
+            <Button
+              variant="danger"
+              onClick={() =>
+                void (resetTarget === 'progress' ? resetProgress() : resetAllLocalData())
+              }
+            >
+              {resetTarget === 'progress' ? 'Erase learning history' : 'Erase all local data'}
+            </Button>
+          </div>
+        </Sheet>
+      )}
     </AppShell>
   );
+}
+
+/** Removes the pre-paint mirrors; IndexedDB remains the preference source of truth. */
+function clearPreferenceCaches(): void {
+  try {
+    localStorage.removeItem(THEME_STORAGE_KEY);
+    localStorage.removeItem(READING_SIZE_STORAGE_KEY);
+  } catch {
+    // A locked-down browser may refuse localStorage; clearAll still removes the source data.
+  }
 }

@@ -78,6 +78,52 @@
   padding: var(--space-3) var(--space-4);
 }
 
+.capabilityPanel {
+  composes: well from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4);
+  text-align: left;
+}
+
+.capabilityPanel h3 {
+  font-size: var(--text-base);
+}
+
+.capabilityPanel > p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.capabilities {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-2);
+}
+
+.capabilities li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.capabilities li > svg {
+  color: var(--color-accent);
+}
+
+.capabilities strong {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
 .eyebrow {
   color: var(--color-accent);
   font-size: var(--text-sm);
@@ -212,5 +258,14 @@
   .roleCard,
   .complete {
     padding: var(--space-4);
+  }
+
+  .capabilities li {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .capabilities strong {
+    grid-column: 2;
+    justify-self: start;
   }
 }

@@ -599,6 +599,18 @@
 000596	sentence	active	No, gracias. Solo el té.
 000597	sentence	active	Son dos euros.
 000598	sentence	active	Aquí tiene. Muchas gracias.
+000599	sentence	active	Perdón, ¿dónde está el banco?
+000600	sentence	active	Está cerca. Gire a la izquierda en la farmacia.
+000601	sentence	active	¿El banco está lejos?
+000602	sentence	active	No, está a cinco minutos.
+000603	sentence	active	Perfecto, muchas gracias.
+000604	sentence	active	Buenas tardes, ¿qué busca?
+000605	sentence	active	Busco un vestido rojo.
+000606	sentence	active	¿Qué talla necesita?
+000607	sentence	active	No sé. ¿Puedo probar este?
+000608	sentence	active	Claro. Puede probarlo allí.
+000609	sentence	active	Me gusta. Me lo llevo. ¿Cuánto cuesta?
+000610	sentence	active	Cuarenta euros.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1066,3 +1078,5 @@
 700013	passage	active	En el médico
 700014	passage	active	¿Qué hacemos esta noche?
 700015	passage	active	Otro pedido en la cafetería
+700016	passage	active	Otra ruta por la ciudad
+700017	passage	active	Otra compra de ropa

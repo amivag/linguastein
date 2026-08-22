@@ -27,7 +27,7 @@ interface Loaded {
   readonly weakest: readonly ItemProgress[];
   readonly sessions: readonly SessionRecord[];
   readonly accuracy: number | null;
-  /** Words and patterns, not sentences — what has actually been acquired. */
+  /** Words and skills, not sentences — what has actually been acquired. */
   readonly mastery: readonly MasteryRecord[];
 }
 
@@ -170,7 +170,7 @@ export function ProgressScreen() {
 
           {mastery.length > 0 && (
             <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Words &amp; patterns</h2>
+              <h2 className={styles.sectionTitle}>Words &amp; skills</h2>
               <ul className={styles.list}>
                 {mastery.map((record) => (
                   <li key={record.id} className={styles.row}>
@@ -192,8 +192,8 @@ export function ProgressScreen() {
                 ))}
               </ul>
               <p className={styles.caption}>
-                Strength counts how many different sentences a word appears in, not just how well
-                one is remembered.
+                Strength combines retrieval quality with evidence across different sentences, not
+                just how well one prompt is remembered.
               </p>
             </section>
           )}

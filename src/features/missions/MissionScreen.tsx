@@ -35,6 +35,19 @@ interface MissionCapability {
   readonly evidence?: MasteryRecord;
 }
 
+interface ResolvedResponsePalette {
+  readonly id: string;
+  readonly capability: SkillId;
+  readonly title: string;
+  readonly cue: string;
+  readonly initiallyVisible: number;
+  readonly responses: readonly {
+    readonly item: LearningItem;
+    readonly meaning?: string;
+    readonly nuance: string;
+  }[];
+}
+
 /** The reusable Understand → Practise → Use journey over one connected passage. */
 export function MissionScreen() {
   const { missionId = '', stage = 'understand' } = useParams();
@@ -132,6 +145,40 @@ export function MissionScreen() {
       }),
     [mission, preferences.referenceLanguage, services.repository, skillMastery],
   );
+  const responsePalettes = useMemo(
+    () =>
+      (mission?.responsePalettes ?? []).flatMap((palette): readonly ResolvedResponsePalette[] => {
+        const capability = services.repository.skillByLocalId(palette.capability);
+        if (!capability || capability.kind !== 'function') return [];
+        const responses = palette.responses.flatMap((response) => {
+          const item = services.repository.itemByLocalId(response.item);
+          if (!item) return [];
+          const meaning = services.repository.translationOf(
+            item.id,
+            preferences.referenceLanguage,
+          )?.text;
+          return [
+            {
+              item,
+              nuance: response.nuance,
+              ...(meaning ? { meaning } : {}),
+            },
+          ];
+        });
+        if (!responses.length) return [];
+        return [
+          {
+            id: palette.id,
+            capability: capability.id,
+            title: palette.title,
+            cue: palette.cue,
+            initiallyVisible: Math.max(1, palette.initiallyVisible ?? 3),
+            responses,
+          },
+        ];
+      }),
+    [mission, preferences.referenceLanguage, services.repository],
+  );
 
   const recordMissionUse = useCallback(
     async (item: LearningItem, grade: ReviewGrade, correct: boolean, latencyMs: number) => {
@@ -195,6 +242,7 @@ export function MissionScreen() {
           missionGoal={mission.goal}
           passageTitle={passage.title}
           capabilities={capabilities}
+          responsePalettes={responsePalettes}
           items={items}
           {...(passage.speakers ? { speakers: passage.speakers } : {})}
           onPractise={() => void navigate(missionPracticePath(course, mission))}
@@ -210,6 +258,7 @@ export function MissionScreen() {
           transferPosition={(transferStep?.index ?? 0) + 1}
           transferTotal={transferStep?.total ?? 1}
           capabilities={capabilities}
+          responsePalettes={responsePalettes}
           {...(mission.learnerSpeaker ? { learnerSpeaker: mission.learnerSpeaker } : {})}
           items={items}
           {...(passage.speakers ? { speakers: passage.speakers } : {})}
@@ -237,6 +286,7 @@ export function MissionScreen() {
     missionGoal,
     passageTitle,
     capabilities: stageCapabilities,
+    responsePalettes: stagePalettes,
     items: stageItems,
     speakers,
     onPractise,
@@ -245,6 +295,7 @@ export function MissionScreen() {
     readonly missionGoal: string;
     readonly passageTitle: string;
     readonly capabilities: readonly MissionCapability[];
+    readonly responsePalettes: readonly ResolvedResponsePalette[];
     readonly items: readonly LearningItem[];
     readonly speakers?: readonly string[];
     readonly onPractise: () => void;
@@ -264,6 +315,14 @@ export function MissionScreen() {
 
         {stageCapabilities.length > 0 && (
           <CapabilityList capabilities={stageCapabilities} variant="preview" />
+        )}
+
+        {stagePalettes.length > 0 && (
+          <ResponsePalettePanel
+            palettes={stagePalettes}
+            language={course.language}
+            onListen={speak}
+          />
         )}
 
         <div className={styles.actions}>
@@ -327,6 +386,7 @@ export function MissionScreen() {
     transferPosition,
     transferTotal,
     capabilities: stageCapabilities,
+    responsePalettes: stagePalettes,
     learnerSpeaker,
     items: stageItems,
     speakers,
@@ -342,6 +402,7 @@ export function MissionScreen() {
     readonly transferPosition: number;
     readonly transferTotal: number;
     readonly capabilities: readonly MissionCapability[];
+    readonly responsePalettes: readonly ResolvedResponsePalette[];
     readonly learnerSpeaker?: string;
     readonly items: readonly LearningItem[];
     readonly speakers?: readonly string[];
@@ -367,6 +428,21 @@ export function MissionScreen() {
     const learnerTurns = stageItems.filter((_, position) =>
       learnerSpeaker === undefined ? true : speakers?.[position] === learnerSpeaker,
     ).length;
+    const activePalette = current
+      ? stagePalettes.find((palette) => current.skills?.includes(palette.capability))
+      : undefined;
+    const acceptedResponses = activePalette && current
+      ? [
+          ...new Set([
+            current.text,
+            ...activePalette.responses
+              .filter(({ item }) => responseFitsTurn(item, current))
+              .map(({ item }) => item.text),
+          ]),
+        ].filter(Boolean)
+      : current
+        ? [current.text]
+        : [];
 
     useEffect(() => {
       startedAt.current = Date.now();
@@ -460,25 +536,32 @@ export function MissionScreen() {
           </p>
           <h2 id={`${id}-turn`}>
             {learnerTurn
-              ? transferSupport === 'independent'
-                ? intentionCue(current)
-                : (translationOf(current) ?? `Respond to ${partner} in Spanish.`)
+              ? activePalette
+                ? activePalette.cue
+                : transferSupport === 'independent'
+                  ? intentionCue(current)
+                  : (translationOf(current) ?? `Respond to ${partner} in Spanish.`)
               : current.text}
           </h2>
 
           {learnerTurn ? (
             <>
-              <p className={styles.coach}>Say the idea naturally. The exact wording comes next.</p>
+              <p className={styles.coach}>
+                {activePalette
+                  ? `${acceptedResponses.length} natural responses are accepted. Choose one that fits.`
+                  : 'Say the idea naturally. The exact wording comes next.'}
+              </p>
               {!revealed && (
                 <SpeakCheck
                   key={current.id}
-                  expected={current.text}
-                  onComparison={setSpeechComparison}
+                  expected={acceptedResponses}
+                  onComparison={(match) => setSpeechComparison(match.comparison)}
                 />
               )}
               {revealed ? (
                 <>
                   <div className={styles.answer} role="status">
+                    {activePalette && <small>One natural option</small>}
                     <p lang={course.language}>{current.text}</p>
                     <Button onClick={() => speak(current)}>
                       <Icon name="speak" /> Listen
@@ -568,6 +651,19 @@ export function MissionScreen() {
       : `Respond naturally to ${mission?.scenarioPartner ?? 'the situation'} in Spanish.`;
   }
 
+  function responseFitsTurn(response: LearningItem, turn: LearningItem): boolean {
+    if (
+      turn.register &&
+      response.register &&
+      turn.register !== 'neutral' &&
+      response.register !== 'neutral' &&
+      turn.register !== response.register
+    ) {
+      return false;
+    }
+    return !(turn.address && response.address && turn.address !== response.address);
+  }
+
   function speakAll(stageItems: readonly LearningItem[]) {
     void services.audio.speak({
       text: stageItems.map((item) => item.text).join(' '),
@@ -575,6 +671,90 @@ export function MissionScreen() {
       ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
     });
   }
+}
+
+function ResponsePalettePanel({
+  palettes,
+  language,
+  onListen,
+}: {
+  readonly palettes: readonly ResolvedResponsePalette[];
+  readonly language: string;
+  readonly onListen: (item: LearningItem) => void;
+}) {
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
+
+  return (
+    <section className={styles.palettePanel} aria-label="Natural response palettes">
+      <div>
+        <p className={styles.eyebrow}>Response palette</p>
+        <h3>Choose what you really mean</h3>
+        <p>Learn the conversational move, then vary the words, tone and feeling.</p>
+      </div>
+      {palettes.map((palette) => {
+        const isExpanded = expanded.has(palette.id);
+        const visible = isExpanded
+          ? palette.responses
+          : palette.responses.slice(0, palette.initiallyVisible);
+        const hidden = palette.responses.length - visible.length;
+        const listId = `response-palette-${palette.id}`;
+        return (
+          <div key={palette.id} className={styles.paletteGroup}>
+            <h4>{palette.title}</h4>
+            <p>{palette.cue}</p>
+            <ul id={listId} className={styles.paletteResponses}>
+              {visible.map(({ item, meaning, nuance }) => (
+                <li key={item.id}>
+                  <span>
+                    <strong lang={language}>{item.text}</strong>
+                    {meaning && <span>{meaning}</span>}
+                    <small>{nuance}</small>
+                  </span>
+                  <Button
+                    onClick={() => onListen(item)}
+                    aria-label={`Listen to response “${item.text}”`}
+                  >
+                    <Icon name="speak" />
+                  </Button>
+                </li>
+              ))}
+            </ul>
+            {hidden > 0 && (
+              <Button
+                aria-expanded={isExpanded}
+                aria-controls={listId}
+                onClick={() =>
+                  setExpanded((current) => {
+                    const next = new Set(current);
+                    if (isExpanded) next.delete(palette.id);
+                    else next.add(palette.id);
+                    return next;
+                  })
+                }
+              >
+                Show {hidden} more natural responses
+              </Button>
+            )}
+            {isExpanded && palette.responses.length > palette.initiallyVisible && (
+              <Button
+                aria-expanded={true}
+                aria-controls={listId}
+                onClick={() =>
+                  setExpanded((current) => {
+                    const next = new Set(current);
+                    next.delete(palette.id);
+                    return next;
+                  })
+                }
+              >
+                Show fewer responses
+              </Button>
+            )}
+          </div>
+        );
+      })}
+    </section>
+  );
 }
 
 function CapabilityList({

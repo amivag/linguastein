@@ -14,8 +14,9 @@ describe('missions', () => {
   it('orders the authored journey and respects the course ceiling', () => {
     const a1 = missionsForCourse(MISSIONS, { language: 'es', level: 'a1' });
 
-    expect(a1).toHaveLength(6);
+    expect(a1).toHaveLength(7);
     expect(a1.map((mission) => mission.id)).toEqual([
+      'greet-and-respond',
       'cafe-order',
       'ask-directions',
       'shop-clothes',
@@ -28,6 +29,18 @@ describe('missions', () => {
 
   it('never resolves a mission outside the current language', () => {
     expect(missionById(MISSIONS, { language: 'fr', level: 'all' }, 'cafe-order')).toBeUndefined();
+  });
+
+  it('gives every mission a substantial response palette', () => {
+    for (const mission of MISSIONS) {
+      expect(mission.responsePalettes?.length, mission.id).toBeGreaterThan(0);
+      for (const palette of mission.responsePalettes ?? []) {
+        expect(palette.responses.length, `${mission.id}/${palette.id}`).toBeGreaterThanOrEqual(8);
+        expect(new Set(palette.responses.map((response) => response.item)).size).toBe(
+          palette.responses.length,
+        );
+      }
+    }
   });
 
   it('derives completion only when every passage item has retrieval evidence', () => {
@@ -45,6 +58,15 @@ describe('missions', () => {
   });
 
   it('uses a different connected situation for transfer when one is authored', () => {
+    const greeting = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'greet-and-respond')!;
+    expect(missionPassageForStage(greeting, 'understand')).toBe('700033');
+    expect(missionTransfers(greeting).map((transfer) => transfer.passage)).toEqual([
+      '700034',
+      '700035',
+      '700036',
+    ]);
+    expect(greeting.responsePalettes?.[0]?.responses).toHaveLength(10);
+
     const cafe = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'cafe-order')!;
 
     expect(missionPassageForStage(cafe, 'understand')).toBe('700009');

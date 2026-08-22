@@ -28,3 +28,7 @@ describe-routine-actions	function	Describir acciones cotidianas	Describe the act
 add-context-to-routine	function	Añadir contexto a una rutina	Add a simple circumstance, reason or detail	a1	describe-routine-actions
 sequence-routine-events	function	Ordenar los eventos de una rutina	Put routine events in a clear chronological sequence	a1	describe-routine-actions
 connect-routine-to-destination	function	Conectar la rutina con un destino	Say where the routine leads and what happens there	a1	sequence-routine-events
+greet-someone	function	Saludar a alguien	Greet someone naturally for the situation	a1
+ask-about-wellbeing	function	Preguntar cómo está alguien	Ask naturally how someone is doing	a1	greet-someone
+respond-to-wellbeing	function	Responder a «¿Cómo estás?»	Give a natural, honest answer about how you are doing	a1	ask-about-wellbeing
+close-friendly-exchange	function	Cerrar un saludo amistoso	Close a short friendly exchange naturally	a1	greet-someone

@@ -705,6 +705,93 @@
 000702	sentence	active	Como fruta y leo el periódico en la cocina.
 000703	sentence	active	Después llamo a un amigo y limpio un poco la casa.
 000704	sentence	active	A las doce salgo y voy al mercado con mi amigo.
+000705	sentence	active	Hola, me llamo Luis.
+000706	sentence	active	Hola, Luis. Soy Marta. Mucho gusto.
+000707	sentence	active	Mucho gusto. ¿Cómo estás?
+000708	sentence	active	Muy bien, gracias. ¿Y tú?
+000709	sentence	active	Estoy bien, gracias.
+000710	sentence	active	Me alegro. Hasta luego.
+000711	sentence	active	Hasta luego, Marta.
+000712	sentence	active	¡Hola, Luis! ¿Cómo estás hoy?
+000713	sentence	active	Hola, Ana.
+000714	sentence	active	Estoy genial. Tengo un día muy bueno.
+000715	sentence	active	¡Qué bien! Me alegro.
+000716	sentence	active	Bueno, tengo que irme. Hasta pronto.
+000717	sentence	active	Hasta pronto, Ana.
+000718	sentence	active	Buenos días, Luis. ¿Cómo está usted?
+000719	sentence	active	Buenos días, señora López.
+000720	sentence	active	Estoy bastante bien, gracias por preguntar.
+000721	sentence	active	Me alegro. Buen día y hasta luego.
+000722	sentence	active	Igualmente, hasta luego.
+000723	sentence	active	Hola, soy Elena, la nueva vecina. ¿Cómo estás?
+000724	sentence	active	Mucho gusto, Elena.
+000725	sentence	active	Bien, gracias. Estoy un poco cansada.
+000726	sentence	active	Tienes que descansar. Nos vemos pronto.
+000727	sentence	active	Gracias, nos vemos.
+000728	sentence	active	Estoy genial.
+000729	sentence	active	Todo bien.
+000730	sentence	active	Bastante bien.
+000731	sentence	active	Más o menos.
+000732	sentence	active	Regular.
+000733	sentence	active	Estoy cansada.
+000734	sentence	active	Estoy un poco triste.
+000735	sentence	active	No estoy muy bien.
+000736	sentence	active	Todo bien, gracias. ¿Y tú?
+000737	sentence	active	Estoy un poco cansado, pero bien. ¿Y usted?
+000738	sentence	active	Hoy estoy más o menos. ¿Y tú?
+000739	sentence	active	Un café solo, por favor.
+000740	sentence	active	Quiero un café con leche, por favor.
+000741	sentence	active	Para mí, un té con leche.
+000742	sentence	active	Voy a tomar un zumo de naranja.
+000743	sentence	active	Un agua, por favor.
+000744	sentence	active	Quiero un café sin leche.
+000745	sentence	active	Un té, pero sin azúcar.
+000746	sentence	active	De momento, solo un café.
+000747	sentence	active	Perdón, ¿dónde está la farmacia?
+000748	sentence	active	Disculpe, ¿dónde está la estación?
+000749	sentence	active	¿Dónde está el centro, por favor?
+000750	sentence	active	Perdone, busco el museo.
+000751	sentence	active	¿Sabe dónde está el banco?
+000752	sentence	active	¿Cómo llego a la plaza?
+000753	sentence	active	¿La parada de autobús está cerca?
+000754	sentence	active	Necesito ir al hotel. ¿Por dónde voy?
+000755	sentence	active	Busco una camisa blanca.
+000756	sentence	active	Quiero una chaqueta azul.
+000757	sentence	active	Necesito unos pantalones negros.
+000758	sentence	active	Estoy buscando un vestido verde.
+000759	sentence	active	¿Tiene esta camisa en rojo?
+000760	sentence	active	¿Hay una talla más grande?
+000761	sentence	active	Solo estoy mirando, gracias.
+000762	sentence	active	Busco algo cómodo para el trabajo.
+000763	sentence	active	Sí, tengo una reserva.
+000764	sentence	active	Sí, una habitación doble para una noche.
+000765	sentence	active	Tengo una habitación individual para dos noches.
+000766	sentence	active	La reserva está a nombre de López.
+000767	sentence	active	Es para tres noches.
+000768	sentence	active	Somos dos personas.
+000769	sentence	active	Tengo una habitación con desayuno.
+000770	sentence	active	No tengo reserva. ¿Hay una habitación libre?
+000771	sentence	active	Sí, buena idea.
+000772	sentence	active	Perfecto, me apetece.
+000773	sentence	active	Vale, vamos.
+000774	sentence	active	Sí, pero un poco más tarde.
+000775	sentence	active	Prefiero ir al parque.
+000776	sentence	active	Hoy no puedo.
+000777	sentence	active	Lo siento, ya tengo planes.
+000778	sentence	active	Quizá otro día.
+000779	sentence	active	No me apetece mucho.
+000780	sentence	active	¿Y si vamos al cine?
+000781	sentence	active	Normalmente me despierto a las siete.
+000782	sentence	active	Primero me ducho.
+000783	sentence	active	Después me visto.
+000784	sentence	active	Desayuno café y fruta.
+000785	sentence	active	Por la mañana leo las noticias.
+000786	sentence	active	Preparo el desayuno en la cocina.
+000787	sentence	active	A las ocho salgo de casa.
+000788	sentence	active	Voy al trabajo en autobús.
+000789	sentence	active	Los domingos me levanto tarde.
+000790	sentence	active	Antes de salir, limpio un poco la casa.
+000791	sentence	active	Hoy estoy algo cansado.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1189,3 +1276,7 @@
 700030	passage	active	Planes para el domingo
 700031	passage	active	Una mañana con prisa
 700032	passage	active	Mi mañana de domingo
+700033	passage	active	Conocer a alguien
+700034	passage	active	Encontrarse con una amiga
+700035	passage	active	Un saludo en el trabajo
+700036	passage	active	Conocer a una vecina

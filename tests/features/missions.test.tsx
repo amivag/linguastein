@@ -1,13 +1,34 @@
-import { screen } from '@testing-library/react';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import type { SpeechRecognitionProvider } from '../../src/audio';
+import { loadCatalog, loadPack, type DatasetSource } from '../../src/data/loaders';
+import { ContentRepository } from '../../src/domain/content';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { missionPracticePath } from '../../src/features/missions/mission-url';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { MISSIONS } from '../../src/app/missions';
 import { renderWithServices, testServices } from '../fixtures/services';
+
+const packRoot = resolve(process.cwd(), 'public/packs');
+const packSource: DatasetSource = {
+  name: packRoot,
+  read: (path) => readFile(resolve(packRoot, path), 'utf8'),
+};
+
+async function shippedServices(speech?: SpeechRecognitionProvider) {
+  const catalog = await loadCatalog(packSource);
+  const loaded = await Promise.all(
+    catalog.packs.map((entry) => loadPack(packSource, entry.manifest)),
+  );
+  return testServices({
+    repository: ContentRepository.from(loaded.map((result) => result.pack)),
+    ...(speech ? { speech } : {}),
+  });
+}
 
 function Where() {
   const location = useLocation();
@@ -54,6 +75,105 @@ describe('MissionScreen', () => {
     expect(screen.getByTestId('where')).toHaveTextContent('passage=700001');
     expect(screen.getByTestId('where')).toHaveTextContent('mission=morning-routine');
     expect(screen.getByTestId('where')).toHaveTextContent('order=sequential');
+  });
+
+  it('introduces a small response palette before revealing its full range', async () => {
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand',
+      services: await shippedServices(),
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('More than “I’m fine”')).toBeInTheDocument();
+    });
+    expect(screen.getByText('Estoy bien, gracias.')).toBeInTheDocument();
+    expect(screen.queryByText('Regular.')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Show 7 more natural responses' }));
+    expect(screen.getByText('Regular.')).toBeInTheDocument();
+    expect(screen.getByText('Things could be better')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show fewer responses' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    );
+  });
+
+  it('uses the same progressive palette pattern in another mission', async () => {
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/cafe-order/understand',
+      services: await shippedServices(),
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Build the order you actually want')).toBeInTheDocument();
+    });
+    expect(screen.getByText('Un café solo, por favor.')).toBeInTheDocument();
+    expect(screen.queryByText('De momento, solo un café.')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Show 5 more natural responses' }));
+    expect(screen.getByText('De momento, solo un café.')).toBeInTheDocument();
+  });
+
+  it('accepts a different natural response during mission transfer', async () => {
+    const speech: SpeechRecognitionProvider = {
+      id: 'palette-test',
+      isAvailable: () => true,
+      supportsLanguage: () => true,
+      stop: () => {},
+      listen: () => Promise.resolve({ transcript: 'más o menos', confidence: 0.95 }),
+    };
+    const services = await shippedServices(speech);
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/use',
+      services,
+    });
+
+    await user.click(await screen.findByRole('button', { name: 'Reply' }));
+    await user.click(screen.getByRole('button', { name: 'Reveal the line' }));
+    await user.click(screen.getByRole('button', { name: 'Got it' }));
+
+    expect(await screen.findByText(/11 natural responses are accepted/)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Check my pronunciation' }));
+    expect(await screen.findByText(/That matched/)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Record result and continue/ }));
+
+    const attempts = await services.storage.attempts.recent(5);
+    expect(attempts[0]).toMatchObject({
+      itemId: expect.stringMatching(/:item:000736$/),
+      grade: 'good',
+      correct: true,
+    });
+  });
+
+  it('narrows accepted palette responses to the current register', async () => {
+    const services = await shippedServices();
+    for (const localId of ['000713', '000736', '000715', '000717']) {
+      const item = services.repository.itemByLocalId(localId)!;
+      await services.storage.attempts.append({
+        id: `completed-${localId}`,
+        itemId: item.id,
+        exerciseKind: 'think-say',
+        grade: 'good',
+        correct: true,
+        at: 1_700_000_000_000,
+        sessionId: 'mission:greet-and-respond:use:700034:test',
+      });
+    }
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/use',
+      services,
+    });
+
+    expect(await screen.findByText('Transfer 2 of 3')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Reply' }));
+    await user.click(screen.getByRole('button', { name: 'Reveal the line' }));
+    await user.click(screen.getByRole('button', { name: 'Got it' }));
+
+    expect(await screen.findByText(/8 natural responses are accepted/)).toBeInTheDocument();
   });
 
   it('runs the Use stage as recall before reveal and reaches completion', async () => {

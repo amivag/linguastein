@@ -2,21 +2,30 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useServices } from '../../app/services-context';
 import { SPEECH_ABORTED } from '../../audio';
 import { Button } from '../../components/Button';
-import { bestAlternative, type SpeechComparison } from '../../domain/exercises';
+import {
+  bestExpectedAlternative,
+  type ExpectedSpeechMatch,
+  type SpeechComparison,
+} from '../../domain/exercises';
 import { Icon } from '../../components/Icon';
 import styles from './SpeakCheck.module.css';
 
 interface SpeakCheckProps {
   /** The target-language text the learner is trying to say. */
-  readonly expected: string;
+  readonly expected: string | readonly string[];
   /** Reports the recogniser's best comparison without deciding how a caller records it. */
-  readonly onComparison?: (comparison: SpeechComparison) => void;
+  readonly onComparison?: (match: ExpectedSpeechMatch) => void;
 }
 
 type State =
   | { readonly phase: 'idle' }
   | { readonly phase: 'listening' }
-  | { readonly phase: 'heard'; readonly text: string; readonly comparison: SpeechComparison }
+  | {
+      readonly phase: 'heard';
+      readonly text: string;
+      readonly expected: string;
+      readonly comparison: SpeechComparison;
+    }
   | { readonly phase: 'failed'; readonly reason: string };
 
 const MESSAGES: Record<SpeechComparison['verdict'], string> = {
@@ -55,10 +64,16 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
     setState({ phase: 'listening' });
     try {
       const result = await speech.listen(preferences.pronunciationLocale);
-      const best = bestAlternative(expected, result.transcript, result.alternatives);
+      const targets = typeof expected === 'string' ? [expected] : expected;
+      const best = bestExpectedAlternative(targets, result.transcript, result.alternatives);
       if (mounted.current) {
-        setState({ phase: 'heard', text: best.text, comparison: best.comparison });
-        onComparison?.(best.comparison);
+        setState({
+          phase: 'heard',
+          text: best.text,
+          expected: best.expected,
+          comparison: best.comparison,
+        });
+        onComparison?.(best);
       }
     } catch (error) {
       if (!mounted.current) return;
@@ -94,6 +109,11 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
             <span className={styles.heard} lang="es">
               Heard: “{state.text}”
             </span>
+            {typeof expected !== 'string' && expected.length > 1 && (
+              <span className={styles.heard} lang="es">
+                Matched response: “{state.expected}”
+              </span>
+            )}
           </>
         )}
         {state.phase === 'failed' && (

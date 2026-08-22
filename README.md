@@ -7,7 +7,7 @@ engine is language-agnostic by design.
 phone, offline, with no account.
 
 Status: **0.1.0-alpha.1 — alpha.** The architecture, engine and practice loop are
-in place, with a generated A1–A2 Spanish pack of 1,155 practisable items awaiting
+in place, with a generated A1–A2 Spanish pack of 1,242 practisable items awaiting
 editorial review (see [`docs/spec`](docs/spec) for the product specification).
 
 Alpha means what it says: anything may change drastically, including the data
@@ -82,19 +82,26 @@ Five sections behind a tab bar (a rail on wider screens):
 | -------- | ------------------------------------------------------------------------------------------------- |
 | Practice | quick sessions, the six presets, and what to practise: categories and a focus                     |
 | Read     | connected texts and dialogues, every word tappable                                                |
-| Browse   | search and filter all 1,155 items, by thematic category or facet; dictate the search with the mic |
+| Browse   | search and filter all 1,242 items, by thematic category or facet; dictate the search with the mic |
 | Progress | what has been practised, accuracy, weak items, recent sessions                                    |
 | Settings | course, audio and voice, practice, appearance, data — in grouped sections                         |
 
 A running session hides the chrome and fills the screen, so practice stays the
 focus rather than the navigation.
 
-The A1 journey is six real-world missions. Each teaches one connected example,
+The A1 journey is seven real-world missions. Each teaches one connected example,
 practises its sentences, then changes the situation for Use. Transfer attempts
 feed the same local FSRS schedule as ordinary practice; speech can grade them
 automatically, and every device has an explicit self-rating fallback after
 reveal. A communicative ability is never called reliable from one memorised
 passage alone.
+
+Every mission now includes a **response palette**: several natural ways to
+perform its central communicative move, with meaning and pragmatic nuance. Three
+high-value options appear first; learners can expand into real café orders,
+destinations, clothing needs, hotel details, reactions to plans, morning actions
+and answers about how they feel. Speech practice accepts any context-appropriate
+response rather than demanding one theatre-script line.
 
 ### Courses are in the URL
 
@@ -145,7 +152,7 @@ from a dataset passes through the validation boundary in
 breaking a session.
 
 The shipped `core-es` pack covers A1–A2: **117 verbs** with generated forms,
-**358 nouns**, **218 modifiers** and **704 example sentences** — 1,155 practisable
+**358 nouns**, **218 modifiers** and **791 example sentences** — 1,242 practisable
 items in total.
 
 Humans author compact TSV in `content/es/`; `npm run build:data` derives

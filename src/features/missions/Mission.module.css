@@ -88,6 +88,69 @@
   text-align: left;
 }
 
+.palettePanel {
+  composes: well from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4);
+}
+
+.palettePanel > div:first-child,
+.paletteGroup {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.palettePanel h3,
+.paletteGroup h4 {
+  font-size: var(--text-base);
+}
+
+.palettePanel > div:first-child > p:last-child,
+.paletteGroup > p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.paletteResponses {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-2);
+}
+
+.paletteResponses li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.paletteResponses li > span {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.paletteResponses strong {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+}
+
+.paletteResponses span span,
+.paletteResponses small {
+  color: var(--color-text-muted);
+}
+
+.paletteResponses small {
+  font-size: var(--text-xs);
+}
+
 .capabilityPanel h3 {
   font-size: var(--text-base);
 }
@@ -223,6 +286,13 @@
   font-family: var(--font-display);
   font-size: var(--text-xl);
   font-weight: var(--weight-bold);
+}
+
+.answer small {
+  color: var(--color-success);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
 }
 
 .complete {

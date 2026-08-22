@@ -206,6 +206,36 @@ describe('shipped packs', () => {
     expect(missing).toEqual([]);
   });
 
+  it('resolves every response palette to distinct ordinary sentence items', async () => {
+    const { repository } = await loadAll();
+    const broken: string[] = [];
+
+    for (const mission of MISSIONS) {
+      for (const palette of mission.responsePalettes ?? []) {
+        const capability = repository.skillByLocalId(palette.capability);
+        if (!capability || capability.kind !== 'function') {
+          broken.push(`${mission.id}/${palette.id}/capability`);
+        }
+        const seen = new Set<string>();
+        for (const response of palette.responses) {
+          const item = repository.itemByLocalId(response.item);
+          if (!item || !['sentence', 'phrase'].includes(item.type)) {
+            broken.push(`${mission.id}/${palette.id}/${response.item}`);
+          }
+          if (capability && !item?.skills?.includes(capability.id)) {
+            broken.push(`${mission.id}/${palette.id}/${response.item}:capability`);
+          }
+          if (seen.has(response.item)) {
+            broken.push(`${mission.id}/${palette.id}/duplicate:${response.item}`);
+          }
+          seen.add(response.item);
+        }
+      }
+    }
+
+    expect(broken).toEqual([]);
+  });
+
   it('name a speaker for every line of every dialogue', async () => {
     const { repository } = await loadAll();
     const wrong = repository

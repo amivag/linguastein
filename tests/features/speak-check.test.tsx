@@ -64,6 +64,23 @@ describe('SpeakCheck', () => {
     expect(await screen.findByRole('status')).toHaveTextContent('That matched');
   });
 
+  it('accepts any response in a semantic palette', async () => {
+    const user = userEvent.setup();
+    renderWithServices(
+      <SpeakCheck expected={['Muy bien, gracias.', 'Más o menos.', 'Estoy cansado.']} />,
+      {
+        services: testServices({
+          speech: fakeSpeech({ transcript: 'mas o menos', confidence: 0.9 }),
+        }),
+      },
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Check my pronunciation' }));
+    const status = await screen.findByRole('status');
+    expect(status).toHaveTextContent('That matched');
+    expect(status).toHaveTextContent('Matched response: “Más o menos.”');
+  });
+
   it('explains a blocked microphone instead of failing silently', async () => {
     const user = userEvent.setup();
     render(new Error('not-allowed'));

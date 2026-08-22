@@ -1,0 +1,114 @@
+# Natural alternatives for communicative moves, plus the connected situations
+# that teach them. These remain ordinary sentence items; the mission catalog
+# groups them into a response palette without storing an exercise in content.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+# Leave the id off a new row: the build assigns one and writes it back.
+
+# ── Conocer a alguien (model dialogue) ────────────────────────────────────────
+000705	Hola, me llamo Luis.	Hello, my name is Luis.	a1	greetings		colloquial	tu		saludo-inicial	Luis	greet-someone
+000706	Hola, Luis. Soy Marta. Mucho gusto.	Hello, Luis. I'm Marta. Nice to meet you.	a1	greetings		colloquial	tu		saludo-inicial	Marta	greet-someone
+000707	Mucho gusto. ¿Cómo estás?	Nice to meet you. How are you?	a1	greetings		colloquial	tu		saludo-inicial	Luis	ask-about-wellbeing
+000708	Muy bien, gracias. ¿Y tú?	Very well, thank you. And you?	a1	greetings		colloquial	tu		saludo-inicial	Marta	respond-to-wellbeing
+000709	Estoy bien, gracias.	I'm fine, thank you.	a1	greetings,feelings		colloquial	tu		saludo-inicial	Luis	respond-to-wellbeing
+000710	Me alegro. Hasta luego.	I'm glad. See you later.	a1	greetings		colloquial	tu		saludo-inicial	Marta	close-friendly-exchange
+000711	Hasta luego, Marta.	See you later, Marta.	a1	greetings		colloquial	tu		saludo-inicial	Luis	close-friendly-exchange
+
+# ── Encontrarse con una amiga (guided transfer) ──────────────────────────────
+000712	¡Hola, Luis! ¿Cómo estás hoy?	Hi, Luis! How are you today?	a1	greetings,feelings		colloquial	tu		saludo-amigo	Ana	greet-someone,ask-about-wellbeing
+000713	Hola, Ana.	Hi, Ana.	a1	greetings		colloquial	tu		saludo-amigo	Luis	greet-someone
+000736	Todo bien, gracias. ¿Y tú?	All good, thanks. And you?	a1	feelings		colloquial	tu		saludo-amigo	Luis	respond-to-wellbeing
+000714	Estoy genial. Tengo un día muy bueno.	I'm doing great. I'm having a very good day.	a1	feelings		colloquial	tu		saludo-amigo	Ana	respond-to-wellbeing
+000715	¡Qué bien! Me alegro.	That's great! I'm glad.	a1	greetings,feelings		colloquial	tu		saludo-amigo	Luis	
+000716	Bueno, tengo que irme. Hasta pronto.	Well, I have to go. See you soon.	a1	greetings		colloquial	tu		saludo-amigo	Ana	close-friendly-exchange
+000717	Hasta pronto, Ana.	See you soon, Ana.	a1	greetings		colloquial	tu		saludo-amigo	Luis	close-friendly-exchange
+
+# ── Un saludo en el trabajo (guided transfer) ────────────────────────────────
+000718	Buenos días, Luis. ¿Cómo está usted?	Good morning, Luis. How are you?	a1	greetings,work		formal	usted		saludo-trabajo	Compañera	greet-someone,ask-about-wellbeing
+000719	Buenos días, señora López.	Good morning, Ms López.	a1	greetings,work		formal	usted		saludo-trabajo	Luis	greet-someone
+000737	Estoy un poco cansado, pero bien. ¿Y usted?	I'm a little tired, but fine. And you?	a1	feelings,work		formal	usted		saludo-trabajo	Luis	respond-to-wellbeing
+000720	Estoy bastante bien, gracias por preguntar.	I'm quite well, thank you for asking.	a1	feelings,work		formal	usted		saludo-trabajo	Compañera	respond-to-wellbeing
+000721	Me alegro. Buen día y hasta luego.	I'm glad. Have a good day and see you later.	a1	greetings,work		formal	usted		saludo-trabajo	Luis	close-friendly-exchange
+000722	Igualmente, hasta luego.	You too, see you later.	a1	greetings,work		formal	usted		saludo-trabajo	Compañera	close-friendly-exchange
+
+# ── Conocer a una vecina (independent transfer) ──────────────────────────────
+000723	Hola, soy Elena, la nueva vecina. ¿Cómo estás?	Hi, I'm Elena, the new neighbour. How are you?	a1	greetings,home		colloquial	tu		saludo-vecina	Elena	greet-someone,ask-about-wellbeing
+000724	Mucho gusto, Elena.	Nice to meet you, Elena.	a1	greetings		colloquial	tu		saludo-vecina	Luis	greet-someone
+000738	Hoy estoy más o menos. ¿Y tú?	I'm so-so today. And you?	a1	feelings		colloquial	tu		saludo-vecina	Luis	respond-to-wellbeing
+000725	Bien, gracias. Estoy un poco cansada.	Fine, thanks. I'm a little tired.	a1	feelings		colloquial	tu		saludo-vecina	Elena	respond-to-wellbeing
+000726	Tienes que descansar. Nos vemos pronto.	You need to rest. See you soon.	a1	greetings,feelings		colloquial	tu		saludo-vecina	Luis	close-friendly-exchange
+000727	Gracias, nos vemos.	Thanks, see you.	a1	greetings		colloquial	tu		saludo-vecina	Elena	close-friendly-exchange
+
+# ── Response palette: natural answers to «¿Cómo estás?» ──────────────────────
+000728	Estoy genial.	I'm doing great.	a1	feelings	Very positive and energetic.	colloquial	tu				respond-to-wellbeing
+000729	Todo bien.	Everything's good.	a1	feelings	Casual and concise.	colloquial	tu				respond-to-wellbeing
+000730	Bastante bien.	Quite well.	a1	feelings	Positive, but less emphatic.	neutral					respond-to-wellbeing
+000731	Más o menos.	So-so.	a1	feelings	Neither especially good nor bad.	neutral					respond-to-wellbeing
+000732	Regular.	Not great.	a1	feelings	A common concise answer meaning things could be better.	neutral					respond-to-wellbeing
+000733	Estoy cansada.	I'm tired.	a1	feelings	Feminine speaker form; use cansado for a masculine speaker.	neutral					respond-to-wellbeing
+000791	Hoy estoy algo cansado.	I'm a little tired today.	a1	feelings	A gently softened tired answer for a masculine speaker.	neutral					respond-to-wellbeing
+000734	Estoy un poco triste.	I'm a little sad.	a1	feelings	An honest, gently softened negative answer.	neutral					respond-to-wellbeing
+000735	No estoy muy bien.	I'm not doing very well.	a1	feelings	A clear negative answer that can invite concern.	neutral					respond-to-wellbeing
+
+# ── Response palette: ordering at a café ─────────────────────────────────────
+000739	Un café solo, por favor.	A black coffee, please.	a1	restaurant,food-drink	Short, polite and direct.	neutral					order-food-drink
+000740	Quiero un café con leche, por favor.	I'd like a coffee with milk, please.	a1	restaurant,food-drink	A dependable full request with quiero.	neutral					order-food-drink
+000741	Para mí, un té con leche.	For me, a tea with milk.	a1	restaurant,food-drink	Natural when ordering as part of a group.	neutral					order-food-drink
+000742	Voy a tomar un zumo de naranja.	I'll have an orange juice.	a1	restaurant,food-drink	A common way to make your choice.	neutral					order-food-drink
+000743	Un agua, por favor.	A water, please.	a1	restaurant,food-drink	A minimal everyday order.	neutral					order-food-drink
+000744	Quiero un café sin leche.	I'd like a coffee without milk.	a1	restaurant,food-drink	Useful for removing an ingredient.	neutral					order-food-drink
+000745	Un té, pero sin azúcar.	A tea, but without sugar.	a1	restaurant,food-drink	Adds a simple preference with pero.	neutral					order-food-drink
+000746	De momento, solo un café.	For now, just a coffee.	a1	restaurant,food-drink	Gently indicates that you may add something later.	neutral					order-food-drink
+
+# ── Response palette: asking for a destination ───────────────────────────────
+000747	Perdón, ¿dónde está la farmacia?	Excuse me, where is the pharmacy?	a1	travel,city	Polite and direct.	formal	usted				ask-for-directions
+000748	Disculpe, ¿dónde está la estación?	Excuse me, where is the station?	a1	travel,city	Slightly more formal with disculpe.	formal	usted				ask-for-directions
+000749	¿Dónde está el centro, por favor?	Where is the town centre, please?	a1	travel,city	The courtesy comes at the end.	neutral					ask-for-directions
+000750	Perdone, busco el museo.	Excuse me, I'm looking for the museum.	a1	travel,city	States the goal instead of asking a direct question.	formal	usted				ask-for-directions
+000751	¿Sabe dónde está el banco?	Do you know where the bank is?	a1	travel,city	A softer indirect question.	formal	usted				ask-for-directions
+000752	¿Cómo llego a la plaza?	How do I get to the square?	a1	travel,city	Asks for the route rather than only the location.	neutral					ask-for-directions
+000753	¿La parada de autobús está cerca?	Is the bus stop nearby?	a1	travel,city	Useful when you already know it is in the area.	neutral					ask-for-directions
+000754	Necesito ir al hotel. ¿Por dónde voy?	I need to get to the hotel. Which way do I go?	a1	travel,city	Explains the destination and asks for a route.	neutral					ask-for-directions
+
+# ── Response palette: saying what you want in a clothes shop ─────────────────
+000755	Busco una camisa blanca.	I'm looking for a white shirt.	a1	shopping,clothes,colours	A straightforward item-and-colour request.	neutral					seek-clothing-item
+000756	Quiero una chaqueta azul.	I'd like a blue jacket.	a1	shopping,clothes,colours	Direct and easy to adapt.	neutral					seek-clothing-item
+000757	Necesito unos pantalones negros.	I need some black trousers.	a1	shopping,clothes,colours	Uses necesito when the item is a need.	neutral					seek-clothing-item
+000758	Estoy buscando un vestido verde.	I'm looking for a green dress.	a1	shopping,clothes,colours	A natural ongoing-search expression.	neutral					seek-clothing-item
+000759	¿Tiene esta camisa en rojo?	Do you have this shirt in red?	a1	shopping,clothes,colours	Keeps the item and changes the colour.	formal	usted				seek-clothing-item
+000760	¿Hay una talla más grande?	Is there a larger size?	a1	shopping,clothes	Asks for a different fit without repeating the item.	neutral					seek-clothing-item
+000761	Solo estoy mirando, gracias.	I'm just looking, thank you.	a1	shopping	A polite way to decline help.	neutral					seek-clothing-item
+000762	Busco algo cómodo para el trabajo.	I'm looking for something comfortable for work.	a1	shopping,clothes,work	Describes the quality and purpose instead of naming an item.	neutral					seek-clothing-item
+
+# ── Response palette: confirming a hotel stay ────────────────────────────────
+000763	Sí, tengo una reserva.	Yes, I have a reservation.	a1	travel	The simplest confirmation.	neutral					give-stay-details
+000764	Sí, una habitación doble para una noche.	Yes, a double room for one night.	a1	travel,numbers	Gives room type and duration together.	neutral					give-stay-details
+000765	Tengo una habitación individual para dos noches.	I have a single room for two nights.	a1	travel,numbers	A full stay description without sí.	neutral					give-stay-details
+000766	La reserva está a nombre de López.	The reservation is under the name López.	a1	travel	Gives the name the receptionist needs.	neutral					give-stay-details
+000767	Es para tres noches.	It's for three nights.	a1	travel,numbers	A concise answer to a duration question.	neutral					give-stay-details
+000768	Somos dos personas.	There are two of us.	a1	travel,numbers	Clarifies the number of guests.	neutral					give-stay-details
+000769	Tengo una habitación con desayuno.	I have a room with breakfast.	a1	travel,food-drink	Clarifies an included option.	neutral					give-stay-details
+000770	No tengo reserva. ¿Hay una habitación libre?	I don't have a reservation. Is there a room available?	a1	travel	Handles the useful unscripted case of arriving without a booking.	neutral					give-stay-details
+
+# ── Response palette: reacting to a suggestion ───────────────────────────────
+000771	Sí, buena idea.	Yes, good idea.	a1	social	Simple positive acceptance.	colloquial	tu				respond-to-suggestion
+000772	Perfecto, me apetece.	Perfect, I feel like it.	a1	social	Warm and enthusiastic acceptance.	colloquial	tu				respond-to-suggestion
+000773	Vale, vamos.	Okay, let's go.	a1	social	Casual and decisive.	colloquial	tu				respond-to-suggestion
+000774	Sí, pero un poco más tarde.	Yes, but a little later.	a1	social,time	Accepts while changing one detail.	colloquial	tu				respond-to-suggestion
+000775	Prefiero ir al parque.	I'd prefer to go to the park.	a1	social	Offers an alternative rather than rejecting the plan.	colloquial	tu				respond-to-suggestion
+000776	Hoy no puedo.	I can't today.	a1	social	A clear practical refusal.	colloquial	tu				respond-to-suggestion
+000777	Lo siento, ya tengo planes.	Sorry, I already have plans.	a1	social	Declines politely and gives a reason.	colloquial	tu				respond-to-suggestion
+000778	Quizá otro día.	Maybe another day.	a1	social	Keeps the relationship open after declining.	colloquial	tu				respond-to-suggestion
+000779	No me apetece mucho.	I don't really feel like it.	a1	social	A softer personal refusal.	colloquial	tu				respond-to-suggestion
+000780	¿Y si vamos al cine?	What if we go to the cinema?	a1	social,entertainment	Responds with a different suggestion.	colloquial	tu				respond-to-suggestion
+
+# ── Response palette: describing a real morning ──────────────────────────────
+000781	Normalmente me despierto a las siete.	I normally wake up at seven.	a1	daily-routine,clock	A simple time anchor with a frequency word.	neutral					describe-routine-actions
+000782	Primero me ducho.	First I take a shower.	a1	daily-routine	Begins a sequence clearly.	neutral					describe-routine-actions
+000783	Después me visto.	Afterwards I get dressed.	a1	daily-routine	Adds the next action.	neutral					describe-routine-actions
+000784	Desayuno café y fruta.	I have coffee and fruit for breakfast.	a1	daily-routine,food-drink	Personalises the routine with breakfast.	neutral					describe-routine-actions
+000785	Por la mañana leo las noticias.	In the morning I read the news.	a1	daily-routine	Adds a habitual activity.	neutral					describe-routine-actions
+000786	Preparo el desayuno en la cocina.	I make breakfast in the kitchen.	a1	daily-routine,food-drink,home	Adds both an action and a place.	neutral					describe-routine-actions
+000787	A las ocho salgo de casa.	At eight I leave home.	a1	daily-routine,clock	Connects an action to a time.	neutral					describe-routine-actions
+000788	Voy al trabajo en autobús.	I go to work by bus.	a1	daily-routine,travel,work	Adds destination and transport.	neutral					describe-routine-actions
+000789	Los domingos me levanto tarde.	On Sundays I get up late.	a1	daily-routine,days-of-week	Contrasts a weekend habit.	neutral					describe-routine-actions
+000790	Antes de salir, limpio un poco la casa.	Before going out, I clean the house a little.	a1	daily-routine,home	Uses antes de to connect two events.	neutral					describe-routine-actions

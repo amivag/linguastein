@@ -85,6 +85,52 @@ export function bestAlternative(
   return best;
 }
 
+export interface ExpectedSpeechMatch {
+  readonly expected: string;
+  readonly text: string;
+  readonly comparison: SpeechComparison;
+}
+
+/**
+ * Finds the recognised phrase and valid response that agree best.
+ *
+ * A response palette can contain genuinely different sentences, so comparing
+ * every recogniser hypothesis only with one canonical line would reject a
+ * perfectly appropriate answer before the curriculum could credit it.
+ */
+export function bestExpectedAlternative(
+  expected: readonly string[],
+  transcript: string,
+  alternatives: readonly string[] = [],
+): ExpectedSpeechMatch {
+  const targets = expected.length ? expected : [''];
+  let best: ExpectedSpeechMatch = {
+    expected: targets[0]!,
+    text: transcript,
+    comparison: compareSpoken(targets[0]!, transcript),
+  };
+
+  for (const target of targets) {
+    for (const candidate of [transcript, ...alternatives]) {
+      const comparison = compareSpoken(target, candidate);
+      if (
+        comparison.score > best.comparison.score ||
+        (comparison.score === best.comparison.score &&
+          verdictRank(comparison.verdict) > verdictRank(best.comparison.verdict))
+      ) {
+        best = { expected: target, text: candidate, comparison };
+      }
+    }
+  }
+
+  return best;
+}
+
+function verdictRank(verdict: SpeechVerdict): number {
+  if (verdict === 'match') return 2;
+  return verdict === 'close' ? 1 : 0;
+}
+
 function words(text: string): readonly string[] {
   return splitWords(normalise(text));
 }

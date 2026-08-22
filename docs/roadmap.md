@@ -47,14 +47,19 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   moves, and a deleted row's id is retired rather than reused
 - Passages: connected texts and dialogues as containers over sentences that stay
   individually practisable, with a reading view and passage-scoped sessions
-- A six-mission A1 communicative journey (Understand → Practise → Use), with a
+- A seven-mission A1 communicative journey (Understand → Practise → Use), with a
   three-context transfer ladder for every mission. The first variations retain
   meaning cues; the final rung uses communicative intentions, and a narration
-  model sits alongside the five dialogues
+  model sits alongside the six dialogues
+- Response palettes now run through every mission: wellbeing, café orders,
+  destinations, clothing needs, hotel details, reactions to suggestions and real
+  morning actions. Each reveals alternatives progressively with meaning and
+  pragmatic nuance, and accepts any context-appropriate answer through the
+  existing speech seam instead of grading against one scripted line
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,
-  704 sentences — 1,155 practisable items, 98% of sentence words linked to a lexeme
+  791 sentences — 1,242 practisable items, 97% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -83,7 +88,7 @@ The dataset work is briefed in full for a fresh session:
 
    The machinery for that pass is now in place, and it is only machinery: review
    is per item via `content/es/reviewed.tsv`, so a slice can be signed off without
-   reading all 1,155 at once, and `npm run review:data` reports the rows worth
+   reading all 1,242 at once, and `npm run review:data` reports the rows worth
    attention rather than asking anyone to scan the lot. Sign-off is pinned to the
    wording that was read, so an edit afterwards fails the build instead of
    inheriting the approval. **Nothing is signed off yet** — the pack is still
@@ -95,7 +100,7 @@ The dataset work is briefed in full for a fresh session:
    `fui`), infinitive+pronoun forms (`ayudarme`, `explicarme`) and conditionals
    (`quisiera`, `gustaría`), which is a sources gap rather than a wording one.
 
-1. **More passages** — the first target is met: 32 exist (11 texts, 21
+1. **More passages** — the first target is met: 36 exist (11 texts, 25
    dialogues). Continue toward 60 through new missions and higher-level reading,
    rather than adding disconnected text only to raise the count. See the dataset
    task.
@@ -141,12 +146,12 @@ The dataset work is briefed in full for a fresh session:
    §4.6 of [docs/tasks/game-feel.md](tasks/game-feel.md) — and the constraints
    still bind: no resettable streak, no reward that overstates the evidence, and
    nothing where motion or colour is the only signal.
-6. **Situations as communicative functions** — landed across all six missions.
+6. **Situations as communicative functions** — landed across all seven missions.
    `content/es/skills.tsv` now authors functions as a second axis to topics:
    `restaurant` is what a sentence is _about_, while ordering politely or
    understanding a price is what the learner is _trying to do_. Sentence rows
    attach those functions, session URLs preserve them, mastery derives evidence,
-   and the mission reports the capabilities it trains. Five missions use a
+   and the mission reports the capabilities it trains. Six missions use a
    dialogue model; describing a morning adds a connected-narration model for
    time, detail, sequence and destination. Every mission now has three ordered
    transfer contexts. Use records `think-say` attempts into the same FSRS schedule

@@ -23,6 +23,25 @@ export interface MissionTransfer {
   readonly brief: string;
 }
 
+export interface MissionResponseOption {
+  /** Local item id of an ordinary sentence that can perform this move. */
+  readonly item: string;
+  /** Brief pragmatic distinction: tone, strength, emotion or setting. */
+  readonly nuance: string;
+}
+
+export interface MissionResponsePalette {
+  readonly id: string;
+  /** Communicative-function skill shared by the turns this palette can answer. */
+  readonly capability: string;
+  /** Prompt used instead of prescribing one English translation in Use. */
+  readonly cue: string;
+  readonly title: string;
+  readonly responses: readonly MissionResponseOption[];
+  /** Number shown before the learner asks to expand the palette. */
+  readonly initiallyVisible?: number;
+}
+
 export interface MissionDefinition {
   /** Stable, shareable curriculum id — deliberately independent of a pack id. */
   readonly id: string;
@@ -46,6 +65,8 @@ export interface MissionDefinition {
   readonly transfers?: readonly MissionTransfer[];
   /** Local ids of communicative-function skills this mission gathers evidence for. */
   readonly capabilities?: readonly string[];
+  /** Natural alternatives for one communicative move, never exercise records. */
+  readonly responsePalettes?: readonly MissionResponsePalette[];
   /** Which line gives Home a useful preview. */
   readonly spotlight: number;
   readonly estimatedMinutes: number;

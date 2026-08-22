@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { bestAlternative, compareSpoken } from '../../src/domain/exercises';
+import {
+  bestAlternative,
+  bestExpectedAlternative,
+  compareSpoken,
+} from '../../src/domain/exercises';
 
 describe('compareSpoken', () => {
   it('accepts an exact match', () => {
@@ -57,5 +61,25 @@ describe('bestAlternative', () => {
   it('keeps the primary transcript when nothing beats it', () => {
     const best = bestAlternative('Tengo hambre', 'tengo hambre', ['tengo hombre']);
     expect(best.text).toBe('tengo hambre');
+  });
+});
+
+describe('bestExpectedAlternative', () => {
+  it('accepts the best of several natural responses', () => {
+    const best = bestExpectedAlternative(
+      ['Muy bien, gracias.', 'Más o menos.', 'Estoy un poco triste.'],
+      'estoy un poco triste',
+    );
+
+    expect(best.expected).toBe('Estoy un poco triste.');
+    expect(best.comparison.verdict).toBe('match');
+  });
+
+  it('still considers alternate recogniser transcripts for every response', () => {
+    const best = bestExpectedAlternative(['Todo bien.', 'Estoy cansado.'], 'toy bien', [
+      'estoy cansado',
+    ]);
+
+    expect(best).toMatchObject({ expected: 'Estoy cansado.', text: 'estoy cansado' });
   });
 });

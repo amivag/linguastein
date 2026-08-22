@@ -703,6 +703,93 @@
 {"ref":"core-es:item:000702","lang":"en","text":"I eat fruit and read the newspaper in the kitchen.","type":"natural"}
 {"ref":"core-es:item:000703","lang":"en","text":"Afterwards I call a friend and clean the house a little.","type":"natural"}
 {"ref":"core-es:item:000704","lang":"en","text":"At twelve I go out and go to the market with my friend.","type":"natural"}
+{"ref":"core-es:item:000705","lang":"en","text":"Hello, my name is Luis.","type":"natural"}
+{"ref":"core-es:item:000706","lang":"en","text":"Hello, Luis. I'm Marta. Nice to meet you.","type":"natural"}
+{"ref":"core-es:item:000707","lang":"en","text":"Nice to meet you. How are you?","type":"natural"}
+{"ref":"core-es:item:000708","lang":"en","text":"Very well, thank you. And you?","type":"natural"}
+{"ref":"core-es:item:000709","lang":"en","text":"I'm fine, thank you.","type":"natural"}
+{"ref":"core-es:item:000710","lang":"en","text":"I'm glad. See you later.","type":"natural"}
+{"ref":"core-es:item:000711","lang":"en","text":"See you later, Marta.","type":"natural"}
+{"ref":"core-es:item:000712","lang":"en","text":"Hi, Luis! How are you today?","type":"natural"}
+{"ref":"core-es:item:000713","lang":"en","text":"Hi, Ana.","type":"natural"}
+{"ref":"core-es:item:000736","lang":"en","text":"All good, thanks. And you?","type":"natural"}
+{"ref":"core-es:item:000714","lang":"en","text":"I'm doing great. I'm having a very good day.","type":"natural"}
+{"ref":"core-es:item:000715","lang":"en","text":"That's great! I'm glad.","type":"natural"}
+{"ref":"core-es:item:000716","lang":"en","text":"Well, I have to go. See you soon.","type":"natural"}
+{"ref":"core-es:item:000717","lang":"en","text":"See you soon, Ana.","type":"natural"}
+{"ref":"core-es:item:000718","lang":"en","text":"Good morning, Luis. How are you?","type":"natural"}
+{"ref":"core-es:item:000719","lang":"en","text":"Good morning, Ms López.","type":"natural"}
+{"ref":"core-es:item:000737","lang":"en","text":"I'm a little tired, but fine. And you?","type":"natural"}
+{"ref":"core-es:item:000720","lang":"en","text":"I'm quite well, thank you for asking.","type":"natural"}
+{"ref":"core-es:item:000721","lang":"en","text":"I'm glad. Have a good day and see you later.","type":"natural"}
+{"ref":"core-es:item:000722","lang":"en","text":"You too, see you later.","type":"natural"}
+{"ref":"core-es:item:000723","lang":"en","text":"Hi, I'm Elena, the new neighbour. How are you?","type":"natural"}
+{"ref":"core-es:item:000724","lang":"en","text":"Nice to meet you, Elena.","type":"natural"}
+{"ref":"core-es:item:000738","lang":"en","text":"I'm so-so today. And you?","type":"natural"}
+{"ref":"core-es:item:000725","lang":"en","text":"Fine, thanks. I'm a little tired.","type":"natural"}
+{"ref":"core-es:item:000726","lang":"en","text":"You need to rest. See you soon.","type":"natural"}
+{"ref":"core-es:item:000727","lang":"en","text":"Thanks, see you.","type":"natural"}
+{"ref":"core-es:item:000728","lang":"en","text":"I'm doing great.","type":"natural","note":"Very positive and energetic."}
+{"ref":"core-es:item:000729","lang":"en","text":"Everything's good.","type":"natural","note":"Casual and concise."}
+{"ref":"core-es:item:000730","lang":"en","text":"Quite well.","type":"natural","note":"Positive, but less emphatic."}
+{"ref":"core-es:item:000731","lang":"en","text":"So-so.","type":"natural","note":"Neither especially good nor bad."}
+{"ref":"core-es:item:000732","lang":"en","text":"Not great.","type":"natural","note":"A common concise answer meaning things could be better."}
+{"ref":"core-es:item:000733","lang":"en","text":"I'm tired.","type":"natural","note":"Feminine speaker form; use cansado for a masculine speaker."}
+{"ref":"core-es:item:000791","lang":"en","text":"I'm a little tired today.","type":"natural","note":"A gently softened tired answer for a masculine speaker."}
+{"ref":"core-es:item:000734","lang":"en","text":"I'm a little sad.","type":"natural","note":"An honest, gently softened negative answer."}
+{"ref":"core-es:item:000735","lang":"en","text":"I'm not doing very well.","type":"natural","note":"A clear negative answer that can invite concern."}
+{"ref":"core-es:item:000739","lang":"en","text":"A black coffee, please.","type":"natural","note":"Short, polite and direct."}
+{"ref":"core-es:item:000740","lang":"en","text":"I'd like a coffee with milk, please.","type":"natural","note":"A dependable full request with quiero."}
+{"ref":"core-es:item:000741","lang":"en","text":"For me, a tea with milk.","type":"natural","note":"Natural when ordering as part of a group."}
+{"ref":"core-es:item:000742","lang":"en","text":"I'll have an orange juice.","type":"natural","note":"A common way to make your choice."}
+{"ref":"core-es:item:000743","lang":"en","text":"A water, please.","type":"natural","note":"A minimal everyday order."}
+{"ref":"core-es:item:000744","lang":"en","text":"I'd like a coffee without milk.","type":"natural","note":"Useful for removing an ingredient."}
+{"ref":"core-es:item:000745","lang":"en","text":"A tea, but without sugar.","type":"natural","note":"Adds a simple preference with pero."}
+{"ref":"core-es:item:000746","lang":"en","text":"For now, just a coffee.","type":"natural","note":"Gently indicates that you may add something later."}
+{"ref":"core-es:item:000747","lang":"en","text":"Excuse me, where is the pharmacy?","type":"natural","note":"Polite and direct."}
+{"ref":"core-es:item:000748","lang":"en","text":"Excuse me, where is the station?","type":"natural","note":"Slightly more formal with disculpe."}
+{"ref":"core-es:item:000749","lang":"en","text":"Where is the town centre, please?","type":"natural","note":"The courtesy comes at the end."}
+{"ref":"core-es:item:000750","lang":"en","text":"Excuse me, I'm looking for the museum.","type":"natural","note":"States the goal instead of asking a direct question."}
+{"ref":"core-es:item:000751","lang":"en","text":"Do you know where the bank is?","type":"natural","note":"A softer indirect question."}
+{"ref":"core-es:item:000752","lang":"en","text":"How do I get to the square?","type":"natural","note":"Asks for the route rather than only the location."}
+{"ref":"core-es:item:000753","lang":"en","text":"Is the bus stop nearby?","type":"natural","note":"Useful when you already know it is in the area."}
+{"ref":"core-es:item:000754","lang":"en","text":"I need to get to the hotel. Which way do I go?","type":"natural","note":"Explains the destination and asks for a route."}
+{"ref":"core-es:item:000755","lang":"en","text":"I'm looking for a white shirt.","type":"natural","note":"A straightforward item-and-colour request."}
+{"ref":"core-es:item:000756","lang":"en","text":"I'd like a blue jacket.","type":"natural","note":"Direct and easy to adapt."}
+{"ref":"core-es:item:000757","lang":"en","text":"I need some black trousers.","type":"natural","note":"Uses necesito when the item is a need."}
+{"ref":"core-es:item:000758","lang":"en","text":"I'm looking for a green dress.","type":"natural","note":"A natural ongoing-search expression."}
+{"ref":"core-es:item:000759","lang":"en","text":"Do you have this shirt in red?","type":"natural","note":"Keeps the item and changes the colour."}
+{"ref":"core-es:item:000760","lang":"en","text":"Is there a larger size?","type":"natural","note":"Asks for a different fit without repeating the item."}
+{"ref":"core-es:item:000761","lang":"en","text":"I'm just looking, thank you.","type":"natural","note":"A polite way to decline help."}
+{"ref":"core-es:item:000762","lang":"en","text":"I'm looking for something comfortable for work.","type":"natural","note":"Describes the quality and purpose instead of naming an item."}
+{"ref":"core-es:item:000763","lang":"en","text":"Yes, I have a reservation.","type":"natural","note":"The simplest confirmation."}
+{"ref":"core-es:item:000764","lang":"en","text":"Yes, a double room for one night.","type":"natural","note":"Gives room type and duration together."}
+{"ref":"core-es:item:000765","lang":"en","text":"I have a single room for two nights.","type":"natural","note":"A full stay description without sí."}
+{"ref":"core-es:item:000766","lang":"en","text":"The reservation is under the name López.","type":"natural","note":"Gives the name the receptionist needs."}
+{"ref":"core-es:item:000767","lang":"en","text":"It's for three nights.","type":"natural","note":"A concise answer to a duration question."}
+{"ref":"core-es:item:000768","lang":"en","text":"There are two of us.","type":"natural","note":"Clarifies the number of guests."}
+{"ref":"core-es:item:000769","lang":"en","text":"I have a room with breakfast.","type":"natural","note":"Clarifies an included option."}
+{"ref":"core-es:item:000770","lang":"en","text":"I don't have a reservation. Is there a room available?","type":"natural","note":"Handles the useful unscripted case of arriving without a booking."}
+{"ref":"core-es:item:000771","lang":"en","text":"Yes, good idea.","type":"natural","note":"Simple positive acceptance."}
+{"ref":"core-es:item:000772","lang":"en","text":"Perfect, I feel like it.","type":"natural","note":"Warm and enthusiastic acceptance."}
+{"ref":"core-es:item:000773","lang":"en","text":"Okay, let's go.","type":"natural","note":"Casual and decisive."}
+{"ref":"core-es:item:000774","lang":"en","text":"Yes, but a little later.","type":"natural","note":"Accepts while changing one detail."}
+{"ref":"core-es:item:000775","lang":"en","text":"I'd prefer to go to the park.","type":"natural","note":"Offers an alternative rather than rejecting the plan."}
+{"ref":"core-es:item:000776","lang":"en","text":"I can't today.","type":"natural","note":"A clear practical refusal."}
+{"ref":"core-es:item:000777","lang":"en","text":"Sorry, I already have plans.","type":"natural","note":"Declines politely and gives a reason."}
+{"ref":"core-es:item:000778","lang":"en","text":"Maybe another day.","type":"natural","note":"Keeps the relationship open after declining."}
+{"ref":"core-es:item:000779","lang":"en","text":"I don't really feel like it.","type":"natural","note":"A softer personal refusal."}
+{"ref":"core-es:item:000780","lang":"en","text":"What if we go to the cinema?","type":"natural","note":"Responds with a different suggestion."}
+{"ref":"core-es:item:000781","lang":"en","text":"I normally wake up at seven.","type":"natural","note":"A simple time anchor with a frequency word."}
+{"ref":"core-es:item:000782","lang":"en","text":"First I take a shower.","type":"natural","note":"Begins a sequence clearly."}
+{"ref":"core-es:item:000783","lang":"en","text":"Afterwards I get dressed.","type":"natural","note":"Adds the next action."}
+{"ref":"core-es:item:000784","lang":"en","text":"I have coffee and fruit for breakfast.","type":"natural","note":"Personalises the routine with breakfast."}
+{"ref":"core-es:item:000785","lang":"en","text":"In the morning I read the news.","type":"natural","note":"Adds a habitual activity."}
+{"ref":"core-es:item:000786","lang":"en","text":"I make breakfast in the kitchen.","type":"natural","note":"Adds both an action and a place."}
+{"ref":"core-es:item:000787","lang":"en","text":"At eight I leave home.","type":"natural","note":"Connects an action to a time."}
+{"ref":"core-es:item:000788","lang":"en","text":"I go to work by bus.","type":"natural","note":"Adds destination and transport."}
+{"ref":"core-es:item:000789","lang":"en","text":"On Sundays I get up late.","type":"natural","note":"Contrasts a weekend habit."}
+{"ref":"core-es:item:000790","lang":"en","text":"Before going out, I clean the house a little.","type":"natural","note":"Uses antes de to connect two events."}
 {"ref":"core-es:item:500001","lang":"en","text":"person","type":"natural"}
 {"ref":"core-es:item:500002","lang":"en","text":"man","type":"natural"}
 {"ref":"core-es:item:500003","lang":"en","text":"woman","type":"natural"}
@@ -1887,6 +1974,10 @@
 {"ref":"core-es:skill:add-context-to-routine","lang":"en","text":"Add a simple circumstance, reason or detail"}
 {"ref":"core-es:skill:sequence-routine-events","lang":"en","text":"Put routine events in a clear chronological sequence"}
 {"ref":"core-es:skill:connect-routine-to-destination","lang":"en","text":"Say where the routine leads and what happens there"}
+{"ref":"core-es:skill:greet-someone","lang":"en","text":"Greet someone naturally for the situation"}
+{"ref":"core-es:skill:ask-about-wellbeing","lang":"en","text":"Ask naturally how someone is doing"}
+{"ref":"core-es:skill:respond-to-wellbeing","lang":"en","text":"Give a natural, honest answer about how you are doing"}
+{"ref":"core-es:skill:close-friendly-exchange","lang":"en","text":"Close a short friendly exchange naturally"}
 {"ref":"core-es:skill:numerals-teens","lang":"en","text":"the teens, written as one word"}
 {"ref":"core-es:skill:numerals-twenties","lang":"en","text":"the twenties, written as one word"}
 {"ref":"core-es:skill:numerals-y-joining","lang":"en","text":"y joins tens to units, and never hundreds to tens"}
@@ -1926,3 +2017,7 @@
 {"ref":"core-es:passage:700030","lang":"en","text":"Sunday plans","type":"natural"}
 {"ref":"core-es:passage:700031","lang":"en","text":"A busy morning","type":"natural"}
 {"ref":"core-es:passage:700032","lang":"en","text":"My Sunday morning","type":"natural"}
+{"ref":"core-es:passage:700033","lang":"en","text":"Meeting someone","type":"natural"}
+{"ref":"core-es:passage:700034","lang":"en","text":"Meeting a friend","type":"natural"}
+{"ref":"core-es:passage:700035","lang":"en","text":"A greeting at work","type":"natural"}
+{"ref":"core-es:passage:700036","lang":"en","text":"Meeting a neighbour","type":"natural"}

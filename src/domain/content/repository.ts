@@ -226,6 +226,14 @@ export class ContentRepository {
     return this.itemOrder.map((id) => this.itemsById.get(id)).filter(isDefined);
   }
 
+  /**
+   * Resolves the stable local part of an item id for curriculum references.
+   * Like passage and skill local ids, the first loaded match wins.
+   */
+  itemByLocalId(local: string): LearningItem | undefined {
+    return this.allItems().find((item) => item.id.endsWith(`:item:${local}`));
+  }
+
   getPassage(id: PassageId): Passage | undefined {
     return this.passagesById.get(id);
   }

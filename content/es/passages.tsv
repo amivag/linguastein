@@ -38,3 +38,7 @@
 700030	planes-domingo	dialogue	Planes para el domingo	Sunday plans	a1	social
 700031	mañana-ocupada	text	Una mañana con prisa	A busy morning	a1	daily-routine
 700032	mañana-domingo	text	Mi mañana de domingo	My Sunday morning	a1	daily-routine
+700033	saludo-inicial	dialogue	Conocer a alguien	Meeting someone	a1	greetings
+700034	saludo-amigo	dialogue	Encontrarse con una amiga	Meeting a friend	a1	greetings
+700035	saludo-trabajo	dialogue	Un saludo en el trabajo	A greeting at work	a1	greetings
+700036	saludo-vecina	dialogue	Conocer a una vecina	Meeting a neighbour	a1	greetings

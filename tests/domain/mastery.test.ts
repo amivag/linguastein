@@ -36,7 +36,7 @@ const contextualPack: ContentPack = {
   ...TEST_PACK,
   items: [
     ...TEST_PACK.items,
-    ...Array.from({ length: 6 }, (_, index) => ({
+    ...Array.from({ length: 9 }, (_, index) => ({
       id: id<ItemId>(`test-es:item:${String(index + 8).padStart(3, '0')}`),
       pack: TEST_PACK_ID,
       type: 'sentence' as const,
@@ -53,6 +53,14 @@ const contextualPack: ContentPack = {
       kind: 'dialogue',
       title: 'First context',
       items: ['008', '009', '010'].map((local) => id<ItemId>(`test-es:item:${local}`)),
+      speakers: ['A', 'B', 'A'],
+    },
+    {
+      id: id<PassageId>('test-es:passage:700012'),
+      pack: TEST_PACK_ID,
+      kind: 'dialogue',
+      title: 'Independent context',
+      items: ['014', '015', '016'].map((local) => id<ItemId>(`test-es:item:${local}`)),
       speakers: ['A', 'B', 'A'],
     },
     {
@@ -139,15 +147,23 @@ describe('inferMastery', () => {
       ['008', '009', '010'].map((local) => record(local, { stability: 60 })),
       NOW,
     ).skills.get(FUNCTION)!;
-    const transferred = inferMastery(
+    const oneTransfer = inferMastery(
       contextualRepository,
       ['008', '009', '010', '011', '012', '013'].map((local) => record(local, { stability: 60 })),
+      NOW,
+    ).skills.get(FUNCTION)!;
+    const broadTransfer = inferMastery(
+      contextualRepository,
+      ['008', '009', '010', '011', '012', '013', '014', '015', '016'].map((local) =>
+        record(local, { stability: 60 }),
+      ),
       NOW,
     ).skills.get(FUNCTION)!;
 
     expect(oneContext).toMatchObject({ contexts: 1, status: 'developing' });
     expect(oneContext.strength).toBeGreaterThanOrEqual(0.7);
-    expect(transferred).toMatchObject({ contexts: 2, status: 'strong' });
+    expect(oneTransfer).toMatchObject({ contexts: 2, status: 'developing' });
+    expect(broadTransfer).toMatchObject({ contexts: 3, status: 'strong' });
   });
 });
 

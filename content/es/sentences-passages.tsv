@@ -158,3 +158,104 @@
 000620	¿A qué hora nos vemos?	What time shall we meet?	a1	time					planes-reto	Luis	coordinate-plan-time
 000621	A las seis. Podemos tomar un café después.	At six. We can have coffee afterwards.	a1	social,restaurant					planes-reto	Ana	coordinate-plan-time
 000622	Perfecto, nos vemos en el parque.	Perfect, see you in the park.	a1	social					planes-reto	Luis	confirm-social-plan
+
+# ── Un desayuno en la cafetería (transfer 2) ─────────────────────────────────
+000628	Buenos días, ¿qué desea tomar?	Good morning, what would you like to drink?	a1	restaurant		formal	usted		contacto-cafe	Camarero	order-food-drink
+000629	Quiero un zumo de naranja, por favor.	I'd like an orange juice, please.	a1	restaurant,food-drink					contacto-cafe	Cliente	order-food-drink
+000630	¿Quiere algo para comer?	Would you like something to eat?	a1	restaurant		formal	usted		contacto-cafe	Camarero	handle-add-on
+000631	Sí, un poco de pan, pero sin mantequilla.	Yes, some bread, but without butter.	a1	restaurant,food-drink					contacto-cafe	Cliente	handle-add-on
+000632	El desayuno cuesta cuatro euros.	Breakfast costs four euros.	a1	restaurant,numbers					contacto-cafe	Camarero	ask-understand-price
+000633	Muy bien. Aquí tiene, gracias.	All right. Here you are, thank you.	a1	restaurant,greetings		formal	usted		contacto-cafe	Cliente	close-service-exchange
+
+# ── Un pedido antes del trabajo (transfer 3) ─────────────────────────────────
+000634	Hola, ¿qué quiere tomar esta mañana?	Hello, what would you like this morning?	a1	restaurant		formal	usted		cafe-libre	Camarero	order-food-drink
+000635	Un café solo y agua, por favor.	A black coffee and water, please.	a1	restaurant,food-drink					cafe-libre	Cliente	order-food-drink
+000636	Tenemos pan y galletas. ¿Algo más?	We have bread and biscuits. Anything else?	a1	restaurant,food-drink		formal	usted		cafe-libre	Camarero	handle-add-on
+000637	Una galleta, gracias. ¿Cuánto cuesta todo?	A biscuit, thank you. How much is everything?	a1	restaurant,greetings					cafe-libre	Cliente	handle-add-on,ask-understand-price
+000638	Son cinco euros, por favor.	That's five euros, please.	a1	restaurant,numbers		formal	usted		cafe-libre	Camarero	ask-understand-price
+000639	Perfecto, muchas gracias. Hasta luego.	Perfect, thank you very much. See you later.	a1	restaurant,greetings					cafe-libre	Cliente	close-service-exchange
+
+# ── El camino al museo (transfer 2) ──────────────────────────────────────────
+000640	Disculpe, ¿dónde está el museo?	Excuse me, where is the museum?	a1	travel,city		formal	usted		ruta-museo	Turista	ask-for-directions
+000641	Siga por esta calle y gire a la derecha en el banco.	Continue down this street and turn right at the bank.	a1	travel,city		formal	usted		ruta-museo	Señora	follow-simple-directions
+000642	¿Está antes o después de la plaza?	Is it before or after the square?	a1	travel,city		formal	usted		ruta-museo	Turista	follow-simple-directions
+000643	Está después de la plaza, cerca de la biblioteca.	It's after the square, near the library.	a1	travel,city		formal	usted		ruta-museo	Señora	follow-simple-directions
+000644	¿Está muy lejos desde aquí?	Is it very far from here?	a1	travel		formal	usted		ruta-museo	Turista	check-distance
+000645	No, está a ocho minutos.	No, it's eight minutes away.	a1	travel,numbers		formal	usted		ruta-museo	Señora	check-distance
+000646	Gracias por su ayuda.	Thank you for your help.	a1	greetings		formal	usted		ruta-museo	Turista	thank-for-help
+
+# ── Buscando la parada (transfer 3) ──────────────────────────────────────────
+000647	Perdone, ¿dónde está la parada de autobús?	Excuse me, where is the bus stop?	a1	travel,city		formal	usted		ruta-autobus	Turista	ask-for-directions
+000648	Vaya todo recto hasta el hotel.	Go straight ahead as far as the hotel.	a1	travel		formal	usted		ruta-autobus	Señor	follow-simple-directions
+000649	¿Tengo que girar en el hotel?	Do I have to turn at the hotel?	a1	travel		formal	usted		ruta-autobus	Turista	follow-simple-directions
+000650	Sí, gire a la izquierda. La parada está allí.	Yes, turn left. The stop is there.	a1	travel		formal	usted		ruta-autobus	Señor	follow-simple-directions
+000651	¿Está a más de diez minutos?	Is it more than ten minutes away?	a1	travel,numbers		formal	usted		ruta-autobus	Turista	check-distance
+000652	No, son unos cinco minutos.	No, it's about five minutes.	a1	travel,numbers		formal	usted		ruta-autobus	Señor	check-distance
+000653	Entendido, muchas gracias por la ayuda.	Understood, thank you very much for your help.	a1	greetings		formal	usted		ruta-autobus	Turista	thank-for-help
+
+# ── Unos pantalones nuevos (transfer 2) ──────────────────────────────────────
+000654	Buenas tardes, ¿puedo ayudarle?	Good afternoon, can I help you?	a1	shopping		formal	usted		ropa-pantalones	Dependienta	seek-clothing-item
+000655	Sí, busco unos pantalones azules.	Yes, I'm looking for blue trousers.	a1	shopping,clothes,colours					ropa-pantalones	Cliente	seek-clothing-item
+000656	¿Qué talla busca?	What size are you looking for?	a1	shopping		formal	usted		ropa-pantalones	Dependienta	handle-clothing-size
+000657	La talla treinta. ¿Puedo probarlos?	Size thirty. Can I try them on?	a1	shopping,numbers					ropa-pantalones	Cliente	handle-clothing-size,ask-to-try-on
+000658	Sí, puede probarlos allí.	Yes, you can try them on over there.	a1	shopping		formal	usted		ropa-pantalones	Dependienta	ask-to-try-on
+000659	Me quedan bien. Me los llevo. ¿Cuánto cuestan?	They fit me well. I'll take them. How much are they?	a1	shopping					ropa-pantalones	Cliente	choose-clothing-purchase,ask-understand-item-price
+000660	Cuestan treinta y cinco euros.	They cost thirty-five euros.	a1	shopping,numbers		formal	usted		ropa-pantalones	Dependienta	ask-understand-item-price
+
+# ── Comprar zapatos (transfer 3) ─────────────────────────────────────────────
+000661	Hola, ¿busca algo especial?	Hello, are you looking for something special?	a1	shopping		formal	usted		ropa-zapatos	Dependienta	seek-clothing-item
+000662	Busco unos zapatos negros.	I'm looking for black shoes.	a1	shopping,clothes,colours					ropa-zapatos	Cliente	seek-clothing-item
+000663	¿Qué número tiene?	What size are you?	a1	shopping,numbers		formal	usted		ropa-zapatos	Dependienta	handle-clothing-size
+000664	El cuarenta. Quiero probar estos, por favor.	Forty. I'd like to try these on, please.	a1	shopping,numbers					ropa-zapatos	Cliente	handle-clothing-size,ask-to-try-on
+000665	Claro. Puede sentarse aquí.	Of course. You can sit here.	a1	shopping		formal	usted		ropa-zapatos	Dependienta	ask-to-try-on
+000666	Son cómodos. ¿Cuánto cuestan?	They're comfortable. How much are they?	a1	shopping					ropa-zapatos	Cliente	choose-clothing-purchase,ask-understand-item-price
+000667	Cincuenta euros.	Fifty euros.	a1	shopping,numbers		formal	usted		ropa-zapatos	Dependienta	ask-understand-item-price
+000668	Muy bien, me los llevo.	All right, I'll take them.	a1	shopping					ropa-zapatos	Cliente	choose-clothing-purchase
+
+# ── Una habitación individual (transfer 2) ──────────────────────────────────
+000669	Buenas tardes, ¿tiene reserva?	Good afternoon, do you have a reservation?	a1	travel		formal	usted		hotel-individual	Recepcionista	confirm-hotel-reservation
+000670	Sí, una habitación individual para cuatro noches.	Yes, a single room for four nights.	a1	travel,numbers					hotel-individual	Cliente	confirm-hotel-reservation,give-stay-details
+000671	Aquí está su llave.	Here is your key.	a1	travel,home		formal	usted		hotel-individual	Recepcionista	give-stay-details
+000672	¿A qué hora es el desayuno?	What time is breakfast?	a1	travel,clock					hotel-individual	Cliente	ask-whats-included,understand-hotel-schedule
+000673	El desayuno es de siete a nueve.	Breakfast is from seven to nine.	a1	travel,clock		formal	usted		hotel-individual	Recepcionista	ask-whats-included,understand-hotel-schedule
+000674	¿Dónde está el restaurante?	Where is the restaurant?	a1	travel					hotel-individual	Cliente	locate-hotel-facility
+000675	Está junto a la entrada.	It's next to the entrance.	a1	travel		formal	usted		hotel-individual	Recepcionista	locate-hotel-facility
+
+# ── Una llegada de noche (transfer 3) ────────────────────────────────────────
+000676	Buenas noches. ¿Tiene una reserva con nosotros?	Good evening. Do you have a reservation with us?	a1	travel		formal	usted		hotel-noche	Recepcionista	confirm-hotel-reservation
+000677	Sí, para una noche, a nombre de García.	Yes, for one night, under the name García.	a1	travel,numbers					hotel-noche	Cliente	confirm-hotel-reservation,give-stay-details
+000678	Perfecto. Su habitación está en el tercer piso.	Perfect. Your room is on the third floor.	a1	travel		formal	usted		hotel-noche	Recepcionista	give-stay-details,locate-hotel-facility
+000679	¿El desayuno está incluido y a qué hora empieza?	Is breakfast included, and what time does it start?	a1	travel,clock					hotel-noche	Cliente	ask-whats-included,understand-hotel-schedule
+000680	Sí, empieza a las siete y media.	Yes, it starts at half past seven.	a1	travel,clock		formal	usted		hotel-noche	Recepcionista	ask-whats-included,understand-hotel-schedule
+000681	¿Dónde está el ascensor?	Where is the lift?	a1	travel					hotel-noche	Cliente	locate-hotel-facility
+000682	El ascensor está detrás de usted.	The lift is behind you.	a1	travel		formal	usted		hotel-noche	Recepcionista	locate-hotel-facility
+
+# ── Quedar para cenar (transfer 2) ───────────────────────────────────────────
+000683	Hola, ¿tienes planes para esta noche?	Hi, do you have plans for tonight?	a1	social		neutral	tu		planes-cena	Ana	open-social-planning
+000684	No. ¿Quieres cenar en el restaurante nuevo?	No. Do you want to have dinner at the new restaurant?	a1	social,restaurant		neutral	tu		planes-cena	Luis	suggest-social-activity,respond-to-suggestion
+000685	Sí, pero también quiero ver una película.	Yes, but I also want to see a film.	a1	social,entertainment		neutral	tu		planes-cena	Ana	respond-to-suggestion
+000686	Podemos cenar primero. ¿A qué hora quedamos?	We can have dinner first. What time shall we meet?	a1	social,clock					planes-cena	Luis	coordinate-plan-time
+000687	A las ocho, delante del restaurante.	At eight, in front of the restaurant.	a1	social,clock					planes-cena	Ana	coordinate-plan-time
+000688	Estupendo, nos vemos allí a las ocho.	Great, see you there at eight.	a1	social,clock					planes-cena	Luis	confirm-social-plan
+
+# ── Planes para el domingo (transfer 3) ──────────────────────────────────────
+000689	¿Qué quieres hacer el domingo?	What do you want to do on Sunday?	a1	social,days-of-week		neutral	tu		planes-domingo	Ana	open-social-planning
+000690	Podemos ir al museo por la mañana.	We can go to the museum in the morning.	a1	social,city					planes-domingo	Luis	suggest-social-activity
+000691	Buena idea, pero el museo abre a las diez.	Good idea, but the museum opens at ten.	a1	social,clock					planes-domingo	Ana	respond-to-suggestion,coordinate-plan-time
+000692	Entonces, ¿quedamos a las diez y media?	Then, shall we meet at half past ten?	a1	social,clock					planes-domingo	Luis	coordinate-plan-time
+000693	Sí. Después podemos comer en el centro.	Yes. Afterwards we can eat in the centre.	a1	social,restaurant					planes-domingo	Ana	respond-to-suggestion
+000694	Perfecto, nos vemos el domingo en el museo.	Perfect, see you on Sunday at the museum.	a1	social,days-of-week					planes-domingo	Luis	confirm-social-plan
+
+# ── Una mañana con prisa (transfer 2) ────────────────────────────────────────
+000695	Los lunes me despierto a las seis y media.	On Mondays I wake up at half past six.	a1	daily-routine,clock,days-of-week					mañana-ocupada		anchor-routine-in-time,describe-routine-actions,sequence-routine-events
+000696	Primero me ducho y me visto muy rápido.	First I shower and get dressed very quickly.	a1	daily-routine					mañana-ocupada		describe-routine-actions,sequence-routine-events
+000697	Después preparo café y desayuno en la cocina.	Afterwards I make coffee and have breakfast in the kitchen.	a1	daily-routine,food-drink					mañana-ocupada		describe-routine-actions,add-context-to-routine,sequence-routine-events
+000698	A las siete salgo de casa porque tengo una reunión.	At seven I leave home because I have a meeting.	a1	daily-routine,clock,work					mañana-ocupada		anchor-routine-in-time,add-context-to-routine,sequence-routine-events
+000699	Voy a la oficina en tren y llego antes de las ocho.	I go to the office by train and arrive before eight.	a1	daily-routine,travel,work,clock					mañana-ocupada		describe-routine-actions,connect-routine-to-destination
+
+# ── Mi mañana de domingo (transfer 3) ────────────────────────────────────────
+000700	El domingo empiezo la mañana tarde, a las diez.	On Sunday I start the morning late, at ten.	a1	daily-routine,clock,days-of-week					mañana-domingo		anchor-routine-in-time,describe-routine-actions,sequence-routine-events
+000701	Primero abro la ventana y preparo el desayuno.	First I open the window and make breakfast.	a1	daily-routine,home,food-drink					mañana-domingo		describe-routine-actions,add-context-to-routine,sequence-routine-events
+000702	Como fruta y leo el periódico en la cocina.	I eat fruit and read the newspaper in the kitchen.	a1	daily-routine,food-drink,home					mañana-domingo		describe-routine-actions,add-context-to-routine
+000703	Después llamo a un amigo y limpio un poco la casa.	Afterwards I call a friend and clean the house a little.	a1	daily-routine,social,home					mañana-domingo		describe-routine-actions,sequence-routine-events
+000704	A las doce salgo y voy al mercado con mi amigo.	At twelve I go out and go to the market with my friend.	a1	daily-routine,clock,shopping					mañana-domingo		anchor-routine-in-time,sequence-routine-events,connect-routine-to-destination

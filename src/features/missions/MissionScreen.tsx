@@ -9,7 +9,13 @@ import { Icon } from '../../components/Icon';
 import { TokenizedText } from '../../components/TokenizedText';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
-import { missionById, missionPassageForStage, type MissionStage } from '../../domain/missions';
+import {
+  missionById,
+  missionTransfers,
+  nextMissionTransfer,
+  type MissionStage,
+  type MissionTransferSupport,
+} from '../../domain/missions';
 import type { LearningItem, SkillId } from '../../domain/content';
 import type { SpeechComparison } from '../../domain/exercises';
 import {
@@ -37,7 +43,10 @@ export function MissionScreen() {
   const { services, preferences } = useServices();
   const mission = missionById(MISSIONS, course, missionId);
   const chosenStage: MissionStage = stage === 'use' ? 'use' : 'understand';
-  const passageLocalId = mission ? missionPassageForStage(mission, chosenStage) : undefined;
+  const [transferStep, setTransferStep] = useState<
+    ReturnType<typeof nextMissionTransfer> | null | undefined
+  >(chosenStage === 'use' ? undefined : null);
+  const passageLocalId = chosenStage === 'use' ? transferStep?.transfer.passage : mission?.passage;
   const requestedPassage = passageLocalId
     ? services.repository.passageByLocalId(passageLocalId)
     : undefined;
@@ -59,6 +68,45 @@ export function MissionScreen() {
   const available = passage !== undefined && items.some((item) => courseIds.has(item.id));
   const [skillMastery, setSkillMastery] = useState<ReadonlyMap<SkillId, MasteryRecord>>(new Map());
   const missionUseSession = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (chosenStage !== 'use' || !mission) return;
+    let cancelled = false;
+    setTransferStep(undefined);
+    missionUseSession.current = undefined;
+    void services.storage.attempts.recent(10_000).then((attempts) => {
+      if (cancelled) return;
+      const evidenced = new Set(
+        attempts
+          .filter((attempt) => attempt.sessionId?.startsWith(`mission:${mission.id}:use:`))
+          .map((attempt) => attempt.itemId),
+      );
+      const availableTransfers = missionTransfers(mission).filter((transfer) =>
+        services.repository.passageByLocalId(transfer.passage),
+      );
+      const complete = new Set<string>();
+      for (const transfer of availableTransfers) {
+        const candidate = services.repository.passageByLocalId(transfer.passage);
+        if (!candidate) continue;
+        const learnerItems = services.repository
+          .itemsOfPassage(candidate.id)
+          .filter(
+            (_, index) =>
+              mission.learnerSpeaker === undefined ||
+              candidate.speakers?.[index] === mission.learnerSpeaker,
+          );
+        if (learnerItems.length && learnerItems.every((item) => evidenced.has(item.id))) {
+          complete.add(transfer.passage);
+        }
+      }
+      setTransferStep(
+        nextMissionTransfer({ ...mission, transfers: availableTransfers }, complete) ?? null,
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [chosenStage, mission, services]);
 
   useEffect(() => {
     if (chosenStage === 'use' || !mission?.capabilities?.length) return;
@@ -89,8 +137,9 @@ export function MissionScreen() {
     async (item: LearningItem, grade: ReviewGrade, correct: boolean, latencyMs: number) => {
       if (!mission) return new Map<SkillId, MasteryRecord>();
       const now = Date.now();
+      const context = transferStep?.transfer.passage ?? mission.passage;
       const sessionId =
-        missionUseSession.current ?? `mission:${mission.id}:use:${now.toString(36)}`;
+        missionUseSession.current ?? `mission:${mission.id}:use:${context}:${now.toString(36)}`;
       missionUseSession.current = sessionId;
       const current = await services.storage.progress.get(item.id);
       const recorded = recordAttempt(
@@ -113,8 +162,16 @@ export function MissionScreen() {
       const progress = await services.storage.progress.all();
       return inferMastery(services.repository, progress).skills;
     },
-    [mission, services],
+    [mission, services, transferStep],
   );
+
+  if (chosenStage === 'use' && transferStep === undefined) {
+    return (
+      <AppShell title={mission?.title ?? 'Mission'} onBack="history" showNav={false}>
+        <p role="status">Preparing your next transfer challenge…</p>
+      </AppShell>
+    );
+  }
 
   if (!mission || !passage || !available) {
     return (
@@ -148,6 +205,10 @@ export function MissionScreen() {
           missionGoal={mission.goal}
           partner={mission.scenarioPartner}
           transfer={isTransfer}
+          {...(transferStep?.transfer.brief ? { transferBrief: transferStep.transfer.brief } : {})}
+          transferSupport={transferStep?.transfer.support ?? 'guided'}
+          transferPosition={(transferStep?.index ?? 0) + 1}
+          transferTotal={transferStep?.total ?? 1}
           capabilities={capabilities}
           {...(mission.learnerSpeaker ? { learnerSpeaker: mission.learnerSpeaker } : {})}
           items={items}
@@ -261,6 +322,10 @@ export function MissionScreen() {
     missionGoal,
     partner,
     transfer,
+    transferBrief,
+    transferSupport,
+    transferPosition,
+    transferTotal,
     capabilities: stageCapabilities,
     learnerSpeaker,
     items: stageItems,
@@ -272,6 +337,10 @@ export function MissionScreen() {
     readonly missionGoal: string;
     readonly partner: string;
     readonly transfer: boolean;
+    readonly transferBrief?: string;
+    readonly transferSupport: MissionTransferSupport;
+    readonly transferPosition: number;
+    readonly transferTotal: number;
     readonly capabilities: readonly MissionCapability[];
     readonly learnerSpeaker?: string;
     readonly items: readonly LearningItem[];
@@ -343,7 +412,9 @@ export function MissionScreen() {
           <MissionJourney current="use" />
           <section className={styles.complete} aria-labelledby={`${id}-complete`}>
             <Icon name="mastered" size="xl" />
-            <p className={styles.eyebrow}>Transfer complete</p>
+            <p className={styles.eyebrow}>
+              Transfer {transferPosition} of {transferTotal} complete
+            </p>
             <h2 id={`${id}-complete`}>{missionGoal}</h2>
             <p>{summary}</p>
             <p>{transferRecommendation(grades, learnerTurns)}</p>
@@ -351,7 +422,7 @@ export function MissionScreen() {
               <CapabilityList capabilities={useCapabilities} variant="evidence" />
             )}
             <Button variant="primary" block large onClick={onFinish}>
-              Finish mission
+              {transferPosition < transferTotal ? 'Continue mission' : 'Finish mission'}
             </Button>
           </section>
         </>
@@ -363,8 +434,13 @@ export function MissionScreen() {
         <MissionJourney current="use" />
         {transfer && (
           <section className={styles.transfer} aria-label="Transfer challenge">
-            <p className={styles.eyebrow}>Transfer challenge</p>
-            <p>Same real-world goal, but the details have changed. Use what you learned here.</p>
+            <p className={styles.eyebrow}>
+              Transfer {transferPosition} of {transferTotal}
+            </p>
+            <p>{transferBrief ?? 'The details have changed. Use what you learned here.'}</p>
+            {transferSupport === 'independent' && (
+              <p>Less scripting this time: use the intention, not an English sentence.</p>
+            )}
           </section>
         )}
         <div
@@ -384,7 +460,9 @@ export function MissionScreen() {
           </p>
           <h2 id={`${id}-turn`}>
             {learnerTurn
-              ? (translationOf(current) ?? `Respond to ${partner} in Spanish.`)
+              ? transferSupport === 'independent'
+                ? intentionCue(current)
+                : (translationOf(current) ?? `Respond to ${partner} in Spanish.`)
               : current.text}
           </h2>
 
@@ -475,6 +553,19 @@ export function MissionScreen() {
         </section>
       </>
     );
+  }
+
+  function intentionCue(item: LearningItem): string {
+    const intentions = (item.skills ?? []).flatMap((id) => {
+      const skill = services.repository.getSkill(id);
+      if (!skill || skill.kind !== 'function') return [];
+      return [
+        services.repository.translationOf(id, preferences.referenceLanguage)?.text ?? skill.label,
+      ];
+    });
+    return intentions.length
+      ? intentions.join(' · ')
+      : `Respond naturally to ${mission?.scenarioPartner ?? 'the situation'} in Spanish.`;
   }
 
   function speakAll(stageItems: readonly LearningItem[]) {

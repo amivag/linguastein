@@ -48,12 +48,13 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - Passages: connected texts and dialogues as containers over sentences that stay
   individually practisable, with a reading view and passage-scoped sessions
 - A six-mission A1 communicative journey (Understand → Practise → Use), with a
-  changed transfer context for every mission and a narration model alongside
-  the five dialogues
+  three-context transfer ladder for every mission. The first variations retain
+  meaning cues; the final rung uses communicative intentions, and a narration
+  model sits alongside the five dialogues
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,
-  627 sentences — 1,078 practisable items, 99% of sentence words linked to a lexeme
+  704 sentences — 1,155 practisable items, 98% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -82,7 +83,7 @@ The dataset work is briefed in full for a fresh session:
 
    The machinery for that pass is now in place, and it is only machinery: review
    is per item via `content/es/reviewed.tsv`, so a slice can be signed off without
-   reading all 1,043 at once, and `npm run review:data` reports the rows worth
+   reading all 1,155 at once, and `npm run review:data` reports the rows worth
    attention rather than asking anyone to scan the lot. Sign-off is pinned to the
    wording that was read, so an edit afterwards fails the build instead of
    inheriting the approval. **Nothing is signed off yet** — the pack is still
@@ -94,10 +95,10 @@ The dataset work is briefed in full for a fresh session:
    `fui`), infinitive+pronoun forms (`ayudarme`, `explicarme`) and conditionals
    (`quisiera`, `gustaría`), which is a sources gap rather than a wording one.
 
-1. **More passages** — 15 exist (8 texts, 7 dialogues); the target is 30–60. The
-   model, the authoring shape and the reading view are all in place, so this is
-   now content work, and it is also the cheapest route to the vocabulary
-   -recycling target. See the dataset task.
+1. **More passages** — the first target is met: 32 exist (11 texts, 21
+   dialogues). Continue toward 60 through new missions and higher-level reading,
+   rather than adding disconnected text only to raise the count. See the dataset
+   task.
 2. **Study mode for flashcards** — previous/next and no scoring are in place: a
    study session records nothing and reports a count rather than a score. What
    remains is the order toggle in the UI; `?order=` already carries it.
@@ -147,13 +148,14 @@ The dataset work is briefed in full for a fresh session:
    attach those functions, session URLs preserve them, mastery derives evidence,
    and the mission reports the capabilities it trains. Five missions use a
    dialogue model; describing a morning adds a connected-narration model for
-   time, detail, sequence and destination. Every mission now has one changed
-   transfer context. Use records `think-say` attempts into the same FSRS schedule
+   time, detail, sequence and destination. Every mission now has three ordered
+   transfer contexts. Use records `think-say` attempts into the same FSRS schedule
    as ordinary practice: speech results map to Good/Hard/Again, while reveal has
    an explicit Not yet/Partly/Got it fallback. Home advances only after every
-   learner turn has transfer evidence, and a communicative function cannot be
-   labelled Reliable until its practised items span at least two passages. Add
-   further contexts to make that reliability broader than the minimum gate.
+   learner turn in all three contexts has transfer evidence, and a communicative
+   function cannot be labelled Reliable until its practised items span at least
+   three passages. The final context uses intention cues instead of exact English
+   lines, making the evidence less vulnerable to translation-script recall.
 7. **Verb practice depth** — surface `VerbForm` records directly (person and
    tense drills), not only cloze inside sentences. Word inspection already
    shows the forms; practising them directly is the next step.

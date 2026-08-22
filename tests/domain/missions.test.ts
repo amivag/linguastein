@@ -5,7 +5,9 @@ import {
   missionCapabilitiesHaveEvidence,
   missionIsComplete,
   missionPassageForStage,
+  missionTransfers,
   missionsForCourse,
+  nextMissionTransfer,
 } from '../../src/domain/missions';
 
 describe('missions', () => {
@@ -48,6 +50,11 @@ describe('missions', () => {
     expect(missionPassageForStage(cafe, 'understand')).toBe('700009');
     expect(missionPassageForStage(cafe, 'practise')).toBe('700009');
     expect(missionPassageForStage(cafe, 'use')).toBe('700015');
+    expect(missionTransfers(cafe).map((transfer) => transfer.passage)).toEqual([
+      '700015',
+      '700021',
+      '700022',
+    ]);
     expect(cafe.capabilities).toEqual([
       'order-food-drink',
       'handle-add-on',
@@ -108,5 +115,23 @@ describe('missions', () => {
       'sequence-routine-events',
       'connect-routine-to-destination',
     ]);
+  });
+
+  it('selects the first unfinished transfer and revisits the final rung after completion', () => {
+    const cafe = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'cafe-order')!;
+
+    expect(nextMissionTransfer(cafe, new Set())).toMatchObject({ index: 0, total: 3 });
+    expect(nextMissionTransfer(cafe, new Set(['700015']))).toMatchObject({
+      index: 1,
+      total: 3,
+    });
+    expect(nextMissionTransfer(cafe, new Set(['700015', '700021']))).toMatchObject({
+      index: 2,
+      total: 3,
+    });
+    expect(nextMissionTransfer(cafe, new Set(['700015', '700021', '700022']))).toMatchObject({
+      index: 2,
+      total: 3,
+    });
   });
 });

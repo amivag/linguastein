@@ -11,7 +11,7 @@ import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { levelLabel } from '../../domain/content';
 import { summarise, type Attempt, type ProgressSummary } from '../../domain/progress';
-import { missionIsComplete, missionsForCourse } from '../../domain/missions';
+import { missionIsComplete, missionTransfers, missionsForCourse } from '../../domain/missions';
 import { DEFAULT_SESSION_MINUTES, type SessionSize } from '../../domain/sessions';
 import { FocusPicker } from '../practice/FocusPicker';
 import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
@@ -75,21 +75,26 @@ export function HomeScreen() {
       return passage && inCourse(passage) ? [{ definition, passage }] : [];
     });
     const unfinished = authored.findIndex(({ definition, passage }) => {
-      const usePassage =
-        services.repository.passageByLocalId(definition.challengePassage ?? definition.passage) ??
-        passage;
-      const useItems = services.repository.itemsOfPassage(usePassage.id);
-      const learnerItems = useItems.filter(
-        (_, index) =>
-          definition.learnerSpeaker === undefined ||
-          usePassage.speakers?.[index] === definition.learnerSpeaker,
-      );
       const useEvidence = missionUseItems.get(definition.id) ?? new Set<string>();
+      const transferPassages = missionTransfers(definition).flatMap((transfer) => {
+        const candidate = services.repository.passageByLocalId(transfer.passage);
+        return candidate ? [candidate] : [];
+      });
+      const usePassages = transferPassages.length ? transferPassages : [passage];
       const complete = definition.capabilities?.length
-        ? missionIsComplete(
-            learnerItems.map((item) => item.id),
-            useEvidence,
-          )
+        ? usePassages.every((usePassage) => {
+            const learnerItems = services.repository
+              .itemsOfPassage(usePassage.id)
+              .filter(
+                (_, index) =>
+                  definition.learnerSpeaker === undefined ||
+                  usePassage.speakers?.[index] === definition.learnerSpeaker,
+              );
+            return missionIsComplete(
+              learnerItems.map((item) => item.id),
+              useEvidence,
+            );
+          })
         : missionIsComplete(passage.items, practisedIds);
       return !complete;
     });
@@ -110,6 +115,31 @@ export function HomeScreen() {
       preferences.referenceLanguage,
     );
     const phrase = items[selected?.definition.spotlight ?? 0];
+    const transfers = selected
+      ? missionTransfers(selected.definition).filter((transfer) =>
+          services.repository.passageByLocalId(transfer.passage),
+        )
+      : [];
+    const useEvidence = selected
+      ? (missionUseItems.get(selected.definition.id) ?? new Set<string>())
+      : new Set<string>();
+    const completedTransfers = selected
+      ? transfers.filter((transfer) => {
+          const transferPassage = services.repository.passageByLocalId(transfer.passage);
+          if (!transferPassage) return false;
+          const learnerItems = services.repository
+            .itemsOfPassage(transferPassage.id)
+            .filter(
+              (_, index) =>
+                selected.definition.learnerSpeaker === undefined ||
+                transferPassage.speakers?.[index] === selected.definition.learnerSpeaker,
+            );
+          return missionIsComplete(
+            learnerItems.map((item) => item.id),
+            useEvidence,
+          );
+        }).length
+      : 0;
 
     return {
       id: selected?.definition.id,
@@ -123,6 +153,10 @@ export function HomeScreen() {
       estimatedMinutes: selected?.definition.estimatedMinutes ?? 5,
       position: selected ? authored.indexOf(selected) + 1 : 1,
       total: selected ? authored.length : 1,
+      stage:
+        completedTransfers > 0 || useEvidence.size > 0 ? ('use' as const) : ('understand' as const),
+      transferPosition: Math.min(completedTransfers + 1, Math.max(transfers.length, 1)),
+      transferTotal: Math.max(transfers.length, 1),
     };
   }, [course, missionUseItems, practisedIds, preferences.referenceLanguage, scope.ids, services]);
 
@@ -153,7 +187,11 @@ export function HomeScreen() {
     }
 
     if (mission) {
-      void navigate(mission.id ? missionPath(course, mission.id) : path(`read/${mission.localId}`));
+      void navigate(
+        mission.id
+          ? missionPath(course, mission.id, mission.stage)
+          : path(`read/${mission.localId}`),
+      );
       return;
     }
 
@@ -169,7 +207,9 @@ export function HomeScreen() {
           {reviewDue
             ? 'Ready for review'
             : mission
-              ? `Mission ${mission.position} of ${mission.total}`
+              ? mission.stage === 'use'
+                ? `Mission ${mission.position} · Transfer ${mission.transferPosition} of ${mission.transferTotal}`
+                : `Mission ${mission.position} of ${mission.total}`
               : "Today's mission"}
         </p>
         <div className={styles.missionHeading}>
@@ -208,7 +248,9 @@ export function HomeScreen() {
           <Icon name="play" />
           {reviewDue
             ? `Review ${due} due`
-            : `Begin mission · ${mission?.estimatedMinutes ?? 5} min`}
+            : mission?.stage === 'use'
+              ? `Continue transfer · ${mission.estimatedMinutes} min`
+              : `Begin mission · ${mission?.estimatedMinutes ?? 5} min`}
         </Button>
       </section>
 

@@ -6,6 +6,8 @@ import { useLocation } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
+import type { ItemId } from '../../src/domain/content';
+import { id } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
 
 describe('HomeScreen', () => {
@@ -44,6 +46,34 @@ describe('HomeScreen', () => {
     expect(screen.getByTestId('where')).toHaveTextContent(
       '/es/all/mission/morning-routine/understand',
     );
+  });
+
+  it('returns a learner with transfer evidence directly to Use', async () => {
+    const services = testServices();
+    await services.storage.attempts.append({
+      id: 'mission-transfer-attempt',
+      itemId: id<ItemId>('test-es:item:001'),
+      exerciseKind: 'think-say',
+      grade: 'good',
+      correct: true,
+      at: 1_700_000_000_000,
+      sessionId: 'mission:morning-routine:use:700001:test',
+    });
+    const user = userEvent.setup();
+    function Where() {
+      return <output data-testid="where">{useLocation().pathname}</output>;
+    }
+
+    renderWithServices(
+      <>
+        <HomeScreen />
+        <Where />
+      </>,
+      { route: '/es/all', services },
+    );
+
+    await user.click(await screen.findByRole('button', { name: /Continue transfer/ }));
+    expect(screen.getByTestId('where')).toHaveTextContent('/es/all/mission/morning-routine/use');
   });
 });
 

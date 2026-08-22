@@ -26,3 +26,15 @@
 700018	hotel-reto	dialogue	Otra llegada al hotel	Another hotel arrival	a1	travel
 700019	planes-reto	dialogue	Otros planes con amigos	Different plans with friends	a1	social
 700020	otra-mañana	text	Una mañana de sábado	A Saturday morning	a1	daily-routine
+700021	contacto-cafe	dialogue	Un desayuno en la cafetería	Breakfast at the café	a1	restaurant
+700022	cafe-libre	dialogue	Un pedido antes del trabajo	An order before work	a1	restaurant
+700023	ruta-museo	dialogue	El camino al museo	The way to the museum	a1	travel
+700024	ruta-autobus	dialogue	Buscando la parada	Looking for the bus stop	a1	travel
+700025	ropa-pantalones	dialogue	Unos pantalones nuevos	A new pair of trousers	a1	shopping
+700026	ropa-zapatos	dialogue	Comprar zapatos	Buying shoes	a1	shopping
+700027	hotel-individual	dialogue	Una habitación individual	A single room	a1	travel
+700028	hotel-noche	dialogue	Una llegada de noche	A late arrival	a1	travel
+700029	planes-cena	dialogue	Quedar para cenar	Making dinner plans	a1	social
+700030	planes-domingo	dialogue	Planes para el domingo	Sunday plans	a1	social
+700031	mañana-ocupada	text	Una mañana con prisa	A busy morning	a1	daily-routine
+700032	mañana-domingo	text	Mi mañana de domingo	My Sunday morning	a1	daily-routine

@@ -68,13 +68,13 @@ describe('MissionScreen', () => {
 
     await user.click(screen.getByRole('button', { name: 'Reveal the line' }));
     expect(screen.getByText('Tengo que trabajar.')).toBeInTheDocument();
-    expect(screen.queryByText('Transfer complete')).not.toBeInTheDocument();
+    expect(screen.queryByText('Transfer 1 of 1 complete')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Got it' }));
 
     await user.click(screen.getByRole('button', { name: 'Reveal the line' }));
     await user.click(screen.getByRole('button', { name: 'Not yet' }));
 
-    expect(await screen.findByText('Transfer complete')).toBeInTheDocument();
+    expect(await screen.findByText('Transfer 1 of 1 complete')).toBeInTheDocument();
     expect(
       screen.getByText('2 transfer attempts recorded: 1 solid, 0 partial, 1 not yet.'),
     ).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('MissionScreen', () => {
     expect(await screen.findByText('I have to go.')).toBeInTheDocument();
     const [attempt] = await services.storage.attempts.recent(1);
     expect(attempt).toMatchObject({ grade: 'good', correct: true, exerciseKind: 'think-say' });
-    expect(attempt?.sessionId).toMatch(/^mission:morning-routine:use:/);
+    expect(attempt?.sessionId).toMatch(/^mission:morning-routine:use:700001:/);
   });
 
   it('continues a finished tracked session into the Use stage', async () => {

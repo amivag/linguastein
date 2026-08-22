@@ -12,6 +12,17 @@ import { CEFR_LEVELS, LEVEL_SCOPE_ALL, type CefrLevel, type Course } from '../co
 export const MISSION_STAGES = ['understand', 'practise', 'use'] as const;
 export type MissionStage = (typeof MISSION_STAGES)[number];
 
+export type MissionTransferSupport = 'guided' | 'independent';
+
+export interface MissionTransfer {
+  /** Local passage id for this distinct real-world context. */
+  readonly passage: string;
+  /** Guided gives line-level meaning cues; independent gives intention cues. */
+  readonly support: MissionTransferSupport;
+  /** Short learner-facing explanation of what changed in this context. */
+  readonly brief: string;
+}
+
 export interface MissionDefinition {
   /** Stable, shareable curriculum id — deliberately independent of a pack id. */
   readonly id: string;
@@ -28,6 +39,11 @@ export interface MissionDefinition {
    * the same useful language so Use is not an exact replay of Understand.
    */
   readonly challengePassage?: string;
+  /**
+   * An ordered ladder of transfer contexts. Earlier rungs change details;
+   * later rungs reduce scripting and ask the learner to recombine the skill.
+   */
+  readonly transfers?: readonly MissionTransfer[];
   /** Local ids of communicative-function skills this mission gathers evidence for. */
   readonly capabilities?: readonly string[];
   /** Which line gives Home a useful preview. */
@@ -40,7 +56,37 @@ export interface MissionDefinition {
 }
 
 export function missionPassageForStage(mission: MissionDefinition, stage: MissionStage): string {
-  return stage === 'use' && mission.challengePassage ? mission.challengePassage : mission.passage;
+  return stage === 'use'
+    ? (missionTransfers(mission)[0]?.passage ?? mission.passage)
+    : mission.passage;
+}
+
+/** The authored ladder, with the original single challenge kept as a fallback. */
+export function missionTransfers(mission: MissionDefinition): readonly MissionTransfer[] {
+  if (mission.transfers?.length) return mission.transfers;
+  return mission.challengePassage
+    ? [
+        {
+          passage: mission.challengePassage,
+          support: 'guided',
+          brief: 'The details have changed. Use what you learned in this new situation.',
+        },
+      ]
+    : [];
+}
+
+/** First unfinished rung; after the ladder is complete, revisit its final challenge. */
+export function nextMissionTransfer(
+  mission: MissionDefinition,
+  completedPassages: ReadonlySet<string>,
+):
+  | { readonly transfer: MissionTransfer; readonly index: number; readonly total: number }
+  | undefined {
+  const transfers = missionTransfers(mission);
+  if (!transfers.length) return undefined;
+  const unfinished = transfers.findIndex((transfer) => !completedPassages.has(transfer.passage));
+  const index = unfinished >= 0 ? unfinished : transfers.length - 1;
+  return { transfer: transfers[index]!, index, total: transfers.length };
 }
 
 /** A mission advances once each named real-world capability has retrieval evidence. */

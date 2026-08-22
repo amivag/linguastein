@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { MISSIONS } from '../../src/app/missions';
 import { loadCatalog, loadPack, type DatasetSource } from '../../src/data/loaders';
 import { ContentRepository } from '../../src/domain/content';
-import { missionPassageForStage } from '../../src/domain/missions';
+import { missionPassageForStage, missionTransfers } from '../../src/domain/missions';
 
 const root = resolve(process.cwd(), 'public/packs');
 const source: DatasetSource = {
@@ -170,7 +170,7 @@ describe('shipped packs', () => {
     const { repository } = await loadAll();
     const missing = MISSIONS.flatMap((mission) => [
       missionPassageForStage(mission, 'understand'),
-      missionPassageForStage(mission, 'use'),
+      ...missionTransfers(mission).map((transfer) => transfer.passage),
     ]).filter((localId) => repository.passageByLocalId(localId) === undefined);
 
     expect(missing).toEqual([]);
@@ -182,15 +182,22 @@ describe('shipped packs', () => {
 
     for (const mission of MISSIONS) {
       if (!mission.capabilities?.length) continue;
-      for (const stage of ['understand', 'use'] as const) {
-        const passage = repository.passageByLocalId(missionPassageForStage(mission, stage));
+      const contexts = [
+        { name: 'understand', passage: mission.passage },
+        ...missionTransfers(mission).map((transfer, index) => ({
+          name: `transfer-${index + 1}`,
+          passage: transfer.passage,
+        })),
+      ];
+      for (const context of contexts) {
+        const passage = repository.passageByLocalId(context.passage);
         const used = new Set(
           passage ? repository.itemsOfPassage(passage.id).flatMap((item) => item.skills ?? []) : [],
         );
         for (const localId of mission.capabilities) {
           const skill = repository.skillByLocalId(localId);
           if (!skill || skill.kind !== 'function' || !used.has(skill.id)) {
-            missing.push(`${mission.id}/${stage}/${localId}`);
+            missing.push(`${mission.id}/${context.name}/${localId}`);
           }
         }
       }

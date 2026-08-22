@@ -87,7 +87,10 @@ export function inferMastery(
       skills,
       (id) => repository.getSkill(id)?.label ?? id,
       'skill',
-      (id) => (repository.getSkill(id)?.kind === 'function' ? 2 : 1),
+      // A taught example plus two changed situations is the minimum evidence
+      // for communicative reliability. Two contexts still permit a memorised
+      // model and one close variation to flatter the learner.
+      (id) => (repository.getSkill(id)?.kind === 'function' ? 3 : 1),
     ),
   };
 }

@@ -16,7 +16,23 @@ export const MISSIONS: readonly MissionDefinition[] = [
     title: 'Order at a café',
     goal: 'Order a drink, add something else and understand the price.',
     passage: '700009',
-    challengePassage: '700015',
+    transfers: [
+      {
+        passage: '700015',
+        support: 'guided',
+        brief: 'Order a different drink and respond when the waiter suggests an extra.',
+      },
+      {
+        passage: '700021',
+        support: 'guided',
+        brief: 'Change the order, decline one option and ask for the new total.',
+      },
+      {
+        passage: '700022',
+        support: 'independent',
+        brief: 'Handle a breakfast order from intention cues, without a line-by-line script.',
+      },
+    ],
     capabilities: [
       'order-food-drink',
       'handle-add-on',
@@ -36,7 +52,23 @@ export const MISSIONS: readonly MissionDefinition[] = [
     title: 'Ask for directions',
     goal: 'Ask where a place is and follow a short answer.',
     passage: '700011',
-    challengePassage: '700016',
+    transfers: [
+      {
+        passage: '700016',
+        support: 'guided',
+        brief: 'Find a different place and check how far away it is.',
+      },
+      {
+        passage: '700023',
+        support: 'guided',
+        brief: 'Ask for the museum and follow a route with two landmarks.',
+      },
+      {
+        passage: '700024',
+        support: 'independent',
+        brief: 'Find a bus stop from intention cues and confirm the distance.',
+      },
+    ],
     capabilities: [
       'ask-for-directions',
       'follow-simple-directions',
@@ -56,7 +88,23 @@ export const MISSIONS: readonly MissionDefinition[] = [
     title: 'Shop for clothes',
     goal: 'Ask for help, choose an item and handle the fitting-room exchange.',
     passage: '700010',
-    challengePassage: '700017',
+    transfers: [
+      {
+        passage: '700017',
+        support: 'guided',
+        brief: 'Choose a different item, size and colour.',
+      },
+      {
+        passage: '700025',
+        support: 'guided',
+        brief: 'Ask for trousers, try them on and decide whether to buy them.',
+      },
+      {
+        passage: '700026',
+        support: 'independent',
+        brief: 'Handle a shoe purchase from intention cues, including size and price.',
+      },
+    ],
     capabilities: [
       'seek-clothing-item',
       'handle-clothing-size',
@@ -77,7 +125,23 @@ export const MISSIONS: readonly MissionDefinition[] = [
     title: 'Check into a hotel',
     goal: 'Confirm a reservation and understand the essential check-in details.',
     passage: '700012',
-    challengePassage: '700018',
+    transfers: [
+      {
+        passage: '700018',
+        support: 'guided',
+        brief: 'Check in for a different stay and locate another hotel facility.',
+      },
+      {
+        passage: '700027',
+        support: 'guided',
+        brief: 'Confirm a single room, breakfast times and where to find reception services.',
+      },
+      {
+        passage: '700028',
+        support: 'independent',
+        brief: 'Complete a late check-in from intention cues and ask for essential details.',
+      },
+    ],
     capabilities: [
       'confirm-hotel-reservation',
       'give-stay-details',
@@ -98,7 +162,23 @@ export const MISSIONS: readonly MissionDefinition[] = [
     title: 'Make evening plans',
     goal: 'Suggest an activity, respond and agree on what to do.',
     passage: '700014',
-    challengePassage: '700019',
+    transfers: [
+      {
+        passage: '700019',
+        support: 'guided',
+        brief: 'Make a different plan for the afternoon.',
+      },
+      {
+        passage: '700029',
+        support: 'guided',
+        brief: 'Suggest dinner, respond to an alternative and agree on a time.',
+      },
+      {
+        passage: '700030',
+        support: 'independent',
+        brief: 'Arrange a weekend activity from intention cues and settle the details.',
+      },
+    ],
     capabilities: [
       'open-social-planning',
       'suggest-social-activity',
@@ -119,7 +199,23 @@ export const MISSIONS: readonly MissionDefinition[] = [
     title: 'Describe your morning',
     goal: 'Tell someone the main events in your morning in a connected sequence.',
     passage: '700001',
-    challengePassage: '700020',
+    transfers: [
+      {
+        passage: '700020',
+        support: 'guided',
+        brief: 'Describe a slower Saturday morning with a different destination.',
+      },
+      {
+        passage: '700031',
+        support: 'guided',
+        brief: 'Describe a busy weekday morning with clear sequence and times.',
+      },
+      {
+        passage: '700032',
+        support: 'independent',
+        brief: 'Build a connected Sunday routine from intention cues.',
+      },
+    ],
     capabilities: [
       'anchor-routine-in-time',
       'describe-routine-actions',

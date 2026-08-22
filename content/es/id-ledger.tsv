@@ -628,6 +628,83 @@
 000625	sentence	active	Después, limpio la casa y lavo la ropa.
 000626	sentence	active	A las once, salgo de casa y voy al parque.
 000627	sentence	active	Allí leo un libro.
+000628	sentence	active	Buenos días, ¿qué desea tomar?
+000629	sentence	active	Quiero un zumo de naranja, por favor.
+000630	sentence	active	¿Quiere algo para comer?
+000631	sentence	active	Sí, un poco de pan, pero sin mantequilla.
+000632	sentence	active	El desayuno cuesta cuatro euros.
+000633	sentence	active	Muy bien. Aquí tiene, gracias.
+000634	sentence	active	Hola, ¿qué quiere tomar esta mañana?
+000635	sentence	active	Un café solo y agua, por favor.
+000636	sentence	active	Tenemos pan y galletas. ¿Algo más?
+000637	sentence	active	Una galleta, gracias. ¿Cuánto cuesta todo?
+000638	sentence	active	Son cinco euros, por favor.
+000639	sentence	active	Perfecto, muchas gracias. Hasta luego.
+000640	sentence	active	Disculpe, ¿dónde está el museo?
+000641	sentence	active	Siga por esta calle y gire a la derecha en el banco.
+000642	sentence	active	¿Está antes o después de la plaza?
+000643	sentence	active	Está después de la plaza, cerca de la biblioteca.
+000644	sentence	active	¿Está muy lejos desde aquí?
+000645	sentence	active	No, está a ocho minutos.
+000646	sentence	active	Gracias por su ayuda.
+000647	sentence	active	Perdone, ¿dónde está la parada de autobús?
+000648	sentence	active	Vaya todo recto hasta el hotel.
+000649	sentence	active	¿Tengo que girar en el hotel?
+000650	sentence	active	Sí, gire a la izquierda. La parada está allí.
+000651	sentence	active	¿Está a más de diez minutos?
+000652	sentence	active	No, son unos cinco minutos.
+000653	sentence	active	Entendido, muchas gracias por la ayuda.
+000654	sentence	active	Buenas tardes, ¿puedo ayudarle?
+000655	sentence	active	Sí, busco unos pantalones azules.
+000656	sentence	active	¿Qué talla busca?
+000657	sentence	active	La talla treinta. ¿Puedo probarlos?
+000658	sentence	active	Sí, puede probarlos allí.
+000659	sentence	active	Me quedan bien. Me los llevo. ¿Cuánto cuestan?
+000660	sentence	active	Cuestan treinta y cinco euros.
+000661	sentence	active	Hola, ¿busca algo especial?
+000662	sentence	active	Busco unos zapatos negros.
+000663	sentence	active	¿Qué número tiene?
+000664	sentence	active	El cuarenta. Quiero probar estos, por favor.
+000665	sentence	active	Claro. Puede sentarse aquí.
+000666	sentence	active	Son cómodos. ¿Cuánto cuestan?
+000667	sentence	active	Cincuenta euros.
+000668	sentence	active	Muy bien, me los llevo.
+000669	sentence	active	Buenas tardes, ¿tiene reserva?
+000670	sentence	active	Sí, una habitación individual para cuatro noches.
+000671	sentence	active	Aquí está su llave.
+000672	sentence	active	¿A qué hora es el desayuno?
+000673	sentence	active	El desayuno es de siete a nueve.
+000674	sentence	active	¿Dónde está el restaurante?
+000675	sentence	active	Está junto a la entrada.
+000676	sentence	active	Buenas noches. ¿Tiene una reserva con nosotros?
+000677	sentence	active	Sí, para una noche, a nombre de García.
+000678	sentence	active	Perfecto. Su habitación está en el tercer piso.
+000679	sentence	active	¿El desayuno está incluido y a qué hora empieza?
+000680	sentence	active	Sí, empieza a las siete y media.
+000681	sentence	active	¿Dónde está el ascensor?
+000682	sentence	active	El ascensor está detrás de usted.
+000683	sentence	active	Hola, ¿tienes planes para esta noche?
+000684	sentence	active	No. ¿Quieres cenar en el restaurante nuevo?
+000685	sentence	active	Sí, pero también quiero ver una película.
+000686	sentence	active	Podemos cenar primero. ¿A qué hora quedamos?
+000687	sentence	active	A las ocho, delante del restaurante.
+000688	sentence	active	Estupendo, nos vemos allí a las ocho.
+000689	sentence	active	¿Qué quieres hacer el domingo?
+000690	sentence	active	Podemos ir al museo por la mañana.
+000691	sentence	active	Buena idea, pero el museo abre a las diez.
+000692	sentence	active	Entonces, ¿quedamos a las diez y media?
+000693	sentence	active	Sí. Después podemos comer en el centro.
+000694	sentence	active	Perfecto, nos vemos el domingo en el museo.
+000695	sentence	active	Los lunes me despierto a las seis y media.
+000696	sentence	active	Primero me ducho y me visto muy rápido.
+000697	sentence	active	Después preparo café y desayuno en la cocina.
+000698	sentence	active	A las siete salgo de casa porque tengo una reunión.
+000699	sentence	active	Voy a la oficina en tren y llego antes de las ocho.
+000700	sentence	active	El domingo empiezo la mañana tarde, a las diez.
+000701	sentence	active	Primero abro la ventana y preparo el desayuno.
+000702	sentence	active	Como fruta y leo el periódico en la cocina.
+000703	sentence	active	Después llamo a un amigo y limpio un poco la casa.
+000704	sentence	active	A las doce salgo y voy al mercado con mi amigo.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1100,3 +1177,15 @@
 700018	passage	active	Otra llegada al hotel
 700019	passage	active	Otros planes con amigos
 700020	passage	active	Una mañana de sábado
+700021	passage	active	Un desayuno en la cafetería
+700022	passage	active	Un pedido antes del trabajo
+700023	passage	active	El camino al museo
+700024	passage	active	Buscando la parada
+700025	passage	active	Unos pantalones nuevos
+700026	passage	active	Comprar zapatos
+700027	passage	active	Una habitación individual
+700028	passage	active	Una llegada de noche
+700029	passage	active	Quedar para cenar
+700030	passage	active	Planes para el domingo
+700031	passage	active	Una mañana con prisa
+700032	passage	active	Mi mañana de domingo

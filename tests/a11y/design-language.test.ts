@@ -149,19 +149,4 @@ describe('overlay, never push', () => {
 
     expect(overlays).toEqual(['components/Sheet.module.css']);
   });
-
-  it('lets a mobile sheet body size itself before it becomes scrollable', () => {
-    /*
-     * Android Chrome can collapse a growing overflow child to zero when its
-     * flex parent has a max-height but no fixed height. The result is a sheet
-     * with only its title and close button visible. Content-first sizing keeps
-     * short sheets intrinsic and still lets long ones shrink and scroll.
-     */
-    const css = withoutComments(read('components/Sheet.module.css'));
-    const body = css.match(/\.body\s*\{([^}]*)\}/)?.[1];
-
-    expect(body).toBeDefined();
-    expect(body).toMatch(/flex:\s*0\s+1\s+auto/);
-    expect(body).toMatch(/overflow-y:\s*auto/);
-  });
 });

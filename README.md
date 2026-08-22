@@ -6,7 +6,7 @@ engine is language-agnostic by design.
 **See it, hear it, repeat it, reveal it, review it** — in two minutes, on a
 phone, offline, with no account.
 
-Status: **0.1.0-alpha.1 — alpha.** The architecture, engine and practice loop are
+Status: **alpha.** The architecture, engine and practice loop are
 in place, with a generated A1–A2 Spanish pack of 1,242 practisable items awaiting
 editorial review (see [`docs/spec`](docs/spec) for the product specification).
 
@@ -102,6 +102,12 @@ high-value options appear first; learners can expand into real café orders,
 destinations, clothing needs, hotel details, reactions to plans, morning actions
 and answers about how they feel. Speech practice accepts any context-appropriate
 response rather than demanding one theatre-script line.
+
+**Variation Labs** go one step further in every mission: learners swap meaningful
+slots, listen to the newly composed sentence, then hide the Spanish and produce
+it from meaning. The 314 combinations cover wellbeing, café orders, directions,
+clothes, hotel stays, making plans and morning routines. They remain transient
+study material rather than fake progress-bearing content records.
 
 ### Courses are in the URL
 

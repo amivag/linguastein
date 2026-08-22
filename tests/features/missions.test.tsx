@@ -114,6 +114,19 @@ describe('MissionScreen', () => {
 
     await user.click(screen.getByRole('button', { name: 'Show 5 more natural responses' }));
     expect(screen.getByText('De momento, solo un café.')).toBeInTheDocument();
+
+    expect(screen.getByRole('region', { name: 'Variation lab' })).toBeInTheDocument();
+    await user.selectOptions(screen.getByLabelText('How to begin'), 'para-mi');
+    await user.selectOptions(screen.getByLabelText('Drink'), 'agua');
+    await user.selectOptions(screen.getByLabelText('Finish'), 'plain');
+    expect(screen.getByText('Para mí, un agua.')).toBeInTheDocument();
+    expect(screen.getByText('For me, a water.')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Practise from meaning' }));
+    expect(screen.queryByText('Para mí, un agua.')).not.toBeInTheDocument();
+    expect(screen.getByText(/Spanish hidden/)).toHaveAttribute('role', 'status');
+    await user.click(screen.getByRole('button', { name: 'Show Spanish' }));
+    expect(screen.getByText('Para mí, un agua.')).toBeInTheDocument();
   });
 
   it('accepts a different natural response during mission transfer', async () => {

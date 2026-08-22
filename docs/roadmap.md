@@ -56,6 +56,11 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   morning actions. Each reveals alternatives progressively with meaning and
   pragmatic nuance, and accepts any context-appropriate answer through the
   existing speech seam instead of grading against one scripted line
+- Variation Labs across all seven missions: pure generators recombine ordered
+  slots into 314 valid study phrases covering wellbeing, café orders,
+  directions, clothes, hotel stays, plans and routines. Learners can hear and
+  produce them from meaning without generating fake stable ids or progress;
+  the evidence-bearing palette sentences remain ordinary content items
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,

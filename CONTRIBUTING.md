@@ -1,6 +1,6 @@
 # Contributing
 
-Linguastein is in **alpha** (`0.1.0-alpha.1`). The data model, the stored shape of
+Linguastein is in **alpha**. The data model, the stored shape of
 learner progress and the exercise mix may all change drastically, so before
 investing in a large change, open an issue first — it may be about to move.
 

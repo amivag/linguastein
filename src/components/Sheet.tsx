@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from './Button';
 import { Icon } from './Icon';
 import { useFocusTrap } from './useFocusTrap';
@@ -88,7 +89,7 @@ export function Sheet({
   // with it. Named variants keep the two apart at the point it matters.
   const anchored = anchor === 'header' ? styles.anchorHeader : styles.anchorCenter;
 
-  return (
+  return createPortal(
     <div className={`${styles.overlay} ${anchored}`}>
       {/* Not a button: a screen reader user leaves by Escape or by the close
           control, and an extra focusable stop before the dialog's own content
@@ -118,6 +119,7 @@ export function Sheet({
 
         <div className={styles.body}>{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

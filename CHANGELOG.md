@@ -15,12 +15,21 @@ in the pack's own counts.
 
 ## Unreleased
 
-`0.1.0-alpha.1` — an alpha, untagged. Everything below is what a first release
-would contain. Breaking changes are expected between alphas, including to stored
-learner state, and are not called out individually until 0.1.0 is tagged.
+## 0.1.0-alpha.2 — 2026-08-22
+
+The first tagged alpha. Breaking changes are expected between alphas, including
+to stored learner state, and are not called out individually until 0.1.0 is
+tagged.
 
 ### Added
 
+- **Response palettes and Variation Labs.** All seven missions teach several
+  natural ways to perform their central communicative move instead of one
+  theatre-script line. Learners can also swap meaningful slots to generate 314
+  valid study phrases across wellbeing, café orders, directions, clothes, hotel
+  stays, plans and routines; then listen, hide the Spanish and produce the result
+  from meaning. Generated combinations remain transient rather than acquiring
+  fake progress-bearing item ids.
 - **Two sections: Study and Test.** The nav offered five verbs — Practice, Read,
   Browse — that gave no clue which of the two things a learner was about to do,
   and every entry point on the home screen started a session: six ways to be
@@ -166,6 +175,10 @@ learner state, and are not called out individually until 0.1.0 is tagged.
 
 ### Fixed
 
+- **Android Chrome sheets no longer open with an empty body.** Shared sheets are
+  portalled outside the sticky header's `backdrop-filter` stacking context, so
+  their viewport overlay and z-index apply to the whole screen rather than only
+  the header strip.
 - **Recent sessions showed another language's history.** Every other panel on
   Progress is narrowed to the course, because a progress row carries an item id
   and an item id carries its pack. A finished session is counts and timestamps,

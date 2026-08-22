@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MISSIONS } from '../../app/missions';
+import { MISSION_VARIATIONS } from '../../app/mission-variations';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
@@ -17,7 +18,12 @@ import {
   type MissionTransferSupport,
 } from '../../domain/missions';
 import type { LearningItem, SkillId } from '../../domain/content';
-import type { SpeechComparison } from '../../domain/exercises';
+import {
+  defaultVariationSelections,
+  renderVariation,
+  type SpeechComparison,
+  type VariationPattern,
+} from '../../domain/exercises';
 import {
   inferMastery,
   recordAttempt,
@@ -179,6 +185,7 @@ export function MissionScreen() {
       }),
     [mission, preferences.referenceLanguage, services.repository],
   );
+  const variationPatterns = mission ? (MISSION_VARIATIONS[mission.id] ?? []) : [];
 
   const recordMissionUse = useCallback(
     async (item: LearningItem, grade: ReviewGrade, correct: boolean, latencyMs: number) => {
@@ -243,6 +250,7 @@ export function MissionScreen() {
           passageTitle={passage.title}
           capabilities={capabilities}
           responsePalettes={responsePalettes}
+          variationPatterns={variationPatterns}
           items={items}
           {...(passage.speakers ? { speakers: passage.speakers } : {})}
           onPractise={() => void navigate(missionPracticePath(course, mission))}
@@ -274,8 +282,12 @@ export function MissionScreen() {
   }
 
   function speak(item: LearningItem) {
+    speakText(item.text);
+  }
+
+  function speakText(text: string) {
     void services.audio.speak({
-      text: item.text,
+      text,
       locale: preferences.pronunciationLocale,
       ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
     });
@@ -287,6 +299,7 @@ export function MissionScreen() {
     passageTitle,
     capabilities: stageCapabilities,
     responsePalettes: stagePalettes,
+    variationPatterns: stageVariations,
     items: stageItems,
     speakers,
     onPractise,
@@ -296,6 +309,7 @@ export function MissionScreen() {
     readonly passageTitle: string;
     readonly capabilities: readonly MissionCapability[];
     readonly responsePalettes: readonly ResolvedResponsePalette[];
+    readonly variationPatterns: readonly VariationPattern[];
     readonly items: readonly LearningItem[];
     readonly speakers?: readonly string[];
     readonly onPractise: () => void;
@@ -322,6 +336,14 @@ export function MissionScreen() {
             palettes={stagePalettes}
             language={course.language}
             onListen={speak}
+          />
+        )}
+
+        {stageVariations.length > 0 && (
+          <VariationLabPanel
+            patterns={stageVariations}
+            language={course.language}
+            onListen={speakText}
           />
         )}
 
@@ -431,18 +453,19 @@ export function MissionScreen() {
     const activePalette = current
       ? stagePalettes.find((palette) => current.skills?.includes(palette.capability))
       : undefined;
-    const acceptedResponses = activePalette && current
-      ? [
-          ...new Set([
-            current.text,
-            ...activePalette.responses
-              .filter(({ item }) => responseFitsTurn(item, current))
-              .map(({ item }) => item.text),
-          ]),
-        ].filter(Boolean)
-      : current
-        ? [current.text]
-        : [];
+    const acceptedResponses =
+      activePalette && current
+        ? [
+            ...new Set([
+              current.text,
+              ...activePalette.responses
+                .filter(({ item }) => responseFitsTurn(item, current))
+                .map(({ item }) => item.text),
+            ]),
+          ].filter(Boolean)
+        : current
+          ? [current.text]
+          : [];
 
     useEffect(() => {
       startedAt.current = Date.now();
@@ -754,6 +777,109 @@ function ResponsePalettePanel({
         );
       })}
     </section>
+  );
+}
+
+function VariationLabPanel({
+  patterns,
+  language,
+  onListen,
+}: {
+  readonly patterns: readonly VariationPattern[];
+  readonly language: string;
+  readonly onListen: (text: string) => void;
+}) {
+  return (
+    <section className={styles.variationPanel} aria-label="Variation lab">
+      <div>
+        <p className={styles.eyebrow}>Variation lab</p>
+        <h3>Keep the pattern. Change the message.</h3>
+        <p>Swap meaningful pieces, then practise the new sentence from its meaning.</p>
+      </div>
+      {patterns.map((pattern) => (
+        <VariationBuilder
+          key={pattern.id}
+          pattern={pattern}
+          language={language}
+          onListen={onListen}
+        />
+      ))}
+    </section>
+  );
+}
+
+function VariationBuilder({
+  pattern,
+  language,
+  onListen,
+}: {
+  readonly pattern: VariationPattern;
+  readonly language: string;
+  readonly onListen: (text: string) => void;
+}) {
+  const ids = useId();
+  const [selections, setSelections] = useState<Readonly<Record<string, string>>>(() =>
+    defaultVariationSelections(pattern),
+  );
+  const [hidden, setHidden] = useState(false);
+  const variation = renderVariation(pattern, selections);
+
+  return (
+    <div className={styles.variationBuilder}>
+      <div>
+        <h4>{pattern.title}</h4>
+        <p>{pattern.cue}</p>
+      </div>
+
+      <div className={styles.variationChoices}>
+        {pattern.slots.map((slot) => {
+          const id = `${ids}-${slot.id}`;
+          return (
+            <div key={slot.id} className={styles.variationField}>
+              <label htmlFor={id}>{slot.label}</label>
+              <select
+                id={id}
+                value={selections[slot.id]}
+                onChange={(event) =>
+                  setSelections((current) => ({
+                    ...current,
+                    [slot.id]: event.target.value,
+                  }))
+                }
+              >
+                {slot.choices.map((choice) => (
+                  <option key={choice.id} value={choice.id}>
+                    {choice.target}
+                  </option>
+                ))}
+              </select>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className={styles.variationResult}>
+        <span>{variation.reference}</span>
+        {hidden ? (
+          <strong role="status">Spanish hidden — say it from the meaning.</strong>
+        ) : (
+          <strong role="status" lang={language}>
+            {variation.target}
+          </strong>
+        )}
+      </div>
+
+      <div className={styles.variationActions}>
+        <Button onClick={() => onListen(variation.target)}>
+          <Icon name="speak" /> Listen
+        </Button>
+        <Button aria-pressed={hidden} onClick={() => setHidden((current) => !current)}>
+          {hidden ? 'Show Spanish' : 'Practise from meaning'}
+        </Button>
+      </div>
+
+      {hidden && <SpeakCheck key={variation.target} expected={variation.target} />}
+    </div>
   );
 }
 

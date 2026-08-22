@@ -74,6 +74,19 @@ describe('the voice control in the header', () => {
     expect(within(menu).getByRole('button', { name: 'Test voice' })).toBeInTheDocument();
   });
 
+  it('escapes the sticky header stacking context', async () => {
+    renderWithServices(<HomeScreen />, {
+      services: testServices({ audio: speakingAudio() }),
+    });
+
+    const { menu } = await openMenu();
+
+    // `backdrop-filter` makes the sticky header a containing block for fixed
+    // descendants on Chrome. The overlay must be portalled directly to body or
+    // the dialog is visually clipped to the header even though its DOM exists.
+    expect(menu.parentElement?.parentElement).toBe(document.body);
+  });
+
   it('writes a voice change to the same preference Settings writes', async () => {
     const changes: Partial<Preferences>[] = [];
     renderWithServices(<HomeScreen />, {

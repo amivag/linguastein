@@ -95,7 +95,11 @@
   display: grid;
   align-content: start;
   gap: var(--space-3);
-  flex: 1 1 auto;
+  /* Size from the content first, then shrink into the viewport cap. A growing
+     scroll child inside a flex parent with only `max-height` can resolve to
+     zero height in Android Chrome, leaving a perfectly visible sheet header
+     above an apparently empty body. */
+  flex: 0 1 auto;
   min-height: 0;
   overflow-y: auto;
   /* A flick that runs out of sheet must not carry on scrolling the page

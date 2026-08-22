@@ -47,10 +47,13 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   moves, and a deleted row's id is retired rather than reused
 - Passages: connected texts and dialogues as containers over sentences that stay
   individually practisable, with a reading view and passage-scoped sessions
+- A six-mission A1 communicative journey (Understand → Practise → Use), with the
+  café mission now testing transfer against a second dialogue rather than replaying
+  the exchange it taught
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,
-  592 sentences — 1,043 practisable items, 99% of sentence words linked to a lexeme
+  598 sentences — 1,049 practisable items, 99% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -63,6 +66,7 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - Reference-language architecture (English is the first, not the only)
 - WCAG 2.2 AA accessibility, enforced by axe and contrast tests in CI
 - Switchable dark/light themes on a modular, extensible token system
+- Small, Medium and Large reading sizes, persisted independently of colour theme
 - Responsive from phone to desktop, with pointer-aware interaction
 - Optional speech-input pronunciation check on speaking exercises
 - AI seam plus a learner-context builder (no vendor, no network)
@@ -90,7 +94,7 @@ The dataset work is briefed in full for a fresh session:
    `fui`), infinitive+pronoun forms (`ayudarme`, `explicarme`) and conditionals
    (`quisiera`, `gustaría`), which is a sources gap rather than a wording one.
 
-1. **More passages** — 14 exist (8 texts, 6 dialogues); the target is 30–60. The
+1. **More passages** — 15 exist (8 texts, 7 dialogues); the target is 30–60. The
    model, the authoring shape and the reading view are all in place, so this is
    now content work, and it is also the cheapest route to the vocabulary
    -recycling target. See the dataset task.
@@ -159,6 +163,10 @@ The dataset work is briefed in full for a fresh session:
 9. **Offline dataset caching** — verify precache coverage and add a visible
    "available offline" state.
 10. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
+11. **Contrast preference and theme families** — keep palette, reading size and
+    contrast as independent axes. Add a manual Normal / High contrast choice,
+    optionally resolving `system` through `prefers-contrast`, before introducing
+    additional light and dark palettes. See [the theming note](theming.md#appearance-axes-stay-separate).
 
 ## Later (architecture allows, code does not attempt)
 

@@ -75,6 +75,11 @@ Spanish is set in `--font-display` and set large. The furniture — labels, coun
 hints, nav — stays small and quiet. The learner's eye should land on the language,
 not on the interface.
 
+“Quiet” must not mean difficult to read. Settings offers Small (the original
+scale), Medium and Large. The choice scales the complete rem-based type hierarchy
+from the root and stays independent of the colour theme; isolated per-component
+font overrides would make the interface internally inconsistent.
+
 Both faces resolve from what the device already has. No webfont, so nothing can
 fail to load on a plane, and the offline-first contract stays intact.
 
@@ -117,6 +122,7 @@ duration and a named easing outside `primitives.css`.
 src/styles/primitives.css       everything that is not colour: space, shape, type,
                                 motion, icon sizes, z-index, nav dimensions
 src/styles/themes/<id>.css      colour roles and shadows, one file per theme
+src/styles/reading-size.ts      the independent Small / Medium / Large scale
 src/styles/surfaces.module.css  shared recipes: card, cardPrimary, cardInteractive,
                                 well, sectionLabel, listReset — composed into a
                                 screen's own classes with `composes`

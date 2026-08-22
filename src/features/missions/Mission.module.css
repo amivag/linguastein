@@ -70,6 +70,14 @@
   color: var(--color-text-muted);
 }
 
+.transfer {
+  composes: well from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+}
+
 .eyebrow {
   color: var(--color-accent);
   font-size: var(--text-sm);

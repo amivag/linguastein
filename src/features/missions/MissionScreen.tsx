@@ -9,7 +9,7 @@ import { Icon } from '../../components/Icon';
 import { TokenizedText } from '../../components/TokenizedText';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
-import { missionById, type MissionStage } from '../../domain/missions';
+import { missionById, missionPassageForStage, type MissionStage } from '../../domain/missions';
 import type { LearningItem } from '../../domain/content';
 import { SpeakCheck } from '../practice/SpeakCheck';
 import { sessionPath } from '../practice/session-url';
@@ -23,7 +23,18 @@ export function MissionScreen() {
   const { course, filter, path } = useCourse();
   const { services, preferences } = useServices();
   const mission = missionById(MISSIONS, course, missionId);
-  const passage = mission ? services.repository.passageByLocalId(mission.passage) : undefined;
+  const chosenStage: MissionStage = stage === 'use' ? 'use' : 'understand';
+  const passageLocalId = mission ? missionPassageForStage(mission, chosenStage) : undefined;
+  const requestedPassage = passageLocalId
+    ? services.repository.passageByLocalId(passageLocalId)
+    : undefined;
+  // A curriculum may run against a compatible pack version that predates its
+  // optional transfer passage. Widen to the taught exchange instead of making
+  // the whole mission unavailable.
+  const passage =
+    requestedPassage ??
+    (mission ? services.repository.passageByLocalId(mission.passage) : undefined);
+  const isTransfer = requestedPassage !== undefined && passageLocalId !== mission?.passage;
   const items = useMemo(
     () => (passage ? services.repository.itemsOfPassage(passage.id) : []),
     [passage, services.repository],
@@ -33,7 +44,6 @@ export function MissionScreen() {
     [filter, services.repository],
   );
   const available = passage !== undefined && items.some((item) => courseIds.has(item.id));
-  const chosenStage: MissionStage = stage === 'use' ? 'use' : 'understand';
 
   if (!mission || !passage || !available) {
     return (
@@ -75,6 +85,7 @@ export function MissionScreen() {
           missionId={mission.id}
           missionGoal={mission.goal}
           partner={mission.scenarioPartner}
+          transfer={isTransfer}
           {...(mission.learnerSpeaker ? { learnerSpeaker: mission.learnerSpeaker } : {})}
           items={items}
           {...(passage.speakers ? { speakers: passage.speakers } : {})}
@@ -113,9 +124,7 @@ export function MissionScreen() {
   }) {
     const [showMeanings, setShowMeanings] = useState(false);
     const words = useWordSelection();
-    const openItem = words.item
-      ? stageItems.find((item) => item.id === words.item)
-      : undefined;
+    const openItem = words.item ? stageItems.find((item) => item.id === words.item) : undefined;
 
     return (
       <>
@@ -130,10 +139,7 @@ export function MissionScreen() {
           <Button onClick={() => void speakAll(stageItems)}>
             <Icon name="speak" /> Listen to all
           </Button>
-          <Button
-            onClick={() => setShowMeanings((shown) => !shown)}
-            aria-pressed={showMeanings}
-          >
+          <Button onClick={() => setShowMeanings((shown) => !shown)} aria-pressed={showMeanings}>
             {showMeanings ? 'Hide meaning' : 'Show meaning'}
           </Button>
         </div>
@@ -184,6 +190,7 @@ export function MissionScreen() {
     missionId: id,
     missionGoal,
     partner,
+    transfer,
     learnerSpeaker,
     items: stageItems,
     speakers,
@@ -192,6 +199,7 @@ export function MissionScreen() {
     readonly missionId: string;
     readonly missionGoal: string;
     readonly partner: string;
+    readonly transfer: boolean;
     readonly learnerSpeaker?: string;
     readonly items: readonly LearningItem[];
     readonly speakers?: readonly string[];
@@ -234,6 +242,12 @@ export function MissionScreen() {
     return (
       <>
         <MissionJourney current="use" />
+        {transfer && (
+          <section className={styles.transfer} aria-label="Transfer challenge">
+            <p className={styles.eyebrow}>Transfer challenge</p>
+            <p>Same real-world goal, but the details have changed. Respond to this new exchange.</p>
+          </section>
+        )}
         <div
           className={styles.roleProgress}
           role="progressbar"
@@ -250,7 +264,9 @@ export function MissionScreen() {
             {learnerTurn ? 'Your turn' : `${speaker ?? partner} says`}
           </p>
           <h2 id={`${id}-turn`}>
-            {learnerTurn ? (translationOf(current) ?? `Respond to ${partner} in Spanish.`) : current.text}
+            {learnerTurn
+              ? (translationOf(current) ?? `Respond to ${partner} in Spanish.`)
+              : current.text}
           </h2>
 
           {learnerTurn ? (

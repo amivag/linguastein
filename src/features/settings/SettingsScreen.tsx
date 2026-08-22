@@ -5,6 +5,7 @@ import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
 import { ThemeToggle } from '../../components/ThemeToggle';
+import { ReadingSizeControl } from '../../components/ReadingSizeControl';
 import { VoiceSettings } from '../../components/VoiceSettings';
 import { REFERENCE_LANGUAGES } from '../../domain/content';
 import { APP } from '../../app/identity';
@@ -114,6 +115,13 @@ export function SettingsScreen() {
           <ThemeToggle />
           <span className={styles.hint}>
             System follows your device setting and switches with it.
+          </span>
+        </div>
+        <div className={styles.field}>
+          <span className={styles.label}>Text size</span>
+          <ReadingSizeControl />
+          <span className={styles.hint}>
+            Changes text throughout the app. It is separate from your colour theme.
           </span>
         </div>
       </section>

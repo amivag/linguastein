@@ -1,10 +1,10 @@
 /**
  * A mission is curriculum sequencing, not an exercise or a copy of content.
  *
- * It points at one connected passage and says what communicative outcome that
- * material serves. The passage keeps owning every sentence; the exercise engine
- * keeps deriving practice from those sentences; learner progress keeps pointing
- * only at item ids. A mission merely turns those existing systems into a journey.
+ * It points at connected passages and says what communicative outcome that
+ * material serves. Each passage keeps owning its sentences; the exercise engine
+ * keeps deriving practice from them; learner progress keeps pointing only at
+ * item ids. A mission merely turns those existing systems into a journey.
  */
 
 import { CEFR_LEVELS, LEVEL_SCOPE_ALL, type CefrLevel, type Course } from '../content';
@@ -23,6 +23,11 @@ export interface MissionDefinition {
   readonly goal: string;
   /** Local passage id, resolved against whichever compatible pack is loaded. */
   readonly passage: string;
+  /**
+   * A parallel situation used only for transfer after practice. It recombines
+   * the same useful language so Use is not an exact replay of Understand.
+   */
+  readonly challengePassage?: string;
   /** Which line gives Home a useful preview. */
   readonly spotlight: number;
   readonly estimatedMinutes: number;
@@ -32,12 +37,17 @@ export interface MissionDefinition {
   readonly scenarioPartner: string;
 }
 
+export function missionPassageForStage(mission: MissionDefinition, stage: MissionStage): string {
+  return stage === 'use' && mission.challengePassage ? mission.challengePassage : mission.passage;
+}
+
 /** Missions that belong in a course, in their authored dependency order. */
 export function missionsForCourse(
   catalog: readonly MissionDefinition[],
   course: Course,
 ): readonly MissionDefinition[] {
-  const ceiling = course.level === LEVEL_SCOPE_ALL ? Number.POSITIVE_INFINITY : CEFR_LEVELS.indexOf(course.level);
+  const ceiling =
+    course.level === LEVEL_SCOPE_ALL ? Number.POSITIVE_INFINITY : CEFR_LEVELS.indexOf(course.level);
 
   return catalog
     .filter(

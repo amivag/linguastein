@@ -18,9 +18,9 @@
     <link rel="apple-touch-icon" href="/icons/icon.svg" />
     <title>%APP_NAME% — %APP_TAGLINE%</title>
     <script>
-      // Resolve the theme before first paint, so there is no flash of the wrong
-      // one. `%APP_ID%` is substituted by the build from src/app/identity.ts, so
-      // this key cannot drift from the one src/styles/themes.ts derives.
+      // Resolve appearance before first paint, so neither colour nor type size
+      // flashes. `%APP_ID%` is substituted from src/app/identity.ts, so these
+      // cache keys cannot drift from the application identity.
       (function () {
         try {
           var stored = localStorage.getItem('%APP_ID%.theme') || 'system';
@@ -28,8 +28,13 @@
             stored === 'dark' ||
             (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
           document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+          var readingSize = localStorage.getItem('%APP_ID%.reading-size') || 'small';
+          document.documentElement.dataset.readingSize = /^(small|medium|large)$/.test(readingSize)
+            ? readingSize
+            : 'small';
         } catch (error) {
           document.documentElement.dataset.theme = 'dark';
+          document.documentElement.dataset.readingSize = 'small';
         }
       })();
     </script>

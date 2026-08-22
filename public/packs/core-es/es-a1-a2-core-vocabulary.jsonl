@@ -95,7 +95,7 @@
 {"id":"core-es:item:500094","pack":"core-es","type":"word","text":"pastel","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:pastel"],"examples":["core-es:item:000162"]}
 {"id":"core-es:item:500095","pack":"core-es","type":"word","text":"helado","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:helado"],"examples":["core-es:item:000164"]}
 {"id":"core-es:item:500096","pack":"core-es","type":"word","text":"chocolate","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:chocolate"],"examples":["core-es:item:000164"]}
-{"id":"core-es:item:500097","pack":"core-es","type":"word","text":"galleta","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:galleta"],"examples":["core-es:item:000165","core-es:item:000559"]}
+{"id":"core-es:item:500097","pack":"core-es","type":"word","text":"galleta","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:galleta"],"examples":["core-es:item:000165","core-es:item:000559","core-es:item:000595"]}
 {"id":"core-es:item:500098","pack":"core-es","type":"word","text":"postre","level":"a1","topics":["restaurant"],"lexemes":["core-es:lexeme:postre"],"examples":["core-es:item:000248","core-es:item:000290"]}
 {"id":"core-es:item:500099","pack":"core-es","type":"word","text":"hambre","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:hambre"],"examples":["core-es:item:000026"]}
 {"id":"core-es:item:500100","pack":"core-es","type":"word","text":"sed","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:sed"],"examples":["core-es:item:000027"]}

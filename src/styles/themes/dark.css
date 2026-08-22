@@ -25,7 +25,9 @@
   /* Boundaries of interactive controls: 3:1 against the surface (WCAG 1.4.11). */
   --color-border-strong: #697386;
   --color-text: #f2f4f8;
-  --color-text-muted: #9aa3b2;
+  /* Comfortably above the AA floor: this role carries explanations throughout
+     the learning loop, so merely passing at small sizes still felt subdued. */
+  --color-text-muted: #b1b9c7;
   /* Same indigo identity as the light theme, lifted until it carries a near
      black label and reads as a link on the page background. */
   --color-accent: #8aa2ff;

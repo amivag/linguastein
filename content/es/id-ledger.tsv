@@ -593,6 +593,12 @@
 000590	sentence	active	¿A qué hora empieza la película?
 000591	sentence	active	A las nueve. Podemos cenar antes.
 000592	sentence	active	Muy bien, nos vemos a las siete.
+000593	sentence	active	Buenas tardes. ¿Qué va a tomar?
+000594	sentence	active	Un té con leche, por favor.
+000595	sentence	active	¿Quiere una galleta también?
+000596	sentence	active	No, gracias. Solo el té.
+000597	sentence	active	Son dos euros.
+000598	sentence	active	Aquí tiene. Muchas gracias.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1059,3 +1065,4 @@
 700012	passage	active	En el hotel
 700013	passage	active	En el médico
 700014	passage	active	¿Qué hacemos esta noche?
+700015	passage	active	Otro pedido en la cafetería

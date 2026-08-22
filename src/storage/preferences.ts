@@ -22,6 +22,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   slowAudio: false,
   showRomanisationHints: false,
   theme: 'system',
+  readingSize: 'small',
 };
 
 export function mergePreferences(current: Preferences, patch: Partial<Preferences>): Preferences {

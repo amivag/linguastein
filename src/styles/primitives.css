@@ -160,6 +160,26 @@
   --transition-spring: var(--duration-base) var(--ease-spring);
 }
 
+/*
+ * Learner-controlled reading scale.
+ *
+ * Type roles use rem, so changing the root preserves their hierarchy and scales
+ * Spanish, explanations and interface furniture together. Percentages respect
+ * the browser's own default size; the app never replaces that user preference
+ * with a fixed pixel root.
+ */
+:root[data-reading-size='small'] {
+  font-size: 100%;
+}
+
+:root[data-reading-size='medium'] {
+  font-size: 112.5%;
+}
+
+:root[data-reading-size='large'] {
+  font-size: 125%;
+}
+
 @media (min-width: 768px) {
   :root {
     --content-width: 720px;

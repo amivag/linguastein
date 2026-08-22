@@ -16,6 +16,7 @@ export const MISSIONS: readonly MissionDefinition[] = [
     title: 'Order at a café',
     goal: 'Order a drink, add something else and understand the price.',
     passage: '700009',
+    challengePassage: '700015',
     spotlight: 1,
     estimatedMinutes: 10,
     learnerSpeaker: 'Cliente',

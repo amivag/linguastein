@@ -71,6 +71,14 @@
 000560	Tres euros.	Three euros.	a1	restaurant,numbers					cafeteria	Camarero
 000561	Gracias.	Thank you.	a1	greetings					cafeteria	Cliente
 #
+# ── Otro pedido en la cafetería (transfer dialogue) ───────────────────────────
+000593	Buenas tardes. ¿Qué va a tomar?	Good afternoon. What are you going to have?	a1	restaurant		formal	usted		cafeteria-reto	Camarero
+000594	Un té con leche, por favor.	A tea with milk, please.	a1	restaurant					cafeteria-reto	Cliente
+000595	¿Quiere una galleta también?	Would you like a biscuit too?	a1	restaurant		formal	usted		cafeteria-reto	Camarero
+000596	No, gracias. Solo el té.	No, thank you. Just the tea.	a1	restaurant,greetings					cafeteria-reto	Cliente
+000597	Son dos euros.	That's two euros.	a1	restaurant,numbers					cafeteria-reto	Camarero
+000598	Aquí tiene. Muchas gracias.	Here you are. Thank you very much.	a1	restaurant,greetings					cafeteria-reto	Cliente
+#
 # ── En la tienda de ropa (dialogue) ───────────────────────────────────────────
 000562	¿Necesita ayuda?	Do you need any help?	a1	shopping		formal	usted		tienda	Dependienta
 000563	Busco una chaqueta negra.	I'm looking for a black jacket.	a1	clothes,colours					tienda	Cliente

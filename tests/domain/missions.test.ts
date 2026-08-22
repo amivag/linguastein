@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { MISSIONS } from '../../src/app/missions';
-import { missionById, missionIsComplete, missionsForCourse } from '../../src/domain/missions';
+import {
+  missionById,
+  missionIsComplete,
+  missionPassageForStage,
+  missionsForCourse,
+} from '../../src/domain/missions';
 
 describe('missions', () => {
   it('orders the authored journey and respects the course ceiling', () => {
@@ -26,5 +31,13 @@ describe('missions', () => {
     expect(missionIsComplete(['one', 'two'], new Set(['one']))).toBe(false);
     expect(missionIsComplete(['one', 'two'], new Set(['one', 'two']))).toBe(true);
     expect(missionIsComplete([], new Set())).toBe(false);
+  });
+
+  it('uses a different connected situation for transfer when one is authored', () => {
+    const cafe = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'cafe-order')!;
+
+    expect(missionPassageForStage(cafe, 'understand')).toBe('700009');
+    expect(missionPassageForStage(cafe, 'practise')).toBe('700009');
+    expect(missionPassageForStage(cafe, 'use')).toBe('700015');
   });
 });

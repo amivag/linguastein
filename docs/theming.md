@@ -3,6 +3,27 @@
 Themes are data, not code. Adding one touches three small places and nothing
 else in the app.
 
+## Appearance axes stay separate
+
+A colour theme, reading size and contrast preference are different choices.
+They must not be encoded into one combined theme id: doing so would require
+variants such as `dark-large-high-contrast` and make every new palette multiply
+the number of combinations.
+
+- `data-theme` selects a palette and its elevation values.
+- `data-reading-size` selects Small, Medium or Large type independently. The
+  preference scales the rem-based type system from the root, so component styles
+  and hierarchy do not fork.
+- A future contrast control should be a separate `data-contrast` axis with
+  `normal`, `more` and, where useful, `system`. `system` can resolve from
+  `prefers-contrast`, while a manual choice remains available on platforms that
+  do not expose it. Contrast variants may strengthen muted text and surface
+  separation, but still have to pass the existing automated minimums.
+
+This keeps every combination possible: a learner can use Large text with any
+light or dark palette, and future high-contrast palettes do not need to know the
+chosen reading size.
+
 ## How it works
 
 `<html>` always carries a concrete `data-theme` (`dark` or `light`). A tiny
@@ -23,6 +44,7 @@ IndexedDB preferences   →  source of truth; localStorage is a cache for paint
 | File                             | Holds                                                                    |
 | -------------------------------- | ------------------------------------------------------------------------ |
 | `src/styles/primitives.css`      | spacing, radii, type, motion, icon sizes, z-index, layout — never colour |
+| `src/styles/reading-size.ts`     | reading-size registry, root attribute and pre-paint cache                |
 | `src/styles/themes/*.css`        | one file per theme, colour roles only                                    |
 | `src/styles/themes.ts`           | the registry: ids, labels, icons, resolution                             |
 | `src/components/ThemeToggle.tsx` | the control, in compact and full variants                                |

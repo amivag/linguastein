@@ -22,6 +22,7 @@ const SRC = resolve(process.cwd(), 'src');
 const VARIANT_CONTROLS: readonly [file: string, token: string][] = [
   ['src/components/Button.module.css', '--button-bg'],
   ['src/components/ThemeToggle.module.css', '--control-bg'],
+  ['src/components/ReadingSizeControl.module.css', '--control-bg'],
   ['src/components/Chip.module.css', '--chip-bg'],
 ];
 

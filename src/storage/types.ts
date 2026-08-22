@@ -8,6 +8,7 @@ import type { ItemId, LanguageTag, LevelScope } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionFocus, SessionRecord } from '../domain/sessions';
 import type { ThemePreference } from '../styles/themes';
+import type { ReadingSize } from '../styles/reading-size';
 
 export interface Preferences {
   /** What is being learned. With the level below it, this is the current course. */
@@ -46,6 +47,8 @@ export interface Preferences {
   readonly slowAudio: boolean;
   readonly showRomanisationHints: boolean;
   readonly theme: ThemePreference;
+  /** Global type scale, deliberately independent of palette and contrast. */
+  readonly readingSize: ReadingSize;
 }
 
 export interface ProgressStore {

@@ -3,8 +3,10 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MISSIONS } from '../../src/app/missions';
 import { loadCatalog, loadPack, type DatasetSource } from '../../src/data/loaders';
 import { ContentRepository } from '../../src/domain/content';
+import { missionPassageForStage } from '../../src/domain/missions';
 
 const root = resolve(process.cwd(), 'public/packs');
 const source: DatasetSource = {
@@ -162,6 +164,16 @@ describe('shipped packs', () => {
 
     // A hole mid-paragraph is worse than no paragraph.
     expect(broken.map((passage) => passage.title)).toEqual([]);
+  });
+
+  it('ships every taught and transfer passage named by the mission catalog', async () => {
+    const { repository } = await loadAll();
+    const missing = MISSIONS.flatMap((mission) => [
+      missionPassageForStage(mission, 'understand'),
+      missionPassageForStage(mission, 'use'),
+    ]).filter((localId) => repository.passageByLocalId(localId) === undefined);
+
+    expect(missing).toEqual([]);
   });
 
   it('name a speaker for every line of every dialogue', async () => {

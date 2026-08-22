@@ -12,6 +12,7 @@ import { MissionScreen } from '../features/missions/MissionScreen';
 import { courseOptions, coursePath, resolveCourse } from '../domain/content';
 import { mergePreferences, type Preferences } from '../storage';
 import { applyTheme } from '../styles/themes';
+import { applyReadingSize } from '../styles/reading-size';
 import { ErrorBoundary } from './ErrorBoundary';
 import { createServices, type AppServices } from './services';
 import { ServicesContext, useServices } from './services-context';
@@ -100,6 +101,11 @@ export function App() {
     return () => media.removeEventListener('change', sync);
   }, [preferredTheme]);
 
+  const readingSize = preferences?.readingSize ?? 'small';
+  useEffect(() => {
+    applyReadingSize(readingSize);
+  }, [readingSize]);
+
   if (boot.phase === 'loading') return <Splash message="Loading…" />;
   if (boot.phase === 'failed')
     return <Splash message={`Could not load content: ${boot.error.message}`} />;
@@ -127,10 +133,7 @@ export function App() {
             <Route path="/:language/:level/read/:id" element={<PassageScreen />} />
             <Route path="/:language/:level/progress" element={<ProgressScreen />} />
             <Route path="/:language/:level/session" element={<SessionScreen />} />
-            <Route
-              path="/:language/:level/mission/:missionId/:stage"
-              element={<MissionScreen />}
-            />
+            <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
             <Route path="/:language/:level/settings" element={<SettingsScreen />} />
 
             {/* Outside the course routes: the design system is a property of the

@@ -1,7 +1,7 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
-import { Icon } from '../../components/Icon';
+import { SectionTabs } from '../../components/SectionTabs';
 import { VoiceSettings } from '../../components/VoiceSettings';
 import { AboutSettings } from './AboutSettings';
 import { AppearanceSettings } from './AppearanceSettings';
@@ -36,25 +36,16 @@ export function SettingsScreen() {
 
   return (
     <AppShell title="Settings">
-      <nav className={styles.tabs} aria-label="Settings sections">
-        <ul className={styles.tabList}>
-          {SETTINGS_TAB_OPTIONS.map((option) => {
-            const current = option.id === tab;
-            return (
-              <li key={option.id}>
-                <Link
-                  to={settingsPath(course, option.id)}
-                  className={`${styles.tab} ${current ? styles.tabActive : ''}`}
-                  aria-current={current ? 'page' : undefined}
-                >
-                  <Icon name={option.icon} size="sm" />
-                  {option.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+      <SectionTabs
+        label="Settings sections"
+        current={tab}
+        tabs={SETTINGS_TAB_OPTIONS.map((option) => ({
+          id: option.id,
+          label: option.label,
+          icon: option.icon,
+          to: settingsPath(course, option.id),
+        }))}
+      />
 
       <section className={styles.group} aria-labelledby="settings-section">
         <h2 className={styles.groupTitle} id="settings-section">

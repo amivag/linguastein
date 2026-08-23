@@ -4,11 +4,17 @@
  * The app had six ways to be tested and none to be taught, so these assert the
  * two things that make this screen worth having — that every tile leads to real
  * material, and that nothing on it records anything.
+ *
+ * The sections are addresses now (`?tab=grammar`), so each case opens the one it
+ * is about. That is the point of the change rather than an inconvenience of
+ * testing it: seventy rows on one page is a page nobody reads to the bottom of.
  */
 
 import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { StudyScreen } from '../../src/features/study/StudyScreen';
+import { STUDY_TABS } from '../../src/features/study/study-url';
 import { renderWithServices } from '../fixtures/services';
 
 const section = async (name: RegExp) => {
@@ -18,14 +24,16 @@ const section = async (name: RegExp) => {
   return within(owner);
 };
 
-const study = () => renderWithServices(<StudyScreen />, { route: '/es/all/study' });
-
-describe('the study section', () => {
-  beforeEach(() => {
-    study();
+const study = (tab?: string) =>
+  renderWithServices(<StudyScreen />, {
+    route: tab ? `/es/all/study?tab=${tab}` : '/es/all/study',
   });
 
+const tabs = () => screen.getByRole('navigation', { name: 'Study sections' });
+
+describe('the study section', () => {
   it('says up front that nothing here is graded', async () => {
+    study();
     expect(
       await screen.findByText(/nothing is graded and nothing is recorded/i),
     ).toBeInTheDocument();
@@ -41,6 +49,7 @@ describe('the study section', () => {
    * fixture has four noun word cards and no verb ones, which is the same shape.
    */
   it('counts a tile with the filter that tile links to', async () => {
+    study('words');
     const words = await section(/^words$/i);
     const nouns = words.getByRole('link', { name: /nouns/i });
 
@@ -50,6 +59,7 @@ describe('the study section', () => {
   });
 
   it('offers no tile for a word kind with no cards', async () => {
+    study('words');
     const words = await section(/^words$/i);
 
     // The fixture's verbs live in sentences and have no word cards, exactly as
@@ -58,31 +68,26 @@ describe('the study section', () => {
   });
 
   it('leads to texts, phrases and sentences separately', async () => {
-    const block = await section(/phrases and sentences/i);
+    study('phrases');
+    const phrases = await section(/^phrases$/i);
 
-    expect(block.getByRole('link', { name: /set phrases/i })).toHaveAttribute(
+    expect(phrases.getByRole('link', { name: /set phrases/i })).toHaveAttribute(
       'href',
       expect.stringContaining('type=phrase'),
     );
-    // Anchored: the passages tile's own note says "several sentences", so an
-    // unanchored match finds two links.
-    expect(block.getByRole('link', { name: /^Sentences/ })).toHaveAttribute(
+    expect(phrases.getByRole('link', { name: /^sentences/i })).toHaveAttribute(
       'href',
       expect.stringContaining('type=sentence'),
     );
-    expect(block.getByRole('link', { name: /texts and dialogues/i })).toHaveAttribute(
+    expect(phrases.getByRole('link', { name: /texts and dialogues/i })).toHaveAttribute(
       'href',
       '/es/all/read',
     );
   });
 
-  /**
-   * A grammar tile is the one place `?skill=` is reachable without typing a URL,
-   * and it has to open something that records nothing — `flashcards` is
-   * `mode: 'study'`, so a self-rated reveal never reaches the scheduler.
-   */
   it('opens a grammar pattern as a study session, not a graded one', async () => {
-    const grammar = await section(/grammar and patterns/i);
+    study('grammar');
+    const grammar = await section(/^grammar$/i);
     const link = grammar.getByRole('link', { name: /tener que/i });
     const href = link.getAttribute('href') ?? '';
 
@@ -91,13 +96,15 @@ describe('the study section', () => {
   });
 
   it('marks target-language text as such, so it is not read with an English voice', async () => {
-    const grammar = await section(/grammar and patterns/i);
+    study('grammar');
+    const grammar = await section(/^grammar$/i);
 
     expect(grammar.getByText('tener que + infinitivo')).toHaveAttribute('lang', 'es');
   });
 
   it('offers a category only where there is something in it', async () => {
-    const categories = await section(/by category/i);
+    study('categories');
+    const categories = await section(/^categories$/i);
 
     // `colours` is declared by the fixture manifest and used by nothing.
     expect(categories.queryByRole('link', { name: /colours/i })).not.toBeInTheDocument();
@@ -119,7 +126,7 @@ describe('the study section', () => {
  */
 describe('the missions on Study', () => {
   beforeEach(() => {
-    study();
+    study('missions');
   });
 
   it('lists the course’s missions as a route rather than a sheet', async () => {
@@ -139,5 +146,85 @@ describe('the missions on Study', () => {
     const missions = await section(/^missions$/i);
 
     expect(missions.getByText(/The last stage is recorded/i)).toBeInTheDocument();
+  });
+});
+
+describe('the study sections', () => {
+  it('shows one section at a time, and links to the others', async () => {
+    study('grammar');
+
+    expect(
+      await screen.findByRole('heading', { name: /^grammar$/i, level: 2 }),
+    ).toBeInTheDocument();
+    // The other sections are one tap away rather than another screen of scrolling.
+    expect(
+      screen.queryByRole('heading', { name: /^categories$/i, level: 2 }),
+    ).not.toBeInTheDocument();
+    expect(within(tabs()).getByRole('link', { name: 'Categories' })).toHaveAttribute(
+      'href',
+      '/es/all/study?tab=categories',
+    );
+  });
+
+  it('marks the open section, and announces it rather than only colouring it', async () => {
+    study('categories');
+
+    expect(within(tabs()).getByRole('link', { name: 'Categories' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    expect(within(tabs()).getByRole('link', { name: 'Words' })).not.toHaveAttribute('aria-current');
+  });
+
+  it('opens the first section it has when the URL names none', async () => {
+    // The fixture has one authored mission in scope, so Missions leads.
+    study();
+
+    expect(
+      await screen.findByRole('heading', { name: /^missions$/i, level: 2 }),
+    ).toBeInTheDocument();
+  });
+
+  it('degrades an unrecognised section instead of showing an empty page', async () => {
+    // A link that has outlived a section should still open Study, the way a
+    // stale course resolves to the widest real one.
+    study('conjugations');
+
+    expect(
+      await screen.findByRole('heading', { name: /^missions$/i, level: 2 }),
+    ).toBeInTheDocument();
+  });
+
+  it('offers no section that would open an empty page', async () => {
+    study();
+
+    const offered = within(tabs())
+      .getAllByRole('link')
+      .map((link) => link.textContent);
+    expect(offered.length).toBeGreaterThan(1);
+    expect(offered.length).toBeLessThanOrEqual(STUDY_TABS.length);
+  });
+});
+
+describe('the course scope on Study', () => {
+  it('states the scope in one line and opens the control over the page', async () => {
+    /*
+     * It used to be a block of chips plus a sentence at the top of the screen —
+     * four lines spent on something a learner changes once a week, above the
+     * material they came for. The summary still has to say what the scope is,
+     * because every count below it is relative to that.
+     */
+    const user = userEvent.setup();
+    study();
+
+    const scope = await screen.findByRole('button', { name: /Course: .*items in scope/ });
+    expect(scope).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('group', { name: 'Course' })).not.toBeInTheDocument();
+
+    await user.click(scope);
+
+    const sheet = await screen.findByRole('dialog');
+    expect(within(sheet).getByRole('group', { name: 'Course' })).toBeInTheDocument();
+    expect(scope).toHaveAttribute('aria-expanded', 'true');
   });
 });

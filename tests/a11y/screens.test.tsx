@@ -11,6 +11,8 @@ import { PassageScreen } from '../../src/features/read/PassageScreen';
 import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import { SETTINGS_TABS } from '../../src/features/settings/settings-url';
+import { StudyScreen } from '../../src/features/study/StudyScreen';
+import { STUDY_TABS } from '../../src/features/study/study-url';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { renderWithServices } from '../fixtures/services';
 import { expectNoViolations } from './axe';
@@ -32,6 +34,16 @@ describe('accessibility', () => {
   it.each(SETTINGS_TABS)('the %s settings have no WCAG violations', async (tab) => {
     const { container } = renderWithServices(<SettingsScreen />, {
       route: `/settings?tab=${tab}`,
+    });
+    await screen.findByRole('heading', { level: 1 });
+    await expectNoViolations(container);
+  });
+
+  // Same reason as the settings sections: one section is mounted at a time, so
+  // checking the screen once would leave most of its markup unchecked.
+  it.each(STUDY_TABS)('the %s section of Study has no WCAG violations', async (tab) => {
+    const { container } = renderWithServices(<StudyScreen />, {
+      route: `/es/all/study?tab=${tab}`,
     });
     await screen.findByRole('heading', { level: 1 });
     await expectNoViolations(container);

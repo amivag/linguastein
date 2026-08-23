@@ -15,6 +15,27 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Changed
+
+- **Study is one section at a time.** It had grown to about seventy rows in one
+  column — seven missions, three word kinds, three sheets, forty-one patterns and
+  thirty-five categories — so the thirty-five categories buried everything above
+  them. The sections are now a strip of links with the open one in the URL
+  (`/es/a1/study?tab=grammar`), and a section with nothing in it is not offered at
+  all. On a desktop, four of the six sections now fit on one screen.
+- **Grammar and abilities are separate sections.** A grammar pattern is how the
+  language works; a communicative function is what you can do with it, and the
+  dataset has drawn that distinction since skills existed. One list mixed
+  `presente de indicativo` with `Pedir comida o bebida`.
+- **Grammar tiles get a grid of their own.** A pattern's title is
+  target-language text with its translation under it, and the narrow grid the
+  one-word sections use broke both across three lines each on a desktop.
+- The course and level control on Study is a one-line summary that opens over the
+  page, the same trade Test makes for its session options — it was four lines of
+  chips and prose above the material.
+- The section switcher Settings introduced is now a shared component, so the two
+  screens cannot drift apart on keyboard or screen-reader behaviour.
+
 ### Added
 
 - **Four palettes, in light and dark.** Indigo (the original), Teal, Plum and

@@ -9,7 +9,7 @@
 .intro {
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-  margin: 0 0 var(--space-5);
+  margin: var(--space-3) 0;
   max-width: 46ch;
 }
 
@@ -90,11 +90,11 @@
 }
 
 /*
- * The missions, which are the one thing on this page that is a *path* rather
- * than a sheet. A row rather than a tile: a mission has a title, an outcome and
- * a position, and none of those fit in a 9.5rem square.
+ * Full-width rows, for a section whose entries carry more than a label. The
+ * missions are the case that needed it: a mission has a title, an outcome and a
+ * position, and none of those fit in a 9.5rem square.
  */
-.missions {
+.rows {
   composes: listReset from '../../styles/surfaces.module.css';
   display: grid;
   gap: var(--space-2);
@@ -153,4 +153,62 @@
   color: var(--color-text-muted);
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
+}
+
+/*
+ * The wider grid, for a tile whose title is target-language text with a
+ * translation under it — a grammar pattern.
+ *
+ * The narrow grid above is sized for one word ("Nouns", "Colours"). At 9.5rem
+ * a desktop fits five columns of it, which broke `presente de indicativo` and
+ * "the present tense" across three lines each and turned the section into a
+ * wall of fragments. Same tile, same tokens; only the column floor changes.
+ */
+.wide {
+  composes: listReset from '../../styles/surfaces.module.css';
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--space-3);
+}
+
+/*
+ * The course, as one line.
+ *
+ * A summary that opens the real control, the way Test summarises a session
+ * before offering its options. It is a button rather than a link because what
+ * it opens is a sheet over this page, not another address.
+ */
+.scope {
+  composes: cardInteractive from '../../styles/surfaces.module.css';
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  color: inherit;
+  text-align: left;
+}
+
+.scopeIcon {
+  color: var(--color-accent);
+}
+
+.scopeName {
+  flex: 1;
+  font-weight: var(--weight-semibold);
+}
+
+/* What the level currently includes. Tabular so switching level does not
+   shuffle the chevron beside it. */
+.scopeCount {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.scopeSheet {
+  display: grid;
+  gap: var(--space-4);
 }

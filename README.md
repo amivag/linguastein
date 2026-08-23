@@ -83,7 +83,7 @@ Four destinations behind a tab bar (a rail on wider screens):
 
 | Section  | What it is                                                                                   |
 | -------- | -------------------------------------------------------------------------------------------- |
-| Study    | the material: the mission ladder, sheets of words, phrases, sentences, texts and patterns    |
+| Study    | the material, in linkable sections: missions, words, phrases, grammar, abilities, categories |
 | Test     | where a session starts: the recommended next action, then quick sessions and the six presets |
 | Progress | what has been practised, accuracy, weak items, recent sessions                               |
 | Settings | five linkable sections: learning, appearance, audio, content packs, about                    |

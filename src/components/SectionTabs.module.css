@@ -1,0 +1,65 @@
+/*
+ * A strip of section links, scrolling rather than wrapping.
+ *
+ * Five labels do not fit across a narrow phone, and a switcher that becomes two
+ * rows pushes the thing you came for further down the screen than the list it
+ * replaced. The negative margin lets it bleed to the edges of the shell so the
+ * scroll reads as "there is more this way" rather than as a clipped row.
+ */
+.tabs {
+  margin: 0 calc(var(--space-4) * -1);
+  padding: 0 var(--space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tabList {
+  composes: listReset from '../styles/surfaces.module.css';
+
+  display: flex;
+  gap: var(--space-2);
+  width: max-content;
+  min-width: 100%;
+}
+
+.tab {
+  --tab-bg: var(--color-surface);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--tab-bg);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  scroll-snap-align: start;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+/* Filled rather than only tinted, for the reason the nav pill is: a colour
+   change alone is not enough to locate at a glance on a bright screen. */
+.tabActive {
+  --tab-bg: var(--color-accent);
+
+  color: var(--color-accent-contrast);
+  font-weight: var(--weight-semibold);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tab:hover {
+    background: color-mix(in srgb, var(--tab-bg) 90%, var(--color-text));
+  }
+}

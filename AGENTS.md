@@ -119,6 +119,34 @@ patterns are counted from the packs over the current course, so a second
 language grows tiles with no edit — and a tile whose count is zero is not
 offered, the same rule the categories and the letters already follow.
 
+**Study is one section at a time, and a section is an address.** All of it on one
+page came to about seventy rows in the shipped course, where thirty-five
+categories buried the three sheets above them. `features/study/study-url.ts` owns
+`?tab=grammar` in both directions, exactly as `browse-url.ts` owns the filters.
+Two details are deliberate:
+
+- **The section list is derived too**, not just the tiles in it. A course with no
+  authored missions has no Missions tab, because a tab that opens an empty page
+  is the same mistake as a tile advertising 546 verbs.
+- **The default is data, so the link spells the tab out.** Browse omits its
+  default sort and Settings its default section, because those defaults are
+  constants; Study's first section depends on what the packs hold, and a link
+  that meant Missions in one course and Words in another is exactly what a shared
+  link must not be.
+
+**Grammar and abilities are two sections, because they are two kinds of thing.**
+A `pattern` is how the language works; a `function` is what a learner can
+accomplish with it — the distinction the dataset already draws (see
+`content/es/skills.tsv`). One list put `presente de indicativo` beside `Pedir
+comida o bebida`, forty-one tiles deep. Only `function` is named in the split, so
+a skill kind added later lands in Grammar rather than disappearing from the
+screen.
+
+The course scope is a one-line summary that opens `CourseBar` in a sheet, the
+trade Test already makes for its session options: four lines at the top of every
+screen is a lot to spend on something a learner changes once a week. It still has
+to _state_ the scope, because every count under it is relative to that.
+
 **Count a tile with the filter the tile links to.** This is easy to get wrong and
 was: the word tiles were counted with `partsOfSpeech`, which counts every item
 _exemplifying_ a part of speech — sentences included — while the tile links to a

@@ -1,13 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useId, useMemo, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { MISSIONS } from '../../app/missions';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon, type IconName } from '../../components/Icon';
+import { SectionTabs } from '../../components/SectionTabs';
+import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
-import { coursePath, POS_LABELS, type PartOfSpeech } from '../../domain/content';
+import {
+  coursePath,
+  levelLabel,
+  POS_LABELS,
+  type PartOfSpeech,
+  type SkillKind,
+} from '../../domain/content';
 import {
   missionStandings,
   missionUseEvidence,
@@ -17,6 +25,7 @@ import {
 import { browsePath } from '../browse/browse-url';
 import { missionPath } from '../missions/mission-url';
 import { sessionPath } from '../practice/session-url';
+import { parseStudyTab, studyPath, type StudyTab } from './study-url';
 import styles from './StudyScreen.module.css';
 
 const NO_EVIDENCE: MissionEvidence = { practised: new Set(), used: new Map() };
@@ -43,17 +52,26 @@ const NO_EVIDENCE: MissionEvidence = { practised: new Set(), used: new Map() };
  * both the section note and the row say so — a screen that promised "nothing is
  * recorded" over a control that records would be worse than no promise.
  *
- * Nothing here is a hard-coded list. The word kinds, the categories and the
- * grammar all come from the packs, counted over the current course, so a pack
- * that grows adverbs or a second language grows a tile with no edit — and a
- * category that would lead nowhere is not offered, which is what quietly hides
- * the seven numeral skills no item carries.
+ * **One section at a time.** All of it on one page came to about seventy rows in
+ * the shipped course, which is a page you scroll past rather than read: the
+ * thirty-five categories buried the three sheets above them. The sections are
+ * addresses now (`?tab=grammar`), so a switch is a navigation and a sheet of
+ * grammar patterns is a thing you can link someone to.
+ *
+ * Nothing here is a hard-coded list — the sections included. Word kinds,
+ * categories and grammar all come from the packs, counted over the current
+ * course, so a pack that grows adverbs or a second language grows a tile with no
+ * edit; and a section with nothing in it is not offered at all, which is the same
+ * rule the tiles, the categories and the letters already follow.
  */
 export function StudyScreen() {
   const { services, preferences } = useServices();
-  const { course, filter: courseScope } = useCourse();
+  const { course, option, filter: courseScope } = useCourse();
   const repository = services.repository;
+  const [params] = useSearchParams();
   const [evidence, setEvidence] = useState<MissionEvidence>(NO_EVIDENCE);
+  const [scopeOpen, setScopeOpen] = useState(false);
+  const scopeSheetId = useId();
 
   /**
    * The one asynchronous thing on the page, and the one thing on it that is not
@@ -118,14 +136,66 @@ export function StudyScreen() {
       sentences: inScope({ types: ['sentence'] }),
       topics: repository.topics(courseScope).filter((topic) => topic.count > 0),
       passages: repository.allPassages().length,
-      // A skill with nothing attached is a tile that leads to an empty sheet —
-      // the same rule the categories and the letters already follow.
-      grammar: repository
-        .allSkills()
-        .map((skill) => ({ skill, count: inScope({ skills: [skill.id] }) }))
-        .filter((entry) => entry.count > 0),
+      /*
+       * Grammar and abilities are two sections rather than one, because they are
+       * two kinds of thing and the domain has said so since skills existed: a
+       * pattern is how the language works, a `function` is what a learner can
+       * accomplish with it. One list put `presente de indicativo` beside `Pedir
+       * comida o bebida` — forty-one tiles of two unrelated ideas.
+       *
+       * `function` is the half that is named; everything else falls to grammar,
+       * so a skill kind added later shows up somewhere rather than silently
+       * disappearing from the screen.
+       *
+       * A skill with nothing attached is dropped either way — a tile that leads
+       * to an empty sheet, which is the rule the categories and the letters
+       * already follow.
+       */
+      ...groupSkills(
+        repository
+          .allSkills()
+          .map((skill) => ({ skill, count: inScope({ skills: [skill.id] }) }))
+          .filter((entry) => entry.count > 0),
+      ),
     };
   }, [repository, courseScope]);
+
+  /**
+   * The sections this course actually has, in order.
+   *
+   * Derived rather than listed, so a pack with no authored missions simply has no
+   * Missions tab — the alternative is a tab that opens an empty page, which is
+   * the same mistake as a tile advertising 546 verbs.
+   */
+  const sections = useMemo(
+    () =>
+      (
+        [
+          { id: 'missions', label: 'Missions', icon: 'mission', size: missions.length },
+          { id: 'words', label: 'Words', icon: 'word', size: counts.words.length },
+          {
+            id: 'phrases',
+            label: 'Phrases',
+            icon: 'browse',
+            size: counts.phrases + counts.sentences + counts.passages,
+          },
+          { id: 'grammar', label: 'Grammar', icon: 'grammar', size: counts.grammar.length },
+          { id: 'abilities', label: 'Abilities', icon: 'speak', size: counts.abilities.length },
+          { id: 'categories', label: 'Categories', icon: 'topic', size: counts.topics.length },
+        ] as const satisfies readonly {
+          id: StudyTab;
+          label: string;
+          icon: IconName;
+          size: number;
+        }[]
+      ).filter((section) => section.size > 0),
+    [counts, missions.length],
+  );
+
+  // An unrecognised or absent section opens the first one this course has, the
+  // way a stale course resolves to the widest real one rather than to an error.
+  const requested = parseStudyTab(params);
+  const current = sections.find((section) => section.id === requested) ?? sections[0];
 
   /** A study session: `flashcards` is `mode: 'study'`, so it records nothing. */
   const studyLink = (skills: readonly string[]) =>
@@ -136,20 +206,53 @@ export function StudyScreen() {
       ordering: 'random',
     });
 
+  const inScope = option?.levels.find((entry) => entry.level === course.level)?.count ?? 0;
+
   return (
     <AppShell title="Study" action={<ThemeToggle variant="compact" />}>
-      <CourseBar />
+      {/*
+        The course, as one line that opens the control rather than as the control.
+        It used to be a block of chips and a sentence at the top of every screen,
+        which is four lines spent on something a learner changes once a week — and
+        the same trade Test already makes for its session options.
+      */}
+      <button
+        type="button"
+        className={styles.scope}
+        onClick={() => setScopeOpen(true)}
+        aria-expanded={scopeOpen}
+        aria-controls={scopeSheetId}
+        aria-label={`Course: ${option?.label ?? course.language}, ${levelLabel(course.level)}, ${inScope} ${
+          inScope === 1 ? 'item' : 'items'
+        } in scope. Change course`}
+      >
+        <Icon name="language" size="sm" className={styles.scopeIcon} />
+        <span className={styles.scopeName}>
+          {option?.label ?? course.language} · {levelLabel(course.level)}
+        </span>
+        <span className={styles.scopeCount}>{inScope}</span>
+        <Icon name="expand" size="sm" />
+      </button>
 
       <p className={styles.intro}>
-        The sheets here are for reading and listening — nothing is graded and nothing is recorded. A
-        mission is the exception, and says so: it ends in practice that counts.
+        Nothing is graded and nothing is recorded here — except the last stage of a mission, which
+        says so.
       </p>
 
-      {/* Missions lead, because they are the one thing on this screen that says
-          what to do *next*. They belong to Study rather than to Test for the
-          reason the section split exists at all: a mission is material and a
-          route through it, and only its last stage is a test. */}
-      {missions.length > 0 && (
+      {sections.length > 0 && (
+        <SectionTabs
+          label="Study sections"
+          current={current?.id ?? ''}
+          tabs={sections.map((section) => ({
+            id: section.id,
+            label: section.label,
+            icon: section.icon,
+            to: studyPath(course, section.id),
+          }))}
+        />
+      )}
+
+      {current?.id === 'missions' && (
         <Section
           label="Missions"
           icon="mission"
@@ -162,43 +265,52 @@ export function StudyScreen() {
         </Section>
       )}
 
-      <Section label="Words" icon="word">
-        {counts.words.map((kind) => (
+      {current?.id === 'words' && (
+        <Section label="Words" icon="word" note="Gender, forms and an example sentence per word.">
+          {counts.words.map((kind) => (
+            <Tile
+              key={kind.pos}
+              to={browsePath(course, { filter: { types: ['word'], pos: [kind.pos] } })}
+              title={kind.label}
+              count={kind.count}
+            />
+          ))}
+        </Section>
+      )}
+
+      {current?.id === 'phrases' && (
+        <Section label="Phrases" icon="browse" note="Every word tappable, on every row.">
           <Tile
-            key={kind.pos}
-            to={browsePath(course, { filter: { types: ['word'], pos: [kind.pos] } })}
-            title={kind.label}
-            count={kind.count}
+            to={browsePath(course, { filter: { types: ['phrase'] } })}
+            title="Set phrases"
+            count={counts.phrases}
+            note="Things said as a unit"
           />
-        ))}
-      </Section>
+          <Tile
+            to={browsePath(course, { filter: { types: ['sentence'] } })}
+            title="Sentences"
+            count={counts.sentences}
+            note="Full sentences with a verb"
+          />
+          <Tile
+            to={coursePath(course, 'read')}
+            title="Texts and dialogues"
+            count={counts.passages}
+            note="Several sentences that read as one"
+            icon="passage"
+          />
+        </Section>
+      )}
 
-      <Section label="Phrases and sentences" icon="browse">
-        <Tile
-          to={browsePath(course, { filter: { types: ['phrase'] } })}
-          title="Set phrases"
-          count={counts.phrases}
-          note="Things said as a unit"
-        />
-        <Tile
-          to={browsePath(course, { filter: { types: ['sentence'] } })}
-          title="Sentences"
-          count={counts.sentences}
-          note="Full sentences with a verb"
-        />
-        <Tile
-          to={coursePath(course, 'read')}
-          title="Texts and dialogues"
-          count={counts.passages}
-          note="Several sentences that read as one"
-          icon="passage"
-        />
-      </Section>
-
-      {counts.grammar.length > 0 && (
+      {current?.id === 'grammar' && (
+        // Wide tiles: a pattern's title is target-language text with a
+        // translation under it — `estar + gerundio`, "what is happening right
+        // now" — and the narrow grid the one-word sections use broke both of them
+        // across three lines each on a desktop.
         <Section
-          label="Grammar and patterns"
+          label="Grammar"
           icon="grammar"
+          layout="wide"
           note="Opens a study session — see it, say it, reveal the meaning."
         >
           {counts.grammar.map(({ skill, count }) => (
@@ -216,16 +328,52 @@ export function StudyScreen() {
         </Section>
       )}
 
-      <Section label="By category" icon="topic">
-        {counts.topics.map((topic) => (
-          <Tile
-            key={topic.id}
-            to={browsePath(course, { filter: { topics: [topic.id] } })}
-            title={topic.label}
-            count={topic.count}
-          />
-        ))}
-      </Section>
+      {current?.id === 'abilities' && (
+        <Section
+          label="Abilities"
+          icon="speak"
+          layout="wide"
+          note="What you can do with the language, rather than how it works. Opens a study session."
+        >
+          {counts.abilities.map(({ skill, count }) => (
+            <Tile
+              key={skill.id}
+              to={studyLink([localIdOf(skill.id)])}
+              title={skill.label}
+              count={count}
+              {...optionalNote(
+                repository.translationOf(skill.id, preferences.referenceLanguage)?.text,
+              )}
+              lang={course.language}
+            />
+          ))}
+        </Section>
+      )}
+
+      {current?.id === 'categories' && (
+        <Section label="Categories" icon="topic" note="One theme, whatever the type of item.">
+          {counts.topics.map((topic) => (
+            <Tile
+              key={topic.id}
+              to={browsePath(course, { filter: { topics: [topic.id] } })}
+              title={topic.label}
+              count={topic.count}
+            />
+          ))}
+        </Section>
+      )}
+
+      {scopeOpen && (
+        <Sheet id={scopeSheetId} title="Course" onClose={() => setScopeOpen(false)}>
+          <div className={styles.scopeSheet}>
+            <CourseBar />
+            <p className={styles.sectionNote}>
+              A level is a ceiling, not a chapter: choosing A2 keeps A1 material in rotation. Every
+              count on this screen follows it.
+            </p>
+          </div>
+        </Sheet>
+      )}
     </AppShell>
   );
 }
@@ -234,8 +382,11 @@ interface SectionProps {
   readonly label: string;
   readonly icon: IconName;
   readonly note?: string;
-  /** Square tiles by default; full-width rows where a title needs the room. */
-  readonly layout?: 'tiles' | 'rows';
+  /**
+   * `tiles` is the narrow grid for one-word titles, `wide` for a title that
+   * carries its own translation, `rows` for full-width rows.
+   */
+  readonly layout?: 'tiles' | 'wide' | 'rows';
   readonly children: React.ReactNode;
 }
 
@@ -247,7 +398,7 @@ function Section({ label, icon, note, layout = 'tiles', children }: SectionProps
         {label}
       </h2>
       {note && <p className={styles.sectionNote}>{note}</p>}
-      <ul className={layout === 'rows' ? styles.missions : styles.tiles}>{children}</ul>
+      <ul className={styles[layout]}>{children}</ul>
     </section>
   );
 }
@@ -329,6 +480,23 @@ function Tile({ to, title, count, note, icon, lang }: TileProps) {
       </Link>
     </li>
   );
+}
+
+/**
+ * Skills split into the two sections they belong to.
+ *
+ * A `function` is what a learner can accomplish — ordering food, asking a price
+ * — and everything else describes how the language works. Written as one pass
+ * with a default rather than as two filters, so a skill kind nobody has thought
+ * of yet lands in Grammar instead of vanishing from the screen.
+ */
+function groupSkills<T extends { readonly skill: { readonly kind: SkillKind } }>(
+  entries: readonly T[],
+): { grammar: readonly T[]; abilities: readonly T[] } {
+  return {
+    grammar: entries.filter((entry) => entry.skill.kind !== 'function'),
+    abilities: entries.filter((entry) => entry.skill.kind === 'function'),
+  };
 }
 
 /** "Verbs", "Nouns" — the plural of what a sheet calls one word. */

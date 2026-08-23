@@ -22,7 +22,7 @@ Connected text is how people actually retain language: a paragraph gives each
 sentence a reason to be there, and recalling line 4 is easier when lines 1–3 have
 set it up. The pack already has the material — 14 passages, 77 sentences — and
 already reads them end to end at `/es/all/read/700001`. What it cannot do is
-practise a passage *as* a passage. Today "Practise these sentences" hands the
+practise a passage _as_ a passage. Today "Practise these sentences" hands the
 five lines to the ordinary planner, which deals them individually and by memory
 strength, so the connective tissue that made them worth grouping is discarded at
 exactly the moment it would pay off.
@@ -61,7 +61,7 @@ is item-scoped. So the work is not "add a generator" but "let a generator be
 about something other than an item" — the same wall a conjugation drill hits,
 since a `VerbForm` is not a `LearningItem` either. Worth solving once, for both.
 
-This is deliberately *not* an argument for giving a passage its own text and
+This is deliberately _not_ an argument for giving a passage its own text and
 making it an item. The build already refuses that, for good reasons recorded in
 `AGENTS.md`: each sentence must stay independently practisable, and mastery
 weights a word by how many distinct sentences it appears in, so a passage that
@@ -105,7 +105,7 @@ independent of everything else in this document. But confirm the intent before
 changing it: dealing a passage's lines in reading order every time also means the
 learner always meets line 1 first, which is the same complaint that made
 `sequential` the wrong default for the Flashcards preset. A reconstruction
-exercise wants declared order as the *answer*, not as the deal order, so the two
+exercise wants declared order as the _answer_, not as the deal order, so the two
 concerns may not conflict at all.
 
 ## 6. Fallout to expect

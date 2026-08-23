@@ -16,12 +16,12 @@
 
 The implementation preserves the selected concept's hierarchy: course header, one dominant real-world mission, phrase and meaning, mission facts, a single primary action, three-stage learning path, non-punitive weekly rhythm, free-practice escape hatch, and persistent bottom navigation. It uses the existing design system and live Spanish content rather than copying decorative details or inventing curriculum records.
 
-| Priority | Finding | Resolution |
-| --- | --- | --- |
-| P0 | None | — |
-| P1 | None | — |
-| P2 | The initial implementation exposed a large course-item count above the mission, weakening the primary hierarchy. | Moved the count into the Free practice sheet beside the course controls. |
-| P2 | The advanced practice disclosure was partially visible behind the fixed navigation at the target viewport. | Moved it cleanly below the first viewport while preserving scroll access. |
+| Priority | Finding                                                                                                          | Resolution                                                                |
+| -------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| P0       | None                                                                                                             | —                                                                         |
+| P1       | None                                                                                                             | —                                                                         |
+| P2       | The initial implementation exposed a large course-item count above the mission, weakening the primary hierarchy. | Moved the count into the Free practice sheet beside the course controls.  |
+| P2       | The advanced practice disclosure was partially visible behind the fixed navigation at the target viewport.       | Moved it cleanly below the first viewport while preserving scroll access. |
 
 ## Functional verification
 

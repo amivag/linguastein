@@ -42,14 +42,7 @@ const routineIds = [
   'core-es:skill:sequence-routine-events',
   'core-es:skill:connect-routine-to-destination',
 ] as const;
-const ids = [
-  ...cafeIds,
-  ...directionIds,
-  ...shoppingIds,
-  ...hotelIds,
-  ...planIds,
-  ...routineIds,
-];
+const ids = [...cafeIds, ...directionIds, ...shoppingIds, ...hotelIds, ...planIds, ...routineIds];
 
 describe('authored communicative skills', () => {
   let scratch: ScratchPack | undefined;

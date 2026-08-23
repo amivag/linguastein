@@ -6,7 +6,8 @@ Guidance for AI agents and new contributors. Read this before changing code.
 
 ```bash
 npm run dev            # dev server
-npm run check          # typecheck + lint + test + validate:data — run before finishing
+npm run check          # typecheck + lint + format + test + validate:data — run before finishing
+npm run format         # write Prettier's formatting, rather than only checking it
 npm test               # vitest
 npx vitest run tests/a11y   # accessibility suite alone
 npm run build:data     # regenerate public/packs from content/es
@@ -16,6 +17,14 @@ npm run build          # production PWA build
 
 `npm run check` is the gate. If it passes, the change is landable; if it fails,
 fix it rather than working around it.
+
+That claim only holds while the gate runs **every** step CI runs, in the same
+order, so keep the two together when either changes. It came apart once: `check`
+omitted `format:check` while `.github/workflows/ci.yml` ran it third, ahead of
+the tests, the dataset checks and the build. Fourteen commits landed on `main`
+with the formatting step red — and because a failed step skips the ones after it,
+none of those commits had its tests or datasets verified by CI at all. A gate
+that is a subset of CI is worse than no gate, because it is believed.
 
 ## This repository is also a skeleton
 

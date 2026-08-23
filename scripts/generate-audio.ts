@@ -353,7 +353,8 @@ const sapiProvider: BatchProvider = {
   unavailable(options) {
     if (process.platform !== 'win32') return 'SAPI is Windows-only';
     const voices = sapiVoices();
-    if (voices.length === 0) return `no installed SAPI voice speaks ${options.locale} — no SAPI voices found`;
+    if (voices.length === 0)
+      return `no installed SAPI voice speaks ${options.locale} — no SAPI voices found`;
     const language = options.locale.split('-')[0];
     const matching = voices.filter((voice) => voice.culture.startsWith(language ?? ''));
     if (matching.length === 0) {

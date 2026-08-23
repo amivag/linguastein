@@ -15,7 +15,9 @@ export function MissionJourney({ current }: { readonly current: MissionStage }) 
       {STAGES.map((stage, index) => (
         <li
           key={stage.id}
-          data-state={index < currentIndex ? 'complete' : index === currentIndex ? 'current' : 'next'}
+          data-state={
+            index < currentIndex ? 'complete' : index === currentIndex ? 'current' : 'next'
+          }
           {...(index === currentIndex ? { 'aria-current': 'step' as const } : {})}
         >
           <span>{index < currentIndex ? '✓' : index + 1}</span>

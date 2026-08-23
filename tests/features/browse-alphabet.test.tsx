@@ -38,11 +38,13 @@ describe('the letter index', () => {
 
     // A, C, P, T — plus the explicit reset. The fixture has nothing under B,
     // and a chip leading to an empty list is worse than not offering the letter.
-    expect(
-      index
-        .getAllByRole('button')
-        .map((chip) => chip.textContent),
-    ).toEqual(['Any', 'A', 'C', 'P', 'T']);
+    expect(index.getAllByRole('button').map((chip) => chip.textContent)).toEqual([
+      'Any',
+      'A',
+      'C',
+      'P',
+      'T',
+    ]);
   });
 
   it('names the size of a letter, since that is what decides the tap', async () => {

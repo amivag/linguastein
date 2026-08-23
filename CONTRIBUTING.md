@@ -10,11 +10,15 @@ investing in a large change, open an issue first — it may be about to move.
 npm run check
 ```
 
-That runs type-checking, lint, the test suite against the coverage floors, and
-dataset validation, in the same order CI does. [AGENTS.md](AGENTS.md) has the
-architecture rules a change is expected to respect: the engine in `src/domain`
-stays pure and framework-free, content is described rather than hard-coded, and
-the accessibility contract is enforced by tests rather than by review.
+That runs type-checking, lint, Prettier's check, the test suite against the
+coverage floors, and dataset validation, in the same order CI does — and keeping
+those two lists identical is the point, so add a step to both or to neither.
+`npm run format` writes the formatting rather than only reporting it.
+
+[AGENTS.md](AGENTS.md) has the architecture rules a change is expected to
+respect: the engine in `src/domain` stays pure and framework-free, content is
+described rather than hard-coded, and the accessibility contract is enforced by
+tests rather than by review.
 
 ## Licensing your contribution
 

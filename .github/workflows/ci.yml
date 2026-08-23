@@ -24,9 +24,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Format check
-        run: npm run format:check
-
       # With coverage, so the floors in vite.config.ts are enforced rather than
       # merely recorded. Same command `npm run check` runs locally.
       - name: Test
@@ -34,6 +31,17 @@ jobs:
 
       - name: Validate datasets
         run: npm run validate:data
+
+      # Last of the correctness steps, deliberately.
+      #
+      # A failed step skips the ones after it. This sat third for a while, so
+      # fourteen commits reached main with the formatting red and their tests and
+      # datasets never checked by CI at all — a whitespace disagreement masking
+      # everything that actually matters. `npm run check` runs the same steps and
+      # now includes this one, so the drift should not recur; the order is the
+      # cheap insurance if it does.
+      - name: Format check
+        run: npm run format:check
 
       # The whole tree, not just public/packs: the build also writes assigned
       # item ids back into content/es, so a row committed without one would

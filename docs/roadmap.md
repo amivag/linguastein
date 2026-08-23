@@ -45,6 +45,11 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   conjugator, coverage reporting and a CI drift check
 - Stable item ids: a row owns its id, keeps it through edits, reordering and file
   moves, and a deleted row's id is retired rather than reused
+- Appearance as four independent axes: light or dark, one of four palettes, one of
+  four contrast levels and one of three type scales. Every palette is checked
+  against every contrast level at WCAG AA, and a contrast level declares no hue —
+  it restates the neutrals along the palette's own ink-to-paper line, so one level
+  serves a palette written after it
 - Passages: connected texts and dialogues as containers over sentences that stay
   individually practisable, with a reading view and passage-scoped sessions
 - A thirteen-mission communicative journey (Understand → Practise → Use), with a
@@ -70,8 +75,8 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   practised without turning attendance into a resettable streak
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
-- core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,
-  984 sentences — 1,435 practisable items, 97% of sentence words linked to a lexeme
+- core-es pack: 126 verbs (3,024 generated forms), 390 nouns, 269 modifiers,
+  984 sentences — 1,605 practisable items, 99% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -100,17 +105,38 @@ The dataset work is briefed in full for a fresh session:
 
    The machinery for that pass is now in place, and it is only machinery: review
    is per item via `content/es/reviewed.tsv`, so a slice can be signed off without
-   reading all 1,435 at once, and `npm run review:data` reports the rows worth
+   reading all 1,605 at once, and `npm run review:data` reports the rows worth
    attention rather than asking anyone to scan the lot. Sign-off is pinned to the
    wording that was read, so an edit afterwards fails the build instead of
    inheriting the approval. **Nothing is signed off yet** — the pack is still
    generated and unreviewed, and only a human reading the Spanish changes that.
 
-   What the report currently raises: one gloss shared by two sentences that need
-   distinguishing, one word (`dinero`) to confirm as universal rather than
-   regional, and 18 words no lexeme claims — mostly irregular preterites (`fue`,
-   `fui`), infinitive+pronoun forms (`ayudarme`, `explicarme`) and conditionals
-   (`quisiera`, `gustaría`), which is a sources gap rather than a wording one.
+   What the report currently raises: seven glosses shared by two sentences that
+   need distinguishing, and one word (`dinero`) to confirm as universal rather
+   than regional. Both are wording questions, which is what a reviewer is for.
+
+   **The vocabulary gap behind them is closed.** Token linking is 99% (5,282 of
+   5,311), up from 96%: every content word the pack uses now has a lexeme, so
+   tapping it answers something. Proper nouns are declared as `PROPN` — a part of
+   speech `inspect.ts` has always known and no content had ever used — so a name
+   is tappable and says it is a name, instead of counting as vocabulary the
+   dataset forgot.
+
+   The 30 occurrences still unlinked are three principled classes, not an
+   authoring backlog:
+
+   - **`ser` and `ir` share a preterite** (`fue`, `fui`, `fuimos` — 10). Two
+     lexemes, one surface, and the tokeniser declines to guess which. Linking to
+     either would be wrong half the time; the real fix is a token that can carry
+     more than one candidate, which is a model change.
+   - **Enclitic pronouns** (`ayudarme`, `probarlo`, `verte`, `dígame` — 17). An
+     infinitive, gerund or imperative with a pronoun stuck to it. Stripping the
+     enclitic and re-matching the stem would resolve most; the imperatives also
+     move their accent (`diga` → `dígame`), so it is a small piece of morphology
+     rather than a suffix trim.
+   - **Conditional and imperfect subjunctive** (`gustaría`, `quisiera` — 2). Tenses
+     the conjugator does not generate; they are in _Later_ with the subjunctive
+     proper.
 
 1. **More passages** — 57 exist (17 texts, 40 dialogues), of which 52 belong to a
    mission. The route from 36 was the intended one: every passage added since
@@ -129,11 +155,20 @@ The dataset work is briefed in full for a fresh session:
    and many devices ship no Spanish voice at all. Until then the app uses device
    speech where a suitable voice exists, and says so where none does.
 
-   The runtime half is already done — canonical audio resolves before the TTS seam,
-   the service worker fetches audio on demand, and `PACK_FILE_KINDS` is a clean
-   extension point. The data half is a new **audio record kind that references
-   items**, the way passages do, so a voice can be added without rewriting a byte of
-   content and a pack stays a self-contained unit that can be imported and exported.
+   **Both code halves are now done.** The runtime resolves canonical audio before
+   the TTS seam and the service worker fetches it on demand; the build reads
+   `content/es/audio-ledger.tsv` and emits one `audio` file per locale, plus the
+   voices declared in `content/es/voices.tsv`. Only rows a human has marked
+   `approved` ship, a clip is keyed by (item, locale, voice) so a typo fix cannot
+   mint a duplicate, and a row whose item has since been deleted is dropped rather
+   than failing the build. No ledger means no audio and a pack identical to
+   today's, which is why this could land before a single clip existed.
+
+   **What remains is not code.** Choosing a voice whose licence permits shipping
+   its output from a CC0, exportable pack, and the ~2 hours of listening per voice
+   that approving it honestly costs. `tsx scripts/generate-audio.ts --sample
+--compare` is the way in: it writes a blind A/B page over the twenty or so clips
+   that decide a voice, beside its own ledger rather than the shipping one.
    Several voices per phrase are a feature, not a special case: dialogues can voice
    their speakers separately, and rotating voices stops a learner recognising a
    waveform instead of a word.
@@ -177,9 +212,17 @@ The dataset work is briefed in full for a fresh session:
    function cannot be labelled Reliable until its practised items span at least
    three passages. The final context uses intention cues instead of exact English
    lines, making the evidence less vulnerable to translation-script recall.
-7. **Verb practice depth** — surface `VerbForm` records directly (person and
-   tense drills), not only cloze inside sentences. Word inspection already
-   shows the forms; practising them directly is the next step.
+7. **Verb practice depth** — half done. Verbs now have word cards of their own
+   (`800_001–899_999`), so `hablar` is a word a learner can look up and
+   `Words × Verbs` in Browse lists 126 of them instead of nothing. The `verbs`
+   preset stayed narrowed to sentences and phrases, because "useful forms inside
+   natural sentences" is not what a bare infinitive card is.
+
+   What remains is the harder half: surfacing `VerbForm` records directly as
+   person and tense drills. Word inspection already shows the forms; practising
+   them needs progress against something that is not a `LearningItem`, which is
+   the same wall [passage practice](tasks/passage-practice.md) hits.
+
 8. **Word-level progress** — inspection knows which lexeme a tapped word maps
    to, so "words I keep looking up" is a natural weak-item signal to feed back
    into session planning. Two smaller gaps of the same shape: the "words &
@@ -190,10 +233,13 @@ The dataset work is briefed in full for a fresh session:
 9. **Offline dataset caching** — verify precache coverage and add a visible
    "available offline" state.
 10. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
-11. **Contrast preference and theme families** — keep palette, reading size and
-    contrast as independent axes. Add a manual Normal / High contrast choice,
-    optionally resolving `system` through `prefers-contrast`, before introducing
-    additional light and dark palettes. See [the theming note](theming.md#appearance-axes-stay-separate).
+11. **Appearance axes** — landed, and further than this item asked for: four
+    palettes in light and dark, and a four-step contrast scale rather than the
+    Normal / High pair. Every palette is held to WCAG AA at every level, and the
+    levels are asserted to come out in order. What remains is the optional half —
+    resolving `system` through `prefers-contrast`, which needs a fifth value on
+    the axis (`system`) rather than a fifth level. See
+    [the theming note](theming.md#appearance-is-four-independent-axes).
 
 ## Later (architecture allows, code does not attempt)
 

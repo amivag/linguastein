@@ -1,7 +1,9 @@
 # Task: give verbs their own word cards
 
-**Status:** not started — investigated only. Every blocking unknown below is
-resolved; nothing has been written.
+**Status:** DONE. Landed as described; the two judgement calls in §7 were both
+decided and the reasoning is recorded in the code rather than here. Kept for the
+record of how the investigation was framed — the counts below are as they were
+when it was written (117 verbs, 451 cards), not as they are now (126 and 621).
 **Written:** 2026-08-20
 **For:** a fresh agent session, no prior context assumed
 **Scope:** one id range, one column in one TSV, four edits to the dataset build,

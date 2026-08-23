@@ -76,6 +76,8 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   caer: { yo: 'caigo' },
   oír: { present: ['oigo', 'oyes', 'oye', 'oímos', 'oís', 'oyen'] },
   conocer: { yo: 'conozco' },
+  // Like conocer: the -zco first person is the whole of its irregularity.
+  apetecer: { yo: 'apetezco' },
   parecer: { yo: 'parezco' },
   ofrecer: { yo: 'ofrezco' },
   nacer: { yo: 'nazco' },

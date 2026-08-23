@@ -1,5 +1,12 @@
 # Task: the canonical audio pipeline
 
+> **Status update (2026-08-23):** both code halves are done. The generator was
+> already written; the dataset build now reads `content/es/audio-ledger.tsv`
+> and emits one `audio` file per locale plus the voices from
+> `content/es/voices.tsv`, covered by `tests/data/canonical-audio.test.ts`.
+> Only `approved` rows ship. What remains is the two things no code can decide:
+> the voice licence question in §4.1, and the listening that approval means.
+
 **Status:** ready to start — the runtime seams exist; nothing has been generated
 **Written:** 2026-08-17
 **Revised:** 2026-08-17 — audio became a **pack file kind that references items**

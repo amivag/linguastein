@@ -110,10 +110,18 @@ export const PRESETS: Record<PresetId, Preset> = {
     ],
     mode: 'practice',
     ordering: 'smart',
-    // "Verbs" as a kind, not as the list of every verb lexeme in the pack: the
-    // repository already knows which items exemplify one, and enumerating them
-    // here meant a second such set would be a second enumeration.
-    filter: () => ({ pos: ['VERB'] }),
+    /*
+     * "Verbs" as a kind, not as the list of every verb lexeme in the pack: the
+     * repository already knows which items exemplify one, and enumerating them
+     * here meant a second such set would be a second enumeration.
+     *
+     * Narrowed to sentences and phrases, because the description is a promise.
+     * Verbs got word cards, and `pos: ['VERB']` alone would have quietly filled
+     * this preset with 126 bare infinitives — "useful forms inside natural
+     * sentences" is exactly what an infinitive on its own is not. The cards are
+     * what `vocabulary` is for.
+     */
+    filter: () => ({ pos: ['VERB'], types: ['sentence', 'phrase'] }),
   },
   vocabulary: {
     id: 'vocabulary',

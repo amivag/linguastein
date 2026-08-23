@@ -17,6 +17,45 @@ in the pack's own counts.
 
 ### Added
 
+- **Verbs have word cards.** All 126 of them, in an id range of their own, so
+  `hablar` is a word you can look up rather than only meet, and `Words × Verbs` in
+  Browse lists 126 entries where it used to be an empty page. Study grew a Verbs
+  tile with no edit, which is what deriving that list from the packs was for. The
+  `verbs` preset stayed narrowed to sentences and phrases: "useful forms inside
+  natural sentences" is precisely what a bare infinitive is not.
+- **The dataset build carries canonical audio.** It reads the ledger
+  `scripts/generate-audio.ts` writes and emits one audio file per locale, plus the
+  voices declared in `content/es/voices.tsv`. Only clips a human has marked
+  `approved` ship; a clip is keyed by item, locale and voice rather than by the
+  text it speaks, so a typo fix cannot mint a duplicate; and a row whose item has
+  been deleted is dropped rather than failing the build. No ledger means no audio
+  and a byte-identical pack, which is why this could land before any clip exists.
+  What is left is not code: a voice whose licence permits shipping its output from
+  a CC0 pack, and the listening that approving it honestly costs.
+
+### Fixed
+
+- **Every content word the pack uses now has a lexeme.** Token linking went from
+  96% to 99%: `kilo` appeared twelve times and answered nothing when tapped, in an
+  app whose rule is that every word of every phrase is tappable. 32 nouns, 23
+  modifiers and 9 verbs were added — the verbs only needed declaring, since forms
+  are generated.
+- **Proper nouns are declared as `PROPN`**, a part of speech `inspect.ts` has
+  always known and no content had ever used. A name is now tappable and says it is
+  a name, instead of counting as vocabulary the dataset had forgotten.
+- The 30 occurrences still unlinked are three principled classes rather than a
+  backlog, and `docs/roadmap.md` names them: `ser` and `ir` sharing a preterite
+  (the tokeniser declines to guess), enclitic pronouns, and the two tenses the
+  conjugator does not generate.
+
+### Changed
+
+- CI runs its format check **last**, after the tests and the dataset checks, and
+  `npm run check` matches. A whitespace disagreement can no longer mask a real
+  failure by failing before it.
+
+### Added
+
 - **Six new missions, taking the journey from seven to thirteen.** Five are A1;
   saying what hurts is the first A2 mission, because the exchange that teaches it
   is. Each brings the full shape: a taught passage, a three-rung transfer ladder,

@@ -1340,6 +1340,162 @@
 {"ref":"core-es:item:500356","lang":"en","text":"reservation","type":"natural"}
 {"ref":"core-es:item:500357","lang":"en","text":"glasses","type":"natural"}
 {"ref":"core-es:item:500358","lang":"en","text":"fridge","type":"natural"}
+{"ref":"core-es:item:500359","lang":"en","text":"kilo","type":"natural"}
+{"ref":"core-es:item:500360","lang":"en","text":"platform","type":"natural"}
+{"ref":"core-es:item:500361","lang":"en","text":"living room","type":"natural"}
+{"ref":"core-es:item:500362","lang":"en","text":"metro, underground","type":"natural"}
+{"ref":"core-es:item:500363","lang":"en","text":"line","type":"natural"}
+{"ref":"core-es:item:500364","lang":"en","text":"loaf","type":"natural"}
+{"ref":"core-es:item:500365","lang":"en","text":"lemon","type":"natural"}
+{"ref":"core-es:item:500366","lang":"en","text":"tablet, pill","type":"natural"}
+{"ref":"core-es:item:500367","lang":"en","text":"appointment","type":"natural"}
+{"ref":"core-es:item:500368","lang":"en","text":"throat","type":"natural"}
+{"ref":"core-es:item:500369","lang":"en","text":"wood","type":"natural"}
+{"ref":"core-es:item:500370","lang":"en","text":"machine","type":"natural"}
+{"ref":"core-es:item:500371","lang":"en","text":"bottle","type":"natural"}
+{"ref":"core-es:item:500372","lang":"en","text":"cash","type":"natural"}
+{"ref":"core-es:item:500373","lang":"en","text":"outward journey","type":"natural"}
+{"ref":"core-es:item:500374","lang":"en","text":"return journey","type":"natural"}
+{"ref":"core-es:item:500375","lang":"en","text":"colleague, companion","type":"natural"}
+{"ref":"core-es:item:500376","lang":"en","text":"colleague (female)","type":"natural"}
+{"ref":"core-es:item:500377","lang":"en","text":"teacher (female)","type":"natural"}
+{"ref":"core-es:item:500378","lang":"en","text":"doctor (female)","type":"natural"}
+{"ref":"core-es:item:500379","lang":"en","text":"waitress","type":"natural"}
+{"ref":"core-es:item:500380","lang":"en","text":"foreigner","type":"natural"}
+{"ref":"core-es:item:500381","lang":"en","text":"stop","type":"natural"}
+{"ref":"core-es:item:500382","lang":"en","text":"lift, elevator","type":"natural"}
+{"ref":"core-es:item:500383","lang":"en","text":"entrance, ticket","type":"natural"}
+{"ref":"core-es:item:500384","lang":"en","text":"piece of news","type":"natural"}
+{"ref":"core-es:item:500385","lang":"en","text":"plan","type":"natural"}
+{"ref":"core-es:item:500386","lang":"en","text":"wifi","type":"natural"}
+{"ref":"core-es:item:500387","lang":"en","text":"neighbour (female)","type":"natural"}
+{"ref":"core-es:item:500388","lang":"en","text":"doctor (female)","type":"natural"}
+{"ref":"core-es:item:800001","lang":"en","text":"to be (identity, characteristics)","type":"natural"}
+{"ref":"core-es:item:800002","lang":"en","text":"to be (state, location)","type":"natural"}
+{"ref":"core-es:item:800003","lang":"en","text":"to have","type":"natural"}
+{"ref":"core-es:item:800004","lang":"en","text":"to have (auxiliary)","type":"natural"}
+{"ref":"core-es:item:800005","lang":"en","text":"to do, to make","type":"natural"}
+{"ref":"core-es:item:800006","lang":"en","text":"to go","type":"natural"}
+{"ref":"core-es:item:800007","lang":"en","text":"can, to be able to","type":"natural"}
+{"ref":"core-es:item:800008","lang":"en","text":"to want","type":"natural"}
+{"ref":"core-es:item:800009","lang":"en","text":"to say, to tell","type":"natural"}
+{"ref":"core-es:item:800010","lang":"en","text":"to see","type":"natural"}
+{"ref":"core-es:item:800011","lang":"en","text":"to give","type":"natural"}
+{"ref":"core-es:item:800012","lang":"en","text":"to know (facts)","type":"natural"}
+{"ref":"core-es:item:800013","lang":"en","text":"to know (people, places)","type":"natural"}
+{"ref":"core-es:item:800014","lang":"en","text":"to arrive","type":"natural"}
+{"ref":"core-es:item:800015","lang":"en","text":"to pass, to happen","type":"natural"}
+{"ref":"core-es:item:800016","lang":"en","text":"must, to owe","type":"natural"}
+{"ref":"core-es:item:800017","lang":"en","text":"to put","type":"natural"}
+{"ref":"core-es:item:800018","lang":"en","text":"to seem","type":"natural"}
+{"ref":"core-es:item:800019","lang":"en","text":"to stay, to remain","type":"natural"}
+{"ref":"core-es:item:800020","lang":"en","text":"to believe","type":"natural"}
+{"ref":"core-es:item:800021","lang":"en","text":"to speak, to talk","type":"natural"}
+{"ref":"core-es:item:800022","lang":"en","text":"to carry, to wear","type":"natural"}
+{"ref":"core-es:item:800023","lang":"en","text":"to leave (something), to let","type":"natural"}
+{"ref":"core-es:item:800024","lang":"en","text":"to follow, to continue","type":"natural"}
+{"ref":"core-es:item:800025","lang":"en","text":"to find","type":"natural"}
+{"ref":"core-es:item:800026","lang":"en","text":"to call","type":"natural"}
+{"ref":"core-es:item:800027","lang":"en","text":"to come","type":"natural"}
+{"ref":"core-es:item:800028","lang":"en","text":"to think","type":"natural"}
+{"ref":"core-es:item:800029","lang":"en","text":"to go out, to leave","type":"natural"}
+{"ref":"core-es:item:800030","lang":"en","text":"to return, to come back","type":"natural"}
+{"ref":"core-es:item:800031","lang":"en","text":"to take, to drink","type":"natural"}
+{"ref":"core-es:item:800032","lang":"en","text":"to live","type":"natural"}
+{"ref":"core-es:item:800033","lang":"en","text":"to feel","type":"natural"}
+{"ref":"core-es:item:800034","lang":"en","text":"to look, to watch","type":"natural"}
+{"ref":"core-es:item:800035","lang":"en","text":"to count, to tell","type":"natural"}
+{"ref":"core-es:item:800036","lang":"en","text":"to start, to begin","type":"natural"}
+{"ref":"core-es:item:800037","lang":"en","text":"to wait, to hope","type":"natural"}
+{"ref":"core-es:item:800038","lang":"en","text":"to look for","type":"natural"}
+{"ref":"core-es:item:800039","lang":"en","text":"to enter, to go in","type":"natural"}
+{"ref":"core-es:item:800040","lang":"en","text":"to work","type":"natural"}
+{"ref":"core-es:item:800041","lang":"en","text":"to write","type":"natural"}
+{"ref":"core-es:item:800042","lang":"en","text":"to lose, to miss","type":"natural"}
+{"ref":"core-es:item:800043","lang":"en","text":"to understand","type":"natural"}
+{"ref":"core-es:item:800044","lang":"en","text":"to ask for, to order","type":"natural"}
+{"ref":"core-es:item:800045","lang":"en","text":"to receive","type":"natural"}
+{"ref":"core-es:item:800046","lang":"en","text":"to remember","type":"natural"}
+{"ref":"core-es:item:800047","lang":"en","text":"to finish","type":"natural"}
+{"ref":"core-es:item:800048","lang":"en","text":"to begin","type":"natural"}
+{"ref":"core-es:item:800049","lang":"en","text":"to serve","type":"natural"}
+{"ref":"core-es:item:800050","lang":"en","text":"to take out, to get","type":"natural"}
+{"ref":"core-es:item:800051","lang":"en","text":"to need","type":"natural"}
+{"ref":"core-es:item:800052","lang":"en","text":"to read","type":"natural"}
+{"ref":"core-es:item:800053","lang":"en","text":"to fall","type":"natural"}
+{"ref":"core-es:item:800054","lang":"en","text":"to change","type":"natural"}
+{"ref":"core-es:item:800055","lang":"en","text":"to open","type":"natural"}
+{"ref":"core-es:item:800056","lang":"en","text":"to hear","type":"natural"}
+{"ref":"core-es:item:800057","lang":"en","text":"to finish, to end up","type":"natural"}
+{"ref":"core-es:item:800058","lang":"en","text":"to win, to earn","type":"natural"}
+{"ref":"core-es:item:800059","lang":"en","text":"to bring","type":"natural"}
+{"ref":"core-es:item:800060","lang":"en","text":"to understand","type":"natural"}
+{"ref":"core-es:item:800061","lang":"en","text":"to explain","type":"natural"}
+{"ref":"core-es:item:800062","lang":"en","text":"to ask","type":"natural"}
+{"ref":"core-es:item:800063","lang":"en","text":"to touch, to play (music)","type":"natural"}
+{"ref":"core-es:item:800064","lang":"en","text":"to study","type":"natural"}
+{"ref":"core-es:item:800065","lang":"en","text":"to run","type":"natural"}
+{"ref":"core-es:item:800066","lang":"en","text":"to pay","type":"natural"}
+{"ref":"core-es:item:800067","lang":"en","text":"to help","type":"natural"}
+{"ref":"core-es:item:800068","lang":"en","text":"to be pleasing (to like)","type":"natural"}
+{"ref":"core-es:item:800069","lang":"en","text":"to play","type":"natural"}
+{"ref":"core-es:item:800070","lang":"en","text":"to listen","type":"natural"}
+{"ref":"core-es:item:800071","lang":"en","text":"to offer","type":"natural"}
+{"ref":"core-es:item:800072","lang":"en","text":"to discover","type":"natural"}
+{"ref":"core-es:item:800073","lang":"en","text":"to try","type":"natural"}
+{"ref":"core-es:item:800074","lang":"en","text":"to use","type":"natural"}
+{"ref":"core-es:item:800075","lang":"en","text":"to decide","type":"natural"}
+{"ref":"core-es:item:800076","lang":"en","text":"to repeat","type":"natural"}
+{"ref":"core-es:item:800077","lang":"en","text":"to forget","type":"natural"}
+{"ref":"core-es:item:800078","lang":"en","text":"to eat","type":"natural"}
+{"ref":"core-es:item:800079","lang":"en","text":"to drink","type":"natural"}
+{"ref":"core-es:item:800080","lang":"en","text":"to sleep","type":"natural"}
+{"ref":"core-es:item:800081","lang":"en","text":"to buy","type":"natural"}
+{"ref":"core-es:item:800082","lang":"en","text":"to sell","type":"natural"}
+{"ref":"core-es:item:800083","lang":"en","text":"to travel","type":"natural"}
+{"ref":"core-es:item:800084","lang":"en","text":"to cook","type":"natural"}
+{"ref":"core-es:item:800085","lang":"en","text":"to clean","type":"natural"}
+{"ref":"core-es:item:800086","lang":"en","text":"to wash","type":"natural"}
+{"ref":"core-es:item:800087","lang":"en","text":"to dance","type":"natural"}
+{"ref":"core-es:item:800088","lang":"en","text":"to sing","type":"natural"}
+{"ref":"core-es:item:800089","lang":"en","text":"to walk","type":"natural"}
+{"ref":"core-es:item:800090","lang":"en","text":"to swim","type":"natural"}
+{"ref":"core-es:item:800091","lang":"en","text":"to learn","type":"natural"}
+{"ref":"core-es:item:800092","lang":"en","text":"to teach, to show","type":"natural"}
+{"ref":"core-es:item:800093","lang":"en","text":"to close","type":"natural"}
+{"ref":"core-es:item:800094","lang":"en","text":"to cost","type":"natural"}
+{"ref":"core-es:item:800095","lang":"en","text":"to try, to taste","type":"natural"}
+{"ref":"core-es:item:800096","lang":"en","text":"to show","type":"natural"}
+{"ref":"core-es:item:800097","lang":"en","text":"to have lunch","type":"natural"}
+{"ref":"core-es:item:800098","lang":"en","text":"to prefer","type":"natural"}
+{"ref":"core-es:item:800099","lang":"en","text":"to wake up","type":"natural"}
+{"ref":"core-es:item:800100","lang":"en","text":"to rest","type":"natural"}
+{"ref":"core-es:item:800101","lang":"en","text":"to hurt","type":"natural"}
+{"ref":"core-es:item:800102","lang":"en","text":"to delight (to love)","type":"natural"}
+{"ref":"core-es:item:800103","lang":"en","text":"to rain","type":"natural"}
+{"ref":"core-es:item:800104","lang":"en","text":"to snow","type":"natural"}
+{"ref":"core-es:item:800105","lang":"en","text":"to have dinner","type":"natural"}
+{"ref":"core-es:item:800106","lang":"en","text":"to visit","type":"natural"}
+{"ref":"core-es:item:800107","lang":"en","text":"to work, to function","type":"natural"}
+{"ref":"core-es:item:800108","lang":"en","text":"to depend","type":"natural"}
+{"ref":"core-es:item:800109","lang":"en","text":"to last","type":"natural"}
+{"ref":"core-es:item:800110","lang":"en","text":"to be born","type":"natural"}
+{"ref":"core-es:item:800111","lang":"en","text":"to drive","type":"natural"}
+{"ref":"core-es:item:800112","lang":"en","text":"to recommend","type":"natural"}
+{"ref":"core-es:item:800113","lang":"en","text":"to mean","type":"natural"}
+{"ref":"core-es:item:800114","lang":"en","text":"to send","type":"natural"}
+{"ref":"core-es:item:800115","lang":"en","text":"to book, to reserve","type":"natural"}
+{"ref":"core-es:item:800116","lang":"en","text":"to turn","type":"natural"}
+{"ref":"core-es:item:800117","lang":"en","text":"to forgive, to excuse","type":"natural"}
+{"ref":"core-es:item:800118","lang":"en","text":"to lift; (levantarse) to get up","type":"natural"}
+{"ref":"core-es:item:800119","lang":"en","text":"to shower; (ducharse) to have a shower","type":"natural"}
+{"ref":"core-es:item:800120","lang":"en","text":"to put to bed; (acostarse) to go to bed","type":"natural"}
+{"ref":"core-es:item:800121","lang":"en","text":"to prepare","type":"natural"}
+{"ref":"core-es:item:800122","lang":"en","text":"to introduce, to present","type":"natural"}
+{"ref":"core-es:item:800123","lang":"en","text":"to make glad; (alegrarse) to be glad","type":"natural"}
+{"ref":"core-es:item:800124","lang":"en","text":"to wish, to want","type":"natural"}
+{"ref":"core-es:item:800125","lang":"en","text":"to feel like, to fancy","type":"natural"}
+{"ref":"core-es:item:800126","lang":"en","text":"to excuse","type":"natural"}
 {"ref":"core-es:item:600001","lang":"en","text":"good","type":"natural"}
 {"ref":"core-es:item:600002","lang":"en","text":"bad","type":"natural"}
 {"ref":"core-es:item:600003","lang":"en","text":"big","type":"natural"}
@@ -1434,6 +1590,20 @@
 {"ref":"core-es:item:600076","lang":"en","text":"included","type":"natural"}
 {"ref":"core-es:item:600077","lang":"en","text":"clear, of course","type":"natural"}
 {"ref":"core-es:item:600078","lang":"en","text":"mine","type":"natural"}
+{"ref":"core-es:item:600095","lang":"en","text":"health, medical","type":"natural"}
+{"ref":"core-es:item:600096","lang":"en","text":"sweet","type":"natural"}
+{"ref":"core-es:item:600097","lang":"en","text":"fresh","type":"natural"}
+{"ref":"core-es:item:600098","lang":"en","text":"alike, similar","type":"natural"}
+{"ref":"core-es:item:600099","lang":"en","text":"older, bigger","type":"natural"}
+{"ref":"core-es:item:600100","lang":"en","text":"noisy","type":"natural"}
+{"ref":"core-es:item:600101","lang":"en","text":"together","type":"natural"}
+{"ref":"core-es:item:600102","lang":"en","text":"single, individual","type":"natural"}
+{"ref":"core-es:item:600103","lang":"en","text":"special","type":"natural"}
+{"ref":"core-es:item:600104","lang":"en","text":"great, wonderful","type":"natural"}
+{"ref":"core-es:item:600105","lang":"en","text":"great, brilliant","type":"natural"}
+{"ref":"core-es:item:600106","lang":"en","text":"perfect","type":"natural"}
+{"ref":"core-es:item:600107","lang":"en","text":"last, past","type":"natural"}
+{"ref":"core-es:item:600108","lang":"en","text":"third","type":"natural"}
 {"ref":"core-es:lexeme:ser","lang":"en","text":"to be (identity, characteristics)"}
 {"ref":"core-es:lexeme:estar","lang":"en","text":"to be (state, location)"}
 {"ref":"core-es:lexeme:tener","lang":"en","text":"to have"}
@@ -1551,6 +1721,15 @@
 {"ref":"core-es:lexeme:reservar","lang":"en","text":"to book, to reserve"}
 {"ref":"core-es:lexeme:girar","lang":"en","text":"to turn"}
 {"ref":"core-es:lexeme:perdonar","lang":"en","text":"to forgive, to excuse"}
+{"ref":"core-es:lexeme:levantar","lang":"en","text":"to lift; (levantarse) to get up"}
+{"ref":"core-es:lexeme:duchar","lang":"en","text":"to shower; (ducharse) to have a shower"}
+{"ref":"core-es:lexeme:acostar","lang":"en","text":"to put to bed; (acostarse) to go to bed"}
+{"ref":"core-es:lexeme:preparar","lang":"en","text":"to prepare"}
+{"ref":"core-es:lexeme:presentar","lang":"en","text":"to introduce, to present"}
+{"ref":"core-es:lexeme:alegrar","lang":"en","text":"to make glad; (alegrarse) to be glad"}
+{"ref":"core-es:lexeme:desear","lang":"en","text":"to wish, to want"}
+{"ref":"core-es:lexeme:apetecer","lang":"en","text":"to feel like, to fancy"}
+{"ref":"core-es:lexeme:disculpar","lang":"en","text":"to excuse"}
 {"ref":"core-es:lexeme:persona","lang":"en","text":"person"}
 {"ref":"core-es:lexeme:hombre","lang":"en","text":"man"}
 {"ref":"core-es:lexeme:mujer","lang":"en","text":"woman"}
@@ -1909,6 +2088,38 @@
 {"ref":"core-es:lexeme:reserva","lang":"en","text":"reservation"}
 {"ref":"core-es:lexeme:lentes","lang":"en","text":"glasses"}
 {"ref":"core-es:lexeme:refrigerador","lang":"en","text":"fridge"}
+{"ref":"core-es:lexeme:kilo","lang":"en","text":"kilo"}
+{"ref":"core-es:lexeme:anden","lang":"en","text":"platform"}
+{"ref":"core-es:lexeme:salon","lang":"en","text":"living room"}
+{"ref":"core-es:lexeme:metro","lang":"en","text":"metro, underground"}
+{"ref":"core-es:lexeme:linea","lang":"en","text":"line"}
+{"ref":"core-es:lexeme:barra","lang":"en","text":"loaf"}
+{"ref":"core-es:lexeme:limon","lang":"en","text":"lemon"}
+{"ref":"core-es:lexeme:pastilla","lang":"en","text":"tablet, pill"}
+{"ref":"core-es:lexeme:cita","lang":"en","text":"appointment"}
+{"ref":"core-es:lexeme:garganta","lang":"en","text":"throat"}
+{"ref":"core-es:lexeme:madera","lang":"en","text":"wood"}
+{"ref":"core-es:lexeme:maquina","lang":"en","text":"machine"}
+{"ref":"core-es:lexeme:botella","lang":"en","text":"bottle"}
+{"ref":"core-es:lexeme:efectivo","lang":"en","text":"cash"}
+{"ref":"core-es:lexeme:ida","lang":"en","text":"outward journey"}
+{"ref":"core-es:lexeme:vuelta","lang":"en","text":"return journey"}
+{"ref":"core-es:lexeme:companero","lang":"en","text":"colleague, companion"}
+{"ref":"core-es:lexeme:companera","lang":"en","text":"colleague (female)"}
+{"ref":"core-es:lexeme:profesora","lang":"en","text":"teacher (female)"}
+{"ref":"core-es:lexeme:doctora","lang":"en","text":"doctor (female)"}
+{"ref":"core-es:lexeme:camarera","lang":"en","text":"waitress"}
+{"ref":"core-es:lexeme:extranjero","lang":"en","text":"foreigner"}
+{"ref":"core-es:lexeme:total","lang":"en","text":"total"}
+{"ref":"core-es:lexeme:acuerdo","lang":"en","text":"agreement"}
+{"ref":"core-es:lexeme:parada","lang":"en","text":"stop"}
+{"ref":"core-es:lexeme:ascensor","lang":"en","text":"lift, elevator"}
+{"ref":"core-es:lexeme:entrada","lang":"en","text":"entrance, ticket"}
+{"ref":"core-es:lexeme:noticia","lang":"en","text":"piece of news"}
+{"ref":"core-es:lexeme:plan","lang":"en","text":"plan"}
+{"ref":"core-es:lexeme:wifi","lang":"en","text":"wifi"}
+{"ref":"core-es:lexeme:vecina","lang":"en","text":"neighbour (female)"}
+{"ref":"core-es:lexeme:medica","lang":"en","text":"doctor (female)"}
 {"ref":"core-es:lexeme:bueno","lang":"en","text":"good"}
 {"ref":"core-es:lexeme:malo","lang":"en","text":"bad"}
 {"ref":"core-es:lexeme:grande","lang":"en","text":"big"}
@@ -2127,6 +2338,57 @@
 {"ref":"core-es:lexeme:recto","lang":"en","text":"straight ahead"}
 {"ref":"core-es:lexeme:mi-pron","lang":"en","text":"me (after a preposition)"}
 {"ref":"core-es:lexeme:ni","lang":"en","text":"nor, neither"}
+{"ref":"core-es:lexeme:sanitario","lang":"en","text":"health, medical"}
+{"ref":"core-es:lexeme:dulce","lang":"en","text":"sweet"}
+{"ref":"core-es:lexeme:fresco","lang":"en","text":"fresh"}
+{"ref":"core-es:lexeme:parecido","lang":"en","text":"alike, similar"}
+{"ref":"core-es:lexeme:mayor","lang":"en","text":"older, bigger"}
+{"ref":"core-es:lexeme:ruidoso","lang":"en","text":"noisy"}
+{"ref":"core-es:lexeme:junto","lang":"en","text":"together"}
+{"ref":"core-es:lexeme:asi","lang":"en","text":"like this, like that"}
+{"ref":"core-es:lexeme:adonde","lang":"en","text":"where to"}
+{"ref":"core-es:lexeme:recien","lang":"en","text":"just, freshly"}
+{"ref":"core-es:lexeme:encima","lang":"en","text":"above, on top"}
+{"ref":"core-es:lexeme:eso","lang":"en","text":"that"}
+{"ref":"core-es:lexeme:vosotros","lang":"en","text":"you (plural, informal)"}
+{"ref":"core-es:lexeme:alguno","lang":"en","text":"some, any"}
+{"ref":"core-es:lexeme:ninguno","lang":"en","text":"none, not any"}
+{"ref":"core-es:lexeme:sevilla","lang":"en","text":"Seville"}
+{"ref":"core-es:lexeme:valencia","lang":"en","text":"Valencia"}
+{"ref":"core-es:lexeme:granada","lang":"en","text":"Granada"}
+{"ref":"core-es:lexeme:carmen","lang":"en","text":"Carmen (a first name)"}
+{"ref":"core-es:lexeme:daniel","lang":"en","text":"Daniel (a first name)"}
+{"ref":"core-es:lexeme:pablo","lang":"en","text":"Pablo (a first name)"}
+{"ref":"core-es:lexeme:lucia","lang":"en","text":"Lucía (a first name)"}
+{"ref":"core-es:lexeme:gomez","lang":"en","text":"Gómez (a surname)"}
+{"ref":"core-es:lexeme:individual","lang":"en","text":"single, individual"}
+{"ref":"core-es:lexeme:especial","lang":"en","text":"special"}
+{"ref":"core-es:lexeme:estupendo","lang":"en","text":"great, wonderful"}
+{"ref":"core-es:lexeme:genial","lang":"en","text":"great, brilliant"}
+{"ref":"core-es:lexeme:perfecto","lang":"en","text":"perfect"}
+{"ref":"core-es:lexeme:pasado","lang":"en","text":"last, past"}
+{"ref":"core-es:lexeme:tercero","lang":"en","text":"third"}
+{"ref":"core-es:lexeme:regular","lang":"en","text":"so-so, not great"}
+{"ref":"core-es:lexeme:luego","lang":"en","text":"later, then"}
+{"ref":"core-es:lexeme:entonces","lang":"en","text":"then, so"}
+{"ref":"core-es:lexeme:detras","lang":"en","text":"behind"}
+{"ref":"core-es:lexeme:delante","lang":"en","text":"in front"}
+{"ref":"core-es:lexeme:quiza","lang":"en","text":"maybe"}
+{"ref":"core-es:lexeme:normalmente","lang":"en","text":"normally"}
+{"ref":"core-es:lexeme:igualmente","lang":"en","text":"likewise, you too"}
+{"ref":"core-es:lexeme:vale","lang":"en","text":"OK"}
+{"ref":"core-es:lexeme:luis","lang":"en","text":"Luis (a first name)"}
+{"ref":"core-es:lexeme:ana","lang":"en","text":"Ana (a first name)"}
+{"ref":"core-es:lexeme:marta","lang":"en","text":"Marta (a first name)"}
+{"ref":"core-es:lexeme:elena","lang":"en","text":"Elena (a first name)"}
+{"ref":"core-es:lexeme:lopez","lang":"en","text":"López (a surname)"}
+{"ref":"core-es:lexeme:garcia","lang":"en","text":"García (a surname)"}
+{"ref":"core-es:lexeme:madrid","lang":"en","text":"Madrid"}
+{"ref":"core-es:lexeme:barcelona","lang":"en","text":"Barcelona"}
+{"ref":"core-es:lexeme:espana","lang":"en","text":"Spain"}
+{"ref":"core-es:lexeme:mexico","lang":"en","text":"Mexico"}
+{"ref":"core-es:lexeme:argentina","lang":"en","text":"Argentina"}
+{"ref":"core-es:lexeme:menudo","lang":"en","text":"often (a menudo)"}
 {"ref":"core-es:skill:tener-que-infinitive","lang":"en","text":"to have to do something"}
 {"ref":"core-es:skill:ir-a-infinitive","lang":"en","text":"going to do something (near future)"}
 {"ref":"core-es:skill:querer-infinitive","lang":"en","text":"to want to do something"}

@@ -228,3 +228,54 @@ perfectamente	perfectly	ADV	a2	core
 recto	straight ahead	ADV	a2	travel
 mí	me (after a preposition)	PRON	a1	grammar
 ni	nor, neither	CCONJ	a2	grammar
+600095	sanitario	health, medical	ADJ	a2	health
+600096	dulce	sweet	ADJ	a1	food-drink
+600097	fresco	fresh	ADJ	a1	food-drink
+600098	parecido	alike, similar	ADJ	a2	people
+600099	mayor	older, bigger	ADJ	a1	family
+600100	ruidoso	noisy	ADJ	a2	home
+600101	junto	together	ADJ	a1	social
+-	así	like this, like that	ADV	a1	grammar	
+-	adónde	where to	ADV	a1	questions	
+-	recién	just, freshly	ADV	a2	grammar	
+-	encima	above, on top	ADV	a1	place	
+-	eso	that	PRON	a1	grammar	
+-	vosotros	you (plural, informal)	PRON	a2	grammar	vosotras
+-	alguno	some, any	DET	a1	grammar	alguna,algunos,algunas,algún
+-	ninguno	none, not any	DET	a1	grammar	ninguna,ningunos,ningunas,ningún
+-	Sevilla	Seville	PROPN	a1	city	
+-	Valencia	Valencia	PROPN	a1	city	
+-	Granada	Granada	PROPN	a1	city	
+-	Carmen	Carmen (a first name)	PROPN	a1	people	
+-	Daniel	Daniel (a first name)	PROPN	a1	people	
+-	Pablo	Pablo (a first name)	PROPN	a1	people	
+-	Lucía	Lucía (a first name)	PROPN	a1	people	
+-	Gómez	Gómez (a surname)	PROPN	a1	people
+600102	individual	single, individual	ADJ	a1	travel
+600103	especial	special	ADJ	a1	grammar
+600104	estupendo	great, wonderful	ADJ	a2	feelings
+600105	genial	great, brilliant	ADJ	a1	feelings
+600106	perfecto	perfect	ADJ	a1	feelings
+600107	pasado	last, past	ADJ	a1	time
+600108	tercero	third	ADJ	a1	numbers	tercer
+-	regular	so-so, not great	ADV	a1	feelings	
+-	luego	later, then	ADV	a1	time	
+-	entonces	then, so	ADV	a1	grammar	
+-	detrás	behind	ADV	a1	place	
+-	delante	in front	ADV	a1	place	
+-	quizá	maybe	ADV	a2	grammar	quizás
+-	normalmente	normally	ADV	a2	time	
+-	igualmente	likewise, you too	ADV	a1	greetings	
+-	vale	OK	INTJ	a1	greetings	
+-	Luis	Luis (a first name)	PROPN	a1	people	
+-	Ana	Ana (a first name)	PROPN	a1	people	
+-	Marta	Marta (a first name)	PROPN	a1	people	
+-	Elena	Elena (a first name)	PROPN	a1	people	
+-	López	López (a surname)	PROPN	a1	people	
+-	García	García (a surname)	PROPN	a1	people	
+-	Madrid	Madrid	PROPN	a1	city	
+-	Barcelona	Barcelona	PROPN	a1	city	
+-	España	Spain	PROPN	a1	city	
+-	México	Mexico	PROPN	a1	city	
+-	Argentina	Argentina	PROPN	a1	city	
+-	menudo	often (a menudo)	ADV	a2	time	

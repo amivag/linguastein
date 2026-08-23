@@ -368,3 +368,35 @@
 # Latin American halves of pairs whose Spanish-of-Spain side shipped unmarked.
 500357	lentes	glasses	m	lentes	a1	clothes	es-419
 500358	refrigerador	fridge	m		a2	home	es-419
+500359	kilo	kilo	m		a1	shopping
+500360	andén	platform	m	andenes	a1	travel
+500361	salón	living room	m	salones	a1	home
+500362	metro	metro, underground	m		a1	travel
+500363	línea	line	f		a1	travel
+500364	barra	loaf	f		a1	food-drink
+500365	limón	lemon	m	limones	a1	food-drink
+500366	pastilla	tablet, pill	f		a2	health
+500367	cita	appointment	f		a2	health
+500368	garganta	throat	f		a1	body
+500369	madera	wood	f		a2	objects
+500370	máquina	machine	f		a1	objects
+500371	botella	bottle	f		a1	food-drink
+500372	efectivo	cash	m		a2	shopping
+500373	ida	outward journey	f		a1	travel
+500374	vuelta	return journey	f		a1	travel
+500375	compañero	colleague, companion	m		a1	work
+500376	compañera	colleague (female)	f		a1	work
+500377	profesora	teacher (female)	f		a1	school
+500378	doctora	doctor (female)	f		a1	health
+500379	camarera	waitress	f		a2	restaurant
+500380	extranjero	foreigner	m		a2	people
+-	total	total	m		a1	numbers
+-	acuerdo	agreement	m		a1	grammar
+500381	parada	stop	f		a1	travel
+500382	ascensor	lift, elevator	m	ascensores	a1	home
+500383	entrada	entrance, ticket	f		a1	city
+500384	noticia	piece of news	f		a2	communication
+500385	plan	plan	m	planes	a1	social
+500386	wifi	wifi	m		a2	objects
+500387	vecina	neighbour (female)	f		a1	people
+500388	médica	doctor (female)	f		a1	health

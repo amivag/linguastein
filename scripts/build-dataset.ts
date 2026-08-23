@@ -43,6 +43,7 @@ interface VerbRow {
   level: string;
   regularity: string;
   topics: string[];
+  row: SourceRow;
 }
 interface NounRow {
   lemma: string;
@@ -191,21 +192,23 @@ function readRows(file: string): SourceRow[] {
   return source.rows;
 }
 
-const readTsv = (file: string): string[][] => readRows(file).map((row) => row.fields);
-
 const list = (value: string | undefined): string[] =>
   (value ?? '')
     .split(',')
     .map((entry) => entry.trim())
     .filter(Boolean);
 
-const verbs: VerbRow[] = readTsv('verbs.tsv').map(([lemma, gloss, level, regularity, topics]) => ({
-  lemma: lemma!,
-  gloss: gloss!,
-  level: level!,
-  regularity: regularity!,
-  topics: list(topics),
-}));
+const verbs: VerbRow[] = readRows('verbs.tsv').map((row) => {
+  const [lemma, gloss, level, regularity, topics] = row.fields;
+  return {
+    lemma: lemma!,
+    gloss: gloss!,
+    level: level!,
+    regularity: regularity!,
+    topics: list(topics),
+    row,
+  };
+});
 
 const nouns: NounRow[] = readRows('nouns.tsv').map((row) => {
   const [lemma, gloss, gender, plural, level, topics, regions, register] = row.fields;
@@ -457,7 +460,7 @@ if (problems.length > 0) {
  */
 const LEDGER_FILE = 'id-ledger.tsv';
 
-type IdKind = 'sentence' | 'noun-card' | 'modifier-card' | 'passage';
+type IdKind = 'sentence' | 'noun-card' | 'modifier-card' | 'verb-card' | 'passage';
 
 /** One range per kind, so appending a noun cannot renumber an adjective. */
 const ID_RANGES: Record<IdKind, { first: number; last: number }> = {
@@ -465,6 +468,7 @@ const ID_RANGES: Record<IdKind, { first: number; last: number }> = {
   'noun-card': { first: 500_001, last: 599_999 },
   'modifier-card': { first: 600_001, last: 699_999 },
   passage: { first: 700_001, last: 799_999 },
+  'verb-card': { first: 800_001, last: 899_999 },
 };
 
 interface LedgerEntry {
@@ -549,6 +553,23 @@ for (const modifier of modifiers) {
   // so this loop silently issued ids to rows that then had no card to own them.
   if (modifier.row.noCard || !CARD_POS.has(modifier.pos)) continue;
   claimId(modifier.row, 'modifier-card', modifier.lemma, nextModifierCardId);
+}
+
+/*
+ * Every verb gets a card, including `haber`.
+ *
+ * The alternative was to give auxiliaries the `-` sentinel, and that was
+ * rejected on purpose: the sentinel means two things today — a homograph that
+ * would ship a duplicate card, and a word no sentence uses yet — and its being
+ * narrow is what makes it readable. "Auxiliaries are not worth drilling" would
+ * be a third meaning, decided by taste, in the one column a reader has to trust.
+ * A card for `haber` is odd; a sentinel that means three unrelated things is
+ * worse.
+ */
+const nextVerbCardId = allocatorFor('verb-card');
+for (const verb of verbs) {
+  if (verb.row.noCard) continue;
+  claimId(verb.row, 'verb-card', verb.lemma, nextVerbCardId);
 }
 
 const nextPassageId = allocatorFor('passage');
@@ -1381,6 +1402,19 @@ const vocabularySources = [
       regions: noun.regions,
       register: noun.register,
     })),
+  ...verbs
+    .filter((verb) => !verb.row.noCard)
+    .map((verb) => ({
+      id: itemId(verb.row),
+      lemma: verb.lemma,
+      pos: 'VERB',
+      level: verb.level,
+      topics: verb.topics,
+      // A verb card is an infinitive: nothing about it is regional or marked for
+      // register, and its forms are generated rather than authored.
+      regions: [] as string[],
+      register: '',
+    })),
   ...modifiers
     .filter((modifier) => !modifier.row.noCard && CARD_POS.has(modifier.pos))
     .map((modifier) => ({
@@ -1620,6 +1654,15 @@ const translations: TranslationRecord[] = [
 
 function glossOf(lemma: string, pos: string): string {
   if (pos === 'NOUN') return nouns.find((noun) => noun.lemma === lemma)!.gloss;
+  /*
+   * A verb gloss comes from verbs.tsv — but not every VERB lexeme is a row
+   * there. `hay` is declared in modifiers.tsv, because it is a form rather
+   * than a conjugatable lemma and nothing would generate it. So this looks
+   * and falls through, instead of asserting and dying on the one verb in the
+   * pack that lives somewhere else.
+   */
+  const verb = pos === 'VERB' ? verbs.find((candidate) => candidate.lemma === lemma) : undefined;
+  if (verb) return verb.gloss;
   const gloss = modifiers.find((modifier) => modifier.lemma === lemma)!.gloss;
 
   // A numeral's gloss carries its digits. Without them the exercises drill a
@@ -1630,6 +1673,122 @@ function glossOf(lemma: string, pos: string): string {
   const value = numeralValues.get(lemma);
   return value === undefined ? gloss : `${gloss} (${value})`;
 }
+
+// ── audio ───────────────────────────────────────────────────────────────────
+
+/**
+ * Canonical audio, from the ledger `generate-audio.ts` writes.
+ *
+ * The two halves of the pipeline meet here and nowhere else: the generator owns
+ * synthesis and never touches the pack, and this reads what it recorded and
+ * never synthesises. So a voice can be added, reviewed, replaced or dropped
+ * without a byte of content changing — which is also what keeps a pack an
+ * exportable, self-contained unit.
+ *
+ * Three rules, all of them consequences of the ledger's shape:
+ *
+ * 1. **Only `approved` clips ship.** The point of a ledger with a column a human
+ *    owns is that nothing reaches a learner unheard. A row still marked
+ *    `pending`, `redo` or `failed` is work in progress, not content.
+ * 2. **The text hash travels with the clip.** An item keeps its id through a typo
+ *    fix, so the hash is the only thing that can tell a current clip from one
+ *    still pronouncing the old wording.
+ * 3. **One file per locale.** A locale can then be dropped from a build by
+ *    removing one manifest entry, and each file stays small enough to read.
+ *
+ * No ledger, no audio: the pack ships exactly as it does today, which is why
+ * this can land before a single clip exists.
+ */
+interface AudioLedgerRow {
+  readonly item: string;
+  readonly locale: string;
+  readonly voice: string;
+  readonly textHash: string;
+  readonly file: string;
+  readonly durationMs: string;
+  readonly review: string;
+}
+
+const AUDIO_LEDGER_FILE = 'audio-ledger.tsv';
+
+function readAudioLedger(): AudioLedgerRow[] {
+  if (!existsSync(join(CONTENT_DIR, AUDIO_LEDGER_FILE))) return [];
+  return readRows(AUDIO_LEDGER_FILE).flatMap((row) => {
+    // The first column is an item's local id, which `readSource` recognises as an
+    // id and strips — so the item comes off `row.id` rather than off the fields.
+    const item = row.id;
+    const [locale, voice, textHash, path, durationMs, , review] = row.fields;
+    if (!item || !locale || !voice || !textHash || !path) return [];
+    return [
+      {
+        item,
+        locale,
+        voice,
+        textHash,
+        file: path,
+        durationMs: durationMs ?? '',
+        review: review ?? '',
+      },
+    ];
+  });
+}
+
+const audioLedger = readAudioLedger();
+const approvedAudio = audioLedger.filter((row) => row.review === 'approved');
+
+const audioClips = approvedAudio.flatMap((row) => {
+  const item = `${PACK_ID}:item:${row.item}`;
+  // A clip whose item no longer exists is stale rather than fatal: a row can
+  // outlive the sentence it spoke, so it is dropped and counted below.
+  if (!itemsById.has(item)) return [];
+  return [
+    {
+      // Stable per (item, locale, voice), deliberately not per hash: a
+      // re-recording of the same line in the same voice fills the same slot, and
+      // an id that moved with the wording would be a new clip every typo fix.
+      id: `${PACK_ID}:audio:${row.item}-${row.locale}-${row.voice}`,
+      pack: PACK_ID,
+      item,
+      locale: row.locale,
+      voice: row.voice,
+      src: row.file,
+      textHash: row.textHash,
+      ...(row.durationMs ? { durationMs: Number(row.durationMs) } : {}),
+      provenance: { source: 'generated', review: 'reviewed', revision: 1 },
+    },
+  ];
+});
+
+const audioLocales = [...new Set(audioClips.map((clip) => clip.locale))].sort();
+
+/** A voice is a thing with provenance, so it is declared rather than inferred. */
+interface VoiceRow {
+  readonly id: string;
+  readonly locale: string;
+  readonly label: string;
+  readonly provider: string;
+  readonly license: string;
+  readonly review: string;
+}
+
+const VOICES_FILE = 'voices.tsv';
+
+const voiceRows: VoiceRow[] = existsSync(join(CONTENT_DIR, VOICES_FILE))
+  ? readRows(VOICES_FILE).flatMap((row) => {
+      const [id, locale, label, provider, license, review] = row.fields;
+      if (!id || !locale) return [];
+      return [
+        {
+          id,
+          locale,
+          label: label ?? id,
+          provider: provider ?? '',
+          license: license ?? '',
+          review: review ?? 'unreviewed',
+        },
+      ];
+    })
+  : [];
 
 // ── write ───────────────────────────────────────────────────────────────────
 
@@ -1643,6 +1802,11 @@ const files = [
   { kind: 'items', path: 'es-a1-a2-core-sentences.jsonl', records: sentenceItems },
   { kind: 'passages', path: 'es-a1-a2-core-passages.jsonl', records: passageRecords },
   { kind: 'translations', path: 'es-a1-a2-core-translations-en.jsonl', records: translations },
+  ...audioLocales.map((locale) => ({
+    kind: 'audio',
+    path: `es-a1-a2-core-audio-${locale}.jsonl`,
+    records: audioClips.filter((clip) => clip.locale === locale),
+  })),
 ].filter((file) => file.records.length > 0);
 
 /** Drops empty arrays and undefined fields so the JSONL stays readable. */
@@ -1688,6 +1852,23 @@ const manifest = {
           id: topic.slug,
           label: topic.label,
           ...(topic.group ? { group: topic.group } : {}),
+        })),
+      }
+    : {}),
+  /*
+   * Voices are declared, not inferred from the clips. A voice carries its own
+   * licence — generated speech is not automatically yours to redistribute — and
+   * the settings picker needs a label that no amount of scanning files supplies.
+   */
+  ...(voiceRows.length > 0
+    ? {
+        voices: voiceRows.map((voice) => ({
+          id: voice.id,
+          locale: voice.locale,
+          label: voice.label,
+          ...(voice.provider ? { provider: voice.provider } : {}),
+          ...(voice.license ? { license: voice.license } : {}),
+          review: voice.review,
         })),
       }
     : {}),

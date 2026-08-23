@@ -116,3 +116,12 @@
 {"id":"core-es:lexeme:reservar","lemma":"reservar","pos":"VERB","level":"a2"}
 {"id":"core-es:lexeme:girar","lemma":"girar","pos":"VERB","level":"a2"}
 {"id":"core-es:lexeme:perdonar","lemma":"perdonar","pos":"VERB","level":"a2"}
+{"id":"core-es:lexeme:levantar","lemma":"levantar","pos":"VERB","level":"a1"}
+{"id":"core-es:lexeme:duchar","lemma":"duchar","pos":"VERB","level":"a1"}
+{"id":"core-es:lexeme:acostar","lemma":"acostar","pos":"VERB","level":"a1","tags":["irregular"]}
+{"id":"core-es:lexeme:preparar","lemma":"preparar","pos":"VERB","level":"a1"}
+{"id":"core-es:lexeme:presentar","lemma":"presentar","pos":"VERB","level":"a1"}
+{"id":"core-es:lexeme:alegrar","lemma":"alegrar","pos":"VERB","level":"a1"}
+{"id":"core-es:lexeme:desear","lemma":"desear","pos":"VERB","level":"a1"}
+{"id":"core-es:lexeme:apetecer","lemma":"apetecer","pos":"VERB","level":"a2","tags":["irregular"]}
+{"id":"core-es:lexeme:disculpar","lemma":"disculpar","pos":"VERB","level":"a1"}

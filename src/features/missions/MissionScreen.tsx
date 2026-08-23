@@ -8,7 +8,7 @@ import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { TokenizedText } from '../../components/TokenizedText';
-import { useWordSelection } from '../../components/useWordSelection';
+import { useWordSelection, type WordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
   isMissionUseSession,
@@ -19,7 +19,7 @@ import {
   type MissionStage,
   type MissionTransferSupport,
 } from '../../domain/missions';
-import type { LearningItem, SkillId } from '../../domain/content';
+import type { ItemId, LearningItem, SkillId } from '../../domain/content';
 import {
   defaultVariationSelections,
   renderVariation,
@@ -64,9 +64,26 @@ export function MissionScreen() {
   const { services, preferences } = useServices();
   const mission = missionById(MISSIONS, course, missionId);
   const chosenStage: MissionStage = stage === 'use' ? 'use' : 'understand';
-  const [transferStep, setTransferStep] = useState<
-    ReturnType<typeof nextMissionTransfer> | null | undefined
-  >(chosenStage === 'use' ? undefined : null);
+  /**
+   * Which rung of the ladder the Use stage is on: `undefined` until the attempt
+   * log has been read, `null` when there is no ladder.
+   *
+   * The answer is stored with the mission it answers *for*, and "not known yet"
+   * is derived from the two disagreeing rather than written by a reset. Writing
+   * it was the older shape and a real hazard: a `setState` in an effect body
+   * renders once with the previous mission's rung before the reset lands, and
+   * the rung decides which passage the whole screen shows.
+   */
+  const [resolvedTransfer, setResolvedTransfer] = useState<{
+    readonly missionId: string;
+    readonly step: ReturnType<typeof nextMissionTransfer> | null;
+  } | null>(null);
+  const transferStep =
+    chosenStage !== 'use'
+      ? null
+      : resolvedTransfer && resolvedTransfer.missionId === mission?.id
+        ? resolvedTransfer.step
+        : undefined;
   const passageLocalId = chosenStage === 'use' ? transferStep?.transfer.passage : mission?.passage;
   const requestedPassage = passageLocalId
     ? services.repository.passageByLocalId(passageLocalId)
@@ -93,7 +110,6 @@ export function MissionScreen() {
   useEffect(() => {
     if (chosenStage !== 'use' || !mission) return;
     let cancelled = false;
-    setTransferStep(undefined);
     missionUseSession.current = undefined;
     void services.storage.attempts.recent(10_000).then((attempts) => {
       if (cancelled) return;
@@ -120,9 +136,10 @@ export function MissionScreen() {
           complete.add(transfer.passage);
         }
       }
-      setTransferStep(
-        nextMissionTransfer({ ...mission, transfers: availableTransfers }, complete) ?? null,
-      );
+      setResolvedTransfer({
+        missionId: mission.id,
+        step: nextMissionTransfer({ ...mission, transfers: availableTransfers }, complete) ?? null,
+      });
     });
     return () => {
       cancelled = true;
@@ -187,6 +204,16 @@ export function MissionScreen() {
       }),
     [mission, preferences.referenceLanguage, services.repository],
   );
+  /**
+   * Which word is open, held here rather than in the stage that shows it.
+   *
+   * UnderstandStage and UseStage are declared inside this component, so every
+   * render of it gives them a fresh identity and React remounts them — and any
+   * state they own goes with it. That is survivable for a toggle, and not for
+   * this: the capability query resolves a moment after mount, so a learner who
+   * tapped a word promptly watched the sheet vanish before it appeared.
+   */
+  const words = useWordSelection();
   const variationPatterns = mission ? (MISSION_VARIATIONS[mission.id] ?? []) : [];
 
   const recordMissionUse = useCallback(
@@ -247,6 +274,12 @@ export function MissionScreen() {
     <AppShell title={mission.title} onBack="history" showNav={false}>
       {chosenStage === 'understand' ? (
         <UnderstandStage
+          key={passage.id}
+          words={words}
+          language={course.language}
+          speak={speak}
+          speakText={speakText}
+          translationOf={translationOf}
           missionId={mission.id}
           missionGoal={mission.goal}
           passageTitle={passage.title}
@@ -259,6 +292,11 @@ export function MissionScreen() {
         />
       ) : (
         <UseStage
+          key={passage.id}
+          words={words}
+          speak={speak}
+          translationOf={translationOf}
+          intentionCue={intentionCue}
           missionId={mission.id}
           missionGoal={mission.goal}
           partner={mission.scenarioPartner}
@@ -287,382 +325,6 @@ export function MissionScreen() {
     speakText(item.text);
   }
 
-  function speakText(text: string) {
-    void services.audio.speak({
-      text,
-      locale: preferences.pronunciationLocale,
-      ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
-    });
-  }
-
-  function UnderstandStage({
-    missionId: id,
-    missionGoal,
-    passageTitle,
-    capabilities: stageCapabilities,
-    responsePalettes: stagePalettes,
-    variationPatterns: stageVariations,
-    items: stageItems,
-    speakers,
-    onPractise,
-  }: {
-    readonly missionId: string;
-    readonly missionGoal: string;
-    readonly passageTitle: string;
-    readonly capabilities: readonly MissionCapability[];
-    readonly responsePalettes: readonly ResolvedResponsePalette[];
-    readonly variationPatterns: readonly VariationPattern[];
-    readonly items: readonly LearningItem[];
-    readonly speakers?: readonly string[];
-    readonly onPractise: () => void;
-  }) {
-    const [showMeanings, setShowMeanings] = useState(false);
-    const words = useWordSelection();
-    const openItem = words.item ? stageItems.find((item) => item.id === words.item) : undefined;
-
-    return (
-      <>
-        <MissionJourney current="understand" />
-        <section className={styles.brief} aria-labelledby={`${id}-goal`}>
-          <p className={styles.eyebrow}>Your goal</p>
-          <h2 id={`${id}-goal`}>{missionGoal}</h2>
-          <p>First understand the connected example. Tap any word when you need help.</p>
-        </section>
-
-        {stageCapabilities.length > 0 && (
-          <CapabilityList capabilities={stageCapabilities} variant="preview" />
-        )}
-
-        {stagePalettes.length > 0 && (
-          <ResponsePalettePanel
-            palettes={stagePalettes}
-            language={course.language}
-            onListen={speak}
-          />
-        )}
-
-        {stageVariations.length > 0 && (
-          <VariationLabPanel
-            patterns={stageVariations}
-            language={course.language}
-            onListen={speakText}
-          />
-        )}
-
-        <div className={styles.actions}>
-          <Button onClick={() => void speakAll(stageItems)}>
-            <Icon name="speak" /> Listen to all
-          </Button>
-          <Button onClick={() => setShowMeanings((shown) => !shown)} aria-pressed={showMeanings}>
-            {showMeanings ? 'Hide meaning' : 'Show meaning'}
-          </Button>
-        </div>
-
-        <ol className={styles.lines} aria-label={`${passageTitle}, ${stageItems.length} lines`}>
-          {stageItems.map((item, index) => (
-            <li key={item.id}>
-              {speakers?.[index] && <p className={styles.speaker}>{speakers[index]}</p>}
-              <TokenizedText
-                item={item}
-                className={styles.lineText}
-                onSelect={(token) => words.open(item.id, token)}
-                selected={words.tokensFor(item.id)}
-                contextLabel={item.text}
-              />
-              {showMeanings && translationOf(item) && (
-                <p className={styles.meaning}>{translationOf(item)}</p>
-              )}
-              <button
-                type="button"
-                className={styles.linePlay}
-                onClick={() => speak(item)}
-                aria-label={`Listen to “${item.text}”`}
-              >
-                <Icon name="speak" size="lg" />
-              </button>
-            </li>
-          ))}
-        </ol>
-
-        <Button variant="primary" block large onClick={onPractise}>
-          Start practice <Icon name="forward" />
-        </Button>
-
-        {openItem && (
-          <WordInfoSheet
-            item={openItem}
-            tokenIds={words.tokens}
-            onChange={words.set}
-            onClose={words.close}
-          />
-        )}
-      </>
-    );
-  }
-
-  function UseStage({
-    missionId: id,
-    missionGoal,
-    partner,
-    transfer,
-    transferBrief,
-    transferSupport,
-    transferPosition,
-    transferTotal,
-    capabilities: stageCapabilities,
-    responsePalettes: stagePalettes,
-    learnerSpeaker,
-    items: stageItems,
-    speakers,
-    onGrade,
-    onFinish,
-  }: {
-    readonly missionId: string;
-    readonly missionGoal: string;
-    readonly partner: string;
-    readonly transfer: boolean;
-    readonly transferBrief?: string;
-    readonly transferSupport: MissionTransferSupport;
-    readonly transferPosition: number;
-    readonly transferTotal: number;
-    readonly capabilities: readonly MissionCapability[];
-    readonly responsePalettes: readonly ResolvedResponsePalette[];
-    readonly learnerSpeaker?: string;
-    readonly items: readonly LearningItem[];
-    readonly speakers?: readonly string[];
-    readonly onGrade: (
-      item: LearningItem,
-      grade: ReviewGrade,
-      correct: boolean,
-      latencyMs: number,
-    ) => Promise<ReadonlyMap<SkillId, MasteryRecord>>;
-    readonly onFinish: () => void;
-  }) {
-    const [index, setIndex] = useState(0);
-    const [revealed, setRevealed] = useState(false);
-    const [speechComparison, setSpeechComparison] = useState<SpeechComparison | undefined>();
-    const [grades, setGrades] = useState<readonly ReviewGrade[]>([]);
-    const [useCapabilities, setUseCapabilities] = useState(stageCapabilities);
-    const [saving, setSaving] = useState(false);
-    const [saveError, setSaveError] = useState(false);
-    const startedAt = useRef(0);
-    const current = stageItems[index];
-    const speaker = speakers?.[index];
-    const learnerTurn = learnerSpeaker === undefined || speaker === learnerSpeaker;
-    const learnerTurns = stageItems.filter((_, position) =>
-      learnerSpeaker === undefined ? true : speakers?.[position] === learnerSpeaker,
-    ).length;
-    const activePalette = current
-      ? stagePalettes.find((palette) => current.skills?.includes(palette.capability))
-      : undefined;
-    const acceptedResponses =
-      activePalette && current
-        ? [
-            ...new Set([
-              current.text,
-              ...activePalette.responses
-                .filter(({ item }) => responseFitsTurn(item, current))
-                .map(({ item }) => item.text),
-            ]),
-          ].filter(Boolean)
-        : current
-          ? [current.text]
-          : [];
-
-    useEffect(() => {
-      startedAt.current = Date.now();
-    }, [index]);
-
-    const advance = () => {
-      setRevealed(false);
-      setSpeechComparison(undefined);
-      setSaveError(false);
-      setIndex((currentIndex) => currentIndex + 1);
-    };
-
-    const gradeAndAdvance = async (grade: ReviewGrade, correct: boolean) => {
-      if (!current || saving) return;
-      setSaving(true);
-      setSaveError(false);
-      try {
-        const mastery = await onGrade(
-          current,
-          grade,
-          correct,
-          Math.max(0, Date.now() - startedAt.current),
-        );
-        setUseCapabilities(
-          stageCapabilities.map((capability) => {
-            const evidence = mastery.get(capability.id);
-            return { ...capability, ...(evidence ? { evidence } : {}) };
-          }),
-        );
-        setGrades((recorded) => [...recorded, grade]);
-        advance();
-      } catch {
-        setSaveError(true);
-      } finally {
-        setSaving(false);
-      }
-    };
-
-    if (!current) {
-      const summary = transferGradeSummary(grades);
-      return (
-        <>
-          <MissionJourney current="use" />
-          <section className={styles.complete} aria-labelledby={`${id}-complete`}>
-            <Icon name="mastered" size="xl" />
-            <p className={styles.eyebrow}>
-              Transfer {transferPosition} of {transferTotal} complete
-            </p>
-            <h2 id={`${id}-complete`}>{missionGoal}</h2>
-            <p>{summary}</p>
-            <p>{transferRecommendation(grades, learnerTurns)}</p>
-            {useCapabilities.length > 0 && (
-              <CapabilityList capabilities={useCapabilities} variant="evidence" />
-            )}
-            <Button variant="primary" block large onClick={onFinish}>
-              {transferPosition < transferTotal ? 'Continue mission' : 'Finish mission'}
-            </Button>
-          </section>
-        </>
-      );
-    }
-
-    return (
-      <>
-        <MissionJourney current="use" />
-        {transfer && (
-          <section className={styles.transfer} aria-label="Transfer challenge">
-            <p className={styles.eyebrow}>
-              Transfer {transferPosition} of {transferTotal}
-            </p>
-            <p>{transferBrief ?? 'The details have changed. Use what you learned here.'}</p>
-            {transferSupport === 'independent' && (
-              <p>Less scripting this time: use the intention, not an English sentence.</p>
-            )}
-          </section>
-        )}
-        <div
-          className={styles.roleProgress}
-          role="progressbar"
-          aria-label="Mission use position"
-          aria-valuemin={1}
-          aria-valuemax={stageItems.length}
-          aria-valuenow={index + 1}
-        >
-          <span style={{ width: `${((index + 1) / stageItems.length) * 100}%` }} />
-        </div>
-
-        <section className={styles.roleCard} aria-labelledby={`${id}-turn`}>
-          <p className={styles.eyebrow}>
-            {learnerTurn ? 'Your turn' : `${speaker ?? partner} says`}
-          </p>
-          <h2 id={`${id}-turn`}>
-            {learnerTurn
-              ? activePalette
-                ? activePalette.cue
-                : transferSupport === 'independent'
-                  ? intentionCue(current)
-                  : (translationOf(current) ?? `Respond to ${partner} in Spanish.`)
-              : current.text}
-          </h2>
-
-          {learnerTurn ? (
-            <>
-              <p className={styles.coach}>
-                {activePalette
-                  ? `${acceptedResponses.length} natural responses are accepted. Choose one that fits.`
-                  : 'Say the idea naturally. The exact wording comes next.'}
-              </p>
-              {!revealed && (
-                <SpeakCheck
-                  key={current.id}
-                  expected={acceptedResponses}
-                  onComparison={(match) => setSpeechComparison(match.comparison)}
-                />
-              )}
-              {revealed ? (
-                <>
-                  <div className={styles.answer} role="status">
-                    {activePalette && <small>One natural option</small>}
-                    <p lang={course.language}>{current.text}</p>
-                    <Button onClick={() => speak(current)}>
-                      <Icon name="speak" /> Listen
-                    </Button>
-                  </div>
-                  <p className={styles.coach}>How much could you say before revealing?</p>
-                  <div className={styles.turnActions}>
-                    <Button disabled={saving} onClick={() => void gradeAndAdvance('again', false)}>
-                      Not yet
-                    </Button>
-                    <Button disabled={saving} onClick={() => void gradeAndAdvance('hard', true)}>
-                      Partly
-                    </Button>
-                    <Button
-                      variant="primary"
-                      disabled={saving}
-                      onClick={() => void gradeAndAdvance('good', true)}
-                    >
-                      Got it
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {speechComparison && (
-                    <Button
-                      variant="primary"
-                      block
-                      large
-                      disabled={saving}
-                      onClick={() => {
-                        const grade = gradeForSpeech(speechComparison);
-                        void gradeAndAdvance(grade, grade !== 'again');
-                      }}
-                    >
-                      Record result and continue <Icon name="forward" />
-                    </Button>
-                  )}
-                  <Button block large disabled={saving} onClick={() => setRevealed(true)}>
-                    Reveal the line
-                  </Button>
-                </>
-              )}
-              {revealed && (
-                <div className={styles.turnActions}>
-                  <Button
-                    disabled={saving}
-                    onClick={() => {
-                      setRevealed(false);
-                      setSpeechComparison(undefined);
-                    }}
-                  >
-                    <Icon name="again" /> Try again
-                  </Button>
-                </div>
-              )}
-              {saveError && (
-                <p role="alert">That attempt could not be saved. Please try the rating again.</p>
-              )}
-            </>
-          ) : (
-            <>
-              {translationOf(current) && <p className={styles.meaning}>{translationOf(current)}</p>}
-              <Button onClick={() => speak(current)}>
-                <Icon name="speak" /> Listen
-              </Button>
-              <Button variant="primary" block large onClick={advance}>
-                Reply <Icon name="forward" />
-              </Button>
-            </>
-          )}
-        </section>
-      </>
-    );
-  }
-
   function intentionCue(item: LearningItem): string {
     const intentions = (item.skills ?? []).flatMap((id) => {
       const skill = services.repository.getSkill(id);
@@ -676,36 +338,468 @@ export function MissionScreen() {
       : `Respond naturally to ${mission?.scenarioPartner ?? 'the situation'} in Spanish.`;
   }
 
-  function responseFitsTurn(response: LearningItem, turn: LearningItem): boolean {
-    if (
-      turn.register &&
-      response.register &&
-      turn.register !== 'neutral' &&
-      response.register !== 'neutral' &&
-      turn.register !== response.register
-    ) {
-      return false;
-    }
-    return !(turn.address && response.address && turn.address !== response.address);
-  }
-
-  function speakAll(stageItems: readonly LearningItem[]) {
+  function speakText(text: string) {
     void services.audio.speak({
-      text: stageItems.map((item) => item.text).join(' '),
+      text,
       locale: preferences.pronunciationLocale,
       ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
     });
   }
 }
 
+function UnderstandStage({
+  missionId: id,
+  words,
+  language,
+  speak,
+  speakText,
+  translationOf,
+  missionGoal,
+  passageTitle,
+  capabilities: stageCapabilities,
+  responsePalettes: stagePalettes,
+  variationPatterns: stageVariations,
+  items: stageItems,
+  speakers,
+  onPractise,
+}: {
+  readonly missionId: string;
+  readonly missionGoal: string;
+  readonly passageTitle: string;
+  readonly capabilities: readonly MissionCapability[];
+  readonly responsePalettes: readonly ResolvedResponsePalette[];
+  readonly variationPatterns: readonly VariationPattern[];
+  readonly words: WordSelection;
+  readonly language: string;
+  readonly speak: (item: LearningItem) => void;
+  readonly speakText: (text: string) => void;
+  readonly translationOf: (item: LearningItem) => string | undefined;
+  readonly items: readonly LearningItem[];
+  readonly speakers?: readonly string[];
+  readonly onPractise: () => void;
+}) {
+  const [showMeanings, setShowMeanings] = useState(false);
+  // The palette is most of the language on this screen, and its phrases are
+  // exactly the ones a learner has not read before — so the sheet has to be
+  // openable from there too, not only from the dialogue.
+  const openItem = words.item ? inspectable(stageItems, stagePalettes, words.item) : undefined;
+
+  return (
+    <>
+      <MissionJourney current="understand" />
+      <section className={styles.brief} aria-labelledby={`${id}-goal`}>
+        <p className={styles.eyebrow}>Your goal</p>
+        <h2 id={`${id}-goal`}>{missionGoal}</h2>
+        <p>First understand the connected example. Tap any word when you need help.</p>
+      </section>
+
+      {stageCapabilities.length > 0 && (
+        <CapabilityList capabilities={stageCapabilities} variant="preview" />
+      )}
+
+      {stagePalettes.length > 0 && (
+        <ResponsePalettePanel palettes={stagePalettes} onListen={speak} words={words} />
+      )}
+
+      {stageVariations.length > 0 && (
+        <VariationLabPanel patterns={stageVariations} language={language} onListen={speakText} />
+      )}
+
+      <div className={styles.actions}>
+        <Button onClick={() => speakText(stageItems.map((item) => item.text).join(' '))}>
+          <Icon name="speak" /> Listen to all
+        </Button>
+        <Button onClick={() => setShowMeanings((shown) => !shown)} aria-pressed={showMeanings}>
+          {showMeanings ? 'Hide meaning' : 'Show meaning'}
+        </Button>
+      </div>
+
+      <ol className={styles.lines} aria-label={`${passageTitle}, ${stageItems.length} lines`}>
+        {stageItems.map((item, index) => (
+          <li key={item.id}>
+            {speakers?.[index] && <p className={styles.speaker}>{speakers[index]}</p>}
+            <TokenizedText
+              item={item}
+              className={styles.lineText}
+              onSelect={(token) => words.open(item.id, token)}
+              selected={words.tokensFor(item.id)}
+              contextLabel={item.text}
+            />
+            {showMeanings && translationOf(item) && (
+              <p className={styles.meaning}>{translationOf(item)}</p>
+            )}
+            <button
+              type="button"
+              className={styles.linePlay}
+              onClick={() => speak(item)}
+              aria-label={`Listen to “${item.text}”`}
+            >
+              <Icon name="speak" size="lg" />
+            </button>
+          </li>
+        ))}
+      </ol>
+
+      <Button variant="primary" block large onClick={onPractise}>
+        Start practice <Icon name="forward" />
+      </Button>
+
+      {openItem && (
+        <WordInfoSheet
+          item={openItem}
+          tokenIds={words.tokens}
+          onChange={words.set}
+          onClose={words.close}
+        />
+      )}
+    </>
+  );
+}
+
+function responseFitsTurn(response: LearningItem, turn: LearningItem): boolean {
+  if (
+    turn.register &&
+    response.register &&
+    turn.register !== 'neutral' &&
+    response.register !== 'neutral' &&
+    turn.register !== response.register
+  ) {
+    return false;
+  }
+  return !(turn.address && response.address && turn.address !== response.address);
+}
+
+function UseStage({
+  missionId: id,
+  words,
+  speak,
+  translationOf,
+  intentionCue,
+  missionGoal,
+  partner,
+  transfer,
+  transferBrief,
+  transferSupport,
+  transferPosition,
+  transferTotal,
+  capabilities: stageCapabilities,
+  responsePalettes: stagePalettes,
+  learnerSpeaker,
+  items: stageItems,
+  speakers,
+  onGrade,
+  onFinish,
+}: {
+  readonly missionId: string;
+  readonly missionGoal: string;
+  readonly partner: string;
+  readonly transfer: boolean;
+  readonly transferBrief?: string;
+  readonly transferSupport: MissionTransferSupport;
+  readonly transferPosition: number;
+  readonly transferTotal: number;
+  readonly words: WordSelection;
+  readonly speak: (item: LearningItem) => void;
+  readonly translationOf: (item: LearningItem) => string | undefined;
+  readonly intentionCue: (item: LearningItem) => string;
+  readonly capabilities: readonly MissionCapability[];
+  readonly responsePalettes: readonly ResolvedResponsePalette[];
+  readonly learnerSpeaker?: string;
+  readonly items: readonly LearningItem[];
+  readonly speakers?: readonly string[];
+  readonly onGrade: (
+    item: LearningItem,
+    grade: ReviewGrade,
+    correct: boolean,
+    latencyMs: number,
+  ) => Promise<ReadonlyMap<SkillId, MasteryRecord>>;
+  readonly onFinish: () => void;
+}) {
+  const [index, setIndex] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [speechComparison, setSpeechComparison] = useState<SpeechComparison | undefined>();
+  const [grades, setGrades] = useState<readonly ReviewGrade[]>([]);
+  const [useCapabilities, setUseCapabilities] = useState(stageCapabilities);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const startedAt = useRef(0);
+  const current = stageItems[index];
+  const speaker = speakers?.[index];
+  const learnerTurn = learnerSpeaker === undefined || speaker === learnerSpeaker;
+  const learnerTurns = stageItems.filter((_, position) =>
+    learnerSpeaker === undefined ? true : speakers?.[position] === learnerSpeaker,
+  ).length;
+  const activePalette = current
+    ? stagePalettes.find((palette) => current.skills?.includes(palette.capability))
+    : undefined;
+  const acceptedResponses =
+    activePalette && current
+      ? [
+          ...new Set([
+            current.text,
+            ...activePalette.responses
+              .filter(({ item }) => responseFitsTurn(item, current))
+              .map(({ item }) => item.text),
+          ]),
+        ].filter(Boolean)
+      : current
+        ? [current.text]
+        : [];
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, [index]);
+
+  const advance = () => {
+    setRevealed(false);
+    setSpeechComparison(undefined);
+    setSaveError(false);
+    setIndex((currentIndex) => currentIndex + 1);
+  };
+
+  const gradeAndAdvance = async (grade: ReviewGrade, correct: boolean) => {
+    if (!current || saving) return;
+    setSaving(true);
+    setSaveError(false);
+    try {
+      const mastery = await onGrade(
+        current,
+        grade,
+        correct,
+        Math.max(0, Date.now() - startedAt.current),
+      );
+      setUseCapabilities(
+        stageCapabilities.map((capability) => {
+          const evidence = mastery.get(capability.id);
+          return { ...capability, ...(evidence ? { evidence } : {}) };
+        }),
+      );
+      setGrades((recorded) => [...recorded, grade]);
+      advance();
+    } catch {
+      setSaveError(true);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (!current) {
+    const summary = transferGradeSummary(grades);
+    return (
+      <>
+        <MissionJourney current="use" />
+        <section className={styles.complete} aria-labelledby={`${id}-complete`}>
+          <Icon name="mastered" size="xl" />
+          <p className={styles.eyebrow}>
+            Transfer {transferPosition} of {transferTotal} complete
+          </p>
+          <h2 id={`${id}-complete`}>{missionGoal}</h2>
+          <p>{summary}</p>
+          <p>{transferRecommendation(grades, learnerTurns)}</p>
+          {useCapabilities.length > 0 && (
+            <CapabilityList capabilities={useCapabilities} variant="evidence" />
+          )}
+          <Button variant="primary" block large onClick={onFinish}>
+            {transferPosition < transferTotal ? 'Continue mission' : 'Finish mission'}
+          </Button>
+        </section>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <MissionJourney current="use" />
+      {transfer && (
+        <section className={styles.transfer} aria-label="Transfer challenge">
+          <p className={styles.eyebrow}>
+            Transfer {transferPosition} of {transferTotal}
+          </p>
+          <p>{transferBrief ?? 'The details have changed. Use what you learned here.'}</p>
+          {transferSupport === 'independent' && (
+            <p>Less scripting this time: use the intention, not an English sentence.</p>
+          )}
+        </section>
+      )}
+      <div
+        className={styles.roleProgress}
+        role="progressbar"
+        aria-label="Mission use position"
+        aria-valuemin={1}
+        aria-valuemax={stageItems.length}
+        aria-valuenow={index + 1}
+      >
+        <span style={{ width: `${((index + 1) / stageItems.length) * 100}%` }} />
+      </div>
+
+      <section className={styles.roleCard} aria-labelledby={`${id}-turn`}>
+        <p className={styles.eyebrow}>{learnerTurn ? 'Your turn' : `${speaker ?? partner} says`}</p>
+        <h2 id={`${id}-turn`}>
+          {learnerTurn ? (
+            activePalette ? (
+              activePalette.cue
+            ) : transferSupport === 'independent' ? (
+              intentionCue(current)
+            ) : (
+              (translationOf(current) ?? `Respond to ${partner} in Spanish.`)
+            )
+          ) : (
+            // What the other person just said is exactly where an unknown word
+            // stops a learner dead, and it was the one line of Spanish on this
+            // screen with no way to ask about it. A span, not a paragraph: it
+            // is already inside the heading.
+            <TokenizedText
+              as="span"
+              item={current}
+              onSelect={(token) => words.open(current.id, token)}
+              selected={words.tokensFor(current.id)}
+            />
+          )}
+        </h2>
+
+        {learnerTurn ? (
+          <>
+            <p className={styles.coach}>
+              {activePalette
+                ? `${acceptedResponses.length} natural responses are accepted. Choose one that fits.`
+                : 'Say the idea naturally. The exact wording comes next.'}
+            </p>
+            {!revealed && (
+              <SpeakCheck
+                key={current.id}
+                expected={acceptedResponses}
+                onComparison={(match) => setSpeechComparison(match.comparison)}
+              />
+            )}
+            {revealed ? (
+              <>
+                <div className={styles.answer} role="status">
+                  {activePalette && <small>One natural option</small>}
+                  <TokenizedText
+                    item={current}
+                    onSelect={(token) => words.open(current.id, token)}
+                    selected={words.tokensFor(current.id)}
+                  />
+                  <Button onClick={() => speak(current)}>
+                    <Icon name="speak" /> Listen
+                  </Button>
+                </div>
+                <p className={styles.coach}>How much could you say before revealing?</p>
+                <div className={styles.turnActions}>
+                  <Button disabled={saving} onClick={() => void gradeAndAdvance('again', false)}>
+                    Not yet
+                  </Button>
+                  <Button disabled={saving} onClick={() => void gradeAndAdvance('hard', true)}>
+                    Partly
+                  </Button>
+                  <Button
+                    variant="primary"
+                    disabled={saving}
+                    onClick={() => void gradeAndAdvance('good', true)}
+                  >
+                    Got it
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                {speechComparison && (
+                  <Button
+                    variant="primary"
+                    block
+                    large
+                    disabled={saving}
+                    onClick={() => {
+                      const grade = gradeForSpeech(speechComparison);
+                      void gradeAndAdvance(grade, grade !== 'again');
+                    }}
+                  >
+                    Record result and continue <Icon name="forward" />
+                  </Button>
+                )}
+                <Button block large disabled={saving} onClick={() => setRevealed(true)}>
+                  Reveal the line
+                </Button>
+              </>
+            )}
+            {revealed && (
+              <div className={styles.turnActions}>
+                <Button
+                  disabled={saving}
+                  onClick={() => {
+                    setRevealed(false);
+                    setSpeechComparison(undefined);
+                  }}
+                >
+                  <Icon name="again" /> Try again
+                </Button>
+              </div>
+            )}
+            {saveError && (
+              <p role="alert">That attempt could not be saved. Please try the rating again.</p>
+            )}
+          </>
+        ) : (
+          <>
+            {translationOf(current) && <p className={styles.meaning}>{translationOf(current)}</p>}
+            <Button onClick={() => speak(current)}>
+              <Icon name="speak" /> Listen
+            </Button>
+            <Button variant="primary" block large onClick={advance}>
+              Reply <Icon name="forward" />
+            </Button>
+          </>
+        )}
+      </section>
+
+      {words.item === current.id && (
+        <WordInfoSheet
+          item={current}
+          tokenIds={words.tokens}
+          onChange={words.set}
+          onClose={words.close}
+        />
+      )}
+    </>
+  );
+}
+
+/**
+ * The item a selected word belongs to, from anywhere the stage shows Spanish.
+ *
+ * The passage is searched first because that is where a learner reads; the
+ * palettes are searched after, and they are the reason this is a function rather
+ * than a `find` — a stage renders several dozen phrases across nine palettes,
+ * and a word tapped in one of them has to resolve to the item that owns it or
+ * the sheet opens on the wrong sentence.
+ */
+function inspectable(
+  items: readonly LearningItem[],
+  palettes: readonly ResolvedResponsePalette[],
+  itemId: ItemId,
+): LearningItem | undefined {
+  return (
+    items.find((item) => item.id === itemId) ??
+    palettes.flatMap((palette) => palette.responses).find((response) => response.item.id === itemId)
+      ?.item
+  );
+}
+
+/**
+ * `words` rather than a sheet of its own: the palette sits on the same screen as
+ * the dialogue, and two independent selections would let a learner open a word
+ * here and another down there and see both sheets at once. One selection per
+ * stage, shared, is also what makes the sheet's own phrase navigation work
+ * across everything the stage shows.
+ */
 function ResponsePalettePanel({
   palettes,
-  language,
   onListen,
+  words,
 }: {
   readonly palettes: readonly ResolvedResponsePalette[];
-  readonly language: string;
   readonly onListen: (item: LearningItem) => void;
+  readonly words: WordSelection;
 }) {
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
 
@@ -730,11 +824,21 @@ function ResponsePalettePanel({
             <ul id={listId} className={styles.paletteResponses}>
               {visible.map(({ item, meaning, nuance }) => (
                 <li key={item.id}>
-                  <span>
-                    <strong lang={language}>{item.text}</strong>
+                  <div>
+                    {/* Named by palette *and* phrase, not by phrase alone: a
+                        palette deliberately offers the line the dialogue below
+                        also shows, so two controls would otherwise be called
+                        `About “Soy” in “Soy de Grecia…”` on one screen. */}
+                    <TokenizedText
+                      item={item}
+                      className={styles.paletteText}
+                      onSelect={(token) => words.open(item.id, token)}
+                      selected={words.tokensFor(item.id)}
+                      contextLabel={`${palette.title} · ${item.text}`}
+                    />
                     {meaning && <span>{meaning}</span>}
                     <small>{nuance}</small>
-                  </span>
+                  </div>
                   <Button
                     onClick={() => onListen(item)}
                     aria-label={`Listen to response “${item.text}”`}

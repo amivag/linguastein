@@ -87,11 +87,17 @@ describe('MissionScreen', () => {
     await waitFor(() => {
       expect(screen.getByText('More than “I’m fine”')).toBeInTheDocument();
     });
-    expect(screen.getByText('Estoy bien, gracias.')).toBeInTheDocument();
-    expect(screen.queryByText('Regular.')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Listen to response “Estoy bien, gracias.”' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Listen to response “Regular.”' }),
+    ).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Show 7 more natural responses' }));
-    expect(screen.getByText('Regular.')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Listen to response “Regular.”' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('Things could be better')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Show fewer responses' })).toHaveAttribute(
       'aria-expanded',
@@ -109,11 +115,17 @@ describe('MissionScreen', () => {
     await waitFor(() => {
       expect(screen.getByText('Build the order you actually want')).toBeInTheDocument();
     });
-    expect(screen.getByText('Un café solo, por favor.')).toBeInTheDocument();
-    expect(screen.queryByText('De momento, solo un café.')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Listen to response “Un café solo, por favor.”' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Listen to response “De momento, solo un café.”' }),
+    ).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Show 5 more natural responses' }));
-    expect(screen.getByText('De momento, solo un café.')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Listen to response “De momento, solo un café.”' }),
+    ).toBeInTheDocument();
 
     expect(screen.getByRole('region', { name: 'Variation lab' })).toBeInTheDocument();
     await user.selectOptions(screen.getByLabelText('How to begin'), 'para-mi');
@@ -127,6 +139,46 @@ describe('MissionScreen', () => {
     expect(screen.getByText(/Spanish hidden/)).toHaveAttribute('role', 'status');
     await user.click(screen.getByRole('button', { name: 'Show Spanish' }));
     expect(screen.getByText('Para mí, un agua.')).toBeInTheDocument();
+  });
+
+  /*
+   * The palettes carry most of the language a mission teaches, and for a long
+   * while they were the one place on the screen where an unknown word could not
+   * be tapped — the dialogue below them could, which made the gap look like a
+   * bug in the sheet rather than in the panel.
+   */
+  it('opens the word sheet from a palette response, not only from the dialogue', async () => {
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand',
+      services: await shippedServices(),
+    });
+
+    // Named by palette *and* phrase: this very line is also spoken in the
+    // dialogue below, so the phrase alone would name two different controls.
+    const word = await screen.findByRole('button', {
+      name: 'About “Grecia” in “Where you are from — and where you live · Soy de Grecia.”',
+    });
+    await user.click(word);
+
+    expect(await screen.findByRole('dialog', { name: 'About Grecia' })).toBeInTheDocument();
+    // The very node that was tapped, still in the document: the stage used to be
+    // declared inside the screen, so any background query landing mid-tap
+    // replaced the whole subtree and the tap fell on a detached button.
+    expect(document.body.contains(word)).toBe(true);
+    expect(word).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('lets the learner ask about a word in what the other person just said', async () => {
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/use',
+      services: await shippedServices(),
+    });
+
+    // Ana's opening line. One phrase on screen, so the name stays short.
+    await user.click(await screen.findByRole('button', { name: 'About “Hola”' }));
+    expect(await screen.findByRole('dialog', { name: 'About Hola' })).toBeInTheDocument();
   });
 
   it('accepts a different natural response during mission transfer', async () => {
@@ -208,10 +260,10 @@ describe('MissionScreen', () => {
 
     await screen.findByText('I have to work.');
     expect(screen.getByText('I have to work.')).toBeInTheDocument();
-    expect(screen.queryByText('Tengo que trabajar.')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'About “Tengo”' })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Reveal the line' }));
-    expect(screen.getByText('Tengo que trabajar.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'About “Tengo”' })).toBeInTheDocument();
     expect(screen.queryByText('Transfer 1 of 1 complete')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Got it' }));
 

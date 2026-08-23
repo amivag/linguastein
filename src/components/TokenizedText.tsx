@@ -32,6 +32,14 @@ interface TokenizedTextProps {
    * nothing, keeping its names short.
    */
   readonly contextLabel?: string | undefined;
+  /**
+   * The element to render into. `p` is right nearly everywhere and is the
+   * default; a caller whose text already sits inside a heading or a paragraph
+   * must pass `span`, because a `<p>` nested in either is invalid markup that
+   * the browser silently restructures — which breaks the layout rather than
+   * only the validator.
+   */
+  readonly as?: 'p' | 'div' | 'span';
 }
 
 /**
@@ -58,6 +66,7 @@ export function TokenizedText({
   selected,
   blankTokenId,
   contextLabel,
+  as: Text = 'p',
 }: TokenizedTextProps) {
   const tokens = item.tokens ?? [];
   const wholeItem = tokens.length === 0 && isInspectableItem(item);
@@ -65,27 +74,27 @@ export function TokenizedText({
 
   if (!onSelect || (tokens.length === 0 && !wholeItem)) {
     return (
-      <p className={className} lang="es">
+      <Text className={className} lang="es">
         {item.text}
-      </p>
+      </Text>
     );
   }
 
   if (wholeItem) {
     return (
-      <p className={className} lang="es">
+      <Text className={className} lang="es">
         <WordButton
           text={item.text}
           tokenId={WHOLE_ITEM_TOKEN}
           onSelect={onSelect}
           selected={open.includes(WHOLE_ITEM_TOKEN)}
         />
-      </p>
+      </Text>
     );
   }
 
   return (
-    <p className={className} lang="es">
+    <Text className={className} lang="es">
       {tokens.map((token, index) => {
         const spaced = needsSpaceBefore(tokens[index - 1]?.text, token.text);
         const blanked = token.id === blankTokenId;
@@ -114,7 +123,7 @@ export function TokenizedText({
           </span>
         );
       })}
-    </p>
+    </Text>
   );
 }
 

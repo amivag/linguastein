@@ -132,17 +132,23 @@
   box-shadow: var(--shadow-sm);
 }
 
-.paletteResponses li > span {
+.paletteResponses li > div {
   display: grid;
   gap: var(--space-1);
+  /* The tokenised phrase wraps as words, so the row needs to be able to shrink
+     below its content rather than pushing the listen button off the end. */
+  min-width: 0;
 }
 
-.paletteResponses strong {
+/* Was a <strong>; it is tappable text now, so the weight is carried here and
+   the element is whatever TokenizedText renders. */
+.paletteText {
   font-family: var(--font-display);
   font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
 }
 
-.paletteResponses span span,
+.paletteResponses div > span,
 .paletteResponses small {
   color: var(--color-text-muted);
 }

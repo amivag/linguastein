@@ -91,6 +91,61 @@ export interface SpeechResult {
 export const SPEECH_ABORTED = 'aborted';
 
 /**
+ * A page served over plain HTTP has no microphone: `getUserMedia` is not even
+ * defined and the recogniser is refused. Its own reason, because the browser
+ * reports it only to the console, and to a learner it is indistinguishable
+ * from a permission they denied.
+ */
+export const SPEECH_INSECURE_CONTEXT = 'insecure-context';
+
+/**
+ * The microphone is held by something else — another tab, another app, a call.
+ * Common enough on a phone to be worth saying out loud, and not one of the Web
+ * Speech reasons, which fold it into `audio-capture`.
+ */
+export const MICROPHONE_BUSY = 'microphone-busy';
+
+/** An open microphone, until it is closed. Closing releases the device. */
+export interface MicrophoneHandle {
+  close(): void;
+}
+
+/**
+ * The microphone as a level, not a recording (spec §6.2).
+ *
+ * Two things come out of one seam here, and only one of them is the meter:
+ *
+ * - **Feedback.** Recognition is a black box — press, speak, and a transcript
+ *   either appears or does not. A live level is the only thing that tells a
+ *   learner the device is hearing them at all.
+ * - **Permission.** Opening the microphone this way is what makes a browser
+ *   *ask*. A recogniser's own request does not always prompt, and one started
+ *   without the permission ends immediately, which looks exactly like a
+ *   feature that does not work.
+ *
+ * Nothing is recorded. Samples are read from an analyser and dropped a frame
+ * later; no buffer outlives the listen.
+ */
+export interface MicrophoneLevels {
+  readonly id: string;
+  isAvailable(): boolean;
+  /**
+   * Opens the microphone and reports loudness, 0–1, until the handle closes.
+   * Rejects with a Web Speech reason (`not-allowed`, `audio-capture`) or
+   * `MICROPHONE_BUSY`, so one vocabulary of causes reaches the UI.
+   */
+  open(onLevel: (level: number) => void): Promise<MicrophoneHandle>;
+}
+
+/** What a caller wants to be told *during* a listen, rather than after it. */
+export interface ListenOptions {
+  /** Microphone loudness, 0–1, for a level meter. */
+  readonly onLevel?: ((level: number) => void) | undefined;
+  /** What the recogniser has heard so far, before it commits to a reading. */
+  readonly onPartial?: ((text: string) => void) | undefined;
+}
+
+/**
  * Listens once and returns what it heard. Always optional: an exercise that
  * offers speech input must remain completable without it.
  */
@@ -98,7 +153,7 @@ export interface SpeechRecognitionProvider {
   readonly id: string;
   isAvailable(): boolean;
   supportsLanguage(locale: LanguageTag): boolean;
-  listen(locale: LanguageTag): Promise<SpeechResult>;
+  listen(locale: LanguageTag, options?: ListenOptions): Promise<SpeechResult>;
   /**
    * Ends a listen in flight, rejecting its promise with `SPEECH_ABORTED`.
    * Whatever offers a listen must also offer this: a recogniser only ends

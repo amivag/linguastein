@@ -3,6 +3,14 @@
   gap: var(--space-2);
 }
 
+/* The button and the level side by side: a meter under the control would read
+   as a result of the last attempt rather than as the microphone being live. */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .result {
   display: grid;
   gap: var(--space-1);
@@ -25,4 +33,11 @@
 .heard,
 .hint {
   color: var(--color-text-muted);
+}
+
+/* Provisional, and it should look it: the recogniser may still replace every
+   word of this, so it is dimmer than a result and set in the target language. */
+.partial {
+  color: var(--color-text-muted);
+  font-style: italic;
 }

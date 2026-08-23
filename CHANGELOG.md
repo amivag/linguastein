@@ -17,6 +17,18 @@ in the pack's own counts.
 
 ### Added
 
+- **"Say it" shows what it hears, while it hears it.** A level meter beside the
+  control, driven by the microphone rather than by a timer, and the words the
+  recogniser has so far before it commits to them. Speech recognition is
+  otherwise a black box — press, speak, and either a transcript appears or
+  nothing does — so a failed listen was indistinguishable from a listen that
+  never started, and the first thing anyone tries is saying it louder. That is
+  the wrong fix for a blocked permission, and the meter is what tells the two
+  apart. It also carries into the failure messages: a recogniser that returns
+  nothing while the meter plainly saw a voice says so, instead of asking the
+  learner to speak up. `MicrophoneLevels` in `audio/types.ts` is the seam; no
+  audio is recorded, kept or sent anywhere.
+
 - **Practice batches, in the engine.** A batch is a set of material the learner
   picks once — "these 30 nouns" — kept so that a week of short sessions can all
   draw on the same items until they hold. `?batch=<id>` in a session link scopes a
@@ -48,6 +60,18 @@ in the pack's own counts.
 
 ### Fixed
 
+- **Speech input on Android.** The microphone is now opened through
+  `getUserMedia` before the recogniser is started, and held for the length of
+  the listen. Starting the recogniser does not reliably prompt for the
+  microphone permission on Android — most reliably not in an installed PWA — and
+  one started without the permission ends immediately and silently, which
+  reaches the learner as "nothing happens when I press Say it". Asking for the
+  device is what makes the browser ask the learner. Two smaller failures went
+  with it: a recogniser that ends without committing a final result now returns
+  what it did hear rather than reporting silence, which is how a correctly spoken
+  sentence became "I did not hear anything", and a listen over a plain-HTTP page
+  says so — there is no microphone to open there, and the browser reports that
+  only to its console.
 - **Every content word the pack uses now has a lexeme.** Token linking went from
   96% to 99%: `kilo` appeared twelve times and answered nothing when tapped, in an
   app whose rule is that every word of every phrase is tappable. 32 nouns, 23

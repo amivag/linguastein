@@ -1,0 +1,27 @@
+/*
+ * A row of bars scaled from the centre, rather than nine elements whose height
+ * is rewritten twenty times a second: `transform` is the one property a browser
+ * can animate without laying the row out again, which is what keeps this cheap
+ * enough to run on a phone while the recogniser works.
+ *
+ * `global.css` collapses the transition under prefers-reduced-motion. The bars
+ * still move — they are the measurement, not decoration — they simply arrive at
+ * each reading without easing into it.
+ */
+
+.meter {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: var(--icon-lg);
+  flex-shrink: 0;
+}
+
+.bar {
+  width: 3px;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  transform-origin: center;
+  transition: transform var(--transition-fast);
+}

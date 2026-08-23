@@ -6,6 +6,7 @@
 
 import {
   createAudioService,
+  createWebMicrophoneLevels,
   createWebSpeechRecognitionProvider,
   createWebSpeechTtsProvider,
   type AudioService,
@@ -74,7 +75,13 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     repository,
     storage,
     audio,
-    speech: createWebSpeechRecognitionProvider(),
+    /*
+     * The microphone is handed to the recogniser rather than kept beside it:
+     * one listen, one device, opened and released together. It is what makes
+     * the browser ask for the permission — Android does not always ask on the
+     * recogniser's behalf — and what the level meter reads while listening.
+     */
+    speech: createWebSpeechRecognitionProvider({ microphone: createWebMicrophoneLevels() }),
     exercises: new ExerciseEngine(),
     preferences,
     batches,

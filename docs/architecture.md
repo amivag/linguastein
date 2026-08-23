@@ -127,6 +127,7 @@ immediately or keep the previous revision cached.
 | `TtsProvider`                 | `audio/types.ts`                 | higher-quality or cached voices        |
 | `TtsVoice`                    | `audio/types.ts`                 | voice choice, without vendor types     |
 | `SpeechRecognitionProvider`   | `audio/types.ts`                 | pronunciation practice                 |
+| `MicrophoneLevels`            | `audio/types.ts`                 | live input level, and the permission   |
 | `Provenance`                  | `domain/content/provenance.ts`   | community + AI-generated content       |
 | Reference-language resolution | `domain/content/language.ts`     | translation packs beyond English       |
 

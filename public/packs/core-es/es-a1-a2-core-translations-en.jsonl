@@ -861,25 +861,61 @@
 {"ref":"core-es:item:000707","lang":"en","text":"Nice to meet you. How are you?","type":"natural"}
 {"ref":"core-es:item:000708","lang":"en","text":"Very well, thank you. And you?","type":"natural"}
 {"ref":"core-es:item:000709","lang":"en","text":"I'm fine, thank you.","type":"natural"}
-{"ref":"core-es:item:000710","lang":"en","text":"I'm glad. See you later.","type":"natural"}
+{"ref":"core-es:item:000985","lang":"en","text":"And where are you from?","type":"natural"}
+{"ref":"core-es:item:000986","lang":"en","text":"I'm from Greece, but I live in Germany.","type":"natural"}
+{"ref":"core-es:item:000987","lang":"en","text":"How interesting! And do you like living there?","type":"natural"}
+{"ref":"core-es:item:000988","lang":"en","text":"Yes, I like it a lot. The people are very kind.","type":"natural"}
+{"ref":"core-es:item:000989","lang":"en","text":"And what do you do for work?","type":"natural"}
+{"ref":"core-es:item:000990","lang":"en","text":"I'm a teacher. I work at a small school.","type":"natural"}
+{"ref":"core-es:item:000991","lang":"en","text":"Great! I work in a hospital.","type":"natural"}
+{"ref":"core-es:item:000992","lang":"en","text":"And what do you do in your free time?","type":"natural"}
+{"ref":"core-es:item:000993","lang":"en","text":"I read a lot and go out with friends. And you?","type":"natural"}
+{"ref":"core-es:item:000994","lang":"en","text":"I play the guitar and do a lot of sport.","type":"natural"}
+{"ref":"core-es:item:000710","lang":"en","text":"How nice! Well, see you later, Luis.","type":"natural"}
 {"ref":"core-es:item:000711","lang":"en","text":"See you later, Marta.","type":"natural"}
 {"ref":"core-es:item:000712","lang":"en","text":"Hi, Luis! How are you today?","type":"natural"}
 {"ref":"core-es:item:000713","lang":"en","text":"Hi, Ana.","type":"natural"}
 {"ref":"core-es:item:000736","lang":"en","text":"All good, thanks. And you?","type":"natural"}
 {"ref":"core-es:item:000714","lang":"en","text":"I'm doing great. I'm having a very good day.","type":"natural"}
 {"ref":"core-es:item:000715","lang":"en","text":"That's great! I'm glad.","type":"natural"}
+{"ref":"core-es:item:000995","lang":"en","text":"How's work?","type":"natural"}
+{"ref":"core-es:item:000996","lang":"en","text":"I have a lot of work, but I quite like it.","type":"natural"}
+{"ref":"core-es:item:000997","lang":"en","text":"And what are you doing this weekend?","type":"natural"}
+{"ref":"core-es:item:000998","lang":"en","text":"I'm going to the cinema with some friends. And you?","type":"natural"}
+{"ref":"core-es:item:000999","lang":"en","text":"I do sport and rest at home.","type":"natural"}
+{"ref":"core-es:item:001000","lang":"en","text":"Very good. I need to rest too.","type":"natural"}
+{"ref":"core-es:item:001060","lang":"en","text":"Hey, are you from here?","type":"natural"}
+{"ref":"core-es:item:001061","lang":"en","text":"No, I'm Greek. I have lived here for three years.","type":"natural"}
+{"ref":"core-es:item:001062","lang":"en","text":"And are you happy here?","type":"natural"}
+{"ref":"core-es:item:001063","lang":"en","text":"Yes, a lot. I have good friends and a good job.","type":"natural"}
 {"ref":"core-es:item:000716","lang":"en","text":"Well, I have to go. See you soon.","type":"natural"}
 {"ref":"core-es:item:000717","lang":"en","text":"See you soon, Ana.","type":"natural"}
 {"ref":"core-es:item:000718","lang":"en","text":"Good morning, Luis. How are you?","type":"natural"}
 {"ref":"core-es:item:000719","lang":"en","text":"Good morning, Ms López.","type":"natural"}
 {"ref":"core-es:item:000737","lang":"en","text":"I'm a little tired, but fine. And you?","type":"natural"}
 {"ref":"core-es:item:000720","lang":"en","text":"I'm quite well, thank you for asking.","type":"natural"}
+{"ref":"core-es:item:001001","lang":"en","text":"Where are you from, Luis?","type":"natural"}
+{"ref":"core-es:item:001002","lang":"en","text":"I am from Greece, but I have lived here for three years.","type":"natural"}
+{"ref":"core-es:item:001003","lang":"en","text":"How nice! And do you like the city?","type":"natural"}
+{"ref":"core-es:item:001004","lang":"en","text":"Yes, a lot. It's quiet and there is good food.","type":"natural"}
+{"ref":"core-es:item:001064","lang":"en","text":"And what do you do in the company?","type":"natural"}
+{"ref":"core-es:item:001065","lang":"en","text":"I work in the office, with the customers.","type":"natural"}
+{"ref":"core-es:item:001005","lang":"en","text":"And what do you do at weekends?","type":"natural"}
+{"ref":"core-es:item:001006","lang":"en","text":"I go out with my family or read at home.","type":"natural"}
 {"ref":"core-es:item:000721","lang":"en","text":"I'm glad. Have a good day and see you later.","type":"natural"}
 {"ref":"core-es:item:000722","lang":"en","text":"You too, see you later.","type":"natural"}
 {"ref":"core-es:item:000723","lang":"en","text":"Hi, I'm Elena, the new neighbour. How are you?","type":"natural"}
 {"ref":"core-es:item:000724","lang":"en","text":"Nice to meet you, Elena.","type":"natural"}
 {"ref":"core-es:item:000738","lang":"en","text":"I'm so-so today. And you?","type":"natural"}
 {"ref":"core-es:item:000725","lang":"en","text":"Fine, thanks. I'm a little tired.","type":"natural"}
+{"ref":"core-es:item:001007","lang":"en","text":"And where are you from, Elena?","type":"natural"}
+{"ref":"core-es:item:001008","lang":"en","text":"I am from Italy, but I have lived in Spain since I was a child.","type":"natural"}
+{"ref":"core-es:item:001009","lang":"en","text":"And do you like living in this city?","type":"natural"}
+{"ref":"core-es:item:001010","lang":"en","text":"Yes, a lot. The people are kind and there's a lot to do.","type":"natural"}
+{"ref":"core-es:item:001011","lang":"en","text":"Do you work near here?","type":"natural"}
+{"ref":"core-es:item:001012","lang":"en","text":"I'm a music teacher. I give classes in the afternoon.","type":"natural"}
+{"ref":"core-es:item:001013","lang":"en","text":"How nice! And what do you do in your free time?","type":"natural"}
+{"ref":"core-es:item:001014","lang":"en","text":"I dance and cook a lot. On Sundays I watch films.","type":"natural"}
 {"ref":"core-es:item:000726","lang":"en","text":"You need to rest. See you soon.","type":"natural"}
 {"ref":"core-es:item:000727","lang":"en","text":"Thanks, see you.","type":"natural"}
 {"ref":"core-es:item:000728","lang":"en","text":"I'm doing great.","type":"natural","note":"Very positive and energetic."}
@@ -983,6 +1019,51 @@
 {"ref":"core-es:item:000982","lang":"en","text":"This boy is my son, the little one.","type":"natural","note":"Distinguishes one child from another."}
 {"ref":"core-es:item:000983","lang":"en","text":"She is my girlfriend, we study together.","type":"natural","note":"Says what you share rather than who they are."}
 {"ref":"core-es:item:000984","lang":"en","text":"You don't know her: she is my aunt from Mexico.","type":"natural","note":"Anticipates that the other person will not know them."}
+{"ref":"core-es:item:001015","lang":"en","text":"I'm from Greece.","type":"natural","note":"The shortest complete answer."}
+{"ref":"core-es:item:001016","lang":"en","text":"I'm Greek, from Athens.","type":"natural","note":"Nationality first, then the city."}
+{"ref":"core-es:item:001017","lang":"en","text":"I'm from a small city, near Berlin.","type":"natural","note":"Places a town nobody knows next to one they do."}
+{"ref":"core-es:item:001018","lang":"en","text":"My family is Italian, but I'm from here.","type":"natural","note":"Separates your family's origin from your own."}
+{"ref":"core-es:item:001019","lang":"en","text":"I was born in Italy and have lived here since I was a child.","type":"natural","note":"Uses nací for where you were born."}
+{"ref":"core-es:item:001020","lang":"en","text":"I'm from Madrid, but I live away now.","type":"natural","note":"For when you have moved away from it."}
+{"ref":"core-es:item:001021","lang":"en","text":"I'm a foreigner. I'm not from here.","type":"natural","note":"Plain, and useful when the place needs no name."}
+{"ref":"core-es:item:001022","lang":"en","text":"I have lived in Germany for two years.","type":"natural","note":"Says how long, with desde hace."}
+{"ref":"core-es:item:001023","lang":"en","text":"I live here, but I work in another city.","type":"natural","note":"Separates home from workplace."}
+{"ref":"core-es:item:001024","lang":"en","text":"I don't live here. I'm on holiday.","type":"natural","note":"For when you are only visiting."}
+{"ref":"core-es:item:001025","lang":"en","text":"I live nearby, ten minutes from here.","type":"natural","note":"Answers with a distance instead of a name."}
+{"ref":"core-es:item:001026","lang":"en","text":"I love living here.","type":"natural","note":"Warmer than me gusta."}
+{"ref":"core-es:item:001027","lang":"en","text":"I like it, but it's very cold in winter.","type":"natural","note":"Positive, with an honest reservation."}
+{"ref":"core-es:item:001028","lang":"en","text":"It's a quiet and very pretty city.","type":"natural","note":"Describes the place instead of your feeling."}
+{"ref":"core-es:item:001029","lang":"en","text":"Yes, but my family is very far away.","type":"natural","note":"Says what living there costs you."}
+{"ref":"core-es:item:001030","lang":"en","text":"I prefer my own country, to be honest.","type":"natural","note":"Honest and negative without being rude."}
+{"ref":"core-es:item:001031","lang":"en","text":"Not much. It's a very big city for me.","type":"natural","note":"A clear no, with a reason."}
+{"ref":"core-es:item:001032","lang":"en","text":"Yes, there's plenty of work and good food here.","type":"natural","note":"Two concrete reasons instead of a feeling."}
+{"ref":"core-es:item:001033","lang":"en","text":"I like reading and listening to music.","type":"natural","note":"Two calm, dependable answers at once."}
+{"ref":"core-es:item:001034","lang":"en","text":"I do sport three times a week.","type":"natural","note":"Adds how often."}
+{"ref":"core-es:item:001035","lang":"en","text":"I go out with my friends at weekends.","type":"natural","note":"Says who with, and when."}
+{"ref":"core-es:item:001036","lang":"en","text":"I watch a lot of films at home.","type":"natural","note":"A quiet answer, and a very common one."}
+{"ref":"core-es:item:001037","lang":"en","text":"I love cooking for my family.","type":"natural","note":"Something you do for other people."}
+{"ref":"core-es:item:001038","lang":"en","text":"I run in the park in the morning.","type":"natural","note":"Says where, and when."}
+{"ref":"core-es:item:001039","lang":"en","text":"I don't have much free time, to be honest.","type":"natural","note":"An honest answer when the true one is none."}
+{"ref":"core-es:item:001040","lang":"en","text":"And you, where are you from?","type":"natural","note":"Returns the question."}
+{"ref":"core-es:item:001041","lang":"en","text":"Are you from here?","type":"natural","note":"A yes-or-no opening."}
+{"ref":"core-es:item:001042","lang":"en","text":"Which part of Spain are you from?","type":"natural","note":"For when you already know the country."}
+{"ref":"core-es:item:001043","lang":"en","text":"And you, where are you from?","type":"natural","note":"The formal version."}
+{"ref":"core-es:item:001044","lang":"en","text":"Where do you live now?","type":"natural","note":"Asks where they live, not where they began."}
+{"ref":"core-es:item:001045","lang":"en","text":"Have you lived here long?","type":"natural","note":"Asks how long."}
+{"ref":"core-es:item:001046","lang":"en","text":"Is your family from here too?","type":"natural","note":"Widens the question to their family."}
+{"ref":"core-es:item:001047","lang":"en","text":"What do you do for a living?","type":"natural","note":"The most common way to ask."}
+{"ref":"core-es:item:001048","lang":"en","text":"Do you study or work?","type":"natural","note":"Natural with someone younger."}
+{"ref":"core-es:item:001049","lang":"en","text":"Do you like your job?","type":"natural","note":"Moves from the job to how they feel about it."}
+{"ref":"core-es:item:001050","lang":"en","text":"And you, what do you do for work?","type":"natural","note":"The formal version."}
+{"ref":"core-es:item:001051","lang":"en","text":"Do you work every day?","type":"natural","note":"Asks about the schedule."}
+{"ref":"core-es:item:001052","lang":"en","text":"Is it an interesting job?","type":"natural","note":"Keeps the subject going without repeating yourself."}
+{"ref":"core-es:item:001053","lang":"en","text":"What do you like doing?","type":"natural","note":"Open, and easy to answer."}
+{"ref":"core-es:item:001054","lang":"en","text":"Do you play any sport?","type":"natural","note":"A yes-or-no question that always goes somewhere."}
+{"ref":"core-es:item:001055","lang":"en","text":"What do you do at weekends?","type":"natural","note":"Anchors the question in time."}
+{"ref":"core-es:item:001056","lang":"en","text":"Do you go out much in the evening?","type":"natural","note":"For a livelier conversation."}
+{"ref":"core-es:item:001057","lang":"en","text":"And you, what do you do on Sundays?","type":"natural","note":"The formal version."}
+{"ref":"core-es:item:001058","lang":"en","text":"Do you have time to read?","type":"natural","note":"Names one activity and asks about it."}
+{"ref":"core-es:item:001059","lang":"en","text":"Do you listen to music or watch films?","type":"natural","note":"Offers two answers so the other person can pick."}
 {"ref":"core-es:item:500001","lang":"en","text":"person","type":"natural"}
 {"ref":"core-es:item:500002","lang":"en","text":"man","type":"natural"}
 {"ref":"core-es:item:500003","lang":"en","text":"woman","type":"natural"}
@@ -1604,6 +1685,8 @@
 {"ref":"core-es:item:600106","lang":"en","text":"perfect","type":"natural"}
 {"ref":"core-es:item:600107","lang":"en","text":"last, past","type":"natural"}
 {"ref":"core-es:item:600108","lang":"en","text":"third","type":"natural"}
+{"ref":"core-es:item:600109","lang":"en","text":"Greek","type":"natural"}
+{"ref":"core-es:item:600110","lang":"en","text":"Italian","type":"natural"}
 {"ref":"core-es:lexeme:ser","lang":"en","text":"to be (identity, characteristics)"}
 {"ref":"core-es:lexeme:estar","lang":"en","text":"to be (state, location)"}
 {"ref":"core-es:lexeme:tener","lang":"en","text":"to have"}
@@ -2368,6 +2451,8 @@
 {"ref":"core-es:lexeme:perfecto","lang":"en","text":"perfect"}
 {"ref":"core-es:lexeme:pasado","lang":"en","text":"last, past"}
 {"ref":"core-es:lexeme:tercero","lang":"en","text":"third"}
+{"ref":"core-es:lexeme:griego","lang":"en","text":"Greek"}
+{"ref":"core-es:lexeme:italiano","lang":"en","text":"Italian"}
 {"ref":"core-es:lexeme:regular","lang":"en","text":"so-so, not great"}
 {"ref":"core-es:lexeme:luego","lang":"en","text":"later, then"}
 {"ref":"core-es:lexeme:entonces","lang":"en","text":"then, so"}
@@ -2388,6 +2473,11 @@
 {"ref":"core-es:lexeme:espana","lang":"en","text":"Spain"}
 {"ref":"core-es:lexeme:mexico","lang":"en","text":"Mexico"}
 {"ref":"core-es:lexeme:argentina","lang":"en","text":"Argentina"}
+{"ref":"core-es:lexeme:grecia","lang":"en","text":"Greece"}
+{"ref":"core-es:lexeme:alemania","lang":"en","text":"Germany"}
+{"ref":"core-es:lexeme:italia","lang":"en","text":"Italy"}
+{"ref":"core-es:lexeme:berlin","lang":"en","text":"Berlin"}
+{"ref":"core-es:lexeme:atenas","lang":"en","text":"Athens"}
 {"ref":"core-es:lexeme:menudo","lang":"en","text":"often (a menudo)"}
 {"ref":"core-es:skill:tener-que-infinitive","lang":"en","text":"to have to do something"}
 {"ref":"core-es:skill:ir-a-infinitive","lang":"en","text":"going to do something (near future)"}
@@ -2433,6 +2523,13 @@
 {"ref":"core-es:skill:ask-about-wellbeing","lang":"en","text":"Ask naturally how someone is doing"}
 {"ref":"core-es:skill:respond-to-wellbeing","lang":"en","text":"Give a natural, honest answer about how you are doing"}
 {"ref":"core-es:skill:close-friendly-exchange","lang":"en","text":"Close a short friendly exchange naturally"}
+{"ref":"core-es:skill:ask-about-origin","lang":"en","text":"Ask where someone is from"}
+{"ref":"core-es:skill:say-where-youre-from","lang":"en","text":"Say which country or city you are from"}
+{"ref":"core-es:skill:say-where-you-are-based","lang":"en","text":"Say which country or city you live in now"}
+{"ref":"core-es:skill:say-if-you-like-a-place","lang":"en","text":"Say whether you like living there, and why"}
+{"ref":"core-es:skill:ask-what-someone-does","lang":"en","text":"Ask what someone does for a living"}
+{"ref":"core-es:skill:ask-about-free-time","lang":"en","text":"Ask what someone does in their free time"}
+{"ref":"core-es:skill:talk-about-free-time","lang":"en","text":"Say what you do in your free time"}
 {"ref":"core-es:skill:describe-a-symptom","lang":"en","text":"Say what hurts, or how you feel"}
 {"ref":"core-es:skill:say-since-when","lang":"en","text":"Say how long you have felt it"}
 {"ref":"core-es:skill:answer-health-questions","lang":"en","text":"Answer a health professional's follow-up questions"}

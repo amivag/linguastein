@@ -9,7 +9,7 @@
 000005	¿Cómo te llamas?	What's your name?	a1	greetings	Literally: how do you call yourself?
 000006	Me llamo Ana.	My name is Ana.	a1	greetings
 000007	Mucho gusto.	Nice to meet you.	a1	greetings		neutral
-000008	¿De dónde eres?	Where are you from?	a1	greetings
+000008	¿De dónde eres?	Where are you from?	a1	greetings,social,questions							ask-about-origin
 000009	Soy de España.	I'm from Spain.	a1	greetings
 000010	¿Hablas inglés?	Do you speak English?	a1	communication
 000011	No hablo mucho español.	I don't speak much Spanish.	a1	communication
@@ -106,7 +106,7 @@
 000102	Duermo ocho horas.	I sleep eight hours.	a1	health,numbers
 000103	No dormí bien anoche.	I didn't sleep well last night.	a2	health
 000104	Trabajo en una oficina.	I work in an office.	a1	work
-000105	¿Dónde trabajas?	Where do you work?	a1	work
+000105	¿Dónde trabajas?	Where do you work?	a1	work,social,questions							ask-what-someone-does
 000106	Estudio en la universidad.	I study at university.	a1	school
 000107	Aprendo español todos los días.	I learn Spanish every day.	a1	school
 000108	Leo un libro cada noche.	I read a book every night.	a1	school

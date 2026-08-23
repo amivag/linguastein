@@ -43,6 +43,13 @@
 {"id":"core-es:skill:ask-about-wellbeing","kind":"function","label":"Preguntar cómo está alguien","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
 {"id":"core-es:skill:respond-to-wellbeing","kind":"function","label":"Responder a «¿Cómo estás?»","level":"a1","prerequisites":["core-es:skill:ask-about-wellbeing"]}
 {"id":"core-es:skill:close-friendly-exchange","kind":"function","label":"Cerrar un saludo amistoso","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
+{"id":"core-es:skill:ask-about-origin","kind":"function","label":"Preguntar de dónde es alguien","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
+{"id":"core-es:skill:say-where-youre-from","kind":"function","label":"Decir de dónde eres","level":"a1","prerequisites":["core-es:skill:ask-about-origin"]}
+{"id":"core-es:skill:say-where-you-are-based","kind":"function","label":"Decir dónde vives ahora","level":"a1","prerequisites":["core-es:skill:say-where-youre-from"]}
+{"id":"core-es:skill:say-if-you-like-a-place","kind":"function","label":"Decir si te gusta el sitio","level":"a1","prerequisites":["core-es:skill:say-where-you-are-based"]}
+{"id":"core-es:skill:ask-what-someone-does","kind":"function","label":"Preguntar a qué se dedica alguien","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
+{"id":"core-es:skill:ask-about-free-time","kind":"function","label":"Preguntar por el tiempo libre","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
+{"id":"core-es:skill:talk-about-free-time","kind":"function","label":"Hablar del tiempo libre","level":"a1","prerequisites":["core-es:skill:ask-about-free-time"]}
 {"id":"core-es:skill:describe-a-symptom","kind":"function","label":"Decir qué te duele","level":"a2"}
 {"id":"core-es:skill:say-since-when","kind":"function","label":"Decir desde cuándo","level":"a2","prerequisites":["core-es:skill:describe-a-symptom"]}
 {"id":"core-es:skill:answer-health-questions","kind":"function","label":"Responder a las preguntas del médico","level":"a2","prerequisites":["core-es:skill:describe-a-symptom"]}

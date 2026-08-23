@@ -10,7 +10,17 @@
 000707	Mucho gusto. ¿Cómo estás?	Nice to meet you. How are you?	a1	greetings		colloquial	tu		saludo-inicial	Luis	ask-about-wellbeing
 000708	Muy bien, gracias. ¿Y tú?	Very well, thank you. And you?	a1	greetings		colloquial	tu		saludo-inicial	Marta	respond-to-wellbeing
 000709	Estoy bien, gracias.	I'm fine, thank you.	a1	greetings,feelings		colloquial	tu		saludo-inicial	Luis	respond-to-wellbeing
-000710	Me alegro. Hasta luego.	I'm glad. See you later.	a1	greetings		colloquial	tu		saludo-inicial	Marta	close-friendly-exchange
+000985	¿Y de dónde eres?	And where are you from?	a1	greetings,social,questions		colloquial	tu		saludo-inicial	Marta	ask-about-origin
+000986	Soy de Grecia, pero vivo en Alemania.	I'm from Greece, but I live in Germany.	a1	social,city		colloquial	tu		saludo-inicial	Luis	say-where-youre-from,say-where-you-are-based
+000987	¡Qué interesante! ¿Y te gusta vivir allí?	How interesting! And do you like living there?	a1	social,feelings		colloquial	tu		saludo-inicial	Marta	react-with-interest
+000988	Sí, me gusta mucho. La gente es muy amable.	Yes, I like it a lot. The people are very kind.	a1	social,feelings		colloquial	tu		saludo-inicial	Luis	say-if-you-like-a-place
+000989	¿Y en qué trabajas?	And what do you do for work?	a1	social,work,questions		colloquial	tu		saludo-inicial	Marta	ask-what-someone-does
+000990	Soy profesor. Trabajo en una escuela pequeña.	I'm a teacher. I work at a small school.	a1	social,work		colloquial	tu		saludo-inicial	Luis	say-what-you-do
+000991	¡Genial! Yo trabajo en un hospital.	Great! I work in a hospital.	a1	social,work		colloquial	tu		saludo-inicial	Marta	react-with-interest,say-what-you-do
+000992	¿Y qué haces en tu tiempo libre?	And what do you do in your free time?	a1	social,questions		colloquial	tu		saludo-inicial	Luis	ask-about-free-time
+000993	Leo mucho y salgo con amigos. ¿Y tú?	I read a lot and go out with friends. And you?	a1	social,entertainment		colloquial	tu		saludo-inicial	Marta	talk-about-free-time
+000994	Toco la guitarra y hago mucho deporte.	I play the guitar and do a lot of sport.	a1	social,music,sport		colloquial	tu		saludo-inicial	Luis	talk-about-free-time
+000710	¡Qué bien! Bueno, hasta luego, Luis.	How nice! Well, see you later, Luis.	a1	greetings		colloquial	tu		saludo-inicial	Marta	close-friendly-exchange
 000711	Hasta luego, Marta.	See you later, Marta.	a1	greetings		colloquial	tu		saludo-inicial	Luis	close-friendly-exchange
 
 # ── Encontrarse con una amiga (guided transfer) ──────────────────────────────
@@ -19,6 +29,16 @@
 000736	Todo bien, gracias. ¿Y tú?	All good, thanks. And you?	a1	feelings		colloquial	tu		saludo-amigo	Luis	respond-to-wellbeing
 000714	Estoy genial. Tengo un día muy bueno.	I'm doing great. I'm having a very good day.	a1	feelings		colloquial	tu		saludo-amigo	Ana	respond-to-wellbeing
 000715	¡Qué bien! Me alegro.	That's great! I'm glad.	a1	greetings,feelings		colloquial	tu		saludo-amigo	Luis	
+000995	¿Qué tal el trabajo?	How's work?	a1	social,work,questions		colloquial	tu		saludo-amigo	Ana	ask-what-someone-does
+000996	Tengo mucho trabajo, pero me gusta bastante.	I have a lot of work, but I quite like it.	a1	social,work		colloquial	tu		saludo-amigo	Luis	say-what-you-do
+000997	¿Y qué haces este fin de semana?	And what are you doing this weekend?	a1	social,time,questions		colloquial	tu		saludo-amigo	Ana	ask-about-free-time
+000998	Voy al cine con unos amigos. ¿Y tú?	I'm going to the cinema with some friends. And you?	a1	social,entertainment		colloquial	tu		saludo-amigo	Luis	talk-about-free-time,ask-about-free-time
+000999	Yo hago deporte y descanso en casa.	I do sport and rest at home.	a1	social,sport		colloquial	tu		saludo-amigo	Ana	talk-about-free-time
+001000	Muy bien. Yo también necesito descansar.	Very good. I need to rest too.	a1	social,feelings		colloquial	tu		saludo-amigo	Luis	react-with-interest
+001060	Oye, ¿tú eres de aquí?	Hey, are you from here?	a1	social,questions		colloquial	tu		saludo-amigo	Ana	ask-about-origin
+001061	No, soy griego. Vivo aquí desde hace tres años.	No, I'm Greek. I have lived here for three years.	a1	social,city		colloquial	tu		saludo-amigo	Luis	say-where-youre-from,say-where-you-are-based
+001062	¿Y estás contento aquí?	And are you happy here?	a1	social,feelings,questions		colloquial	tu		saludo-amigo	Ana	react-with-interest
+001063	Sí, mucho. Tengo buenos amigos y un buen trabajo.	Yes, a lot. I have good friends and a good job.	a1	social,feelings		colloquial	tu		saludo-amigo	Luis	say-if-you-like-a-place
 000716	Bueno, tengo que irme. Hasta pronto.	Well, I have to go. See you soon.	a1	greetings		colloquial	tu		saludo-amigo	Ana	close-friendly-exchange
 000717	Hasta pronto, Ana.	See you soon, Ana.	a1	greetings		colloquial	tu		saludo-amigo	Luis	close-friendly-exchange
 
@@ -27,6 +47,14 @@
 000719	Buenos días, señora López.	Good morning, Ms López.	a1	greetings,work		formal	usted		saludo-trabajo	Luis	greet-someone
 000737	Estoy un poco cansado, pero bien. ¿Y usted?	I'm a little tired, but fine. And you?	a1	feelings,work		formal	usted		saludo-trabajo	Luis	respond-to-wellbeing
 000720	Estoy bastante bien, gracias por preguntar.	I'm quite well, thank you for asking.	a1	feelings,work		formal	usted		saludo-trabajo	Compañera	respond-to-wellbeing
+001001	¿De dónde es usted, Luis?	Where are you from, Luis?	a1	social,work,questions		formal	usted		saludo-trabajo	Compañera	ask-about-origin
+001002	Soy de Grecia, pero vivo aquí desde hace tres años.	I am from Greece, but I have lived here for three years.	a1	social,city		formal	usted		saludo-trabajo	Luis	say-where-youre-from,say-where-you-are-based
+001003	¡Qué bien! ¿Y le gusta la ciudad?	How nice! And do you like the city?	a1	social,city		formal	usted		saludo-trabajo	Compañera	react-with-interest
+001004	Sí, mucho. Es tranquila y hay buena comida.	Yes, a lot. It's quiet and there is good food.	a1	social,city		formal	usted		saludo-trabajo	Luis	say-if-you-like-a-place
+001064	¿Y qué hace usted en la empresa?	And what do you do in the company?	a1	social,work,questions		formal	usted		saludo-trabajo	Compañera	ask-what-someone-does
+001065	Trabajo en la oficina, con los clientes.	I work in the office, with the customers.	a1	social,work		formal	usted		saludo-trabajo	Luis	say-what-you-do
+001005	¿Y qué hace usted los fines de semana?	And what do you do at weekends?	a1	social,time,questions		formal	usted		saludo-trabajo	Compañera	ask-about-free-time
+001006	Salgo con mi familia o leo en casa.	I go out with my family or read at home.	a1	social,family		formal	usted		saludo-trabajo	Luis	talk-about-free-time
 000721	Me alegro. Buen día y hasta luego.	I'm glad. Have a good day and see you later.	a1	greetings,work		formal	usted		saludo-trabajo	Luis	close-friendly-exchange
 000722	Igualmente, hasta luego.	You too, see you later.	a1	greetings,work		formal	usted		saludo-trabajo	Compañera	close-friendly-exchange
 
@@ -35,6 +63,14 @@
 000724	Mucho gusto, Elena.	Nice to meet you, Elena.	a1	greetings		colloquial	tu		saludo-vecina	Luis	greet-someone
 000738	Hoy estoy más o menos. ¿Y tú?	I'm so-so today. And you?	a1	feelings		colloquial	tu		saludo-vecina	Luis	respond-to-wellbeing
 000725	Bien, gracias. Estoy un poco cansada.	Fine, thanks. I'm a little tired.	a1	feelings		colloquial	tu		saludo-vecina	Elena	respond-to-wellbeing
+001007	¿Y de dónde eres, Elena?	And where are you from, Elena?	a1	social,questions		colloquial	tu		saludo-vecina	Luis	ask-about-origin
+001008	Soy de Italia, pero vivo en España desde niña.	I am from Italy, but I have lived in Spain since I was a child.	a1	social,city		colloquial	tu		saludo-vecina	Elena	say-where-youre-from,say-where-you-are-based
+001009	¿Y te gusta vivir en esta ciudad?	And do you like living in this city?	a1	social,city,questions		colloquial	tu		saludo-vecina	Luis	react-with-interest
+001010	Sí, mucho. La gente es amable y hay mucho que hacer.	Yes, a lot. The people are kind and there's a lot to do.	a1	social,city		colloquial	tu		saludo-vecina	Elena	say-if-you-like-a-place
+001011	¿Trabajas aquí cerca?	Do you work near here?	a1	social,work,questions		colloquial	tu		saludo-vecina	Luis	ask-what-someone-does
+001012	Soy profesora de música. Doy clases por la tarde.	I'm a music teacher. I give classes in the afternoon.	a1	social,work,music		colloquial	tu		saludo-vecina	Elena	say-what-you-do
+001013	¡Qué bien! ¿Y qué haces en tu tiempo libre?	How nice! And what do you do in your free time?	a1	social,questions		colloquial	tu		saludo-vecina	Luis	react-with-interest,ask-about-free-time
+001014	Bailo y cocino mucho. Los domingos veo películas.	I dance and cook a lot. On Sundays I watch films.	a1	social,entertainment		colloquial	tu		saludo-vecina	Elena	talk-about-free-time
 000726	Tienes que descansar. Nos vemos pronto.	You need to rest. See you soon.	a1	greetings,feelings		colloquial	tu		saludo-vecina	Luis	close-friendly-exchange
 000727	Gracias, nos vemos.	Thanks, see you.	a1	greetings		colloquial	tu		saludo-vecina	Elena	close-friendly-exchange
 
@@ -124,14 +160,14 @@
 000856	Soy profesora de español para extranjeros.	I am a Spanish teacher for foreigners.	a1	work,language	A precise job, feminine speaker.	neutral					say-what-you-do
 
 # ── Decir dónde vives (palette options) ─────────────────────────────────────
-000857	Vivo en el centro, en un piso alto.	I live in the centre, in a flat high up.	a1	home,city	Says the area and the kind of home.	neutral					say-where-you-live
+000857	Vivo en el centro, en un piso alto.	I live in the centre, in a flat high up.	a1	home,city	Says the area and the kind of home.	neutral					say-where-you-live,say-where-you-are-based
 000858	Vivo con dos amigos en un piso grande.	I live with two friends in a big flat.	a1	home,social	Says who you live with.	neutral					say-where-you-live
-000859	Vivo en una casa, fuera de la ciudad.	I live in a house, outside the city.	a1	home,city	For a home away from the centre.	neutral					say-where-you-live
+000859	Vivo en una casa, fuera de la ciudad.	I live in a house, outside the city.	a1	home,city	For a home away from the centre.	neutral					say-where-you-live,say-where-you-are-based
 000860	Vivo solo, en un piso muy pequeño.	I live alone, in a very small flat.	a1	home	Masculine speaker; sola for a feminine one.	neutral					say-where-you-live
 000861	Vivo con mi familia, cerca del río.	I live with my family, near the river.	a1	home,family	Adds a landmark instead of a street.	neutral					say-where-you-live
-000862	Ahora vivo en Madrid, pero soy de un pueblo.	I live in Madrid now, but I'm from a village.	a1	home,city	Separates where you live from where you are from.	neutral					say-where-you-live
+000862	Ahora vivo en Madrid, pero soy de un pueblo.	I live in Madrid now, but I'm from a village.	a1	home,city	Separates where you live from where you are from.	neutral					say-where-you-live,say-where-you-are-based
 000863	Vivo encima de una tienda, en una calle ruidosa.	I live above a shop, on a noisy street.	a1	home,city	A detail that says how it feels to live there.	neutral					say-where-you-live
-000864	Vivo en el mismo piso desde hace diez años.	I have lived in the same flat for ten years.	a2	home,time	Says how long, with desde hace.	neutral					say-where-you-live
+000864	Vivo en el mismo piso desde hace diez años.	I have lived in the same flat for ten years.	a2	home,time	Says how long, with desde hace.	neutral					say-where-you-live,say-where-you-are-based
 
 # ── Pedir un billete (palette options) ──────────────────────────────────────
 000961	Un billete para Barcelona, por favor.	One ticket to Barcelona, please.	a1	travel	Short and direct, with the destination first.	neutral					ask-for-a-ticket
@@ -162,3 +198,62 @@
 000982	Este chico es mi hijo, el pequeño.	This boy is my son, the little one.	a1	family	Distinguishes one child from another.	neutral					introduce-a-person
 000983	Es mi novia, estudiamos juntos.	She is my girlfriend, we study together.	a1	family,school	Says what you share rather than who they are.	neutral					introduce-a-person
 000984	No la conoces: es mi tía de México.	You don't know her: she is my aunt from Mexico.	a1	family	Anticipates that the other person will not know them.	neutral					introduce-a-person
+
+# ── Response palette: saying where you are from ──────────────────────────────
+001015	Soy de Grecia.	I'm from Greece.	a1	social,city	The shortest complete answer.	neutral					say-where-youre-from
+001016	Soy griego, de Atenas.	I'm Greek, from Athens.	a1	social,city	Nationality first, then the city.	neutral					say-where-youre-from
+001017	Soy de una ciudad pequeña, cerca de Berlín.	I'm from a small city, near Berlin.	a1	social,city	Places a town nobody knows next to one they do.	neutral					say-where-youre-from
+001018	Mi familia es italiana, pero yo soy de aquí.	My family is Italian, but I'm from here.	a1	social,family	Separates your family's origin from your own.	neutral					say-where-youre-from
+001019	Nací en Italia y vivo aquí desde niño.	I was born in Italy and have lived here since I was a child.	a1	social,city	Uses nací for where you were born.	neutral					say-where-youre-from
+001020	Soy de Madrid, pero ahora vivo fuera.	I'm from Madrid, but I live away now.	a1	social,city	For when you have moved away from it.	neutral					say-where-youre-from
+001021	Soy extranjero. No soy de aquí.	I'm a foreigner. I'm not from here.	a1	social	Plain, and useful when the place needs no name.	neutral					say-where-youre-from
+
+# ── Response palette: where you live now ─────────────────────────────────────
+001022	Vivo en Alemania desde hace dos años.	I have lived in Germany for two years.	a1	social,city	Says how long, with desde hace.	neutral					say-where-you-are-based
+001023	Vivo aquí, pero trabajo en otra ciudad.	I live here, but I work in another city.	a1	social,work	Separates home from workplace.	neutral					say-where-you-are-based
+001024	No vivo aquí. Estoy de vacaciones.	I don't live here. I'm on holiday.	a1	social,travel	For when you are only visiting.	neutral					say-where-you-are-based
+001025	Vivo cerca, a diez minutos de aquí.	I live nearby, ten minutes from here.	a1	social,place	Answers with a distance instead of a name.	neutral					say-where-you-are-based
+
+# ── Response palette: whether you like it there ──────────────────────────────
+001026	Me encanta vivir aquí.	I love living here.	a1	social,feelings	Warmer than me gusta.	neutral					say-if-you-like-a-place
+001027	Me gusta, pero hace mucho frío en invierno.	I like it, but it's very cold in winter.	a1	social,weather	Positive, with an honest reservation.	neutral					say-if-you-like-a-place
+001028	Es una ciudad tranquila y muy bonita.	It's a quiet and very pretty city.	a1	social,city	Describes the place instead of your feeling.	neutral					say-if-you-like-a-place
+001029	Sí, pero mi familia está muy lejos.	Yes, but my family is very far away.	a1	social,family	Says what living there costs you.	neutral					say-if-you-like-a-place
+001030	Prefiero mi país, la verdad.	I prefer my own country, to be honest.	a1	social,feelings	Honest and negative without being rude.	neutral					say-if-you-like-a-place
+001031	No mucho. Es una ciudad muy grande para mí.	Not much. It's a very big city for me.	a1	social,city	A clear no, with a reason.	neutral					say-if-you-like-a-place
+001032	Sí, aquí hay mucho trabajo y buena comida.	Yes, there's plenty of work and good food here.	a1	social,work	Two concrete reasons instead of a feeling.	neutral					say-if-you-like-a-place
+
+# ── Response palette: what you do in your free time ──────────────────────────
+001033	Me gusta leer y escuchar música.	I like reading and listening to music.	a1	social,music	Two calm, dependable answers at once.	neutral					talk-about-free-time
+001034	Hago deporte tres veces por semana.	I do sport three times a week.	a1	social,sport	Adds how often.	neutral					talk-about-free-time
+001035	Salgo con mis amigos los fines de semana.	I go out with my friends at weekends.	a1	social,entertainment	Says who with, and when.	neutral					talk-about-free-time
+001036	Veo muchas películas en casa.	I watch a lot of films at home.	a1	social,entertainment	A quiet answer, and a very common one.	neutral					talk-about-free-time
+001037	Me encanta cocinar para mi familia.	I love cooking for my family.	a1	social,food-drink	Something you do for other people.	neutral					talk-about-free-time
+001038	Corro por el parque por la mañana.	I run in the park in the morning.	a1	social,sport	Says where, and when.	neutral					talk-about-free-time
+001039	No tengo mucho tiempo libre, la verdad.	I don't have much free time, to be honest.	a1	social	An honest answer when the true one is none.	neutral					talk-about-free-time
+
+# ── Response palette: asking where someone is from ───────────────────────────
+001040	¿Y tú, de dónde eres?	And you, where are you from?	a1	social,questions	Returns the question.	colloquial	tu				ask-about-origin
+001041	¿Eres de aquí?	Are you from here?	a1	social,questions	A yes-or-no opening.	colloquial	tu				ask-about-origin
+001042	¿De qué parte de España eres?	Which part of Spain are you from?	a1	social,questions	For when you already know the country.	colloquial	tu				ask-about-origin
+001043	¿Y usted, de dónde es?	And you, where are you from?	a1	social,questions	The formal version.	formal	usted				ask-about-origin
+001044	¿Dónde vives ahora?	Where do you live now?	a1	social,questions	Asks where they live, not where they began.	colloquial	tu				ask-about-origin
+001045	¿Vives aquí desde hace mucho?	Have you lived here long?	a1	social,questions	Asks how long.	colloquial	tu				ask-about-origin
+001046	¿Tu familia también es de aquí?	Is your family from here too?	a1	social,questions	Widens the question to their family.	colloquial	tu				ask-about-origin
+
+# ── Response palette: asking what someone does ───────────────────────────────
+001047	¿A qué te dedicas?	What do you do for a living?	a1	social,work,questions	The most common way to ask.	colloquial	tu				ask-what-someone-does
+001048	¿Estudias o trabajas?	Do you study or work?	a1	social,work,questions	Natural with someone younger.	colloquial	tu				ask-what-someone-does
+001049	¿Te gusta tu trabajo?	Do you like your job?	a1	social,work,questions	Moves from the job to how they feel about it.	colloquial	tu				ask-what-someone-does
+001050	¿Y usted, en qué trabaja?	And you, what do you do for work?	a1	social,work,questions	The formal version.	formal	usted				ask-what-someone-does
+001051	¿Trabajas todos los días?	Do you work every day?	a1	social,work,questions	Asks about the schedule.	colloquial	tu				ask-what-someone-does
+001052	¿Es un trabajo interesante?	Is it an interesting job?	a1	social,work,questions	Keeps the subject going without repeating yourself.	neutral					ask-what-someone-does
+
+# ── Response palette: asking about free time ─────────────────────────────────
+001053	¿Qué te gusta hacer?	What do you like doing?	a1	social,questions	Open, and easy to answer.	colloquial	tu				ask-about-free-time
+001054	¿Haces deporte?	Do you play any sport?	a1	social,sport,questions	A yes-or-no question that always goes somewhere.	colloquial	tu				ask-about-free-time
+001055	¿Qué haces los fines de semana?	What do you do at weekends?	a1	social,time,questions	Anchors the question in time.	colloquial	tu				ask-about-free-time
+001056	¿Sales mucho por la noche?	Do you go out much in the evening?	a1	social,entertainment,questions	For a livelier conversation.	colloquial	tu				ask-about-free-time
+001057	¿Y usted, qué hace los domingos?	And you, what do you do on Sundays?	a1	social,time,questions	The formal version.	formal	usted				ask-about-free-time
+001058	¿Tienes tiempo para leer?	Do you have time to read?	a1	social,questions	Names one activity and asks about it.	colloquial	tu				ask-about-free-time
+001059	¿Escuchas música o ves películas?	Do you listen to music or watch films?	a1	social,music,questions	Offers two answers so the other person can pick.	colloquial	tu				ask-about-free-time

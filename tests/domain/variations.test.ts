@@ -7,7 +7,7 @@ import {
 } from '../../src/domain/exercises';
 
 describe('variation practice', () => {
-  it('covers every mission with 574 deliberately bounded combinations', () => {
+  it('covers every mission with 640 deliberately bounded combinations', () => {
     expect(Object.keys(MISSION_VARIATIONS)).toEqual([
       'greet-and-respond',
       'cafe-order',
@@ -36,7 +36,7 @@ describe('variation practice', () => {
       0,
     );
 
-    expect(combinations).toBe(574);
+    expect(combinations).toBe(640);
   });
 
   it.each([

@@ -46,6 +46,87 @@ export const MISSION_VARIATIONS: Readonly<Record<string, readonly VariationPatte
         },
       ],
     },
+    {
+      id: 'build-origin-answer',
+      title: 'Where you are from, where you live',
+      cue: 'Two facts in one sentence — the pattern that answers “¿De dónde eres?” properly.',
+      targetTemplate: '{origin}{residence}',
+      referenceTemplate: '{origin}{residence}',
+      slots: [
+        {
+          id: 'origin',
+          label: 'Where you are from',
+          choices: [
+            { id: 'grecia', target: 'Soy de Grecia', reference: "I'm from Greece" },
+            { id: 'italia', target: 'Soy de Italia', reference: "I'm from Italy" },
+            { id: 'alemania', target: 'Soy de Alemania', reference: "I'm from Germany" },
+            { id: 'madrid', target: 'Soy de Madrid', reference: "I'm from Madrid" },
+            { id: 'griego', target: 'Soy griego', reference: "I'm Greek" },
+            { id: 'aqui', target: 'Soy de aquí', reference: "I'm from here" },
+          ],
+        },
+        {
+          id: 'residence',
+          label: 'Where you live now',
+          choices: [
+            { id: 'none', target: '.', reference: '.' },
+            {
+              id: 'alemania',
+              target: ', pero vivo en Alemania.',
+              reference: ', but I live in Germany.',
+            },
+            { id: 'aqui', target: ', pero ahora vivo aquí.', reference: ', but I live here now.' },
+            { id: 'berlin', target: ' y vivo en Berlín.', reference: ' and I live in Berlin.' },
+            {
+              id: 'fuera',
+              target: ', pero vivo fuera de la ciudad.',
+              reference: ', but I live outside the city.',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'build-free-time-answer',
+      title: 'Say what you do with your time',
+      cue: 'Pick the activity, then add how often or when. The second half is what invites a reply.',
+      targetTemplate: '{activity}{when}',
+      referenceTemplate: '{activity}{when}',
+      slots: [
+        {
+          id: 'activity',
+          label: 'What you do',
+          choices: [
+            { id: 'leer', target: 'Leo', reference: 'I read' },
+            { id: 'deporte', target: 'Hago deporte', reference: 'I do sport' },
+            { id: 'guitarra', target: 'Toco la guitarra', reference: 'I play the guitar' },
+            { id: 'amigos', target: 'Salgo con amigos', reference: 'I go out with friends' },
+            { id: 'peliculas', target: 'Veo películas', reference: 'I watch films' },
+            { id: 'cocinar', target: 'Cocino', reference: 'I cook' },
+          ],
+        },
+        {
+          id: 'when',
+          label: 'How often, or when',
+          choices: [
+            { id: 'none', target: '.', reference: '.' },
+            { id: 'mucho', target: ' mucho.', reference: ' a lot.' },
+            { id: 'manana', target: ' por la mañana.', reference: ' in the morning.' },
+            { id: 'noche', target: ' por la noche.', reference: ' in the evening.' },
+            {
+              id: 'finde',
+              target: ' los fines de semana.',
+              reference: ' at weekends.',
+            },
+            {
+              id: 'semana',
+              target: ' tres veces por semana.',
+              reference: ' three times a week.',
+            },
+          ],
+        },
+      ],
+    },
   ],
   'cafe-order': [
     {

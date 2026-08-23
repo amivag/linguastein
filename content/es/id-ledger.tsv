@@ -710,7 +710,7 @@
 000707	sentence	active	Mucho gusto. ¿Cómo estás?
 000708	sentence	active	Muy bien, gracias. ¿Y tú?
 000709	sentence	active	Estoy bien, gracias.
-000710	sentence	active	Me alegro. Hasta luego.
+000710	sentence	active	¡Qué bien! Bueno, hasta luego, Luis.
 000711	sentence	active	Hasta luego, Marta.
 000712	sentence	active	¡Hola, Luis! ¿Cómo estás hoy?
 000713	sentence	active	Hola, Ana.
@@ -985,6 +985,87 @@
 000982	sentence	active	Este chico es mi hijo, el pequeño.
 000983	sentence	active	Es mi novia, estudiamos juntos.
 000984	sentence	active	No la conoces: es mi tía de México.
+000985	sentence	active	¿Y de dónde eres?
+000986	sentence	active	Soy de Grecia, pero vivo en Alemania.
+000987	sentence	active	¡Qué interesante! ¿Y te gusta vivir allí?
+000988	sentence	active	Sí, me gusta mucho. La gente es muy amable.
+000989	sentence	active	¿Y en qué trabajas?
+000990	sentence	active	Soy profesor. Trabajo en una escuela pequeña.
+000991	sentence	active	¡Genial! Yo trabajo en un hospital.
+000992	sentence	active	¿Y qué haces en tu tiempo libre?
+000993	sentence	active	Leo mucho y salgo con amigos. ¿Y tú?
+000994	sentence	active	Toco la guitarra y hago mucho deporte.
+000995	sentence	active	¿Qué tal el trabajo?
+000996	sentence	active	Tengo mucho trabajo, pero me gusta bastante.
+000997	sentence	active	¿Y qué haces este fin de semana?
+000998	sentence	active	Voy al cine con unos amigos. ¿Y tú?
+000999	sentence	active	Yo hago deporte y descanso en casa.
+001000	sentence	active	Muy bien. Yo también necesito descansar.
+001001	sentence	active	¿De dónde es usted, Luis?
+001002	sentence	active	Soy de Grecia, pero vivo aquí desde hace tres años.
+001003	sentence	active	¡Qué bien! ¿Y le gusta la ciudad?
+001004	sentence	active	Sí, mucho. Es tranquila y hay buena comida.
+001005	sentence	active	¿Y qué hace usted los fines de semana?
+001006	sentence	active	Salgo con mi familia o leo en casa.
+001007	sentence	active	¿Y de dónde eres, Elena?
+001008	sentence	active	Soy de Italia, pero vivo en España desde niña.
+001009	sentence	active	¿Y te gusta vivir en esta ciudad?
+001010	sentence	active	Sí, mucho. La gente es amable y hay mucho que hacer.
+001011	sentence	active	¿Trabajas aquí cerca?
+001012	sentence	active	Soy profesora de música. Doy clases por la tarde.
+001013	sentence	active	¡Qué bien! ¿Y qué haces en tu tiempo libre?
+001014	sentence	active	Bailo y cocino mucho. Los domingos veo películas.
+001015	sentence	active	Soy de Grecia.
+001016	sentence	active	Soy griego, de Atenas.
+001017	sentence	active	Soy de una ciudad pequeña, cerca de Berlín.
+001018	sentence	active	Mi familia es italiana, pero yo soy de aquí.
+001019	sentence	active	Nací en Italia y vivo aquí desde niño.
+001020	sentence	active	Soy de Madrid, pero ahora vivo fuera.
+001021	sentence	active	Soy extranjero. No soy de aquí.
+001022	sentence	active	Vivo en Alemania desde hace dos años.
+001023	sentence	active	Vivo aquí, pero trabajo en otra ciudad.
+001024	sentence	active	No vivo aquí. Estoy de vacaciones.
+001025	sentence	active	Vivo cerca, a diez minutos de aquí.
+001026	sentence	active	Me encanta vivir aquí.
+001027	sentence	active	Me gusta, pero hace mucho frío en invierno.
+001028	sentence	active	Es una ciudad tranquila y muy bonita.
+001029	sentence	active	Sí, pero mi familia está muy lejos.
+001030	sentence	active	Prefiero mi país, la verdad.
+001031	sentence	active	No mucho. Es una ciudad muy grande para mí.
+001032	sentence	active	Sí, aquí hay mucho trabajo y buena comida.
+001033	sentence	active	Me gusta leer y escuchar música.
+001034	sentence	active	Hago deporte tres veces por semana.
+001035	sentence	active	Salgo con mis amigos los fines de semana.
+001036	sentence	active	Veo muchas películas en casa.
+001037	sentence	active	Me encanta cocinar para mi familia.
+001038	sentence	active	Corro por el parque por la mañana.
+001039	sentence	active	No tengo mucho tiempo libre, la verdad.
+001040	sentence	active	¿Y tú, de dónde eres?
+001041	sentence	active	¿Eres de aquí?
+001042	sentence	active	¿De qué parte de España eres?
+001043	sentence	active	¿Y usted, de dónde es?
+001044	sentence	active	¿Dónde vives ahora?
+001045	sentence	active	¿Vives aquí desde hace mucho?
+001046	sentence	active	¿Tu familia también es de aquí?
+001047	sentence	active	¿A qué te dedicas?
+001048	sentence	active	¿Estudias o trabajas?
+001049	sentence	active	¿Te gusta tu trabajo?
+001050	sentence	active	¿Y usted, en qué trabaja?
+001051	sentence	active	¿Trabajas todos los días?
+001052	sentence	active	¿Es un trabajo interesante?
+001053	sentence	active	¿Qué te gusta hacer?
+001054	sentence	active	¿Haces deporte?
+001055	sentence	active	¿Qué haces los fines de semana?
+001056	sentence	active	¿Sales mucho por la noche?
+001057	sentence	active	¿Y usted, qué hace los domingos?
+001058	sentence	active	¿Tienes tiempo para leer?
+001059	sentence	active	¿Escuchas música o ves películas?
+001060	sentence	active	Oye, ¿tú eres de aquí?
+001061	sentence	active	No, soy griego. Vivo aquí desde hace tres años.
+001062	sentence	active	¿Y estás contento aquí?
+001063	sentence	active	Sí, mucho. Tengo buenos amigos y un buen trabajo.
+001064	sentence	active	¿Y qué hace usted en la empresa?
+001065	sentence	active	Trabajo en la oficina, con los clientes.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1481,6 +1562,8 @@
 600106	modifier-card	active	perfecto
 600107	modifier-card	active	pasado
 600108	modifier-card	active	tercero
+600109	modifier-card	active	griego
+600110	modifier-card	active	italiano
 700001	passage	active	Una mañana normal
 700002	passage	active	Mi piso
 700003	passage	active	Un día en la oficina

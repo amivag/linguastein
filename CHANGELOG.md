@@ -17,6 +17,21 @@ in the pack's own counts.
 
 ### Added
 
+- **The first mission is a conversation now, not a greeting.** `greet-and-respond`
+  used to be seven lines: hello, how are you, goodbye. All four of its dialogues
+  now carry on past the wellbeing answer into what actually happens next — where
+  you are from, where you live now, whether you like it there, what you do, what
+  you do with your time — and close on that instead. The model exchange runs
+  seventeen lines, the mission claims eleven capabilities where it claimed four,
+  and each transfer rehearses the whole arc rather than a slice of it: a friend
+  who does not know you well, the same conversation in usted at work, and a
+  neighbour where the learner does the asking. Nine response palettes sit behind
+  it, eight of them new — because a learner who can only answer is still being
+  interviewed, the asking side is drilled as its own move, with its own
+  alternatives and its own tú/usted pair. Two variation-lab patterns build
+  “Soy de X, pero vivo en Y” and an activity plus how often, from parts. The pack
+  grew by 81 sentences and 7 communicative functions, written almost entirely
+  from vocabulary it already had.
 - **"Say it" shows what it hears, while it hears it.** A level meter beside the
   control, driven by the microphone rather than by a timer, and the words the
   recogniser has so far before it commits to them. Speech recognition is

@@ -163,7 +163,18 @@ describe('MissionScreen', () => {
 
   it('narrows accepted palette responses to the current register', async () => {
     const services = await shippedServices();
-    for (const localId of ['000713', '000736', '000715', '000717']) {
+    const transferOne = [
+      '000713',
+      '000736',
+      '000715',
+      '000996',
+      '000998',
+      '001000',
+      '001061',
+      '001063',
+      '000717',
+    ];
+    for (const localId of transferOne) {
       const item = services.repository.itemByLocalId(localId)!;
       await services.storage.attempts.append({
         id: `completed-${localId}`,

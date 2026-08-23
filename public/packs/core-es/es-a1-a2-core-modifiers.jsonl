@@ -247,6 +247,8 @@
 {"id":"core-es:lexeme:perfecto","lemma":"perfecto","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:pasado","lemma":"pasado","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:tercero","lemma":"tercero","pos":"ADJ","level":"a1"}
+{"id":"core-es:lexeme:griego","lemma":"griego","pos":"ADJ","level":"a1"}
+{"id":"core-es:lexeme:italiano","lemma":"italiano","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:regular","lemma":"regular","pos":"ADV","level":"a1"}
 {"id":"core-es:lexeme:luego","lemma":"luego","pos":"ADV","level":"a1"}
 {"id":"core-es:lexeme:entonces","lemma":"entonces","pos":"ADV","level":"a1"}
@@ -267,4 +269,9 @@
 {"id":"core-es:lexeme:espana","lemma":"España","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:mexico","lemma":"México","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:argentina","lemma":"Argentina","pos":"PROPN","level":"a1"}
+{"id":"core-es:lexeme:grecia","lemma":"Grecia","pos":"PROPN","level":"a1"}
+{"id":"core-es:lexeme:alemania","lemma":"Alemania","pos":"PROPN","level":"a1"}
+{"id":"core-es:lexeme:italia","lemma":"Italia","pos":"PROPN","level":"a1"}
+{"id":"core-es:lexeme:berlin","lemma":"Berlín","pos":"PROPN","level":"a1"}
+{"id":"core-es:lexeme:atenas","lemma":"Atenas","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:menudo","lemma":"menudo","pos":"ADV","level":"a2"}

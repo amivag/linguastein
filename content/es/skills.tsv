@@ -32,6 +32,13 @@ greet-someone	function	Saludar a alguien	Greet someone naturally for the situati
 ask-about-wellbeing	function	Preguntar cómo está alguien	Ask naturally how someone is doing	a1	greet-someone
 respond-to-wellbeing	function	Responder a «¿Cómo estás?»	Give a natural, honest answer about how you are doing	a1	ask-about-wellbeing
 close-friendly-exchange	function	Cerrar un saludo amistoso	Close a short friendly exchange naturally	a1	greet-someone
+ask-about-origin	function	Preguntar de dónde es alguien	Ask where someone is from	a1	greet-someone
+say-where-youre-from	function	Decir de dónde eres	Say which country or city you are from	a1	ask-about-origin
+say-where-you-are-based	function	Decir dónde vives ahora	Say which country or city you live in now	a1	say-where-youre-from
+say-if-you-like-a-place	function	Decir si te gusta el sitio	Say whether you like living there, and why	a1	say-where-you-are-based
+ask-what-someone-does	function	Preguntar a qué se dedica alguien	Ask what someone does for a living	a1	greet-someone
+ask-about-free-time	function	Preguntar por el tiempo libre	Ask what someone does in their free time	a1	greet-someone
+talk-about-free-time	function	Hablar del tiempo libre	Say what you do in your free time	a1	ask-about-free-time
 describe-a-symptom	function	Decir qué te duele	Say what hurts, or how you feel	a2	
 say-since-when	function	Decir desde cuándo	Say how long you have felt it	a2	describe-a-symptom
 answer-health-questions	function	Responder a las preguntas del médico	Answer a health professional's follow-up questions	a2	describe-a-symptom

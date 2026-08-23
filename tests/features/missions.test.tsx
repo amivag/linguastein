@@ -94,15 +94,16 @@ describe('MissionScreen', () => {
       screen.queryByRole('button', { name: 'Listen to response “Regular.”' }),
     ).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Show 7 more natural responses' }));
+    await user.click(
+      screen.getByRole('button', { name: 'More than “I’m fine”: show 7 more responses' }),
+    );
     expect(
       screen.getByRole('button', { name: 'Listen to response “Regular.”' }),
     ).toBeInTheDocument();
     expect(screen.getByText('Things could be better')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Show fewer responses' })).toHaveAttribute(
-      'aria-expanded',
-      'true',
-    );
+    expect(
+      screen.getByRole('button', { name: 'More than “I’m fine”: show fewer responses' }),
+    ).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('uses the same progressive palette pattern in another mission', async () => {
@@ -122,7 +123,11 @@ describe('MissionScreen', () => {
       screen.queryByRole('button', { name: 'Listen to response “De momento, solo un café.”' }),
     ).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Show 5 more natural responses' }));
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Build the order you actually want: show 5 more responses',
+      }),
+    );
     expect(
       screen.getByRole('button', { name: 'Listen to response “De momento, solo un café.”' }),
     ).toBeInTheDocument();

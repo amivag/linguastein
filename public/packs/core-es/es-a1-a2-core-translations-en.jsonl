@@ -513,6 +513,74 @@
 {"ref":"core-es:item:001226","lang":"en","text":"All right, eight o’clock then.","type":"natural","note":"Says the time back."}
 {"ref":"core-es:item:001227","lang":"en","text":"OK, I'll see you there.","type":"natural","note":"Casual, and very Spanish."}
 {"ref":"core-es:item:001228","lang":"en","text":"Great, see you tomorrow.","type":"natural","note":"Warm, for a plan you are pleased about."}
+{"ref":"core-es:item:001229","lang":"en","text":"Good afternoon, how are things?","type":"natural","note":"Time of day plus an opener, in four words."}
+{"ref":"core-es:item:001230","lang":"en","text":"Hi, I'm Luis. And you?","type":"natural","note":"Gives your name and hands the turn straight back."}
+{"ref":"core-es:item:001231","lang":"en","text":"Good evening, sir.","type":"natural","note":"Formal, and for after dark."}
+{"ref":"core-es:item:001232","lang":"en","text":"Hi, how is everything going?","type":"natural","note":"Warmer than ¿cómo estás? with someone you know."}
+{"ref":"core-es:item:001233","lang":"en","text":"Right, see you later.","type":"natural","note":"Bueno is what signals you are leaving."}
+{"ref":"core-es:item:001234","lang":"en","text":"See you tomorrow.","type":"natural","note":"When you know when."}
+{"ref":"core-es:item:001235","lang":"en","text":"Until next time.","type":"natural","note":"When you do not."}
+{"ref":"core-es:item:001236","lang":"en","text":"Have a good day, and see you soon.","type":"natural","note":"Warm without being long."}
+{"ref":"core-es:item:001237","lang":"en","text":"I usually don't have much time in the morning.","type":"natural","note":"A circumstance rather than an action."}
+{"ref":"core-es:item:001238","lang":"en","text":"I go to work by metro and arrive at nine.","type":"natural","note":"How you travel, and when you land."}
+{"ref":"core-es:item:001239","lang":"en","text":"I leave early and get to the school before eight.","type":"natural","note":"A different destination, the same shape."}
+{"ref":"core-es:item:001240","lang":"en","text":"For three days now.","type":"natural","note":"The bare answer, with desde hace."}
+{"ref":"core-es:item:001241","lang":"en","text":"Since last weekend.","type":"natural","note":"Anchors it to a day rather than a count."}
+{"ref":"core-es:item:001242","lang":"en","text":"It started yesterday morning.","type":"natural","note":"Says when it began instead of how long."}
+{"ref":"core-es:item:001243","lang":"en","text":"Yes, a slight temperature.","type":"natural","note":"Yes, with the degree."}
+{"ref":"core-es:item:001244","lang":"en","text":"No, I'm not taking any medication.","type":"natural","note":"The question they always ask."}
+{"ref":"core-es:item:001245","lang":"en","text":"I've been sleeping badly since Monday.","type":"natural","note":"Answers about sleep with a start date."}
+{"ref":"core-es:item:001246","lang":"en","text":"I'm eating well, but I'm very tired.","type":"natural","note":"Rules one thing out and offers another."}
+{"ref":"core-es:item:001247","lang":"en","text":"All right, I'll rest for two days.","type":"natural","note":"Accepts, and says how much."}
+{"ref":"core-es:item:001248","lang":"en","text":"All right, I'll take a tablet at night.","type":"natural","note":"Repeats the instruction back."}
+{"ref":"core-es:item:001249","lang":"en","text":"Understood. And if I am not better?","type":"natural","note":"Accepts, then asks the obvious next question."}
+{"ref":"core-es:item:001250","lang":"en","text":"Thank you. I'll drink plenty of water.","type":"natural","note":"Names the advice you are going to follow."}
+{"ref":"core-es:item:001251","lang":"en","text":"I have three meetings this week.","type":"natural","note":"How many, over what period."}
+{"ref":"core-es:item:001252","lang":"en","text":"I talk to the customers on the phone.","type":"natural","note":"For work that is meetings by another name."}
+{"ref":"core-es:item:001253","lang":"en","text":"On Mondays we have a team meeting.","type":"natural","note":"A regular one, anchored to a day."}
+{"ref":"core-es:item:001254","lang":"en","text":"It was a hard day, but a good one.","type":"natural","note":"Two verdicts at once, which is usually the truth."}
+{"ref":"core-es:item:001255","lang":"en","text":"I finish early today and I'm happy about it.","type":"natural","note":"The reason and the feeling together."}
+{"ref":"core-es:item:001256","lang":"en","text":"I get home tired, but calm.","type":"natural","note":"Tired is not the same as unhappy."}
+{"ref":"core-es:item:001257","lang":"en","text":"There is a shop very close by.","type":"natural","note":"The thing people ask about first."}
+{"ref":"core-es:item:001258","lang":"en","text":"The bus stop is right in front of the house.","type":"natural","note":"Names how close, not just that it exists."}
+{"ref":"core-es:item:001259","lang":"en","text":"There are no shops nearby. It is a problem.","type":"natural","note":"What is missing is as useful as what is there."}
+{"ref":"core-es:item:001260","lang":"en","text":"There is a very big park near the house.","type":"natural","note":"Puts the place first, which is natural in Spanish."}
+{"ref":"core-es:item:001261","lang":"en","text":"I live very well here.","type":"natural","note":"About the living, not the flat."}
+{"ref":"core-es:item:001262","lang":"en","text":"It's a bit small, but I like it.","type":"natural","note":"The honest verdict most people give."}
+{"ref":"core-es:item:001263","lang":"en","text":"I don't like the street, it's very noisy.","type":"natural","note":"Negative, and says exactly what about."}
+{"ref":"core-es:item:001264","lang":"en","text":"I want to move house next year.","type":"natural","note":"A feeling expressed as a plan."}
+{"ref":"core-es:item:001265","lang":"en","text":"What time does the next train leave?","type":"natural","note":"The question that starts every journey."}
+{"ref":"core-es:item:001266","lang":"en","text":"When does the next bus leave?","type":"natural","note":"Cuándo, when you do not need the exact hour."}
+{"ref":"core-es:item:001267","lang":"en","text":"Is there a later one?","type":"natural","note":"When the next one is too soon."}
+{"ref":"core-es:item:001268","lang":"en","text":"Does the train arrive before ten?","type":"natural","note":"About the arrival, which is what you actually need."}
+{"ref":"core-es:item:001269","lang":"en","text":"Return, please.","type":"natural","note":"The two words that answer the standard question."}
+{"ref":"core-es:item:001270","lang":"en","text":"One ticket, one way.","type":"natural","note":"How many and which fare at once."}
+{"ref":"core-es:item:001271","lang":"en","text":"Two tickets for tomorrow.","type":"natural","note":"Adds the day, which they will ask for next."}
+{"ref":"core-es:item:001272","lang":"en","text":"How much is a return?","type":"natural","note":"Asks the price before choosing."}
+{"ref":"core-es:item:001273","lang":"en","text":"Which platform does it leave from?","type":"natural","note":"The last thing between you and the train."}
+{"ref":"core-es:item:001274","lang":"en","text":"Where is platform three?","type":"natural","note":"Once you know the number."}
+{"ref":"core-es:item:001275","lang":"en","text":"Is this the right stop?","type":"natural","note":"For a bus, where there is no platform."}
+{"ref":"core-es:item:001276","lang":"en","text":"Does it leave from here or the other platform?","type":"natural","note":"Offers both, so the answer cannot be vague."}
+{"ref":"core-es:item:001277","lang":"en","text":"How much is a kilo?","type":"natural","note":"The straightforward form."}
+{"ref":"core-es:item:001278","lang":"en","text":"How much are the lemons?","type":"natural","note":"A cuánto están is what you will actually hear."}
+{"ref":"core-es:item:001279","lang":"en","text":"How much for two kilos?","type":"natural","note":"For the amount you want, not the unit."}
+{"ref":"core-es:item:001280","lang":"en","text":"And how much is half a kilo?","type":"natural","note":"Half a kilo is the usual market amount."}
+{"ref":"core-es:item:001281","lang":"en","text":"Make it a kilo rather than half.","type":"natural","note":"Mejor is how you change an order politely."}
+{"ref":"core-es:item:001282","lang":"en","text":"Sorry, I have changed my mind. Two, please.","type":"natural","note":"Says plainly that you are changing it."}
+{"ref":"core-es:item:001283","lang":"en","text":"I would like some bread as well, please.","type":"natural","note":"Adds rather than changes."}
+{"ref":"core-es:item:001284","lang":"en","text":"No, just the oranges.","type":"natural","note":"Takes something back off the counter."}
+{"ref":"core-es:item:001285","lang":"en","text":"Can I pay in cash?","type":"natural","note":"Small stalls often prefer it."}
+{"ref":"core-es:item:001286","lang":"en","text":"Here's ten euros.","type":"natural","note":"Says the amount as you hand it over."}
+{"ref":"core-es:item:001287","lang":"en","text":"Thank you, see you next week.","type":"natural","note":"For a stall you will come back to."}
+{"ref":"core-es:item:001288","lang":"en","text":"That's all right. Thank you very much.","type":"natural","note":"Confirms the change was right on the way out."}
+{"ref":"core-es:item:001289","lang":"en","text":"She works in a shop in the centre.","type":"natural","note":"Where, when the job has no short name."}
+{"ref":"core-es:item:001290","lang":"en","text":"He is a student and works in the afternoons.","type":"natural","note":"For someone doing both."}
+{"ref":"core-es:item:001291","lang":"en","text":"She is not working at the moment, she is looking for something new.","type":"natural","note":"Honest, and very common."}
+{"ref":"core-es:item:001292","lang":"en","text":"He is a waiter in a restaurant in the centre.","type":"natural","note":"Job and place in one line."}
+{"ref":"core-es:item:001293","lang":"en","text":"There are four of us at home.","type":"natural","note":"The size of the household, in three words."}
+{"ref":"core-es:item:001294","lang":"en","text":"My brother is thirty.","type":"natural","note":"Ages use tener, not ser."}
+{"ref":"core-es:item:001295","lang":"en","text":"I have two children, aged six and nine.","type":"natural","note":"Two ages without repeating años twice."}
+{"ref":"core-es:item:001296","lang":"en","text":"My parents live in another city.","type":"natural","note":"Where, rather than who or how old."}
 {"ref":"core-es:item:000444","lang":"en","text":"Potato and tomato are vegetables.","type":"natural"}
 {"ref":"core-es:item:000445","lang":"en","text":"I buy potatoes at the supermarket.","type":"natural"}
 {"ref":"core-es:item:000446","lang":"en","text":"My car is old but it works.","type":"natural"}

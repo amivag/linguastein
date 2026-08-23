@@ -114,3 +114,109 @@
 001226	Muy bien, entonces a las ocho.	All right, eight o’clock then.	a1	social,clock	Says the time back.	neutral					confirm-social-plan
 001227	Vale, nos vemos allí.	OK, I'll see you there.	a1	social,greetings	Casual, and very Spanish.	colloquial	tu				confirm-social-plan
 001228	Genial, hasta mañana.	Great, see you tomorrow.	a1	social,greetings,time	Warm, for a plan you are pleased about.	neutral					confirm-social-plan
+
+# ── Greetings: opening ────────────────────────────────────────────────────────
+001229	Buenas tardes, ¿qué tal?	Good afternoon, how are things?	a1	greetings	Time of day plus an opener, in four words.	neutral					greet-someone
+001230	Hola, soy Luis. ¿Y tú?	Hi, I'm Luis. And you?	a1	greetings,people	Gives your name and hands the turn straight back.	colloquial	tu				greet-someone
+001231	Buenas noches, señor.	Good evening, sir.	a1	greetings,people	Formal, and for after dark.	formal	usted				greet-someone
+001232	Hola, ¿cómo va todo?	Hi, how is everything going?	a1	greetings	Warmer than ¿cómo estás? with someone you know.	colloquial	tu				greet-someone
+
+# ── Greetings: closing ────────────────────────────────────────────────────────
+001233	Bueno, hasta luego.	Right, see you later.	a1	greetings	Bueno is what signals you are leaving.	neutral					close-friendly-exchange
+001234	Nos vemos mañana.	See you tomorrow.	a1	greetings,time	When you know when.	neutral					close-friendly-exchange
+001235	Hasta la próxima.	Until next time.	a1	greetings	When you do not.	neutral					close-friendly-exchange
+001236	Buen día y hasta pronto.	Have a good day, and see you soon.	a1	greetings	Warm without being long.	neutral					close-friendly-exchange
+
+# ── Routine: the detail that makes it yours ───────────────────────────────────
+001237	Normalmente no tengo mucho tiempo por la mañana.	I usually don't have much time in the morning.	a2	daily-routine,time	A circumstance rather than an action.	neutral					add-context-to-routine
+
+# ── Routine: where it leads ───────────────────────────────────────────────────
+001238	Voy al trabajo en metro y llego a las nueve.	I go to work by metro and arrive at nine.	a1	daily-routine,travel,clock	How you travel, and when you land.	neutral					connect-routine-to-destination
+001239	Salgo pronto y llego a la escuela antes de las ocho.	I leave early and get to the school before eight.	a1	daily-routine,school,clock	A different destination, the same shape.	neutral					connect-routine-to-destination
+
+# ── Health: how long it has been ──────────────────────────────────────────────
+001240	Desde hace tres días.	For three days now.	a2	health,time	The bare answer, with desde hace.	neutral					say-since-when
+001241	Desde el fin de semana pasado.	Since last weekend.	a2	health,time	Anchors it to a day rather than a count.	neutral					say-since-when
+001242	Empezó ayer por la mañana.	It started yesterday morning.	a2	health,time	Says when it began instead of how long.	neutral					say-since-when
+
+# ── Health: answering the doctor's questions ──────────────────────────────────
+001243	Sí, un poco de fiebre.	Yes, a slight temperature.	a2	health	Yes, with the degree.	neutral					answer-health-questions
+001244	No, no tomo ninguna medicina.	No, I'm not taking any medication.	a2	health	The question they always ask.	neutral					answer-health-questions
+001245	Duermo mal desde el lunes.	I've been sleeping badly since Monday.	a2	health,time	Answers about sleep with a start date.	neutral					answer-health-questions
+001246	Como bien, pero estoy muy cansado.	I'm eating well, but I'm very tired.	a2	health,feelings	Rules one thing out and offers another.	neutral					answer-health-questions
+
+# ── Health: taking the advice ─────────────────────────────────────────────────
+001247	De acuerdo, voy a descansar dos días.	All right, I'll rest for two days.	a2	health,time	Accepts, and says how much.	neutral					follow-health-advice
+001248	Muy bien, tomo una pastilla por la noche.	All right, I'll take a tablet at night.	a2	health,time	Repeats the instruction back.	neutral					follow-health-advice
+001249	Entendido. ¿Y si no estoy mejor?	Understood. And if I am not better?	a2	health,questions	Accepts, then asks the obvious next question.	neutral					follow-health-advice
+001250	Gracias. Voy a beber mucha agua.	Thank you. I'll drink plenty of water.	a2	health,food-drink	Names the advice you are going to follow.	neutral					follow-health-advice
+
+# ── Work: who you meet, and when ──────────────────────────────────────────────
+001251	Tengo tres reuniones esta semana.	I have three meetings this week.	a1	work,time,numbers	How many, over what period.	neutral					talk-about-work-meetings
+001252	Hablo con los clientes por teléfono.	I talk to the customers on the phone.	a1	work,communication	For work that is meetings by another name.	neutral					talk-about-work-meetings
+001253	Los lunes tenemos una reunión de equipo.	On Mondays we have a team meeting.	a1	work,days-of-week	A regular one, anchored to a day.	neutral					talk-about-work-meetings
+
+# ── Work: how the day left you ────────────────────────────────────────────────
+001254	Fue un día difícil, pero bueno.	It was a hard day, but a good one.	a1	work,feelings,time	Two verdicts at once, which is usually the truth.	neutral					say-how-the-day-went
+001255	Hoy termino pronto y estoy contento.	I finish early today and I'm happy about it.	a1	work,feelings,clock	The reason and the feeling together.	neutral					say-how-the-day-went
+001256	Llego a casa cansado, pero tranquilo.	I get home tired, but calm.	a1	work,feelings,home	Tired is not the same as unhappy.	neutral					say-how-the-day-went
+
+# ── Home: what is nearby ──────────────────────────────────────────────────────
+001257	Hay una tienda muy cerca.	There is a shop very close by.	a1	home,city,shopping	The thing people ask about first.	neutral					say-what-is-nearby
+001258	La parada de autobús está delante de casa.	The bus stop is right in front of the house.	a1	home,city,travel	Names how close, not just that it exists.	neutral					say-what-is-nearby
+001259	No hay tiendas cerca. Es un problema.	There are no shops nearby. It is a problem.	a1	home,city,shopping	What is missing is as useful as what is there.	neutral					say-what-is-nearby
+001260	Cerca de casa hay un parque muy grande.	There is a very big park near the house.	a1	home,city,nature	Puts the place first, which is natural in Spanish.	neutral					say-what-is-nearby
+
+# ── Home: how you feel about it ───────────────────────────────────────────────
+001261	Vivo muy bien aquí.	I live very well here.	a1	home,feelings	About the living, not the flat.	neutral					say-how-you-feel-about-home
+001262	Es un poco pequeño, pero me gusta.	It's a bit small, but I like it.	a1	home,feelings	The honest verdict most people give.	neutral					say-how-you-feel-about-home
+001263	No me gusta la calle, es muy ruidosa.	I don't like the street, it's very noisy.	a1	home,feelings,city	Negative, and says exactly what about.	neutral					say-how-you-feel-about-home
+001264	Quiero cambiar de casa el año que viene.	I want to move house next year.	a1	home,time	A feeling expressed as a plan.	neutral					say-how-you-feel-about-home
+
+# ── Travel: when it leaves ────────────────────────────────────────────────────
+001265	¿A qué hora sale el próximo tren?	What time does the next train leave?	a1	travel,clock,questions	The question that starts every journey.	neutral					ask-about-departure
+001266	¿Cuándo sale el próximo autobús?	When does the next bus leave?	a1	travel,clock,questions	Cuándo, when you do not need the exact hour.	neutral					ask-about-departure
+001267	¿Hay uno más tarde?	Is there a later one?	a1	travel,clock,questions	When the next one is too soon.	neutral					ask-about-departure
+001268	¿El tren llega antes de las diez?	Does the train arrive before ten?	a1	travel,clock,questions	About the arrival, which is what you actually need.	neutral					ask-about-departure
+
+# ── Travel: which ticket ──────────────────────────────────────────────────────
+001269	Ida y vuelta, por favor.	Return, please.	a1	travel	The two words that answer the standard question.	neutral					choose-a-fare
+001270	Un billete, solo ida.	One ticket, one way.	a1	travel,numbers	How many and which fare at once.	neutral					choose-a-fare
+001271	Dos billetes para mañana.	Two tickets for tomorrow.	a1	travel,numbers,time	Adds the day, which they will ask for next.	neutral					choose-a-fare
+001272	¿Cuánto cuesta ida y vuelta?	How much is a return?	a1	travel,numbers,questions	Asks the price before choosing.	neutral					choose-a-fare
+
+# ── Travel: where it leaves from ──────────────────────────────────────────────
+001273	¿De qué andén sale?	Which platform does it leave from?	a1	travel,questions	The last thing between you and the train.	neutral					find-the-platform
+001274	¿Dónde está el andén tres?	Where is platform three?	a1	travel,numbers,questions	Once you know the number.	neutral					find-the-platform
+001275	¿Es esta la parada correcta?	Is this the right stop?	a1	travel,questions	For a bus, where there is no platform.	neutral					find-the-platform
+001276	¿Sale de aquí o del otro andén?	Does it leave from here or the other platform?	a1	travel,questions	Offers both, so the answer cannot be vague.	neutral					find-the-platform
+
+# ── Market: what it costs by weight ───────────────────────────────────────────
+001277	¿Cuánto cuesta el kilo?	How much is a kilo?	a1	shopping,food-drink,numbers,questions	The straightforward form.	neutral					ask-price-by-weight
+001278	¿A cuánto están los limones?	How much are the lemons?	a1	shopping,food-drink,numbers,questions	A cuánto están is what you will actually hear.	neutral					ask-price-by-weight
+001279	¿Cuánto son dos kilos?	How much for two kilos?	a1	shopping,food-drink,numbers,questions	For the amount you want, not the unit.	neutral					ask-price-by-weight
+001280	¿Y el medio kilo cuánto es?	And how much is half a kilo?	a1	shopping,food-drink,numbers,questions	Half a kilo is the usual market amount.	neutral					ask-price-by-weight
+
+# ── Market: changing your mind ────────────────────────────────────────────────
+001281	Mejor un kilo, no medio.	Make it a kilo rather than half.	a1	shopping,food-drink,numbers	Mejor is how you change an order politely.	neutral					change-what-you-asked-for
+001282	Perdón, cambio de idea. Dos, por favor.	Sorry, I have changed my mind. Two, please.	a1	shopping,numbers	Says plainly that you are changing it.	neutral					change-what-you-asked-for
+001283	También quiero pan, por favor.	I would like some bread as well, please.	a1	shopping,food-drink	Adds rather than changes.	neutral					change-what-you-asked-for
+001284	No, solo las naranjas.	No, just the oranges.	a1	shopping,food-drink	Takes something back off the counter.	neutral					change-what-you-asked-for
+
+# ── Market: paying and going ──────────────────────────────────────────────────
+001285	¿Puedo pagar en efectivo?	Can I pay in cash?	a1	shopping,questions	Small stalls often prefer it.	neutral					pay-and-leave
+001286	Aquí tiene diez euros.	Here's ten euros.	a1	shopping,numbers	Says the amount as you hand it over.	neutral					pay-and-leave
+001287	Gracias, hasta la semana que viene.	Thank you, see you next week.	a1	shopping,greetings,time	For a stall you will come back to.	neutral					pay-and-leave
+001288	Todo correcto. Muchas gracias.	That's all right. Thank you very much.	a1	shopping,greetings	Confirms the change was right on the way out.	neutral					pay-and-leave
+
+# ── Family: what they do ──────────────────────────────────────────────────────
+001289	Trabaja en una tienda del centro.	She works in a shop in the centre.	a1	family,work,city	Where, when the job has no short name.	neutral					say-what-they-do
+001290	Es estudiante y trabaja por las tardes.	He is a student and works in the afternoons.	a1	family,school,work	For someone doing both.	neutral					say-what-they-do
+001291	No trabaja ahora, busca algo nuevo.	She is not working at the moment, she is looking for something new.	a1	family,work	Honest, and very common.	neutral					say-what-they-do
+001292	Es camarero en un restaurante del centro.	He is a waiter in a restaurant in the centre.	a1	family,work,restaurant	Job and place in one line.	neutral					say-what-they-do
+
+# ── Family: the details ───────────────────────────────────────────────────────
+001293	Somos cuatro en casa.	There are four of us at home.	a1	family,numbers,home	The size of the household, in three words.	neutral					give-family-details
+001294	Mi hermano tiene treinta años.	My brother is thirty.	a1	family,numbers	Ages use tener, not ser.	neutral					give-family-details
+001295	Tengo dos hijos, de seis y de nueve años.	I have two children, aged six and nine.	a1	family,numbers	Two ages without repeating años twice.	neutral					give-family-details
+001296	Mis padres viven en otra ciudad.	My parents live in another city.	a1	family,city	Where, rather than who or how old.	neutral					give-family-details

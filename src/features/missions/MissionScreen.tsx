@@ -850,6 +850,10 @@ function ResponsePalettePanel({
             </ul>
             {hidden > 0 && (
               <Button
+                // Named by palette: a stage shows up to eleven of these, and
+                // `Show 5 more natural responses` said eleven times over is a
+                // control neither a screen reader nor an agent can pick.
+                aria-label={`${palette.title}: show ${hidden} more responses`}
                 aria-expanded={isExpanded}
                 aria-controls={listId}
                 onClick={() =>
@@ -866,6 +870,7 @@ function ResponsePalettePanel({
             )}
             {isExpanded && palette.responses.length > palette.initiallyVisible && (
               <Button
+                aria-label={`${palette.title}: show fewer responses`}
                 aria-expanded={true}
                 aria-controls={listId}
                 onClick={() =>

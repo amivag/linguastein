@@ -123,11 +123,34 @@
  * separates with space, and a seventh horizontal stroke was the problem.
  */
 .outcomeBar {
+  /*
+   * Pinned to the bottom of the viewport until you scroll down to it.
+   *
+   * Answering a card *adds* this region, and on a phone the card is usually
+   * already taller than the screen — so the one thing tapping an option
+   * produced, the verdict and the way onward, appeared below the fold. The
+   * learner tapped, nothing visibly happened, and the next move was a scroll
+   * they had no reason to know they needed.
+   *
+   * Sticky rather than fixed: it belongs to the card, so it is released the
+   * moment the card's own end comes into view and settles back into the stack
+   * above the notes. The reference material below it passes underneath, which
+   * the sunken fill and the inset top edge are already enough to read — the
+   * band is a different colour from the card in every theme.
+   */
+  position: sticky;
+  bottom: 0;
+  /* Over the notes it covers, under the header and any sheet. */
+  z-index: var(--z-raised);
   display: grid;
   gap: var(--space-3);
   margin-top: var(--space-2);
   margin-inline: calc(var(--space-4) * -1);
   padding: var(--space-4);
+  /* Its own inset while pinned: at the viewport's bottom edge the shell's
+     padding is behind it, so Continue would otherwise sit on the home
+     indicator. */
+  padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
   background: var(--color-surface-sunken);
   box-shadow: var(--shadow-inset);
 }

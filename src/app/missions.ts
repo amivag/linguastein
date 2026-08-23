@@ -402,4 +402,398 @@ export const MISSIONS: readonly MissionDefinition[] = [
     estimatedMinutes: 9,
     scenarioPartner: 'a new friend',
   },
+  /**
+   * The first A2 mission, and the first built on material that was already in
+   * the pack: `En el médico` was the one dialogue no mission claimed.
+   *
+   * Health is the survival scenario the seven A1 missions leave out — a learner
+   * can order a coffee and check into a hotel but cannot say what hurts. It sits
+   * at A2 because its taught exchange does: `¿Desde cuándo?` wants a past
+   * reference, which is exactly why it earns a level of its own rather than
+   * being forced into A1.
+   *
+   * The transfer ladder deliberately leaves the surgery. Naming the symptom to a
+   * pharmacist and to a receptionist on the phone is the same ability under
+   * different pressure, which is what transfer is for — a second appointment
+   * with a different doctor would mostly re-run the script.
+   */
+  {
+    id: 'doctor-visit',
+    language: 'es',
+    level: 'a2',
+    order: 7,
+    title: 'Say what hurts',
+    goal: 'Describe a symptom, say how long you have had it, and follow the advice you are given.',
+    passage: '700013',
+    transfers: [
+      {
+        passage: '700037',
+        support: 'guided',
+        brief: 'Ask a pharmacist for something for a headache, and take the dosage in.',
+      },
+      {
+        passage: '700038',
+        support: 'guided',
+        brief: 'A different symptom and a different doctor: your back, and how many days.',
+      },
+      {
+        passage: '700039',
+        support: 'independent',
+        brief: 'Phone a health centre for an appointment from intention cues alone.',
+      },
+    ],
+    capabilities: [
+      'describe-a-symptom',
+      'say-since-when',
+      'answer-health-questions',
+      'follow-health-advice',
+    ],
+    responsePalettes: [
+      {
+        /*
+         * Every option here is a sentence the pack already had — the symptoms
+         * were authored long before this mission existed, scattered across the
+         * body and health sheets. Pointing at them rather than writing ten near
+         * copies is the same rule content follows everywhere else: describe what
+         * exists, do not duplicate it. The build would have rejected the copies
+         * anyway, since no two items may carry the same text.
+         */
+        id: 'symptom-report',
+        capability: 'describe-a-symptom',
+        title: 'Say what is actually wrong',
+        cue: 'Name what hurts, or how you feel. Add where and how much when you can.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '000365', nuance: 'The most common complaint of all' },
+          { item: '000366', nuance: 'A different part of the body' },
+          { item: '000367', nuance: 'A symptom with tener rather than doler' },
+          { item: '000145', nuance: 'Two places at once' },
+          { item: '000148', nuance: 'Naming which side' },
+          { item: '000150', nuance: 'Plural: doler agrees with what hurts' },
+          { item: '000046', nuance: 'Not pain but a state · masculine speaker' },
+          { item: '000047', nuance: 'The same state, stronger and today' },
+          { item: '000368', nuance: 'Includes how long it has been' },
+          { item: '000155', nuance: 'Asking for a remedy rather than reporting' },
+        ],
+      },
+    ],
+    spotlight: 1,
+    estimatedMinutes: 8,
+    learnerSpeaker: 'Paciente',
+    scenarioPartner: 'the doctor',
+  },
+  /**
+   * Built on `Un día en la oficina`, which had sat in the pack unclaimed.
+   *
+   * A monologue mission rather than a dialogue, like `morning-routine`: "what do
+   * you do?" is answered in a paragraph, not an exchange, and the transfer is a
+   * different *job* rather than a different interlocutor. The last rung moves
+   * into the past tense on purpose — recounting a specific bad day is the point
+   * at which describing work stops being a script.
+   */
+  {
+    id: 'your-work',
+    language: 'es',
+    level: 'a1',
+    order: 8,
+    title: 'Talk about your work',
+    goal: 'Say what you do, take someone through a working day, and say how it left you.',
+    passage: '700003',
+    transfers: [
+      {
+        passage: '700040',
+        support: 'guided',
+        brief: 'The same day from home: a different place, the same shape.',
+      },
+      {
+        passage: '700041',
+        support: 'guided',
+        brief: 'A different job entirely — a shop, with opening and closing times.',
+      },
+      {
+        passage: '700042',
+        support: 'independent',
+        brief: 'Recount one particular busy day, in the past, from intention cues.',
+      },
+    ],
+    capabilities: [
+      'say-what-you-do',
+      'walk-through-a-workday',
+      'talk-about-work-meetings',
+      'say-how-the-day-went',
+    ],
+    responsePalettes: [
+      {
+        id: 'what-you-do',
+        capability: 'say-what-you-do',
+        title: 'Say what you actually do',
+        cue: 'Name the job, or the place, or who you do it with — whatever is true.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '000849', nuance: 'The job before the place' },
+          { item: '000850', nuance: 'Adds who you work with' },
+          { item: '000851', nuance: 'For someone studying as well' },
+          { item: '000852', nuance: 'Where rather than what' },
+          { item: '000853', nuance: 'Honest, when you are between jobs' },
+          { item: '000854', nuance: 'Adds how near it is' },
+          { item: '000855', nuance: 'Says more than the question asked' },
+          { item: '000856', nuance: 'A precise job · feminine speaker' },
+        ],
+      },
+    ],
+    spotlight: 0,
+    estimatedMinutes: 9,
+    scenarioPartner: 'someone you have just met',
+  },
+  /**
+   * Built on `Mi piso`, the other text nothing pointed at.
+   *
+   * The transfers deliberately change *who is speaking about what home* rather
+   * than only the rooms: your parents' house, a student room, a flat two people
+   * are still looking for. The last one is in the future rather than the present,
+   * which is where "describe your home" stops being a list of furniture.
+   */
+  {
+    id: 'your-home',
+    language: 'es',
+    level: 'a1',
+    order: 9,
+    title: 'Describe where you live',
+    goal: 'Say where you live, what the rooms are like, what is nearby, and how you feel about it.',
+    passage: '700002',
+    transfers: [
+      {
+        passage: '700043',
+        support: 'guided',
+        brief: "Someone else's home: a village house, with a garden and a river.",
+      },
+      {
+        passage: '700044',
+        support: 'guided',
+        brief: 'A much smaller home, and what it is missing.',
+      },
+      {
+        passage: '700045',
+        support: 'independent',
+        brief: 'A home you do not have yet — say what you are looking for.',
+      },
+    ],
+    capabilities: [
+      'say-where-you-live',
+      'describe-the-rooms',
+      'say-what-is-nearby',
+      'say-how-you-feel-about-home',
+    ],
+    responsePalettes: [
+      {
+        id: 'where-you-live',
+        capability: 'say-where-you-live',
+        title: 'Say where you really live',
+        cue: 'Say the kind of home, the area, or who you live with. Any of the three is an answer.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '000857', nuance: 'Area and kind of home' },
+          { item: '000858', nuance: 'Who you live with' },
+          { item: '000859', nuance: 'Away from the centre' },
+          { item: '000860', nuance: 'Alone · masculine speaker' },
+          { item: '000861', nuance: 'A landmark instead of a street' },
+          { item: '000862', nuance: 'Separates where you live from where you are from' },
+          { item: '000863', nuance: 'A detail that says how it feels' },
+          { item: '000864', nuance: 'How long, with desde hace' },
+        ],
+      },
+    ],
+    spotlight: 0,
+    estimatedMinutes: 8,
+    scenarioPartner: 'a new neighbour',
+  },
+  /**
+   * The largest gap in the seven A1 missions relative to what the pack already
+   * knew: travel was its biggest topic and its only travel dialogues were asking
+   * directions and checking into a hotel. A learner could find the station and
+   * sleep near it without ever buying a ticket.
+   *
+   * The ladder changes the *mode* rather than the destination — bus, return fare,
+   * metro — because the pressure in this exchange comes from the fare and the
+   * platform, not from where you are going.
+   */
+  {
+    id: 'buy-a-ticket',
+    language: 'es',
+    level: 'a1',
+    order: 10,
+    title: 'Buy a ticket',
+    goal: 'Ask for a ticket, choose the fare, and find out when and where it leaves.',
+    passage: '700046',
+    transfers: [
+      {
+        passage: '700047',
+        support: 'guided',
+        brief: 'A bus rather than a train, and a stop rather than a platform.',
+      },
+      {
+        passage: '700048',
+        support: 'guided',
+        brief: 'A return for two people, with a choice between two departures.',
+      },
+      {
+        passage: '700049',
+        support: 'independent',
+        brief: 'A metro machine: single or ten journeys, from intention cues.',
+      },
+    ],
+    capabilities: ['ask-for-a-ticket', 'ask-about-departure', 'choose-a-fare', 'find-the-platform'],
+    responsePalettes: [
+      {
+        id: 'ticket-request',
+        capability: 'ask-for-a-ticket',
+        title: 'Ask for the ticket you need',
+        cue: 'Say where you are going, or how many, or which fare — any of the three opens it.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '000961', nuance: 'Destination first, short and direct' },
+          { item: '000962', nuance: 'Says how many at the same time' },
+          { item: '000963', nuance: 'Names the fare instead of the place' },
+          { item: '000964', nuance: 'Whatever leaves soonest' },
+          { item: '000965', nuance: 'Puts the price question first' },
+          { item: '000966', nuance: 'Says which day it is for' },
+          { item: '000967', nuance: 'For a group, without the word billete' },
+          { item: '000968', nuance: 'When you already have one and are unsure' },
+        ],
+      },
+    ],
+    spotlight: 1,
+    estimatedMinutes: 9,
+    learnerSpeaker: 'Viajero',
+    scenarioPartner: 'the person at the counter',
+  },
+  /**
+   * `En el mercado` existed as a monologue and nothing let a learner *buy*
+   * anything in it. Shopping already had four clothes dialogues, and a market is
+   * usefully different: quantities and weights rather than sizes, and a price per
+   * kilo rather than per item.
+   *
+   * The independent rung is the one that matters here — the stall is out of what
+   * you asked for, so the script cannot be followed and something has to be
+   * changed on the spot.
+   */
+  {
+    id: 'market-shopping',
+    language: 'es',
+    level: 'a1',
+    order: 11,
+    title: 'Shop at the market',
+    goal: 'Ask for an amount, find out what it costs by weight, change your order and pay.',
+    passage: '700050',
+    transfers: [
+      {
+        passage: '700051',
+        support: 'guided',
+        brief: 'A bakery: counted loaves rather than a weight, and a change of mind.',
+      },
+      {
+        passage: '700052',
+        support: 'guided',
+        brief: 'A fishmonger, a higher price per kilo, and card or cash.',
+      },
+      {
+        passage: '700053',
+        support: 'independent',
+        brief: 'They are out of what you wanted. Take the substitute and re-price it.',
+      },
+    ],
+    capabilities: [
+      'ask-for-a-quantity',
+      'ask-price-by-weight',
+      'change-what-you-asked-for',
+      'pay-and-leave',
+    ],
+    responsePalettes: [
+      {
+        id: 'quantity-request',
+        capability: 'ask-for-a-quantity',
+        title: 'Ask for how much you want',
+        cue: 'Weigh it, count it, or leave it vague — all three are what people actually say.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '000969', nuance: 'The everyday weight request' },
+          { item: '000970', nuance: 'Half, with a limit made clear' },
+          { item: '000971', nuance: 'Counted rather than weighed' },
+          { item: '000972', nuance: 'Vague on purpose, and perfectly natural' },
+          { item: '000973', nuance: 'Adds which size' },
+          { item: '000974', nuance: 'The question form a stall expects' },
+          { item: '000975', nuance: 'Small, with the courtesy at the end' },
+          { item: '000976', nuance: 'For a stall you go back to' },
+        ],
+      },
+    ],
+    spotlight: 1,
+    estimatedMinutes: 9,
+    learnerSpeaker: 'Cliente',
+    scenarioPartner: 'the stallholder',
+  },
+  /**
+   * `greet-and-respond` gets a learner as far as hello and how are you. This is
+   * the next thing anyone is asked, and the pack had thirty-seven family items
+   * with no exchange to use them in.
+   *
+   * It reuses the characters of the greetings mission on purpose — Luis, Marta,
+   * Ana, Daniel, Elena — so the two missions read as the same person's life
+   * rather than as two unrelated scripts. The learner is Luis in both.
+   */
+  {
+    id: 'introduce-your-family',
+    language: 'es',
+    level: 'a1',
+    order: 12,
+    title: 'Introduce your family',
+    goal: 'Say who someone is, what they do, and give a detail — then react to what you hear.',
+    passage: '700054',
+    transfers: [
+      {
+        passage: '700055',
+        support: 'guided',
+        brief: 'A cousin at a party, and how often he visits.',
+      },
+      {
+        passage: '700056',
+        support: 'guided',
+        brief: 'A sister with a different job, and her children.',
+      },
+      {
+        passage: '700057',
+        support: 'independent',
+        brief: 'Your own household now: who you live with, and a baby’s age.',
+      },
+    ],
+    capabilities: [
+      'introduce-a-person',
+      'say-what-they-do',
+      'give-family-details',
+      'react-with-interest',
+    ],
+    responsePalettes: [
+      {
+        id: 'who-they-are',
+        capability: 'introduce-a-person',
+        title: 'Say who someone is',
+        cue: 'Give the relationship, the name, or where you know them from.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '000977', nuance: 'Relationship first, then the name' },
+          { item: '000978', nuance: 'Says where you know them from' },
+          { item: '000979', nuance: 'The set phrase for an introduction' },
+          { item: '000980', nuance: 'Two people at once, plus a detail' },
+          { item: '000981', nuance: 'A more formal name for an older person' },
+          { item: '000982', nuance: 'Distinguishes one child from another' },
+          { item: '000983', nuance: 'Says what you share rather than who they are' },
+          { item: '000984', nuance: 'Anticipates that they will not know them' },
+        ],
+      },
+    ],
+    spotlight: 1,
+    estimatedMinutes: 9,
+    learnerSpeaker: 'Luis',
+    scenarioPartner: 'a friend looking at your photos',
+  },
 ] as const;

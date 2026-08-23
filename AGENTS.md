@@ -296,6 +296,14 @@ than a thousand rows — lives in [docs/tasks/numerals.md](docs/tasks/numerals.m
 and one for making the UI more enjoyable without making it loud lives in
 [docs/tasks/game-feel.md](docs/tasks/game-feel.md).
 
+**Author the content a mission teaches before authoring the mission.** Six
+missions landed at once because the vocabulary was already there — travel had 148
+items before `buy-a-ticket` existed. The past-tense mission
+([docs/tasks/past-tense-mission.md](docs/tasks/past-tense-mission.md)) is briefed
+rather than built for the opposite reason: writing the sequence and the language
+it drills in one pass is how a mission ends up teaching whatever its author
+happened to write that afternoon.
+
 Verbs have no word cards: all 451 are nouns, adjectives and numerals, so `hablar`
 is a word you can meet inside a sentence but not look up, and `Words × Verbs` in
 Browse is an empty page. [docs/tasks/verb-cards.md](docs/tasks/verb-cards.md) is a

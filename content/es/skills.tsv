@@ -32,3 +32,27 @@ greet-someone	function	Saludar a alguien	Greet someone naturally for the situati
 ask-about-wellbeing	function	Preguntar cómo está alguien	Ask naturally how someone is doing	a1	greet-someone
 respond-to-wellbeing	function	Responder a «¿Cómo estás?»	Give a natural, honest answer about how you are doing	a1	ask-about-wellbeing
 close-friendly-exchange	function	Cerrar un saludo amistoso	Close a short friendly exchange naturally	a1	greet-someone
+describe-a-symptom	function	Decir qué te duele	Say what hurts, or how you feel	a2	
+say-since-when	function	Decir desde cuándo	Say how long you have felt it	a2	describe-a-symptom
+answer-health-questions	function	Responder a las preguntas del médico	Answer a health professional's follow-up questions	a2	describe-a-symptom
+follow-health-advice	function	Entender un consejo médico	Understand and accept simple health advice	a2	answer-health-questions
+say-what-you-do	function	Decir en qué trabajas	Say what you do and where you work	a1	
+walk-through-a-workday	function	Contar un día de trabajo	Take someone through a working day in order	a1	say-what-you-do
+talk-about-work-meetings	function	Hablar de reuniones y citas	Say who you meet at work and when	a1	walk-through-a-workday
+say-how-the-day-went	function	Decir cómo terminó el día	Say how a working day left you	a1	walk-through-a-workday
+say-where-you-live	function	Decir dónde vives	Say where you live and what kind of home it is	a1	
+describe-the-rooms	function	Describir las habitaciones	Describe the rooms and what is in them	a1	say-where-you-live
+say-what-is-nearby	function	Decir qué hay cerca	Say what there is nearby, and what there is not	a1	say-where-you-live
+say-how-you-feel-about-home	function	Decir si te gusta vivir allí	Say how you feel about living there	a1	describe-the-rooms
+ask-for-a-ticket	function	Pedir un billete	Ask for a ticket to where you are going	a1	
+ask-about-departure	function	Preguntar a qué hora sale	Ask when the next one leaves	a1	ask-for-a-ticket
+choose-a-fare	function	Elegir el tipo de billete	Choose between fares and say how many	a1	ask-for-a-ticket
+find-the-platform	function	Preguntar de dónde sale	Ask where it leaves from	a1	ask-about-departure
+ask-for-a-quantity	function	Pedir una cantidad	Ask for an amount of something	a1	
+ask-price-by-weight	function	Preguntar el precio por kilo	Ask what something costs by weight	a1	ask-for-a-quantity
+change-what-you-asked-for	function	Cambiar el pedido	Add something, or change your mind	a1	ask-for-a-quantity
+pay-and-leave	function	Pagar y despedirse	Pay and close the exchange	a1	ask-price-by-weight
+introduce-a-person	function	Presentar a alguien	Introduce someone and say who they are	a1	
+say-what-they-do	function	Decir a qué se dedica	Say what someone does or studies	a1	introduce-a-person
+give-family-details	function	Dar detalles de la familia	Give ages, numbers and relationships	a1	introduce-a-person
+react-with-interest	function	Reaccionar con interés	React with interest to what you hear	a1	say-what-they-do

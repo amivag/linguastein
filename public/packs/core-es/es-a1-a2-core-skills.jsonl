@@ -43,6 +43,30 @@
 {"id":"core-es:skill:ask-about-wellbeing","kind":"function","label":"Preguntar cómo está alguien","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
 {"id":"core-es:skill:respond-to-wellbeing","kind":"function","label":"Responder a «¿Cómo estás?»","level":"a1","prerequisites":["core-es:skill:ask-about-wellbeing"]}
 {"id":"core-es:skill:close-friendly-exchange","kind":"function","label":"Cerrar un saludo amistoso","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
+{"id":"core-es:skill:describe-a-symptom","kind":"function","label":"Decir qué te duele","level":"a2"}
+{"id":"core-es:skill:say-since-when","kind":"function","label":"Decir desde cuándo","level":"a2","prerequisites":["core-es:skill:describe-a-symptom"]}
+{"id":"core-es:skill:answer-health-questions","kind":"function","label":"Responder a las preguntas del médico","level":"a2","prerequisites":["core-es:skill:describe-a-symptom"]}
+{"id":"core-es:skill:follow-health-advice","kind":"function","label":"Entender un consejo médico","level":"a2","prerequisites":["core-es:skill:answer-health-questions"]}
+{"id":"core-es:skill:say-what-you-do","kind":"function","label":"Decir en qué trabajas","level":"a1"}
+{"id":"core-es:skill:walk-through-a-workday","kind":"function","label":"Contar un día de trabajo","level":"a1","prerequisites":["core-es:skill:say-what-you-do"]}
+{"id":"core-es:skill:talk-about-work-meetings","kind":"function","label":"Hablar de reuniones y citas","level":"a1","prerequisites":["core-es:skill:walk-through-a-workday"]}
+{"id":"core-es:skill:say-how-the-day-went","kind":"function","label":"Decir cómo terminó el día","level":"a1","prerequisites":["core-es:skill:walk-through-a-workday"]}
+{"id":"core-es:skill:say-where-you-live","kind":"function","label":"Decir dónde vives","level":"a1"}
+{"id":"core-es:skill:describe-the-rooms","kind":"function","label":"Describir las habitaciones","level":"a1","prerequisites":["core-es:skill:say-where-you-live"]}
+{"id":"core-es:skill:say-what-is-nearby","kind":"function","label":"Decir qué hay cerca","level":"a1","prerequisites":["core-es:skill:say-where-you-live"]}
+{"id":"core-es:skill:say-how-you-feel-about-home","kind":"function","label":"Decir si te gusta vivir allí","level":"a1","prerequisites":["core-es:skill:describe-the-rooms"]}
+{"id":"core-es:skill:ask-for-a-ticket","kind":"function","label":"Pedir un billete","level":"a1"}
+{"id":"core-es:skill:ask-about-departure","kind":"function","label":"Preguntar a qué hora sale","level":"a1","prerequisites":["core-es:skill:ask-for-a-ticket"]}
+{"id":"core-es:skill:choose-a-fare","kind":"function","label":"Elegir el tipo de billete","level":"a1","prerequisites":["core-es:skill:ask-for-a-ticket"]}
+{"id":"core-es:skill:find-the-platform","kind":"function","label":"Preguntar de dónde sale","level":"a1","prerequisites":["core-es:skill:ask-about-departure"]}
+{"id":"core-es:skill:ask-for-a-quantity","kind":"function","label":"Pedir una cantidad","level":"a1"}
+{"id":"core-es:skill:ask-price-by-weight","kind":"function","label":"Preguntar el precio por kilo","level":"a1","prerequisites":["core-es:skill:ask-for-a-quantity"]}
+{"id":"core-es:skill:change-what-you-asked-for","kind":"function","label":"Cambiar el pedido","level":"a1","prerequisites":["core-es:skill:ask-for-a-quantity"]}
+{"id":"core-es:skill:pay-and-leave","kind":"function","label":"Pagar y despedirse","level":"a1","prerequisites":["core-es:skill:ask-price-by-weight"]}
+{"id":"core-es:skill:introduce-a-person","kind":"function","label":"Presentar a alguien","level":"a1"}
+{"id":"core-es:skill:say-what-they-do","kind":"function","label":"Decir a qué se dedica","level":"a1","prerequisites":["core-es:skill:introduce-a-person"]}
+{"id":"core-es:skill:give-family-details","kind":"function","label":"Dar detalles de la familia","level":"a1","prerequisites":["core-es:skill:introduce-a-person"]}
+{"id":"core-es:skill:react-with-interest","kind":"function","label":"Reaccionar con interés","level":"a1","prerequisites":["core-es:skill:say-what-they-do"]}
 {"id":"core-es:skill:numerals-teens","kind":"pattern","label":"dieciséis, diecisiete…","level":"a1"}
 {"id":"core-es:skill:numerals-twenties","kind":"pattern","label":"veintiuno, veintidós…","level":"a1"}
 {"id":"core-es:skill:numerals-y-joining","kind":"pattern","label":"treinta y uno / ciento uno","level":"a1"}

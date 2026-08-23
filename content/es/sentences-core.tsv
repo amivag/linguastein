@@ -1,5 +1,5 @@
 # Everyday core sentences.
-# Columns: id	spanish	english	level	topics	note	register	address	regions
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
 # Leave the id off a new row: the build assigns one and writes it back, and the
 # row keeps it thereafter however the file is edited, reordered or split.
 000001	Hola, ¿cómo estás?	Hi, how are you?	a1	greetings		colloquial	tu	
@@ -47,8 +47,8 @@
 000043	No es difícil.	It isn't difficult.	a1	core
 000044	Este libro es interesante.	This book is interesting.	a1	school
 000045	La película fue muy buena.	The film was very good.	a2	entertainment
-000046	Estoy cansado.	I'm tired.	a1	health	estar for states, ser for lasting characteristics
-000047	Hoy estoy muy cansado.	I'm very tired today.	a1	health
+000046	Estoy cansado.	I'm tired.	a1	health	estar for states, ser for lasting characteristics						describe-a-symptom
+000047	Hoy estoy muy cansado.	I'm very tired today.	a1	health							describe-a-symptom
 000048	Estoy contento.	I'm happy.	a1	feelings
 000049	Estamos en casa.	We're at home.	a1	home
 000050	¿Dónde estás?	Where are you?	a1	core

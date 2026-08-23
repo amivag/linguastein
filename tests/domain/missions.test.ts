@@ -14,7 +14,7 @@ describe('missions', () => {
   it('orders the authored journey and respects the course ceiling', () => {
     const a1 = missionsForCourse(MISSIONS, { language: 'es', level: 'a1' });
 
-    expect(a1).toHaveLength(7);
+    expect(a1).toHaveLength(12);
     expect(a1.map((mission) => mission.id)).toEqual([
       'greet-and-respond',
       'cafe-order',
@@ -23,6 +23,11 @@ describe('missions', () => {
       'hotel-check-in',
       'make-plans',
       'morning-routine',
+      'your-work',
+      'your-home',
+      'buy-a-ticket',
+      'market-shopping',
+      'introduce-your-family',
     ]);
     expect(missionsForCourse(MISSIONS, { language: 'fr', level: 'all' })).toEqual([]);
   });

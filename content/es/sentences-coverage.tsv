@@ -1,5 +1,5 @@
 # Sentences written to cover lemmas the other files miss (see the build's coverage report).
-# Columns: id	spanish	english	level	topics	note	register	address	regions
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
 000135	El hombre y la mujer entran en la casa.	The man and the woman go into the house.	a1	people
 000136	Ese chico es mi primo.	That boy is my cousin.	a1	family
 000137	Mi tío y mi tía tienen un bebé.	My uncle and aunt have a baby.	a1	family
@@ -10,17 +10,17 @@
 000142	Mi novio canta muy mal.	My boyfriend sings very badly.	a1	family
 000143	Esa niña es amiga de mi hija.	That girl is a friend of my daughter.	a1	family
 000144	Hay mucha gente en la plaza.	There are a lot of people in the square.	a1	city
-000145	Me duele la cabeza y el cuello.	My head and neck hurt.	a1	body
+000145	Me duele la cabeza y el cuello.	My head and neck hurt.	a1	body							describe-a-symptom
 000146	Tengo los ojos verdes y el pelo negro.	I have green eyes and black hair.	a1	body,colours
 000147	Me lavo la cara y los dientes.	I wash my face and brush my teeth.	a1	daily-routine
-000148	Me duele el brazo derecho.	My right arm hurts.	a1	body
+000148	Me duele el brazo derecho.	My right arm hurts.	a1	body							describe-a-symptom
 000149	Tengo un dedo roto en la mano.	I have a broken finger on my hand.	a2	body
-000150	Me duelen las piernas y la espalda.	My legs and back hurt.	a2	body
+000150	Me duelen las piernas y la espalda.	My legs and back hurt.	a2	body							describe-a-symptom
 000151	El médico mira mi oreja.	The doctor looks at my ear.	a1	health
 000152	El corazón es un músculo fuerte.	The heart is a strong muscle.	a2	body
 000153	Tiene la piel muy blanca.	He has very fair skin.	a2	body,colours
 000154	La salud es lo más importante.	Health is the most important thing.	a2	health
-000155	Necesito una medicina para el dolor.	I need medicine for the pain.	a1	health
+000155	Necesito una medicina para el dolor.	I need medicine for the pain.	a1	health							describe-a-symptom
 000156	El almuerzo es a la una y la cena a las nueve.	Lunch is at one and dinner at nine.	a1	food-drink,clock
 000157	Quiero un jugo de naranja.	I'd like an orange juice.	a1	food-drink
 000158	Bebemos vino con la comida.	We drink wine with the meal.	a1	food-drink

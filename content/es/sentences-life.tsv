@@ -1,5 +1,5 @@
 # Work, school, health, people, feelings, nature.
-# Columns: id	spanish	english	level	topics	note	register	address	regions
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
 000341	Trabajo de nueve a cinco.	I work from nine to five.	a1	work,clock
 000342	Tengo una reunión a las diez.	I have a meeting at ten.	a1	work,clock
 000343	Mi jefe es muy amable.	My boss is very kind.	a1	work
@@ -24,10 +24,10 @@
 000362	Repite la frase, por favor.	Repeat the sentence, please.	a1	school			tu
 000363	Voy a la biblioteca a estudiar.	I'm going to the library to study.	a1	school
 000364	No me siento bien.	I don't feel well.	a1	health
-000365	Me duele la cabeza.	My head hurts.	a1	health	doler works like gustar
-000366	Me duele el estómago.	I have a stomach ache.	a1	health
-000367	Tengo fiebre.	I have a fever.	a1	health
-000368	Estoy enfermo desde ayer.	I've been ill since yesterday.	a2	health
+000365	Me duele la cabeza.	My head hurts.	a1	health	doler works like gustar						describe-a-symptom
+000366	Me duele el estómago.	I have a stomach ache.	a1	health							describe-a-symptom
+000367	Tengo fiebre.	I have a fever.	a1	health							describe-a-symptom
+000368	Estoy enfermo desde ayer.	I've been ill since yesterday.	a2	health							describe-a-symptom,say-since-when
 000369	Necesito ir al médico.	I need to go to the doctor.	a1	health
 000370	El hospital está cerca del parque.	The hospital is near the park.	a1	health
 000371	Tomo una medicina cada día.	I take medicine every day.	a2	health

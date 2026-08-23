@@ -15,6 +15,46 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Added
+
+- **Six new missions, taking the journey from seven to thirteen.** Five are A1;
+  saying what hurts is the first A2 mission, because the exchange that teaches it
+  is. Each brings the full shape: a taught passage, a three-rung transfer ladder,
+  four communicative functions, a response palette and a variation pattern.
+  - **Say what hurts** — health was the survival scenario the seven A1 missions
+    left out, and `En el médico` was the one dialogue in the pack nothing pointed
+    at. Its ladder leaves the surgery: a pharmacy, a second doctor, and a phone
+    call to make an appointment.
+  - **Buy a ticket** — travel was the biggest topic in the pack and its only
+    dialogues were asking directions and checking into a hotel. Train, bus, return
+    fare and a metro machine.
+  - **Shop at the market** — quantities and a price per kilo rather than the sizes
+    the clothes missions drill. The independent rung has the stall out of what you
+    asked for, so the script cannot be followed.
+  - **Introduce your family** — the next thing anyone is asked after hello, with
+    thirty-seven family items and no exchange to use them in. It reuses the
+    characters of the greetings mission, so the two read as one person's life.
+  - **Talk about your work** and **Describe where you live** — built on the office
+    and flat texts, two passages that had sat in the pack unclaimed. Narration
+    missions like describing a morning, not dialogues.
+- 120 sentences, 12 passages and 24 communicative functions of content, all
+  generated and **unreviewed** like the rest of the pack — `npm run review:data`
+  lists the new rows for an editor.
+- A briefed task for the past-tense mission
+  ([docs/tasks/past-tense-mission.md](docs/tasks/past-tense-mission.md)),
+  deliberately not built: the content it would teach is not in the pack yet, and
+  authoring the sequence and the language at the same time is how a mission ends
+  up drilling whatever its author happened to write.
+
+### Fixed
+
+- A variation slot can no longer offer a choice with no text. A slot renders as a
+  `<select>`, so an empty target was a blank line in a dropdown rather than an
+  option — `variationProblems` refuses one now, which caught two while the new
+  missions were being written.
+- `languageOption` searched only the target languages, so a pack's meanings were
+  reported as available in "en" rather than in English.
+
 ### Changed
 
 - **Study is one section at a time.** It had grown to about seventy rows in one

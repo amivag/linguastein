@@ -357,4 +357,282 @@ export const MISSION_VARIATIONS: Readonly<Record<string, readonly VariationPatte
       ],
     },
   ],
+  /**
+   * Two slots rather than three, and the reason is Spanish rather than taste.
+   *
+   * A degree belongs *before* the body part — `Me duele mucho el estómago`, which
+   * is how the taught dialogue says it — and a flat template cannot drop one slot
+   * inside the phrase another slot produced. A separate "how much" slot could
+   * only append, which spells `Me duele la cabeza mucho`: understandable, and not
+   * what anyone says. So the degree travels with the part.
+   *
+   * `doler` agrees with what hurts rather than with the speaker, which is the
+   * trap this actually drills: `las piernas` can only ever take `me duelen`, and
+   * keeping the verb in the choice is what makes that impossible to get wrong.
+   */
+  'doctor-visit': [
+    {
+      id: 'build-symptom-report',
+      title: 'Say exactly what hurts',
+      cue: 'Choose what hurts and how much, then whether to say since when.',
+      targetTemplate: '{part}{since}',
+      referenceTemplate: '{part}{since}',
+      slots: [
+        {
+          id: 'part',
+          label: 'What hurts',
+          choices: [
+            { id: 'cabeza', target: 'Me duele la cabeza', reference: 'My head hurts' },
+            {
+              id: 'cabeza-mucho',
+              target: 'Me duele mucho la cabeza',
+              reference: 'My head hurts a lot',
+            },
+            { id: 'estomago', target: 'Me duele el estómago', reference: 'My stomach hurts' },
+            {
+              id: 'estomago-mucho',
+              target: 'Me duele mucho el estómago',
+              reference: 'My stomach hurts a lot',
+            },
+            { id: 'garganta', target: 'Me duele la garganta', reference: 'My throat hurts' },
+            {
+              id: 'garganta-poco',
+              target: 'Me duele un poco la garganta',
+              reference: 'My throat hurts a little',
+            },
+            { id: 'espalda', target: 'Me duele la espalda', reference: 'My back hurts' },
+            { id: 'piernas', target: 'Me duelen las piernas', reference: 'My legs hurt' },
+            {
+              id: 'piernas-poco',
+              target: 'Me duelen un poco las piernas',
+              reference: 'My legs hurt a little',
+            },
+            { id: 'cansado', target: 'Estoy muy cansado', reference: "I'm very tired" },
+          ],
+        },
+        {
+          id: 'since',
+          label: 'Since when',
+          choices: [
+            { id: 'none', target: '.', reference: '.' },
+            { id: 'hoy', target: ' desde hoy.', reference: ' since today.' },
+            { id: 'ayer', target: ' desde ayer.', reference: ' since yesterday.' },
+            { id: 'lunes', target: ' desde el lunes.', reference: ' since Monday.' },
+          ],
+        },
+      ],
+    },
+  ],
+  'your-work': [
+    {
+      id: 'build-work-answer',
+      title: 'Answer “¿dónde trabajas?”',
+      cue: 'Choose the place, then whether to add who with or how near.',
+      targetTemplate: 'Trabajo en {place}{extra}',
+      referenceTemplate: 'I work in {place}{extra}',
+      slots: [
+        {
+          id: 'place',
+          label: 'Where',
+          choices: [
+            { id: 'oficina', target: 'una oficina', reference: 'an office' },
+            { id: 'tienda', target: 'una tienda', reference: 'a shop' },
+            { id: 'restaurante', target: 'un restaurante', reference: 'a restaurant' },
+            { id: 'hospital', target: 'un hospital', reference: 'a hospital' },
+            { id: 'escuela', target: 'una escuela', reference: 'a school' },
+            { id: 'casa', target: 'casa', reference: 'at home' },
+          ],
+        },
+        {
+          id: 'extra',
+          label: 'Add a detail',
+          choices: [
+            { id: 'none', target: '.', reference: '.' },
+            { id: 'centro', target: ', en el centro.', reference: ', in the centre.' },
+            { id: 'cerca', target: ', cerca de mi casa.', reference: ', near my house.' },
+            {
+              id: 'companeros',
+              target: ', con dos compañeros.',
+              reference: ', with two colleagues.',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  'your-home': [
+    {
+      id: 'build-home-answer',
+      title: 'Answer “¿dónde vives?”',
+      cue: 'Choose the kind of home, then who is in it, then how you feel about it.',
+      targetTemplate: 'Vivo en {home}{company}{feeling}',
+      referenceTemplate: 'I live in {home}{company}{feeling}',
+      slots: [
+        {
+          id: 'home',
+          label: 'Kind of home',
+          choices: [
+            { id: 'piso', target: 'un piso', reference: 'a flat' },
+            { id: 'piso-pequeno', target: 'un piso pequeño', reference: 'a small flat' },
+            { id: 'casa', target: 'una casa', reference: 'a house' },
+            { id: 'habitacion', target: 'una habitación', reference: 'a room' },
+          ],
+        },
+        {
+          /*
+           * Every choice says something. A "no answer" option would have to carry
+           * an empty target, and a slot is rendered as a `<select>` — so an empty
+           * target is a blank line in a dropdown, which reads as a rendering
+           * fault rather than as a choice. `variations.test.ts` refuses one now.
+           */
+          id: 'company',
+          label: 'Who with',
+          choices: [
+            { id: 'solo', target: ', solo', reference: ', alone' },
+            { id: 'familia', target: ', con mi familia', reference: ', with my family' },
+            { id: 'amigos', target: ', con dos amigos', reference: ', with two friends' },
+          ],
+        },
+        {
+          id: 'feeling',
+          label: 'How you feel about it',
+          choices: [
+            { id: 'plain', target: '.', reference: '.' },
+            { id: 'gusta', target: ', y me gusta mucho.', reference: ', and I like it a lot.' },
+            {
+              id: 'pequeno',
+              target: ', y es un poco pequeño.',
+              reference: ", and it's a little small.",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  'buy-a-ticket': [
+    {
+      id: 'build-ticket-request',
+      title: 'Build your ticket request',
+      cue: 'Change how many, where to, and which fare.',
+      targetTemplate: '{count} {destination}{fare}',
+      referenceTemplate: '{count} {destination}{fare}',
+      slots: [
+        {
+          id: 'count',
+          label: 'How many',
+          choices: [
+            { id: 'uno', target: 'Un billete', reference: 'One ticket' },
+            { id: 'dos', target: 'Dos billetes', reference: 'Two tickets' },
+            { id: 'tres', target: 'Tres billetes', reference: 'Three tickets' },
+          ],
+        },
+        {
+          id: 'destination',
+          label: 'Where to',
+          choices: [
+            { id: 'sevilla', target: 'para Sevilla', reference: 'to Seville' },
+            { id: 'madrid', target: 'para Madrid', reference: 'to Madrid' },
+            { id: 'centro', target: 'para el centro', reference: 'to the centre' },
+            { id: 'aeropuerto', target: 'para el aeropuerto', reference: 'to the airport' },
+          ],
+        },
+        {
+          id: 'fare',
+          label: 'Which fare',
+          choices: [
+            { id: 'plain', target: ', por favor.', reference: ', please.' },
+            { id: 'ida', target: ', solo ida.', reference: ', one way.' },
+            { id: 'vuelta', target: ', ida y vuelta.', reference: ', return.' },
+            { id: 'hoy', target: ', para hoy.', reference: ', for today.' },
+          ],
+        },
+      ],
+    },
+  ],
+  'market-shopping': [
+    {
+      id: 'build-quantity-request',
+      title: 'Build your order',
+      cue: 'Change the amount, the produce, and how you finish.',
+      targetTemplate: '{amount} {produce}{finish}',
+      referenceTemplate: '{amount} {produce}{finish}',
+      slots: [
+        {
+          id: 'amount',
+          label: 'How much',
+          choices: [
+            { id: 'kilo', target: 'Un kilo de', reference: 'A kilo of' },
+            { id: 'medio', target: 'Medio kilo de', reference: 'Half a kilo of' },
+            { id: 'dos-kilos', target: 'Dos kilos de', reference: 'Two kilos of' },
+            { id: 'poco', target: 'Un poco de', reference: 'A little' },
+          ],
+        },
+        {
+          id: 'produce',
+          label: 'What',
+          choices: [
+            { id: 'manzanas', target: 'manzanas', reference: 'apples' },
+            { id: 'tomates', target: 'tomates', reference: 'tomatoes' },
+            { id: 'naranjas', target: 'naranjas', reference: 'oranges' },
+            { id: 'patatas', target: 'patatas', reference: 'potatoes' },
+            { id: 'queso', target: 'queso', reference: 'cheese' },
+          ],
+        },
+        {
+          id: 'finish',
+          label: 'Finish',
+          choices: [
+            { id: 'please', target: ', por favor.', reference: ', please.' },
+            { id: 'nada-mas', target: ', y nada más.', reference: ", and that's all." },
+          ],
+        },
+      ],
+    },
+  ],
+  'introduce-your-family': [
+    {
+      id: 'build-introduction',
+      title: 'Introduce someone',
+      cue: 'Change who they are, then add their name or what they do.',
+      targetTemplate: '{lead} {relation}{detail}',
+      referenceTemplate: '{lead} {relation}{detail}',
+      slots: [
+        {
+          id: 'lead',
+          label: 'How to begin',
+          choices: [
+            { id: 'este-es', target: 'Este es', reference: 'This is' },
+            { id: 'esta-es', target: 'Esta es', reference: 'This is' },
+            { id: 'es', target: 'Es', reference: "That's" },
+          ],
+        },
+        {
+          id: 'relation',
+          label: 'Who they are',
+          choices: [
+            { id: 'hermano', target: 'mi hermano', reference: 'my brother' },
+            { id: 'hermana', target: 'mi hermana', reference: 'my sister' },
+            { id: 'madre', target: 'mi madre', reference: 'my mother' },
+            { id: 'padre', target: 'mi padre', reference: 'my father' },
+            { id: 'primo', target: 'mi primo', reference: 'my cousin' },
+            { id: 'amiga', target: 'mi amiga', reference: 'my friend' },
+          ],
+        },
+        {
+          id: 'detail',
+          label: 'Add a detail',
+          choices: [
+            { id: 'plain', target: '.', reference: '.' },
+            { id: 'nombre', target: ', se llama Pablo.', reference: ', his name is Pablo.' },
+            {
+              id: 'trabajo',
+              target: ', trabaja en un hospital.',
+              reference: ', he works in a hospital.',
+            },
+            { id: 'estudia', target: ', estudia medicina.', reference: ', he studies medicine.' },
+          ],
+        },
+      ],
+    },
+  ],
 };

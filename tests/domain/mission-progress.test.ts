@@ -77,9 +77,14 @@ describe('missionStandings', () => {
       used: new Map(),
     });
 
-    expect(standings.map((standing) => standing.mission.id)).toEqual(['morning-routine']);
+    // Two of the authored missions are built on passages the fixture holds:
+    // 700001 teaches the morning routine and 700002 the flat.
+    expect(standings.map((standing) => standing.mission.id)).toEqual([
+      'morning-routine',
+      'your-home',
+    ]);
     expect(standings[0]?.position).toBe(1);
-    expect(standings[0]?.total).toBe(1);
+    expect(standings[0]?.total).toBe(2);
     expect(standings[0]?.lineCount).toBe(2);
   });
 

@@ -22,18 +22,18 @@
 000627	Allí leo un libro.	There I read a book.	a1	daily-routine,school					otra-mañana		add-context-to-routine,connect-routine-to-destination
 #
 # ── Mi piso ───────────────────────────────────────────────────────────────────
-000521	Vivo en un piso pequeño con dos dormitorios.	I live in a small flat with two bedrooms.	a1	home,numbers					piso
-000522	La cocina es grande y tiene una ventana muy alta.	The kitchen is big and has a very tall window.	a1	home					piso
-000523	Mi habitación está siempre limpia.	My room is always clean.	a1	home					piso
-000524	No hay jardín, pero hay una plaza cerca.	There's no garden, but there's a square nearby.	a1	home					piso
-000525	Me gusta mucho vivir aquí.	I like living here a lot.	a1	home					piso
+000521	Vivo en un piso pequeño con dos dormitorios.	I live in a small flat with two bedrooms.	a1	home,numbers					piso		say-where-you-live
+000522	La cocina es grande y tiene una ventana muy alta.	The kitchen is big and has a very tall window.	a1	home					piso		describe-the-rooms
+000523	Mi habitación está siempre limpia.	My room is always clean.	a1	home					piso		describe-the-rooms
+000524	No hay jardín, pero hay una plaza cerca.	There's no garden, but there's a square nearby.	a1	home					piso		say-what-is-nearby
+000525	Me gusta mucho vivir aquí.	I like living here a lot.	a1	home					piso		say-how-you-feel-about-home
 #
 # ── Un día en la oficina ──────────────────────────────────────────────────────
-000526	Trabajo en una oficina en el centro.	I work in an office in the centre.	a1	work					oficina
-000527	Llego a las nueve y leo mis correos.	I arrive at nine and read my emails.	a1	work,clock					oficina
-000528	Tengo una reunión con mi jefe a las once.	I have a meeting with my boss at eleven.	a1	work,clock					oficina
-000529	Almuerzo con un amigo a la una.	I have lunch with a friend at one.	a1	work,clock					oficina
-000530	Termino a las seis y vuelvo a casa cansado.	I finish at six and come home tired.	a1	work,clock					oficina
+000526	Trabajo en una oficina en el centro.	I work in an office in the centre.	a1	work					oficina		say-what-you-do
+000527	Llego a las nueve y leo mis correos.	I arrive at nine and read my emails.	a1	work,clock					oficina		walk-through-a-workday
+000528	Tengo una reunión con mi jefe a las once.	I have a meeting with my boss at eleven.	a1	work,clock					oficina		talk-about-work-meetings
+000529	Almuerzo con un amigo a la una.	I have lunch with a friend at one.	a1	work,clock					oficina		walk-through-a-workday,talk-about-work-meetings
+000530	Termino a las seis y vuelvo a casa cansado.	I finish at six and come home tired.	a1	work,clock					oficina		say-how-the-day-went,walk-through-a-workday
 #
 # ── El sábado ─────────────────────────────────────────────────────────────────
 000531	El sábado no trabajo.	On Saturday I don't work.	a1	social,days-of-week					sabado
@@ -135,13 +135,14 @@
 000616	Sí, está en el segundo piso.	Yes, it's on the second floor.	a1	travel		formal	usted		hotel-reto	Recepcionista	locate-hotel-facility
 #
 # ── En el médico (dialogue) ───────────────────────────────────────────────────
-000580	Buenos días, ¿qué le pasa?	Good morning, what's the matter?	a2	health		formal	usted		medico	Médica
-000581	Me duele mucho el estómago.	My stomach hurts a lot.	a2	health					medico	Paciente
-000582	¿Desde cuándo?	Since when?	a2	health		formal	usted		medico	Médica
-000583	Desde ayer por la noche. No pude dormir.	Since last night. I couldn't sleep.	a2	health					medico	Paciente
-000584	¿Tiene fiebre?	Do you have a fever?	a2	health		formal	usted		medico	Médica
-000585	No, pero estoy muy cansado.	No, but I'm very tired.	a2	health					medico	Paciente
-000586	Tiene que descansar y beber mucha agua.	You need to rest and drink a lot of water.	a2	health		formal	usted		medico	Médica
+000580	Buenos días, ¿qué le pasa?	Good morning, what's the matter?	a2	health		formal	usted		medico	Médica	describe-a-symptom
+000581	Me duele mucho el estómago.	My stomach hurts a lot.	a2	health					medico	Paciente	describe-a-symptom
+000582	¿Desde cuándo?	Since when?	a2	health		formal	usted		medico	Médica	say-since-when
+000583	Desde ayer por la noche. No pude dormir.	Since last night. I couldn't sleep.	a2	health					medico	Paciente	say-since-when
+000584	¿Tiene fiebre?	Do you have a fever?	a2	health		formal	usted		medico	Médica	answer-health-questions
+000585	No, pero estoy muy cansado.	No, but I'm very tired.	a2	health					medico	Paciente	answer-health-questions
+000586	Tiene que descansar y beber mucha agua.	You need to rest and drink a lot of water.	a2	health		formal	usted		medico	Médica	follow-health-advice
+000792	Gracias, doctora. Voy a descansar.	Thank you, doctor. I'm going to rest.	a2	health,greetings					medico	Paciente	follow-health-advice
 #
 # ── ¿Qué hacemos esta noche? (dialogue) ───────────────────────────────────────
 000587	¿Qué hacemos esta noche?	What shall we do tonight?	a1	social					amigos	Ana	open-social-planning
@@ -259,3 +260,197 @@
 000702	Como fruta y leo el periódico en la cocina.	I eat fruit and read the newspaper in the kitchen.	a1	daily-routine,food-drink,home					mañana-domingo		describe-routine-actions,add-context-to-routine
 000703	Después llamo a un amigo y limpio un poco la casa.	Afterwards I call a friend and clean the house a little.	a1	daily-routine,social,home					mañana-domingo		describe-routine-actions,sequence-routine-events
 000704	A las doce salgo y voy al mercado con mi amigo.	At twelve I go out and go to the market with my friend.	a1	daily-routine,clock,shopping					mañana-domingo		anchor-routine-in-time,sequence-routine-events,connect-routine-to-destination
+#
+# ── En la farmacia (guided transfer) ────────────────────────────────────────
+000793	Buenas tardes, ¿qué necesita?	Good afternoon, what do you need?	a2	health		formal	usted		farmacia	Farmacéutica	describe-a-symptom
+000794	Necesito algo para el dolor de cabeza.	I need something for a headache.	a2	health					farmacia	Paciente	describe-a-symptom
+000795	¿Desde cuándo le duele?	How long has it been hurting?	a2	health		formal	usted		farmacia	Farmacéutica	say-since-when
+000796	Desde esta mañana, cuando me levanté.	Since this morning, when I got up.	a2	health					farmacia	Paciente	say-since-when
+000797	¿Toma alguna otra medicina?	Are you taking any other medicine?	a2	health		formal	usted		farmacia	Farmacéutica	answer-health-questions
+000798	No, ninguna. Solo tengo dolor de cabeza.	No, none. I just have a headache.	a2	health					farmacia	Paciente	answer-health-questions
+000799	Tome una pastilla cada ocho horas.	Take one tablet every eight hours.	a2	health		formal	usted		farmacia	Farmacéutica	follow-health-advice
+000800	Muy bien. Muchas gracias por su ayuda.	Very well. Thank you very much for your help.	a2	health,greetings					farmacia	Paciente	follow-health-advice
+#
+# ── Otra consulta médica (guided transfer) ──────────────────────────────────
+000801	Buenas tardes, ¿cómo se siente?	Good afternoon, how are you feeling?	a2	health		formal	usted		medico-espalda	Médico	describe-a-symptom
+000802	Me duele la espalda cuando trabajo.	My back hurts when I work.	a2	health,work					medico-espalda	Paciente	describe-a-symptom
+000803	¿Cuántos días lleva así?	How many days has it been like this?	a2	health,numbers		formal	usted		medico-espalda	Médico	say-since-when
+000804	Desde el lunes, más o menos.	Since Monday, more or less.	a2	health,days-of-week					medico-espalda	Paciente	say-since-when
+000805	¿Duerme bien por la noche?	Do you sleep well at night?	a2	health		formal	usted		medico-espalda	Médico	answer-health-questions
+000806	No muy bien, porque me duele mucho.	Not very well, because it hurts a lot.	a2	health					medico-espalda	Paciente	answer-health-questions
+000807	Tiene que caminar un poco cada día.	You need to walk a little every day.	a2	health		formal	usted		medico-espalda	Médico	follow-health-advice
+000808	De acuerdo, lo voy a hacer.	All right, I'm going to do that.	a2	health					medico-espalda	Paciente	follow-health-advice
+#
+# ── Pedir cita por teléfono (independent transfer) ──────────────────────────
+000809	Centro de salud, buenos días.	Health centre, good morning.	a2	health,greetings		formal	usted		cita-telefono	Recepcionista	describe-a-symptom
+000810	Buenos días. Quiero una cita, por favor.	Good morning. I would like an appointment, please.	a2	health,communication					cita-telefono	Paciente	describe-a-symptom
+000811	¿Qué le pasa?	What's the matter?	a2	health		formal	usted		cita-telefono	Recepcionista	describe-a-symptom
+000812	Tengo fiebre y me duele la garganta.	I have a fever and my throat hurts.	a2	health,body					cita-telefono	Paciente	describe-a-symptom
+000813	¿Desde cuándo se siente así?	How long have you been feeling like this?	a2	health		formal	usted		cita-telefono	Recepcionista	say-since-when
+000814	Desde el fin de semana.	Since the weekend.	a2	health,time					cita-telefono	Paciente	say-since-when
+000815	¿Puede venir hoy a las cinco?	Can you come today at five?	a2	health,clock		formal	usted		cita-telefono	Recepcionista	answer-health-questions
+000816	Sí, a las cinco está bien.	Yes, five o’clock is fine.	a2	health,clock					cita-telefono	Paciente	answer-health-questions
+000817	Muy bien. Traiga su tarjeta sanitaria.	Very well. Bring your health card.	a2	health		formal	usted		cita-telefono	Recepcionista	follow-health-advice
+000818	La traigo. Gracias por todo.	I'll bring it. Thank you for everything.	a2	health,greetings					cita-telefono	Paciente	follow-health-advice
+#
+# ── Un día de trabajo en casa (transfer text) ───────────────────────────────
+000819	Los martes trabajo en casa, en la mesa del comedor.	On Tuesdays I work at home, at the dining table.	a1	work,home					trabajo-casa		say-what-you-do
+000820	Empiezo a las ocho, antes que en la oficina.	I start at eight, earlier than at the office.	a1	work,clock					trabajo-casa		walk-through-a-workday
+000821	Hablo con mi jefe por teléfono a las diez.	I talk to my boss on the phone at ten.	a1	work,communication					trabajo-casa		talk-about-work-meetings
+000822	Como en la cocina y descanso veinte minutos.	I eat in the kitchen and rest for twenty minutes.	a1	work,home					trabajo-casa		walk-through-a-workday
+000823	Termino temprano y tengo tiempo para leer.	I finish early and have time to read.	a1	work,time					trabajo-casa		say-how-the-day-went
+#
+# ── Un día en la tienda (transfer text) ─────────────────────────────────────
+000824	Trabajo en una tienda de ropa, cerca de la plaza.	I work in a clothes shop, near the square.	a1	work,shopping					trabajo-tienda		say-what-you-do
+000825	Abro a las diez y hablo con muchos clientes.	I open at ten and talk to a lot of customers.	a1	work,clock					trabajo-tienda		walk-through-a-workday
+000826	A la una viene mi compañera y comemos juntas.	At one my colleague comes and we eat together.	a1	work,social					trabajo-tienda		talk-about-work-meetings
+000827	Por la tarde hay menos gente y limpio la tienda.	In the afternoon there are fewer people and I clean the shop.	a1	work,shopping					trabajo-tienda		walk-through-a-workday
+000828	Cierro a las ocho y vuelvo a casa contenta.	I close at eight and go home happy.	a1	work,feelings					trabajo-tienda		say-how-the-day-went
+#
+# ── Un día muy ocupado (independent transfer text) ──────────────────────────
+000829	Trabajo en una oficina y el jueves fue un día muy ocupado.	I work in an office and Thursday was a very busy day.	a2	work,days-of-week					trabajo-ocupado		say-what-you-do,say-how-the-day-went
+000830	Llegué a las ocho y ya tenía diez correos.	I arrived at eight and already had ten emails.	a2	work,numbers					trabajo-ocupado		walk-through-a-workday
+000831	Tuve dos reuniones, una por la mañana y otra después de comer.	I had two meetings, one in the morning and another after lunch.	a2	work,numbers					trabajo-ocupado		talk-about-work-meetings
+000832	No pude comer con mis compañeros.	I couldn't eat with my colleagues.	a2	work,social					trabajo-ocupado		walk-through-a-workday
+000833	Terminé a las siete y llegué a casa muy cansada.	I finished at seven and got home very tired.	a2	work,feelings					trabajo-ocupado		say-how-the-day-went
+#
+# ── Mi casa en el pueblo (transfer text) ────────────────────────────────────
+000834	Mis padres viven en una casa en un pueblo pequeño.	My parents live in a house in a small village.	a1	home,family					casa-pueblo		say-where-you-live
+000835	La casa tiene tres dormitorios y un salón grande.	The house has three bedrooms and a big living room.	a1	home,numbers					casa-pueblo		describe-the-rooms
+000836	En la cocina hay una mesa de madera muy vieja.	In the kitchen there is a very old wooden table.	a1	home,objects					casa-pueblo		describe-the-rooms
+000837	Hay un jardín detrás y el río está muy cerca.	There is a garden behind and the river is very close.	a1	home,nature					casa-pueblo		say-what-is-nearby
+000838	Me gusta ir en verano, pero no quiero vivir allí.	I like going in summer, but I don't want to live there.	a1	home,feelings					casa-pueblo		say-how-you-feel-about-home
+#
+# ── Mi habitación de estudiante (transfer text) ─────────────────────────────
+000839	Vivo en una habitación pequeña, cerca de la universidad.	I live in a small room, near the university.	a1	home,school					habitacion-estudiante		say-where-you-live
+000840	Tengo una cama, una mesa y muchos libros.	I have a bed, a table and a lot of books.	a1	home,objects					habitacion-estudiante		describe-the-rooms
+000841	La cocina es para todos y a veces está sucia.	The kitchen is for everyone and sometimes it is dirty.	a1	home					habitacion-estudiante		describe-the-rooms
+000842	No hay jardín, pero hay un parque en la misma calle.	There is no garden, but there is a park on the same street.	a1	home,city					habitacion-estudiante		say-what-is-nearby
+000843	Es pequeña, pero estoy contento aquí.	It's small, but I'm happy here.	a1	home,feelings					habitacion-estudiante		say-how-you-feel-about-home
+#
+# ── Un piso para dos (independent transfer text) ────────────────────────────
+000844	Mi hermana y yo buscamos un piso para las dos.	My sister and I are looking for a flat for the two of us.	a1	home,family					piso-compartido		say-where-you-live
+000845	Queremos dos dormitorios y una cocina con ventana.	We want two bedrooms and a kitchen with a window.	a1	home,numbers					piso-compartido		describe-the-rooms
+000846	El baño tiene que estar limpio y el salón, tranquilo.	The bathroom has to be clean and the living room, quiet.	a1	home					piso-compartido		describe-the-rooms
+000847	Necesitamos una parada de autobús cerca.	We need a bus stop nearby.	a1	home,travel					piso-compartido		say-what-is-nearby
+000848	No es fácil, pero vamos a encontrar algo bueno.	It isn't easy, but we're going to find something good.	a1	home,feelings					piso-compartido		say-how-you-feel-about-home
+#
+# ── En la estación (taught dialogue) ────────────────────────────────────────
+000865	Buenos días, ¿adónde va?	Good morning, where are you going?	a1	travel		formal	usted		billete-tren	Empleada	ask-for-a-ticket
+000866	A Sevilla. Un billete, por favor.	To Seville. One ticket, please.	a1	travel					billete-tren	Viajero	ask-for-a-ticket
+000867	¿Ida, o ida y vuelta?	One way, or return?	a1	travel		formal	usted		billete-tren	Empleada	choose-a-fare
+000868	Solo ida. ¿Cuánto cuesta?	One way only. How much is it?	a1	travel					billete-tren	Viajero	choose-a-fare
+000869	Treinta euros. El próximo tren sale a las diez.	Thirty euros. The next train leaves at ten.	a1	travel,clock		formal	usted		billete-tren	Empleada	ask-about-departure
+000870	¿Y a qué hora llega a Sevilla?	And what time does it get to Seville?	a1	travel,clock					billete-tren	Viajero	ask-about-departure
+000871	A la una. Sale del andén cuatro.	At one. It leaves from platform four.	a1	travel,numbers		formal	usted		billete-tren	Empleada	find-the-platform
+000872	Andén cuatro. Muchas gracias.	Platform four. Thank you very much.	a1	travel,numbers					billete-tren	Viajero	find-the-platform
+#
+# ── En la estación de autobuses (guided transfer) ───────────────────────────
+000873	Buenas tardes, dígame.	Good afternoon, how can I help?	a1	travel		formal	usted		billete-autobus	Taquillero	ask-for-a-ticket
+000874	Quiero un billete para Granada.	I would like a ticket to Granada.	a1	travel					billete-autobus	Viajero	ask-for-a-ticket
+000875	¿Para hoy o para mañana?	For today or for tomorrow?	a1	travel,time		formal	usted		billete-autobus	Taquillero	choose-a-fare
+000876	Para hoy, y solo uno.	For today, and just one.	a1	travel,numbers					billete-autobus	Viajero	choose-a-fare
+000877	El autobús sale a las seis y media.	The bus leaves at half past six.	a1	travel,clock		formal	usted		billete-autobus	Taquillero	ask-about-departure
+000878	¿Sale mucha gente a esa hora?	Do a lot of people leave at that time?	a1	travel,clock					billete-autobus	Viajero	ask-about-departure
+000879	Bastante. La parada está a la derecha.	Quite a few. The stop is on the right.	a1	travel,place		formal	usted		billete-autobus	Taquillero	find-the-platform
+000880	¿La parada de la derecha? Perfecto.	The stop on the right? Perfect.	a1	travel,place					billete-autobus	Viajero	find-the-platform
+#
+# ── Un billete de ida y vuelta (guided transfer) ────────────────────────────
+000881	¿Adónde quiere ir y cuándo vuelve?	Where do you want to go and when are you coming back?	a1	travel		formal	usted		billete-vuelta	Empleada	ask-for-a-ticket
+000882	A Valencia, y vuelvo el domingo.	To Valencia, and I come back on Sunday.	a1	travel,days-of-week					billete-vuelta	Viajero	ask-for-a-ticket
+000883	Entonces ida y vuelta. ¿Cuántas personas?	A return, then. How many people?	a1	travel,numbers		formal	usted		billete-vuelta	Empleada	choose-a-fare
+000884	Dos, mi hermana y yo.	Two, my sister and me.	a1	travel,family					billete-vuelta	Viajero	choose-a-fare
+000885	Hay un tren a las nueve y otro a las once.	There is a train at nine and another at eleven.	a1	travel,clock		formal	usted		billete-vuelta	Empleada	ask-about-departure
+000886	El de las nueve, mejor.	The nine o’clock one, better.	a1	travel,clock					billete-vuelta	Viajero	ask-about-departure
+000887	Muy bien. Andén dos, a la izquierda.	Very well. Platform two, on the left.	a1	travel,place		formal	usted		billete-vuelta	Empleada	find-the-platform
+000888	¿Andén dos? Gracias por su ayuda.	Platform two? Thank you for your help.	a1	travel,numbers					billete-vuelta	Viajero	find-the-platform
+#
+# ── Comprar un billete de metro (independent transfer) ──────────────────────
+000889	¿Necesita ayuda con la máquina?	Do you need help with the machine?	a1	travel,city		formal	usted		billete-metro	Empleada	ask-for-a-ticket
+000890	Sí, quiero un billete para el centro.	Yes, I want a ticket to the centre.	a1	travel,city					billete-metro	Viajero	ask-for-a-ticket
+000891	¿Un viaje, o diez viajes?	One journey, or ten journeys?	a1	travel,numbers		formal	usted		billete-metro	Empleada	choose-a-fare
+000892	Diez viajes, porque estoy una semana aquí.	Ten journeys, because I'm here for a week.	a1	travel,time					billete-metro	Viajero	choose-a-fare
+000893	El metro pasa cada cinco minutos.	The metro comes every five minutes.	a1	travel,clock		formal	usted		billete-metro	Empleada	ask-about-departure
+000894	Muy bien, ¿y el último a qué hora pasa?	Very good, and what time does the last one come?	a1	travel,clock					billete-metro	Viajero	ask-about-departure
+000895	A la una y media. La línea dos va al centro.	At half past one. Line two goes to the centre.	a1	travel,numbers		formal	usted		billete-metro	Empleada	find-the-platform
+000896	¿La línea dos? Gracias, ya lo tengo.	Line two? Thanks, I've got it now.	a1	travel,numbers					billete-metro	Viajero	find-the-platform
+#
+# ── En el puesto de fruta (taught dialogue) ─────────────────────────────────
+000897	Buenos días, ¿qué le pongo?	Good morning, what can I get you?	a1	shopping		formal	usted		mercado-fruta	Frutera	ask-for-a-quantity
+000898	Un kilo de manzanas, por favor.	A kilo of apples, please.	a1	shopping,food-drink					mercado-fruta	Cliente	ask-for-a-quantity
+000899	Aquí tiene. ¿Algo más?	Here you are. Anything else?	a1	shopping		formal	usted		mercado-fruta	Frutera	change-what-you-asked-for
+000900	Sí, también medio kilo de tomates.	Yes, half a kilo of tomatoes too.	a1	shopping,food-drink					mercado-fruta	Cliente	change-what-you-asked-for
+000901	¿A cuánto están los tomates?	How much are the tomatoes?	a1	shopping,numbers					mercado-fruta	Cliente	ask-price-by-weight
+000902	A dos euros el kilo, muy buenos.	Two euros a kilo, very good ones.	a1	shopping,numbers		formal	usted		mercado-fruta	Frutera	ask-price-by-weight
+000903	Son cuatro euros en total.	That's four euros altogether.	a1	shopping,numbers		formal	usted		mercado-fruta	Frutera	pay-and-leave
+000904	Aquí tiene. Hasta el jueves.	Here you are. See you on Thursday.	a1	shopping,days-of-week					mercado-fruta	Cliente	pay-and-leave
+#
+# ── En la panadería (guided transfer) ───────────────────────────────────────
+000905	Hola, ¿qué necesita hoy?	Hello, what do you need today?	a1	shopping		formal	usted		mercado-pan	Panadero	ask-for-a-quantity
+000906	Dos barras de pan, por favor.	Two loaves of bread, please.	a1	shopping,food-drink					mercado-pan	Cliente	ask-for-a-quantity
+000907	¿Quiere también algo dulce?	Would you like something sweet as well?	a1	shopping,food-drink		formal	usted		mercado-pan	Panadero	change-what-you-asked-for
+000908	No, mejor solo el pan. Bueno, y una galleta.	No, just the bread. Well, and one biscuit.	a1	shopping,food-drink					mercado-pan	Cliente	change-what-you-asked-for
+000909	¿Cuánto cuesta la barra?	How much is a loaf?	a1	shopping,numbers					mercado-pan	Cliente	ask-price-by-weight
+000910	Un euro cada una, recién hecho.	One euro each, freshly made.	a1	shopping,numbers		formal	usted		mercado-pan	Panadero	ask-price-by-weight
+000911	Dos euros y medio, por favor.	Two euros fifty, please.	a1	shopping,numbers		formal	usted		mercado-pan	Panadero	pay-and-leave
+000912	Tenga. Muchas gracias, hasta mañana.	Here. Thank you very much, see you tomorrow.	a1	shopping,greetings					mercado-pan	Cliente	pay-and-leave
+#
+# ── En la pescadería (guided transfer) ──────────────────────────────────────
+000913	Buenas, ¿le pongo pescado hoy?	Hello, shall I get you some fish today?	a1	shopping,food-drink		formal	usted		mercado-pescado	Pescadero	ask-for-a-quantity
+000914	Sí, medio kilo de pescado fresco.	Yes, half a kilo of fresh fish.	a1	shopping,food-drink					mercado-pescado	Cliente	ask-for-a-quantity
+000915	Este está muy bien hoy. ¿Le pongo más?	This one is very good today. Shall I give you more?	a1	shopping		formal	usted		mercado-pescado	Pescadero	change-what-you-asked-for
+000916	No, medio kilo está bien. Solo eso.	No, half a kilo is fine. Just that.	a1	shopping					mercado-pescado	Cliente	change-what-you-asked-for
+000917	¿A cuánto está el kilo?	How much is it a kilo?	a1	shopping,numbers					mercado-pescado	Cliente	ask-price-by-weight
+000918	A doce euros el kilo.	Twelve euros a kilo.	a1	shopping,numbers		formal	usted		mercado-pescado	Pescadero	ask-price-by-weight
+000919	Seis euros. ¿Con tarjeta o en efectivo?	Six euros. By card or in cash?	a1	shopping,numbers		formal	usted		mercado-pescado	Pescadero	pay-and-leave
+000920	Con tarjeta, gracias. Buen día.	By card, thanks. Have a good day.	a1	shopping,greetings					mercado-pescado	Cliente	pay-and-leave
+#
+# ── Con la lista de la compra (independent transfer) ────────────────────────
+000921	Dígame, ¿qué lleva hoy?	Tell me, what are you having today?	a1	shopping		formal	usted		mercado-lista	Vendedora	ask-for-a-quantity
+000922	Un kilo de cebollas y tres limones.	A kilo of onions and three lemons.	a1	shopping,numbers					mercado-lista	Cliente	ask-for-a-quantity
+000923	No tengo limones hoy. ¿Naranjas?	I have no lemons today. Oranges?	a1	shopping,food-drink		formal	usted		mercado-lista	Vendedora	change-what-you-asked-for
+000924	Entonces cuatro naranjas, mejor.	Four oranges then, better.	a1	shopping,numbers					mercado-lista	Cliente	change-what-you-asked-for
+000925	¿Y las naranjas a cuánto están?	And how much are the oranges?	a1	shopping,numbers					mercado-lista	Cliente	ask-price-by-weight
+000926	Dos euros el kilo, son muy dulces.	Two euros a kilo, they are very sweet.	a1	shopping,food-drink		formal	usted		mercado-lista	Vendedora	ask-price-by-weight
+000927	Todo son cinco euros.	Five euros for everything.	a1	shopping,numbers		formal	usted		mercado-lista	Vendedora	pay-and-leave
+000928	Perfecto, aquí tiene cinco. Gracias.	Perfect, here is five. Thanks.	a1	shopping,numbers					mercado-lista	Cliente	pay-and-leave
+#
+# ── Una foto de la familia (taught dialogue) ────────────────────────────────
+000929	¿Quién es esta señora de la foto?	Who is this lady in the photo?	a1	family,people		colloquial	tu		familia-foto	Ana	introduce-a-person
+000930	Es mi madre. Se llama Carmen.	That's my mother. Her name is Carmen.	a1	family		colloquial	tu		familia-foto	Luis	introduce-a-person
+000931	¿Y trabaja aquí, en la ciudad?	And does she work here, in the city?	a1	family,work		colloquial	tu		familia-foto	Ana	say-what-they-do
+000932	Es profesora en una escuela pequeña.	She is a teacher in a small school.	a1	family,work		colloquial	tu		familia-foto	Luis	say-what-they-do
+000933	¿Y tienes hermanos?	And do you have brothers or sisters?	a1	family		colloquial	tu		familia-foto	Ana	give-family-details
+000934	Tengo una hermana de veinte años.	I have a sister who is twenty.	a1	family,numbers		colloquial	tu		familia-foto	Luis	give-family-details
+000935	¡Qué bien! Tienes una familia muy simpática.	How nice! You have a very likeable family.	a1	family,feelings		colloquial	tu		familia-foto	Ana	react-with-interest
+000936	Gracias. Son lo más importante para mí.	Thanks. They are the most important thing to me.	a1	family,feelings		colloquial	tu		familia-foto	Luis	react-with-interest
+#
+# ── En una fiesta (guided transfer) ─────────────────────────────────────────
+000937	Luis, ¿quién es el chico de la puerta?	Luis, who is the boy by the door?	a1	family,people		colloquial	tu		familia-fiesta	Marta	introduce-a-person
+000938	Es mi primo Daniel, de Valencia.	That is my cousin Daniel, from Valencia.	a1	family,city		colloquial	tu		familia-fiesta	Luis	introduce-a-person
+000939	¿Y qué hace en Valencia?	And what does he do in Valencia?	a1	family,work		colloquial	tu		familia-fiesta	Marta	say-what-they-do
+000940	Estudia medicina y trabaja los sábados.	He studies medicine and works on Saturdays.	a1	family,school		colloquial	tu		familia-fiesta	Luis	say-what-they-do
+000941	¿Viene mucho a verte?	Does he come to see you often?	a1	family		colloquial	tu		familia-fiesta	Marta	give-family-details
+000942	Dos o tres veces al año, en verano.	Two or three times a year, in summer.	a1	family,numbers		colloquial	tu		familia-fiesta	Luis	give-family-details
+000943	¡Qué interesante! Quiero conocerlo.	How interesting! I want to meet him.	a1	family,feelings		colloquial	tu		familia-fiesta	Marta	react-with-interest
+000944	Ahora te lo presento, ven.	I'll introduce you now, come on.	a1	family,social		colloquial	tu		familia-fiesta	Luis	react-with-interest
+#
+# ── Hablar de una hermana (guided transfer) ─────────────────────────────────
+000945	¿Esta es tu hermana? Sois muy parecidos.	Is this your sister? You look very alike.	a1	family,people		colloquial	tu		familia-hermana	Elena	introduce-a-person
+000946	Sí, es Marta, la mayor.	Yes, that is Marta, the older one.	a1	family		colloquial	tu		familia-hermana	Luis	introduce-a-person
+000947	¿Ella también trabaja en una oficina?	Does she work in an office too?	a1	family,work		colloquial	tu		familia-hermana	Elena	say-what-they-do
+000948	No, es médica en un hospital.	No, she is a doctor in a hospital.	a1	family,work		colloquial	tu		familia-hermana	Luis	say-what-they-do
+000949	¿Y tiene hijos?	And does she have children?	a1	family		colloquial	tu		familia-hermana	Elena	give-family-details
+000950	Tiene dos, un niño y una niña.	She has two, a boy and a girl.	a1	family,numbers		colloquial	tu		familia-hermana	Luis	give-family-details
+000951	Me alegro. Tu familia es grande.	I am glad. Your family is big.	a1	family,feelings		colloquial	tu		familia-hermana	Elena	react-with-interest
+000952	Sí, y todos vivimos cerca.	Yes, and we all live nearby.	a1	family,home		colloquial	tu		familia-hermana	Luis	react-with-interest
+#
+# ── Presentar a la familia (independent transfer) ───────────────────────────
+000953	¿Con quién vives ahora?	Who do you live with now?	a1	family,home		colloquial	tu		familia-nueva	Daniel	introduce-a-person
+000954	Con mi esposa y nuestro bebé.	With my wife and our baby.	a1	family,home		colloquial	tu		familia-nueva	Luis	introduce-a-person
+000955	¡Un bebé! ¿Y tu esposa trabaja?	A baby! And does your wife work?	a1	family,work		colloquial	tu		familia-nueva	Daniel	say-what-they-do
+000956	Es camarera, pero ahora está en casa.	She is a waitress, but she is at home now.	a1	family,work		colloquial	tu		familia-nueva	Luis	say-what-they-do
+000957	¿Cuántos meses tiene el bebé?	How many months old is the baby?	a1	family,numbers		colloquial	tu		familia-nueva	Daniel	give-family-details
+000958	Cinco meses, y ya duerme bien.	Five months, and he already sleeps well.	a1	family,numbers		colloquial	tu		familia-nueva	Luis	give-family-details
+000959	¡Qué bueno! Me alegro mucho por vosotros.	How good! I am very happy for you.	a1	family,feelings		colloquial	tu		familia-nueva	Daniel	react-with-interest
+000960	Gracias, estamos muy contentos.	Thanks, we are very happy.	a1	family,feelings		colloquial	tu		familia-nueva	Luis	react-with-interest

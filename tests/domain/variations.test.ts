@@ -7,7 +7,7 @@ import {
 } from '../../src/domain/exercises';
 
 describe('variation practice', () => {
-  it('covers every mission with 314 deliberately bounded combinations', () => {
+  it('covers every mission with 574 deliberately bounded combinations', () => {
     expect(Object.keys(MISSION_VARIATIONS)).toEqual([
       'greet-and-respond',
       'cafe-order',
@@ -16,6 +16,12 @@ describe('variation practice', () => {
       'hotel-check-in',
       'make-plans',
       'morning-routine',
+      'doctor-visit',
+      'your-work',
+      'your-home',
+      'buy-a-ticket',
+      'market-shopping',
+      'introduce-your-family',
     ]);
 
     const combinations = Object.values(MISSION_VARIATIONS).reduce(
@@ -30,7 +36,7 @@ describe('variation practice', () => {
       0,
     );
 
-    expect(combinations).toBe(314);
+    expect(combinations).toBe(574);
   });
 
   it.each([

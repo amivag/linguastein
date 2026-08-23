@@ -42,3 +42,24 @@
 700034	saludo-amigo	dialogue	Encontrarse con una amiga	Meeting a friend	a1	greetings
 700035	saludo-trabajo	dialogue	Un saludo en el trabajo	A greeting at work	a1	greetings
 700036	saludo-vecina	dialogue	Conocer a una vecina	Meeting a neighbour	a1	greetings
+700037	farmacia	dialogue	En la farmacia	At the pharmacy	a2	health
+700038	medico-espalda	dialogue	Otra consulta médica	Another doctor’s appointment	a2	health
+700039	cita-telefono	dialogue	Pedir cita por teléfono	Making an appointment by phone	a2	health
+700040	trabajo-casa	text	Un día de trabajo en casa	A day working from home	a1	work
+700041	trabajo-tienda	text	Un día en la tienda	A day in the shop	a1	work
+700042	trabajo-ocupado	text	Un día muy ocupado	A very busy day	a2	work
+700043	casa-pueblo	text	Mi casa en el pueblo	My house in the village	a1	home
+700044	habitacion-estudiante	text	Mi habitación de estudiante	My student room	a1	home
+700045	piso-compartido	text	Un piso para dos	A flat for two	a1	home
+700046	billete-tren	dialogue	En la estación	At the station	a1	travel
+700047	billete-autobus	dialogue	En la estación de autobuses	At the bus station	a1	travel
+700048	billete-vuelta	dialogue	Un billete de ida y vuelta	A return ticket	a1	travel
+700049	billete-metro	dialogue	Comprar un billete de metro	Buying a metro ticket	a1	travel
+700050	mercado-fruta	dialogue	En el puesto de fruta	At the fruit stall	a1	shopping
+700051	mercado-pan	dialogue	En la panadería	At the bakery	a1	shopping
+700052	mercado-pescado	dialogue	En la pescadería	At the fishmonger	a1	shopping
+700053	mercado-lista	dialogue	Con la lista de la compra	With the shopping list	a1	shopping
+700054	familia-foto	dialogue	Una foto de la familia	A family photo	a1	family
+700055	familia-fiesta	dialogue	En una fiesta	At a party	a1	family
+700056	familia-hermana	dialogue	Hablar de una hermana	Talking about a sister	a1	family
+700057	familia-nueva	dialogue	Presentar a la familia	Introducing the family	a1	family

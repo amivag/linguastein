@@ -18,7 +18,9 @@ describe('HomeScreen', () => {
     expect(
       await screen.findByRole('heading', { name: 'Español · All levels' }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Mission 1 of 1')).toBeInTheDocument();
+    // Two authored missions are built on passages the fixture holds, so the
+    // count is what the ladder actually has rather than a fixed 1.
+    expect(screen.getByText('Mission 1 of 2')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Begin mission/ })).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /Free practice/ }));

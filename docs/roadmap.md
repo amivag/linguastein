@@ -47,18 +47,20 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   moves, and a deleted row's id is retired rather than reused
 - Passages: connected texts and dialogues as containers over sentences that stay
   individually practisable, with a reading view and passage-scoped sessions
-- A seven-mission A1 communicative journey (Understand → Practise → Use), with a
+- A thirteen-mission communicative journey (Understand → Practise → Use), with a
   three-context transfer ladder for every mission. The first variations retain
-  meaning cues; the final rung uses communicative intentions, and a narration
-  model sits alongside the six dialogues
+  meaning cues; the final rung uses communicative intentions, and three narration
+  models sit alongside the ten dialogues. Twelve are A1; saying what hurts is the
+  first A2 mission, because the exchange that teaches it is
 - Response palettes now run through every mission: wellbeing, café orders,
   destinations, clothing needs, hotel details, reactions to suggestions and real
   morning actions. Each reveals alternatives progressively with meaning and
   pragmatic nuance, and accepts any context-appropriate answer through the
   existing speech seam instead of grading against one scripted line
-- Variation Labs across all seven missions: pure generators recombine ordered
-  slots into 314 valid study phrases covering wellbeing, café orders,
-  directions, clothes, hotel stays, plans and routines. Learners can hear and
+- Variation Labs across all thirteen missions: pure generators recombine ordered
+  slots into 574 valid study phrases covering wellbeing, café orders, directions,
+  clothes, hotel stays, plans, routines, symptoms, work, homes, tickets, market
+  quantities and introductions. Learners can hear and
   produce them from meaning without generating fake stable ids or progress;
   the evidence-bearing palette sentences remain ordinary content items
 - An adaptive daily path on Home: one primary action followed by at most two
@@ -69,7 +71,7 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 117 verbs (2,808 generated forms), 358 nouns, 218 modifiers,
-  791 sentences — 1,242 practisable items, 97% of sentence words linked to a lexeme
+  984 sentences — 1,435 practisable items, 97% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -98,7 +100,7 @@ The dataset work is briefed in full for a fresh session:
 
    The machinery for that pass is now in place, and it is only machinery: review
    is per item via `content/es/reviewed.tsv`, so a slice can be signed off without
-   reading all 1,242 at once, and `npm run review:data` reports the rows worth
+   reading all 1,435 at once, and `npm run review:data` reports the rows worth
    attention rather than asking anyone to scan the lot. Sign-off is pinned to the
    wording that was read, so an edit afterwards fails the build instead of
    inheriting the approval. **Nothing is signed off yet** — the pack is still
@@ -110,10 +112,14 @@ The dataset work is briefed in full for a fresh session:
    `fui`), infinitive+pronoun forms (`ayudarme`, `explicarme`) and conditionals
    (`quisiera`, `gustaría`), which is a sources gap rather than a wording one.
 
-1. **More passages** — the first target is met: 36 exist (11 texts, 25
-   dialogues). Continue toward 60 through new missions and higher-level reading,
-   rather than adding disconnected text only to raise the count. See the dataset
-   task.
+1. **More passages** — 57 exist (17 texts, 40 dialogues), of which 52 belong to a
+   mission. The route from 36 was the intended one: every passage added since
+   arrived as part of a mission rather than as disconnected text raising a count.
+   The five nothing points at are all monologue texts — a Saturday, feeling
+   unwell, last summer, the market and a rainy day. `El verano pasado` is the seed
+   of the past-tense mission briefed in
+   [docs/tasks/past-tense-mission.md](tasks/past-tense-mission.md); the other four
+   read as supporting material for missions that already exist.
 2. **Study mode for flashcards** — previous/next and no scoring are in place: a
    study session records nothing and reports a count rather than a score. What
    remains is the order toggle in the UI; `?order=` already carries it.
@@ -156,14 +162,14 @@ The dataset work is briefed in full for a fresh session:
    [docs/tasks/game-feel.md](tasks/game-feel.md)) — and the constraints
    still bind: no resettable streak, no reward that overstates the evidence, and
    nothing where motion or colour is the only signal.
-6. **Situations as communicative functions** — landed across all seven missions.
+6. **Situations as communicative functions** — landed across all thirteen missions.
    `content/es/skills.tsv` now authors functions as a second axis to topics:
    `restaurant` is what a sentence is _about_, while ordering politely or
    understanding a price is what the learner is _trying to do_. Sentence rows
    attach those functions, session URLs preserve them, mastery derives evidence,
-   and the mission reports the capabilities it trains. Six missions use a
-   dialogue model; describing a morning adds a connected-narration model for
-   time, detail, sequence and destination. Every mission now has three ordered
+   and the mission reports the capabilities it trains. Ten missions use a dialogue
+   model; describing a morning, a working day and a home add a connected-narration
+   model for time, detail, sequence and destination. Every mission now has three ordered
    transfer contexts. Use records `think-say` attempts into the same FSRS schedule
    as ordinary practice: speech results map to Good/Hard/Again, while reveal has
    an explicit Not yet/Partly/Got it fallback. Home advances only after every

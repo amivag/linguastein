@@ -42,7 +42,56 @@ const routineIds = [
   'core-es:skill:sequence-routine-events',
   'core-es:skill:connect-routine-to-destination',
 ] as const;
-const ids = [...cafeIds, ...directionIds, ...shoppingIds, ...hotelIds, ...planIds, ...routineIds];
+const workIds = [
+  'core-es:skill:say-what-you-do',
+  'core-es:skill:walk-through-a-workday',
+  'core-es:skill:talk-about-work-meetings',
+  'core-es:skill:say-how-the-day-went',
+] as const;
+const homeIds = [
+  'core-es:skill:say-where-you-live',
+  'core-es:skill:describe-the-rooms',
+  'core-es:skill:say-what-is-nearby',
+  'core-es:skill:say-how-you-feel-about-home',
+] as const;
+const ticketIds = [
+  'core-es:skill:ask-for-a-ticket',
+  'core-es:skill:ask-about-departure',
+  'core-es:skill:choose-a-fare',
+  'core-es:skill:find-the-platform',
+] as const;
+const marketIds = [
+  'core-es:skill:ask-for-a-quantity',
+  'core-es:skill:ask-price-by-weight',
+  'core-es:skill:change-what-you-asked-for',
+  'core-es:skill:pay-and-leave',
+] as const;
+const familyIds = [
+  'core-es:skill:introduce-a-person',
+  'core-es:skill:say-what-they-do',
+  'core-es:skill:give-family-details',
+  'core-es:skill:react-with-interest',
+] as const;
+/** The health functions are A2, because the exchange that teaches them is. */
+const healthIds = [
+  'core-es:skill:describe-a-symptom',
+  'core-es:skill:say-since-when',
+  'core-es:skill:answer-health-questions',
+  'core-es:skill:follow-health-advice',
+] as const;
+const ids = [
+  ...cafeIds,
+  ...directionIds,
+  ...shoppingIds,
+  ...hotelIds,
+  ...planIds,
+  ...routineIds,
+  ...workIds,
+  ...homeIds,
+  ...ticketIds,
+  ...marketIds,
+  ...familyIds,
+];
 
 describe('authored communicative skills', () => {
   let scratch: ScratchPack | undefined;
@@ -73,6 +122,24 @@ describe('authored communicative skills', () => {
     expect(skills.find((skill) => skill.id === planIds[4])?.prerequisites).toEqual([planIds[3]]);
     expect(skills.find((skill) => skill.id === routineIds[4])?.prerequisites).toEqual([
       routineIds[3],
+    ]);
+    expect(skills.find((skill) => skill.id === ticketIds[3])?.prerequisites).toEqual([
+      ticketIds[1],
+    ]);
+    expect(skills.find((skill) => skill.id === familyIds[3])?.prerequisites).toEqual([
+      familyIds[1],
+    ]);
+
+    for (const id of healthIds) {
+      const skill = skills.find((candidate) => candidate.id === id);
+      expect(skill, id).toMatchObject({ kind: 'function', level: 'a2' });
+      expect(skill!.label.length).toBeGreaterThan(0);
+      expect(
+        translations.find((translation) => translation.ref === id)?.text.length,
+      ).toBeGreaterThan(0);
+    }
+    expect(skills.find((skill) => skill.id === healthIds[1])?.prerequisites).toEqual([
+      healthIds[0],
     ]);
   });
 

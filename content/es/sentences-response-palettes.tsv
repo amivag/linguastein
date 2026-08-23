@@ -112,3 +112,53 @@
 000788	Voy al trabajo en autobús.	I go to work by bus.	a1	daily-routine,travel,work	Adds destination and transport.	neutral					describe-routine-actions
 000789	Los domingos me levanto tarde.	On Sundays I get up late.	a1	daily-routine,days-of-week	Contrasts a weekend habit.	neutral					describe-routine-actions
 000790	Antes de salir, limpio un poco la casa.	Before going out, I clean the house a little.	a1	daily-routine,home	Uses antes de to connect two events.	neutral					describe-routine-actions
+
+# ── Decir en qué trabajas (palette options) ─────────────────────────────────
+000849	Soy camarero en un restaurante.	I am a waiter in a restaurant.	a1	work	Names the job before the place.	neutral					say-what-you-do
+000850	Trabajo en un hospital, con niños.	I work in a hospital, with children.	a1	work,health	Adds who you work with.	neutral					say-what-you-do
+000851	Estudio y trabajo los fines de semana.	I study and work at weekends.	a1	work,school	For someone doing both.	neutral					say-what-you-do
+000852	Trabajo en casa, con el ordenador.	I work at home, on the computer.	a1	work,home	Says where rather than what.	neutral					say-what-you-do
+000853	No trabajo ahora, busco algo nuevo.	I'm not working now, I'm looking for something new.	a1	work	An honest answer when you are between jobs.	neutral					say-what-you-do
+000854	Trabajo en una escuela, cerca de mi casa.	I work in a school, near my house.	a1	work,school	Adds how near it is.	neutral					say-what-you-do
+000855	Tengo dos trabajos, pero me gusta uno más.	I have two jobs, but I like one more.	a1	work	Says more than the question asked.	neutral					say-what-you-do
+000856	Soy profesora de español para extranjeros.	I am a Spanish teacher for foreigners.	a1	work,language	A precise job, feminine speaker.	neutral					say-what-you-do
+
+# ── Decir dónde vives (palette options) ─────────────────────────────────────
+000857	Vivo en el centro, en un piso alto.	I live in the centre, in a flat high up.	a1	home,city	Says the area and the kind of home.	neutral					say-where-you-live
+000858	Vivo con dos amigos en un piso grande.	I live with two friends in a big flat.	a1	home,social	Says who you live with.	neutral					say-where-you-live
+000859	Vivo en una casa, fuera de la ciudad.	I live in a house, outside the city.	a1	home,city	For a home away from the centre.	neutral					say-where-you-live
+000860	Vivo solo, en un piso muy pequeño.	I live alone, in a very small flat.	a1	home	Masculine speaker; sola for a feminine one.	neutral					say-where-you-live
+000861	Vivo con mi familia, cerca del río.	I live with my family, near the river.	a1	home,family	Adds a landmark instead of a street.	neutral					say-where-you-live
+000862	Ahora vivo en Madrid, pero soy de un pueblo.	I live in Madrid now, but I'm from a village.	a1	home,city	Separates where you live from where you are from.	neutral					say-where-you-live
+000863	Vivo encima de una tienda, en una calle ruidosa.	I live above a shop, on a noisy street.	a1	home,city	A detail that says how it feels to live there.	neutral					say-where-you-live
+000864	Vivo en el mismo piso desde hace diez años.	I have lived in the same flat for ten years.	a2	home,time	Says how long, with desde hace.	neutral					say-where-you-live
+
+# ── Pedir un billete (palette options) ──────────────────────────────────────
+000961	Un billete para Barcelona, por favor.	One ticket to Barcelona, please.	a1	travel	Short and direct, with the destination first.	neutral					ask-for-a-ticket
+000962	Quiero dos billetes para Madrid.	I would like two tickets to Madrid.	a1	travel,numbers	Says how many at the same time.	neutral					ask-for-a-ticket
+000963	Necesito un billete de ida y vuelta.	I need a return ticket.	a1	travel	Names the fare instead of the destination.	neutral					ask-for-a-ticket
+000964	¿Me da un billete para el próximo tren?	Could you give me a ticket for the next train?	a1	travel	Asks for whatever leaves soonest.	neutral					ask-for-a-ticket
+000965	Voy a Sevilla, ¿cuánto es el billete?	I am going to Seville, how much is the ticket?	a1	travel,numbers	Puts the price question first.	neutral					ask-for-a-ticket
+000966	Un billete de autobús para hoy, por favor.	One bus ticket for today, please.	a1	travel,time	Says which day it is for.	neutral					ask-for-a-ticket
+000967	Somos tres y vamos al aeropuerto.	There are three of us and we are going to the airport.	a1	travel,numbers	For a group, without the word billete at all.	neutral					ask-for-a-ticket
+000968	Perdón, ¿este billete vale para el metro?	Excuse me, is this ticket valid for the metro?	a1	travel,city	When you already have one and are unsure.	neutral					ask-for-a-ticket
+
+# ── Pedir una cantidad (palette options) ────────────────────────────────────
+000969	Un kilo de patatas, por favor.	A kilo of potatoes, please.	a1	shopping,food-drink	The everyday weight request.	neutral					ask-for-a-quantity
+000970	Medio kilo de queso, no más.	Half a kilo of cheese, no more.	a1	shopping,food-drink	Half, with a limit made clear.	neutral					ask-for-a-quantity
+000971	Tres manzanas y dos plátanos.	Three apples and two bananas.	a1	shopping,numbers	Counted rather than weighed.	neutral					ask-for-a-quantity
+000972	Un poco de fruta para dos días.	A little fruit for two days.	a1	shopping,food-drink	Vague on purpose, and perfectly natural.	neutral					ask-for-a-quantity
+000973	Dos botellas de agua, las grandes.	Two bottles of water, the big ones.	a1	shopping,food-drink	Adds which size.	neutral					ask-for-a-quantity
+000974	¿Me pone un kilo de naranjas?	Could you get me a kilo of oranges?	a1	shopping,food-drink	The question form a market stall expects.	neutral					ask-for-a-quantity
+000975	Solo una barra de pan, gracias.	Just one loaf of bread, thank you.	a1	shopping,food-drink	Small, with the courtesy at the end.	neutral					ask-for-a-quantity
+000976	Quiero lo mismo que la semana pasada.	I want the same as last week.	a2	shopping,time	For a stall you go back to.	neutral					ask-for-a-quantity
+
+# ── Presentar a alguien (palette options) ───────────────────────────────────
+000977	Este es mi hermano, se llama Pablo.	This is my brother, his name is Pablo.	a1	family	Relationship first, then the name.	neutral					introduce-a-person
+000978	Ella es mi amiga Lucía, del trabajo.	She is my friend Lucía, from work.	a1	family,work	Says where you know them from.	neutral					introduce-a-person
+000979	Te presento a mi padre.	Let me introduce you to my father.	a1	family	The set phrase for making an introduction.	neutral					introduce-a-person
+000980	Son mis abuelos, viven con nosotros.	They are my grandparents, they live with us.	a1	family,home	Two people at once, plus a detail.	neutral					introduce-a-person
+000981	Es mi vecina, la señora Gómez.	She is my neighbour, Mrs Gómez.	a1	family,home	A more formal name for an older person.	neutral					introduce-a-person
+000982	Este chico es mi hijo, el pequeño.	This boy is my son, the little one.	a1	family	Distinguishes one child from another.	neutral					introduce-a-person
+000983	Es mi novia, estudiamos juntos.	She is my girlfriend, we study together.	a1	family,school	Says what you share rather than who they are.	neutral					introduce-a-person
+000984	No la conoces: es mi tía de México.	You don't know her: she is my aunt from Mexico.	a1	family	Anticipates that the other person will not know them.	neutral					introduce-a-person

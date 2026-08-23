@@ -614,6 +614,7 @@
 {"ref":"core-es:item:000584","lang":"en","text":"Do you have a fever?","type":"natural"}
 {"ref":"core-es:item:000585","lang":"en","text":"No, but I'm very tired.","type":"natural"}
 {"ref":"core-es:item:000586","lang":"en","text":"You need to rest and drink a lot of water.","type":"natural"}
+{"ref":"core-es:item:000792","lang":"en","text":"Thank you, doctor. I'm going to rest.","type":"natural"}
 {"ref":"core-es:item:000587","lang":"en","text":"What shall we do tonight?","type":"natural"}
 {"ref":"core-es:item:000588","lang":"en","text":"I don't know. Do you want to go to the cinema?","type":"natural"}
 {"ref":"core-es:item:000589","lang":"en","text":"There's a very good new film.","type":"natural"}
@@ -703,6 +704,158 @@
 {"ref":"core-es:item:000702","lang":"en","text":"I eat fruit and read the newspaper in the kitchen.","type":"natural"}
 {"ref":"core-es:item:000703","lang":"en","text":"Afterwards I call a friend and clean the house a little.","type":"natural"}
 {"ref":"core-es:item:000704","lang":"en","text":"At twelve I go out and go to the market with my friend.","type":"natural"}
+{"ref":"core-es:item:000793","lang":"en","text":"Good afternoon, what do you need?","type":"natural"}
+{"ref":"core-es:item:000794","lang":"en","text":"I need something for a headache.","type":"natural"}
+{"ref":"core-es:item:000795","lang":"en","text":"How long has it been hurting?","type":"natural"}
+{"ref":"core-es:item:000796","lang":"en","text":"Since this morning, when I got up.","type":"natural"}
+{"ref":"core-es:item:000797","lang":"en","text":"Are you taking any other medicine?","type":"natural"}
+{"ref":"core-es:item:000798","lang":"en","text":"No, none. I just have a headache.","type":"natural"}
+{"ref":"core-es:item:000799","lang":"en","text":"Take one tablet every eight hours.","type":"natural"}
+{"ref":"core-es:item:000800","lang":"en","text":"Very well. Thank you very much for your help.","type":"natural"}
+{"ref":"core-es:item:000801","lang":"en","text":"Good afternoon, how are you feeling?","type":"natural"}
+{"ref":"core-es:item:000802","lang":"en","text":"My back hurts when I work.","type":"natural"}
+{"ref":"core-es:item:000803","lang":"en","text":"How many days has it been like this?","type":"natural"}
+{"ref":"core-es:item:000804","lang":"en","text":"Since Monday, more or less.","type":"natural"}
+{"ref":"core-es:item:000805","lang":"en","text":"Do you sleep well at night?","type":"natural"}
+{"ref":"core-es:item:000806","lang":"en","text":"Not very well, because it hurts a lot.","type":"natural"}
+{"ref":"core-es:item:000807","lang":"en","text":"You need to walk a little every day.","type":"natural"}
+{"ref":"core-es:item:000808","lang":"en","text":"All right, I'm going to do that.","type":"natural"}
+{"ref":"core-es:item:000809","lang":"en","text":"Health centre, good morning.","type":"natural"}
+{"ref":"core-es:item:000810","lang":"en","text":"Good morning. I would like an appointment, please.","type":"natural"}
+{"ref":"core-es:item:000811","lang":"en","text":"What's the matter?","type":"natural"}
+{"ref":"core-es:item:000812","lang":"en","text":"I have a fever and my throat hurts.","type":"natural"}
+{"ref":"core-es:item:000813","lang":"en","text":"How long have you been feeling like this?","type":"natural"}
+{"ref":"core-es:item:000814","lang":"en","text":"Since the weekend.","type":"natural"}
+{"ref":"core-es:item:000815","lang":"en","text":"Can you come today at five?","type":"natural"}
+{"ref":"core-es:item:000816","lang":"en","text":"Yes, five o’clock is fine.","type":"natural"}
+{"ref":"core-es:item:000817","lang":"en","text":"Very well. Bring your health card.","type":"natural"}
+{"ref":"core-es:item:000818","lang":"en","text":"I'll bring it. Thank you for everything.","type":"natural"}
+{"ref":"core-es:item:000819","lang":"en","text":"On Tuesdays I work at home, at the dining table.","type":"natural"}
+{"ref":"core-es:item:000820","lang":"en","text":"I start at eight, earlier than at the office.","type":"natural"}
+{"ref":"core-es:item:000821","lang":"en","text":"I talk to my boss on the phone at ten.","type":"natural"}
+{"ref":"core-es:item:000822","lang":"en","text":"I eat in the kitchen and rest for twenty minutes.","type":"natural"}
+{"ref":"core-es:item:000823","lang":"en","text":"I finish early and have time to read.","type":"natural"}
+{"ref":"core-es:item:000824","lang":"en","text":"I work in a clothes shop, near the square.","type":"natural"}
+{"ref":"core-es:item:000825","lang":"en","text":"I open at ten and talk to a lot of customers.","type":"natural"}
+{"ref":"core-es:item:000826","lang":"en","text":"At one my colleague comes and we eat together.","type":"natural"}
+{"ref":"core-es:item:000827","lang":"en","text":"In the afternoon there are fewer people and I clean the shop.","type":"natural"}
+{"ref":"core-es:item:000828","lang":"en","text":"I close at eight and go home happy.","type":"natural"}
+{"ref":"core-es:item:000829","lang":"en","text":"I work in an office and Thursday was a very busy day.","type":"natural"}
+{"ref":"core-es:item:000830","lang":"en","text":"I arrived at eight and already had ten emails.","type":"natural"}
+{"ref":"core-es:item:000831","lang":"en","text":"I had two meetings, one in the morning and another after lunch.","type":"natural"}
+{"ref":"core-es:item:000832","lang":"en","text":"I couldn't eat with my colleagues.","type":"natural"}
+{"ref":"core-es:item:000833","lang":"en","text":"I finished at seven and got home very tired.","type":"natural"}
+{"ref":"core-es:item:000834","lang":"en","text":"My parents live in a house in a small village.","type":"natural"}
+{"ref":"core-es:item:000835","lang":"en","text":"The house has three bedrooms and a big living room.","type":"natural"}
+{"ref":"core-es:item:000836","lang":"en","text":"In the kitchen there is a very old wooden table.","type":"natural"}
+{"ref":"core-es:item:000837","lang":"en","text":"There is a garden behind and the river is very close.","type":"natural"}
+{"ref":"core-es:item:000838","lang":"en","text":"I like going in summer, but I don't want to live there.","type":"natural"}
+{"ref":"core-es:item:000839","lang":"en","text":"I live in a small room, near the university.","type":"natural"}
+{"ref":"core-es:item:000840","lang":"en","text":"I have a bed, a table and a lot of books.","type":"natural"}
+{"ref":"core-es:item:000841","lang":"en","text":"The kitchen is for everyone and sometimes it is dirty.","type":"natural"}
+{"ref":"core-es:item:000842","lang":"en","text":"There is no garden, but there is a park on the same street.","type":"natural"}
+{"ref":"core-es:item:000843","lang":"en","text":"It's small, but I'm happy here.","type":"natural"}
+{"ref":"core-es:item:000844","lang":"en","text":"My sister and I are looking for a flat for the two of us.","type":"natural"}
+{"ref":"core-es:item:000845","lang":"en","text":"We want two bedrooms and a kitchen with a window.","type":"natural"}
+{"ref":"core-es:item:000846","lang":"en","text":"The bathroom has to be clean and the living room, quiet.","type":"natural"}
+{"ref":"core-es:item:000847","lang":"en","text":"We need a bus stop nearby.","type":"natural"}
+{"ref":"core-es:item:000848","lang":"en","text":"It isn't easy, but we're going to find something good.","type":"natural"}
+{"ref":"core-es:item:000865","lang":"en","text":"Good morning, where are you going?","type":"natural"}
+{"ref":"core-es:item:000866","lang":"en","text":"To Seville. One ticket, please.","type":"natural"}
+{"ref":"core-es:item:000867","lang":"en","text":"One way, or return?","type":"natural"}
+{"ref":"core-es:item:000868","lang":"en","text":"One way only. How much is it?","type":"natural"}
+{"ref":"core-es:item:000869","lang":"en","text":"Thirty euros. The next train leaves at ten.","type":"natural"}
+{"ref":"core-es:item:000870","lang":"en","text":"And what time does it get to Seville?","type":"natural"}
+{"ref":"core-es:item:000871","lang":"en","text":"At one. It leaves from platform four.","type":"natural"}
+{"ref":"core-es:item:000872","lang":"en","text":"Platform four. Thank you very much.","type":"natural"}
+{"ref":"core-es:item:000873","lang":"en","text":"Good afternoon, how can I help?","type":"natural"}
+{"ref":"core-es:item:000874","lang":"en","text":"I would like a ticket to Granada.","type":"natural"}
+{"ref":"core-es:item:000875","lang":"en","text":"For today or for tomorrow?","type":"natural"}
+{"ref":"core-es:item:000876","lang":"en","text":"For today, and just one.","type":"natural"}
+{"ref":"core-es:item:000877","lang":"en","text":"The bus leaves at half past six.","type":"natural"}
+{"ref":"core-es:item:000878","lang":"en","text":"Do a lot of people leave at that time?","type":"natural"}
+{"ref":"core-es:item:000879","lang":"en","text":"Quite a few. The stop is on the right.","type":"natural"}
+{"ref":"core-es:item:000880","lang":"en","text":"The stop on the right? Perfect.","type":"natural"}
+{"ref":"core-es:item:000881","lang":"en","text":"Where do you want to go and when are you coming back?","type":"natural"}
+{"ref":"core-es:item:000882","lang":"en","text":"To Valencia, and I come back on Sunday.","type":"natural"}
+{"ref":"core-es:item:000883","lang":"en","text":"A return, then. How many people?","type":"natural"}
+{"ref":"core-es:item:000884","lang":"en","text":"Two, my sister and me.","type":"natural"}
+{"ref":"core-es:item:000885","lang":"en","text":"There is a train at nine and another at eleven.","type":"natural"}
+{"ref":"core-es:item:000886","lang":"en","text":"The nine o’clock one, better.","type":"natural"}
+{"ref":"core-es:item:000887","lang":"en","text":"Very well. Platform two, on the left.","type":"natural"}
+{"ref":"core-es:item:000888","lang":"en","text":"Platform two? Thank you for your help.","type":"natural"}
+{"ref":"core-es:item:000889","lang":"en","text":"Do you need help with the machine?","type":"natural"}
+{"ref":"core-es:item:000890","lang":"en","text":"Yes, I want a ticket to the centre.","type":"natural"}
+{"ref":"core-es:item:000891","lang":"en","text":"One journey, or ten journeys?","type":"natural"}
+{"ref":"core-es:item:000892","lang":"en","text":"Ten journeys, because I'm here for a week.","type":"natural"}
+{"ref":"core-es:item:000893","lang":"en","text":"The metro comes every five minutes.","type":"natural"}
+{"ref":"core-es:item:000894","lang":"en","text":"Very good, and what time does the last one come?","type":"natural"}
+{"ref":"core-es:item:000895","lang":"en","text":"At half past one. Line two goes to the centre.","type":"natural"}
+{"ref":"core-es:item:000896","lang":"en","text":"Line two? Thanks, I've got it now.","type":"natural"}
+{"ref":"core-es:item:000897","lang":"en","text":"Good morning, what can I get you?","type":"natural"}
+{"ref":"core-es:item:000898","lang":"en","text":"A kilo of apples, please.","type":"natural"}
+{"ref":"core-es:item:000899","lang":"en","text":"Here you are. Anything else?","type":"natural"}
+{"ref":"core-es:item:000900","lang":"en","text":"Yes, half a kilo of tomatoes too.","type":"natural"}
+{"ref":"core-es:item:000901","lang":"en","text":"How much are the tomatoes?","type":"natural"}
+{"ref":"core-es:item:000902","lang":"en","text":"Two euros a kilo, very good ones.","type":"natural"}
+{"ref":"core-es:item:000903","lang":"en","text":"That's four euros altogether.","type":"natural"}
+{"ref":"core-es:item:000904","lang":"en","text":"Here you are. See you on Thursday.","type":"natural"}
+{"ref":"core-es:item:000905","lang":"en","text":"Hello, what do you need today?","type":"natural"}
+{"ref":"core-es:item:000906","lang":"en","text":"Two loaves of bread, please.","type":"natural"}
+{"ref":"core-es:item:000907","lang":"en","text":"Would you like something sweet as well?","type":"natural"}
+{"ref":"core-es:item:000908","lang":"en","text":"No, just the bread. Well, and one biscuit.","type":"natural"}
+{"ref":"core-es:item:000909","lang":"en","text":"How much is a loaf?","type":"natural"}
+{"ref":"core-es:item:000910","lang":"en","text":"One euro each, freshly made.","type":"natural"}
+{"ref":"core-es:item:000911","lang":"en","text":"Two euros fifty, please.","type":"natural"}
+{"ref":"core-es:item:000912","lang":"en","text":"Here. Thank you very much, see you tomorrow.","type":"natural"}
+{"ref":"core-es:item:000913","lang":"en","text":"Hello, shall I get you some fish today?","type":"natural"}
+{"ref":"core-es:item:000914","lang":"en","text":"Yes, half a kilo of fresh fish.","type":"natural"}
+{"ref":"core-es:item:000915","lang":"en","text":"This one is very good today. Shall I give you more?","type":"natural"}
+{"ref":"core-es:item:000916","lang":"en","text":"No, half a kilo is fine. Just that.","type":"natural"}
+{"ref":"core-es:item:000917","lang":"en","text":"How much is it a kilo?","type":"natural"}
+{"ref":"core-es:item:000918","lang":"en","text":"Twelve euros a kilo.","type":"natural"}
+{"ref":"core-es:item:000919","lang":"en","text":"Six euros. By card or in cash?","type":"natural"}
+{"ref":"core-es:item:000920","lang":"en","text":"By card, thanks. Have a good day.","type":"natural"}
+{"ref":"core-es:item:000921","lang":"en","text":"Tell me, what are you having today?","type":"natural"}
+{"ref":"core-es:item:000922","lang":"en","text":"A kilo of onions and three lemons.","type":"natural"}
+{"ref":"core-es:item:000923","lang":"en","text":"I have no lemons today. Oranges?","type":"natural"}
+{"ref":"core-es:item:000924","lang":"en","text":"Four oranges then, better.","type":"natural"}
+{"ref":"core-es:item:000925","lang":"en","text":"And how much are the oranges?","type":"natural"}
+{"ref":"core-es:item:000926","lang":"en","text":"Two euros a kilo, they are very sweet.","type":"natural"}
+{"ref":"core-es:item:000927","lang":"en","text":"Five euros for everything.","type":"natural"}
+{"ref":"core-es:item:000928","lang":"en","text":"Perfect, here is five. Thanks.","type":"natural"}
+{"ref":"core-es:item:000929","lang":"en","text":"Who is this lady in the photo?","type":"natural"}
+{"ref":"core-es:item:000930","lang":"en","text":"That's my mother. Her name is Carmen.","type":"natural"}
+{"ref":"core-es:item:000931","lang":"en","text":"And does she work here, in the city?","type":"natural"}
+{"ref":"core-es:item:000932","lang":"en","text":"She is a teacher in a small school.","type":"natural"}
+{"ref":"core-es:item:000933","lang":"en","text":"And do you have brothers or sisters?","type":"natural"}
+{"ref":"core-es:item:000934","lang":"en","text":"I have a sister who is twenty.","type":"natural"}
+{"ref":"core-es:item:000935","lang":"en","text":"How nice! You have a very likeable family.","type":"natural"}
+{"ref":"core-es:item:000936","lang":"en","text":"Thanks. They are the most important thing to me.","type":"natural"}
+{"ref":"core-es:item:000937","lang":"en","text":"Luis, who is the boy by the door?","type":"natural"}
+{"ref":"core-es:item:000938","lang":"en","text":"That is my cousin Daniel, from Valencia.","type":"natural"}
+{"ref":"core-es:item:000939","lang":"en","text":"And what does he do in Valencia?","type":"natural"}
+{"ref":"core-es:item:000940","lang":"en","text":"He studies medicine and works on Saturdays.","type":"natural"}
+{"ref":"core-es:item:000941","lang":"en","text":"Does he come to see you often?","type":"natural"}
+{"ref":"core-es:item:000942","lang":"en","text":"Two or three times a year, in summer.","type":"natural"}
+{"ref":"core-es:item:000943","lang":"en","text":"How interesting! I want to meet him.","type":"natural"}
+{"ref":"core-es:item:000944","lang":"en","text":"I'll introduce you now, come on.","type":"natural"}
+{"ref":"core-es:item:000945","lang":"en","text":"Is this your sister? You look very alike.","type":"natural"}
+{"ref":"core-es:item:000946","lang":"en","text":"Yes, that is Marta, the older one.","type":"natural"}
+{"ref":"core-es:item:000947","lang":"en","text":"Does she work in an office too?","type":"natural"}
+{"ref":"core-es:item:000948","lang":"en","text":"No, she is a doctor in a hospital.","type":"natural"}
+{"ref":"core-es:item:000949","lang":"en","text":"And does she have children?","type":"natural"}
+{"ref":"core-es:item:000950","lang":"en","text":"She has two, a boy and a girl.","type":"natural"}
+{"ref":"core-es:item:000951","lang":"en","text":"I am glad. Your family is big.","type":"natural"}
+{"ref":"core-es:item:000952","lang":"en","text":"Yes, and we all live nearby.","type":"natural"}
+{"ref":"core-es:item:000953","lang":"en","text":"Who do you live with now?","type":"natural"}
+{"ref":"core-es:item:000954","lang":"en","text":"With my wife and our baby.","type":"natural"}
+{"ref":"core-es:item:000955","lang":"en","text":"A baby! And does your wife work?","type":"natural"}
+{"ref":"core-es:item:000956","lang":"en","text":"She is a waitress, but she is at home now.","type":"natural"}
+{"ref":"core-es:item:000957","lang":"en","text":"How many months old is the baby?","type":"natural"}
+{"ref":"core-es:item:000958","lang":"en","text":"Five months, and he already sleeps well.","type":"natural"}
+{"ref":"core-es:item:000959","lang":"en","text":"How good! I am very happy for you.","type":"natural"}
+{"ref":"core-es:item:000960","lang":"en","text":"Thanks, we are very happy.","type":"natural"}
 {"ref":"core-es:item:000705","lang":"en","text":"Hello, my name is Luis.","type":"natural"}
 {"ref":"core-es:item:000706","lang":"en","text":"Hello, Luis. I'm Marta. Nice to meet you.","type":"natural"}
 {"ref":"core-es:item:000707","lang":"en","text":"Nice to meet you. How are you?","type":"natural"}
@@ -790,6 +943,46 @@
 {"ref":"core-es:item:000788","lang":"en","text":"I go to work by bus.","type":"natural","note":"Adds destination and transport."}
 {"ref":"core-es:item:000789","lang":"en","text":"On Sundays I get up late.","type":"natural","note":"Contrasts a weekend habit."}
 {"ref":"core-es:item:000790","lang":"en","text":"Before going out, I clean the house a little.","type":"natural","note":"Uses antes de to connect two events."}
+{"ref":"core-es:item:000849","lang":"en","text":"I am a waiter in a restaurant.","type":"natural","note":"Names the job before the place."}
+{"ref":"core-es:item:000850","lang":"en","text":"I work in a hospital, with children.","type":"natural","note":"Adds who you work with."}
+{"ref":"core-es:item:000851","lang":"en","text":"I study and work at weekends.","type":"natural","note":"For someone doing both."}
+{"ref":"core-es:item:000852","lang":"en","text":"I work at home, on the computer.","type":"natural","note":"Says where rather than what."}
+{"ref":"core-es:item:000853","lang":"en","text":"I'm not working now, I'm looking for something new.","type":"natural","note":"An honest answer when you are between jobs."}
+{"ref":"core-es:item:000854","lang":"en","text":"I work in a school, near my house.","type":"natural","note":"Adds how near it is."}
+{"ref":"core-es:item:000855","lang":"en","text":"I have two jobs, but I like one more.","type":"natural","note":"Says more than the question asked."}
+{"ref":"core-es:item:000856","lang":"en","text":"I am a Spanish teacher for foreigners.","type":"natural","note":"A precise job, feminine speaker."}
+{"ref":"core-es:item:000857","lang":"en","text":"I live in the centre, in a flat high up.","type":"natural","note":"Says the area and the kind of home."}
+{"ref":"core-es:item:000858","lang":"en","text":"I live with two friends in a big flat.","type":"natural","note":"Says who you live with."}
+{"ref":"core-es:item:000859","lang":"en","text":"I live in a house, outside the city.","type":"natural","note":"For a home away from the centre."}
+{"ref":"core-es:item:000860","lang":"en","text":"I live alone, in a very small flat.","type":"natural","note":"Masculine speaker; sola for a feminine one."}
+{"ref":"core-es:item:000861","lang":"en","text":"I live with my family, near the river.","type":"natural","note":"Adds a landmark instead of a street."}
+{"ref":"core-es:item:000862","lang":"en","text":"I live in Madrid now, but I'm from a village.","type":"natural","note":"Separates where you live from where you are from."}
+{"ref":"core-es:item:000863","lang":"en","text":"I live above a shop, on a noisy street.","type":"natural","note":"A detail that says how it feels to live there."}
+{"ref":"core-es:item:000864","lang":"en","text":"I have lived in the same flat for ten years.","type":"natural","note":"Says how long, with desde hace."}
+{"ref":"core-es:item:000961","lang":"en","text":"One ticket to Barcelona, please.","type":"natural","note":"Short and direct, with the destination first."}
+{"ref":"core-es:item:000962","lang":"en","text":"I would like two tickets to Madrid.","type":"natural","note":"Says how many at the same time."}
+{"ref":"core-es:item:000963","lang":"en","text":"I need a return ticket.","type":"natural","note":"Names the fare instead of the destination."}
+{"ref":"core-es:item:000964","lang":"en","text":"Could you give me a ticket for the next train?","type":"natural","note":"Asks for whatever leaves soonest."}
+{"ref":"core-es:item:000965","lang":"en","text":"I am going to Seville, how much is the ticket?","type":"natural","note":"Puts the price question first."}
+{"ref":"core-es:item:000966","lang":"en","text":"One bus ticket for today, please.","type":"natural","note":"Says which day it is for."}
+{"ref":"core-es:item:000967","lang":"en","text":"There are three of us and we are going to the airport.","type":"natural","note":"For a group, without the word billete at all."}
+{"ref":"core-es:item:000968","lang":"en","text":"Excuse me, is this ticket valid for the metro?","type":"natural","note":"When you already have one and are unsure."}
+{"ref":"core-es:item:000969","lang":"en","text":"A kilo of potatoes, please.","type":"natural","note":"The everyday weight request."}
+{"ref":"core-es:item:000970","lang":"en","text":"Half a kilo of cheese, no more.","type":"natural","note":"Half, with a limit made clear."}
+{"ref":"core-es:item:000971","lang":"en","text":"Three apples and two bananas.","type":"natural","note":"Counted rather than weighed."}
+{"ref":"core-es:item:000972","lang":"en","text":"A little fruit for two days.","type":"natural","note":"Vague on purpose, and perfectly natural."}
+{"ref":"core-es:item:000973","lang":"en","text":"Two bottles of water, the big ones.","type":"natural","note":"Adds which size."}
+{"ref":"core-es:item:000974","lang":"en","text":"Could you get me a kilo of oranges?","type":"natural","note":"The question form a market stall expects."}
+{"ref":"core-es:item:000975","lang":"en","text":"Just one loaf of bread, thank you.","type":"natural","note":"Small, with the courtesy at the end."}
+{"ref":"core-es:item:000976","lang":"en","text":"I want the same as last week.","type":"natural","note":"For a stall you go back to."}
+{"ref":"core-es:item:000977","lang":"en","text":"This is my brother, his name is Pablo.","type":"natural","note":"Relationship first, then the name."}
+{"ref":"core-es:item:000978","lang":"en","text":"She is my friend Lucía, from work.","type":"natural","note":"Says where you know them from."}
+{"ref":"core-es:item:000979","lang":"en","text":"Let me introduce you to my father.","type":"natural","note":"The set phrase for making an introduction."}
+{"ref":"core-es:item:000980","lang":"en","text":"They are my grandparents, they live with us.","type":"natural","note":"Two people at once, plus a detail."}
+{"ref":"core-es:item:000981","lang":"en","text":"She is my neighbour, Mrs Gómez.","type":"natural","note":"A more formal name for an older person."}
+{"ref":"core-es:item:000982","lang":"en","text":"This boy is my son, the little one.","type":"natural","note":"Distinguishes one child from another."}
+{"ref":"core-es:item:000983","lang":"en","text":"She is my girlfriend, we study together.","type":"natural","note":"Says what you share rather than who they are."}
+{"ref":"core-es:item:000984","lang":"en","text":"You don't know her: she is my aunt from Mexico.","type":"natural","note":"Anticipates that the other person will not know them."}
 {"ref":"core-es:item:500001","lang":"en","text":"person","type":"natural"}
 {"ref":"core-es:item:500002","lang":"en","text":"man","type":"natural"}
 {"ref":"core-es:item:500003","lang":"en","text":"woman","type":"natural"}
@@ -1978,6 +2171,30 @@
 {"ref":"core-es:skill:ask-about-wellbeing","lang":"en","text":"Ask naturally how someone is doing"}
 {"ref":"core-es:skill:respond-to-wellbeing","lang":"en","text":"Give a natural, honest answer about how you are doing"}
 {"ref":"core-es:skill:close-friendly-exchange","lang":"en","text":"Close a short friendly exchange naturally"}
+{"ref":"core-es:skill:describe-a-symptom","lang":"en","text":"Say what hurts, or how you feel"}
+{"ref":"core-es:skill:say-since-when","lang":"en","text":"Say how long you have felt it"}
+{"ref":"core-es:skill:answer-health-questions","lang":"en","text":"Answer a health professional's follow-up questions"}
+{"ref":"core-es:skill:follow-health-advice","lang":"en","text":"Understand and accept simple health advice"}
+{"ref":"core-es:skill:say-what-you-do","lang":"en","text":"Say what you do and where you work"}
+{"ref":"core-es:skill:walk-through-a-workday","lang":"en","text":"Take someone through a working day in order"}
+{"ref":"core-es:skill:talk-about-work-meetings","lang":"en","text":"Say who you meet at work and when"}
+{"ref":"core-es:skill:say-how-the-day-went","lang":"en","text":"Say how a working day left you"}
+{"ref":"core-es:skill:say-where-you-live","lang":"en","text":"Say where you live and what kind of home it is"}
+{"ref":"core-es:skill:describe-the-rooms","lang":"en","text":"Describe the rooms and what is in them"}
+{"ref":"core-es:skill:say-what-is-nearby","lang":"en","text":"Say what there is nearby, and what there is not"}
+{"ref":"core-es:skill:say-how-you-feel-about-home","lang":"en","text":"Say how you feel about living there"}
+{"ref":"core-es:skill:ask-for-a-ticket","lang":"en","text":"Ask for a ticket to where you are going"}
+{"ref":"core-es:skill:ask-about-departure","lang":"en","text":"Ask when the next one leaves"}
+{"ref":"core-es:skill:choose-a-fare","lang":"en","text":"Choose between fares and say how many"}
+{"ref":"core-es:skill:find-the-platform","lang":"en","text":"Ask where it leaves from"}
+{"ref":"core-es:skill:ask-for-a-quantity","lang":"en","text":"Ask for an amount of something"}
+{"ref":"core-es:skill:ask-price-by-weight","lang":"en","text":"Ask what something costs by weight"}
+{"ref":"core-es:skill:change-what-you-asked-for","lang":"en","text":"Add something, or change your mind"}
+{"ref":"core-es:skill:pay-and-leave","lang":"en","text":"Pay and close the exchange"}
+{"ref":"core-es:skill:introduce-a-person","lang":"en","text":"Introduce someone and say who they are"}
+{"ref":"core-es:skill:say-what-they-do","lang":"en","text":"Say what someone does or studies"}
+{"ref":"core-es:skill:give-family-details","lang":"en","text":"Give ages, numbers and relationships"}
+{"ref":"core-es:skill:react-with-interest","lang":"en","text":"React with interest to what you hear"}
 {"ref":"core-es:skill:numerals-teens","lang":"en","text":"the teens, written as one word"}
 {"ref":"core-es:skill:numerals-twenties","lang":"en","text":"the twenties, written as one word"}
 {"ref":"core-es:skill:numerals-y-joining","lang":"en","text":"y joins tens to units, and never hundreds to tens"}
@@ -2021,3 +2238,24 @@
 {"ref":"core-es:passage:700034","lang":"en","text":"Meeting a friend","type":"natural"}
 {"ref":"core-es:passage:700035","lang":"en","text":"A greeting at work","type":"natural"}
 {"ref":"core-es:passage:700036","lang":"en","text":"Meeting a neighbour","type":"natural"}
+{"ref":"core-es:passage:700037","lang":"en","text":"At the pharmacy","type":"natural"}
+{"ref":"core-es:passage:700038","lang":"en","text":"Another doctor’s appointment","type":"natural"}
+{"ref":"core-es:passage:700039","lang":"en","text":"Making an appointment by phone","type":"natural"}
+{"ref":"core-es:passage:700040","lang":"en","text":"A day working from home","type":"natural"}
+{"ref":"core-es:passage:700041","lang":"en","text":"A day in the shop","type":"natural"}
+{"ref":"core-es:passage:700042","lang":"en","text":"A very busy day","type":"natural"}
+{"ref":"core-es:passage:700043","lang":"en","text":"My house in the village","type":"natural"}
+{"ref":"core-es:passage:700044","lang":"en","text":"My student room","type":"natural"}
+{"ref":"core-es:passage:700045","lang":"en","text":"A flat for two","type":"natural"}
+{"ref":"core-es:passage:700046","lang":"en","text":"At the station","type":"natural"}
+{"ref":"core-es:passage:700047","lang":"en","text":"At the bus station","type":"natural"}
+{"ref":"core-es:passage:700048","lang":"en","text":"A return ticket","type":"natural"}
+{"ref":"core-es:passage:700049","lang":"en","text":"Buying a metro ticket","type":"natural"}
+{"ref":"core-es:passage:700050","lang":"en","text":"At the fruit stall","type":"natural"}
+{"ref":"core-es:passage:700051","lang":"en","text":"At the bakery","type":"natural"}
+{"ref":"core-es:passage:700052","lang":"en","text":"At the fishmonger","type":"natural"}
+{"ref":"core-es:passage:700053","lang":"en","text":"With the shopping list","type":"natural"}
+{"ref":"core-es:passage:700054","lang":"en","text":"A family photo","type":"natural"}
+{"ref":"core-es:passage:700055","lang":"en","text":"At a party","type":"natural"}
+{"ref":"core-es:passage:700056","lang":"en","text":"Talking about a sister","type":"natural"}
+{"ref":"core-es:passage:700057","lang":"en","text":"Introducing the family","type":"natural"}

@@ -79,6 +79,17 @@ export function variationProblems(pattern: VariationPattern): readonly string[] 
     const choiceIds = slot.choices.map((choice) => choice.id);
     if (new Set(choiceIds).size !== choiceIds.length)
       problems.push(`${slot.id}: duplicate choice id`);
+    /*
+     * A slot is rendered as a `<select>`, so a choice with no target is a blank
+     * line in a dropdown — which reads as a rendering fault rather than as an
+     * option, and cannot be picked out by name. "Say nothing here" has to be
+     * spelled with something visible, the way the sentence-final slots use a
+     * bare full stop.
+     */
+    for (const choice of slot.choices) {
+      if (!choice.target.trim()) problems.push(`${slot.id}/${choice.id}: empty target`);
+      if (!choice.reference.trim()) problems.push(`${slot.id}/${choice.id}: empty reference`);
+    }
   }
   for (const [name, template] of [
     ['target', pattern.targetTemplate],

@@ -1,0 +1,116 @@
+# Natural alternatives for the communicative moves the missions already teach.
+# One section per palette; every row is an ordinary sentence item and the mission
+# catalog groups them, so nothing here stores an exercise.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+# Leave the id off a new row: the build assigns one and writes it back.
+#
+# Written from words the pack already had wherever possible, and pointing at
+# existing items rather than restating them: a palette entry is an item id, so a
+# line already spoken in a dialogue costs nothing to gather.
+
+# ── Café: accepting or declining the extra ────────────────────────────────────
+001158	No, gracias. Así está bien.	No, thank you. That's fine as it is.	a1	restaurant,food-drink	A complete, polite no.	neutral					handle-add-on
+001159	Sí, también un agua, por favor.	Yes, a water as well, please.	a1	restaurant,food-drink	Adds a second thing without repeating the first.	neutral					handle-add-on
+001160	Nada más, gracias.	Nothing else, thank you.	a1	restaurant,food-drink	The shortest way to close the order.	neutral					handle-add-on
+001161	Sí, pero algo pequeño, por favor.	Yes, but something small, please.	a1	restaurant,food-drink	Says yes and sets the size.	neutral					handle-add-on
+
+# ── Café: asking what it comes to ─────────────────────────────────────────────
+001162	¿Cuánto es todo?	How much is it all together?	a1	restaurant,shopping,numbers	For the whole order rather than one item.	neutral					ask-understand-price
+001163	¿Cuánto cuesta el café?	How much is the coffee?	a1	restaurant,food-drink,numbers	Asks about one thing before ordering it.	neutral					ask-understand-price
+001164	¿Cuánto cuesta la galleta?	How much is the biscuit?	a1	restaurant,food-drink,numbers	For the extra rather than the drink.	neutral					ask-understand-price
+001165	Perdón, ¿cuánto es?	Sorry, how much is it?	a1	restaurant,numbers	When you missed the number the first time.	neutral					ask-understand-price
+
+# ── Café: leaving well ────────────────────────────────────────────────────────
+001166	Muy amable, gracias.	That's very kind, thank you.	a1	restaurant,greetings	Warmer than gracias on its own.	neutral					close-service-exchange
+001167	Gracias, hasta luego.	Thank you, see you later.	a1	restaurant,greetings	The everyday close.	neutral					close-service-exchange
+001168	Todo perfecto, gracias.	Everything was perfect, thank you.	a1	restaurant,greetings	Says the food or the service was good.	neutral					close-service-exchange
+001169	Está muy bueno, gracias.	It's very good, thank you.	a1	restaurant,food-drink	A compliment on the way out.	neutral					close-service-exchange
+
+# ── Directions: checking you followed them ────────────────────────────────────
+001170	¿Giro a la izquierda o a la derecha?	Do I turn left or right?	a1	city,travel,questions	Offers both, so the answer cannot be ambiguous.	neutral					follow-simple-directions
+001171	¿Todo recto hasta la plaza?	Straight on as far as the square?	a1	city,travel,questions	Reads back the first half.	neutral					follow-simple-directions
+001172	¿Y después de la farmacia?	And after the pharmacy?	a1	city,travel,questions	Asks for the next step only.	neutral					follow-simple-directions
+001173	¿Es la primera calle o la segunda?	Is it the first street or the second?	a1	city,travel,numbers,questions	The detail that is most often missed.	neutral					follow-simple-directions
+001174	¿Y dónde giro?	And where do I turn?	a1	city,travel,questions	When you have the direction but not the place.	neutral					follow-simple-directions
+001175	¿Paso por delante del banco?	Do I go past the bank?	a1	city,travel,questions	Names a landmark to confirm the route.	neutral					follow-simple-directions
+
+# ── Directions: how far it is ─────────────────────────────────────────────────
+001176	¿Cuántos minutos son?	How many minutes is it?	a1	city,travel,numbers,questions	Asks for a number instead of a feeling.	neutral					check-distance
+001177	¿Puedo ir a pie?	Can I walk there?	a1	city,travel,questions	The question behind the question.	neutral					check-distance
+001178	¿Es mejor ir en autobús?	Is it better to go by bus?	a1	city,travel,questions	Asks for a recommendation, not just a distance.	neutral					check-distance
+
+# ── Directions: thanking them ─────────────────────────────────────────────────
+001179	Es usted muy amable.	That is very kind of you.	a1	city,greetings	Formal and warm.	formal	usted				thank-for-help
+001180	Gracias, ahora sé dónde está.	Thank you, now I know where it is.	a1	city,greetings	Confirms the help worked.	neutral					thank-for-help
+001181	Perfecto, ya está. Gracias.	Perfect, that's it. Thank you.	a1	city,greetings	Short, when you are already moving.	neutral					thank-for-help
+001182	Muchas gracias, es una gran ayuda.	Thank you very much, that is a great help.	a1	city,greetings	For someone who went out of their way.	neutral					thank-for-help
+
+# ── Clothes: your size ────────────────────────────────────────────────────────
+001183	Uso la talla treinta y ocho.	I take a size thirty-eight.	a1	shopping,clothes,numbers	When you know the local number.	neutral					handle-clothing-size
+001184	No sé mi talla aquí.	I don't know my size here.	a1	shopping,clothes	Sizes differ by country, and saying so is normal.	neutral					handle-clothing-size
+001185	Creo que es la talla pequeña.	I think it's the small size.	a1	shopping,clothes	Hedged, when you are guessing.	neutral					handle-clothing-size
+
+# ── Clothes: trying it on ─────────────────────────────────────────────────────
+001186	¿Dónde puedo probar la camisa?	Where can I try the shirt on?	a1	shopping,clothes,questions	Asks for the fitting room without naming it.	neutral					ask-to-try-on
+001187	¿Puedo probar las dos?	Can I try both on?	a1	shopping,clothes,questions	For when you cannot choose yet.	neutral					ask-to-try-on
+001188	¿Puedo probar esta chaqueta?	Can I try this jacket on?	a1	shopping,clothes,questions	Names the item you are holding.	neutral					ask-to-try-on
+001189	Quiero probar la talla más grande.	I want to try the bigger size.	a1	shopping,clothes	A statement, after the first one did not fit.	neutral					ask-to-try-on
+
+# ── Clothes: taking it, or not ────────────────────────────────────────────────
+001190	Me llevo esta camisa.	I'll take this shirt.	a1	shopping,clothes	The plain decision.	neutral					choose-clothing-purchase
+001191	Me quedo con la azul.	I'll go with the blue one.	a1	shopping,clothes,colours	Chooses between two.	neutral					choose-clothing-purchase
+001192	Prefiero pensar un poco más.	I'd rather think about it a bit more.	a1	shopping	A polite no that leaves the door open.	neutral					choose-clothing-purchase
+
+# ── Clothes: what it costs ────────────────────────────────────────────────────
+001193	¿Cuánto cuesta esta camisa?	How much is this shirt?	a1	shopping,clothes,numbers,questions	Before you commit to trying it on.	neutral					ask-understand-item-price
+001194	¿Cuánto cuestan los dos?	How much are the two together?	a1	shopping,numbers,questions	For two items at once.	neutral					ask-understand-item-price
+001195	Perdón, ¿cuánto cuesta?	Sorry, how much is it?	a1	shopping,numbers,questions	When you missed the price the first time.	neutral					ask-understand-item-price
+001196	¿Puedo pagar con tarjeta aquí?	Can I pay by card here?	a1	shopping,questions	Worth asking before you get to the till.	neutral					ask-understand-item-price
+
+# ── Hotel: arriving ───────────────────────────────────────────────────────────
+001197	Buenas tardes, tengo una reserva.	Good afternoon, I have a reservation.	a1	travel,greetings	Opens the whole exchange in one line.	neutral					confirm-hotel-reservation
+001198	Sí, a nombre de López.	Yes, under the name López.	a1	travel,people	The detail they actually need.	neutral					confirm-hotel-reservation
+001199	Tengo una reserva para esta noche.	I have a reservation for tonight.	a1	travel,time	Adds how long, unprompted.	neutral					confirm-hotel-reservation
+001200	No tengo reserva. ¿Hay habitaciones?	I have no reservation. Do you have any rooms?	a1	travel,questions	The other case, and it happens.	neutral					confirm-hotel-reservation
+
+# ── Hotel: what is included ───────────────────────────────────────────────────
+001201	¿Qué está incluido en el precio?	What is included in the price?	a1	travel,questions	Open, so you hear about things you would not ask for.	neutral					ask-whats-included
+001202	¿El desayuno cuesta más?	Does breakfast cost extra?	a1	travel,food-drink,numbers,questions	The question behind the question.	neutral					ask-whats-included
+001203	¿La habitación tiene baño?	Does the room have a bathroom?	a1	travel,home,questions	Cheap rooms sometimes do not.	neutral					ask-whats-included
+
+# ── Hotel: times ──────────────────────────────────────────────────────────────
+001204	¿A qué hora empieza el desayuno?	What time does breakfast start?	a1	travel,clock,questions	The one you will need tomorrow morning.	neutral					understand-hotel-schedule
+001205	¿A qué hora termina el desayuno?	What time does breakfast finish?	a1	travel,clock,questions	More useful than when it starts.	neutral					understand-hotel-schedule
+001206	¿A qué hora tengo que salir?	What time do I have to leave?	a1	travel,clock,questions	Check-out, without needing the word for it.	neutral					understand-hotel-schedule
+001207	¿El restaurante abre a las ocho?	Does the restaurant open at eight?	a1	travel,restaurant,clock,questions	Proposes a time and lets them correct it.	neutral					understand-hotel-schedule
+001208	¿A qué hora cierra el bar?	What time does the bar close?	a1	travel,clock,questions	For the evening.	neutral					understand-hotel-schedule
+001209	¿Puedo llegar más tarde?	Can I arrive later?	a1	travel,clock,questions	When your train gets in at midnight.	neutral					understand-hotel-schedule
+
+# ── Hotel: finding your way around it ─────────────────────────────────────────
+001210	¿Hay un bar cerca del hotel?	Is there a bar near the hotel?	a1	travel,city,questions	Outside the hotel rather than in it.	neutral					locate-hotel-facility
+001211	¿En qué piso está mi habitación?	What floor is my room on?	a1	travel,questions	Ask before you carry the bags up.	neutral					locate-hotel-facility
+001212	¿Dónde está la entrada?	Where is the entrance?	a1	travel,city,questions	For a hotel with more than one door.	neutral					locate-hotel-facility
+
+# ── Plans: opening the subject ────────────────────────────────────────────────
+001213	¿Tienes planes para el fin de semana?	Do you have plans for the weekend?	a1	social,time,questions	Opens without committing you to anything.	colloquial	tu				open-social-planning
+001214	¿Hacemos algo mañana?	Shall we do something tomorrow?	a1	social,time,questions	Direct, and easy to say yes to.	colloquial	tu				open-social-planning
+001215	¿Estás libre esta tarde?	Are you free this afternoon?	a1	social,time,questions	Checks first, suggests after.	colloquial	tu				open-social-planning
+001216	¿Qué hacemos mañana?	What shall we do tomorrow?	a1	social,time,questions	Assumes the plan and asks only what.	colloquial	tu				open-social-planning
+
+# ── Plans: suggesting something ───────────────────────────────────────────────
+001217	¿Quieres ir a tomar algo?	Do you want to go for a drink?	a1	social,entertainment,questions	The lowest-commitment suggestion there is.	colloquial	tu				suggest-social-activity
+001218	Podemos ir al parque por la tarde.	We could go to the park in the afternoon.	a1	social,entertainment	A suggestion with a time attached.	neutral					suggest-social-activity
+001219	¿Vamos al restaurante nuevo?	Shall we go to the new restaurant?	a1	social,restaurant,questions	Names somewhere specific.	colloquial	tu				suggest-social-activity
+001220	¿Te apetece un café?	Do you fancy a coffee?	a1	social,food-drink,questions	Apetecer is the natural verb for this in Spain.	colloquial	tu				suggest-social-activity
+
+# ── Plans: settling the time ──────────────────────────────────────────────────
+001221	¿A qué hora quedamos?	What time shall we meet?	a1	social,clock,questions	The plain question.	colloquial	tu				coordinate-plan-time
+001222	¿Nos vemos a las siete?	Shall we meet at seven?	a1	social,clock,questions	Proposes a time rather than asking for one.	colloquial	tu				coordinate-plan-time
+001223	¿Puede ser más tarde?	Could it be later?	a1	social,clock,questions	Moves the time without rejecting the plan.	neutral					coordinate-plan-time
+001224	¿Dónde quedamos?	Where shall we meet?	a1	social,city,questions	The other half of the arrangement.	colloquial	tu				coordinate-plan-time
+
+# ── Plans: confirming it ──────────────────────────────────────────────────────
+001225	Perfecto, hasta el domingo.	Perfect, see you on Sunday.	a1	social,greetings,days-of-week	Says the day back, which is what fixes it.	neutral					confirm-social-plan
+001226	Muy bien, entonces a las ocho.	All right, eight o’clock then.	a1	social,clock	Says the time back.	neutral					confirm-social-plan
+001227	Vale, nos vemos allí.	OK, I'll see you there.	a1	social,greetings	Casual, and very Spanish.	colloquial	tu				confirm-social-plan
+001228	Genial, hasta mañana.	Great, see you tomorrow.	a1	social,greetings,time	Warm, for a plan you are pleased about.	neutral					confirm-social-plan

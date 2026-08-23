@@ -442,6 +442,77 @@
 {"ref":"core-es:item:000441","lang":"en","text":"Have you seen my phone?","type":"natural"}
 {"ref":"core-es:item:000442","lang":"en","text":"I've written three letters.","type":"natural"}
 {"ref":"core-es:item:000443","lang":"en","text":"We've done a lot of work today.","type":"natural"}
+{"ref":"core-es:item:001158","lang":"en","text":"No, thank you. That's fine as it is.","type":"natural","note":"A complete, polite no."}
+{"ref":"core-es:item:001159","lang":"en","text":"Yes, a water as well, please.","type":"natural","note":"Adds a second thing without repeating the first."}
+{"ref":"core-es:item:001160","lang":"en","text":"Nothing else, thank you.","type":"natural","note":"The shortest way to close the order."}
+{"ref":"core-es:item:001161","lang":"en","text":"Yes, but something small, please.","type":"natural","note":"Says yes and sets the size."}
+{"ref":"core-es:item:001162","lang":"en","text":"How much is it all together?","type":"natural","note":"For the whole order rather than one item."}
+{"ref":"core-es:item:001163","lang":"en","text":"How much is the coffee?","type":"natural","note":"Asks about one thing before ordering it."}
+{"ref":"core-es:item:001164","lang":"en","text":"How much is the biscuit?","type":"natural","note":"For the extra rather than the drink."}
+{"ref":"core-es:item:001165","lang":"en","text":"Sorry, how much is it?","type":"natural","note":"When you missed the number the first time."}
+{"ref":"core-es:item:001166","lang":"en","text":"That's very kind, thank you.","type":"natural","note":"Warmer than gracias on its own."}
+{"ref":"core-es:item:001167","lang":"en","text":"Thank you, see you later.","type":"natural","note":"The everyday close."}
+{"ref":"core-es:item:001168","lang":"en","text":"Everything was perfect, thank you.","type":"natural","note":"Says the food or the service was good."}
+{"ref":"core-es:item:001169","lang":"en","text":"It's very good, thank you.","type":"natural","note":"A compliment on the way out."}
+{"ref":"core-es:item:001170","lang":"en","text":"Do I turn left or right?","type":"natural","note":"Offers both, so the answer cannot be ambiguous."}
+{"ref":"core-es:item:001171","lang":"en","text":"Straight on as far as the square?","type":"natural","note":"Reads back the first half."}
+{"ref":"core-es:item:001172","lang":"en","text":"And after the pharmacy?","type":"natural","note":"Asks for the next step only."}
+{"ref":"core-es:item:001173","lang":"en","text":"Is it the first street or the second?","type":"natural","note":"The detail that is most often missed."}
+{"ref":"core-es:item:001174","lang":"en","text":"And where do I turn?","type":"natural","note":"When you have the direction but not the place."}
+{"ref":"core-es:item:001175","lang":"en","text":"Do I go past the bank?","type":"natural","note":"Names a landmark to confirm the route."}
+{"ref":"core-es:item:001176","lang":"en","text":"How many minutes is it?","type":"natural","note":"Asks for a number instead of a feeling."}
+{"ref":"core-es:item:001177","lang":"en","text":"Can I walk there?","type":"natural","note":"The question behind the question."}
+{"ref":"core-es:item:001178","lang":"en","text":"Is it better to go by bus?","type":"natural","note":"Asks for a recommendation, not just a distance."}
+{"ref":"core-es:item:001179","lang":"en","text":"That is very kind of you.","type":"natural","note":"Formal and warm."}
+{"ref":"core-es:item:001180","lang":"en","text":"Thank you, now I know where it is.","type":"natural","note":"Confirms the help worked."}
+{"ref":"core-es:item:001181","lang":"en","text":"Perfect, that's it. Thank you.","type":"natural","note":"Short, when you are already moving."}
+{"ref":"core-es:item:001182","lang":"en","text":"Thank you very much, that is a great help.","type":"natural","note":"For someone who went out of their way."}
+{"ref":"core-es:item:001183","lang":"en","text":"I take a size thirty-eight.","type":"natural","note":"When you know the local number."}
+{"ref":"core-es:item:001184","lang":"en","text":"I don't know my size here.","type":"natural","note":"Sizes differ by country, and saying so is normal."}
+{"ref":"core-es:item:001185","lang":"en","text":"I think it's the small size.","type":"natural","note":"Hedged, when you are guessing."}
+{"ref":"core-es:item:001186","lang":"en","text":"Where can I try the shirt on?","type":"natural","note":"Asks for the fitting room without naming it."}
+{"ref":"core-es:item:001187","lang":"en","text":"Can I try both on?","type":"natural","note":"For when you cannot choose yet."}
+{"ref":"core-es:item:001188","lang":"en","text":"Can I try this jacket on?","type":"natural","note":"Names the item you are holding."}
+{"ref":"core-es:item:001189","lang":"en","text":"I want to try the bigger size.","type":"natural","note":"A statement, after the first one did not fit."}
+{"ref":"core-es:item:001190","lang":"en","text":"I'll take this shirt.","type":"natural","note":"The plain decision."}
+{"ref":"core-es:item:001191","lang":"en","text":"I'll go with the blue one.","type":"natural","note":"Chooses between two."}
+{"ref":"core-es:item:001192","lang":"en","text":"I'd rather think about it a bit more.","type":"natural","note":"A polite no that leaves the door open."}
+{"ref":"core-es:item:001193","lang":"en","text":"How much is this shirt?","type":"natural","note":"Before you commit to trying it on."}
+{"ref":"core-es:item:001194","lang":"en","text":"How much are the two together?","type":"natural","note":"For two items at once."}
+{"ref":"core-es:item:001195","lang":"en","text":"Sorry, how much is it?","type":"natural","note":"When you missed the price the first time."}
+{"ref":"core-es:item:001196","lang":"en","text":"Can I pay by card here?","type":"natural","note":"Worth asking before you get to the till."}
+{"ref":"core-es:item:001197","lang":"en","text":"Good afternoon, I have a reservation.","type":"natural","note":"Opens the whole exchange in one line."}
+{"ref":"core-es:item:001198","lang":"en","text":"Yes, under the name López.","type":"natural","note":"The detail they actually need."}
+{"ref":"core-es:item:001199","lang":"en","text":"I have a reservation for tonight.","type":"natural","note":"Adds how long, unprompted."}
+{"ref":"core-es:item:001200","lang":"en","text":"I have no reservation. Do you have any rooms?","type":"natural","note":"The other case, and it happens."}
+{"ref":"core-es:item:001201","lang":"en","text":"What is included in the price?","type":"natural","note":"Open, so you hear about things you would not ask for."}
+{"ref":"core-es:item:001202","lang":"en","text":"Does breakfast cost extra?","type":"natural","note":"The question behind the question."}
+{"ref":"core-es:item:001203","lang":"en","text":"Does the room have a bathroom?","type":"natural","note":"Cheap rooms sometimes do not."}
+{"ref":"core-es:item:001204","lang":"en","text":"What time does breakfast start?","type":"natural","note":"The one you will need tomorrow morning."}
+{"ref":"core-es:item:001205","lang":"en","text":"What time does breakfast finish?","type":"natural","note":"More useful than when it starts."}
+{"ref":"core-es:item:001206","lang":"en","text":"What time do I have to leave?","type":"natural","note":"Check-out, without needing the word for it."}
+{"ref":"core-es:item:001207","lang":"en","text":"Does the restaurant open at eight?","type":"natural","note":"Proposes a time and lets them correct it."}
+{"ref":"core-es:item:001208","lang":"en","text":"What time does the bar close?","type":"natural","note":"For the evening."}
+{"ref":"core-es:item:001209","lang":"en","text":"Can I arrive later?","type":"natural","note":"When your train gets in at midnight."}
+{"ref":"core-es:item:001210","lang":"en","text":"Is there a bar near the hotel?","type":"natural","note":"Outside the hotel rather than in it."}
+{"ref":"core-es:item:001211","lang":"en","text":"What floor is my room on?","type":"natural","note":"Ask before you carry the bags up."}
+{"ref":"core-es:item:001212","lang":"en","text":"Where is the entrance?","type":"natural","note":"For a hotel with more than one door."}
+{"ref":"core-es:item:001213","lang":"en","text":"Do you have plans for the weekend?","type":"natural","note":"Opens without committing you to anything."}
+{"ref":"core-es:item:001214","lang":"en","text":"Shall we do something tomorrow?","type":"natural","note":"Direct, and easy to say yes to."}
+{"ref":"core-es:item:001215","lang":"en","text":"Are you free this afternoon?","type":"natural","note":"Checks first, suggests after."}
+{"ref":"core-es:item:001216","lang":"en","text":"What shall we do tomorrow?","type":"natural","note":"Assumes the plan and asks only what."}
+{"ref":"core-es:item:001217","lang":"en","text":"Do you want to go for a drink?","type":"natural","note":"The lowest-commitment suggestion there is."}
+{"ref":"core-es:item:001218","lang":"en","text":"We could go to the park in the afternoon.","type":"natural","note":"A suggestion with a time attached."}
+{"ref":"core-es:item:001219","lang":"en","text":"Shall we go to the new restaurant?","type":"natural","note":"Names somewhere specific."}
+{"ref":"core-es:item:001220","lang":"en","text":"Do you fancy a coffee?","type":"natural","note":"Apetecer is the natural verb for this in Spain."}
+{"ref":"core-es:item:001221","lang":"en","text":"What time shall we meet?","type":"natural","note":"The plain question."}
+{"ref":"core-es:item:001222","lang":"en","text":"Shall we meet at seven?","type":"natural","note":"Proposes a time rather than asking for one."}
+{"ref":"core-es:item:001223","lang":"en","text":"Could it be later?","type":"natural","note":"Moves the time without rejecting the plan."}
+{"ref":"core-es:item:001224","lang":"en","text":"Where shall we meet?","type":"natural","note":"The other half of the arrangement."}
+{"ref":"core-es:item:001225","lang":"en","text":"Perfect, see you on Sunday.","type":"natural","note":"Says the day back, which is what fixes it."}
+{"ref":"core-es:item:001226","lang":"en","text":"All right, eight o’clock then.","type":"natural","note":"Says the time back."}
+{"ref":"core-es:item:001227","lang":"en","text":"OK, I'll see you there.","type":"natural","note":"Casual, and very Spanish."}
+{"ref":"core-es:item:001228","lang":"en","text":"Great, see you tomorrow.","type":"natural","note":"Warm, for a plan you are pleased about."}
 {"ref":"core-es:item:000444","lang":"en","text":"Potato and tomato are vegetables.","type":"natural"}
 {"ref":"core-es:item:000445","lang":"en","text":"I buy potatoes at the supermarket.","type":"natural"}
 {"ref":"core-es:item:000446","lang":"en","text":"My car is old but it works.","type":"natural"}

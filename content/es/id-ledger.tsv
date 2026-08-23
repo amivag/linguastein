@@ -1158,6 +1158,77 @@
 001155	sentence	active	Un momento, escribo la dirección.
 001156	sentence	active	¿Puede escribir el precio?
 001157	sentence	active	¿Me lo escribes en una nota?
+001158	sentence	active	No, gracias. Así está bien.
+001159	sentence	active	Sí, también un agua, por favor.
+001160	sentence	active	Nada más, gracias.
+001161	sentence	active	Sí, pero algo pequeño, por favor.
+001162	sentence	active	¿Cuánto es todo?
+001163	sentence	active	¿Cuánto cuesta el café?
+001164	sentence	active	¿Cuánto cuesta la galleta?
+001165	sentence	active	Perdón, ¿cuánto es?
+001166	sentence	active	Muy amable, gracias.
+001167	sentence	active	Gracias, hasta luego.
+001168	sentence	active	Todo perfecto, gracias.
+001169	sentence	active	Está muy bueno, gracias.
+001170	sentence	active	¿Giro a la izquierda o a la derecha?
+001171	sentence	active	¿Todo recto hasta la plaza?
+001172	sentence	active	¿Y después de la farmacia?
+001173	sentence	active	¿Es la primera calle o la segunda?
+001174	sentence	active	¿Y dónde giro?
+001175	sentence	active	¿Paso por delante del banco?
+001176	sentence	active	¿Cuántos minutos son?
+001177	sentence	active	¿Puedo ir a pie?
+001178	sentence	active	¿Es mejor ir en autobús?
+001179	sentence	active	Es usted muy amable.
+001180	sentence	active	Gracias, ahora sé dónde está.
+001181	sentence	active	Perfecto, ya está. Gracias.
+001182	sentence	active	Muchas gracias, es una gran ayuda.
+001183	sentence	active	Uso la talla treinta y ocho.
+001184	sentence	active	No sé mi talla aquí.
+001185	sentence	active	Creo que es la talla pequeña.
+001186	sentence	active	¿Dónde puedo probar la camisa?
+001187	sentence	active	¿Puedo probar las dos?
+001188	sentence	active	¿Puedo probar esta chaqueta?
+001189	sentence	active	Quiero probar la talla más grande.
+001190	sentence	active	Me llevo esta camisa.
+001191	sentence	active	Me quedo con la azul.
+001192	sentence	active	Prefiero pensar un poco más.
+001193	sentence	active	¿Cuánto cuesta esta camisa?
+001194	sentence	active	¿Cuánto cuestan los dos?
+001195	sentence	active	Perdón, ¿cuánto cuesta?
+001196	sentence	active	¿Puedo pagar con tarjeta aquí?
+001197	sentence	active	Buenas tardes, tengo una reserva.
+001198	sentence	active	Sí, a nombre de López.
+001199	sentence	active	Tengo una reserva para esta noche.
+001200	sentence	active	No tengo reserva. ¿Hay habitaciones?
+001201	sentence	active	¿Qué está incluido en el precio?
+001202	sentence	active	¿El desayuno cuesta más?
+001203	sentence	active	¿La habitación tiene baño?
+001204	sentence	active	¿A qué hora empieza el desayuno?
+001205	sentence	active	¿A qué hora termina el desayuno?
+001206	sentence	active	¿A qué hora tengo que salir?
+001207	sentence	active	¿El restaurante abre a las ocho?
+001208	sentence	active	¿A qué hora cierra el bar?
+001209	sentence	active	¿Puedo llegar más tarde?
+001210	sentence	active	¿Hay un bar cerca del hotel?
+001211	sentence	active	¿En qué piso está mi habitación?
+001212	sentence	active	¿Dónde está la entrada?
+001213	sentence	active	¿Tienes planes para el fin de semana?
+001214	sentence	active	¿Hacemos algo mañana?
+001215	sentence	active	¿Estás libre esta tarde?
+001216	sentence	active	¿Qué hacemos mañana?
+001217	sentence	active	¿Quieres ir a tomar algo?
+001218	sentence	active	Podemos ir al parque por la tarde.
+001219	sentence	active	¿Vamos al restaurante nuevo?
+001220	sentence	active	¿Te apetece un café?
+001221	sentence	active	¿A qué hora quedamos?
+001222	sentence	active	¿Nos vemos a las siete?
+001223	sentence	active	¿Puede ser más tarde?
+001224	sentence	active	¿Dónde quedamos?
+001225	sentence	active	Perfecto, hasta el domingo.
+001226	sentence	active	Muy bien, entonces a las ocho.
+001227	sentence	active	Vale, nos vemos allí.
+001228	sentence	active	Genial, hasta mañana.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer

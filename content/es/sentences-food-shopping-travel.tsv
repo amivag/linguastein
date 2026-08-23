@@ -12,8 +12,8 @@
 000274	Está muy rico.	It's delicious.	a1	restaurant	rico means tasty when talking about food
 000275	La comida está fría.	The food is cold.	a1	restaurant
 000276	¿Me trae la cuenta?	Could you bring me the bill?	a1	restaurant		formal	usted	
-000277	¿Puedo pagar con tarjeta?	Can I pay by card?	a1	shopping
-000278	La cuenta, por favor.	The bill, please.	a1	restaurant
+000277	¿Puedo pagar con tarjeta?	Can I pay by card?	a1	shopping							ask-understand-price
+000278	La cuenta, por favor.	The bill, please.	a1	restaurant							ask-understand-price
 000279	El desayuno es a las ocho.	Breakfast is at eight.	a1	food-drink,clock
 000280	Como fruta cada mañana.	I eat fruit every morning.	a1	food-drink
 000281	Bebo mucha agua.	I drink a lot of water.	a1	food-drink
@@ -32,7 +32,7 @@
 000294	Es muy barato.	It's very cheap.	a1	shopping
 000295	¿Tiene algo más barato?	Do you have anything cheaper?	a1	shopping
 000296	Quiero probar esta chaqueta.	I want to try on this jacket.	a1	shopping
-000297	¿Tiene una talla más grande?	Do you have a bigger size?	a2	shopping
+000297	¿Tiene una talla más grande?	Do you have a bigger size?	a2	shopping							handle-clothing-size
 000298	Me llevo estos pantalones.	I'll take these trousers.	a2	shopping
 000299	¿Dónde está la caja?	Where is the till?	a1	shopping
 000300	Voy al supermercado.	I'm going to the supermarket.	a1	shopping
@@ -46,9 +46,9 @@
 000308	Estos zapatos son muy cómodos.	These shoes are very comfortable.	a2	clothes
 000309	Llevo una camisa blanca.	I'm wearing a white shirt.	a1	clothes,colours	llevar means to wear as well as to carry
 000310	¿Dónde está la estación?	Where is the station?	a1	travel
-000311	¿Dónde está el baño?	Where is the bathroom?	a1	travel
+000311	¿Dónde está el baño?	Where is the bathroom?	a1	travel							locate-hotel-facility
 000312	¿Cómo llego al centro?	How do I get to the centre?	a1	travel
-000313	¿Está lejos de aquí?	Is it far from here?	a1	travel
+000313	¿Está lejos de aquí?	Is it far from here?	a1	travel							check-distance
 000314	Está muy cerca.	It's very close.	a1	travel
 000315	Siga todo recto.	Go straight ahead.	a2	travel	Formal command	formal	usted	
 000316	Gire a la derecha.	Turn right.	a2	travel		formal	usted	
@@ -62,7 +62,7 @@
 000324	¿Cuánto dura el viaje?	How long does the journey take?	a2	travel
 000325	Tengo una reserva.	I have a reservation.	a1	travel
 000326	Quiero una habitación doble.	I'd like a double room.	a1	travel		neutral		
-000327	¿Está incluido el desayuno?	Is breakfast included?	a2	travel		neutral		
+000327	¿Está incluido el desayuno?	Is breakfast included?	a2	travel		neutral					ask-whats-included
 000328	¿Hay wifi en el hotel?	Is there wifi at the hotel?	a1	travel
 000329	Mi maleta es esta.	My suitcase is this one.	a1	travel
 000330	He perdido mi pasaporte.	I've lost my passport.	a2	travel

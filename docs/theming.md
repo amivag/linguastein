@@ -162,6 +162,8 @@ in order, so a "softer" level cannot end up sharper than the default.
 | `--color-success-soft`    | the panel a correct verdict sits on                |
 | `--color-danger`          | incorrect answers                                  |
 | `--color-danger-soft`     | the panel an incorrect verdict sits on             |
+| `--color-kind-1…6`        | the categorical family: which kind of material     |
+| `--color-kind-1…6-soft`   | each one's companion tint                          |
 | `--backdrop`              | the modal scrim                                    |
 
 `--color-ink` and `--color-paper` are the only roles nothing is painted with
@@ -223,6 +225,27 @@ panel has to carry the word _and_ the expected answer.
 They are also the pairing a contrast level cannot help with: a level moves the
 text and leaves the tint where the palette put it, so the palette has to leave the
 room. That is checked at every level, not only at Normal.
+
+### The categorical family
+
+`--color-kind-1` … `--color-kind-6` and their tints are six hues sharing one
+meaning — _which kind of material this is_ — for the pages that list a lot of
+kinds: Study's tiles, its mission and set ladders, the category chips on Browse.
+The design rationale is in
+[docs/design-language.md](design-language.md#5-colour-means-something); what a
+palette author needs to know is smaller:
+
+- **Numbered, not named.** Each palette rotates the wheel to its own temperature,
+  so `--color-kind-3` is amber in Indigo and something warmer in Sand. A hue name
+  in the token would be a lie in three files out of four.
+- **Solve the tint first, then the hue against it.** In a light palette the tint
+  is the darker of the two grounds, so a hue that clears its own badge clears the
+  card for free; in a dark palette the argument runs the other way and the
+  surface is what has to be cleared. Getting this backwards produces six hues
+  that pass on a card and fail on their own badge.
+- **Three pairings are checked per hue**, generated from `KIND_HUE_COUNT`: the
+  hue on a card, the hue on its own tint, and body text on that tint. All at
+  4.5:1 — these badges carry digits, not only glyphs.
 
 `--color-highlight` is deliberately _not_ a semantic. It is the second accent, for
 the places where another colour is liveliness rather than meaning — the "new

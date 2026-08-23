@@ -29,6 +29,7 @@ import { browsePath } from '../browse/browse-url';
 import { missionPath } from '../missions/mission-url';
 import { readPath } from '../read/read-url';
 import { sessionPath } from '../practice/session-url';
+import { kindHue } from '../../styles/kinds';
 import { parseStudyTab, studyPath, type StudyTab } from './study-url';
 import styles from './StudyScreen.module.css';
 
@@ -356,6 +357,8 @@ export function StudyScreen() {
               to={browsePath(course, { filter: { types: ['word'], pos: [kind.pos] }, from })}
               title={kind.label}
               count={kind.count}
+              icon="word"
+              hue={kind.pos}
             />
           ))}
         </Section>
@@ -368,12 +371,16 @@ export function StudyScreen() {
             title="Set phrases"
             count={counts.phrases}
             note="Things said as a unit"
+            icon="browse"
+            hue="type:phrase"
           />
           <Tile
             to={browsePath(course, { filter: { types: ['sentence'] }, from })}
             title="Sentences"
             count={counts.sentences}
             note="Full sentences with a verb"
+            icon="browse"
+            hue="type:sentence"
           />
           <Tile
             to={readPath(course, { from })}
@@ -381,6 +388,7 @@ export function StudyScreen() {
             count={counts.passages}
             note="Several sentences that read as one"
             icon="passage"
+            hue="type:passage"
           />
         </Section>
       )}
@@ -406,6 +414,8 @@ export function StudyScreen() {
                 repository.translationOf(skill.id, preferences.referenceLanguage)?.text,
               )}
               lang={course.language}
+              icon="grammar"
+              hue={skill.id}
             />
           ))}
         </Section>
@@ -428,6 +438,8 @@ export function StudyScreen() {
                 repository.translationOf(skill.id, preferences.referenceLanguage)?.text,
               )}
               lang={course.language}
+              icon="speak"
+              hue={skill.id}
             />
           ))}
         </Section>
@@ -441,6 +453,8 @@ export function StudyScreen() {
               to={browsePath(course, { filter: { topics: [topic.id] }, from })}
               title={topic.label}
               count={topic.count}
+              icon="topic"
+              hue={topic.id}
             />
           ))}
         </Section>
@@ -507,8 +521,12 @@ function MissionRow({
   return (
     <li>
       <Link className={styles.mission} to={missionPath(course, mission.id, standing.stage)}>
+        {/* No `data-kind` once it is complete: green is a verdict and outranks the
+            mission's own hue, and the attribute is what the hue rules select on —
+            see the note on `.missionDone`. */}
         <span
           className={`${styles.missionIndex} ${complete ? styles.missionDone : ''}`}
+          {...(complete ? {} : { 'data-kind': kindHue(mission.id) })}
           aria-hidden="true"
         >
           {complete ? <Icon name="check" size="sm" /> : position}
@@ -555,8 +573,11 @@ function BatchRow({
           size: { kind: 'items', count: batch.perSession ?? standing.total },
         })}
       >
+        {/* Absorbed is a verdict too, so the hue steps aside for green exactly as a
+            completed mission's does. */}
         <span
           className={`${styles.missionIndex} ${complete ? styles.missionDone : ''}`}
+          {...(complete ? {} : { 'data-kind': kindHue(batch.id) })}
           aria-hidden="true"
         >
           {complete ? <Icon name="check" size="sm" /> : standing.absorbed}
@@ -610,7 +631,17 @@ interface TileProps {
   readonly title: string;
   readonly count: number;
   readonly note?: string;
-  readonly icon?: IconName;
+  readonly icon: IconName;
+  /**
+   * The stable id this tile's colour is derived from — a part of speech, a topic
+   * id, a skill id.
+   *
+   * Passed rather than computed from the title, because a title is display text:
+   * it is translated, it is edited for wording, and either would silently
+   * repaint a category a learner had already learnt to recognise by its colour.
+   * The id is the thing that does not change.
+   */
+  readonly hue: string;
   /**
    * Set when the title is target-language text, as a grammar pattern's is
    * (`tener que + infinitivo`), so a screen reader does not read Spanish with an
@@ -619,14 +650,20 @@ interface TileProps {
   readonly lang?: string;
 }
 
-function Tile({ to, title, count, note, icon, lang }: TileProps) {
+function Tile({ to, title, count, note, icon, hue, lang }: TileProps) {
   return (
     <li>
       {/* The count is inside the link's text rather than beside it: forty tiles
           all named "Nouns" with the number rendered separately gives an agent and
           a screen reader nothing to choose between. */}
       <Link className={styles.tile} to={to}>
-        {icon && <Icon name={icon} size="sm" className={styles.tileIcon} />}
+        {/* The badge is decoration over a link that is already named: the hue
+            says which kind of material this is, and the title says it in words.
+            Colour is never the only signal, so the glyph is `aria-hidden` and
+            nothing here reaches the accessible name. */}
+        <span className={styles.tileBadge} data-kind={kindHue(hue)} aria-hidden="true">
+          <Icon name={icon} size="sm" />
+        </span>
         <span className={styles.tileTitle} {...(lang ? { lang } : {})}>
           {title}
         </span>

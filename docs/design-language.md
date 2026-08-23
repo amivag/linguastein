@@ -99,6 +99,47 @@ A fifth hue would need a fifth meaning. A tint is always a role
 what made the same "correct" green come out three shades across the card, the
 option and the summary.
 
+There is now exactly one fifth meaning, and it is a _family_ rather than a hue:
+
+| Role               | Means                                         |
+| ------------------ | --------------------------------------------- |
+| `--color-kind-1…6` | Which kind of material this is. Nothing more. |
+
+Six hues, one meaning between them — the relationship a chart's series colours
+have to each other, not six new semantics. It exists because Study lists
+thirty-five categories, seven word kinds and a ladder of missions as identical
+grey cards, and a page you scan by reading every label is a page you scroll past.
+A learner who has learnt that Body is the teal one is using colour for recall,
+which is the only thing that earns a hue here.
+
+Three constraints keep it from eroding the four above it, and the first is the
+one that matters:
+
+- **It is never a verdict and never a control.** A kind hue marks material, so it
+  cannot appear where success, danger or the accent is doing its job. Where the
+  two systems meet, the state wins and the hue steps aside — a finished mission
+  goes green, a selected chip's dot goes to the accent's own contrast colour.
+  Both do it by _withholding_ `data-kind` or re-pointing `--kind` rather than by
+  painting over it, so the winner is decided by specificity rather than by
+  ordering.
+- **Nothing is ever only its colour.** Every badge sits beside the label that
+  names it, every dot inside a chip that states its category and its count. The
+  hues are `aria-hidden` throughout; nothing reaches an accessible name. This is
+  the colour-is-never-the-only-signal rule, unchanged.
+- **A hue belongs to the thing, not to the row.** `kindHue()` in
+  [`src/styles/kinds.ts`](../src/styles/kinds.ts) derives it from the stable id,
+  so a category keeps its colour as the dataset grows around it. Colouring by
+  position looks identical and throws away the recognition the moment a pack
+  gains a row.
+
+They sit close to the accent or the highlight in some palettes; six hues around a
+wheel that already has four occupants leaves no room not to. That is accepted
+rather than worked around, because proximity only misleads if two colours can
+appear in the same role, and these never do.
+
+The mapping from a number to a pair of colours is written once, as `kindTone` in
+`surfaces.module.css`. Nothing else may spell out `--color-kind-3`.
+
 A palette changes which hues these are, never what they mean. There are four —
 Indigo, Teal, Plum and Sand — and `sand` inverts the temperature, so its
 highlight is cool: a warm accent beside a warm highlight reads as one hue at two
@@ -106,7 +147,9 @@ strengths, and the highlight's whole job is to be a second voice.
 
 Every role passes contrast in **every** palette at **every** contrast level,
 checked by [`contrast.test.ts`](../tests/a11y/contrast.test.ts), which discovers
-both from their directories. No component may hard-code a colour; the
+both from their directories. The categorical rows are generated from
+`KIND_HUE_COUNT` rather than written out, so the count cannot drift between what
+a palette declares and what a screen can ask for. No component may hard-code a colour; the
 design-language test fails on a hex or an `rgb()` outside `src/styles/themes/`.
 That includes a preview of a palette — the picker's swatches carry
 `data-palette` and are painted by the palette's own stylesheet.

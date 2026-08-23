@@ -80,6 +80,54 @@
   --color-danger-soft: #3a1a1c;
 
   /*
+   * The categorical family: six hues that say *which kind of material* a tile
+   * holds, and nothing else.
+   *
+   * This is the one place the palette carries more than the four meanings in
+   * rule 5 of the design language, and it is a scale rather than six new
+   * meanings — the same relationship a chart's series colours have to each
+   * other. Study lists thirty-five categories, seven word kinds and a ladder of
+   * missions as identical grey cards; a hue per kind is what makes that page
+   * scannable, and a learner who has learnt that Body is the teal one is using
+   * colour as recall rather than as decoration.
+   *
+   * Three rules keep it from eroding the four that mean something:
+   *
+   * - It is never a verdict and never a control. A kind hue marks material, so
+   *   it cannot appear where success, danger or the accent is doing its job, and
+   *   nothing is ever *only* this colour — every badge sits beside its own label.
+   * - A kind's hue is derived from its stable id (`src/styles/kinds.ts`), so it
+   *   is a property of the thing rather than of where it sits in a list. A
+   *   category keeps its colour as the dataset grows around it.
+   * - Positions on a wheel, not names. `--color-kind-3` is deliberately not
+   *   `--color-kind-amber`: each palette rotates the wheel to its own
+   *   temperature, so a hue name would be a lie in three files out of four.
+   *
+   * They sit close to the accent or the highlight in some palettes — six hues
+   * around a wheel that already has four occupants leaves no room not to. That
+   * is accepted rather than worked around: proximity only misleads if two
+   * colours can appear in the same role, and these never do.
+   *
+   * The tint is solved *first* and the hue against it, not the other way round:
+   * in a light palette the tint is the darker of the two grounds, so a hue that
+   * clears its own panel clears the card for free — and the argument runs in
+   * reverse in a dark palette, where the tint is the deeper ground. Both
+   * directions are asserted in `contrast.test.ts`, at every contrast level.
+   */
+  --color-kind-1: #1c95ae;
+  --color-kind-1-soft: #0c1d21;
+  --color-kind-2: #4aa71b;
+  --color-kind-2-soft: #13210c;
+  --color-kind-3: #ac811c;
+  --color-kind-3-soft: #211b0c;
+  --color-kind-4: #e4577c;
+  --color-kind-4-soft: #210c12;
+  --color-kind-5: #c25ce4;
+  --color-kind-5-soft: #1c0c21;
+  --color-kind-6: #4589e1;
+  --color-kind-6-soft: #0c1521;
+
+  /*
    * Chrome that content scrolls behind: the header and the navigation.
    *
    * Declared opaque and mixed towards transparent at the call site, so the

@@ -63,6 +63,22 @@
   --color-danger: #b3261e;
   --color-danger-soft: #fde4e1;
 
+  /* The categorical family — six hues for *which kind of material*, never a
+     fifth meaning. The reasoning, and why they are numbered rather than named,
+     is in `indigo-dark.css`. Rotated to this palette's own temperature. */
+  --color-kind-1: #0b778d;
+  --color-kind-1-soft: #e4f5f8;
+  --color-kind-2: #317d0a;
+  --color-kind-2-soft: #ebf8e4;
+  --color-kind-3: #8d660b;
+  --color-kind-3-soft: #f8f2e4;
+  --color-kind-4: #cb1042;
+  --color-kind-4-soft: #f8e4ea;
+  --color-kind-5: #a612d8;
+  --color-kind-5-soft: #f3e4f8;
+  --color-kind-6: #1165d2;
+  --color-kind-6-soft: #e4edf8;
+
   /* Chrome that content scrolls behind. Opaque here and mixed towards
      transparent at the call site — see the note in `indigo-dark.css`. */
   --color-chrome: #fbfbfe;

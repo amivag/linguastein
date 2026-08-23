@@ -110,3 +110,101 @@
  * styles them by element instead, which is one rule rather than five call sites,
  * and it is also where the reason a field keeps its border is written down.
  */
+
+/*
+ * The categorical hues, mapped once.
+ *
+ * `kindTone` is the only place in the app that turns a `data-kind` number into a
+ * pair of colours; everything that wears a categorical hue composes it and reads
+ * `--kind` and `--kind-soft`. Written this way because the alternative is the
+ * six-way mapping repeated per shape — a badge, a dot, a bar — and a seventh hue
+ * then arrives in some of them and not others.
+ *
+ * The hue arrives as an attribute rather than as an inline `style`. Two reasons:
+ * an inline custom property is a colour decision made in TSX, where none of the
+ * stylesheet tests can read it, and an attribute lets a *state* outrank a hue by
+ * plain specificity — which is how a finished mission goes green and a selected
+ * chip stops competing with its own dot. `[data-state]` on the session pips is
+ * the same pattern for the same reason.
+ *
+ * `kindHue()` in `src/styles/kinds.ts` decides which number a thing gets, and
+ * `contrast.test.ts` holds both roles against each other in both directions at
+ * every contrast level.
+ */
+.kindTone[data-kind='1'] {
+  --kind: var(--color-kind-1);
+  --kind-soft: var(--color-kind-1-soft);
+}
+
+.kindTone[data-kind='2'] {
+  --kind: var(--color-kind-2);
+  --kind-soft: var(--color-kind-2-soft);
+}
+
+.kindTone[data-kind='3'] {
+  --kind: var(--color-kind-3);
+  --kind-soft: var(--color-kind-3-soft);
+}
+
+.kindTone[data-kind='4'] {
+  --kind: var(--color-kind-4);
+  --kind-soft: var(--color-kind-4-soft);
+}
+
+.kindTone[data-kind='5'] {
+  --kind: var(--color-kind-5);
+  --kind-soft: var(--color-kind-5-soft);
+}
+
+.kindTone[data-kind='6'] {
+  --kind: var(--color-kind-6);
+  --kind-soft: var(--color-kind-6-soft);
+}
+
+/*
+ * A filled disc in one of the six hues, carrying a glyph or a digit in that
+ * hue's own tint.
+ *
+ * Filled rather than tinted on purpose. A pale wash behind a coloured glyph is
+ * the timid version of this and it disappears at arm's length on a phone in
+ * daylight; a solid disc is what makes a page of thirty-five categories scannable
+ * rather than merely less grey. It is the loudest thing in the design language,
+ * which is why it is small, round and never larger than the label beside it —
+ * rule 4 still holds, and the learner's eye still has to land on the language.
+ */
+.kindBadge {
+  composes: kindTone;
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--kind);
+  color: var(--kind-soft);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * The same hue at the size of a bullet, for a control that already has a shape
+ * of its own — a category chip, where a disc the size of the badge above would
+ * fight the label it is meant to be labelling.
+ *
+ * It carries no information a learner could lose: the chip states its category
+ * in words, its count, and its selection through `aria-pressed`. The dot is
+ * recognition for someone who has seen the category before, which is exactly the
+ * job colour is allowed to do here.
+ */
+.kindDot {
+  composes: kindTone;
+
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--kind);
+}

@@ -33,6 +33,22 @@
   --color-success-soft: #16311d;
   --color-danger: #ff8a7a;
   --color-danger-soft: #3b1d18;
+
+  /* The categorical family — six hues for *which kind of material*, never a
+     fifth meaning. The reasoning, and why they are numbered rather than named,
+     is in `indigo-dark.css`. Rotated to this palette's own temperature. */
+  --color-kind-1: #1d95b3;
+  --color-kind-1-soft: #0c1d21;
+  --color-kind-2: #37a71b;
+  --color-kind-2-soft: #10210c;
+  --color-kind-3: #ba7c1e;
+  --color-kind-3-soft: #21190c;
+  --color-kind-4: #e45874;
+  --color-kind-4-soft: #210c10;
+  --color-kind-5: #d053e3;
+  --color-kind-5-soft: #1e0c21;
+  --color-kind-6: #278edc;
+  --color-kind-6-soft: #0c1821;
   --color-chrome: #191510;
   --color-track: #322c22;
 

@@ -58,10 +58,21 @@
   text-decoration: none;
 }
 
-.tileIcon {
+/*
+ * The tile's categorical badge — a filled disc in the hue this kind of material
+ * owns, replacing the muted grey glyph that used to sit here.
+ *
+ * It is what makes a section of thirty-five categories readable as a set of
+ * things rather than as a wall: the colour is the only difference a learner can
+ * take in without reading, and it is stable per category, so it comes to *mean*
+ * that category rather than merely decorating it.
+ */
+.tileBadge {
+  composes: kindBadge from '../../styles/surfaces.module.css';
+
   grid-area: icon;
-  color: var(--color-text-muted);
-  /* Optical: the glyph reads high against a baseline-aligned cap height. */
+  /* The row is baseline-aligned for the title and the count; a disc has no
+     baseline worth aligning, so it centres against the cap height instead. */
   align-self: center;
 }
 
@@ -112,21 +123,30 @@
   text-decoration: none;
 }
 
-/* The number is the sequence, which is half of what a curriculum is. */
+/*
+ * The number is the sequence, which is half of what a curriculum is — and it now
+ * wears the mission's own hue rather than the accent.
+ *
+ * That is a correction as much as a coloured badge. The accent means *the app
+ * acting*: it belongs on the button you press next, and seven of them down a
+ * ladder said "press me" seven times. A mission's position is an identity, so it
+ * takes a categorical hue, which also gives the ladder the thing a ladder wants —
+ * each rung visibly its own.
+ */
 .missionIndex {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: var(--radius-pill);
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  font-variant-numeric: tabular-nums;
+  composes: kindBadge from '../../styles/surfaces.module.css';
 }
 
+/*
+ * Finished is a verdict, so it leaves the categorical family and goes green.
+ * This is the one place the two systems meet, and the verdict wins.
+ *
+ * It wins by the row carrying no `data-kind` at all rather than by overriding
+ * one: `.kindBadge[data-kind='3']` is a class *and* an attribute, so it outranks
+ * this single class and a completed mission would have kept its hue. Withholding
+ * the attribute is also the more honest spelling — a finished mission has no
+ * categorical hue, rather than one that something else paints over.
+ */
 .missionDone {
   background: var(--color-success-soft);
   color: var(--color-success);

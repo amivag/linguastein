@@ -75,6 +75,10 @@ export function CategoryPicker({
                       // relying on the highlight a colour-only style would give.
                       pressed={pressed}
                       count={topic.count}
+                      // The same hue this category wears on its Study tile,
+                      // because both are derived from the topic id rather than
+                      // from where it sits in either list.
+                      hue={topic.id}
                       onClick={() => onToggle(topic.id)}
                     >
                       {topic.label}

@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
+import { kindHue } from '../styles/kinds';
 import { Icon, type IconName } from './Icon';
 import styles from './Chip.module.css';
 
@@ -22,6 +23,15 @@ interface ChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly icon?: IconName;
   /** `soft` is the warm variant, for a chip that offers rather than filters. */
   readonly tone?: 'neutral' | 'accent';
+  /**
+   * A stable id, if this chip should wear its category's colour as a dot.
+   *
+   * Opt-in rather than automatic, because a chip is also a level, a part of
+   * speech and a session option — and a hue there would be colour that means
+   * nothing, which is the failure mode the four semantic roles exist to avoid.
+   * Only a list a learner is meant to *recognise* entries in asks for it.
+   */
+  readonly hue?: string;
 }
 
 /**
@@ -41,6 +51,7 @@ export function Chip({
   count,
   icon,
   tone = 'neutral',
+  hue,
   className,
   children,
   type = 'button',
@@ -53,6 +64,13 @@ export function Chip({
   return (
     <button type={type} className={classes} aria-pressed={pressed} {...rest}>
       {icon && <Icon name={icon} size="sm" />}
+      {/* Decoration, and never the only signal: the label names the category,
+          the count sizes it and `aria-pressed` carries the state. It stays in the
+          layout when selected rather than being removed — a dot that disappears
+          on press would reflow a wrapped row of thirty-five chips. */}
+      {hue !== undefined && (
+        <span className={styles.dot} data-kind={kindHue(hue)} aria-hidden="true" />
+      )}
       <span className={styles.label}>{children}</span>
       {count !== undefined && (
         <span className={styles.count} aria-hidden="true">

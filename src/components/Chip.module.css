@@ -98,3 +98,26 @@
     background: color-mix(in srgb, var(--chip-bg) 88%, var(--color-text));
   }
 }
+
+/*
+ * The category dot: which category this is, for someone who has seen it before.
+ *
+ * When the chip is selected the accent fills it, and the dot moves to the colour
+ * that fill is already contrast-checked to carry rather than keeping a hue that
+ * would sit on an unchecked background. Same rule as a finished mission dropping
+ * its hue for green: a state outranks an identity, and it wins here on plain
+ * specificity — `.chip[aria-pressed='true'] .dot` is one selector longer than the
+ * `[data-kind]` rule it beats.
+ *
+ * It moves by re-pointing `--kind` rather than by setting `background`, which is
+ * the same discipline `--chip-bg` imposes on the chip itself one level up: one
+ * property owns what a thing is painted with, so a second rule cannot paint over
+ * it and leave the first rule's foreground behind.
+ */
+.dot {
+  composes: kindDot from '../styles/surfaces.module.css';
+}
+
+.chip[aria-pressed='true'] .dot {
+  --kind: var(--color-accent-contrast);
+}

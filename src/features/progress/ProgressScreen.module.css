@@ -20,6 +20,27 @@
   color: var(--color-text-muted);
 }
 
+/*
+ * The two figures the meter below is drawn from, tinted to match their own
+ * segments — practised in the accent, mastered in green.
+ *
+ * Deliberately *not* the categorical family that Study's tiles wear. These are
+ * four measures of one set of material, not four kinds of material, and painting
+ * them in kind hues would say the two systems mean the same thing. The pairing
+ * that is worth drawing is between a number and the segment of the bar it
+ * explains, which is a job the roles already in the palette do exactly.
+ *
+ * The other two stay muted on purpose. Colouring all four would leave the eye
+ * nothing to land on, which is the state this screen was already in.
+ */
+.statIconSeen {
+  color: var(--color-accent);
+}
+
+.statIconMastered {
+  color: var(--color-success);
+}
+
 .statValue {
   font-family: var(--font-display);
   font-size: var(--text-xl);

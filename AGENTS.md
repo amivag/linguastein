@@ -101,9 +101,9 @@ src/components/  shared UI: AppShell, AppNav, Button, Chip, Sheet, Icon, CourseB
                  useWordSelection (used by practice, reading, browse and progress
                  alike). `icons.ts` is the icon-set seam
 src/features/design/  the live style guide at /design
-src/styles/      primitives, shared surface recipes, the token reader, one file
-                 per palette per mode (themes/) and one per contrast level
-                 (contrast/)
+src/styles/      primitives, shared surface recipes, the token reader, the
+                 categorical hue assignment (kinds.ts), one file per palette per
+                 mode (themes/) and one per contrast level (contrast/)
 content/es/      hand-authored dataset sources (TSV)
 public/packs/    GENERATED datasets — never edit by hand
 ```
@@ -604,6 +604,16 @@ Six rules, and four test files enforce them:
 5. **Colour means something.** Accent = the app acting, highlight = new
    material, success/danger = verdicts. Tints are roles (`--color-*-soft`), never
    a per-component `color-mix`. No hex or `rgb()` outside `src/styles/themes/`.
+   The one addition is `--color-kind-1…6`: six hues sharing the single meaning
+   "which kind of material this is", assigned from a stable id by
+   `src/styles/kinds.ts` and mapped to colours only by `kindTone` in
+   `surfaces.module.css`. It is never a verdict and never a control — where the
+   two meet, the state wins.
+
+   Also in `src/styles/`: `themes.ts`, `contrast.ts`, `reading-size.ts` and
+   `kinds.ts` are the four registries the tests read. A change to any of them is a
+   change to what the palettes must declare.
+
 6. **Motion confirms, never informs.** Name an intent (`var(--transition-fast)`),
    never a duration and a curve.
 

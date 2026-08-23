@@ -113,18 +113,36 @@ export function ProgressScreen() {
           <ul className={styles.stats} aria-label="Overall progress">
             {(
               [
-                { icon: 'study', value: summary.seen, label: 'items practised' },
-                { icon: 'mastered', value: summary.mastered, label: 'mastered' },
-                { icon: 'due', value: summary.due, label: 'due now' },
+                // `tint` names the glyph's class rather than a colour, so the
+                // pairing with the meter below lives in the stylesheet with the
+                // segments it has to agree with.
+                {
+                  icon: 'study',
+                  value: summary.seen,
+                  label: 'items practised',
+                  tint: 'statIconSeen',
+                },
+                {
+                  icon: 'mastered',
+                  value: summary.mastered,
+                  label: 'mastered',
+                  tint: 'statIconMastered',
+                },
+                { icon: 'due', value: summary.due, label: 'due now', tint: null },
                 {
                   icon: 'accuracy',
                   value: accuracy === null ? '—' : `${accuracy}%`,
                   label: 'accuracy',
+                  tint: null,
                 },
               ] as const
             ).map((entry) => (
               <li key={entry.label} className={styles.stat}>
-                <Icon name={entry.icon} size="sm" className={styles.statIcon} />
+                <Icon
+                  name={entry.icon}
+                  size="sm"
+                  className={`${styles.statIcon} ${entry.tint ? (styles[entry.tint] ?? '') : ''}`}
+                />
                 <span className={styles.statValue}>{entry.value}</span>
                 <span className={styles.statLabel}>{entry.label}</span>
               </li>

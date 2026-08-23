@@ -14,6 +14,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { CONTRAST_LEVELS, DEFAULT_CONTRAST } from '../../src/styles/contrast';
+import { KIND_HUE_COUNT } from '../../src/styles/kinds';
 import { DEFAULT_PALETTE, PALETTES, THEME_PREFERENCES } from '../../src/styles/themes';
 import { READING_SIZES } from '../../src/styles/reading-size';
 
@@ -169,6 +170,34 @@ const PAIRS: readonly [string, string, number, string][] = [
   // level is a mix along the line between them, so a palette whose ends sit
   // close together has no axis to offer and Maximum would mean nothing.
   ['--color-ink', '--color-paper', 12, 'the ends of the contrast axis'],
+  /*
+   * The categorical family, generated rather than written out: six hues times
+   * three pairings is eighteen rows that would otherwise differ only by a digit,
+   * and a hand-kept list is how the seventh hue ships unchecked.
+   *
+   * `KIND_HUE_COUNT` is imported from the module the app assigns hues with, so
+   * the count cannot drift between what a palette declares and what a screen can
+   * ask for — a hue the app uses but no palette defines is an unstyled badge, and
+   * `REQUIRED_ROLES` below turns that into a failure rather than a grey disc.
+   *
+   * Three pairings, because a badge is used both ways round: the hue fills the
+   * disc and the tint carries the glyph in a light palette, and a tinted panel
+   * has to carry body text wherever one is used. All three are held to 4.5:1
+   * rather than to the 3:1 a glyph alone would need, since these badges carry
+   * digits — a mission's position, a set's count.
+   */
+  ...Array.from({ length: KIND_HUE_COUNT }, (_, index) => index + 1).flatMap(
+    (hue): readonly [string, string, number, string][] => [
+      [`--color-kind-${hue}`, '--color-surface', 4.5, `categorical hue ${hue} on a card`],
+      [
+        `--color-kind-${hue}`,
+        `--color-kind-${hue}-soft`,
+        4.5,
+        `categorical hue ${hue} on its own badge`,
+      ],
+      ['--color-text', `--color-kind-${hue}-soft`, 4.5, `body text on categorical tint ${hue}`],
+    ],
+  ),
 ];
 
 /** Every role a palette must define; the app breaks silently without them. */

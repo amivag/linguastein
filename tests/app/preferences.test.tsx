@@ -79,6 +79,7 @@ async function bootApp() {
     },
     exercises: new ExerciseEngine(),
     preferences: DEFAULT_PREFERENCES,
+    batches: [],
     datasetIssues: [],
   });
 

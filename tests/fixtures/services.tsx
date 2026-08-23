@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ServicesContext } from '../../src/app/services-context';
 import type { AppServices } from '../../src/app/services';
+import type { BatchDefinition } from '../../src/domain/batches';
 import { NOOP_PLAYBACK, type AudioService, type SpeechRecognitionProvider } from '../../src/audio';
 import { ExerciseEngine } from '../../src/domain/exercises';
 import { createMemoryStorage, DEFAULT_PREFERENCES, type Preferences } from '../../src/storage';
@@ -37,6 +38,7 @@ export function testServices(overrides: Partial<AppServices> = {}): AppServices 
     speech: noSpeech,
     exercises: new ExerciseEngine(),
     preferences: DEFAULT_PREFERENCES,
+    batches: [],
     datasetIssues: [],
     ...overrides,
   };
@@ -49,6 +51,9 @@ export function renderWithServices(
     route?: string;
     /** Supply one to assert on what a control tried to change. */
     updatePreferences?: (patch: Partial<Preferences>) => void;
+    /** Supply one to assert on a batch a control tried to save. */
+    saveBatch?: (batch: BatchDefinition) => void;
+    removeBatch?: (id: string) => void;
   } = {},
 ) {
   const services = options.services ?? testServices();
@@ -58,6 +63,12 @@ export function renderWithServices(
         services,
         preferences: services.preferences,
         updatePreferences: options.updatePreferences ?? (() => {}),
+        // The batches a screen reads are the ones the services were built with,
+        // exactly as `preferences` is: a test that needs one supplies it through
+        // `testServices({ batches })` rather than through a second channel.
+        batches: services.batches,
+        saveBatch: options.saveBatch ?? (() => {}),
+        removeBatch: options.removeBatch ?? (() => {}),
       }}
     >
       <MemoryRouter initialEntries={[options.route ?? '/']}>{children}</MemoryRouter>

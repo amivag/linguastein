@@ -9,6 +9,7 @@ import { ReadScreen } from '../features/read/ReadScreen';
 import { SessionScreen } from '../features/practice/SessionScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { MissionScreen } from '../features/missions/MissionScreen';
+import type { BatchDefinition } from '../domain/batches';
 import { courseOptions, coursePath, resolveCourse } from '../domain/content';
 import { mergePreferences, type Preferences } from '../storage';
 import { applyPalette, applyTheme, DEFAULT_PALETTE } from '../styles/themes';
@@ -39,6 +40,7 @@ type BootState =
 export function App() {
   const [boot, setBoot] = useState<BootState>({ phase: 'loading' });
   const [preferences, setPreferences] = useState<Preferences | null>(null);
+  const [batches, setBatches] = useState<readonly BatchDefinition[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -47,6 +49,7 @@ export function App() {
         if (cancelled) return;
         setBoot({ phase: 'ready', services });
         setPreferences(services.preferences);
+        setBatches(services.batches);
       },
       (error: unknown) => {
         if (!cancelled) {
@@ -87,6 +90,40 @@ export function App() {
           // is not a reason to snap a control back to where it was.
           console.warn('Could not persist preferences', error);
         });
+    },
+    [services],
+  );
+
+  /**
+   * Saving and removing a batch, applied at once and persisted per record.
+   *
+   * Deliberately *not* chained the way the preference write above is, and the
+   * difference is the store rather than the caller: `preferences.write` reads the
+   * stored record, merges a patch and puts it back, so concurrent calls all read
+   * the same starting point and the last one silently wins. A batch write is a
+   * whole record under its own key, so two of them cannot lose each other. The
+   * functional `setBatches` updates are what make the local half safe, and they
+   * are the part that would break if either of these took `batches` as a
+   * dependency instead.
+   */
+  const saveBatch = useCallback(
+    (batch: BatchDefinition) => {
+      if (!services) return;
+      setBatches((current) => [...current.filter((entry) => entry.id !== batch.id), batch]);
+      void services.storage.batches.put(batch).catch((error: unknown) => {
+        console.warn('Could not persist batch', error);
+      });
+    },
+    [services],
+  );
+
+  const removeBatch = useCallback(
+    (id: string) => {
+      if (!services) return;
+      setBatches((current) => current.filter((entry) => entry.id !== id));
+      void services.storage.batches.remove(id).catch((error: unknown) => {
+        console.warn('Could not remove batch', error);
+      });
     },
     [services],
   );
@@ -133,7 +170,9 @@ export function App() {
       and because the way out is a reload rather than a navigation, so the
       boundary has no use for router context.
     */
-    <ServicesContext value={{ services, preferences, updatePreferences }}>
+    <ServicesContext
+      value={{ services, preferences, updatePreferences, batches, saveBatch, removeBatch }}
+    >
       <ErrorBoundary>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <Routes>

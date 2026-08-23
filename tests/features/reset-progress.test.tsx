@@ -42,13 +42,26 @@ async function storageWithHistory() {
   return storage;
 }
 
-async function renderSettings(updatePreferences?: (patch: Partial<Preferences>) => void) {
+const BATCH = {
+  id: 'batch-1',
+  label: 'Food nouns',
+  course: { language: 'es', level: 'a1' },
+  itemIds: [ITEM],
+  createdAt: 1_700_000_000_000,
+} as const;
+
+async function renderSettings(
+  updatePreferences?: (patch: Partial<Preferences>) => void,
+  removeBatch?: (id: string) => void,
+) {
   const storage = await storageWithHistory();
+  await storage.batches.put(BATCH);
   const view = renderWithServices(<SettingsScreen />, {
-    services: testServices({ storage }),
+    services: testServices({ storage, batches: [BATCH] }),
     // The reset controls live in the About section; the tab is part of the URL.
     route: '/settings?tab=about',
     ...(updatePreferences ? { updatePreferences } : {}),
+    ...(removeBatch ? { removeBatch } : {}),
   });
   return { ...view, storage };
 }
@@ -112,10 +125,28 @@ describe('reset progress', () => {
     expect((await storage.preferences.read()).voiceName).toBe('Paulina');
   });
 
+  /**
+   * A batch is material the learner chose, not evidence of what they did with
+   * it — so clearing the evidence hands the same sets back to start again on.
+   * Erasing them here would make "reset progress" destroy work nobody asked it
+   * to touch, and there is nowhere to restore it from.
+   */
+  it('keeps batches, which are not history either', async () => {
+    const user = userEvent.setup();
+    const { storage } = await renderSettings();
+
+    await user.click(screen.getByRole('button', { name: 'Reset progress' }));
+    await user.click(screen.getByRole('button', { name: 'Erase learning history' }));
+
+    await screen.findByText('Learning history cleared.');
+    expect(await storage.batches.all()).toEqual([BATCH]);
+  });
+
   it('clears history, preferences and pre-paint caches in a full local reset', async () => {
     const user = userEvent.setup();
     const updatePreferences = vi.fn();
-    const { storage } = await renderSettings(updatePreferences);
+    const removeBatch = vi.fn();
+    const { storage } = await renderSettings(updatePreferences, removeBatch);
     await storage.preferences.write({
       targetLanguage: 'fr',
       level: 'all',
@@ -135,7 +166,11 @@ describe('reset progress', () => {
 
     expect(await stored(storage)).toEqual({ progress: 0, attempts: 0, sessions: 0 });
     expect(await storage.preferences.read()).toEqual(DEFAULT_PREFERENCES);
+    expect(await storage.batches.all()).toEqual([]);
     expect(updatePreferences).toHaveBeenCalledWith(DEFAULT_PREFERENCES);
+    // The live list has to catch up too, exactly as preferences do: without this
+    // a full reset would leave every batch on screen until a reload.
+    expect(removeBatch).toHaveBeenCalledWith(BATCH.id);
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
     expect(localStorage.getItem(READING_SIZE_STORAGE_KEY)).toBeNull();
     expect(await screen.findByText('All local data reset to app defaults.')).toBeInTheDocument();

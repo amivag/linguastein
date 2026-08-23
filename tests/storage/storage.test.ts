@@ -100,6 +100,29 @@ describe.each(implementations)('%s storage', (_name, create) => {
     expect(await storage.sessions.recent(10)).toHaveLength(2);
   });
 
+  it('round-trips a batch and removes one by id', async () => {
+    const batch = {
+      id: 'batch-1',
+      label: 'Food nouns',
+      course: { language: 'es', level: 'a1' } as const,
+      itemIds: [ITEM],
+      createdAt: 1_700_000_000_000,
+      perSession: 10,
+    };
+    await storage.batches.put(batch);
+    expect(await storage.batches.all()).toEqual([batch]);
+
+    // A put under the same id replaces rather than duplicating, which is what
+    // lets a learner rename a set without minting a second one.
+    await storage.batches.put({ ...batch, label: 'Food & drink nouns' });
+    const stored = await storage.batches.all();
+    expect(stored).toHaveLength(1);
+    expect(stored[0]?.label).toBe('Food & drink nouns');
+
+    await storage.batches.remove('batch-1');
+    expect(await storage.batches.all()).toEqual([]);
+  });
+
   it('clears everything on reset', async () => {
     await storage.progress.put(newItemProgress(ITEM));
     await storage.sessions.put({
@@ -110,9 +133,17 @@ describe.each(implementations)('%s storage', (_name, create) => {
       completed: 5,
       correct: 4,
     });
+    await storage.batches.put({
+      id: 'batch-1',
+      label: 'Food nouns',
+      course: { language: 'es', level: 'a1' },
+      itemIds: [ITEM],
+      createdAt: 1,
+    });
 
     await storage.clearAll();
     expect(await storage.progress.all()).toEqual([]);
     expect(await storage.sessions.recent(10)).toEqual([]);
+    expect(await storage.batches.all()).toEqual([]);
   });
 });

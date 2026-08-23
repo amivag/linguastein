@@ -31,6 +31,7 @@ describe('sessionPath', () => {
         usableIn: 'es-MX',
       },
       passage: 'mercado',
+      batch: 'batch-lq2p8v-k3f9a1',
       mission: 'market-shopping',
       skills: ['preterite'],
       dueOnly: true,
@@ -136,5 +137,24 @@ describe('parseSessionUrl', () => {
     expect(url.skills).toEqual(['imperative']);
     expect(url.filter.topics).toEqual(['work']);
     expect(url.filter.skills).toBeUndefined();
+  });
+
+  /**
+   * A batch travels as its id for the reason `writeItemFilter` refuses `ids`
+   * altogether: thirty item ids is not a link. The same division of labour as a
+   * passage — this module cannot know which batches exist, so it parses without
+   * validating and the screen resolves.
+   */
+  it('carries a batch as an id and never as its items', () => {
+    const path = sessionPath(COURSE, { preset: 'quick', batch: 'batch-1' });
+
+    expect(path).toContain('batch=batch-1');
+    expect(path).not.toContain('ids=');
+    expect(parse(path).batch).toBe('batch-1');
+    expect(parse(path).filter.ids).toBeUndefined();
+  });
+
+  it('keeps a batch id it cannot validate, and leaves resolution to the screen', () => {
+    expect(parse('/session?preset=quick&batch=gone').batch).toBe('gone');
   });
 });

@@ -240,6 +240,15 @@ The dataset work is briefed in full for a fresh session:
     resolving `system` through `prefers-contrast`, which needs a fifth value on
     the axis (`system`) rather than a fifth level. See
     [the theming note](theming.md#appearance-is-four-independent-axes).
+12. **Practice batches** — a set the learner picks once and returns to across
+    short sessions until it is absorbed, with where they stand derived from the
+    attempt log the way a mission's standing already is. Briefed in full in
+    [docs/tasks/practice-batches.md](tasks/practice-batches.md), including why
+    this is not a mission and why its graduation bar cannot be lexeme mastery:
+    most of the pack's words appear in too few sentences to reach that floor.
+    It is also the first feature with a reason to read `Attempt.exerciseKind`,
+    which item 8 and [learner-profile.md](tasks/learner-profile.md) §9.2 both
+    circle.
 
 ## Later (architecture allows, code does not attempt)
 

@@ -4,6 +4,7 @@
  * works, it just does not survive a reload.
  */
 
+import type { BatchDefinition } from '../domain/batches';
 import type { ItemId } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionRecord } from '../domain/sessions';
@@ -16,6 +17,7 @@ export function createMemoryStorage(
   const progress = new Map<ItemId, ItemProgress>();
   let attempts: Attempt[] = [];
   let sessions: SessionRecord[] = [];
+  const batches = new Map<string, BatchDefinition>();
   let preferences = initialPreferences;
 
   return {
@@ -76,6 +78,21 @@ export function createMemoryStorage(
         return Promise.resolve();
       },
     },
+    batches: {
+      all: () => Promise.resolve([...batches.values()]),
+      put: (batch) => {
+        batches.set(batch.id, batch);
+        return Promise.resolve();
+      },
+      remove: (id) => {
+        batches.delete(id);
+        return Promise.resolve();
+      },
+      clear: () => {
+        batches.clear();
+        return Promise.resolve();
+      },
+    },
     preferences: {
       read: () => Promise.resolve(preferences),
       write: (patch) => {
@@ -87,6 +104,7 @@ export function createMemoryStorage(
       progress.clear();
       attempts = [];
       sessions = [];
+      batches.clear();
       preferences = DEFAULT_PREFERENCES;
       return Promise.resolve();
     },

@@ -1,5 +1,5 @@
 /**
- * Opening a version-1 database with the version-2 code.
+ * Opening an old database with the current code.
  *
  * The two fields added in version 2 are the reason this file exists. `packId` is
  * indexed, and an IndexedDB index is built from a stored key path and nothing
@@ -10,6 +10,11 @@
  *
  * So the assertions here are deliberately about the old rows, not the new ones:
  * a fresh install exercises none of this.
+ *
+ * Version 3 is a different kind of bump — it adds an empty store and touches no
+ * existing record — and the second block below is what holds that claim: the
+ * version-2 rows have to come through it untouched, and the new store has to
+ * work on a database that was not created with it.
  */
 
 import { deleteDB, openDB } from 'idb';
@@ -143,5 +148,117 @@ describe('upgrading a version-1 database', () => {
       streak: 2,
       dueAt: 5_000,
     });
+  });
+});
+
+/** Version 2 as it shipped: the fields are already there, the batches are not. */
+async function seedVersion2(): Promise<void> {
+  await deleteDB(APP.id);
+  const db = await openDB(APP.id, 2, {
+    upgrade(database) {
+      const progress = database.createObjectStore('progress', { keyPath: 'itemId' });
+      progress.createIndex('by-due', 'dueAt');
+      progress.createIndex('by-status', 'status');
+      progress.createIndex('by-pack', 'packId');
+
+      const attempts = database.createObjectStore('attempts', { keyPath: 'id' });
+      attempts.createIndex('by-item', 'itemId');
+      attempts.createIndex('by-time', 'at');
+
+      const sessions = database.createObjectStore('sessions', { keyPath: 'id' });
+      sessions.createIndex('by-time', 'startedAt');
+
+      database.createObjectStore('meta');
+    },
+  });
+
+  await db.put('progress', {
+    itemId: REVIEWED,
+    packId: 'test-es',
+    status: 'review',
+    attempts: 2,
+    correct: 2,
+    incorrect: 0,
+    difficulty: 0.3,
+    hintsUsed: 0,
+    streak: 2,
+    lastReviewedAt: 1_000,
+    dueAt: 5_000,
+    updatedAt: 1_000,
+  });
+  await db.put('sessions', {
+    id: 'session-1',
+    course: { language: 'es', level: 'a1' },
+    startedAt: 500,
+    endedAt: 900,
+    planned: 3,
+    completed: 3,
+    correct: 2,
+  });
+  await db.put('meta', { targetLanguage: 'es', level: 'a1' }, 'preferences');
+
+  db.close();
+}
+
+describe('upgrading a version-2 database', () => {
+  let upgraded: AppDatabase | undefined;
+
+  const open = async (): Promise<AppDatabase> => {
+    upgraded = await openAppDatabase();
+    return upgraded;
+  };
+
+  beforeEach(seedVersion2);
+  afterEach(() => {
+    upgraded?.close();
+    upgraded = undefined;
+  });
+
+  it('adds the batches store to a database that never had one', async () => {
+    const storage = createIndexedDbStorage(await open());
+
+    expect(await storage.batches.all()).toEqual([]);
+
+    const batch = {
+      id: 'batch-1',
+      label: 'Food nouns',
+      course: { language: 'es', level: 'a1' } as const,
+      itemIds: [REVIEWED],
+      createdAt: 2_000,
+    };
+    await storage.batches.put(batch);
+    expect(await storage.batches.all()).toEqual([batch]);
+  });
+
+  /**
+   * The whole claim of version 3: it adds a store and rewrites nothing. A bump
+   * that quietly re-put every progress row would be indistinguishable here from
+   * one that did not, until the day it got the rewrite wrong.
+   */
+  it('leaves the version-2 rows exactly as they were', async () => {
+    const db = await open();
+    const storage = createIndexedDbStorage(db);
+
+    // Through the index rather than the store, for the reason the version-1
+    // block gives: a row disturbed out of `by-pack` is still in `getAll()`.
+    expect(await db.getAllFromIndex('progress', 'by-pack', 'test-es')).toHaveLength(1);
+
+    expect(await storage.progress.get(REVIEWED)).toEqual({
+      itemId: REVIEWED,
+      packId: 'test-es',
+      status: 'review',
+      attempts: 2,
+      correct: 2,
+      incorrect: 0,
+      difficulty: 0.3,
+      hintsUsed: 0,
+      streak: 2,
+      lastReviewedAt: 1_000,
+      dueAt: 5_000,
+      updatedAt: 1_000,
+    });
+
+    const [record] = await storage.sessions.recent(10);
+    expect(record?.course).toEqual({ language: 'es', level: 'a1' });
   });
 });

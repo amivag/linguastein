@@ -13,6 +13,7 @@ import {
   type StoreNames,
 } from 'idb';
 import { APP } from '../app/identity';
+import type { BatchDefinition } from '../domain/batches';
 import { LEVEL_SCOPE_ALL, packIdOf, type Course, type ItemId } from '../domain/content';
 import type { Attempt, ItemProgress, Timestamp } from '../domain/progress';
 import type { SessionRecord } from '../domain/sessions';
@@ -20,7 +21,7 @@ import { DEFAULT_PREFERENCES, mergePreferences } from './preferences';
 import type { LearnerStorage, Preferences } from './types';
 
 const DB_NAME = APP.id;
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const PREFERENCES_KEY = 'preferences';
 
 interface AppDatabase extends DBSchema {
@@ -38,6 +39,16 @@ interface AppDatabase extends DBSchema {
     key: string;
     value: SessionRecord;
     indexes: { 'by-time': number };
+  };
+  /**
+   * Deliberately unindexed. A batch is a deliberate act rather than a log entry,
+   * so there are a handful of them and `getAll` is the honest read — and an
+   * index whose key path a record lacks silently excludes that record, which is
+   * the trap version 2's migration exists to document. No index, no trap.
+   */
+  batches: {
+    key: string;
+    value: BatchDefinition;
   };
   meta: {
     key: string;
@@ -75,6 +86,19 @@ export async function openAppDatabase(): Promise<IDBPDatabase<AppDatabase>> {
       }
 
       if (oldVersion < 2) await upgradeToV2(tx, oldVersion);
+
+      /*
+       * Version 3: somewhere to keep the sets a learner assembles.
+       *
+       * A dozen characters against version 2's careful rewrite, and the
+       * difference is worth naming rather than leaving as a happy accident: this
+       * version *adds* a store, so there is no existing record to bring up to a
+       * new shape and therefore nothing to backfill. Version 2 had to backfill
+       * because a row missing its new key path drops out of the index built on
+       * it. Neither claim is general — check which kind a future bump is before
+       * copying either one.
+       */
+      if (oldVersion < 3) db.createObjectStore('batches', { keyPath: 'id' });
     },
   });
 }
@@ -194,6 +218,20 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
         await db.clear('sessions');
       },
     },
+    batches: {
+      async all() {
+        return db.getAll('batches');
+      },
+      async put(batch) {
+        await db.put('batches', batch);
+      },
+      async remove(id) {
+        await db.delete('batches', id);
+      },
+      async clear() {
+        await db.clear('batches');
+      },
+    },
     preferences: {
       async read() {
         const stored = (await db.get('meta', PREFERENCES_KEY)) as Partial<Preferences> | undefined;
@@ -211,6 +249,7 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
         db.clear('progress'),
         db.clear('attempts'),
         db.clear('sessions'),
+        db.clear('batches'),
         db.clear('meta'),
       ]);
     },

@@ -4,6 +4,7 @@
  * of a remote store without the app noticing.
  */
 
+import type { BatchDefinition } from '../domain/batches';
 import type { ItemId, LanguageTag, LevelScope } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionFocus, SessionRecord } from '../domain/sessions';
@@ -91,6 +92,22 @@ export interface SessionStore {
   clear(): Promise<void>;
 }
 
+/**
+ * Batches the learner has assembled.
+ *
+ * The one store here holding something a learner *authored* rather than
+ * something they did: the other three are history, and preferences are
+ * settings. There is no `recent(limit)` because there is nothing to page —
+ * a batch is a deliberate act, so there are a handful of them, and the
+ * listing narrows by language in memory.
+ */
+export interface BatchStore {
+  all(): Promise<readonly BatchDefinition[]>;
+  put(batch: BatchDefinition): Promise<void>;
+  remove(id: string): Promise<void>;
+  clear(): Promise<void>;
+}
+
 export interface PreferencesStore {
   read(): Promise<Preferences>;
   write(preferences: Partial<Preferences>): Promise<Preferences>;
@@ -101,11 +118,15 @@ export interface LearnerStorage {
   readonly progress: ProgressStore;
   readonly attempts: AttemptStore;
   readonly sessions: SessionStore;
+  readonly batches: BatchStore;
   readonly preferences: PreferencesStore;
   /**
-   * Wipes all learner data, preferences included. Settings uses this for a clean
-   * local reset; its narrower "reset progress" action clears the three history
-   * stores by hand so a learner can keep their voice and appearance choices.
+   * Wipes all learner data, preferences and batches included. Settings uses this
+   * for a clean local reset; its narrower "reset progress" action clears the
+   * three history stores by hand so a learner can keep their voice and
+   * appearance choices — and, deliberately, their batches: a batch is material
+   * they chose, not evidence of what they did with it, so resetting progress
+   * hands back the same sets to start again on.
    */
   clearAll(): Promise<void>;
 }

@@ -49,6 +49,17 @@ export interface SessionUrl {
   readonly filter: ItemFilter;
   /** Passage *local* id, e.g. `mercado`; scopes the session to its sentences. */
   readonly passage?: string;
+  /**
+   * A batch the learner assembled, by id; scopes the session to its items.
+   *
+   * The id rather than the items, for the reason {@link writeItemFilter} gives
+   * about `ids`: thirty item ids in a query string is not a link, and three
+   * hundred is not even a URL. Resolved by the screen against the stored
+   * batches, exactly as `passage` is resolved against the repository — and, like
+   * a passage, an id nothing knows about widens the session rather than emptying
+   * it.
+   */
+  readonly batch?: string;
   /** Mission to continue after this practice set completes. */
   readonly mission?: string;
   /**
@@ -87,6 +98,7 @@ export function sessionPath(course: Course, input: SessionUrlInput): string {
   writeItemFilter(params, input.filter ?? {});
 
   if (input.passage) params.set('passage', input.passage);
+  if (input.batch) params.set('batch', input.batch);
   if (input.mission) params.set('mission', input.mission);
   if (input.skills?.length) params.set('skill', input.skills.join(','));
   if (input.dueOnly) params.set('due', '1');
@@ -100,6 +112,7 @@ export function sessionPath(course: Course, input: SessionUrlInput): string {
 export function parseSessionUrl(params: URLSearchParams): SessionUrl {
   const preset = params.get('preset');
   const passage = params.get('passage');
+  const batch = params.get('batch');
   const mission = params.get('mission');
   const focus = params.get('focus');
   const ordering = params.get('order');
@@ -115,6 +128,7 @@ export function parseSessionUrl(params: URLSearchParams): SessionUrl {
     size: parseSize(params.get('size')),
     filter: parseItemFilter(params),
     ...(passage ? { passage } : {}),
+    ...(batch ? { batch } : {}),
     ...(mission ? { mission } : {}),
     ...(skills.length ? { skills } : {}),
     ...(isTruthy(params.get('due')) ? { dueOnly: true } : {}),

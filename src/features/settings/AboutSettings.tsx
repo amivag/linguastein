@@ -22,7 +22,7 @@ type ResetResult = ResetTarget | null;
 
 /** This build, the design system, and the data this device is holding. */
 export function AboutSettings() {
-  const { services, updatePreferences } = useServices();
+  const { services, updatePreferences, batches, removeBatch } = useServices();
   const navigate = useNavigate();
   const [resetTarget, setResetTarget] = useState<ResetTarget | null>(null);
   const [resetResult, setResetResult] = useState<ResetResult>(null);
@@ -32,7 +32,10 @@ export function AboutSettings() {
     await services.storage.attempts.clear();
     await services.storage.sessions.clear();
     // Preferences are deliberately kept: nobody asking to clear their history
-    // is also asking to have their voice and theme picked again.
+    // is also asking to have their voice and theme picked again. Batches are
+    // kept for the same reason and a stronger one — a batch is material the
+    // learner chose, not evidence of what they did with it, so clearing the
+    // evidence hands back the same sets to start again on.
     setResetTarget(null);
     setResetResult('progress');
   };
@@ -44,6 +47,10 @@ export function AboutSettings() {
     // to see that the reset worked, and the next route should be the same clean
     // A1 course a new install opens.
     updatePreferences(DEFAULT_PREFERENCES);
+    // `clearAll` has already emptied the store; this is the live list catching
+    // up, which is the same thing the line above does for preferences. Without
+    // it a reset would leave every batch on screen until a reload.
+    for (const batch of batches) removeBatch(batch.id);
     setResetTarget(null);
     setResetResult('all');
     void navigate(`/${DEFAULT_PREFERENCES.targetLanguage}/${DEFAULT_PREFERENCES.level}`);

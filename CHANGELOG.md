@@ -17,6 +17,19 @@ in the pack's own counts.
 
 ### Added
 
+- **Practice batches, in the engine.** A batch is a set of material the learner
+  picks once — "these 30 nouns" — kept so that a week of short sessions can all
+  draw on the same items until they hold. `?batch=<id>` in a session link scopes a
+  session to exactly that set, resolved from the id rather than from the items,
+  because thirty item ids in a query string is not a link anyone can share. Where
+  a learner stands in one is derived from the attempt log, never stored, the way a
+  mission's standing already is: an item counts as absorbed when it has been
+  _produced_ — not recognised — on two separate days and is still held a week out,
+  and a batch is done at 90% so one stubborn item cannot hold it hostage. There is
+  no way to create a batch yet; that is the next stage, and it is briefed in
+  [docs/tasks/practice-batches.md](docs/tasks/practice-batches.md) along with the
+  measurement that decided the graduation bar. Local storage moves to version 3,
+  which adds a store and rewrites nothing.
 - **Verbs have word cards.** All 126 of them, in an id range of their own, so
   `hablar` is a word you can look up rather than only meet, and `Words × Verbs` in
   Browse lists 126 entries where it used to be an empty page. Study grew a Verbs

@@ -13,6 +13,7 @@ import {
 } from '../audio';
 import { httpDatasetSource, loadCatalog, loadPacks } from '../data/loaders';
 import type { ValidationIssue } from '../data/validation';
+import type { BatchDefinition } from '../domain/batches';
 import { ContentRepository } from '../domain/content';
 import { ExerciseEngine } from '../domain/exercises';
 import { createStorage } from '../storage';
@@ -26,6 +27,17 @@ export interface AppServices {
   readonly speech: SpeechRecognitionProvider;
   readonly exercises: ExerciseEngine;
   readonly preferences: Preferences;
+  /**
+   * The learner's batches, read once at boot like `preferences` above.
+   *
+   * Read eagerly rather than per screen because `SessionScreen` builds its
+   * config in a synchronous `useMemo` over the URL — that is deliberate, since
+   * the query string is the only thing a session depends on — so a `?batch=`
+   * that needed an `await` to resolve would mean rebuilding that screen around a
+   * loading state. There are a handful of these records and they are tiny, which
+   * is exactly the case where preferences' pattern beats progress's.
+   */
+  readonly batches: readonly BatchDefinition[];
   /** Non-fatal dataset problems, surfaced in Settings rather than swallowed. */
   readonly datasetIssues: readonly ValidationIssue[];
 }
@@ -47,7 +59,10 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
 
   const repository = ContentRepository.from(packs);
   const storage = await createStorage();
-  const preferences = await storage.preferences.read();
+  const [preferences, batches] = await Promise.all([
+    storage.preferences.read(),
+    storage.batches.all(),
+  ]);
 
   const audio = createAudioService({
     repository,
@@ -62,6 +77,7 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     speech: createWebSpeechRecognitionProvider(),
     exercises: new ExerciseEngine(),
     preferences,
+    batches,
     datasetIssues: issues,
   };
 }

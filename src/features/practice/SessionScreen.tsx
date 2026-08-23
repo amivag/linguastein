@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MISSIONS } from '../../app/missions';
+import { batchById } from '../../domain/batches';
 import type { SkillId } from '../../domain/content';
 import { missionById } from '../../domain/missions';
 import { AppShell } from '../../components/AppShell';
@@ -25,14 +26,14 @@ export function SessionScreen() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { course, filter: courseScope, path } = useCourse();
-  const { services, preferences } = useServices();
+  const { services, preferences, batches } = useServices();
 
   // The URL is the source of truth for a session; rebuilding the config on
   // every render would replan the session on every keystroke of state. The
   // query string is the dependency, so the plan changes only when the link does.
   const search = params.toString();
   const repository = services.repository;
-  const { preset, config, mission } = useMemo(() => {
+  const { preset, config, mission, emptyBatch } = useMemo(() => {
     const url = parseSessionUrl(new URLSearchParams(search));
     const chosen = PRESETS[url.preset];
     // `?passage=` practises exactly one text; facets narrow it further, since
@@ -40,6 +41,17 @@ export function SessionScreen() {
     const passageItems = url.passage
       ? (repository.passageByLocalId(url.passage)?.items ?? [])
       : undefined;
+    /*
+     * `?batch=` practises exactly the set a learner assembled.
+     *
+     * An unknown id resolves to nothing and drops out, widening the session
+     * rather than emptying it — the rule `session-url.ts` is built on, and the
+     * same thing a stale `?skill=` does. A batch that *is* known but whose items
+     * have all fallen outside the current course is the one case that must not
+     * widen, because practising the whole pack is not what the link asked for;
+     * `emptyBatch` below is that case, reported rather than silently broadened.
+     */
+    const batch = url.batch ? batchById(batches, url.batch) : undefined;
     // `?skill=preterite` narrows to the items a skill is attached to. A slug no
     // loaded pack declares resolves to nothing and drops out, so a stale link
     // widens to a broader session rather than planning an empty one — a facet
@@ -47,15 +59,30 @@ export function SessionScreen() {
     const skills = (url.skills ?? [])
       .map((slug) => repository.skillByLocalId(slug)?.id)
       .filter((id): id is SkillId => id !== undefined);
+    // Both spell "exactly these items", so a link carrying both would have one
+    // quietly overwrite the other. A passage is the narrower and the authored
+    // one, so it wins — and no screen builds such a link in the first place.
+    const allowList = passageItems ?? batch?.itemIds;
     const scope = {
       ...url.filter,
-      ...(passageItems ? { ids: passageItems } : {}),
+      ...(allowList ? { ids: allowList } : {}),
       ...(skills.length ? { skills } : {}),
     };
+
+    // A batch whose material has all fallen outside this course — a different
+    // language, or a level ceiling below what it was drawn at. Asked here rather
+    // than inferred from an empty plan, because "nothing to practise" and "this
+    // set is not part of what you are studying" are different problems and only
+    // one of them is fixed by switching course.
+    const batchOutOfScope =
+      batch !== undefined &&
+      passageItems === undefined &&
+      repository.query({ ...courseScope, ids: batch.itemIds }).length === 0;
 
     return {
       preset: chosen,
       mission: url.mission,
+      emptyBatch: batchOutOfScope ? batch.label : undefined,
       config: buildSessionConfig(chosen, {
         repository,
         preferences,
@@ -68,7 +95,7 @@ export function SessionScreen() {
         ...(url.seed !== undefined ? { seed: url.seed } : {}),
       }),
     };
-  }, [search, repository, preferences, courseScope]);
+  }, [search, repository, preferences, courseScope, batches]);
 
   const runner = useSessionRunner(config, course);
   const activeMission = mission ? missionById(MISSIONS, course, mission) : undefined;
@@ -79,7 +106,11 @@ export function SessionScreen() {
 
       {runner.status === 'empty' && (
         <section className={styles.summaryScreen}>
-          <p>Nothing to practise here yet.</p>
+          <p>
+            {emptyBatch
+              ? `None of “${emptyBatch}” is part of this course. Switch course to practise it.`
+              : 'Nothing to practise here yet.'}
+          </p>
           <Button variant="primary" block large onClick={() => void navigate(path())}>
             Back to home
           </Button>

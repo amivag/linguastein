@@ -14,10 +14,10 @@
  * the learner. Do not mix the two definitions on one screen.
  */
 
-import type { ItemId } from '../content';
+import type { Course, ItemId } from '../content';
 import type { ExerciseKind } from '../exercises/types';
 import { isDue, type Attempt, type ItemProgress, type Timestamp } from '../progress/types';
-import type { BatchDefinition } from './model';
+import { batchesForCourse, type BatchDefinition } from './model';
 
 /**
  * Retrieval modes that count as evidence.
@@ -144,6 +144,36 @@ export function batchStanding(input: BatchStandingInput): BatchStanding {
     dueNow,
     complete: total > 0 && absorbed >= Math.ceil(total * BATCH_COMPLETION_RATIO),
   };
+}
+
+/**
+ * Every batch this course offers, newest first, each with its standing.
+ *
+ * Plural for the reason `missionStandings` is: two screens ask the same question
+ * — Study lists them all, Home leads with one — and they must not answer it
+ * differently. Each caller supplies the progress and attempts it has already
+ * read rather than this reading for itself, which is the same division of labour
+ * missions use and the reason neither screen loads the attempt log twice.
+ */
+export function batchStandings(
+  batches: readonly BatchDefinition[],
+  course: Course,
+  input: Omit<BatchStandingInput, 'batch'>,
+): readonly BatchStanding[] {
+  return batchesForCourse(batches, course).map((batch) => batchStanding({ ...input, batch }));
+}
+
+/**
+ * The batch to lead with: the first unfinished one with something in it.
+ *
+ * Deliberately unlike `nextMissionStanding`, which falls back to the last
+ * mission so a finished course still has something to open. A finished batch is
+ * *finished* — re-offering it would be the app asking for work it has already
+ * decided was absorbed, and the honest answer to "every set is done" is to
+ * suggest making another rather than to reopen one.
+ */
+export function nextBatchStanding(standings: readonly BatchStanding[]): BatchStanding | undefined {
+  return standings.find((standing) => !standing.complete && standing.total > 0);
 }
 
 const EMPTY_DAYS: ReadonlySet<string> = new Set();

@@ -5,7 +5,9 @@ import {
   batchById,
   batchesForCourse,
   batchStanding,
+  batchStandings,
   newBatchId,
+  nextBatchStanding,
   type BatchDefinition,
 } from '../../src/domain/batches';
 import type { Course, ItemId } from '../../src/domain/content';
@@ -236,5 +238,60 @@ describe('batch standing', () => {
     // A guard, not a tautology: the tests above hard-code two days, so a change
     // to the constant has to come with a change to them.
     expect(ABSORBED_PRODUCTION_DAYS).toBe(2);
+  });
+});
+
+describe('choosing which batch to lead with', () => {
+  const ten = (n: number) => Array.from({ length: n }, (_, index) => item(index + 1));
+
+  const standingFor = (definition: BatchDefinition, courseItemIds = definition.itemIds) =>
+    batchStanding({
+      batch: definition,
+      courseItemIds: new Set(courseItemIds),
+      progress: new Map(),
+      attempts: [],
+      now: 100 * DAY,
+      dayOf,
+    });
+
+  it('lists a course’s batches newest first, each with its standing', () => {
+    const older = batch({ id: 'old', createdAt: 1_000, itemIds: ten(2) });
+    const newer = batch({ id: 'new', createdAt: 2_000, itemIds: ten(3) });
+    const french = batch({ id: 'fr', course: FR });
+
+    const listed = batchStandings([older, newer, french], ES, {
+      courseItemIds: new Set(ten(3)),
+      progress: new Map(),
+      attempts: [],
+      now: 100 * DAY,
+      dayOf,
+    });
+
+    expect(listed.map((entry) => entry.batch.id)).toEqual(['new', 'old']);
+    expect(listed[0]?.total).toBe(3);
+  });
+
+  it('leads with the first unfinished batch', () => {
+    const done = { ...standingFor(batch({ id: 'done' })), complete: true };
+    const open = standingFor(batch({ id: 'open' }));
+
+    expect(nextBatchStanding([done, open])?.batch.id).toBe('open');
+  });
+
+  /**
+   * Deliberately unlike `nextMissionStanding`, which falls back to the last
+   * mission so a finished course still opens something. A finished batch is
+   * finished: re-offering it would be the app asking for work it has already
+   * decided was absorbed.
+   */
+  it('offers nothing when every batch is absorbed', () => {
+    const done = { ...standingFor(batch()), complete: true };
+
+    expect(nextBatchStanding([done])).toBeUndefined();
+  });
+
+  /** A batch with nothing reachable is not something to lead with either. */
+  it('skips a batch whose material is out of scope', () => {
+    expect(nextBatchStanding([standingFor(batch(), [])])).toBeUndefined();
   });
 });

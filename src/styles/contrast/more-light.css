@@ -1,0 +1,18 @@
+/**
+ * More contrast, light. See `soft-dark.css` for the model.
+ */
+
+[data-theme='light'][data-contrast='more'],
+[data-theme='light'] [data-contrast='more'] {
+  --color-bg: color-mix(in srgb, var(--color-ink) 2%, var(--color-paper));
+  --color-bg-tint: color-mix(in srgb, var(--color-ink) 5%, var(--color-paper));
+  --color-surface: var(--color-paper);
+  --color-surface-raised: var(--color-paper);
+  --color-surface-sunken: color-mix(in srgb, var(--color-ink) 6%, var(--color-paper));
+  --color-chrome: color-mix(in srgb, var(--color-ink) 1%, var(--color-paper));
+  --color-border: color-mix(in srgb, var(--color-ink) 14%, var(--color-paper));
+  --color-border-strong: color-mix(in srgb, var(--color-ink) 58%, var(--color-paper));
+  --color-track: color-mix(in srgb, var(--color-ink) 17%, var(--color-paper));
+  --color-text: color-mix(in srgb, var(--color-ink) 99%, var(--color-paper));
+  --color-text-muted: color-mix(in srgb, var(--color-ink) 76%, var(--color-paper));
+}

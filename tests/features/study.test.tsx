@@ -107,3 +107,37 @@ describe('the study section', () => {
     );
   });
 });
+
+/**
+ * Missions belong to Study rather than to Test.
+ *
+ * The section split is "material" against "find out whether you know it", and a
+ * mission is mostly material: an exchange to understand, then the same language
+ * used somewhere new. Only its last stage records anything — which is the one
+ * thing this screen has to say out loud, because everything else on it promises
+ * the opposite.
+ */
+describe('the missions on Study', () => {
+  beforeEach(() => {
+    study();
+  });
+
+  it('lists the course’s missions as a route rather than a sheet', async () => {
+    const missions = await section(/^missions$/i);
+    const mission = missions.getByRole('link', { name: /Describe your morning/ });
+
+    // The state is inside the link's own text: a list of rows all called
+    // "Continue" gives a screen reader and an agent nothing to choose between.
+    expect(mission).toHaveAttribute('href', '/es/all/mission/morning-routine/understand');
+    expect(mission.textContent).toMatch(/2 lines/);
+  });
+
+  it('says that the last stage of a mission is recorded', async () => {
+    // The rest of the screen promises that nothing is recorded. A control that
+    // records, sitting under that promise unqualified, would make the promise a
+    // lie rather than a scope.
+    const missions = await section(/^missions$/i);
+
+    expect(missions.getByText(/The last stage is recorded/i)).toBeInTheDocument();
+  });
+});

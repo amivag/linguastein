@@ -1,15 +1,25 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCourse } from '../../app/course';
+import { MISSIONS } from '../../app/missions';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon, type IconName } from '../../components/Icon';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { coursePath, POS_LABELS, type PartOfSpeech } from '../../domain/content';
+import {
+  missionStandings,
+  missionUseEvidence,
+  type MissionEvidence,
+  type MissionStanding,
+} from '../../domain/missions';
 import { browsePath } from '../browse/browse-url';
+import { missionPath } from '../missions/mission-url';
 import { sessionPath } from '../practice/session-url';
 import styles from './StudyScreen.module.css';
+
+const NO_EVIDENCE: MissionEvidence = { practised: new Set(), used: new Map() };
 
 /**
  * Study: the material, before anything grades you on it.
@@ -24,8 +34,14 @@ import styles from './StudyScreen.module.css';
  * The split is not a new idea in this codebase, only a newly visible one: the
  * domain has drawn it since sessions existed. `mode: 'study'` records nothing
  * and `mode: 'practice'` feeds the scheduler, because a self-rated reveal is not
- * evidence of retrieval. Every link on this screen leads somewhere that records
+ * evidence of retrieval. Every sheet on this screen leads somewhere that records
  * nothing.
+ *
+ * The missions are the deliberate exception, and they are here rather than on
+ * Test because a mission is mostly material: an exchange to understand, then the
+ * same language used somewhere new. Only its last stage records anything, and
+ * both the section note and the row say so — a screen that promised "nothing is
+ * recorded" over a control that records would be worse than no promise.
  *
  * Nothing here is a hard-coded list. The word kinds, the categories and the
  * grammar all come from the packs, counted over the current course, so a pack
@@ -37,6 +53,38 @@ export function StudyScreen() {
   const { services, preferences } = useServices();
   const { course, filter: courseScope } = useCourse();
   const repository = services.repository;
+  const [evidence, setEvidence] = useState<MissionEvidence>(NO_EVIDENCE);
+
+  /**
+   * The one asynchronous thing on the page, and the one thing on it that is not
+   * a count: how far the learner has got with each mission.
+   *
+   * Read here rather than passed in because a mission's completion is derived
+   * from the attempt log — nothing writes down "mission finished", so nothing can
+   * be handed a stale copy of it.
+   */
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const [progress, attempts] = await Promise.all([
+        services.storage.progress.all(),
+        services.storage.attempts.recent(10_000),
+      ]);
+      if (cancelled) return;
+      setEvidence({
+        practised: new Set(progress.map((entry) => entry.itemId)),
+        used: missionUseEvidence(attempts),
+      });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [services.storage]);
+
+  const missions = useMemo(() => {
+    const courseIds = new Set(repository.query(courseScope).map((item) => item.id));
+    return missionStandings(MISSIONS, course, repository, courseIds, evidence);
+  }, [course, courseScope, evidence, repository]);
 
   const counts = useMemo(() => {
     const inScope = (extra: Parameters<typeof repository.query>[0]) =>
@@ -93,8 +141,26 @@ export function StudyScreen() {
       <CourseBar />
 
       <p className={styles.intro}>
-        Everything here is for reading and listening — nothing is graded and nothing is recorded.
+        The sheets here are for reading and listening — nothing is graded and nothing is recorded. A
+        mission is the exception, and says so: it ends in practice that counts.
       </p>
+
+      {/* Missions lead, because they are the one thing on this screen that says
+          what to do *next*. They belong to Study rather than to Test for the
+          reason the section split exists at all: a mission is material and a
+          route through it, and only its last stage is a test. */}
+      {missions.length > 0 && (
+        <Section
+          label="Missions"
+          icon="mission"
+          layout="rows"
+          note="A short journey to one real-world outcome: understand the exchange, practise it, then use it somewhere new. The last stage is recorded."
+        >
+          {missions.map((standing) => (
+            <MissionRow key={standing.mission.id} standing={standing} course={course} />
+          ))}
+        </Section>
+      )}
 
       <Section label="Words" icon="word">
         {counts.words.map((kind) => (
@@ -168,10 +234,12 @@ interface SectionProps {
   readonly label: string;
   readonly icon: IconName;
   readonly note?: string;
+  /** Square tiles by default; full-width rows where a title needs the room. */
+  readonly layout?: 'tiles' | 'rows';
   readonly children: React.ReactNode;
 }
 
-function Section({ label, icon, note, children }: SectionProps) {
+function Section({ label, icon, note, layout = 'tiles', children }: SectionProps) {
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionLabel}>
@@ -179,9 +247,56 @@ function Section({ label, icon, note, children }: SectionProps) {
         {label}
       </h2>
       {note && <p className={styles.sectionNote}>{note}</p>}
-      <ul className={styles.tiles}>{children}</ul>
+      <ul className={layout === 'rows' ? styles.missions : styles.tiles}>{children}</ul>
     </section>
   );
+}
+
+/**
+ * One mission, and where the learner stands in it.
+ *
+ * The whole state is inside the link's own text — the number, the outcome and
+ * what is left — because a list of seven links called "Continue" is unusable to
+ * a screen reader and to an agent alike, and because "Transfer 2 of 3" is the
+ * only thing that distinguishes a mission you are halfway through from one you
+ * have not opened.
+ */
+function MissionRow({
+  standing,
+  course,
+}: {
+  readonly standing: MissionStanding;
+  readonly course: Parameters<typeof missionPath>[0];
+}) {
+  const { mission, complete, position } = standing;
+
+  return (
+    <li>
+      <Link className={styles.mission} to={missionPath(course, mission.id, standing.stage)}>
+        <span
+          className={`${styles.missionIndex} ${complete ? styles.missionDone : ''}`}
+          aria-hidden="true"
+        >
+          {complete ? <Icon name="check" size="sm" /> : position}
+        </span>
+        <span className={styles.missionBody}>
+          <span className={styles.missionTitle}>{mission.title}</span>
+          <span className={styles.missionGoal}>{mission.goal}</span>
+          <span className={styles.missionState}>{describeStanding(standing)}</span>
+        </span>
+        <Icon name="next" size="sm" />
+      </Link>
+    </li>
+  );
+}
+
+/** What is left to do, in the words the mission screen itself uses. */
+function describeStanding(standing: MissionStanding): string {
+  if (standing.complete) return 'Complete';
+  if (standing.stage === 'use') {
+    return `Transfer ${standing.transferPosition} of ${standing.transferTotal}`;
+  }
+  return `${standing.lineCount} lines · about ${standing.mission.estimatedMinutes} min`;
 }
 
 interface TileProps {

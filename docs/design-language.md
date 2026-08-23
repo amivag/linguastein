@@ -99,10 +99,17 @@ A fifth hue would need a fifth meaning. A tint is always a role
 what made the same "correct" green come out three shades across the card, the
 option and the summary.
 
-Every role passes contrast in **every** theme file, checked by
-[`contrast.test.ts`](../tests/a11y/contrast.test.ts), which discovers themes
-automatically. No component may hard-code a colour; the design-language test
-fails on a hex or an `rgb()` outside `src/styles/themes/`.
+A palette changes which hues these are, never what they mean. There are four —
+Indigo, Teal, Plum and Sand — and `sand` inverts the temperature, so its
+highlight is cool: a warm accent beside a warm highlight reads as one hue at two
+strengths, and the highlight's whole job is to be a second voice.
+
+Every role passes contrast in **every** palette at **every** contrast level,
+checked by [`contrast.test.ts`](../tests/a11y/contrast.test.ts), which discovers
+both from their directories. No component may hard-code a colour; the
+design-language test fails on a hex or an `rgb()` outside `src/styles/themes/`.
+That includes a preview of a palette — the picker's swatches carry
+`data-palette` and are painted by the palette's own stylesheet.
 
 ### 6. Motion confirms, never informs
 

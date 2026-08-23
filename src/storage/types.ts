@@ -7,7 +7,8 @@
 import type { ItemId, LanguageTag, LevelScope } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionFocus, SessionRecord } from '../domain/sessions';
-import type { ThemePreference } from '../styles/themes';
+import type { PaletteId, ThemePreference } from '../styles/themes';
+import type { ContrastLevel } from '../styles/contrast';
 import type { ReadingSize } from '../styles/reading-size';
 
 export interface Preferences {
@@ -47,6 +48,16 @@ export interface Preferences {
   readonly slowAudio: boolean;
   readonly showRomanisationHints: boolean;
   readonly theme: ThemePreference;
+  /**
+   * Which set of hues the chosen theme is drawn with.
+   *
+   * A separate axis from light/dark on purpose: a learner keeps their palette
+   * when the OS flips to dark, and a palette added later needs no new
+   * preference. See docs/theming.md.
+   */
+  readonly palette: PaletteId;
+  /** How far apart the palette's neutrals sit. Never below WCAG AA. */
+  readonly contrast: ContrastLevel;
   /** Global type scale, deliberately independent of palette and contrast. */
   readonly readingSize: ReadingSize;
 }

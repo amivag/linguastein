@@ -47,9 +47,13 @@ export const TARGET_LANGUAGES: readonly LanguageOption[] = [
  */
 export function languageOption(tag: LanguageTag): LanguageOption {
   const base = baseLanguage(tag);
+  // Both lists, because this answers "how is this tag spelled for a human" and
+  // not "can it be learned". English is a reference language and not (yet) a
+  // target one, so looking only at the targets is how a pack's meanings came to
+  // be reported as available in "en".
+  const named = [...TARGET_LANGUAGES, ...REFERENCE_LANGUAGES];
   const known =
-    TARGET_LANGUAGES.find((option) => option.tag === tag) ??
-    TARGET_LANGUAGES.find((option) => option.tag === base);
+    named.find((option) => option.tag === tag) ?? named.find((option) => option.tag === base);
   return known ?? { tag, nativeName: tag, englishName: tag };
 }
 

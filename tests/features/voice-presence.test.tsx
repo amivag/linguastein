@@ -151,7 +151,7 @@ describe('the Settings audio section', () => {
   it('offers the same controls, so neither surface is the poorer one', async () => {
     renderWithServices(<SettingsScreen />, {
       services: testServices({ audio: speakingAudio() }),
-      route: '/settings',
+      route: '/settings?tab=audio',
     });
 
     const audio = (await screen.findByRole('region', { name: 'Audio' })) as HTMLElement;

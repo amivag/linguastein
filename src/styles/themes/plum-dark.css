@@ -1,0 +1,46 @@
+/**
+ * Plum, dark — a violet key, for the same reason the default is indigo: the
+ * accent has to sit far enough from the verdict colours that a button can never
+ * be mistaken for a result.
+ *
+ * The greys are tinted towards the accent rather than neutral, which is what
+ * stops a saturated fuchsia from looking pasted onto a cold page.
+ */
+
+[data-theme='dark'][data-palette='plum'],
+[data-theme='dark'] [data-palette='plum'] {
+  color-scheme: dark;
+
+  --color-ink: #fbf7fc;
+  --color-paper: #08060b;
+
+  --color-bg: #120f16;
+  --color-bg-tint: #1b1522;
+  --color-surface: #1a1620;
+  --color-surface-raised: #241f2d;
+  --color-surface-sunken: #0e0c12;
+  --color-border: #322b3c;
+  --color-border-strong: #7c7289;
+  --color-text: #f5f1f8;
+  --color-text-muted: #bab2c6;
+  --color-accent: #e07ef0;
+  --color-accent-contrast: #24072a;
+  --color-accent-soft: #2e1636;
+  --color-accent-edge: #9a4fa8;
+  --color-highlight: #ffc75c;
+  --color-highlight-soft: #2d2213;
+  --color-success: #63d68f;
+  --color-success-soft: #16351f;
+  --color-danger: #ff7a80;
+  --color-danger-soft: #3d1a1e;
+  --color-chrome: #17131f;
+  --color-track: #2b2436;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 35%);
+  --shadow-lg: 0 -8px 48px rgb(0 0 0 / 55%);
+  --shadow-inset: inset 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-accent: 0 6px 20px rgb(224 126 240 / 20%);
+
+  --backdrop: rgb(0 0 0 / 55%);
+}

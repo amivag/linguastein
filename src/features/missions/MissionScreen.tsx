@@ -11,8 +11,10 @@ import { TokenizedText } from '../../components/TokenizedText';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
+  isMissionUseSession,
   missionById,
   missionTransfers,
+  missionUseSessionId,
   nextMissionTransfer,
   type MissionStage,
   type MissionTransferSupport,
@@ -97,7 +99,7 @@ export function MissionScreen() {
       if (cancelled) return;
       const evidenced = new Set(
         attempts
-          .filter((attempt) => attempt.sessionId?.startsWith(`mission:${mission.id}:use:`))
+          .filter((attempt) => isMissionUseSession(attempt.sessionId, mission.id))
           .map((attempt) => attempt.itemId),
       );
       const availableTransfers = missionTransfers(mission).filter((transfer) =>
@@ -193,7 +195,7 @@ export function MissionScreen() {
       const now = Date.now();
       const context = transferStep?.transfer.passage ?? mission.passage;
       const sessionId =
-        missionUseSession.current ?? `mission:${mission.id}:use:${context}:${now.toString(36)}`;
+        missionUseSession.current ?? missionUseSessionId(mission.id, context, now.toString(36));
       missionUseSession.current = sessionId;
       const current = await services.storage.progress.get(item.id);
       const recorded = recordAttempt(

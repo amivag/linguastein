@@ -1,268 +1,86 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useServices } from '../../app/services-context';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
-import { Button } from '../../components/Button';
-import { CourseBar } from '../../components/CourseBar';
-import { ThemeToggle } from '../../components/ThemeToggle';
-import { ReadingSizeControl } from '../../components/ReadingSizeControl';
-import { VoiceSettings } from '../../components/VoiceSettings';
-import { REFERENCE_LANGUAGES } from '../../domain/content';
-import { APP } from '../../app/identity';
-import { buildDate, buildLabel } from '../../app/version';
 import { Icon } from '../../components/Icon';
-import { Sheet } from '../../components/Sheet';
-import { DEFAULT_PREFERENCES } from '../../storage';
-import { THEME_STORAGE_KEY } from '../../styles/themes';
-import { READING_SIZE_STORAGE_KEY } from '../../styles/reading-size';
-import styles from './SettingsScreen.module.css';
+import { VoiceSettings } from '../../components/VoiceSettings';
+import { AboutSettings } from './AboutSettings';
+import { AppearanceSettings } from './AppearanceSettings';
+import { LearningSettings } from './LearningSettings';
+import { PackSettings } from './PackSettings';
+import {
+  parseSettingsTab,
+  SETTINGS_TAB_OPTIONS,
+  settingsPath,
+  type SettingsTab,
+} from './settings-url';
+import styles from './Settings.module.css';
 
 /**
- * Resetting is a three-state control rather than one button, because the action
- * is irreversible and there is nowhere to restore from: learner state is local
- * to the device by design, so a mis-tap is the whole history gone.
+ * Settings, in five sections rather than one column.
+ *
+ * The list it replaced was eleven cards deep, and the two things a learner
+ * actually comes here to change — the course and the voice — were the first and
+ * the fifth, with the app's own facts about itself interleaved. So the sections
+ * are grouped by *whose* setting it is: Learning, Appearance and Audio are the
+ * learner's, Packs and About are the app's.
+ *
+ * The open section is in the query string rather than in state, so `?tab=packs`
+ * is an address like every other view in this app — see `settings-url.ts`. One
+ * `<h1>`, one `<main>`: the section is an `<h2>`, not a second page.
  */
-type ResetTarget = 'progress' | 'all';
-type ResetResult = ResetTarget | null;
-
 export function SettingsScreen() {
-  const { services, preferences, updatePreferences } = useServices();
-  const navigate = useNavigate();
-  const [resetTarget, setResetTarget] = useState<ResetTarget | null>(null);
-  const [resetResult, setResetResult] = useState<ResetResult>(null);
-
-  const resetProgress = async () => {
-    await services.storage.progress.clear();
-    await services.storage.attempts.clear();
-    await services.storage.sessions.clear();
-    // Preferences are deliberately kept: nobody asking to clear their history
-    // is also asking to have their voice and theme picked again.
-    setResetTarget(null);
-    setResetResult('progress');
-  };
-
-  const resetAllLocalData = async () => {
-    await services.storage.clearAll();
-    clearPreferenceCaches();
-    // Update the live app as well as storage. Reloading should not be required
-    // to see that the reset worked, and the next route should be the same clean
-    // A1 course a new install opens.
-    updatePreferences(DEFAULT_PREFERENCES);
-    setResetTarget(null);
-    setResetResult('all');
-    void navigate(`/${DEFAULT_PREFERENCES.targetLanguage}/${DEFAULT_PREFERENCES.level}`);
-  };
-
-  const errors = services.datasetIssues.filter((issue) => issue.severity === 'error');
+  const { course } = useCourse();
+  const [params] = useSearchParams();
+  const tab = parseSettingsTab(params);
+  const active = SETTINGS_TAB_OPTIONS.find((option) => option.id === tab);
 
   return (
     <AppShell title="Settings">
-      <section className={styles.group} aria-labelledby="group-language">
-        <h2 className={styles.groupTitle} id="group-language">
-          Language
+      <nav className={styles.tabs} aria-label="Settings sections">
+        <ul className={styles.tabList}>
+          {SETTINGS_TAB_OPTIONS.map((option) => {
+            const current = option.id === tab;
+            return (
+              <li key={option.id}>
+                <Link
+                  to={settingsPath(course, option.id)}
+                  className={`${styles.tab} ${current ? styles.tabActive : ''}`}
+                  aria-current={current ? 'page' : undefined}
+                >
+                  <Icon name={option.icon} size="sm" />
+                  {option.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <section className={styles.group} aria-labelledby="settings-section">
+        <h2 className={styles.groupTitle} id="settings-section">
+          {active?.label ?? 'Settings'}
         </h2>
-        {/* The same control the course bar offers everywhere else, so there is
-            one way to change course rather than two that can disagree. */}
-        <div className={styles.field}>
-          <span className={styles.label}>
-            <Icon name="language" size="sm" className={styles.labelIcon} />
-            Learning
-          </span>
-          <CourseBar />
-          <span className={styles.hint}>
-            A level is a ceiling, not a chapter: choosing A2 keeps A1 material in rotation as
-            review.
-          </span>
-        </div>
-        <label className={styles.field}>
-          <span className={styles.label}>
-            <Icon name="explain" size="sm" className={styles.labelIcon} />
-            Reference language
-          </span>
-          <select
-            value={preferences.referenceLanguage}
-            onChange={(event) => updatePreferences({ referenceLanguage: event.target.value })}
-          >
-            {REFERENCE_LANGUAGES.map((language) => (
-              <option key={language.tag} value={language.tag}>
-                {language.nativeName}
-              </option>
-            ))}
-          </select>
-          <span className={styles.hint}>
-            The language meanings are shown in. More will follow — English is only the first.
-          </span>
-        </label>
+        {active && <p className={styles.sectionSummary}>{active.summary}</p>}
+        <Section tab={tab} />
       </section>
-
-      <section className={styles.group} aria-labelledby="group-audio">
-        <h2 className={styles.groupTitle} id="group-audio">
-          Audio
-        </h2>
-        {/* The same control the header's voice menu opens, so a change made
-            in either place is the same change — there is nothing here that the
-            menu cannot reach, and nothing in the menu that stops here. */}
-        <VoiceSettings />
-      </section>
-
-      <section className={styles.group} aria-labelledby="group-practice">
-        <h2 className={styles.groupTitle} id="group-practice">
-          Practice
-        </h2>
-        <label className={styles.toggle}>
-          <input
-            type="checkbox"
-            checked={preferences.showTimer}
-            onChange={(event) => updatePreferences({ showTimer: event.target.checked })}
-          />
-          <span>Show elapsed time</span>
-        </label>
-        <span className={styles.hint}>
-          How long the session has been running. There is no limit and no penalty — switch it off if
-          a clock is a distraction.
-        </span>
-      </section>
-
-      <section className={styles.group} aria-labelledby="group-appearance">
-        <h2 className={styles.groupTitle} id="group-appearance">
-          Appearance
-        </h2>
-        <div className={styles.field}>
-          <span className={styles.label} id="theme-label">
-            <Icon name="theme" size="sm" className={styles.labelIcon} />
-            Theme
-          </span>
-          <ThemeToggle />
-          <span className={styles.hint}>
-            System follows your device setting and switches with it.
-          </span>
-        </div>
-        <div className={styles.field}>
-          <span className={styles.label}>Text size</span>
-          <ReadingSizeControl />
-          <span className={styles.hint}>
-            Changes text throughout the app. It is separate from your colour theme.
-          </span>
-        </div>
-      </section>
-
-      <section className={styles.group} aria-labelledby="group-data">
-        <h2 className={styles.groupTitle} id="group-data">
-          Data
-        </h2>
-        <div className={styles.field}>
-          <span className={styles.label}>
-            <Icon name="topic" size="sm" className={styles.labelIcon} />
-            Content
-          </span>
-          <p className={styles.hint}>
-            {services.repository.itemCount} items in {services.repository.packs.length} pack(s).
-            {errors.length > 0 && ` ${errors.length} dataset error(s) were skipped.`}
-          </p>
-        </div>
-
-        <div className={styles.field}>
-          <span className={styles.label}>
-            <Icon name="theme" size="sm" className={styles.labelIcon} />
-            Design system
-          </span>
-          <p className={styles.hint}>
-            Every colour role, token, icon and control this build is drawing with, read from the
-            stylesheets themselves.
-          </p>
-          <Link className={styles.link} to="/design">
-            Open the design system
-            <Icon name="next" size="sm" />
-          </Link>
-        </div>
-
-        <div className={styles.field}>
-          <span className={styles.label}>
-            <Icon name="explain" size="sm" className={styles.labelIcon} />
-            Version
-          </span>
-          {/* The string a bug report should quote, and the pack version beside it:
-              content ships and updates independently of the app. */}
-          <p className={styles.hint}>
-            {APP.name} {buildLabel()}
-            {buildDate() && ` · built ${buildDate()}`}
-          </p>
-          <p className={styles.hint}>
-            {services.repository.packs.map((pack) => `${pack.name} ${pack.version}`).join(' · ') ||
-              'No content packs loaded'}
-          </p>
-        </div>
-
-        <div className={styles.field}>
-          <span className={styles.label}>Learning history</span>
-          <p className={styles.hint}>
-            Clear attempts, sessions and review schedules while keeping your course and appearance
-            settings.
-          </p>
-          <Button block onClick={() => setResetTarget('progress')}>
-            Reset progress
-          </Button>
-        </div>
-
-        <div className={styles.field}>
-          <span className={`${styles.label} ${styles.dangerLabel}`}>
-            <Icon name="delete" size="sm" />
-            Clean-install testing
-          </span>
-          <p className={styles.hint}>
-            Restore this device to the app defaults, including progress, course, theme, text size,
-            voice and practice preferences.
-          </p>
-          <Button variant="danger" block onClick={() => setResetTarget('all')}>
-            Reset all local data
-          </Button>
-        </div>
-
-        {resetResult && (
-          <p className={styles.resetStatus} role="status">
-            <Icon name="check" size="sm" />
-            {resetResult === 'progress'
-              ? 'Learning history cleared.'
-              : 'All local data reset to app defaults.'}
-          </p>
-        )}
-      </section>
-
-      {resetTarget && (
-        <Sheet
-          title={resetTarget === 'progress' ? 'Reset progress?' : 'Reset all local data?'}
-          onClose={() => setResetTarget(null)}
-        >
-          {/* Announced, not just coloured: the warning is the only thing
-              standing between a tap and an unrecoverable delete. */}
-          <p className={styles.resetWarning} role="alert">
-            {resetTarget === 'progress'
-              ? 'This erases every attempt, session and review schedule stored on this device. Your settings stay unchanged. It cannot be undone.'
-              : 'This erases all learning history and restores every app setting on this device to its default. It cannot be undone.'}
-          </p>
-          <div className={styles.confirm}>
-            <Button onClick={() => setResetTarget(null)}>Cancel</Button>
-            <Button
-              variant="danger"
-              onClick={() =>
-                void (resetTarget === 'progress' ? resetProgress() : resetAllLocalData())
-              }
-            >
-              {resetTarget === 'progress' ? 'Erase learning history' : 'Erase all local data'}
-            </Button>
-          </div>
-        </Sheet>
-      )}
     </AppShell>
   );
 }
 
-/** Removes the pre-paint mirrors; IndexedDB remains the preference source of truth. */
-function clearPreferenceCaches(): void {
-  try {
-    localStorage.removeItem(THEME_STORAGE_KEY);
-    localStorage.removeItem(READING_SIZE_STORAGE_KEY);
-  } catch {
-    // A locked-down browser may refuse localStorage; clearAll still removes the source data.
+function Section({ tab }: { readonly tab: SettingsTab }) {
+  switch (tab) {
+    case 'learning':
+      return <LearningSettings />;
+    case 'appearance':
+      return <AppearanceSettings />;
+    case 'audio':
+      // The same control the header's voice menu opens, so a change made in
+      // either place is the same change — there is nothing here the menu cannot
+      // reach, and nothing in the menu that stops here.
+      return <VoiceSettings />;
+    case 'packs':
+      return <PackSettings />;
+    case 'about':
+      return <AboutSettings />;
   }
 }

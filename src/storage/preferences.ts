@@ -5,6 +5,8 @@ import {
   DEFAULT_TARGET_LANGUAGE,
 } from '../domain/content';
 import { DEFAULT_SESSION_FOCUS } from '../domain/sessions';
+import { DEFAULT_CONTRAST } from '../styles/contrast';
+import { DEFAULT_PALETTE } from '../styles/themes';
 import type { Preferences } from './types';
 
 export const DEFAULT_PREFERENCES: Preferences = {
@@ -22,6 +24,8 @@ export const DEFAULT_PREFERENCES: Preferences = {
   slowAudio: false,
   showRomanisationHints: false,
   theme: 'system',
+  palette: DEFAULT_PALETTE,
+  contrast: DEFAULT_CONTRAST,
   readingSize: 'small',
 };
 

@@ -1,0 +1,22 @@
+/**
+ * Maximum contrast, light — text at `ink` on a card at `paper`.
+ *
+ * The page keeps two points of ink so a card still reads as raised above it.
+ * A light mode has nothing above white to raise a surface *to*, so that small
+ * step is the only depth available and Maximum cannot afford to spend it.
+ */
+
+[data-theme='light'][data-contrast='max'],
+[data-theme='light'] [data-contrast='max'] {
+  --color-bg: color-mix(in srgb, var(--color-ink) 2%, var(--color-paper));
+  --color-bg-tint: color-mix(in srgb, var(--color-ink) 4%, var(--color-paper));
+  --color-surface: var(--color-paper);
+  --color-surface-raised: var(--color-paper);
+  --color-surface-sunken: color-mix(in srgb, var(--color-ink) 6%, var(--color-paper));
+  --color-chrome: var(--color-paper);
+  --color-border: color-mix(in srgb, var(--color-ink) 19%, var(--color-paper));
+  --color-border-strong: color-mix(in srgb, var(--color-ink) 70%, var(--color-paper));
+  --color-track: color-mix(in srgb, var(--color-ink) 23%, var(--color-paper));
+  --color-text: var(--color-ink);
+  --color-text-muted: color-mix(in srgb, var(--color-ink) 88%, var(--color-paper));
+}

@@ -13,6 +13,7 @@ import {
   CircleHelp,
   CircleX,
   Clock,
+  Contrast,
   Copy,
   Download,
   Ear,
@@ -33,11 +34,13 @@ import {
   Monitor,
   Moon,
   NotebookPen,
+  Package,
   Palette,
   Pause,
   Play,
   Plus,
   RefreshCw,
+  Route,
   Ruler,
   RotateCcw,
   Search,
@@ -125,6 +128,8 @@ export const ICONS = {
   themeLight: Sun,
   themeDark: Moon,
   themeSystem: Monitor,
+  /* The contrast axis, which is a separate choice from the palette. */
+  contrast: Contrast,
 
   // Verdicts and learning state. `correct`/`incorrect` are the graded pair;
   // `check` is a plain tick for a list, and deliberately not the same drawing.
@@ -144,6 +149,10 @@ export const ICONS = {
   word: Type,
   grammar: Ruler,
   passage: NotebookPen,
+  /* A content pack: an add-on with its own version, licence and contents. */
+  pack: Package,
+  /* A mission — a route through material towards one real-world outcome. */
+  mission: Route,
   shuffle: Shuffle,
 
   // Progress and reward. Kept few on purpose: every icon here is a claim about

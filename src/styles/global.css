@@ -1,6 +1,28 @@
 @import './primitives.css';
-@import './themes/dark.css';
-@import './themes/light.css';
+
+/*
+ * Palettes first, then contrast levels.
+ *
+ * The order is load-bearing, not tidiness: a palette selects on two
+ * attributes ([data-theme][data-palette]) and so does a contrast level, so
+ * they tie on specificity and the later import wins. A level is meant to
+ * restate the neutral roles a palette declared, so it has to come second —
+ * contrast.test.ts asserts this ordering rather than trusting the comment.
+ */
+@import './themes/indigo-dark.css';
+@import './themes/indigo-light.css';
+@import './themes/teal-dark.css';
+@import './themes/teal-light.css';
+@import './themes/plum-dark.css';
+@import './themes/plum-light.css';
+@import './themes/sand-dark.css';
+@import './themes/sand-light.css';
+@import './contrast/soft-dark.css';
+@import './contrast/soft-light.css';
+@import './contrast/more-dark.css';
+@import './contrast/more-light.css';
+@import './contrast/max-dark.css';
+@import './contrast/max-light.css';
 
 *,
 *::before,

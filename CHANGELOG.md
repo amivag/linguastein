@@ -15,6 +15,43 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Added
+
+- **Four palettes, in light and dark.** Indigo (the original), Teal, Plum and
+  Sand — the last inverting the temperature, with warm paper, a bronze accent and
+  therefore a cool second accent. A palette is its own axis, so it survives the
+  theme switching around it, and the picker's swatches are the real palettes
+  rather than copies of their colours.
+- **A contrast scale with four steps**: Soft, Normal, More and Maximum. A level
+  restates a palette's neutrals as positions along that palette's own ink-to-paper
+  axis and touches no hue, so one level serves every palette — including ones
+  written later. Soft is quieter, not less legible: every palette is checked
+  against every level at WCAG AA, and the levels are asserted to come out in
+  order.
+- **Content packs are treated as add-ons.** Settings lists each pack with its
+  version, language, levels, accents, recorded voices, licence and review state,
+  and counts what it actually holds — word cards, phrases, sentences, texts,
+  patterns, categories — from the repository rather than from the manifest's
+  description. A skipped record is now attributed to the pack whose file it came
+  from instead of appearing as a lone number.
+- **Missions have a home in Study.** The whole ladder is listed in authored order
+  with each mission's standing, so an earlier one can be revisited and the route
+  ahead is visible. Test still leads with the next unfinished mission and links
+  across to the list.
+
+### Changed
+
+- **Settings is five sections instead of one column of eleven cards**, grouped by
+  whose setting it is: Learning, Appearance and Audio are the learner's, Packs and
+  About are the app's. The open section lives in the URL
+  (`/es/a1/settings?tab=appearance`), so it survives a reload and can be linked
+  to; an unrecognised one opens the default rather than breaking.
+- Study's promise is now scoped rather than absolute: the sheets record nothing,
+  and the missions section says out loud that a mission's last stage does.
+- Where a learner stands in a mission is computed in one place
+  (`domain/missions/progress.ts`) instead of inline on the home screen, so the two
+  screens that ask cannot answer differently.
+
 ## 0.1.0-alpha.4 — 2026-08-22
 
 ### Changed

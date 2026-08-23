@@ -1,0 +1,46 @@
+/**
+ * Sand, dark — the one palette whose temperature is reversed.
+ *
+ * The greys are warm and the accent is a bronze, so the *highlight* becomes the
+ * cool one: a warm accent beside a warm highlight would read as one hue at two
+ * strengths, and the highlight's whole job is to be a second voice. Everything
+ * else keeps its meaning exactly.
+ */
+
+[data-theme='dark'][data-palette='sand'],
+[data-theme='dark'] [data-palette='sand'] {
+  color-scheme: dark;
+
+  --color-ink: #fcf8f1;
+  --color-paper: #0a0805;
+
+  --color-bg: #14110d;
+  --color-bg-tint: #1e1913;
+  --color-surface: #1b1712;
+  --color-surface-raised: #26211a;
+  --color-surface-sunken: #100e0a;
+  --color-border: #352e24;
+  --color-border-strong: #8a7c68;
+  --color-text: #f7f2e9;
+  --color-text-muted: #c2b8a6;
+  --color-accent: #e0b872;
+  --color-accent-contrast: #2a1f08;
+  --color-accent-soft: #322612;
+  --color-accent-edge: #96793d;
+  --color-highlight: #6fd8e8;
+  --color-highlight-soft: #10282e;
+  --color-success: #7ecf8e;
+  --color-success-soft: #16311d;
+  --color-danger: #ff8a7a;
+  --color-danger-soft: #3b1d18;
+  --color-chrome: #191510;
+  --color-track: #322c22;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 35%);
+  --shadow-lg: 0 -8px 48px rgb(0 0 0 / 55%);
+  --shadow-inset: inset 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-accent: 0 6px 20px rgb(224 184 114 / 20%);
+
+  --backdrop: rgb(0 0 0 / 55%);
+}

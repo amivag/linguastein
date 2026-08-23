@@ -74,20 +74,23 @@ These are load-bearing. Breaking one is a design change, not a refactor. Rules
 
 ```text
 src/app/         composition root, routing, the current course (`course.ts`)
-src/domain/      the engine (content, exercises, sessions, progress)
+src/domain/      the engine (content, exercises, sessions, progress, missions)
 src/languages/   language-specific morphology — build-time, not engine
 src/data/        dataset loading + the zod validation boundary
 src/storage/     IndexedDB and in-memory LearnerStorage
 src/audio/       audio service + TTS seam
 src/ai/          AI seam and learner-context builder (no vendor, no network)
-src/features/    screens: home, study, browse, read, progress, practice, settings, sharing
+src/features/    screens: home, study, browse, read, progress, practice, missions,
+                 settings (one file per section), sharing
 src/components/  shared UI: AppShell, AppNav, Button, Chip, Sheet, Icon, CourseBar,
-                 ThemeToggle, VoiceInput, TokenizedText, WordInfoSheet and
+                 ThemeToggle, PaletteControl, ContrastControl, ReadingSizeControl,
+                 VoiceInput, TokenizedText, WordInfoSheet and
                  useWordSelection (used by practice, reading, browse and progress
                  alike). `icons.ts` is the icon-set seam
 src/features/design/  the live style guide at /design
-src/styles/      primitives, shared surface recipes, the token reader, and one
-                 file per theme
+src/styles/      primitives, shared surface recipes, the token reader, one file
+                 per palette per mode (themes/) and one per contrast level
+                 (contrast/)
 content/es/      hand-authored dataset sources (TSV)
 public/packs/    GENERATED datasets — never edit by hand
 ```
@@ -112,6 +115,23 @@ was: the word tiles were counted with `partsOfSpeech`, which counts every item
 _exemplifying_ a part of speech — sentences included — while the tile links to a
 sheet of word cards. That advertised 546 verbs where the sheet lists none.
 
+**Missions belong to Study.** A mission is mostly material — an exchange to
+understand, then the same language used somewhere new — so the catalogue lives on
+Study, listed in authored order with each one's standing. Test keeps leading with
+the next unfinished one, because a recommendation is what that screen is for, and
+links across to the full ladder rather than being the only way in.
+
+Only the Use stage records anything, and Study says so: the rest of that screen
+promises the opposite, so a control that records has to qualify the promise rather
+than quietly break it.
+
+Where a learner stands is **derived, never stored** —
+`domain/missions/progress.ts` computes it from the attempt log, and both screens
+call it. It was inline in the home screen before, which is why Study could not
+list missions without copying the calculation. The Use-stage session id
+(`mission:<id>:use:<passage>:<stamp>`) is built and parsed there too, for the same
+reason: it was spelled out in three places.
+
 ## Browse's URL, and the filter spelling
 
 A study sheet is a thing you link to, so Browse's filters live in the query
@@ -127,6 +147,29 @@ Add a facet there, not in a screen.
 `sort` is the exception and deliberately so — it narrows nothing, so it stays in
 Browse's URL and never travels into a session link, where `ordering` is the
 session's own business.
+
+## Settings, in sections
+
+Five sections rather than one column, grouped by _whose_ setting it is: Learning,
+Appearance and Audio are the learner's; Packs and About are the app's. One file
+per section under `features/settings/`, and the shell only picks between them.
+
+The open section is in the query string — `/es/a1/settings?tab=packs` — and
+`settings-url.ts` owns both directions, exactly as Browse and a session do. The
+default is left unsaid in the link, and an unrecognised name opens the default
+rather than erroring. The switcher is a `nav` of links with `aria-current`, not a
+`role="tablist"`: a section here _is_ an address, and half an ARIA tab widget
+promises arrow-key semantics that a set of links does not have.
+
+**A content pack is an add-on, and Settings treats it as one.** It ships,
+versions and is licensed separately, so the Packs section lists each one with its
+version, levels, accents, licence and provenance, and counts what it holds through
+`domain/content/packs.ts` — counted from the repository rather than read out of
+the manifest's prose, and with the filter each label describes. Two rules matter
+here: a pack that has not been editorially reviewed says so, because generated
+material must stay distinguishable from checked material; and a skipped record is
+attributed to the pack whose file it came from, since a number floating on the
+screen names nothing to fix.
 
 ## Courses and the URL
 
@@ -321,10 +364,11 @@ automated agents alike, so the same rules serve both:
   resumed, shared or scripted. `src/features/practice/session-url.ts` owns both
   directions — build links with `sessionPath` rather than by hand, so a
   parameter cannot be written that the screen does not read
-- colour contrast is asserted against every file in `src/styles/themes/` by
-  `tests/a11y/contrast.test.ts`. Where a boundary is drawn at all it uses
-  `--color-border-strong` (3:1) for a control and `--color-border` for
-  decoration — but see rule 1 of the design language: almost nothing draws one
+- colour contrast is asserted for every _combination_ of palette and contrast
+  level by `tests/a11y/contrast.test.ts`, which discovers both from their
+  directories. Where a boundary is drawn at all it uses `--color-border-strong`
+  (3:1) for a control and `--color-border` for decoration — but see rule 1 of the
+  design language: almost nothing draws one
 - `tests/a11y/design-language.test.ts` enumerates every remaining border and
   fails on a new one, and refuses a hard-coded colour outside a theme file
 - a render that throws is caught by `src/app/ErrorBoundary.tsx` and reported as
@@ -402,16 +446,37 @@ read it before changing `registerSW` options or the workbox config.
 
 ## Theming
 
-Themes are colour-only and live in `src/styles/themes/<id>.css`, registered in
-`src/styles/themes.ts`. Primitives (spacing, type, layout) are theme-independent
-and belong in `primitives.css`. Never hard-code a colour in a component — use a
-role token, and add a role rather than inventing a one-off. Adding a theme is
-documented in [docs/theming.md](docs/theming.md); the contrast test discovers
-theme files automatically, so a new theme is held to WCAG AA the moment it
-appears.
+Appearance is **four independent axes**, never one combined id: `data-theme`
+(light/dark), `data-palette` (which hues), `data-contrast` (how far apart the
+neutrals sit) and `data-reading-size` (the type scale). Combining them would need
+`dark-teal-large-more`, and every palette added would multiply the files.
 
-`<html>` always carries a resolved `data-theme`; the pre-paint script in
-`index.html` and the key in `themes.ts` must stay in sync.
+Palettes are colour-only and live in `src/styles/themes/<palette>-<mode>.css`,
+registered in `src/styles/themes.ts`; contrast levels live in
+`src/styles/contrast/<level>-<mode>.css`, registered in `src/styles/contrast.ts`.
+Primitives (spacing, type, layout) are axis-independent and belong in
+`primitives.css`. Never hard-code a colour in a component — use a role token, and
+add a role rather than inventing a one-off. Adding a palette is documented in
+[docs/theming.md](docs/theming.md).
+
+Three rules do the load-bearing work, and all three are asserted:
+
+- **A contrast level declares no hue.** It restates the neutral roles as mixes
+  along the palette's own `--color-ink` → `--color-paper` axis, which is what lets
+  one level serve a palette written after it — More contrast in Sand stays warm
+  instead of turning grey.
+- **Every combination is checked, not just the default.** `contrast.test.ts`
+  discovers palettes and levels from the directories and holds each palette to
+  WCAG AA at each level, evaluating the `color-mix` itself. Soft is quieter, not
+  less legible, and the levels are asserted to come out in order.
+- **A preview is the real palette.** Each palette file also selects a
+  _descendant_ carrying `data-palette`, so the settings picker shows four live
+  palettes with no colour leaving `src/styles/themes/`. Never build a swatch from
+  a hex.
+
+`<html>` always carries all four attributes. The pre-paint script in `index.html`
+repeats the four lists as literals because it cannot import a module — that is the
+one duplication, and the contrast test asserts it matches the registries.
 
 ## The design language
 

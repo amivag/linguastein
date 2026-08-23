@@ -1,10 +1,20 @@
 /**
- * The theme registry.
+ * The appearance registry: light or dark, and which palette.
  *
- * Adding a theme is two steps: create `src/styles/themes/<id>.css` declaring
- * the colour roles under `[data-theme='<id>']`, import it in `global.css`, and
- * add an entry here. The settings UI, the quick toggle and the contrast test
- * all read from this list, so nothing else needs touching.
+ * Three axes decide how the app looks, and they are deliberately separate
+ * rather than combined into one theme id — see `docs/theming.md`. A combined id
+ * would need `dark-teal-large-more` and would multiply with every palette added.
+ *
+ * - `data-theme` — light or dark, this file
+ * - `data-palette` — which set of hues, this file
+ * - `data-contrast` — how far apart they sit, `contrast.ts`
+ * - `data-reading-size` — type scale, `reading-size.ts`
+ *
+ * Adding a palette is three steps: create `src/styles/themes/<id>-dark.css` and
+ * `<id>-light.css` declaring every colour role, import both in `global.css`, and
+ * add an entry to `PALETTE_OPTIONS`. The settings picker, the style guide and
+ * the contrast test all read from these lists, so nothing else needs touching —
+ * and the test refuses a palette whose two files are not both there.
  */
 
 import { storageKey } from '../app/identity';
@@ -36,18 +46,40 @@ export const THEME_OPTIONS: readonly ThemeOption[] = [
 ];
 
 /**
- * Where the resolved preference is cached for the pre-paint script.
+ * The palettes on offer, in the order the picker shows them.
  *
- * Derived rather than typed out. It used to be a literal here *and* a literal in
- * `index.html`, with a comment asking the reader to keep them in sync — which is
- * a contract no test could check and nothing would report breaking. `index.html`
- * now carries a `%APP_ID%` placeholder that the build substitutes from the same
- * constant, so there is one spelling and it cannot drift.
+ * `indigo` is first and is what an unset `data-palette` resolves to, which is
+ * why its two files carry the bare `[data-theme='…']` selector as well.
  */
+export const PALETTES = ['indigo', 'teal', 'plum', 'sand'] as const;
+export type PaletteId = (typeof PALETTES)[number];
+
+export const DEFAULT_PALETTE: PaletteId = 'indigo';
+
+export interface PaletteOption {
+  readonly id: PaletteId;
+  readonly label: string;
+  /** One line on what changes, for the hint under the picker. */
+  readonly description: string;
+}
+
+export const PALETTE_OPTIONS: readonly PaletteOption[] = [
+  { id: 'indigo', label: 'Indigo', description: 'Cool indigo with a warm amber second voice.' },
+  { id: 'teal', label: 'Teal', description: 'Green-cast greys and a deep teal accent.' },
+  { id: 'plum', label: 'Plum', description: 'Violet greys and a fuchsia accent.' },
+  { id: 'sand', label: 'Sand', description: 'Warm paper and bronze, with a cool highlight.' },
+];
+
+/** Where each resolved axis is cached for the pre-paint script. */
 export const THEME_STORAGE_KEY = storageKey('theme');
+export const PALETTE_STORAGE_KEY = storageKey('palette');
 
 export function isThemePreference(value: unknown): value is ThemePreference {
   return typeof value === 'string' && (THEME_PREFERENCES as readonly string[]).includes(value);
+}
+
+export function isPaletteId(value: unknown): value is PaletteId {
+  return typeof value === 'string' && (PALETTES as readonly string[]).includes(value);
 }
 
 export function resolveTheme(preference: ThemePreference, prefersDark: boolean): ThemeId {
@@ -63,10 +95,24 @@ export function resolveTheme(preference: ThemePreference, prefersDark: boolean):
 export function applyTheme(preference: ThemePreference, prefersDark: boolean): ThemeId {
   const resolved = resolveTheme(preference, prefersDark);
   document.documentElement.dataset['theme'] = resolved;
-  try {
-    localStorage.setItem(THEME_STORAGE_KEY, preference);
-  } catch {
-    // Private browsing can refuse storage; the theme still applies this session.
-  }
+  cache(THEME_STORAGE_KEY, preference);
   return resolved;
+}
+
+/**
+ * Applies a palette. Always written out, including the default, so a decorative
+ * element can override it locally to preview another one — the picker's swatches
+ * are real palettes rather than hard-coded colours.
+ */
+export function applyPalette(palette: PaletteId): void {
+  document.documentElement.dataset['palette'] = palette;
+  cache(PALETTE_STORAGE_KEY, palette);
+}
+
+function cache(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Private browsing can refuse storage; the choice still applies this session.
+  }
 }

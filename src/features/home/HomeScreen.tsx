@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MISSIONS } from '../../app/missions';
@@ -10,8 +10,8 @@ import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { levelLabel } from '../../domain/content';
-import { summarise, type Attempt, type ProgressSummary } from '../../domain/progress';
-import { missionIsComplete, missionTransfers, missionsForCourse } from '../../domain/missions';
+import { summarise, type ProgressSummary } from '../../domain/progress';
+import { missionStandings, missionUseEvidence, nextMissionStanding } from '../../domain/missions';
 import {
   DEFAULT_SESSION_MINUTES,
   type SessionFocus,
@@ -61,7 +61,7 @@ export function HomeScreen() {
       const attemptsInScope = attempts.filter((attempt) => scope.ids.has(attempt.itemId));
       setSummary(summarise(inScope, scope.total, now));
       setPractisedIds(new Set(inScope.map((entry) => entry.itemId)));
-      setMissionUseItems(indexMissionUseAttempts(attempts));
+      setMissionUseItems(missionUseEvidence(attempts));
       setPracticeDays(daysPractisedThisWeek(attempts, now));
       setLastPractice(describeLastPractice(attemptsInScope, now));
     })();
@@ -70,48 +70,28 @@ export function HomeScreen() {
     };
   }, [services, scope]);
 
+  // Where the learner stands in every mission this course offers. Study lists
+  // all of them; the home screen only needs the one that leads.
+  const standings = useMemo(
+    () =>
+      missionStandings(MISSIONS, course, services.repository, scope.ids, {
+        practised: practisedIds,
+        used: missionUseItems,
+      }),
+    [course, missionUseItems, practisedIds, scope.ids, services.repository],
+  );
+
   // The next unfinished authored mission leads. A pack with no mission catalog
   // still gets a useful first passage rather than Spanish sequencing leaking in.
   const mission = useMemo(() => {
-    const inCourse = (candidate: ReturnType<typeof services.repository.passageByLocalId>) =>
-      candidate !== undefined &&
-      services.repository.itemsOfPassage(candidate.id).some((item) => scope.ids.has(item.id));
-
-    const authored = missionsForCourse(MISSIONS, course).flatMap((definition) => {
-      const passage = services.repository.passageByLocalId(definition.passage);
-      return passage && inCourse(passage) ? [{ definition, passage }] : [];
-    });
-    const unfinished = authored.findIndex(({ definition, passage }) => {
-      const useEvidence = missionUseItems.get(definition.id) ?? new Set<string>();
-      const transferPassages = missionTransfers(definition).flatMap((transfer) => {
-        const candidate = services.repository.passageByLocalId(transfer.passage);
-        return candidate ? [candidate] : [];
-      });
-      const usePassages = transferPassages.length ? transferPassages : [passage];
-      const complete = definition.capabilities?.length
-        ? usePassages.every((usePassage) => {
-            const learnerItems = services.repository
-              .itemsOfPassage(usePassage.id)
-              .filter(
-                (_, index) =>
-                  definition.learnerSpeaker === undefined ||
-                  usePassage.speakers?.[index] === definition.learnerSpeaker,
-              );
-            return missionIsComplete(
-              learnerItems.map((item) => item.id),
-              useEvidence,
-            );
-          })
-        : missionIsComplete(passage.items, practisedIds);
-      return !complete;
-    });
-    const selected = authored[unfinished >= 0 ? unfinished : Math.max(0, authored.length - 1)];
-
+    const selected = nextMissionStanding(standings);
     const passage =
       selected?.passage ??
       services.repository
         .allPassages()
-        .filter((candidate) => inCourse(candidate))
+        .filter((candidate) =>
+          services.repository.itemsOfPassage(candidate.id).some((item) => scope.ids.has(item.id)),
+        )
         .sort((a, b) => Number(b.kind === 'dialogue') - Number(a.kind === 'dialogue'))[0];
 
     if (!passage) return null;
@@ -121,51 +101,25 @@ export function HomeScreen() {
       passage.id,
       preferences.referenceLanguage,
     );
-    const phrase = items[selected?.definition.spotlight ?? 0];
-    const transfers = selected
-      ? missionTransfers(selected.definition).filter((transfer) =>
-          services.repository.passageByLocalId(transfer.passage),
-        )
-      : [];
-    const useEvidence = selected
-      ? (missionUseItems.get(selected.definition.id) ?? new Set<string>())
-      : new Set<string>();
-    const completedTransfers = selected
-      ? transfers.filter((transfer) => {
-          const transferPassage = services.repository.passageByLocalId(transfer.passage);
-          if (!transferPassage) return false;
-          const learnerItems = services.repository
-            .itemsOfPassage(transferPassage.id)
-            .filter(
-              (_, index) =>
-                selected.definition.learnerSpeaker === undefined ||
-                transferPassage.speakers?.[index] === selected.definition.learnerSpeaker,
-            );
-          return missionIsComplete(
-            learnerItems.map((item) => item.id),
-            useEvidence,
-          );
-        }).length
-      : 0;
+    const phrase = items[selected?.mission.spotlight ?? 0];
 
     return {
-      id: selected?.definition.id,
+      id: selected?.mission.id,
       localId,
-      title: selected?.definition.title ?? titleTranslation?.text ?? passage.title,
+      title: selected?.mission.title ?? titleTranslation?.text ?? passage.title,
       phrase: phrase?.text ?? passage.title,
       phraseMeaning: phrase
         ? services.repository.translationOf(phrase.id, preferences.referenceLanguage)?.text
         : undefined,
       lineCount: items.length,
-      estimatedMinutes: selected?.definition.estimatedMinutes ?? 5,
-      position: selected ? authored.indexOf(selected) + 1 : 1,
-      total: selected ? authored.length : 1,
-      stage:
-        completedTransfers > 0 || useEvidence.size > 0 ? ('use' as const) : ('understand' as const),
-      transferPosition: Math.min(completedTransfers + 1, Math.max(transfers.length, 1)),
-      transferTotal: Math.max(transfers.length, 1),
+      estimatedMinutes: selected?.mission.estimatedMinutes ?? 5,
+      position: selected?.position ?? 1,
+      total: selected?.total ?? 1,
+      stage: selected?.stage ?? ('understand' as const),
+      transferPosition: selected?.transferPosition ?? 1,
+      transferTotal: selected?.transferTotal ?? 1,
     };
-  }, [course, missionUseItems, practisedIds, preferences.referenceLanguage, scope.ids, services]);
+  }, [preferences.referenceLanguage, scope.ids, services.repository, standings]);
 
   // The standing focus is written into every free-practice link so the session
   // remains reloadable and shareable rather than secretly reading preferences.
@@ -281,6 +235,17 @@ export function HomeScreen() {
               ? `Continue transfer · ${mission.estimatedMinutes} min`
               : `Begin mission · ${mission?.estimatedMinutes ?? 5} min`}
         </Button>
+
+        {/* The whole ladder lives in Study, which is where a mission belongs:
+            this card only ever shows the next rung, and a learner who wants to
+            see the route — or go back to an earlier one — needs somewhere to
+            look that is not this button. */}
+        {standings.length > 1 && (
+          <Link className={styles.missionAll} to={path('study')}>
+            All {standings.length} missions
+            <Icon name="next" size="sm" />
+          </Link>
+        )}
       </section>
 
       {followUps.length > 0 && (
@@ -437,20 +402,6 @@ export function HomeScreen() {
       )}
     </AppShell>
   );
-}
-
-function indexMissionUseAttempts(
-  attempts: readonly Attempt[],
-): ReadonlyMap<string, ReadonlySet<string>> {
-  const result = new Map<string, Set<string>>();
-  for (const attempt of attempts) {
-    const mission = /^mission:([^:]+):use:/.exec(attempt.sessionId ?? '')?.[1];
-    if (!mission) continue;
-    const items = result.get(mission) ?? new Set<string>();
-    items.add(attempt.itemId);
-    result.set(mission, items);
-  }
-  return result;
 }
 
 function daysPractisedThisWeek(attempts: readonly { readonly at: number }[], now: number): number {

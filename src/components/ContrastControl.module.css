@@ -1,0 +1,72 @@
+/*
+ * A four-step scale in a shared sunken track, the same shape the theme and text
+ * size controls use — it is one choice with four settings, not four actions.
+ */
+.group {
+  --control-bg: var(--color-surface-sunken);
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+  background: var(--control-bg);
+  box-shadow: var(--shadow-inset);
+}
+
+.option {
+  --control-bg: transparent;
+
+  display: grid;
+  gap: var(--space-1);
+  justify-items: center;
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--control-bg);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.active {
+  --control-bg: var(--color-surface);
+
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+/*
+ * The preview: a card at this level carrying body text and a muted label, which
+ * are the two roles the axis moves furthest. Painted with plain role tokens, so
+ * the level this element declares is what resolves them.
+ */
+.sample {
+  display: flex;
+  gap: var(--space-1);
+  align-items: baseline;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-weight: var(--weight-semibold);
+}
+
+.sampleText {
+  color: var(--color-text);
+}
+
+.sampleMuted {
+  color: var(--color-text-muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    background: color-mix(in srgb, var(--control-bg) 90%, var(--color-text));
+    color: var(--color-text);
+  }
+}

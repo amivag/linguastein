@@ -8,7 +8,8 @@ import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { UsageBadges } from '../../components/UsageBadges';
 import { ungrouped, group, type Token } from '../../styles/tokens';
-import { THEME_OPTIONS } from '../../styles/themes';
+import { PALETTE_OPTIONS, THEME_OPTIONS } from '../../styles/themes';
+import { CONTRAST_OPTIONS } from '../../styles/contrast';
 import { useTokens } from './useTokens';
 import styles from './StyleGuide.module.css';
 
@@ -248,15 +249,55 @@ export function StyleGuideScreen() {
 
       <Section title="Themes" count={THEME_OPTIONS.length}>
         <p className={styles.note}>
-          Themes are colour-only, one file each under <code>styles/themes/</code>, discovered
-          automatically by the contrast test — so a new theme is held to WCAG AA the moment it
-          exists.
+          Light or dark, resolved from the OS when it is left to System. It is one of four
+          independent appearance axes, and the only one an operating system has an opinion about.
         </p>
         <ul className={styles.themeList}>
           {THEME_OPTIONS.map((option) => (
             <li key={option.id} className={styles.themeItem}>
               <Icon name={option.icon} size="sm" />
               {option.label}
+              <code className={styles.iconName}>{option.id}</code>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section title="Palettes" count={PALETTE_OPTIONS.length}>
+        <p className={styles.note}>
+          Colour-only, two files each under <code>styles/themes/</code> — one per mode — discovered
+          automatically by the contrast test. A palette changes hue and temperature and never
+          meaning: the accent is still the app acting, and green and red are still verdicts.
+        </p>
+        <ul className={styles.themeList}>
+          {PALETTE_OPTIONS.map((option) => (
+            <li key={option.id} className={styles.themeItem}>
+              {/* The swatch is the palette itself rather than a picture of one:
+                  the attribute is what the palette's own stylesheet selects on. */}
+              <span className={styles.paletteSwatch} data-palette={option.id} aria-hidden="true">
+                <span data-role="accent" />
+                <span data-role="highlight" />
+              </span>
+              {option.label}
+              <code className={styles.iconName}>{option.id}</code>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section title="Contrast" count={CONTRAST_OPTIONS.length}>
+        <p className={styles.note}>
+          How far apart a palette&rsquo;s neutrals sit, expressed as a mix along its own
+          <code> ink</code> → <code>paper</code> axis. Every level is checked against every palette,
+          so Soft is quieter without being less legible.
+        </p>
+        <ul className={styles.themeList}>
+          {CONTRAST_OPTIONS.map((option) => (
+            <li key={option.id} className={styles.themeItem}>
+              <span className={styles.contrastSample} data-contrast={option.id} aria-hidden="true">
+                Aa
+              </span>
+              {option.shortLabel}
               <code className={styles.iconName}>{option.id}</code>
             </li>
           ))}
@@ -296,7 +337,7 @@ const RULES: readonly { icon: IconName; title: string; body: string }[] = [
   {
     icon: 'theme',
     title: 'Colour means something.',
-    body: 'Indigo is the app acting, amber is new material, green and red are verdicts. A fifth hue would need a fifth meaning.',
+    body: 'The accent is the app acting, the second accent is new material, green and red are verdicts. Four palettes change which hues those are; none of them changes what they mean.',
   },
   {
     icon: 'quick',

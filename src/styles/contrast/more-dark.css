@@ -1,0 +1,22 @@
+/**
+ * More contrast, dark — a step past the authored palette.
+ *
+ * The grounds drop towards `paper` and the text rises towards `ink`, so the
+ * page separates further without any hue moving. See `soft-dark.css` for the
+ * model and why every level is still checked.
+ */
+
+[data-theme='dark'][data-contrast='more'],
+[data-theme='dark'] [data-contrast='more'] {
+  --color-bg: color-mix(in srgb, var(--color-ink) 2%, var(--color-paper));
+  --color-bg-tint: color-mix(in srgb, var(--color-ink) 5%, var(--color-paper));
+  --color-surface: color-mix(in srgb, var(--color-ink) 5%, var(--color-paper));
+  --color-surface-raised: color-mix(in srgb, var(--color-ink) 9%, var(--color-paper));
+  --color-surface-sunken: color-mix(in srgb, var(--color-ink) 1%, var(--color-paper));
+  --color-chrome: color-mix(in srgb, var(--color-ink) 4%, var(--color-paper));
+  --color-border: color-mix(in srgb, var(--color-ink) 20%, var(--color-paper));
+  --color-border-strong: color-mix(in srgb, var(--color-ink) 52%, var(--color-paper));
+  --color-track: color-mix(in srgb, var(--color-ink) 17%, var(--color-paper));
+  --color-text: color-mix(in srgb, var(--color-ink) 99%, var(--color-paper));
+  --color-text-muted: color-mix(in srgb, var(--color-ink) 78%, var(--color-paper));
+}

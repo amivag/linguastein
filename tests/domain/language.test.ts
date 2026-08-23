@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   baseLanguage,
+  languageOption,
   deriveTokenSpans,
   parseEntityId,
   referenceLanguageChain,
@@ -18,6 +19,20 @@ describe('language resolution', () => {
   it('reduces a tag to its base language', () => {
     expect(baseLanguage('es-MX')).toBe('es');
     expect(baseLanguage('es')).toBe('es');
+  });
+
+  it('names a tag from either list, since naming is not learnability', () => {
+    /*
+     * English is a reference language and not (yet) a target one. Looking only
+     * at the targets reported a pack's meanings as available in "en", which is a
+     * tag rather than a language.
+     */
+    expect(languageOption('es').englishName).toBe('Spanish');
+    expect(languageOption('en').englishName).toBe('English');
+    expect(languageOption('es-MX').englishName).toBe('Spanish');
+    // An unknown tag still names itself, so a pack can ship before this list
+    // learns about its language.
+    expect(languageOption('zz').englishName).toBe('zz');
   });
 
   it('matches a pronunciation locale within the same language', () => {

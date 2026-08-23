@@ -1,0 +1,97 @@
+/*
+ * Four palettes, laid out as a grid of previews rather than a select: colour is
+ * the one setting nobody can choose from a name.
+ */
+.group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+@media (width >= 30rem) {
+  .group {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.option {
+  --control-bg: var(--color-surface);
+
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  padding: var(--space-3) var(--space-2);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--control-bg);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+/* The selected palette is raised and its label is full strength — the swatch
+   cannot carry the selection itself, since all four are equally colourful. */
+.active {
+  --control-bg: var(--color-surface-raised);
+
+  box-shadow: var(--shadow-md);
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+/*
+ * The preview.
+ *
+ * Everything inside is painted with plain role tokens, which resolve to the
+ * palette this element declares rather than the one the page is using — that is
+ * the whole trick, and why no colour is written here.
+ */
+.swatch {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-1);
+  align-items: center;
+  width: 100%;
+  max-width: 4.5rem;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-inset);
+}
+
+.swatchAccent,
+.swatchHighlight,
+.swatchText {
+  height: 0.75rem;
+  border-radius: var(--radius-pill);
+}
+
+.swatchAccent {
+  background: var(--color-accent);
+}
+
+.swatchHighlight {
+  background: var(--color-highlight);
+}
+
+/* The third band is the text colour, so a palette's *contrast* is visible in the
+   preview too and Soft does not look like a different palette. */
+.swatchText {
+  background: var(--color-text);
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    background: color-mix(in srgb, var(--control-bg) 90%, var(--color-text));
+    color: var(--color-text);
+  }
+}

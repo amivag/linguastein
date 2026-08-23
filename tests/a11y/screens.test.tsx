@@ -10,6 +10,7 @@ import { ProgressScreen } from '../../src/features/progress/ProgressScreen';
 import { PassageScreen } from '../../src/features/read/PassageScreen';
 import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
+import { SETTINGS_TABS } from '../../src/features/settings/settings-url';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { renderWithServices } from '../fixtures/services';
 import { expectNoViolations } from './axe';
@@ -21,8 +22,17 @@ describe('accessibility', () => {
     await expectNoViolations(container);
   });
 
-  it('settings screen has no WCAG violations', async () => {
-    const { container } = renderWithServices(<SettingsScreen />, { route: '/settings' });
+  /*
+   * Every settings section, not just the one a bare `/settings` opens.
+   *
+   * Only one section is mounted at a time, so checking the screen once would
+   * leave four fifths of it unchecked — and the two that arrived last, the
+   * appearance pickers and the pack cards, are the ones with new markup.
+   */
+  it.each(SETTINGS_TABS)('the %s settings have no WCAG violations', async (tab) => {
+    const { container } = renderWithServices(<SettingsScreen />, {
+      route: `/settings?tab=${tab}`,
+    });
     await screen.findByRole('heading', { level: 1 });
     await expectNoViolations(container);
   });

@@ -1,0 +1,24 @@
+/**
+ * Maximum contrast, dark — as far as the axis goes.
+ *
+ * Text is `ink` outright and the sunken surface is `paper` outright. The
+ * surfaces keep a few points of separation on purpose: collapsing them all onto
+ * the ground would maximise text contrast and destroy the depth that tells a
+ * card from the page, and depth is the app's only boundary — see rule 1 of the
+ * design language.
+ */
+
+[data-theme='dark'][data-contrast='max'],
+[data-theme='dark'] [data-contrast='max'] {
+  --color-bg: color-mix(in srgb, var(--color-ink) 1%, var(--color-paper));
+  --color-bg-tint: color-mix(in srgb, var(--color-ink) 3%, var(--color-paper));
+  --color-surface: color-mix(in srgb, var(--color-ink) 4%, var(--color-paper));
+  --color-surface-raised: color-mix(in srgb, var(--color-ink) 8%, var(--color-paper));
+  --color-surface-sunken: var(--color-paper);
+  --color-chrome: color-mix(in srgb, var(--color-ink) 2%, var(--color-paper));
+  --color-border: color-mix(in srgb, var(--color-ink) 26%, var(--color-paper));
+  --color-border-strong: color-mix(in srgb, var(--color-ink) 64%, var(--color-paper));
+  --color-track: color-mix(in srgb, var(--color-ink) 22%, var(--color-paper));
+  --color-text: var(--color-ink);
+  --color-text-muted: color-mix(in srgb, var(--color-ink) 90%, var(--color-paper));
+}

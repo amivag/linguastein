@@ -289,3 +289,45 @@
   background: var(--color-surface-sunken);
   font-size: var(--text-sm);
 }
+
+/*
+ * A palette, previewed by declaring it.
+ *
+ * Everything inside resolves against the palette this element names rather than
+ * the one the page is on, because each palette file selects a descendant with
+ * `data-palette` as well as the document. No colour is written here, which is
+ * the only way a preview cannot go stale.
+ */
+.paletteSwatch {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-inset);
+}
+
+.paletteSwatch > span {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-pill);
+}
+
+.paletteSwatch > [data-role='accent'] {
+  background: var(--color-accent);
+}
+
+.paletteSwatch > [data-role='highlight'] {
+  background: var(--color-highlight);
+}
+
+/* The same trick for the other axis: body text on a card, at that level. */
+.contrastSample {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}

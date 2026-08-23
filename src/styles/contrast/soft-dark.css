@@ -1,0 +1,38 @@
+/**
+ * Soft contrast, dark — the quiet end of the axis.
+ *
+ * A contrast level is not a palette. It restates the neutral roles — grounds,
+ * surfaces, text, boundaries — as positions along the palette's own
+ * `paper` → `ink` line, and touches no hue at all: the accent, the highlight and
+ * the verdict colours stay exactly as the palette authored them. That is what
+ * makes a level work for a palette written after it, and what stops More
+ * contrast in Sand from turning grey.
+ *
+ * Soft is deliberately still WCAG AA. A level a learner can pick is a level the
+ * app is responsible for, so `tests/a11y/contrast.test.ts` holds every
+ * palette × level combination to the same floors as the palette alone — Soft
+ * lowers the shout, not the legibility. It also asserts that the four levels
+ * are ordered, so a "softer" level cannot quietly end up sharper than the
+ * default.
+ *
+ * Percentages are the share of `ink`. In a dark mode, depth goes *up*: a surface
+ * carries more ink than the page it rests on.
+ */
+
+[data-theme='dark'][data-contrast='soft'],
+[data-theme='dark'] [data-contrast='soft'] {
+  --color-bg: color-mix(in srgb, var(--color-ink) 7%, var(--color-paper));
+  --color-bg-tint: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
+  --color-surface: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
+  --color-surface-raised: color-mix(in srgb, var(--color-ink) 14%, var(--color-paper));
+  --color-surface-sunken: color-mix(in srgb, var(--color-ink) 5%, var(--color-paper));
+  --color-chrome: color-mix(in srgb, var(--color-ink) 8%, var(--color-paper));
+  --color-border: color-mix(in srgb, var(--color-ink) 18%, var(--color-paper));
+  /* Still 3:1 against every surface it can be drawn on: a boundary is the only
+     thing identifying a native field, so this role has a floor Soft cannot
+     go under. */
+  --color-border-strong: color-mix(in srgb, var(--color-ink) 46%, var(--color-paper));
+  --color-track: color-mix(in srgb, var(--color-ink) 15%, var(--color-paper));
+  --color-text: color-mix(in srgb, var(--color-ink) 85%, var(--color-paper));
+  --color-text-muted: color-mix(in srgb, var(--color-ink) 62%, var(--color-paper));
+}

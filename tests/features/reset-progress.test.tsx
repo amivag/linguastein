@@ -46,7 +46,8 @@ async function renderSettings(updatePreferences?: (patch: Partial<Preferences>) 
   const storage = await storageWithHistory();
   const view = renderWithServices(<SettingsScreen />, {
     services: testServices({ storage }),
-    route: '/settings',
+    // The reset controls live in the About section; the tab is part of the URL.
+    route: '/settings?tab=about',
     ...(updatePreferences ? { updatePreferences } : {}),
   });
   return { ...view, storage };

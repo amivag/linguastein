@@ -1,0 +1,45 @@
+/**
+ * Teal, light.
+ *
+ * The light half of a palette is the harder one: an accent has to be dark enough
+ * to carry white text and to read as a link on a near-white page, so the teal is
+ * a deep pine rather than the bright one the dark mode can afford.
+ */
+
+[data-theme='light'][data-palette='teal'],
+[data-theme='light'] [data-palette='teal'] {
+  color-scheme: light;
+
+  --color-ink: #04080a;
+  --color-paper: #ffffff;
+
+  --color-bg: #f3f8f8;
+  --color-bg-tint: #e6f2f0;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #e7efee;
+  --color-border: #dde8e7;
+  --color-border-strong: #73858a;
+  --color-text: #0f1719;
+  --color-text-muted: #55636a;
+  --color-accent: #0e6f68;
+  --color-accent-contrast: #ffffff;
+  --color-accent-soft: #dcf1ee;
+  --color-accent-edge: #094c47;
+  --color-highlight: #9a4a06;
+  --color-highlight-soft: #fdf0dd;
+  --color-success: #0b6b3a;
+  --color-success-soft: #dcf5e6;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fde4e1;
+  --color-chrome: #fafdfd;
+  --color-track: #d7e3e1;
+
+  --shadow-sm: 0 1px 2px rgb(15 23 25 / 6%);
+  --shadow-md: 0 6px 18px rgb(15 23 25 / 8%);
+  --shadow-lg: 0 -8px 48px rgb(15 23 25 / 18%);
+  --shadow-inset: inset 0 1px 2px rgb(15 23 25 / 8%);
+  --shadow-accent: 0 6px 20px rgb(14 111 104 / 24%);
+
+  --backdrop: rgb(15 23 25 / 40%);
+}

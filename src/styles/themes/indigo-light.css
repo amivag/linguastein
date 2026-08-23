@@ -1,13 +1,21 @@
 /**
- * Light theme.
+ * Indigo, light.
  *
  * `data-theme` is always set on <html> by the pre-paint script in index.html
- * (resolving "system" from the OS preference), so each theme is declared once —
- * no duplicated media-query copy to keep in sync.
+ * (resolving "system" from the OS preference), so each palette is declared once
+ * per mode — no duplicated media-query copy to keep in sync. The descendant
+ * selector is the preview seam described in `indigo-dark.css`.
  */
 
-[data-theme='light'] {
+[data-theme='light'],
+[data-theme='light'] [data-palette='indigo'] {
   color-scheme: light;
+
+  /* The ends of the contrast axis — see the note in `indigo-dark.css`. In a
+     light palette `paper` is the whitest ground it will go to and `ink` the
+     darkest text, so a contrast level moves the same way in both modes. */
+  --color-ink: #05060a;
+  --color-paper: #ffffff;
 
   /* The page, and the wash at the top of it. The two are a hair apart on
      purpose: enough for the screen to have a light source, not enough to read
@@ -17,7 +25,7 @@
   --color-surface: #ffffff;
   --color-surface-raised: #ffffff;
   /* Recessed into a card: rows you pick from, answer slots, tracks. A light
-     theme cannot raise anything above white, so depth has to go downwards. */
+     palette cannot raise anything above white, so depth has to go downwards. */
   --color-surface-sunken: #ebecf4;
   --color-border: #e3e4ef;
   --color-border-strong: #7b8296;
@@ -35,8 +43,8 @@
      four slightly different shades across the app. */
   --color-accent-soft: #e8eafc;
   /* The band a filled button sits on and presses down onto — see the note in
-     `dark.css`. Darker than the fill in this theme, lighter in that one; both
-     read as the same gesture. */
+     `indigo-dark.css`. Darker than the fill in this mode, lighter in that one;
+     both read as the same gesture. */
   --color-accent-edge: #2c2490;
   /*
    * The second accent: warm, and deliberately not a semantic.
@@ -44,28 +52,28 @@
    * It exists because a single hue plus grey is what made the app read as
    * austere, and it is amber rather than another blue so the two never look
    * like a gradient of one idea. Dark enough to be text on the page — which is
-   * the whole difficulty with a warm accent in a light theme.
+   * the whole difficulty with a warm accent in a light palette.
    */
   --color-highlight: #9a4a06;
   --color-highlight-soft: #fdf0dd;
   --color-success: #0b6b3a;
-  /* Verdict tints as roles, matching `dark.css`: pale here, deep there, and the
-     same job in both. */
+  /* Verdict tints as roles, matching `indigo-dark.css`: pale here, deep there,
+     and the same job in both. */
   --color-success-soft: #dcf5e6;
   --color-danger: #b3261e;
   --color-danger-soft: #fde4e1;
 
   /* Chrome that content scrolls behind. Opaque here and mixed towards
-     transparent at the call site — see the note in `dark.css`. */
+     transparent at the call site — see the note in `indigo-dark.css`. */
   --color-chrome: #fbfbfe;
 
   /* The groove a progress bar fills, held to 3:1 against the accent. */
   --color-track: #dfe1ee;
 
   /*
-   * Elevation. A light theme has nowhere to go above white, so the shadow is
+   * Elevation. A light palette has nowhere to go above white, so the shadow is
    * the only thing that raises a card — which makes this scale carry more of
-   * the design language here than it does in the dark theme. Cool-tinted rather
+   * the design language here than it does in the dark one. Cool-tinted rather
    * than neutral black, so it belongs to the same grey family as the page.
    */
   --shadow-sm: 0 1px 2px rgb(20 22 26 / 6%);

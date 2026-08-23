@@ -1,0 +1,42 @@
+/**
+ * Plum, light. The bright fuchsia of the dark mode cannot carry white text, so
+ * the light half drops to a deep magenta and lets the tints do the brightening.
+ */
+
+[data-theme='light'][data-palette='plum'],
+[data-theme='light'] [data-palette='plum'] {
+  color-scheme: light;
+
+  --color-ink: #070509;
+  --color-paper: #ffffff;
+
+  --color-bg: #faf6fb;
+  --color-bg-tint: #f2e9f6;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #f0eaf3;
+  --color-border: #e8e0ec;
+  --color-border-strong: #837a8c;
+  --color-text: #17131a;
+  --color-text-muted: #605769;
+  --color-accent: #9333a4;
+  --color-accent-contrast: #ffffff;
+  --color-accent-soft: #f6e6fa;
+  --color-accent-edge: #6d1f7c;
+  --color-highlight: #8f4e07;
+  --color-highlight-soft: #fdf0da;
+  --color-success: #0b6b3a;
+  --color-success-soft: #dcf5e6;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fde4e1;
+  --color-chrome: #fdfbfe;
+  --color-track: #e3d8e8;
+
+  --shadow-sm: 0 1px 2px rgb(23 19 26 / 6%);
+  --shadow-md: 0 6px 18px rgb(23 19 26 / 8%);
+  --shadow-lg: 0 -8px 48px rgb(23 19 26 / 18%);
+  --shadow-inset: inset 0 1px 2px rgb(23 19 26 / 8%);
+  --shadow-accent: 0 6px 20px rgb(147 51 164 / 24%);
+
+  --backdrop: rgb(23 19 26 / 40%);
+}

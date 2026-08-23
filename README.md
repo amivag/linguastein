@@ -58,10 +58,13 @@ src/
 ├── storage/      IndexedDB and in-memory implementations of learner storage
 ├── audio/        audio service, TTS and speech-recognition seams
 ├── ai/           AI provider seam and learner-context builder
-├── features/     screens: home, browse, read, progress, practice, settings, sharing
+├── features/     screens: home, study, browse, read, progress, practice, missions,
+│                 settings, sharing
 ├── components/   shared UI: AppShell, AppNav, Button, CourseBar, ThemeToggle,
-│                 VoiceInput, TokenizedText, WordInfoSheet
-├── styles/       primitives + one CSS file per theme
+│                 PaletteControl, ContrastControl, VoiceInput, TokenizedText,
+│                 WordInfoSheet
+├── styles/       primitives, one CSS file per palette per mode, one per
+│                 contrast level
 └── utils/        small helpers (RNG, clipboard)
 
 content/es/      dataset authoring sources (TSV) — the human-edited input
@@ -76,20 +79,25 @@ dist/             build output (git-ignored)
 
 ## The app
 
-Five sections behind a tab bar (a rail on wider screens):
+Four destinations behind a tab bar (a rail on wider screens):
 
-| Section  | What it is                                                                                        |
-| -------- | ------------------------------------------------------------------------------------------------- |
-| Practice | quick sessions, the six presets, and what to practise: categories and a focus                     |
-| Read     | connected texts and dialogues, every word tappable                                                |
-| Browse   | search and filter all 1,242 items, by thematic category or facet; dictate the search with the mic |
-| Progress | what has been practised, accuracy, weak items, recent sessions                                    |
-| Settings | course, audio and voice, practice, appearance, data — in grouped sections                         |
+| Section  | What it is                                                                                   |
+| -------- | -------------------------------------------------------------------------------------------- |
+| Study    | the material: the mission ladder, sheets of words, phrases, sentences, texts and patterns    |
+| Test     | where a session starts: the recommended next action, then quick sessions and the six presets |
+| Progress | what has been practised, accuracy, weak items, recent sessions                               |
+| Settings | five linkable sections: learning, appearance, audio, content packs, about                    |
+
+Browse and Read are sheets _inside_ Study rather than destinations of their own —
+search and filter all 1,242 items by category or facet (and dictate the search
+with the mic), or open a connected text with every word tappable. Both still work
+as deep links.
 
 A running session hides the chrome and fills the screen, so practice stays the
 focus rather than the navigation.
 
-The A1 journey is seven real-world missions. Each teaches one connected example,
+The A1 journey is seven real-world missions, listed in order on Study. Each
+teaches one connected example,
 practises its sentences, then changes the situation for Use. Transfer attempts
 feed the same local FSRS schedule as ordinary practice; speech can grade them
 automatically, and every device has an explicit self-rating fallback after
@@ -211,10 +219,19 @@ Icons are [Lucide](https://lucide.dev) (ISC), behind a seam in
 `src/components/icons.ts` — one 24px grid, one stroke weight, tree-shaken per
 glyph, and `currentColor` throughout, so no icon can be off-palette.
 
-Dark and light, switchable from the header or Settings, defaulting to the OS
-setting and following it live. Themes are one CSS file each plus a registry
-entry — see [`docs/theming.md`](docs/theming.md). Colour contrast for every
-theme is asserted in tests, so a new theme cannot ship below WCAG AA.
+Appearance is four independent axes rather than one list of themes: light or
+dark (defaulting to the OS setting and following it live), which of four
+palettes — Indigo, Teal, Plum or Sand — how far apart that palette's neutrals
+sit, and the type scale. Keeping them separate is what lets Large text, warm
+colours and high contrast be chosen independently instead of as a combined
+`dark-teal-large-more` theme.
+
+A palette is two CSS files plus a registry entry; a contrast level restates the
+neutral roles as mixes along the palette's own ink-to-paper axis and touches no
+hue, so one level serves every palette including ones written later. See
+[`docs/theming.md`](docs/theming.md). Colour contrast is asserted for every
+palette at every contrast level, so nothing a learner can select ships below
+WCAG AA.
 
 The layout is one readable column that widens with the viewport (phone →
 tablet → desktop), with hover styles applied only where a pointer can hover and
@@ -228,7 +245,8 @@ larger screen, so the height of a screen is never a function of what is open.
 WCAG 2.2 AA is a build gate, not an aspiration:
 
 - axe runs over every screen in `tests/a11y` and must report zero violations
-- colour contrast is computed from the theme files and asserted for both themes
+- colour contrast is computed from the stylesheets and asserted for every
+  palette at every contrast level
 - focus is trapped in dialogs and restored on close; every screen has one
   `<h1>`, one `<main>`, a skip link and a matching document title
 - state is exposed through ARIA — `role="status"` for answer feedback,

@@ -1,18 +1,40 @@
 /**
- * Dark theme — the default, because most practice happens on a phone.
+ * Indigo, dark — the default palette, and the app's own colour identity.
  *
- * A theme declares exactly these colour roles and nothing else. `:root` carries
- * them too, so the app still renders correctly before the theme script runs or
- * with JavaScript disabled.
+ * A theme file is one palette in one mode: `<palette>-<mode>.css`. It declares
+ * exactly the colour roles and nothing else. `:root` carries the default palette
+ * as well, so the app still renders correctly before the pre-paint script runs
+ * or with JavaScript disabled.
+ *
+ * The third selector is what lets a palette be *previewed* while another one is
+ * active: a decorative element carrying `data-palette` gets that palette's roles
+ * declared on itself, so the settings picker shows four real palettes without a
+ * single colour leaving this directory. Indigo needs no palette qualifier on the
+ * first two selectors, because it is what an unset `data-palette` means.
  *
  * Contrast for every role is asserted in `tests/a11y/contrast.test.ts`, which
- * discovers theme files automatically — a new theme is checked the moment it
- * is added.
+ * discovers palettes and contrast levels automatically — a new palette is held
+ * to WCAG AA at every contrast level the moment it is added.
  */
 
 :root,
-[data-theme='dark'] {
+[data-theme='dark'],
+[data-theme='dark'] [data-palette='indigo'] {
   color-scheme: dark;
+
+  /*
+   * The two ends of this palette's contrast axis, and the only roles nothing is
+   * painted with directly.
+   *
+   * `ink` is as far as its text ever goes, `paper` as far as its ground ever
+   * goes. Every level in `src/styles/contrast/` is written as a mix along that
+   * line, which is what keeps a level palette-agnostic: the axis carries the
+   * hue, so More contrast in Sand stays warm instead of turning grey. The
+   * authored values below sit somewhere between the two — Normal is a hand-tuned
+   * position on the axis rather than a computed one.
+   */
+  --color-ink: #fbfcfe;
+  --color-paper: #05070a;
 
   --color-bg: #0f1117;
   /* The wash at the top of the page. Lifted rather than tinted: a dark theme
@@ -28,7 +50,7 @@
   /* Comfortably above the AA floor: this role carries explanations throughout
      the learning loop, so merely passing at small sizes still felt subdued. */
   --color-text-muted: #b1b9c7;
-  /* Same indigo identity as the light theme, lifted until it carries a near
+  /* Same indigo identity as the light palette, lifted until it carries a near
      black label and reads as a link on the page background. */
   --color-accent: #8aa2ff;
   --color-accent-contrast: #0b1030;
@@ -46,7 +68,7 @@
    */
   --color-accent-edge: #5266bd;
   /* The warm second accent. Bright here, where a dark amber would disappear;
-     the light theme takes the opposite route for the same hue. */
+     the light palette takes the opposite route for the same hue. */
   --color-highlight: #ffb454;
   --color-highlight-soft: #2a2113;
   --color-success: #5fd18c;
@@ -81,7 +103,7 @@
    * genuinely above it — a sheet or a popover. `inset` is the opposite
    * direction: a slot, a track, a row you pick from.
    *
-   * A dark theme cannot cast a visible shadow onto a dark page, so these are
+   * A dark palette cannot cast a visible shadow onto a dark page, so these are
    * deep and diffuse and the *surface* tokens do most of the lifting. Do not
    * compensate by darkening them further; that reads as a smudge.
    */

@@ -11,7 +11,8 @@ import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { MissionScreen } from '../features/missions/MissionScreen';
 import { courseOptions, coursePath, resolveCourse } from '../domain/content';
 import { mergePreferences, type Preferences } from '../storage';
-import { applyTheme } from '../styles/themes';
+import { applyPalette, applyTheme, DEFAULT_PALETTE } from '../styles/themes';
+import { applyContrast, DEFAULT_CONTRAST } from '../styles/contrast';
 import { applyReadingSize } from '../styles/reading-size';
 import { ErrorBoundary } from './ErrorBoundary';
 import { createServices, type AppServices } from './services';
@@ -100,6 +101,18 @@ export function App() {
     media.addEventListener('change', sync);
     return () => media.removeEventListener('change', sync);
   }, [preferredTheme]);
+
+  // The other three appearance axes are independent of the OS, so each is a
+  // one-line effect rather than part of the theme resolution above.
+  const palette = preferences?.palette ?? DEFAULT_PALETTE;
+  useEffect(() => {
+    applyPalette(palette);
+  }, [palette]);
+
+  const contrast = preferences?.contrast ?? DEFAULT_CONTRAST;
+  useEffect(() => {
+    applyContrast(contrast);
+  }, [contrast]);
 
   const readingSize = preferences?.readingSize ?? 'small';
   useEffect(() => {

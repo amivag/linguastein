@@ -27,7 +27,7 @@ merely written down:
 
 | File                                 | Refuses                                                                                           |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| `tests/a11y/contrast.test.ts`        | Any theme whose colour roles miss WCAG AA. Discovers theme files itself.                          |
+| `tests/a11y/contrast.test.ts`        | Any palette that misses WCAG AA at any contrast level. Discovers both itself.                     |
 | `tests/a11y/motion.test.ts`          | A hard-coded duration or easing outside `primitives.css`.                                         |
 | `tests/a11y/hover-states.test.ts`    | A control whose hover can repaint it in a colour its label was not chosen for.                    |
 | `tests/a11y/design-language.test.ts` | A border outside two enumerated exceptions; a colour outside a theme file.                        |

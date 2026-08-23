@@ -19,23 +19,35 @@
     <title>%APP_NAME% — %APP_TAGLINE%</title>
     <script>
       // Resolve appearance before first paint, so neither colour nor type size
-      // flashes. `%APP_ID%` is substituted from src/app/identity.ts, so these
-      // cache keys cannot drift from the application identity.
+      // flashes. Four independent axes, each with its own cache key and its own
+      // root attribute: theme (light/dark), palette (which hues), contrast (how
+      // far apart they sit) and reading size. `%APP_ID%` is substituted from
+      // src/app/identity.ts, so these keys cannot drift from the app identity.
       (function () {
-        try {
-          var stored = localStorage.getItem('%APP_ID%.theme') || 'system';
-          var dark =
-            stored === 'dark' ||
-            (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-          var readingSize = localStorage.getItem('%APP_ID%.reading-size') || 'small';
-          document.documentElement.dataset.readingSize = /^(small|medium|large)$/.test(readingSize)
-            ? readingSize
-            : 'small';
-        } catch (error) {
-          document.documentElement.dataset.theme = 'dark';
-          document.documentElement.dataset.readingSize = 'small';
+        var root = document.documentElement;
+        // Each axis falls back to its default rather than aborting the rest: a
+        // single unreadable key must not leave the page unthemed.
+        function pick(name, allowed, fallback) {
+          try {
+            var stored = localStorage.getItem('%APP_ID%.' + name);
+            return allowed.indexOf(stored) >= 0 ? stored : fallback;
+          } catch (error) {
+            return fallback;
+          }
         }
+        var theme = pick('theme', ['system', 'dark', 'light'], 'system');
+        var dark = theme === 'dark';
+        if (theme === 'system') {
+          try {
+            dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          } catch (error) {
+            dark = true;
+          }
+        }
+        root.dataset.theme = dark ? 'dark' : 'light';
+        root.dataset.palette = pick('palette', ['indigo', 'teal', 'plum', 'sand'], 'indigo');
+        root.dataset.contrast = pick('contrast', ['soft', 'normal', 'more', 'max'], 'normal');
+        root.dataset.readingSize = pick('reading-size', ['small', 'medium', 'large'], 'small');
       })();
     </script>
   </head>

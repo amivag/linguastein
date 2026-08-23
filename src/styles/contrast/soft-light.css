@@ -1,0 +1,25 @@
+/**
+ * Soft contrast, light.
+ *
+ * The mirror of `soft-dark.css`, and the reason a level needs one file per mode
+ * rather than one file: in a light mode depth goes *down*, so a card carries
+ * less ink than the page it sits on and a sunken row carries more. The
+ * percentages are the same axis read in the other direction.
+ */
+
+[data-theme='light'][data-contrast='soft'],
+[data-theme='light'] [data-contrast='soft'] {
+  --color-bg: color-mix(in srgb, var(--color-ink) 6%, var(--color-paper));
+  --color-bg-tint: color-mix(in srgb, var(--color-ink) 9%, var(--color-paper));
+  --color-surface: color-mix(in srgb, var(--color-ink) 2%, var(--color-paper));
+  --color-surface-raised: color-mix(in srgb, var(--color-ink) 2%, var(--color-paper));
+  --color-surface-sunken: color-mix(in srgb, var(--color-ink) 9%, var(--color-paper));
+  --color-chrome: color-mix(in srgb, var(--color-ink) 4%, var(--color-paper));
+  --color-border: color-mix(in srgb, var(--color-ink) 13%, var(--color-paper));
+  /* Higher than the dark mode's equivalent, and for a real reason: a light page
+     leaves a boundary less room, so 3:1 against a sunken row lands here. */
+  --color-border-strong: color-mix(in srgb, var(--color-ink) 52%, var(--color-paper));
+  --color-track: color-mix(in srgb, var(--color-ink) 15%, var(--color-paper));
+  --color-text: color-mix(in srgb, var(--color-ink) 84%, var(--color-paper));
+  --color-text-muted: color-mix(in srgb, var(--color-ink) 62%, var(--color-paper));
+}

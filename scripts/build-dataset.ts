@@ -137,6 +137,7 @@ const NO_CARD = '-';
 
 const TOPICS_FILE = 'topics.tsv';
 const SKILLS_FILE = 'skills.tsv';
+const PACK_FILE = 'pack.tsv';
 
 /**
  * Below this many items a category is not worth opening, so the build names it.
@@ -319,9 +320,47 @@ const authoredSkillRows: AuthoredSkillRow[] = existsSync(join(CONTENT_DIR, SKILL
     })
   : [];
 
+/**
+ * The pack's own version, and the item count it was cut at.
+ *
+ * Authored rather than derived, because a version is a judgement about what
+ * changed and no amount of counting supplies one. It lived as a literal in this
+ * script for its whole life and was written exactly once — the pack went from
+ * 443 sentences to 1,395 still calling itself `0.1.0`, and Settings showed that
+ * number to every learner. A version nobody can bump is worse than no version,
+ * because it is displayed.
+ *
+ * `items` is the mechanism that stops it freezing again. The build reports a
+ * disagreement and `tests/data/pack-version.test.ts` fails on one, so adding or
+ * removing content forces an edit to this file — where the version is sitting on
+ * the same line, which is the whole point. A wording fix changes no count and
+ * needs no bump.
+ */
+interface PackRow {
+  version: string;
+  items: number;
+}
+
+const packRow: PackRow | undefined = existsSync(join(CONTENT_DIR, PACK_FILE))
+  ? (() => {
+      const [row] = readSource(PACK_FILE).rows;
+      if (!row) return undefined;
+      const [version, items] = row.fields;
+      return { version: version!, items: Number(items ?? Number.NaN) };
+    })()
+  : undefined;
+
 // ── guards ──────────────────────────────────────────────────────────────────
 
 const problems: string[] = [];
+
+if (!packRow) {
+  problems.push(`${PACK_FILE}: missing — the pack has no version to ship`);
+} else if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(packRow.version)) {
+  problems.push(`${PACK_FILE}: "${packRow.version}" is not a semver version`);
+} else if (!Number.isInteger(packRow.items)) {
+  problems.push(`${PACK_FILE}: "${packRow.items}" is not an item count`);
+}
 
 /**
  * Topics are a controlled vocabulary, not free text. Without this check
@@ -1836,7 +1875,8 @@ const manifest = {
   id: PACK_ID,
   name: 'Spanish Core A1–A2',
   targetLanguage: 'es',
-  version: '0.1.0',
+  // Authored in `content/es/pack.tsv`, beside the content it describes.
+  version: packRow?.version ?? '0.0.0',
   description:
     'High-frequency Spanish verbs, nouns, modifiers and everyday sentences. Generated from content/es and not yet reviewed by a human editor.',
   license: 'CC0-1.0',
@@ -1909,6 +1949,22 @@ console.log(
 );
 
 const totalItems = sentenceItems.length + vocabularyItems.length;
+
+/*
+ * Named rather than failed, and for the same reason ids are written back rather
+ * than demanded: the new count is not knowable until this build has run, so
+ * refusing here would leave an author with no way to learn the number they are
+ * being asked to supply. `npm run check` is where it bites.
+ */
+if (packRow && packRow.items !== totalItems) {
+  console.log(
+    `  pack version ${packRow.version} was cut at ${packRow.items} items, and this build has` +
+      ` ${totalItems} — bump the version in ${PACK_FILE} and record ${totalItems}`,
+  );
+} else if (packRow) {
+  console.log(`  pack version ${packRow.version}, cut at ${packRow.items} items`);
+}
+
 const reviewedShare = totalItems === 0 ? 0 : Math.round((reviewedCount / totalItems) * 100);
 console.log(
   `  editorial review: ${reviewedCount}/${totalItems} items signed off (${reviewedShare}%)` +

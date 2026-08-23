@@ -1,0 +1,25 @@
+# The pack's own version — the one thing about core-es a human versions rather
+# than the build derives.
+#
+# Columns: version	items	note
+#
+# Content packs version independently of the app: a dataset ships without an app
+# release, and does. `package.json` is the app's version and has nothing to say
+# about this one.
+#
+# `items` is the sentence-and-word-card total the version was cut at, and it is
+# here to stop this file going stale. The version used to be a literal inside
+# `scripts/build-dataset.ts`, written once when the pack held 443 sentences and
+# never touched again — four dataset expansions later it still said 0.1.0, and
+# Settings displayed that to every learner. Now the build reports a disagreement
+# and `tests/data/pack-version.test.ts` fails on one, so adding or removing
+# content forces an edit here, with the version on the same line.
+#
+# Which number to move: a new topic, a new set of sentences or a new word is
+# additive, so it is the minor. The major is for a change that could invalidate
+# what a learner has practised — retiring items in bulk, renaming topic slugs,
+# changing the level scheme. A wording or accent fix changes no count, needs no
+# bump, and should not get one.
+#
+# Run `npm run build:data` to learn the current count; it prints it either way.
+0.2.0	2022	The four question words, the demonstratives, and chica beside chico

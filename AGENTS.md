@@ -536,7 +536,15 @@ Releasing is: bump `version`, move the `Unreleased` section of
 `Linguastein <version> (<commit>)`, which is what a bug report should quote.
 
 Content packs version separately in their own `pack.json` — a dataset can ship
-without an app release, and does.
+without an app release, and does. That version is authored in
+`content/es/pack.tsv`, beside the content it describes, along with the item count
+it was cut at. It used to be a literal in `scripts/build-dataset.ts` and was
+written exactly once: the pack grew from 443 sentences to 1,395 across four
+expansions still calling itself `0.1.0`, and Settings showed that number to every
+learner. The count is what stops a repeat — the build reports a disagreement and
+`tests/data/pack-version.test.ts` fails on one, so changing what the pack
+_contains_ forces an edit to the file the version lives on. A wording fix changes
+no count and needs no bump.
 
 JS and CSS are content-hashed, so they need no cache-busting of their own.
 `index.html` and `sw.js` cannot be hashed and must be served no-store; a service

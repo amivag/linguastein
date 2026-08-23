@@ -1,0 +1,109 @@
+/**
+ * The pack's version has to move when the pack's contents do.
+ *
+ * `core-es` versions independently of the app — a dataset ships without an app
+ * release, and does. But the version was a literal inside
+ * `scripts/build-dataset.ts` and was written exactly once: the pack grew from 443
+ * sentences to 1,395 across four expansions still calling itself `0.1.0`, and
+ * `PackSettings` displayed that number to every learner the whole time. This is
+ * the same failure `doc-stats.test.ts` was written for — a figure *about* the
+ * pack that nothing held against the pack — in a place no test was watching.
+ *
+ * So the version is authored in `content/es/pack.tsv` next to the item count it
+ * was cut at, and these tests fail when the two disagree. Adding or removing
+ * content therefore forces an edit to that file, where the version sits on the
+ * same line. Fixing a typo changes no count and needs no bump.
+ */
+
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { afterAll, describe, expect, it } from 'vitest';
+import type { PackManifest } from '../../src/domain/content';
+import { createScratchPack, readJsonl, repoRoot } from '../fixtures/dataset';
+
+const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
+
+interface Declared {
+  readonly version: string;
+  readonly items: number;
+}
+
+/** The first data row of `content/es/pack.tsv`. */
+function declared(): Declared {
+  const row = readFileSync(join(repoRoot, 'content/es/pack.tsv'), 'utf8')
+    .split(/\r?\n/)
+    .find((line) => line.trim().length > 0 && !line.startsWith('#'));
+  const [version, items] = (row ?? '').split('\t');
+  return { version: (version ?? '').trim(), items: Number(items) };
+}
+
+const shipped = JSON.parse(
+  readFileSync(join(repoRoot, 'public/packs/core-es/pack.json'), 'utf8'),
+) as PackManifest;
+
+const shippedItems = ['es-a1-a2-core-sentences.jsonl', 'es-a1-a2-core-vocabulary.jsonl'].reduce(
+  (total, file) => total + readJsonl(join(repoRoot, 'public/packs/core-es', file)).length,
+  0,
+);
+
+describe('the authored pack version', () => {
+  it('is a semver string', () => {
+    expect(declared().version).toMatch(SEMVER);
+  });
+
+  it('is what the shipped manifest carries', () => {
+    // The manifest is generated, so this catches the version being read from
+    // somewhere else — or not read at all, which is how it froze before.
+    expect(shipped.version).toBe(declared().version);
+  });
+
+  it('was cut at the number of items the pack actually ships', () => {
+    expect(
+      shippedItems,
+      `content/es/pack.tsv says version ${declared().version} was cut at ${declared().items} items,` +
+        ` but the pack ships ${shippedItems}. Bump the version and record ${shippedItems}.`,
+    ).toBe(declared().items);
+  });
+
+  it('is not the version the literal was frozen at', () => {
+    // Belt and braces, and cheap: 0.1.0 is what four expansions shipped under.
+    // If this pack is ever legitimately 0.1.0 again, something is very wrong.
+    expect(declared().version).not.toBe('0.1.0');
+  });
+});
+
+describe('the guard against it freezing again', () => {
+  const scratch = createScratchPack('pack-version');
+  afterAll(() => scratch.dispose());
+
+  it('names the disagreement when content is added without a bump', () => {
+    scratch.append(
+      'sentences-core.tsv',
+      ['Esto es una frase de prueba.', 'This is a test sentence.', 'a1', 'core'].join('\t'),
+    );
+
+    const output = scratch.build();
+
+    // Reported rather than fatal on purpose: the new count is not knowable until
+    // the build has run, so failing here would withhold the number the author is
+    // being asked for. `npm run check` is where it stops being advisory.
+    expect(output).toContain('bump the version');
+    expect(output).toMatch(/was cut at \d+ items, and this build has \d+/);
+  });
+
+  it('refuses a version that is not semver', () => {
+    scratch.write('pack.tsv', 'version-two\t2022\tnot a version\n');
+    const { ok, output } = scratch.tryBuild();
+
+    expect(ok).toBe(false);
+    expect(output).toContain('is not a semver version');
+  });
+
+  it('refuses an item count that is not a number', () => {
+    scratch.write('pack.tsv', '0.2.0\tlots\tnot a count\n');
+    const { ok, output } = scratch.tryBuild();
+
+    expect(ok).toBe(false);
+    expect(output).toContain('is not an item count');
+  });
+});

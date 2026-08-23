@@ -17,6 +17,17 @@ in the pack's own counts.
 
 ### Added
 
+- **The pack versions itself now, and cannot freeze again.** `core-es` versions
+  independently of the app, but the version was a literal inside
+  `scripts/build-dataset.ts` and had been written exactly once: the pack went from
+  443 sentences to 1,395 across four expansions still calling itself `0.1.0`, and
+  Settings showed that number to every learner the whole time. It is now authored
+  in `content/es/pack.tsv`, beside the content it describes, and it is `0.2.0`.
+  The same row records the item count the version was cut at — the build reports a
+  disagreement and `tests/data/pack-version.test.ts` fails on one, so changing
+  what the pack contains forces an edit to the line the version sits on. A wording
+  fix changes no count and needs no bump. This is the guard `doc-stats.test.ts`
+  already gives the README's figures, in the one place that was still unwatched.
 - **Teach the four questions the pack could not ask.** `qué`, `dónde`, `cuánto`
   and `cómo` were always well covered — you cannot order a coffee without them.
   The other four never were: outside the health passages `cuándo` had two plain

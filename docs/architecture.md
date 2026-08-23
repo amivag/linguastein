@@ -97,8 +97,19 @@ policy at the HTTP layer, or a stale `index.html` will keep pointing at assets
 that no longer exist. That is a hosting-header concern; no amount of build
 configuration fixes it.
 
+**The pack's own version.** Separate from the app's, authored in
+`content/es/pack.tsv` and copied into `pack.json` by the build. It is what
+`PackSettings` shows beside the app version, which is why it is guarded: as a
+literal in the build script it went four expansions without moving, so the file
+also records the item count the version was cut at and
+`tests/data/pack-version.test.ts` fails when the two disagree.
+
 **Datasets and audio.** Packs are precached by revision, so a rebuilt pack is
-refetched. Audio is `CacheFirst` for 90 days, which is safe because a clip is named
+refetched. That revision is a content hash of each file, computed at build time
+and written into `sw.js` — so it is the _file changing_ that invalidates the
+cache, not the version string. Bumping the pack version does not make a client
+refetch anything, and forgetting to bump it does not stop one: the two mechanisms
+are independent, and only one of them is displayed. Audio is `CacheFirst` for 90 days, which is safe because a clip is named
 for a hash of the text it speaks: correcting a sentence produces a different
 filename rather than leaving a stale clip behind a stable item id.
 

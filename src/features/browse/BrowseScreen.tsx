@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
@@ -29,7 +29,10 @@ import {
   type Register,
 } from '../../domain/content';
 import type { SessionSize } from '../../domain/sessions';
+import { newBatchId } from '../../domain/batches';
+import { systemRng } from '../../utils/random';
 import { sessionPath } from '../practice/session-url';
+import { studyPath } from '../study/study-url';
 import { browsePath, parseBrowseUrl } from './browse-url';
 import styles from './BrowseScreen.module.css';
 import { CategoryPicker } from './CategoryPicker';
@@ -56,6 +59,20 @@ const SORT_LABELS: Record<ItemSort, string> = {
 const PAGE_SIZE = 40;
 /** Longest session offered from a filter, however much the filter matched. */
 const SESSION_CAP = 20;
+
+/**
+ * Batch sizes offered when a sheet of results is saved as one.
+ *
+ * A week's worth of deliberate work, in the units learners actually ask for —
+ * "thirty words a day", "two hundred a week". Sizes above the number matched are
+ * dropped rather than shown as impossible, and the whole sheet is always offered
+ * as a last option, so a filter that matched seven can still become a set of
+ * seven.
+ */
+const BATCH_SIZES = [10, 20, 30, 50] as const;
+
+/** How much of a batch one short slot deals. */
+const BATCH_PER_SESSION = 10;
 
 /**
  * "Verbs", "Nouns" — the plural of what the sheet calls one word.
@@ -120,7 +137,7 @@ function filterOf(facets: Facets): ItemFilter {
  * the place to look something up rather than practise it.
  */
 export function BrowseScreen() {
-  const { services, preferences } = useServices();
+  const { services, preferences, saveBatch } = useServices();
   const { course, filter: courseScope, path } = useCourse();
   const navigate = useNavigate();
 
@@ -157,6 +174,8 @@ export function BrowseScreen() {
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filterSheetId = useId();
+  const [saveOpen, setSaveOpen] = useState(false);
+  const saveSheetId = useId();
 
   const facets: Facets = { search, type, pos, topic, registers, region, initial, sort };
 
@@ -306,6 +325,44 @@ export function BrowseScreen() {
     });
   // Never offer a longer session than the filter actually found.
   const size: SessionSize = { kind: 'items', count: Math.min(results.length, SESSION_CAP) };
+
+  /**
+   * Turns the sheet on screen into a set the learner comes back to.
+   *
+   * Frozen from `results`, which is the *sorted* list, and that distinction is
+   * deliberate: which items a set contains is the filter's answer, and the order
+   * they are dealt in is the session's, so taking the sorted slice is right while
+   * writing the sort into the set's link would not be. A learner looking at an
+   * A–Z sheet and asking for its first thirty means those thirty.
+   *
+   * The clock is read here rather than during render, which the React Compiler
+   * rules require and which is also where it belongs: the batch is created by
+   * this press.
+   */
+  const saveAsBatch = useCallback(
+    (count: number) => {
+      // `useCallback` for the reason `MissionScreen.recordMissionUse` uses it:
+      // the React Compiler rules forbid an impure call during render, and a
+      // plain arrow in the component body cannot be told apart from one.
+      const now = Date.now();
+      saveBatch({
+        id: newBatchId(now, systemRng),
+        label: filterSummary || 'Everything',
+        course,
+        itemIds: results.slice(0, count).map((item) => item.id),
+        createdAt: now,
+        perSession: Math.min(BATCH_PER_SESSION, count),
+      });
+      setSaveOpen(false);
+      // To the list rather than straight into a session: the learner pressed
+      // save, not practise, and seeing the set exist is what confirms the press.
+      void navigate(studyPath(course, 'batches'));
+    },
+    [course, filterSummary, navigate, results, saveBatch],
+  );
+
+  /** Offered sizes, impossible ones dropped, the whole sheet always last. */
+  const batchSizes = [...BATCH_SIZES.filter((count) => count < results.length), results.length];
 
   return (
     // Back to Study rather than to history: a sheet is reached from there, and
@@ -601,7 +658,37 @@ export function BrowseScreen() {
           >
             Study these
           </Button>
+          {/* The third thing you can do with a sheet: keep it. "Practise these"
+              and "Study these" are both one sitting, and the material a learner
+              wants to work through over a week had nowhere to be kept. */}
+          <Button
+            block
+            onClick={() => setSaveOpen(true)}
+            aria-expanded={saveOpen}
+            aria-controls={saveSheetId}
+          >
+            Save as a set
+          </Button>
         </div>
+      )}
+
+      {saveOpen && (
+        <Sheet id={saveSheetId} title="Save as a set" onClose={() => setSaveOpen(false)}>
+          <div className={styles.saveSheet}>
+            <p className={styles.saveNote}>
+              A set is material you come back to. Every short session started from it draws on the
+              same items — the ones you keep missing first — until you have absorbed them.
+            </p>
+            <p className={styles.saveSummary}>{filterSummary || 'Everything'}</p>
+            <div className={styles.saveSizes}>
+              {batchSizes.map((count) => (
+                <Button key={count} variant="primary" onClick={() => saveAsBatch(count)}>
+                  {count === results.length ? `All ${count}` : `First ${count}`}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </Sheet>
       )}
     </AppShell>
   );

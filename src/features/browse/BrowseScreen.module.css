@@ -249,3 +249,31 @@
   flex-wrap: wrap;
   gap: var(--space-2);
 }
+
+/* Saving a sheet as a set: the explanation first, because "set" is a new noun in
+   this app, then the sheet's own name, then the sizes. */
+.saveSheet {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.saveNote {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+/* The set's name, in the display voice: it is the one piece of target-language
+   material on the sheet worth reading before choosing a size. */
+.saveSummary {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  margin: 0;
+}
+
+/* Wraps rather than scrolls, for the reason the register toggles above do. */
+.saveSizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

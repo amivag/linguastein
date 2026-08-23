@@ -1,13 +1,17 @@
 # Task: practice batches — a set the learner picks and keeps coming back to
 
-**Status:** **Stage A has landed.** §5 and §6 now read as a record of why the
-record, the store and the URL parameter are shaped as they are rather than as work
-to do. Stage B — the three surfaces in §7 — is briefed and unstarted, and both
-decisions in §9 were taken on the way in (see the note at the end of §6).
+**Status:** **Stages A and B have landed.** The whole document now reads as a
+record of why each piece is shaped as it is rather than as work to do. What is
+left is listed in §8 (deliberately out of scope) and the one gap Stage B opened,
+recorded at the end of §7.
 **Written:** 2026-08-23
 **Stage A landed:** 2026-08-23 — `src/domain/batches/`, `BatchStore` at database
 version 3, `?batch=` in `session-url.ts`, batches loaded at the composition root
 alongside preferences, and the out-of-scope case reported rather than widened.
+**Stage B landed:** 2026-08-23 — saving a sheet as a set on Browse, a derived
+Sets section on Study, a follow-up card on Home, `batchStandings` and
+`nextBatchStanding` in the domain, and `localDay` as the app's one definition of
+a calendar day.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** one new domain module (`src/domain/batches/`), one new store on
 `LearnerStorage` at database version 3, one parameter in `session-url.ts`, and
@@ -394,6 +398,30 @@ abandoned. Read the existing `followUps` construction before adding to it.
 
 The card states the standing plainly — _"Food & travel nouns · 11 of 30
 absorbed"_ — and resumes in one tap at the batch's `perSession` size.
+
+### 7.4 The gap Stage B opened
+
+**A set can be made and cannot be removed.** `BatchStore.remove` and the
+context's `removeBatch` both exist and are used by the full local reset, but no
+screen offers the action, so the only way out of a set a learner regrets is to
+erase everything. That is the next thing to build, and it is smaller than it
+sounds — one control on the Study row. Two decisions come with it rather than
+before it:
+
+- **Removing a set must not touch progress.** The items were practised; that
+  evidence belongs to the items, not to the set that grouped them. Deleting a set
+  is forgetting the grouping, and the confirm should say so — otherwise it reads
+  as throwing away the work.
+- **A finished set probably wants archiving rather than deleting.**
+  `nextBatchStanding` already stops offering a complete one, so the list is the
+  only place a finished set still shows. Whether that is a state on the record or
+  simply the learner deleting it is a real choice; do not add a field until the
+  Study row's behaviour makes one necessary.
+
+Also unbuilt, and deliberately: renaming. The label is derived from the filter,
+which is right at creation and wrong a week later when two sets both read
+"Words · Nouns". It needs a text input and the accessible naming that comes with
+one, which is why it is not smuggled in here.
 
 ## 8. Deliberately out of scope
 

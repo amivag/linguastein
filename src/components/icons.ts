@@ -27,6 +27,7 @@ import {
   Languages,
   Layers,
   Lightbulb,
+  ListChecks,
   ListFilter,
   Mic,
   MicOff,
@@ -153,6 +154,10 @@ export const ICONS = {
   pack: Package,
   /* A mission — a route through material towards one real-world outcome. */
   mission: Route,
+  /* A batch: a bounded set of material the learner assembled, worked through
+     until absorbed. A checklist rather than a stack, because what makes one
+     legible is how much of it is done. */
+  batch: ListChecks,
   shuffle: Shuffle,
 
   // Progress and reward. Kept few on purpose: every icon here is a claim about

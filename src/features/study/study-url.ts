@@ -16,6 +16,7 @@ import { coursePath, type Course } from '../../domain/content';
 
 export const STUDY_TABS = [
   'missions',
+  'batches',
   'words',
   'phrases',
   'grammar',

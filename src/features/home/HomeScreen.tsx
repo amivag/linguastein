@@ -9,9 +9,16 @@ import { CourseBar } from '../../components/CourseBar';
 import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
-import { levelLabel } from '../../domain/content';
-import { summarise, type ProgressSummary } from '../../domain/progress';
+import { levelLabel, type ItemId } from '../../domain/content';
+import {
+  summarise,
+  type Attempt,
+  type ItemProgress,
+  type ProgressSummary,
+} from '../../domain/progress';
 import { missionStandings, missionUseEvidence, nextMissionStanding } from '../../domain/missions';
+import { batchStandings, nextBatchStanding, type BatchStanding } from '../../domain/batches';
+import { localDay } from '../../utils/calendar';
 import {
   DEFAULT_SESSION_MINUTES,
   type SessionFocus,
@@ -28,7 +35,7 @@ import styles from './HomeScreen.module.css';
  * tap away for a learner who already knows what they want.
  */
 export function HomeScreen() {
-  const { services, preferences } = useServices();
+  const { services, preferences, batches } = useServices();
   const { course, option, filter, path } = useCourse();
   const navigate = useNavigate();
   const practiceSheetId = useId();
@@ -36,6 +43,18 @@ export function HomeScreen() {
   const [practiceDays, setPracticeDays] = useState(0);
   const [lastPractice, setLastPractice] = useState('Not yet');
   const [practisedIds, setPractisedIds] = useState<ReadonlySet<string>>(new Set());
+  /**
+   * The records themselves, not just which ids appear in them.
+   *
+   * A mission asks "has this been practised at all", which a set of ids answers;
+   * a set asks whether each item is *absorbed*, which is a question about memory
+   * stability and about which days it was produced on. Same one read either way.
+   */
+  const [history, setHistory] = useState<{
+    readonly progress: ReadonlyMap<ItemId, ItemProgress>;
+    readonly attempts: readonly Attempt[];
+    readonly now: number;
+  } | null>(null);
   const [missionUseItems, setMissionUseItems] = useState<ReadonlyMap<string, ReadonlySet<string>>>(
     new Map(),
   );
@@ -62,6 +81,11 @@ export function HomeScreen() {
       setSummary(summarise(inScope, scope.total, now));
       setPractisedIds(new Set(inScope.map((entry) => entry.itemId)));
       setMissionUseItems(missionUseEvidence(attempts));
+      setHistory({
+        progress: new Map(inScope.map((entry) => [entry.itemId, entry])),
+        attempts,
+        now,
+      });
       setPracticeDays(daysPractisedThisWeek(attempts, now));
       setLastPractice(describeLastPractice(attemptsInScope, now));
     })();
@@ -144,15 +168,59 @@ export function HomeScreen() {
     );
   };
 
+  /**
+   * The set to offer, or none.
+   *
+   * Unlike the mission, an absent one is a real answer: a learner with no sets,
+   * or whose sets are all absorbed, should be offered something else rather than
+   * a finished set to redo. `nextBatchStanding` is where that difference lives.
+   */
+  const set = useMemo(
+    () =>
+      history
+        ? nextBatchStanding(
+            batchStandings(batches, course, {
+              courseItemIds: scope.ids,
+              progress: history.progress,
+              attempts: history.attempts,
+              now: history.now,
+              dayOf: localDay,
+            }),
+          )
+        : undefined,
+    [batches, course, history, scope.ids],
+  );
+
   const due = summary?.due ?? 0;
   const reviewDue = due > 0;
-  const followUps: readonly ('mission' | 'reinforce' | 'fresh')[] = summary
+  /*
+   * At most two, and a set is never the first thing.
+   *
+   * Due reviews lead, always: items outside a set keep coming due while a learner
+   * drills one, and a set that displaced them would build exactly the review debt
+   * that gets a learner to give up. But a set the learner assembled themselves is
+   * the strongest statement of intent on this screen, so it comes before the two
+   * generic suggestions.
+   */
+  const followUps: readonly ('mission' | 'set' | 'reinforce' | 'fresh')[] = summary
     ? [
         ...(reviewDue && mission ? (['mission'] as const) : []),
+        ...(set ? (['set'] as const) : []),
         ...(summary.seen > 0 ? (['reinforce'] as const) : []),
         ...(summary.seen < summary.total ? (['fresh'] as const) : []),
       ].slice(0, 2)
     : [];
+
+  const continueSet = () => {
+    if (!set) return;
+    void navigate(
+      sessionPath(course, {
+        preset: 'quick',
+        batch: set.batch.id,
+        size: { kind: 'items', count: set.batch.perSession ?? set.total },
+      }),
+    );
+  };
 
   const continueMission = () => {
     if (!mission) return;
@@ -271,6 +339,21 @@ export function HomeScreen() {
                           ? 'Use it in a new situation'
                           : 'Build flexible, useful language'}
                       </small>
+                    </span>
+                    <Icon name="next" />
+                  </Button>
+                ) : action === 'set' ? (
+                  <Button className={styles.nextAction} onClick={continueSet}>
+                    <span className={styles.nextActionIcon} aria-hidden="true">
+                      <Icon name="batch" />
+                    </span>
+                    <span>
+                      <strong>Continue {set?.batch.label}</strong>
+                      {/* The standing is inside the label, not beside it: a card
+                          saying only "Continue" tells a screen reader and an
+                          agent nothing about which of a learner's sets this is
+                          or how far through it they are. */}
+                      <small>{set ? describeSetProgress(set) : ''}</small>
                     </span>
                     <Icon name="next" />
                   </Button>
@@ -404,6 +487,20 @@ export function HomeScreen() {
   );
 }
 
+/**
+ * What is left of a set, in one line.
+ *
+ * "Absorbed" and never "mastered" or a percentage: it means the specific
+ * evidenced thing `domain/batches/progress.ts` defines, and a rounded percentage
+ * would read as the lexeme mastery a set deliberately does not claim.
+ */
+function describeSetProgress(standing: BatchStanding): string {
+  const absorbed = `${standing.absorbed} of ${standing.total} absorbed`;
+  if (standing.dueNow > 0) return `${absorbed} · ${standing.dueNow} ready to review`;
+  if (standing.untouched > 0) return `${absorbed} · ${standing.untouched} not started`;
+  return absorbed;
+}
+
 function daysPractisedThisWeek(attempts: readonly { readonly at: number }[], now: number): number {
   const current = new Date(now);
   const start = new Date(current.getFullYear(), current.getMonth(), current.getDate());
@@ -413,7 +510,7 @@ function daysPractisedThisWeek(attempts: readonly { readonly at: number }[], now
   return new Set(
     attempts
       .filter((attempt) => attempt.at >= start.getTime() && attempt.at <= now)
-      .map((attempt) => new Date(attempt.at).toDateString()),
+      .map((attempt) => localDay(attempt.at)),
   ).size;
 }
 

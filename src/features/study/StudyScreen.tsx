@@ -13,6 +13,7 @@ import {
   coursePath,
   levelLabel,
   POS_LABELS,
+  type ItemId,
   type PartOfSpeech,
   type SkillKind,
 } from '../../domain/content';
@@ -22,6 +23,9 @@ import {
   type MissionEvidence,
   type MissionStanding,
 } from '../../domain/missions';
+import { batchStandings, type BatchStanding } from '../../domain/batches';
+import type { Attempt, ItemProgress } from '../../domain/progress';
+import { localDay } from '../../utils/calendar';
 import { browsePath } from '../browse/browse-url';
 import { missionPath } from '../missions/mission-url';
 import { sessionPath } from '../practice/session-url';
@@ -29,6 +33,33 @@ import { parseStudyTab, studyPath, type StudyTab } from './study-url';
 import styles from './StudyScreen.module.css';
 
 const NO_EVIDENCE: MissionEvidence = { practised: new Set(), used: new Map() };
+
+/**
+ * One read of the learner's history, in the shapes the two derived lists need.
+ *
+ * Missions want "what has been practised at all" plus the Use-stage evidence;
+ * batches want the progress records themselves, because absorbing an item is a
+ * question about its memory stability rather than about having met it. Held as
+ * one state so the attempt log is read once — it is the whole log, and reading it
+ * twice on one screen is the cost `learner-profile.md` §4.5 warns about.
+ *
+ * `now` is captured here rather than read during render: the React Compiler rules
+ * forbid `Date.now()` in a render pass, and a due count that changed on every
+ * re-render would be worse anyway.
+ */
+interface History {
+  readonly evidence: MissionEvidence;
+  readonly progress: ReadonlyMap<ItemId, ItemProgress>;
+  readonly attempts: readonly Attempt[];
+  readonly now: number;
+}
+
+const NO_HISTORY: History = {
+  evidence: NO_EVIDENCE,
+  progress: new Map(),
+  attempts: [],
+  now: 0,
+};
 
 /**
  * Study: the material, before anything grades you on it.
@@ -65,21 +96,21 @@ const NO_EVIDENCE: MissionEvidence = { practised: new Set(), used: new Map() };
  * rule the tiles, the categories and the letters already follow.
  */
 export function StudyScreen() {
-  const { services, preferences } = useServices();
+  const { services, preferences, batches } = useServices();
   const { course, option, filter: courseScope } = useCourse();
   const repository = services.repository;
   const [params] = useSearchParams();
-  const [evidence, setEvidence] = useState<MissionEvidence>(NO_EVIDENCE);
+  const [history, setHistory] = useState<History>(NO_HISTORY);
   const [scopeOpen, setScopeOpen] = useState(false);
   const scopeSheetId = useId();
 
   /**
    * The one asynchronous thing on the page, and the one thing on it that is not
-   * a count: how far the learner has got with each mission.
+   * a count: how far the learner has got with each mission and each set.
    *
-   * Read here rather than passed in because a mission's completion is derived
-   * from the attempt log — nothing writes down "mission finished", so nothing can
-   * be handed a stale copy of it.
+   * Read here rather than passed in because both are derived from the attempt log
+   * — nothing writes down "mission finished" or "set absorbed", so nothing can be
+   * handed a stale copy of either.
    */
   useEffect(() => {
     let cancelled = false;
@@ -89,9 +120,14 @@ export function StudyScreen() {
         services.storage.attempts.recent(10_000),
       ]);
       if (cancelled) return;
-      setEvidence({
-        practised: new Set(progress.map((entry) => entry.itemId)),
-        used: missionUseEvidence(attempts),
+      setHistory({
+        evidence: {
+          practised: new Set(progress.map((entry) => entry.itemId)),
+          used: missionUseEvidence(attempts),
+        },
+        progress: new Map(progress.map((entry) => [entry.itemId, entry])),
+        attempts,
+        now: Date.now(),
       });
     })();
     return () => {
@@ -99,10 +135,28 @@ export function StudyScreen() {
     };
   }, [services.storage]);
 
-  const missions = useMemo(() => {
-    const courseIds = new Set(repository.query(courseScope).map((item) => item.id));
-    return missionStandings(MISSIONS, course, repository, courseIds, evidence);
-  }, [course, courseScope, evidence, repository]);
+  /** Item ids the course admits, which both derived lists narrow against. */
+  const courseItemIds = useMemo(
+    () => new Set(repository.query(courseScope).map((item) => item.id)),
+    [courseScope, repository],
+  );
+
+  const missions = useMemo(
+    () => missionStandings(MISSIONS, course, repository, courseItemIds, history.evidence),
+    [course, courseItemIds, history.evidence, repository],
+  );
+
+  const sets = useMemo(
+    () =>
+      batchStandings(batches, course, {
+        courseItemIds,
+        progress: history.progress,
+        attempts: history.attempts,
+        now: history.now,
+        dayOf: localDay,
+      }),
+    [batches, course, courseItemIds, history],
+  );
 
   const counts = useMemo(() => {
     const inScope = (extra: Parameters<typeof repository.query>[0]) =>
@@ -172,6 +226,11 @@ export function StudyScreen() {
       (
         [
           { id: 'missions', label: 'Missions', icon: 'mission', size: missions.length },
+          // Learner-made rather than pack-derived, so this is the one section
+          // whose count is a property of what *they* have done — and the same
+          // rule still applies: no sets, no tab, and creation lives on Browse
+          // where the sheet being saved is already on screen.
+          { id: 'batches', label: 'Sets', icon: 'batch', size: sets.length },
           { id: 'words', label: 'Words', icon: 'word', size: counts.words.length },
           {
             id: 'phrases',
@@ -189,7 +248,7 @@ export function StudyScreen() {
           size: number;
         }[]
       ).filter((section) => section.size > 0),
-    [counts, missions.length],
+    [counts, missions.length, sets.length],
   );
 
   // An unrecognised or absent section opens the first one this course has, the
@@ -261,6 +320,19 @@ export function StudyScreen() {
         >
           {missions.map((standing) => (
             <MissionRow key={standing.mission.id} standing={standing} course={course} />
+          ))}
+        </Section>
+      )}
+
+      {current?.id === 'batches' && (
+        <Section
+          label="Sets"
+          icon="batch"
+          layout="rows"
+          note="Material you chose, to come back to across short sessions until it is absorbed. Practising a set is recorded, like any other practice."
+        >
+          {sets.map((standing) => (
+            <BatchRow key={standing.batch.id} standing={standing} course={course} />
           ))}
         </Section>
       )}
@@ -439,6 +511,78 @@ function MissionRow({
       </Link>
     </li>
   );
+}
+
+/**
+ * One set, and how much of it has landed.
+ *
+ * The whole state is inside the link's text for the reason `MissionRow` gives: a
+ * list of links called "Practise" tells a screen reader and an agent nothing, and
+ * "11 of 30 absorbed" is the only thing distinguishing a set halfway done from
+ * one just made.
+ *
+ * The link starts a session over the set rather than opening a page about it.
+ * There is nothing on such a page a learner needs that this row does not already
+ * say, and the whole point of a set is that opening it is one tap.
+ */
+function BatchRow({
+  standing,
+  course,
+}: {
+  readonly standing: BatchStanding;
+  readonly course: Parameters<typeof sessionPath>[0];
+}) {
+  const { batch, complete } = standing;
+
+  return (
+    <li>
+      <Link
+        className={styles.mission}
+        to={sessionPath(course, {
+          preset: 'quick',
+          batch: batch.id,
+          size: { kind: 'items', count: batch.perSession ?? standing.total },
+        })}
+      >
+        <span
+          className={`${styles.missionIndex} ${complete ? styles.missionDone : ''}`}
+          aria-hidden="true"
+        >
+          {complete ? <Icon name="check" size="sm" /> : standing.absorbed}
+        </span>
+        <span className={styles.missionBody}>
+          <span className={styles.missionTitle}>{batch.label}</span>
+          <span className={styles.missionGoal}>{describeBatchSize(standing)}</span>
+          <span className={styles.missionState}>{describeBatch(standing)}</span>
+        </span>
+        <Icon name="next" size="sm" />
+      </Link>
+    </li>
+  );
+}
+
+/** How big the set is, and how much of it this course can still reach. */
+function describeBatchSize(standing: BatchStanding): string {
+  const items = `${standing.total} ${standing.total === 1 ? 'item' : 'items'}`;
+  // Reported rather than hidden: a set drawn at a higher level, or before a pack
+  // was removed, is not broken — part of it is simply out of reach from here.
+  return standing.missing > 0 ? `${items} · ${standing.missing} outside this course` : items;
+}
+
+/**
+ * What is left, in the terms the set is judged on.
+ *
+ * Deliberately never a percentage and never the word "mastered": absorbed means
+ * the specific, evidenced thing `domain/batches/progress.ts` defines — produced
+ * on two separate days and still held a week later — and a rounded percentage
+ * would invite reading it as the lexeme mastery this screen must not claim.
+ */
+function describeBatch(standing: BatchStanding): string {
+  if (standing.complete) return `Absorbed · ${standing.absorbed} of ${standing.total}`;
+  const parts = [`${standing.absorbed} of ${standing.total} absorbed`];
+  if (standing.dueNow > 0) parts.push(`${standing.dueNow} due`);
+  else if (standing.untouched > 0) parts.push(`${standing.untouched} not started`);
+  return parts.join(' · ');
 }
 
 /** What is left to do, in the words the mission screen itself uses. */

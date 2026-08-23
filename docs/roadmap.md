@@ -97,7 +97,11 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 ## Next
 
 The dataset work is briefed in full for a fresh session:
-[docs/tasks/dataset-expansion.md](tasks/dataset-expansion.md).
+[docs/tasks/dataset-expansion.md](tasks/dataset-expansion.md). Two content gaps
+are briefed on their own because each needs deciding before authoring:
+[feelings, mood and state](tasks/feelings-mood-state.md) — fifty-two sentences
+and ten lexemes for the question the greeting mission opens with — and the
+[past-tense mission](tasks/past-tense-mission.md).
 
 0. **Editorial review of core-es** — the pack is machine-generated and marked
    unreviewed. Genders, glosses and sentence naturalness need a human pass

@@ -56,3 +56,33 @@ export function studyPath(course: Course, tab?: StudyTab): string {
   const base = coursePath(course, 'study');
   return tab ? `${base}?tab=${tab}` : base;
 }
+
+/**
+ * The section a sheet was opened from — `?from=categories` on Browse or Read.
+ *
+ * Browse and Read are sheets *inside* Study rather than destinations of their
+ * own, so both send Back to Study rather than into history: a learner who
+ * followed three category tiles should not have to tap Back three times to
+ * leave. The cost of that choice was the whole bug this exists to fix — bare
+ * `/study` resolves to the *first* section the course has, so leaving a category
+ * dropped you on Missions. Back undid the navigation and the section switch
+ * above it, which is the one thing Back must never do.
+ *
+ * Carried in the sheet's own address rather than in a router state object, for
+ * the reason Browse's filters are: it survives a reload, a shared link and an
+ * agent driving the screen, none of which have a history stack to consult.
+ */
+export function writeStudyOrigin(params: URLSearchParams, from: StudyTab | undefined): void {
+  if (from) params.set('from', from);
+}
+
+/**
+ * Where Back should land, or `undefined` for "Study, wherever it opens".
+ *
+ * An unrecognised name degrades to that rather than erroring, as every other
+ * parser here does: a stale link should still get you out of the sheet.
+ */
+export function parseStudyOrigin(params: URLSearchParams): StudyTab | undefined {
+  const from = params.get('from');
+  return isStudyTab(from) ? from : undefined;
+}

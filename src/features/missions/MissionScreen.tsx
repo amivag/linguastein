@@ -33,6 +33,7 @@ import {
   type ReviewGrade,
 } from '../../domain/progress';
 import { SpeakCheck } from '../practice/SpeakCheck';
+import { studyPath } from '../study/study-url';
 import { MissionJourney } from './MissionJourney';
 import { missionPracticePath } from './mission-url';
 import styles from './Mission.module.css';
@@ -60,7 +61,7 @@ interface ResolvedResponsePalette {
 export function MissionScreen() {
   const { missionId = '', stage = 'understand' } = useParams();
   const navigate = useNavigate();
-  const { course, filter, path } = useCourse();
+  const { course, filter } = useCourse();
   const { services, preferences } = useServices();
   const mission = missionById(MISSIONS, course, missionId);
   const chosenStage: MissionStage = stage === 'use' ? 'use' : 'understand';
@@ -262,7 +263,15 @@ export function MissionScreen() {
         <section className={styles.empty}>
           <Icon name="passage" size="xl" />
           <p>This mission is not available in the current course.</p>
-          <Button variant="primary" block onClick={() => void navigate(path())}>
+          {/* To the ladder the button names. `path()` is the course home — Test —
+              so "Back to missions" landed on the one screen that is not the
+              missions list, which is the same broken promise as a Back button
+              that resets the section you were in. */}
+          <Button
+            variant="primary"
+            block
+            onClick={() => void navigate(studyPath(course, 'missions'))}
+          >
             Back to missions
           </Button>
         </section>
@@ -311,7 +320,11 @@ export function MissionScreen() {
           items={items}
           {...(passage.speakers ? { speakers: passage.speakers } : {})}
           onGrade={recordMissionUse}
-          onFinish={() => void navigate(path())}
+          // Out to the mission list, where this mission's row now reads either
+          // "Complete" or the transfer you are up to — the screen a learner
+          // finishing a stage is trying to get back to. It used to be the course
+          // home, which showed them a session instead.
+          onFinish={() => void navigate(studyPath(course, 'missions'))}
         />
       )}
     </AppShell>

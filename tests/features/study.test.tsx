@@ -79,9 +79,11 @@ describe('the study section', () => {
       'href',
       expect.stringContaining('type=sentence'),
     );
+    // The reading list, and the section to come back to — `back-navigation`
+    // holds the second half.
     expect(phrases.getByRole('link', { name: /texts and dialogues/i })).toHaveAttribute(
       'href',
-      '/es/all/read',
+      '/es/all/read?from=phrases',
     );
   });
 

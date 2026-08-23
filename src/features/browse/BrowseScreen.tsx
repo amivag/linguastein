@@ -138,7 +138,7 @@ function filterOf(facets: Facets): ItemFilter {
  */
 export function BrowseScreen() {
   const { services, preferences, saveBatch } = useServices();
-  const { course, filter: courseScope, path } = useCourse();
+  const { course, filter: courseScope } = useCourse();
   const navigate = useNavigate();
 
   const [params, setParams] = useSearchParams();
@@ -154,7 +154,7 @@ export function BrowseScreen() {
    * Read through the same pair a session link uses, so `?pos=verb` cannot come
    * to mean two things.
    */
-  const { filter, sort } = useMemo(() => parseBrowseUrl(params), [params]);
+  const { filter, sort, from } = useMemo(() => parseBrowseUrl(params), [params]);
 
   // The selects are single-choice; the filter is plural because a link may carry
   // `?pos=verb,noun`. Reading the first value keeps a hand-written batch working
@@ -189,9 +189,15 @@ export function BrowseScreen() {
     const next = { ...facets, ...patch };
     // Through `browsePath` rather than assembled here, so the sheet's own links
     // and the ones Study builds cannot come to disagree.
-    setParams(browsePath(course, { filter: filterOf(next), sort: next.sort }).split('?')[1] ?? '', {
-      replace: true,
-    });
+    //
+    // `from` is carried through rather than patched: narrowing the sheet is not
+    // arriving at it from somewhere else, and dropping it here would strand the
+    // learner the moment they touched a filter — the Back button would forget
+    // where they came from because they used the screen.
+    setParams(
+      browsePath(course, { filter: filterOf(next), sort: next.sort, from }).split('?')[1] ?? '',
+      { replace: true },
+    );
     setLimit(PAGE_SIZE);
   };
   const words = useWordSelection();
@@ -368,7 +374,12 @@ export function BrowseScreen() {
     // Back to Study rather than to history: a sheet is reached from there, and
     // a learner who followed three category tiles should not have to tap Back
     // three times to leave.
-    <AppShell title="Browse" onBack={() => void navigate(path('study'))}>
+    //
+    // To the *section* that opened it, not to bare `/study`, which resolves to
+    // whichever section the course happens to start with — so leaving a category
+    // landed you on Missions, undoing a navigation the learner did not make.
+    // Back may cost you one step; it may never cost you two.
+    <AppShell title="Browse" onBack={() => void navigate(studyPath(course, from))}>
       {/* Search stays ready to use. Every deliberate narrowing choice lives in
           one overlay so results remain visible and the page never has nested
           scroll regions. */}

@@ -189,6 +189,35 @@ Add a facet there, not in a screen.
 Browse's URL and never travels into a session link, where `ordering` is the
 session's own business.
 
+**A sheet carries the section that opened it.** Browse and Read send Back to
+Study rather than into history, because a learner who followed three category
+tiles should not have to tap Back three times to leave. The other half of that
+choice was a bug: bare `/study` resolves to whichever section the course
+_starts_ with, so leaving a category landed you on Missions — Back undid the
+navigation the learner made and the section switch above it, then dropped them
+on a screen they had never asked for. So every sheet link Study builds carries
+`?from=<tab>` and each sheet's Back goes to `studyPath(course, from)`.
+`study-url.ts` owns that spelling in both directions (`writeStudyOrigin` /
+`parseStudyOrigin`), because the section names are Study's; `browse-url.ts` and
+`read-url.ts` only pass it through. Three details matter:
+
+- **It is provenance, not a facet.** It narrows nothing and never travels into a
+  session link, so it lives beside `sort` rather than in `writeItemFilter`.
+- **Narrowing the sheet must not drop it.** Every rewrite of Browse's query is a
+  `replace` that carries `from` through: a Back button that forgets where you
+  came from because you touched a filter is the original bug again.
+- **Study reads it off the open section**, not out of a literal per link, so no
+  two links on one screen can disagree and a section added later needs no edit.
+  An absent or unrecognised name degrades to Study-wherever-it-opens, which is
+  what a shared link and a reload get.
+
+The general rule, worth stating because it is easy to break one control at a
+time: **Back may cost a learner one step, and it may never cost two.** It must
+also never land somewhere they have not been — the reason `MissionScreen`'s
+"Back to missions" and its finish button go to the missions ladder on Study
+rather than to `path()`, which is the course home and the one screen a mission
+was not reached from.
+
 ## Settings, in sections
 
 Five sections rather than one column, grouped by _whose_ setting it is: Learning,

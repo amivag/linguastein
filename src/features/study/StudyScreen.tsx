@@ -10,7 +10,6 @@ import { SectionTabs } from '../../components/SectionTabs';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import {
-  coursePath,
   levelLabel,
   POS_LABELS,
   type ItemId,
@@ -28,6 +27,7 @@ import type { Attempt, ItemProgress } from '../../domain/progress';
 import { localDay } from '../../utils/calendar';
 import { browsePath } from '../browse/browse-url';
 import { missionPath } from '../missions/mission-url';
+import { readPath } from '../read/read-url';
 import { sessionPath } from '../practice/session-url';
 import { parseStudyTab, studyPath, type StudyTab } from './study-url';
 import styles from './StudyScreen.module.css';
@@ -256,6 +256,17 @@ export function StudyScreen() {
   const requested = parseStudyTab(params);
   const current = sections.find((section) => section.id === requested) ?? sections[0];
 
+  /**
+   * Stamped onto every sheet this screen links to, so its Back button comes back
+   * *here* rather than to bare `/study` — which resolves to whichever section the
+   * course starts with, and so answered "back" with "Missions" no matter which
+   * section you had left.
+   *
+   * Read off the open section rather than written out per link: the two cannot
+   * then disagree, and a section added later carries the way back with no edit.
+   */
+  const from = current?.id;
+
   /** A study session: `flashcards` is `mode: 'study'`, so it records nothing. */
   const studyLink = (skills: readonly string[]) =>
     sessionPath(course, {
@@ -342,7 +353,7 @@ export function StudyScreen() {
           {counts.words.map((kind) => (
             <Tile
               key={kind.pos}
-              to={browsePath(course, { filter: { types: ['word'], pos: [kind.pos] } })}
+              to={browsePath(course, { filter: { types: ['word'], pos: [kind.pos] }, from })}
               title={kind.label}
               count={kind.count}
             />
@@ -353,19 +364,19 @@ export function StudyScreen() {
       {current?.id === 'phrases' && (
         <Section label="Phrases" icon="browse" note="Every word tappable, on every row.">
           <Tile
-            to={browsePath(course, { filter: { types: ['phrase'] } })}
+            to={browsePath(course, { filter: { types: ['phrase'] }, from })}
             title="Set phrases"
             count={counts.phrases}
             note="Things said as a unit"
           />
           <Tile
-            to={browsePath(course, { filter: { types: ['sentence'] } })}
+            to={browsePath(course, { filter: { types: ['sentence'] }, from })}
             title="Sentences"
             count={counts.sentences}
             note="Full sentences with a verb"
           />
           <Tile
-            to={coursePath(course, 'read')}
+            to={readPath(course, { from })}
             title="Texts and dialogues"
             count={counts.passages}
             note="Several sentences that read as one"
@@ -427,7 +438,7 @@ export function StudyScreen() {
           {counts.topics.map((topic) => (
             <Tile
               key={topic.id}
-              to={browsePath(course, { filter: { topics: [topic.id] } })}
+              to={browsePath(course, { filter: { topics: [topic.id] }, from })}
               title={topic.label}
               count={topic.count}
             />

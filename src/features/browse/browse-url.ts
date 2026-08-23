@@ -18,10 +18,18 @@ import {
   type ItemSort,
 } from '../../domain/content';
 import { parseItemFilter, writeItemFilter } from '../practice/session-url';
+import { parseStudyOrigin, writeStudyOrigin, type StudyTab } from '../study/study-url';
 
 export interface BrowseUrl {
   readonly filter: ItemFilter;
   readonly sort: ItemSort;
+  /**
+   * The Study section this sheet was opened from, and so the one Back returns
+   * to. Not a facet and not the list's business: it narrows nothing and never
+   * travels into a session link. `study-url.ts` owns its spelling, because the
+   * section names are Study's.
+   */
+  readonly from: StudyTab | undefined;
 }
 
 /**
@@ -37,6 +45,7 @@ export function browsePath(course: Course, url: Partial<BrowseUrl> = {}): string
   // Pack order is the default, so it is left unsaid — a link a human might read
   // should not spell out the thing that was not chosen.
   if (url.sort && url.sort !== 'pack') params.set('sort', url.sort);
+  writeStudyOrigin(params, url.from);
 
   const query = params.toString();
   return query ? `${coursePath(course, 'browse')}?${query}` : coursePath(course, 'browse');
@@ -49,6 +58,7 @@ export function parseBrowseUrl(params: URLSearchParams): BrowseUrl {
     // Unrecognised widens to the default rather than erroring, as everywhere
     // else: a stale link should show the sheet, not a broken screen.
     sort: isItemSort(sort) ? sort : 'pack',
+    from: parseStudyOrigin(params),
   };
 }
 

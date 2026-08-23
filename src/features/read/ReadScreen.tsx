@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
@@ -8,6 +8,8 @@ import { Icon } from '../../components/Icon';
 import { CourseBar } from '../../components/CourseBar';
 import { UsageBadges } from '../../components/UsageBadges';
 import { CEFR_LEVELS, type PassageKind } from '../../domain/content';
+import { studyPath } from '../study/study-url';
+import { parseReadUrl } from './read-url';
 import styles from './Read.module.css';
 
 const KINDS: readonly { readonly id: PassageKind | 'all'; readonly label: string }[] = [
@@ -23,9 +25,15 @@ const KINDS: readonly { readonly id: PassageKind | 'all'; readonly label: string
  */
 export function ReadScreen() {
   const { services, preferences } = useServices();
-  const { filter, path } = useCourse();
+  const { course, filter, path } = useCourse();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const [kind, setKind] = useState<PassageKind | 'all'>('all');
+
+  // Which Study section opened this list, so Back returns to it rather than to
+  // whichever section the course happens to start with. The reasoning is
+  // `browse-url.ts`'s, and so is the mechanism.
+  const { from } = parseReadUrl(params);
 
   const passages = useMemo(() => {
     // A passage carries its own level, so the course narrows this list the same
@@ -43,7 +51,7 @@ export function ReadScreen() {
   }, [services.repository, kind, filter]);
 
   return (
-    <AppShell title="Read" onBack={() => void navigate(path('study'))}>
+    <AppShell title="Read" onBack={() => void navigate(studyPath(course, from))}>
       <CourseBar compact />
       <p className={styles.intro}>
         Short texts and conversations built from words you already practise. Tap any word for its

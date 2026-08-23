@@ -1,0 +1,145 @@
+# The question words, and the answers they are asked for.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+# Leave the id off a new row: the build assigns one and writes it back.
+#
+# Why this file exists. `qué`, `dónde`, `cuánto` and `cómo` were well covered by the
+# situations the missions teach -- you cannot order a coffee without them. The
+# other four were not: `cuándo` had two plain examples outside the health
+# passages, `cuál` had two, `quién` four, and `por qué` exactly one. A learner
+# could confirm a hotel and describe a symptom but could not ask when the party
+# starts, which of two shirts is cheaper, who the new boss is, or why not.
+#
+# So each of those four gets what the missions get: a dialogue that puts it in a
+# real situation, and a palette of natural alternatives on either side of it --
+# the question and the answer, because a question word nobody answers teaches
+# half a move.
+#
+# The demonstratives ride along at the end. `este`/`ese`/`aquel` are what the
+# answer to «¿cuál?» is actually made of, so the choosing dialogue teaches the
+# three-way contrast where it really occurs, and the closing section gives the
+# `grammar` category the items it was short of.
+
+# ── ¿Cuándo es la fiesta? (model dialogue) ────────────────────────────────────
+001297	Oye, Luis, el sábado hay una fiesta en mi casa.	Hey, Luis, there's a party at my place on Saturday.	a1	social		colloquial	tu		cuando-fiesta	Ana	suggest-social-activity
+001298	¡Qué bien! ¿Cuándo empieza?	Great! When does it start?	a1	social,clock,questions		colloquial	tu		cuando-fiesta	Luis	ask-when-something-happens
+001299	Empieza a las nueve de la noche.	It starts at nine in the evening.	a1	social,clock		colloquial	tu		cuando-fiesta	Ana	say-when-something-happens
+001300	¿Y cuándo termina?	And when does it finish?	a1	social,clock,questions		colloquial	tu		cuando-fiesta	Luis	ask-when-something-happens
+001301	Muy tarde. Estas fiestas nunca terminan pronto.	Very late. These parties never finish early.	a1	social,clock		colloquial	tu		cuando-fiesta	Ana	say-when-something-happens
+001302	¿Cuándo tengo que llegar?	When do I need to get there?	a1	social,clock,questions		colloquial	tu		cuando-fiesta	Luis	ask-when-something-happens
+001303	A las nueve o a las diez. Las dos están bien.	At nine or at ten. Either is fine.	a1	social,clock		colloquial	tu		cuando-fiesta	Ana	say-when-something-happens
+001304	Entonces voy sobre las nueve y media.	Then I'll come at about half past nine.	a1	social,clock		colloquial	tu		cuando-fiesta	Luis	confirm-social-plan
+001305	Perfecto. Hasta el sábado.	Perfect. See you on Saturday.	a1	social,greetings		colloquial	tu		cuando-fiesta	Ana	close-friendly-exchange
+001306	Hasta el sábado, Ana.	See you on Saturday, Ana.	a1	greetings		colloquial	tu		cuando-fiesta	Luis	close-friendly-exchange
+
+# ── Asking when something happens ─────────────────────────────────────────────
+001307	¿Cuándo es la fiesta?	When is the party?	a1	social,clock,questions	The bare question, for anything with a date.	neutral					ask-when-something-happens
+001308	¿Cuándo abre el museo?	When does the museum open?	a1	city,clock,questions	For opening times rather than an event.	neutral					ask-when-something-happens
+001309	¿Cuándo empieza la película?	When does the film start?	a1	entertainment,clock,questions	For something with a start time.	neutral					ask-when-something-happens
+001310	¿Cuándo cierra la tienda?	When does the shop close?	a1	shopping,clock,questions	The other half of opening hours.	neutral					ask-when-something-happens
+001311	¿Cuándo es tu cumpleaños?	When is your birthday?	a1	family,questions	Asks for a date, not a time.	colloquial	tu				ask-when-something-happens
+001312	¿Cuándo vuelves de vacaciones?	When are you back from holiday?	a1	travel,questions	About a person rather than an event.	colloquial	tu				ask-when-something-happens
+001313	¿Desde cuándo vives aquí?	How long have you lived here?	a1	social,questions	Asks when something started and still holds.	colloquial	tu				ask-when-something-happens
+001314	¿Hasta cuándo estás en Madrid?	How long are you in Madrid for?	a1	travel,questions	Asks when something ends.	colloquial	tu				ask-when-something-happens
+
+# ── Saying when something happens ─────────────────────────────────────────────
+001315	Es el sábado por la tarde.	It's on Saturday afternoon.	a1	social,time	A day and a part of it, without a clock time.	neutral					say-when-something-happens
+001316	Empieza a las ocho y media.	It starts at half past eight.	a1	clock	The precise answer.	neutral					say-when-something-happens
+001317	Abre a las diez de la mañana.	It opens at ten in the morning.	a1	shopping,clock	Says which ten, which the clock alone does not.	neutral					say-when-something-happens
+001318	Cierra los domingos.	It's closed on Sundays.	a1	shopping,days-of-week	A recurring day rather than one date.	neutral					say-when-something-happens
+001319	En dos semanas.	In two weeks.	a1	time	Counts forward instead of naming a date.	neutral					say-when-something-happens
+001320	Todavía no lo sé.	I don't know yet.	a1	time	An honest answer that still answers.	neutral					say-when-something-happens
+001321	Esta tarde, sobre las seis.	This afternoon, at about six.	a1	clock,time	Approximate on purpose.	neutral					say-when-something-happens
+001322	Siempre a la misma hora.	Always at the same time.	a1	clock,time	For a routine rather than a one-off.	neutral					say-when-something-happens
+
+# ── ¿Cuál te gusta más? (model dialogue — and where este/ese/aquel live) ──────
+001323	Mira estas camisas. Son muy bonitas.	Look at these shirts. They're very nice.	a1	shopping,clothes		colloquial	tu		cual-camisa	Marta	
+001324	Sí. ¿Cuál te gusta más?	Yes. Which one do you like better?	a1	shopping,clothes,questions		colloquial	tu		cual-camisa	Ana	ask-which-one
+001325	Esta, la azul. ¿Y a ti?	This one, the blue one. And you?	a1	shopping,clothes,colours		colloquial	tu		cual-camisa	Marta	choose-between-options
+001326	Yo prefiero esa, la verde.	I prefer that one, the green one.	a1	shopping,clothes,colours		colloquial	tu		cual-camisa	Ana	choose-between-options
+001327	¿Y aquella, la de la ventana?	And that one over there, the one in the window?	a1	shopping,clothes,questions		colloquial	tu		cual-camisa	Marta	ask-which-one
+001328	Aquella es muy cara.	That one over there is very expensive.	a1	shopping,clothes		colloquial	tu		cual-camisa	Ana	choose-between-options
+001329	¿Cuál compro entonces?	Which one shall I buy then?	a1	shopping,clothes,questions		colloquial	tu		cual-camisa	Marta	ask-which-one
+001330	Las dos primeras son bonitas.	The first two are nice.	a1	shopping,clothes		colloquial	tu		cual-camisa	Ana	choose-between-options
+001331	Vale, me llevo esta.	All right, I'll take this one.	a1	shopping,clothes		colloquial	tu		cual-camisa	Marta	choose-between-options
+
+# ── Asking which one ──────────────────────────────────────────────────────────
+001332	¿Cuál prefieres?	Which one do you prefer?	a1	questions	The shortest form of the question.	colloquial	tu				ask-which-one
+001333	¿Cuál te gusta más, este o ese?	Which do you like better, this one or that one?	a1	questions,grammar	Names both options, so the answer cannot be vague.	colloquial	tu				ask-which-one
+001334	¿Cuál es el mejor?	Which one is the best?	a1	questions	Asks for a recommendation out of several.	neutral					ask-which-one
+001335	¿Cuáles quieres?	Which ones do you want?	a1	questions	The plural — more than one is being chosen.	colloquial	tu				ask-which-one
+001336	¿Cuál de los dos es más barato?	Which of the two is cheaper?	a1	shopping,questions,numbers	Narrows the field to two and names the test.	neutral					ask-which-one
+001337	¿Cuál es mi habitación?	Which one is my room?	a1	travel,questions	Picks one out of a set that is already known.	neutral					ask-which-one
+
+# ── Choosing one ──────────────────────────────────────────────────────────────
+001338	Prefiero este.	I prefer this one.	a1	grammar	The near one, with no noun repeated after it.	neutral					choose-between-options
+001339	Me gusta más ese.	I like that one better.	a1	grammar	The one nearer the other person.	neutral					choose-between-options
+001340	Este es más bonito.	This one is nicer.	a1	grammar	Chooses and gives the reason in one line.	neutral					choose-between-options
+001341	Me llevo esta.	I'll take this one.	a1	shopping	Ends the choosing — a decision, not a preference.	neutral					choose-between-options
+001342	Los dos me gustan.	I like both of them.	a1	core	Declines to choose, pleasantly.	neutral					choose-between-options
+001343	Ninguno de los dos, gracias.	Neither of them, thank you.	a1	shopping	A polite no to the whole set.	neutral					choose-between-options
+
+# ── ¿Quién es el nuevo jefe? (model dialogue) ─────────────────────────────────
+001344	Buenos días, Marta. ¿Quién es ese señor?	Good morning, Marta. Who's that man?	a1	work,people,questions		colloquial	tu		quien-oficina	Luis	ask-who-someone-is
+001345	Es el nuevo jefe. Se llama Carlos.	He's the new boss. His name is Carlos.	a1	work,people		colloquial	tu		quien-oficina	Marta	say-who-someone-is
+001346	¿Y quiénes son esas dos?	And who are those two?	a1	work,people,questions		colloquial	tu		quien-oficina	Luis	ask-who-someone-is
+001347	Son las compañeras de Carlos. Trabajan con él.	They're Carlos's colleagues. They work with him.	a1	work,people		colloquial	tu		quien-oficina	Marta	say-who-someone-is
+001348	¿Con quién tengo la reunión hoy?	Who do I have the meeting with today?	a1	work,questions		colloquial	tu		quien-oficina	Luis	ask-who-someone-is
+001349	Con Carlos, a las once.	With Carlos, at eleven.	a1	work,clock		colloquial	tu		quien-oficina	Marta	say-when-something-happens
+001350	¿Y quién más va a la reunión?	And who else is going to the meeting?	a1	work,questions		colloquial	tu		quien-oficina	Luis	ask-who-someone-is
+001351	Todos nosotros. Es una reunión grande.	All of us. It's a big meeting.	a1	work		colloquial	tu		quien-oficina	Marta	say-who-someone-is
+001352	Muy bien. Gracias, Marta.	Very good. Thanks, Marta.	a1	work,greetings		colloquial	tu		quien-oficina	Luis	thank-for-help
+
+# ── Asking who someone is ─────────────────────────────────────────────────────
+001353	¿Quién es esa chica?	Who's that girl?	a1	people,questions	About someone in sight, pointed at with a demonstrative.	neutral					ask-who-someone-is
+001354	¿Quiénes son esos señores?	Who are those men?	a1	people,questions	The plural, which the singular does not cover.	neutral					ask-who-someone-is
+001355	¿Con quién trabajas?	Who do you work with?	a1	work,questions	`quién` after a preposition, where English moves it to the end.	colloquial	tu				ask-who-someone-is
+001356	¿Quién es el jefe aquí?	Who's the boss here?	a1	work,questions	Asks for a role rather than a name.	neutral					ask-who-someone-is
+001357	¿De quién es este libro?	Whose book is this?	a1	objects,questions	Ownership is `de quién`, not a word of its own.	neutral					ask-who-someone-is
+001358	¿Quién viene esta noche?	Who's coming tonight?	a1	social,questions	About people who are not there yet.	neutral					ask-who-someone-is
+
+# ── Saying who someone is ─────────────────────────────────────────────────────
+001359	Es un compañero del trabajo.	He's a colleague from work.	a1	work,people	A relationship rather than a name.	neutral					say-who-someone-is
+001360	Son mis vecinos.	They're my neighbours.	a1	home,people	The plural answer.	neutral					say-who-someone-is
+001361	Es la nueva profesora.	She's the new teacher.	a1	school,people	A role, with the one detail that matters.	neutral					say-who-someone-is
+001362	Es el hijo de Marta.	He's Marta's son.	a1	family,people	Places someone by who they belong to.	neutral					say-who-someone-is
+001363	No lo conozco.	I don't know him.	a1	people	The answer when there is no answer.	neutral					say-who-someone-is
+001364	Es una amiga de mi hermana.	She's a friend of my sister's.	a1	family,people	Two steps of relationship, which is how it usually comes out.	neutral					say-who-someone-is
+
+# ── ¿Por qué no vienes? (model dialogue) ──────────────────────────────────────
+001365	¿Vamos al cine esta noche?	Shall we go to the cinema tonight?	a1	social,entertainment		colloquial	tu		porque-plan	Ana	suggest-social-activity
+001366	Esta noche no puedo. Lo siento.	I can't tonight. I'm sorry.	a1	social		colloquial	tu		porque-plan	Luis	respond-to-suggestion
+001367	¿Por qué no?	Why not?	a1	social,questions		colloquial	tu		porque-plan	Ana	ask-why
+001368	Porque tengo mucho trabajo.	Because I have a lot of work.	a1	work,social		colloquial	tu		porque-plan	Luis	give-a-reason
+001369	¿Y por qué tienes mucho trabajo ahora?	And why do you have a lot of work now?	a1	work,questions		colloquial	tu		porque-plan	Ana	ask-why
+001370	Porque mi jefe está de vacaciones.	Because my boss is on holiday.	a1	work		colloquial	tu		porque-plan	Luis	give-a-reason
+001371	¿Y por qué no vamos el viernes?	And why don't we go on Friday?	a1	social,questions		colloquial	tu		porque-plan	Ana	ask-why
+001372	El viernes sí puedo. Buena idea.	I can on Friday. Good idea.	a1	social		colloquial	tu		porque-plan	Luis	respond-to-suggestion
+001373	Entonces el viernes a las ocho.	Friday at eight then.	a1	social,clock		colloquial	tu		porque-plan	Ana	confirm-social-plan
+
+# ── Asking why ────────────────────────────────────────────────────────────────
+001374	¿Por qué?	Why?	a1	questions	On its own. Short, and not rude in Spanish.	neutral					ask-why
+001375	¿Y eso por qué?	And why's that?	a1	questions,grammar	Softer than the bare question, and very common.	neutral					ask-why
+001376	¿Por qué dices eso?	Why do you say that?	a1	questions,grammar	Asks about what was just said.	colloquial	tu				ask-why
+001377	¿Por qué no vienes con nosotros?	Why don't you come with us?	a1	social,questions	A suggestion wearing a question — not a complaint.	colloquial	tu				ask-why
+001378	¿Por qué está cerrado hoy?	Why is it closed today?	a1	shopping,questions	About a situation rather than a person.	neutral					ask-why
+001379	¿Por qué es tan caro?	Why is it so expensive?	a1	shopping,questions	Asks for a reason and shows surprise at once.	neutral					ask-why
+
+# ── Giving a reason ───────────────────────────────────────────────────────────
+001380	Porque estoy muy cansado.	Because I'm very tired.	a1	feelings	`porque` is one word; `por qué` is two.	neutral					give-a-reason
+001381	Porque tengo que trabajar.	Because I have to work.	a1	work	The most useful reason there is.	neutral					give-a-reason
+001382	Es que no tengo tiempo.	It's just that I don't have time.	a1	core	Softens a reason, and never starts with `porque`.	neutral					give-a-reason
+001383	Por el trabajo.	Because of work.	a1	work	A reason with no verb in it at all.	neutral					give-a-reason
+001384	No sé por qué.	I don't know why.	a1	questions	`por qué` inside a statement rather than a question.	neutral					give-a-reason
+001385	Porque mañana me levanto pronto.	Because I get up early tomorrow.	a1	daily-routine	A reason about later, not about now.	neutral					give-a-reason
+
+# ── este, ese, aquel — near, there, over there ────────────────────────────────
+001386	Este libro es mío y ese es de Marta.	This book is mine and that one is Marta's.	a1	grammar,objects	The two-way contrast in one line.	neutral					
+001387	Esta silla es nueva, pero aquella es muy vieja.	This chair is new, but that one over there is very old.	a1	grammar,home	Adds the third distance: further off than `ese`.	neutral					
+001388	Quiero este, no ese.	I want this one, not that one.	a1	grammar	Both standing alone, with no noun after them.	neutral					
+001389	¿Ves aquella casa blanca? Allí vivo yo.	Can you see that white house over there? That's where I live.	a1	grammar,home	`aquel` for something in sight but far away.	colloquial	tu				
+001390	Eso no es verdad.	That isn't true.	a1	grammar	Neuter: points at an idea, not at a thing with a gender.	neutral					
+001391	Esto es para ti.	This is for you.	a1	grammar	The near neuter — handing something over.	neutral					
+001392	Esos zapatos son muy caros.	Those shoes are very expensive.	a1	grammar,clothes	Plural, and still a determiner before its noun.	neutral					
+001393	Estas llaves son de la casa y esas son de la oficina.	These keys are for the house and those are for the office.	a1	grammar,objects	Feminine plural, both sides of the contrast.	neutral					
+001394	Esta semana trabajo mucho, pero la próxima no.	This week I'm working a lot, but not next week.	a1	grammar,time	`este` about time rather than space, which is most of its use.	neutral					
+001395	Aquel hotel de la plaza es muy bueno.	That hotel on the square over there is very good.	a1	grammar,travel	`aquel` before its noun, the way a determiner normally sits.	neutral					

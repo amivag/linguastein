@@ -145,6 +145,7 @@
 {"id":"core-es:lexeme:nuestro","lemma":"nuestro","pos":"DET","level":"a1"}
 {"id":"core-es:lexeme:este","lemma":"este","pos":"DET","level":"a1"}
 {"id":"core-es:lexeme:ese","lemma":"ese","pos":"DET","level":"a1"}
+{"id":"core-es:lexeme:aquel","lemma":"aquel","pos":"DET","level":"a1"}
 {"id":"core-es:lexeme:al","lemma":"al","pos":"ADP","level":"a1"}
 {"id":"core-es:lexeme:del","lemma":"del","pos":"ADP","level":"a1"}
 {"id":"core-es:lexeme:hay","lemma":"hay","pos":"VERB","level":"a1"}
@@ -216,6 +217,7 @@
 {"id":"core-es:lexeme:perfectamente","lemma":"perfectamente","pos":"ADV","level":"a2"}
 {"id":"core-es:lexeme:recto","lemma":"recto","pos":"ADV","level":"a2"}
 {"id":"core-es:lexeme:mi-pron","lemma":"mí","pos":"PRON","level":"a1"}
+{"id":"core-es:lexeme:ti","lemma":"ti","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:ni","lemma":"ni","pos":"CCONJ","level":"a2"}
 {"id":"core-es:lexeme:sanitario","lemma":"sanitario","pos":"ADJ","level":"a2"}
 {"id":"core-es:lexeme:dulce","lemma":"dulce","pos":"ADJ","level":"a1"}
@@ -225,10 +227,12 @@
 {"id":"core-es:lexeme:ruidoso","lemma":"ruidoso","pos":"ADJ","level":"a2"}
 {"id":"core-es:lexeme:junto","lemma":"junto","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:asi","lemma":"así","pos":"ADV","level":"a1"}
+{"id":"core-es:lexeme:tan","lemma":"tan","pos":"ADV","level":"a1"}
 {"id":"core-es:lexeme:adonde","lemma":"adónde","pos":"ADV","level":"a1"}
 {"id":"core-es:lexeme:recien","lemma":"recién","pos":"ADV","level":"a2"}
 {"id":"core-es:lexeme:encima","lemma":"encima","pos":"ADV","level":"a1"}
 {"id":"core-es:lexeme:eso","lemma":"eso","pos":"PRON","level":"a1"}
+{"id":"core-es:lexeme:esto","lemma":"esto","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:vosotros","lemma":"vosotros","pos":"PRON","level":"a2"}
 {"id":"core-es:lexeme:alguno","lemma":"alguno","pos":"DET","level":"a1"}
 {"id":"core-es:lexeme:ninguno","lemma":"ninguno","pos":"DET","level":"a1"}
@@ -262,6 +266,7 @@
 {"id":"core-es:lexeme:luis","lemma":"Luis","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:ana","lemma":"Ana","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:marta","lemma":"Marta","pos":"PROPN","level":"a1"}
+{"id":"core-es:lexeme:carlos","lemma":"Carlos","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:elena","lemma":"Elena","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:lopez","lemma":"López","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:garcia","lemma":"García","pos":"PROPN","level":"a1"}

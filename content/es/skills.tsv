@@ -70,3 +70,13 @@ introduce-a-person	function	Presentar a alguien	Introduce someone and say who th
 say-what-they-do	function	Decir a qué se dedica	Say what someone does or studies	a1	introduce-a-person
 give-family-details	function	Dar detalles de la familia	Give ages, numbers and relationships	a1	introduce-a-person
 react-with-interest	function	Reaccionar con interés	React with interest to what you hear	a1	say-what-they-do
+
+# Asking the four questions the pack could not ask, and answering them.
+ask-when-something-happens	function	Preguntar cuándo es algo	Ask when something happens	a1	
+say-when-something-happens	function	Decir cuándo es algo	Say when something happens	a1	ask-when-something-happens
+ask-which-one	function	Preguntar cuál de varios	Ask which one, out of several	a1	
+choose-between-options	function	Elegir una opción	Choose one and say which	a1	ask-which-one
+ask-who-someone-is	function	Preguntar quién es alguien	Ask who someone is	a1	
+say-who-someone-is	function	Decir quién es alguien	Say who someone is	a1	ask-who-someone-is
+ask-why	function	Preguntar por qué	Ask why something is so	a1	
+give-a-reason	function	Dar una razón	Give a simple reason	a1	ask-why

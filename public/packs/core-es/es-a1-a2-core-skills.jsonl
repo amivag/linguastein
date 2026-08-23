@@ -81,6 +81,14 @@
 {"id":"core-es:skill:say-what-they-do","kind":"function","label":"Decir a qué se dedica","level":"a1","prerequisites":["core-es:skill:introduce-a-person"]}
 {"id":"core-es:skill:give-family-details","kind":"function","label":"Dar detalles de la familia","level":"a1","prerequisites":["core-es:skill:introduce-a-person"]}
 {"id":"core-es:skill:react-with-interest","kind":"function","label":"Reaccionar con interés","level":"a1","prerequisites":["core-es:skill:say-what-they-do"]}
+{"id":"core-es:skill:ask-when-something-happens","kind":"function","label":"Preguntar cuándo es algo","level":"a1"}
+{"id":"core-es:skill:say-when-something-happens","kind":"function","label":"Decir cuándo es algo","level":"a1","prerequisites":["core-es:skill:ask-when-something-happens"]}
+{"id":"core-es:skill:ask-which-one","kind":"function","label":"Preguntar cuál de varios","level":"a1"}
+{"id":"core-es:skill:choose-between-options","kind":"function","label":"Elegir una opción","level":"a1","prerequisites":["core-es:skill:ask-which-one"]}
+{"id":"core-es:skill:ask-who-someone-is","kind":"function","label":"Preguntar quién es alguien","level":"a1"}
+{"id":"core-es:skill:say-who-someone-is","kind":"function","label":"Decir quién es alguien","level":"a1","prerequisites":["core-es:skill:ask-who-someone-is"]}
+{"id":"core-es:skill:ask-why","kind":"function","label":"Preguntar por qué","level":"a1"}
+{"id":"core-es:skill:give-a-reason","kind":"function","label":"Dar una razón","level":"a1","prerequisites":["core-es:skill:ask-why"]}
 {"id":"core-es:skill:numerals-teens","kind":"pattern","label":"dieciséis, diecisiete…","level":"a1"}
 {"id":"core-es:skill:numerals-twenties","kind":"pattern","label":"veintiuno, veintidós…","level":"a1"}
 {"id":"core-es:skill:numerals-y-joining","kind":"pattern","label":"treinta y uno / ciento uno","level":"a1"}

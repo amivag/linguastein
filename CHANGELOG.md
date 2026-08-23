@@ -17,6 +17,25 @@ in the pack's own counts.
 
 ### Added
 
+- **Teach the four questions the pack could not ask.** `qué`, `dónde`, `cuánto`
+  and `cómo` were always well covered — you cannot order a coffee without them.
+  The other four never were: outside the health passages `cuándo` had two plain
+  examples, `cuál` had two, `quién` four and `por qué` exactly one, and no skill
+  or mission pointed at any of them. A learner could confirm a hotel and describe
+  a symptom but could not ask when the party starts, which of two shirts is
+  cheaper, who the new boss is, or why not. Each of the four now gets what a
+  mission gets: a dialogue that puts it in a real situation — a party, a clothes
+  shop, a first morning in a new office, a plan being turned down — and a palette
+  either side of it, because asking is one ability and understanding the answer
+  is another. Ninety-nine sentences, four dialogues and eight paired skills, in
+  `content/es/sentences-questions.tsv`.
+- **`este`, `ese` and `aquel` as the three-way contrast Spanish actually makes.**
+  `aquel` was not in the dataset at all, so the pack could teach two distances of
+  "that" and not the third; `esto` and `ti` were missing too, next to an `eso` and
+  a `mí` that had been there from the start. They are taught where they really
+  occur — inside the answer to «¿cuál?» — and the closing section of the new file
+  drills the contrast on its own. That also lifts `grammar` off the build's
+  under-eight-items list, where it had been sitting on two.
 - **The first mission is a conversation now, not a greeting.** `greet-and-respond`
   used to be seven lines: hello, how are you, goodbye. All four of its dialogues
   now carry on past the wellbeing answer into what actually happens next — where

@@ -110,8 +110,8 @@ nos	us, ourselves	PRON	a1	grammar
 lo	it, him	PRON	a1	grammar
 le	to him, to her	PRON	a1	grammar
 qué	what	PRON	a1	questions
-quién	who	PRON	a1	questions
-cuál	which	PRON	a1	questions
+quién	who	PRON	a1	questions	quiénes
+cuál	which	PRON	a1	questions	cuáles
 cuánto	how much	PRON	a1	questions	cuánta,cuántos,cuántas
 dónde	where	ADV	a1	questions
 cuándo	when	ADV	a1	questions
@@ -154,6 +154,7 @@ su	his, her, their	DET	a1	grammar	sus
 nuestro	our	DET	a1	grammar	nuestra,nuestros,nuestras
 este	this	DET	a1	grammar	esta,estos,estas
 ese	that	DET	a1	grammar	esa,esos,esas
+aquel	that (over there)	DET	a1	grammar	aquella,aquellos,aquellas
 al	to the	ADP	a1	grammar	
 del	of the, from the	ADP	a1	grammar	
 hay	there is, there are	VERB	a1	grammar	
@@ -227,6 +228,7 @@ fuera	outside	ADV	a1	place
 perfectamente	perfectly	ADV	a2	core
 recto	straight ahead	ADV	a2	travel
 mí	me (after a preposition)	PRON	a1	grammar
+ti	you (after a preposition)	PRON	a1	grammar
 ni	nor, neither	CCONJ	a2	grammar
 600095	sanitario	health, medical	ADJ	a2	health
 600096	dulce	sweet	ADJ	a1	food-drink
@@ -236,10 +238,12 @@ ni	nor, neither	CCONJ	a2	grammar
 600100	ruidoso	noisy	ADJ	a2	home
 600101	junto	together	ADJ	a1	social
 -	así	like this, like that	ADV	a1	grammar	
+-	tan	so	ADV	a1	core	
 -	adónde	where to	ADV	a1	questions	
 -	recién	just, freshly	ADV	a2	grammar	
 -	encima	above, on top	ADV	a1	place	
 -	eso	that	PRON	a1	grammar	
+-	esto	this	PRON	a1	grammar	
 -	vosotros	you (plural, informal)	PRON	a2	grammar	vosotras
 -	alguno	some, any	DET	a1	grammar	alguna,algunos,algunas,algún
 -	ninguno	none, not any	DET	a1	grammar	ninguna,ningunos,ningunas,ningún
@@ -273,6 +277,7 @@ ni	nor, neither	CCONJ	a2	grammar
 -	Luis	Luis (a first name)	PROPN	a1	people	
 -	Ana	Ana (a first name)	PROPN	a1	people	
 -	Marta	Marta (a first name)	PROPN	a1	people	
+-	Carlos	Carlos (a first name)	PROPN	a1	people	
 -	Elena	Elena (a first name)	PROPN	a1	people	
 -	López	López (a surname)	PROPN	a1	people	
 -	García	García (a surname)	PROPN	a1	people	

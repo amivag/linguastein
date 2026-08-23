@@ -1297,6 +1297,105 @@
 001294	sentence	active	Mi hermano tiene treinta años.
 001295	sentence	active	Tengo dos hijos, de seis y de nueve años.
 001296	sentence	active	Mis padres viven en otra ciudad.
+001297	sentence	active	Oye, Luis, el sábado hay una fiesta en mi casa.
+001298	sentence	active	¡Qué bien! ¿Cuándo empieza?
+001299	sentence	active	Empieza a las nueve de la noche.
+001300	sentence	active	¿Y cuándo termina?
+001301	sentence	active	Muy tarde. Estas fiestas nunca terminan pronto.
+001302	sentence	active	¿Cuándo tengo que llegar?
+001303	sentence	active	A las nueve o a las diez. Las dos están bien.
+001304	sentence	active	Entonces voy sobre las nueve y media.
+001305	sentence	active	Perfecto. Hasta el sábado.
+001306	sentence	active	Hasta el sábado, Ana.
+001307	sentence	active	¿Cuándo es la fiesta?
+001308	sentence	active	¿Cuándo abre el museo?
+001309	sentence	active	¿Cuándo empieza la película?
+001310	sentence	active	¿Cuándo cierra la tienda?
+001311	sentence	active	¿Cuándo es tu cumpleaños?
+001312	sentence	active	¿Cuándo vuelves de vacaciones?
+001313	sentence	active	¿Desde cuándo vives aquí?
+001314	sentence	active	¿Hasta cuándo estás en Madrid?
+001315	sentence	active	Es el sábado por la tarde.
+001316	sentence	active	Empieza a las ocho y media.
+001317	sentence	active	Abre a las diez de la mañana.
+001318	sentence	active	Cierra los domingos.
+001319	sentence	active	En dos semanas.
+001320	sentence	active	Todavía no lo sé.
+001321	sentence	active	Esta tarde, sobre las seis.
+001322	sentence	active	Siempre a la misma hora.
+001323	sentence	active	Mira estas camisas. Son muy bonitas.
+001324	sentence	active	Sí. ¿Cuál te gusta más?
+001325	sentence	active	Esta, la azul. ¿Y a ti?
+001326	sentence	active	Yo prefiero esa, la verde.
+001327	sentence	active	¿Y aquella, la de la ventana?
+001328	sentence	active	Aquella es muy cara.
+001329	sentence	active	¿Cuál compro entonces?
+001330	sentence	active	Las dos primeras son bonitas.
+001331	sentence	active	Vale, me llevo esta.
+001332	sentence	active	¿Cuál prefieres?
+001333	sentence	active	¿Cuál te gusta más, este o ese?
+001334	sentence	active	¿Cuál es el mejor?
+001335	sentence	active	¿Cuáles quieres?
+001336	sentence	active	¿Cuál de los dos es más barato?
+001337	sentence	active	¿Cuál es mi habitación?
+001338	sentence	active	Prefiero este.
+001339	sentence	active	Me gusta más ese.
+001340	sentence	active	Este es más bonito.
+001341	sentence	active	Me llevo esta.
+001342	sentence	active	Los dos me gustan.
+001343	sentence	active	Ninguno de los dos, gracias.
+001344	sentence	active	Buenos días, Marta. ¿Quién es ese señor?
+001345	sentence	active	Es el nuevo jefe. Se llama Carlos.
+001346	sentence	active	¿Y quiénes son esas dos?
+001347	sentence	active	Son las compañeras de Carlos. Trabajan con él.
+001348	sentence	active	¿Con quién tengo la reunión hoy?
+001349	sentence	active	Con Carlos, a las once.
+001350	sentence	active	¿Y quién más va a la reunión?
+001351	sentence	active	Todos nosotros. Es una reunión grande.
+001352	sentence	active	Muy bien. Gracias, Marta.
+001353	sentence	active	¿Quién es esa chica?
+001354	sentence	active	¿Quiénes son esos señores?
+001355	sentence	active	¿Con quién trabajas?
+001356	sentence	active	¿Quién es el jefe aquí?
+001357	sentence	active	¿De quién es este libro?
+001358	sentence	active	¿Quién viene esta noche?
+001359	sentence	active	Es un compañero del trabajo.
+001360	sentence	active	Son mis vecinos.
+001361	sentence	active	Es la nueva profesora.
+001362	sentence	active	Es el hijo de Marta.
+001363	sentence	active	No lo conozco.
+001364	sentence	active	Es una amiga de mi hermana.
+001365	sentence	active	¿Vamos al cine esta noche?
+001366	sentence	active	Esta noche no puedo. Lo siento.
+001367	sentence	active	¿Por qué no?
+001368	sentence	active	Porque tengo mucho trabajo.
+001369	sentence	active	¿Y por qué tienes mucho trabajo ahora?
+001370	sentence	active	Porque mi jefe está de vacaciones.
+001371	sentence	active	¿Y por qué no vamos el viernes?
+001372	sentence	active	El viernes sí puedo. Buena idea.
+001373	sentence	active	Entonces el viernes a las ocho.
+001374	sentence	active	¿Por qué?
+001375	sentence	active	¿Y eso por qué?
+001376	sentence	active	¿Por qué dices eso?
+001377	sentence	active	¿Por qué no vienes con nosotros?
+001378	sentence	active	¿Por qué está cerrado hoy?
+001379	sentence	active	¿Por qué es tan caro?
+001380	sentence	active	Porque estoy muy cansado.
+001381	sentence	active	Porque tengo que trabajar.
+001382	sentence	active	Es que no tengo tiempo.
+001383	sentence	active	Por el trabajo.
+001384	sentence	active	No sé por qué.
+001385	sentence	active	Porque mañana me levanto pronto.
+001386	sentence	active	Este libro es mío y ese es de Marta.
+001387	sentence	active	Esta silla es nueva, pero aquella es muy vieja.
+001388	sentence	active	Quiero este, no ese.
+001389	sentence	active	¿Ves aquella casa blanca? Allí vivo yo.
+001390	sentence	active	Eso no es verdad.
+001391	sentence	active	Esto es para ti.
+001392	sentence	active	Esos zapatos son muy caros.
+001393	sentence	active	Estas llaves son de la casa y esas son de la oficina.
+001394	sentence	active	Esta semana trabajo mucho, pero la próxima no.
+001395	sentence	active	Aquel hotel de la plaza es muy bueno.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1687,6 +1786,7 @@
 500388	noun-card	active	médica
 500389	noun-card	active	dirección
 500390	noun-card	active	nota
+500391	noun-card	active	chica
 600001	modifier-card	active	bueno
 600002	modifier-card	active	malo
 600003	modifier-card	active	grande
@@ -1859,6 +1959,10 @@
 700059	passage	active	Más despacio, por favor
 700060	passage	active	¿Cómo se dice?
 700061	passage	active	¿Me lo escribe?
+700062	passage	active	¿Cuándo es la fiesta?
+700063	passage	active	¿Cuál te gusta más?
+700064	passage	active	¿Quién es el nuevo jefe?
+700065	passage	active	¿Por qué no vienes?
 800001	verb-card	active	ser
 800002	verb-card	active	estar
 800003	verb-card	active	tener

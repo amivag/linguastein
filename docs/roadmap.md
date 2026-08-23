@@ -75,8 +75,8 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   practised without turning attendance into a resettable streak
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
-- core-es pack: 126 verbs (3,024 generated forms), 392 nouns, 277 modifiers,
-  1,296 sentences — 1,922 practisable items, 99% of sentence words linked to a lexeme
+- core-es pack: 126 verbs (3,024 generated forms), 393 nouns, 282 modifiers,
+  1,395 sentences — 2,022 practisable items, 99% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in

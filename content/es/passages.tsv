@@ -69,3 +69,9 @@
 700059	mas-despacio	dialogue	Más despacio, por favor	More slowly, please	a1	communication
 700060	como-se-dice	dialogue	¿Cómo se dice?	How do you say it?	a1	communication,language
 700061	escribir-la-direccion	dialogue	¿Me lo escribe?	Could you write it down?	a1	communication
+
+# One situation per question word: when, which one, who, why.
+700062	cuando-fiesta	dialogue	¿Cuándo es la fiesta?	When's the party?	a1	social,clock
+700063	cual-camisa	dialogue	¿Cuál te gusta más?	Which one do you like better?	a1	shopping,clothes
+700064	quien-oficina	dialogue	¿Quién es el nuevo jefe?	Who's the new boss?	a1	work,people
+700065	porque-plan	dialogue	¿Por qué no vienes?	Why aren't you coming?	a1	social

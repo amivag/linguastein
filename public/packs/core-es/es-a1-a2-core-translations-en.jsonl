@@ -995,6 +995,105 @@
 {"ref":"core-es:item:000958","lang":"en","text":"Five months, and he already sleeps well.","type":"natural"}
 {"ref":"core-es:item:000959","lang":"en","text":"How good! I am very happy for you.","type":"natural"}
 {"ref":"core-es:item:000960","lang":"en","text":"Thanks, we are very happy.","type":"natural"}
+{"ref":"core-es:item:001297","lang":"en","text":"Hey, Luis, there's a party at my place on Saturday.","type":"natural"}
+{"ref":"core-es:item:001298","lang":"en","text":"Great! When does it start?","type":"natural"}
+{"ref":"core-es:item:001299","lang":"en","text":"It starts at nine in the evening.","type":"natural"}
+{"ref":"core-es:item:001300","lang":"en","text":"And when does it finish?","type":"natural"}
+{"ref":"core-es:item:001301","lang":"en","text":"Very late. These parties never finish early.","type":"natural"}
+{"ref":"core-es:item:001302","lang":"en","text":"When do I need to get there?","type":"natural"}
+{"ref":"core-es:item:001303","lang":"en","text":"At nine or at ten. Either is fine.","type":"natural"}
+{"ref":"core-es:item:001304","lang":"en","text":"Then I'll come at about half past nine.","type":"natural"}
+{"ref":"core-es:item:001305","lang":"en","text":"Perfect. See you on Saturday.","type":"natural"}
+{"ref":"core-es:item:001306","lang":"en","text":"See you on Saturday, Ana.","type":"natural"}
+{"ref":"core-es:item:001307","lang":"en","text":"When is the party?","type":"natural","note":"The bare question, for anything with a date."}
+{"ref":"core-es:item:001308","lang":"en","text":"When does the museum open?","type":"natural","note":"For opening times rather than an event."}
+{"ref":"core-es:item:001309","lang":"en","text":"When does the film start?","type":"natural","note":"For something with a start time."}
+{"ref":"core-es:item:001310","lang":"en","text":"When does the shop close?","type":"natural","note":"The other half of opening hours."}
+{"ref":"core-es:item:001311","lang":"en","text":"When is your birthday?","type":"natural","note":"Asks for a date, not a time."}
+{"ref":"core-es:item:001312","lang":"en","text":"When are you back from holiday?","type":"natural","note":"About a person rather than an event."}
+{"ref":"core-es:item:001313","lang":"en","text":"How long have you lived here?","type":"natural","note":"Asks when something started and still holds."}
+{"ref":"core-es:item:001314","lang":"en","text":"How long are you in Madrid for?","type":"natural","note":"Asks when something ends."}
+{"ref":"core-es:item:001315","lang":"en","text":"It's on Saturday afternoon.","type":"natural","note":"A day and a part of it, without a clock time."}
+{"ref":"core-es:item:001316","lang":"en","text":"It starts at half past eight.","type":"natural","note":"The precise answer."}
+{"ref":"core-es:item:001317","lang":"en","text":"It opens at ten in the morning.","type":"natural","note":"Says which ten, which the clock alone does not."}
+{"ref":"core-es:item:001318","lang":"en","text":"It's closed on Sundays.","type":"natural","note":"A recurring day rather than one date."}
+{"ref":"core-es:item:001319","lang":"en","text":"In two weeks.","type":"natural","note":"Counts forward instead of naming a date."}
+{"ref":"core-es:item:001320","lang":"en","text":"I don't know yet.","type":"natural","note":"An honest answer that still answers."}
+{"ref":"core-es:item:001321","lang":"en","text":"This afternoon, at about six.","type":"natural","note":"Approximate on purpose."}
+{"ref":"core-es:item:001322","lang":"en","text":"Always at the same time.","type":"natural","note":"For a routine rather than a one-off."}
+{"ref":"core-es:item:001323","lang":"en","text":"Look at these shirts. They're very nice.","type":"natural"}
+{"ref":"core-es:item:001324","lang":"en","text":"Yes. Which one do you like better?","type":"natural"}
+{"ref":"core-es:item:001325","lang":"en","text":"This one, the blue one. And you?","type":"natural"}
+{"ref":"core-es:item:001326","lang":"en","text":"I prefer that one, the green one.","type":"natural"}
+{"ref":"core-es:item:001327","lang":"en","text":"And that one over there, the one in the window?","type":"natural"}
+{"ref":"core-es:item:001328","lang":"en","text":"That one over there is very expensive.","type":"natural"}
+{"ref":"core-es:item:001329","lang":"en","text":"Which one shall I buy then?","type":"natural"}
+{"ref":"core-es:item:001330","lang":"en","text":"The first two are nice.","type":"natural"}
+{"ref":"core-es:item:001331","lang":"en","text":"All right, I'll take this one.","type":"natural"}
+{"ref":"core-es:item:001332","lang":"en","text":"Which one do you prefer?","type":"natural","note":"The shortest form of the question."}
+{"ref":"core-es:item:001333","lang":"en","text":"Which do you like better, this one or that one?","type":"natural","note":"Names both options, so the answer cannot be vague."}
+{"ref":"core-es:item:001334","lang":"en","text":"Which one is the best?","type":"natural","note":"Asks for a recommendation out of several."}
+{"ref":"core-es:item:001335","lang":"en","text":"Which ones do you want?","type":"natural","note":"The plural — more than one is being chosen."}
+{"ref":"core-es:item:001336","lang":"en","text":"Which of the two is cheaper?","type":"natural","note":"Narrows the field to two and names the test."}
+{"ref":"core-es:item:001337","lang":"en","text":"Which one is my room?","type":"natural","note":"Picks one out of a set that is already known."}
+{"ref":"core-es:item:001338","lang":"en","text":"I prefer this one.","type":"natural","note":"The near one, with no noun repeated after it."}
+{"ref":"core-es:item:001339","lang":"en","text":"I like that one better.","type":"natural","note":"The one nearer the other person."}
+{"ref":"core-es:item:001340","lang":"en","text":"This one is nicer.","type":"natural","note":"Chooses and gives the reason in one line."}
+{"ref":"core-es:item:001341","lang":"en","text":"I'll take this one.","type":"natural","note":"Ends the choosing — a decision, not a preference."}
+{"ref":"core-es:item:001342","lang":"en","text":"I like both of them.","type":"natural","note":"Declines to choose, pleasantly."}
+{"ref":"core-es:item:001343","lang":"en","text":"Neither of them, thank you.","type":"natural","note":"A polite no to the whole set."}
+{"ref":"core-es:item:001344","lang":"en","text":"Good morning, Marta. Who's that man?","type":"natural"}
+{"ref":"core-es:item:001345","lang":"en","text":"He's the new boss. His name is Carlos.","type":"natural"}
+{"ref":"core-es:item:001346","lang":"en","text":"And who are those two?","type":"natural"}
+{"ref":"core-es:item:001347","lang":"en","text":"They're Carlos's colleagues. They work with him.","type":"natural"}
+{"ref":"core-es:item:001348","lang":"en","text":"Who do I have the meeting with today?","type":"natural"}
+{"ref":"core-es:item:001349","lang":"en","text":"With Carlos, at eleven.","type":"natural"}
+{"ref":"core-es:item:001350","lang":"en","text":"And who else is going to the meeting?","type":"natural"}
+{"ref":"core-es:item:001351","lang":"en","text":"All of us. It's a big meeting.","type":"natural"}
+{"ref":"core-es:item:001352","lang":"en","text":"Very good. Thanks, Marta.","type":"natural"}
+{"ref":"core-es:item:001353","lang":"en","text":"Who's that girl?","type":"natural","note":"About someone in sight, pointed at with a demonstrative."}
+{"ref":"core-es:item:001354","lang":"en","text":"Who are those men?","type":"natural","note":"The plural, which the singular does not cover."}
+{"ref":"core-es:item:001355","lang":"en","text":"Who do you work with?","type":"natural","note":"`quién` after a preposition, where English moves it to the end."}
+{"ref":"core-es:item:001356","lang":"en","text":"Who's the boss here?","type":"natural","note":"Asks for a role rather than a name."}
+{"ref":"core-es:item:001357","lang":"en","text":"Whose book is this?","type":"natural","note":"Ownership is `de quién`, not a word of its own."}
+{"ref":"core-es:item:001358","lang":"en","text":"Who's coming tonight?","type":"natural","note":"About people who are not there yet."}
+{"ref":"core-es:item:001359","lang":"en","text":"He's a colleague from work.","type":"natural","note":"A relationship rather than a name."}
+{"ref":"core-es:item:001360","lang":"en","text":"They're my neighbours.","type":"natural","note":"The plural answer."}
+{"ref":"core-es:item:001361","lang":"en","text":"She's the new teacher.","type":"natural","note":"A role, with the one detail that matters."}
+{"ref":"core-es:item:001362","lang":"en","text":"He's Marta's son.","type":"natural","note":"Places someone by who they belong to."}
+{"ref":"core-es:item:001363","lang":"en","text":"I don't know him.","type":"natural","note":"The answer when there is no answer."}
+{"ref":"core-es:item:001364","lang":"en","text":"She's a friend of my sister's.","type":"natural","note":"Two steps of relationship, which is how it usually comes out."}
+{"ref":"core-es:item:001365","lang":"en","text":"Shall we go to the cinema tonight?","type":"natural"}
+{"ref":"core-es:item:001366","lang":"en","text":"I can't tonight. I'm sorry.","type":"natural"}
+{"ref":"core-es:item:001367","lang":"en","text":"Why not?","type":"natural"}
+{"ref":"core-es:item:001368","lang":"en","text":"Because I have a lot of work.","type":"natural"}
+{"ref":"core-es:item:001369","lang":"en","text":"And why do you have a lot of work now?","type":"natural"}
+{"ref":"core-es:item:001370","lang":"en","text":"Because my boss is on holiday.","type":"natural"}
+{"ref":"core-es:item:001371","lang":"en","text":"And why don't we go on Friday?","type":"natural"}
+{"ref":"core-es:item:001372","lang":"en","text":"I can on Friday. Good idea.","type":"natural"}
+{"ref":"core-es:item:001373","lang":"en","text":"Friday at eight then.","type":"natural"}
+{"ref":"core-es:item:001374","lang":"en","text":"Why?","type":"natural","note":"On its own. Short, and not rude in Spanish."}
+{"ref":"core-es:item:001375","lang":"en","text":"And why's that?","type":"natural","note":"Softer than the bare question, and very common."}
+{"ref":"core-es:item:001376","lang":"en","text":"Why do you say that?","type":"natural","note":"Asks about what was just said."}
+{"ref":"core-es:item:001377","lang":"en","text":"Why don't you come with us?","type":"natural","note":"A suggestion wearing a question — not a complaint."}
+{"ref":"core-es:item:001378","lang":"en","text":"Why is it closed today?","type":"natural","note":"About a situation rather than a person."}
+{"ref":"core-es:item:001379","lang":"en","text":"Why is it so expensive?","type":"natural","note":"Asks for a reason and shows surprise at once."}
+{"ref":"core-es:item:001380","lang":"en","text":"Because I'm very tired.","type":"natural","note":"`porque` is one word; `por qué` is two."}
+{"ref":"core-es:item:001381","lang":"en","text":"Because I have to work.","type":"natural","note":"The most useful reason there is."}
+{"ref":"core-es:item:001382","lang":"en","text":"It's just that I don't have time.","type":"natural","note":"Softens a reason, and never starts with `porque`."}
+{"ref":"core-es:item:001383","lang":"en","text":"Because of work.","type":"natural","note":"A reason with no verb in it at all."}
+{"ref":"core-es:item:001384","lang":"en","text":"I don't know why.","type":"natural","note":"`por qué` inside a statement rather than a question."}
+{"ref":"core-es:item:001385","lang":"en","text":"Because I get up early tomorrow.","type":"natural","note":"A reason about later, not about now."}
+{"ref":"core-es:item:001386","lang":"en","text":"This book is mine and that one is Marta's.","type":"natural","note":"The two-way contrast in one line."}
+{"ref":"core-es:item:001387","lang":"en","text":"This chair is new, but that one over there is very old.","type":"natural","note":"Adds the third distance: further off than `ese`."}
+{"ref":"core-es:item:001388","lang":"en","text":"I want this one, not that one.","type":"natural","note":"Both standing alone, with no noun after them."}
+{"ref":"core-es:item:001389","lang":"en","text":"Can you see that white house over there? That's where I live.","type":"natural","note":"`aquel` for something in sight but far away."}
+{"ref":"core-es:item:001390","lang":"en","text":"That isn't true.","type":"natural","note":"Neuter: points at an idea, not at a thing with a gender."}
+{"ref":"core-es:item:001391","lang":"en","text":"This is for you.","type":"natural","note":"The near neuter — handing something over."}
+{"ref":"core-es:item:001392","lang":"en","text":"Those shoes are very expensive.","type":"natural","note":"Plural, and still a determiner before its noun."}
+{"ref":"core-es:item:001393","lang":"en","text":"These keys are for the house and those are for the office.","type":"natural","note":"Feminine plural, both sides of the contrast."}
+{"ref":"core-es:item:001394","lang":"en","text":"This week I'm working a lot, but not next week.","type":"natural","note":"`este` about time rather than space, which is most of its use."}
+{"ref":"core-es:item:001395","lang":"en","text":"That hotel on the square over there is very good.","type":"natural","note":"`aquel` before its noun, the way a determiner normally sits."}
 {"ref":"core-es:item:000705","lang":"en","text":"Hello, my name is Luis.","type":"natural"}
 {"ref":"core-es:item:000706","lang":"en","text":"Hello, Luis. I'm Marta. Nice to meet you.","type":"natural"}
 {"ref":"core-es:item:000707","lang":"en","text":"Nice to meet you. How are you?","type":"natural"}
@@ -1324,6 +1423,7 @@
 {"ref":"core-es:item:500027","lang":"en","text":"sir, mister","type":"natural"}
 {"ref":"core-es:item:500028","lang":"en","text":"madam, missus","type":"natural"}
 {"ref":"core-es:item:500029","lang":"en","text":"boy, guy","type":"natural"}
+{"ref":"core-es:item:500391","lang":"en","text":"girl, young woman","type":"natural"}
 {"ref":"core-es:item:500030","lang":"en","text":"name","type":"natural"}
 {"ref":"core-es:item:500031","lang":"en","text":"body","type":"natural"}
 {"ref":"core-es:item:500032","lang":"en","text":"head","type":"natural"}
@@ -2076,6 +2176,7 @@
 {"ref":"core-es:lexeme:senor","lang":"en","text":"sir, mister"}
 {"ref":"core-es:lexeme:senora","lang":"en","text":"madam, missus"}
 {"ref":"core-es:lexeme:chico","lang":"en","text":"boy, guy"}
+{"ref":"core-es:lexeme:chica","lang":"en","text":"girl, young woman"}
 {"ref":"core-es:lexeme:nombre","lang":"en","text":"name"}
 {"ref":"core-es:lexeme:cuerpo","lang":"en","text":"body"}
 {"ref":"core-es:lexeme:cabeza","lang":"en","text":"head"}
@@ -2585,6 +2686,7 @@
 {"ref":"core-es:lexeme:nuestro","lang":"en","text":"our"}
 {"ref":"core-es:lexeme:este","lang":"en","text":"this"}
 {"ref":"core-es:lexeme:ese","lang":"en","text":"that"}
+{"ref":"core-es:lexeme:aquel","lang":"en","text":"that (over there)"}
 {"ref":"core-es:lexeme:al","lang":"en","text":"to the"}
 {"ref":"core-es:lexeme:del","lang":"en","text":"of the, from the"}
 {"ref":"core-es:lexeme:hay","lang":"en","text":"there is, there are"}
@@ -2656,6 +2758,7 @@
 {"ref":"core-es:lexeme:perfectamente","lang":"en","text":"perfectly"}
 {"ref":"core-es:lexeme:recto","lang":"en","text":"straight ahead"}
 {"ref":"core-es:lexeme:mi-pron","lang":"en","text":"me (after a preposition)"}
+{"ref":"core-es:lexeme:ti","lang":"en","text":"you (after a preposition)"}
 {"ref":"core-es:lexeme:ni","lang":"en","text":"nor, neither"}
 {"ref":"core-es:lexeme:sanitario","lang":"en","text":"health, medical"}
 {"ref":"core-es:lexeme:dulce","lang":"en","text":"sweet"}
@@ -2665,10 +2768,12 @@
 {"ref":"core-es:lexeme:ruidoso","lang":"en","text":"noisy"}
 {"ref":"core-es:lexeme:junto","lang":"en","text":"together"}
 {"ref":"core-es:lexeme:asi","lang":"en","text":"like this, like that"}
+{"ref":"core-es:lexeme:tan","lang":"en","text":"so"}
 {"ref":"core-es:lexeme:adonde","lang":"en","text":"where to"}
 {"ref":"core-es:lexeme:recien","lang":"en","text":"just, freshly"}
 {"ref":"core-es:lexeme:encima","lang":"en","text":"above, on top"}
 {"ref":"core-es:lexeme:eso","lang":"en","text":"that"}
+{"ref":"core-es:lexeme:esto","lang":"en","text":"this"}
 {"ref":"core-es:lexeme:vosotros","lang":"en","text":"you (plural, informal)"}
 {"ref":"core-es:lexeme:alguno","lang":"en","text":"some, any"}
 {"ref":"core-es:lexeme:ninguno","lang":"en","text":"none, not any"}
@@ -2702,6 +2807,7 @@
 {"ref":"core-es:lexeme:luis","lang":"en","text":"Luis (a first name)"}
 {"ref":"core-es:lexeme:ana","lang":"en","text":"Ana (a first name)"}
 {"ref":"core-es:lexeme:marta","lang":"en","text":"Marta (a first name)"}
+{"ref":"core-es:lexeme:carlos","lang":"en","text":"Carlos (a first name)"}
 {"ref":"core-es:lexeme:elena","lang":"en","text":"Elena (a first name)"}
 {"ref":"core-es:lexeme:lopez","lang":"en","text":"López (a surname)"}
 {"ref":"core-es:lexeme:garcia","lang":"en","text":"García (a surname)"}
@@ -2798,6 +2904,14 @@
 {"ref":"core-es:skill:say-what-they-do","lang":"en","text":"Say what someone does or studies"}
 {"ref":"core-es:skill:give-family-details","lang":"en","text":"Give ages, numbers and relationships"}
 {"ref":"core-es:skill:react-with-interest","lang":"en","text":"React with interest to what you hear"}
+{"ref":"core-es:skill:ask-when-something-happens","lang":"en","text":"Ask when something happens"}
+{"ref":"core-es:skill:say-when-something-happens","lang":"en","text":"Say when something happens"}
+{"ref":"core-es:skill:ask-which-one","lang":"en","text":"Ask which one, out of several"}
+{"ref":"core-es:skill:choose-between-options","lang":"en","text":"Choose one and say which"}
+{"ref":"core-es:skill:ask-who-someone-is","lang":"en","text":"Ask who someone is"}
+{"ref":"core-es:skill:say-who-someone-is","lang":"en","text":"Say who someone is"}
+{"ref":"core-es:skill:ask-why","lang":"en","text":"Ask why something is so"}
+{"ref":"core-es:skill:give-a-reason","lang":"en","text":"Give a simple reason"}
 {"ref":"core-es:skill:numerals-teens","lang":"en","text":"the teens, written as one word"}
 {"ref":"core-es:skill:numerals-twenties","lang":"en","text":"the twenties, written as one word"}
 {"ref":"core-es:skill:numerals-y-joining","lang":"en","text":"y joins tens to units, and never hundreds to tens"}
@@ -2866,3 +2980,7 @@
 {"ref":"core-es:passage:700059","lang":"en","text":"More slowly, please","type":"natural"}
 {"ref":"core-es:passage:700060","lang":"en","text":"How do you say it?","type":"natural"}
 {"ref":"core-es:passage:700061","lang":"en","text":"Could you write it down?","type":"natural"}
+{"ref":"core-es:passage:700062","lang":"en","text":"When's the party?","type":"natural"}
+{"ref":"core-es:passage:700063","lang":"en","text":"Which one do you like better?","type":"natural"}
+{"ref":"core-es:passage:700064","lang":"en","text":"Who's the new boss?","type":"natural"}
+{"ref":"core-es:passage:700065","lang":"en","text":"Why aren't you coming?","type":"natural"}

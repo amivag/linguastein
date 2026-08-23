@@ -28,6 +28,7 @@
 {"id":"core-es:lexeme:senor","lemma":"señor","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:senora","lemma":"señora","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:chico","lemma":"chico","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:chica","lemma":"chica","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:nombre","lemma":"nombre","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:cuerpo","lemma":"cuerpo","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:cabeza","lemma":"cabeza","pos":"NOUN","level":"a1","gender":"feminine"}

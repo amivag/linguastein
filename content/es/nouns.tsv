@@ -36,6 +36,7 @@
 500027	señor	sir, mister	m		a1	social
 500028	señora	madam, missus	f		a1	social
 500029	chico	boy, guy	m		a1	people
+500391	chica	girl, young woman	f		a1	people
 500030	nombre	name	m		a1	people
 500031	cuerpo	body	m		a1	body
 500032	cabeza	head	f		a1	body

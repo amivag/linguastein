@@ -1066,6 +1066,98 @@
 001063	sentence	active	Sí, mucho. Tengo buenos amigos y un buen trabajo.
 001064	sentence	active	¿Y qué hace usted en la empresa?
 001065	sentence	active	Trabajo en la oficina, con los clientes.
+001066	sentence	active	El libro llega el martes por la tarde.
+001067	sentence	active	Perdón, no entiendo. ¿Puede repetir, por favor?
+001068	sentence	active	Sí, claro. El libro llega el martes.
+001069	sentence	active	Más despacio, por favor. Hablo poco español.
+001070	sentence	active	El martes. Por la tarde. Entre las cuatro y las seis.
+001071	sentence	active	¿Cómo se dice esta palabra en español?
+001072	sentence	active	Esa palabra es tarde.
+001073	sentence	active	¿Y qué significa tarde?
+001074	sentence	active	Es la parte del día entre la mañana y la noche.
+001075	sentence	active	Entonces, el libro llega el martes por la tarde.
+001076	sentence	active	Sí, está muy bien.
+001077	sentence	active	¿Puede escribir el día, por favor?
+001078	sentence	active	Claro, ahora mismo.
+001079	sentence	active	Muchas gracias. Ahora sí entiendo.
+001080	sentence	active	Siga todo recto y gire a la derecha en la segunda calle.
+001081	sentence	active	Perdón, no entiendo nada.
+001082	sentence	active	¿Habla usted español?
+001083	sentence	active	Un poco. Pero más despacio, por favor.
+001084	sentence	active	Primero, todo recto. Luego, a la derecha.
+001085	sentence	active	¿Puede repetir la última parte?
+001086	sentence	active	A la derecha, en la segunda calle.
+001087	sentence	active	Entonces, todo recto y la segunda calle a la derecha.
+001088	sentence	active	Correcto. Está muy cerca.
+001089	sentence	active	Ahora sí. Muchas gracias.
+001090	sentence	active	Hoy vamos a hablar de la comida.
+001091	sentence	active	Perdón, no entiendo esta palabra.
+001092	sentence	active	¿Qué palabra?
+001093	sentence	active	Esta. ¿Qué significa?
+001094	sentence	active	Es algo que comemos.
+001095	sentence	active	¿Y cómo se dice en inglés?
+001096	sentence	active	No sé, pero en español es pan.
+001097	sentence	active	Más despacio, por favor. ¿Otra vez?
+001098	sentence	active	Pan. ¿Ahora sí?
+001099	sentence	active	¿Puedes escribir la palabra, por favor?
+001100	sentence	active	Claro. Aquí, en tu libro.
+001101	sentence	active	Perfecto. Pan es comida.
+001102	sentence	active	La reunión es en la calle del Río, número diez.
+001103	sentence	active	Perdón, ¿puede repetir la dirección?
+001104	sentence	active	Es la calle del Río. El número es diez.
+001105	sentence	active	Más despacio, por favor. No entiendo bien.
+001106	sentence	active	La calle del Río. El número, diez.
+001107	sentence	active	¿Puede escribir la dirección, por favor?
+001108	sentence	active	Sí, aquí tiene una nota.
+001109	sentence	active	¿Y cómo se dice esta palabra?
+001110	sentence	active	Es Río, el nombre de la calle.
+001111	sentence	active	Entonces, la calle del Río, número diez. ¿Es correcto?
+001112	sentence	active	Correcto. Hasta el martes.
+001113	sentence	active	Hasta el martes. Muchas gracias.
+001114	sentence	active	Perdón, no entiendo.
+001115	sentence	active	Perdón, no entiendo muy bien.
+001116	sentence	active	Perdón, ¿cómo?
+001117	sentence	active	Hablo muy poco español.
+001118	sentence	active	No entiendo esa palabra.
+001119	sentence	active	Mi español no es muy bueno.
+001120	sentence	active	Perdón, es un poco difícil para mí.
+001121	sentence	active	¿Puede repetir, por favor?
+001122	sentence	active	¿Cómo dice?
+001123	sentence	active	La última palabra, por favor.
+001124	sentence	active	¿Puede repetir el número?
+001125	sentence	active	¿Puede repetir más alto, por favor?
+001126	sentence	active	¿Puede hablar más despacio?
+001127	sentence	active	¿Puedes hablar más despacio?
+001128	sentence	active	Habla muy rápido para mí.
+001129	sentence	active	Un poco más despacio, por favor.
+001130	sentence	active	Necesito un poco más de tiempo.
+001131	sentence	active	Palabra por palabra, por favor.
+001132	sentence	active	¿Cómo se dice esta palabra?
+001133	sentence	active	No sé la palabra en español.
+001134	sentence	active	¿Hay otra palabra más fácil?
+001135	sentence	active	¿Cómo se llama esta cosa?
+001136	sentence	active	Quiero decir algo, pero no sé la palabra.
+001137	sentence	active	¿Se dice así en español?
+001138	sentence	active	¿Qué significa?
+001139	sentence	active	¿Qué significa esa palabra?
+001140	sentence	active	No sé qué significa.
+001141	sentence	active	¿Puede explicar la palabra?
+001142	sentence	active	¿Puede dar un ejemplo?
+001143	sentence	active	¿Es una cosa o una persona?
+001144	sentence	active	¿Es correcto?
+001145	sentence	active	¿Está bien así?
+001146	sentence	active	¿Entiendo bien?
+001147	sentence	active	¿Me entiende?
+001148	sentence	active	¿Está claro para usted?
+001149	sentence	active	Repito para estar bien seguro.
+001150	sentence	active	Entonces, ¿el martes a las cuatro?
+001151	sentence	active	¿Puede escribir la dirección?
+001152	sentence	active	¿Me escribe el número, por favor?
+001153	sentence	active	¿Puede escribir la hora aquí?
+001154	sentence	active	¿Puede escribir el nombre de la calle?
+001155	sentence	active	Un momento, escribo la dirección.
+001156	sentence	active	¿Puede escribir el precio?
+001157	sentence	active	¿Me lo escribes en una nota?
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1454,6 +1546,8 @@
 500386	noun-card	active	wifi
 500387	noun-card	active	vecina
 500388	noun-card	active	médica
+500389	noun-card	active	dirección
+500390	noun-card	active	nota
 600001	modifier-card	active	bueno
 600002	modifier-card	active	malo
 600003	modifier-card	active	grande
@@ -1564,6 +1658,7 @@
 600108	modifier-card	active	tercero
 600109	modifier-card	active	griego
 600110	modifier-card	active	italiano
+600111	modifier-card	active	correcto
 700001	passage	active	Una mañana normal
 700002	passage	active	Mi piso
 700003	passage	active	Un día en la oficina
@@ -1621,6 +1716,10 @@
 700055	passage	active	En una fiesta
 700056	passage	active	Hablar de una hermana
 700057	passage	active	Presentar a la familia
+700058	passage	active	No entiendo
+700059	passage	active	Más despacio, por favor
+700060	passage	active	¿Cómo se dice?
+700061	passage	active	¿Me lo escribe?
 800001	verb-card	active	ser
 800002	verb-card	active	estar
 800003	verb-card	active	tener

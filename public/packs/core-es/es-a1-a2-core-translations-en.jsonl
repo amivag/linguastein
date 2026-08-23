@@ -1064,6 +1064,98 @@
 {"ref":"core-es:item:001057","lang":"en","text":"And you, what do you do on Sundays?","type":"natural","note":"The formal version."}
 {"ref":"core-es:item:001058","lang":"en","text":"Do you have time to read?","type":"natural","note":"Names one activity and asks about it."}
 {"ref":"core-es:item:001059","lang":"en","text":"Do you listen to music or watch films?","type":"natural","note":"Offers two answers so the other person can pick."}
+{"ref":"core-es:item:001066","lang":"en","text":"The book arrives on Tuesday afternoon.","type":"natural"}
+{"ref":"core-es:item:001067","lang":"en","text":"Sorry, I don't understand. Could you say that again, please?","type":"natural"}
+{"ref":"core-es:item:001068","lang":"en","text":"Yes, of course. The book arrives on Tuesday.","type":"natural"}
+{"ref":"core-es:item:001069","lang":"en","text":"More slowly, please. I speak little Spanish.","type":"natural"}
+{"ref":"core-es:item:001070","lang":"en","text":"Tuesday. In the afternoon. Between four and six.","type":"natural"}
+{"ref":"core-es:item:001071","lang":"en","text":"How do you say this word in Spanish?","type":"natural"}
+{"ref":"core-es:item:001072","lang":"en","text":"That word is \"tarde\".","type":"natural"}
+{"ref":"core-es:item:001073","lang":"en","text":"And what does \"tarde\" mean?","type":"natural"}
+{"ref":"core-es:item:001074","lang":"en","text":"It is the part of the day between morning and night.","type":"natural"}
+{"ref":"core-es:item:001075","lang":"en","text":"So the book arrives on Tuesday afternoon.","type":"natural"}
+{"ref":"core-es:item:001076","lang":"en","text":"Yes, that's exactly right.","type":"natural"}
+{"ref":"core-es:item:001077","lang":"en","text":"Could you write the day down, please?","type":"natural"}
+{"ref":"core-es:item:001078","lang":"en","text":"Of course, right now.","type":"natural"}
+{"ref":"core-es:item:001079","lang":"en","text":"Thank you very much. Now I do understand.","type":"natural"}
+{"ref":"core-es:item:001080","lang":"en","text":"Go straight on and turn right at the second street.","type":"natural"}
+{"ref":"core-es:item:001081","lang":"en","text":"Sorry, I don't understand a thing.","type":"natural"}
+{"ref":"core-es:item:001082","lang":"en","text":"Do you speak Spanish?","type":"natural"}
+{"ref":"core-es:item:001083","lang":"en","text":"A little. But more slowly, please.","type":"natural"}
+{"ref":"core-es:item:001084","lang":"en","text":"First, straight on. Then, to the right.","type":"natural"}
+{"ref":"core-es:item:001085","lang":"en","text":"Could you repeat the last part?","type":"natural"}
+{"ref":"core-es:item:001086","lang":"en","text":"To the right, at the second street.","type":"natural"}
+{"ref":"core-es:item:001087","lang":"en","text":"So, straight on and the second street on the right.","type":"natural"}
+{"ref":"core-es:item:001088","lang":"en","text":"Correct. It's very close.","type":"natural"}
+{"ref":"core-es:item:001089","lang":"en","text":"Now I have it. Thank you very much.","type":"natural"}
+{"ref":"core-es:item:001090","lang":"en","text":"Today we're going to talk about food.","type":"natural"}
+{"ref":"core-es:item:001091","lang":"en","text":"Sorry, I don't understand this word.","type":"natural"}
+{"ref":"core-es:item:001092","lang":"en","text":"Which word?","type":"natural"}
+{"ref":"core-es:item:001093","lang":"en","text":"This one. What does it mean?","type":"natural"}
+{"ref":"core-es:item:001094","lang":"en","text":"It's something we eat.","type":"natural"}
+{"ref":"core-es:item:001095","lang":"en","text":"And how do you say it in English?","type":"natural"}
+{"ref":"core-es:item:001096","lang":"en","text":"I don't know, but in Spanish it's \"pan\".","type":"natural"}
+{"ref":"core-es:item:001097","lang":"en","text":"More slowly, please. Again?","type":"natural"}
+{"ref":"core-es:item:001098","lang":"en","text":"\"Pan\". Got it now?","type":"natural"}
+{"ref":"core-es:item:001099","lang":"en","text":"Could you write the word down, please?","type":"natural"}
+{"ref":"core-es:item:001100","lang":"en","text":"Of course. Here, in your book.","type":"natural"}
+{"ref":"core-es:item:001101","lang":"en","text":"Perfect. \"Pan\" is food.","type":"natural"}
+{"ref":"core-es:item:001102","lang":"en","text":"The meeting is on Río Street, number ten.","type":"natural"}
+{"ref":"core-es:item:001103","lang":"en","text":"Sorry, could you repeat the address?","type":"natural"}
+{"ref":"core-es:item:001104","lang":"en","text":"It's Río Street. The number is ten.","type":"natural"}
+{"ref":"core-es:item:001105","lang":"en","text":"More slowly, please. I don't understand well.","type":"natural"}
+{"ref":"core-es:item:001106","lang":"en","text":"Río Street. The number, ten.","type":"natural"}
+{"ref":"core-es:item:001107","lang":"en","text":"Could you write the address down, please?","type":"natural"}
+{"ref":"core-es:item:001108","lang":"en","text":"Yes, here's a note for you.","type":"natural"}
+{"ref":"core-es:item:001109","lang":"en","text":"And how do you say this word?","type":"natural"}
+{"ref":"core-es:item:001110","lang":"en","text":"It's \"Río\", the name of the street.","type":"natural"}
+{"ref":"core-es:item:001111","lang":"en","text":"So, Río Street, number ten. Is that correct?","type":"natural"}
+{"ref":"core-es:item:001112","lang":"en","text":"Correct. See you on Tuesday.","type":"natural"}
+{"ref":"core-es:item:001113","lang":"en","text":"See you on Tuesday. Thank you very much.","type":"natural"}
+{"ref":"core-es:item:001114","lang":"en","text":"Sorry, I don't understand.","type":"natural","note":"The one to have ready before anything else."}
+{"ref":"core-es:item:001115","lang":"en","text":"Sorry, I don't understand very well.","type":"natural","note":"Softer: you caught some of it."}
+{"ref":"core-es:item:001116","lang":"en","text":"Sorry, what?","type":"natural","note":"The shortest one, and very common."}
+{"ref":"core-es:item:001117","lang":"en","text":"I speak very little Spanish.","type":"natural","note":"Explains why, so the other person adjusts."}
+{"ref":"core-es:item:001118","lang":"en","text":"I don't understand that word.","type":"natural","note":"Names the problem: one word, not the sentence."}
+{"ref":"core-es:item:001119","lang":"en","text":"My Spanish is not very good.","type":"natural","note":"Useful at the start of a conversation."}
+{"ref":"core-es:item:001120","lang":"en","text":"Sorry, it's a little difficult for me.","type":"natural","note":"Honest, and asks for patience without demanding it."}
+{"ref":"core-es:item:001121","lang":"en","text":"Could you repeat that, please?","type":"natural","note":"The dependable formal one."}
+{"ref":"core-es:item:001122","lang":"en","text":"Sorry, what did you say?","type":"natural","note":"Formal, and asks for the whole thing again."}
+{"ref":"core-es:item:001123","lang":"en","text":"The last word, please.","type":"natural","note":"Asks for the part you missed instead of all of it."}
+{"ref":"core-es:item:001124","lang":"en","text":"Could you repeat the number?","type":"natural","note":"Numbers are the thing most often missed."}
+{"ref":"core-es:item:001125","lang":"en","text":"Could you repeat that louder, please?","type":"natural","note":"For a noisy street or a bad line."}
+{"ref":"core-es:item:001126","lang":"en","text":"Could you speak more slowly?","type":"natural","note":"A full formal request."}
+{"ref":"core-es:item:001127","lang":"en","text":"Could you speak more slowly?","type":"natural","note":"The same in tú."}
+{"ref":"core-es:item:001128","lang":"en","text":"You speak very fast for me.","type":"natural","note":"Says it is about your ear, not their speech."}
+{"ref":"core-es:item:001129","lang":"en","text":"A little more slowly, please.","type":"natural","note":"Asks for less, so it is easier to grant."}
+{"ref":"core-es:item:001130","lang":"en","text":"I need a little more time.","type":"natural","note":"For when the problem is thinking, not hearing."}
+{"ref":"core-es:item:001131","lang":"en","text":"Word by word, please.","type":"natural","note":"When a whole sentence is too much at once."}
+{"ref":"core-es:item:001132","lang":"en","text":"How do you say this word?","type":"natural","note":"While pointing at something written."}
+{"ref":"core-es:item:001133","lang":"en","text":"I don't know the word in Spanish.","type":"natural","note":"Says what is missing, and invites help."}
+{"ref":"core-es:item:001134","lang":"en","text":"Is there an easier word?","type":"natural","note":"Asks for a simpler one instead of the same one again."}
+{"ref":"core-es:item:001135","lang":"en","text":"What is this thing called?","type":"natural","note":"When you can point at it."}
+{"ref":"core-es:item:001136","lang":"en","text":"I want to say something, but I don't know the word.","type":"natural","note":"Buys you a moment and keeps the turn."}
+{"ref":"core-es:item:001137","lang":"en","text":"Is that how you say it in Spanish?","type":"natural","note":"Checks a word you have guessed."}
+{"ref":"core-es:item:001138","lang":"en","text":"What does it mean?","type":"natural","note":"The bare question."}
+{"ref":"core-es:item:001139","lang":"en","text":"What does that word mean?","type":"natural","note":"For a word they just said rather than one you can see."}
+{"ref":"core-es:item:001140","lang":"en","text":"I don't know what it means.","type":"natural","note":"A statement, when a question would interrupt."}
+{"ref":"core-es:item:001141","lang":"en","text":"Could you explain the word?","type":"natural","note":"Asks for an explanation, not a translation."}
+{"ref":"core-es:item:001142","lang":"en","text":"Could you give an example?","type":"natural","note":"Often clearer than a definition."}
+{"ref":"core-es:item:001143","lang":"en","text":"Is it a thing or a person?","type":"natural","note":"Narrows it down when nothing else works."}
+{"ref":"core-es:item:001144","lang":"en","text":"Is that correct?","type":"natural","note":"Add it after repeating back what you heard."}
+{"ref":"core-es:item:001145","lang":"en","text":"Is that right?","type":"natural","note":"Lighter, and very common."}
+{"ref":"core-es:item:001146","lang":"en","text":"Am I understanding correctly?","type":"natural","note":"Puts the doubt on you rather than on them."}
+{"ref":"core-es:item:001147","lang":"en","text":"Do you understand me?","type":"natural","note":"The other direction: checking your own Spanish landed."}
+{"ref":"core-es:item:001148","lang":"en","text":"Is that clear for you?","type":"natural","note":"Formal, and useful at work."}
+{"ref":"core-es:item:001149","lang":"en","text":"Let me repeat it to be sure.","type":"natural","note":"Announces the read-back so it does not sound like doubt."}
+{"ref":"core-es:item:001150","lang":"en","text":"So, Tuesday at four?","type":"natural","note":"Reads back the detail that matters most."}
+{"ref":"core-es:item:001151","lang":"en","text":"Could you write the address down?","type":"natural","note":"An address heard once is an address lost."}
+{"ref":"core-es:item:001152","lang":"en","text":"Could you write the number down for me, please?","type":"natural","note":"For a phone number or a price."}
+{"ref":"core-es:item:001153","lang":"en","text":"Could you write the time here?","type":"natural","note":"For an appointment."}
+{"ref":"core-es:item:001154","lang":"en","text":"Could you write the name of the street down?","type":"natural","note":"A street name is hard to hear and easy to read."}
+{"ref":"core-es:item:001155","lang":"en","text":"One moment, I am writing the address down.","type":"natural","note":"You do the writing, and they wait."}
+{"ref":"core-es:item:001156","lang":"en","text":"Could you write the price down?","type":"natural","note":"Prices in a foreign language go by fast."}
+{"ref":"core-es:item:001157","lang":"en","text":"Could you write it on a note for me?","type":"natural","note":"The tú version, for a friend or a classmate."}
 {"ref":"core-es:item:500001","lang":"en","text":"person","type":"natural"}
 {"ref":"core-es:item:500002","lang":"en","text":"man","type":"natural"}
 {"ref":"core-es:item:500003","lang":"en","text":"woman","type":"natural"}
@@ -1451,6 +1543,8 @@
 {"ref":"core-es:item:500386","lang":"en","text":"wifi","type":"natural"}
 {"ref":"core-es:item:500387","lang":"en","text":"neighbour (female)","type":"natural"}
 {"ref":"core-es:item:500388","lang":"en","text":"doctor (female)","type":"natural"}
+{"ref":"core-es:item:500389","lang":"en","text":"address","type":"natural"}
+{"ref":"core-es:item:500390","lang":"en","text":"note","type":"natural"}
 {"ref":"core-es:item:800001","lang":"en","text":"to be (identity, characteristics)","type":"natural"}
 {"ref":"core-es:item:800002","lang":"en","text":"to be (state, location)","type":"natural"}
 {"ref":"core-es:item:800003","lang":"en","text":"to have","type":"natural"}
@@ -1685,6 +1779,7 @@
 {"ref":"core-es:item:600106","lang":"en","text":"perfect","type":"natural"}
 {"ref":"core-es:item:600107","lang":"en","text":"last, past","type":"natural"}
 {"ref":"core-es:item:600108","lang":"en","text":"third","type":"natural"}
+{"ref":"core-es:item:600111","lang":"en","text":"correct, right","type":"natural"}
 {"ref":"core-es:item:600109","lang":"en","text":"Greek","type":"natural"}
 {"ref":"core-es:item:600110","lang":"en","text":"Italian","type":"natural"}
 {"ref":"core-es:lexeme:ser","lang":"en","text":"to be (identity, characteristics)"}
@@ -2203,6 +2298,8 @@
 {"ref":"core-es:lexeme:wifi","lang":"en","text":"wifi"}
 {"ref":"core-es:lexeme:vecina","lang":"en","text":"neighbour (female)"}
 {"ref":"core-es:lexeme:medica","lang":"en","text":"doctor (female)"}
+{"ref":"core-es:lexeme:direccion","lang":"en","text":"address"}
+{"ref":"core-es:lexeme:nota","lang":"en","text":"note"}
 {"ref":"core-es:lexeme:bueno","lang":"en","text":"good"}
 {"ref":"core-es:lexeme:malo","lang":"en","text":"bad"}
 {"ref":"core-es:lexeme:grande","lang":"en","text":"big"}
@@ -2451,6 +2548,7 @@
 {"ref":"core-es:lexeme:perfecto","lang":"en","text":"perfect"}
 {"ref":"core-es:lexeme:pasado","lang":"en","text":"last, past"}
 {"ref":"core-es:lexeme:tercero","lang":"en","text":"third"}
+{"ref":"core-es:lexeme:correcto","lang":"en","text":"correct, right"}
 {"ref":"core-es:lexeme:griego","lang":"en","text":"Greek"}
 {"ref":"core-es:lexeme:italiano","lang":"en","text":"Italian"}
 {"ref":"core-es:lexeme:regular","lang":"en","text":"so-so, not great"}
@@ -2530,6 +2628,13 @@
 {"ref":"core-es:skill:ask-what-someone-does","lang":"en","text":"Ask what someone does for a living"}
 {"ref":"core-es:skill:ask-about-free-time","lang":"en","text":"Ask what someone does in their free time"}
 {"ref":"core-es:skill:talk-about-free-time","lang":"en","text":"Say what you do in your free time"}
+{"ref":"core-es:skill:say-you-did-not-understand","lang":"en","text":"Say you have not understood"}
+{"ref":"core-es:skill:ask-to-repeat","lang":"en","text":"Ask for something again"}
+{"ref":"core-es:skill:ask-to-slow-down","lang":"en","text":"Ask someone to slow down"}
+{"ref":"core-es:skill:ask-for-a-word","lang":"en","text":"Ask how to say something"}
+{"ref":"core-es:skill:ask-what-something-means","lang":"en","text":"Ask what a word means"}
+{"ref":"core-es:skill:ask-it-in-writing","lang":"en","text":"Ask for it in writing"}
+{"ref":"core-es:skill:check-you-were-understood","lang":"en","text":"Check you got it right"}
 {"ref":"core-es:skill:describe-a-symptom","lang":"en","text":"Say what hurts, or how you feel"}
 {"ref":"core-es:skill:say-since-when","lang":"en","text":"Say how long you have felt it"}
 {"ref":"core-es:skill:answer-health-questions","lang":"en","text":"Answer a health professional's follow-up questions"}
@@ -2618,3 +2723,7 @@
 {"ref":"core-es:passage:700055","lang":"en","text":"At a party","type":"natural"}
 {"ref":"core-es:passage:700056","lang":"en","text":"Talking about a sister","type":"natural"}
 {"ref":"core-es:passage:700057","lang":"en","text":"Introducing the family","type":"natural"}
+{"ref":"core-es:passage:700058","lang":"en","text":"I don't understand","type":"natural"}
+{"ref":"core-es:passage:700059","lang":"en","text":"More slowly, please","type":"natural"}
+{"ref":"core-es:passage:700060","lang":"en","text":"How do you say it?","type":"natural"}
+{"ref":"core-es:passage:700061","lang":"en","text":"Could you write it down?","type":"natural"}

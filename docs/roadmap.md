@@ -75,8 +75,8 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   practised without turning attendance into a resettable streak
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
-- core-es pack: 126 verbs (3,024 generated forms), 390 nouns, 276 modifiers,
-  1,065 sentences — 1,688 practisable items, 99% of sentence words linked to a lexeme
+- core-es pack: 126 verbs (3,024 generated forms), 392 nouns, 277 modifiers,
+  1,157 sentences — 1,783 practisable items, 99% of sentence words linked to a lexeme
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -105,7 +105,7 @@ The dataset work is briefed in full for a fresh session:
 
    The machinery for that pass is now in place, and it is only machinery: review
    is per item via `content/es/reviewed.tsv`, so a slice can be signed off without
-   reading all 1,688 at once, and `npm run review:data` reports the rows worth
+   reading all 1,783 at once, and `npm run review:data` reports the rows worth
    attention rather than asking anyone to scan the lot. Sign-off is pinned to the
    wording that was read, so an edit afterwards fails the build instead of
    inheriting the approval. **Nothing is signed off yet** — the pack is still

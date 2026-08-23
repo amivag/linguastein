@@ -257,3 +257,118 @@
 001057	¿Y usted, qué hace los domingos?	And you, what do you do on Sundays?	a1	social,time,questions	The formal version.	formal	usted				ask-about-free-time
 001058	¿Tienes tiempo para leer?	Do you have time to read?	a1	social,questions	Names one activity and asks about it.	colloquial	tu				ask-about-free-time
 001059	¿Escuchas música o ves películas?	Do you listen to music or watch films?	a1	social,music,questions	Offers two answers so the other person can pick.	colloquial	tu				ask-about-free-time
+
+
+# ── No entiendo (model dialogue) ─────────────────────────────────────────────
+001066	El libro llega el martes por la tarde.	The book arrives on Tuesday afternoon.	a1	communication,shopping		formal	usted		no-entiendo	Empleada	
+001067	Perdón, no entiendo. ¿Puede repetir, por favor?	Sorry, I don't understand. Could you say that again, please?	a1	communication		formal	usted		no-entiendo	Luis	say-you-did-not-understand,ask-to-repeat
+001068	Sí, claro. El libro llega el martes.	Yes, of course. The book arrives on Tuesday.	a1	communication		formal	usted		no-entiendo	Empleada	
+001069	Más despacio, por favor. Hablo poco español.	More slowly, please. I speak little Spanish.	a1	communication,language		formal	usted		no-entiendo	Luis	ask-to-slow-down
+001070	El martes. Por la tarde. Entre las cuatro y las seis.	Tuesday. In the afternoon. Between four and six.	a1	communication,clock		formal	usted		no-entiendo	Empleada	
+001071	¿Cómo se dice esta palabra en español?	How do you say this word in Spanish?	a1	communication,language,questions		formal	usted		no-entiendo	Luis	ask-for-a-word
+001072	Esa palabra es tarde.	That word is "tarde".	a1	communication,language		formal	usted		no-entiendo	Empleada	
+001073	¿Y qué significa tarde?	And what does "tarde" mean?	a1	communication,language,questions		formal	usted		no-entiendo	Luis	ask-what-something-means
+001074	Es la parte del día entre la mañana y la noche.	It is the part of the day between morning and night.	a1	communication,time		formal	usted		no-entiendo	Empleada	
+001075	Entonces, el libro llega el martes por la tarde.	So the book arrives on Tuesday afternoon.	a1	communication		formal	usted		no-entiendo	Luis	check-you-were-understood
+001076	Sí, está muy bien.	Yes, that's exactly right.	a1	communication		formal	usted		no-entiendo	Empleada	
+001077	¿Puede escribir el día, por favor?	Could you write the day down, please?	a1	communication,questions		formal	usted		no-entiendo	Luis	ask-it-in-writing
+001078	Claro, ahora mismo.	Of course, right now.	a1	communication		formal	usted		no-entiendo	Empleada	
+001079	Muchas gracias. Ahora sí entiendo.	Thank you very much. Now I do understand.	a1	communication		formal	usted		no-entiendo	Luis	
+
+# ── Más despacio (guided transfer) ───────────────────────────────────────────
+001080	Siga todo recto y gire a la derecha en la segunda calle.	Go straight on and turn right at the second street.	a1	communication,city		formal	usted		mas-despacio	Señora	
+001081	Perdón, no entiendo nada.	Sorry, I don't understand a thing.	a1	communication		formal	usted		mas-despacio	Luis	say-you-did-not-understand
+001082	¿Habla usted español?	Do you speak Spanish?	a1	communication,language,questions		formal	usted		mas-despacio	Señora	
+001083	Un poco. Pero más despacio, por favor.	A little. But more slowly, please.	a1	communication,language		formal	usted		mas-despacio	Luis	ask-to-slow-down
+001084	Primero, todo recto. Luego, a la derecha.	First, straight on. Then, to the right.	a1	communication,city		formal	usted		mas-despacio	Señora	
+001085	¿Puede repetir la última parte?	Could you repeat the last part?	a1	communication,questions		formal	usted		mas-despacio	Luis	ask-to-repeat
+001086	A la derecha, en la segunda calle.	To the right, at the second street.	a1	communication,city		formal	usted		mas-despacio	Señora	
+001087	Entonces, todo recto y la segunda calle a la derecha.	So, straight on and the second street on the right.	a1	communication,city		formal	usted		mas-despacio	Luis	check-you-were-understood
+001088	Correcto. Está muy cerca.	Correct. It's very close.	a1	communication,city		formal	usted		mas-despacio	Señora	
+001089	Ahora sí. Muchas gracias.	Now I have it. Thank you very much.	a1	communication		formal	usted		mas-despacio	Luis	
+
+# ── ¿Cómo se dice? (guided transfer) ─────────────────────────────────────────
+001090	Hoy vamos a hablar de la comida.	Today we're going to talk about food.	a1	communication,school,food-drink		colloquial	tu		como-se-dice	Profesora	
+001091	Perdón, no entiendo esta palabra.	Sorry, I don't understand this word.	a1	communication,language		colloquial	tu		como-se-dice	Luis	say-you-did-not-understand
+001092	¿Qué palabra?	Which word?	a1	communication,questions		colloquial	tu		como-se-dice	Profesora	
+001093	Esta. ¿Qué significa?	This one. What does it mean?	a1	communication,language,questions		colloquial	tu		como-se-dice	Luis	ask-what-something-means
+001094	Es algo que comemos.	It's something we eat.	a1	communication,food-drink		colloquial	tu		como-se-dice	Profesora	
+001095	¿Y cómo se dice en inglés?	And how do you say it in English?	a1	communication,language,questions		colloquial	tu		como-se-dice	Luis	ask-for-a-word
+001096	No sé, pero en español es pan.	I don't know, but in Spanish it's "pan".	a1	communication,language,food-drink		colloquial	tu		como-se-dice	Profesora	
+001097	Más despacio, por favor. ¿Otra vez?	More slowly, please. Again?	a1	communication		colloquial	tu		como-se-dice	Luis	ask-to-slow-down,ask-to-repeat
+001098	Pan. ¿Ahora sí?	"Pan". Got it now?	a1	communication,food-drink		colloquial	tu		como-se-dice	Profesora	
+001099	¿Puedes escribir la palabra, por favor?	Could you write the word down, please?	a1	communication,questions		colloquial	tu		como-se-dice	Luis	ask-it-in-writing
+001100	Claro. Aquí, en tu libro.	Of course. Here, in your book.	a1	communication,school		colloquial	tu		como-se-dice	Profesora	
+001101	Perfecto. Pan es comida.	Perfect. "Pan" is food.	a1	communication,food-drink		colloquial	tu		como-se-dice	Luis	check-you-were-understood
+
+# ── ¿Me lo escribe? (independent transfer) ───────────────────────────────────
+001102	La reunión es en la calle del Río, número diez.	The meeting is on Río Street, number ten.	a1	communication,work,city		formal	usted		escribir-la-direccion	Recepcionista	
+001103	Perdón, ¿puede repetir la dirección?	Sorry, could you repeat the address?	a1	communication,city,questions		formal	usted		escribir-la-direccion	Luis	say-you-did-not-understand,ask-to-repeat
+001104	Es la calle del Río. El número es diez.	It's Río Street. The number is ten.	a1	communication,city		formal	usted		escribir-la-direccion	Recepcionista	
+001105	Más despacio, por favor. No entiendo bien.	More slowly, please. I don't understand well.	a1	communication		formal	usted		escribir-la-direccion	Luis	ask-to-slow-down
+001106	La calle del Río. El número, diez.	Río Street. The number, ten.	a1	communication,city		formal	usted		escribir-la-direccion	Recepcionista	
+001107	¿Puede escribir la dirección, por favor?	Could you write the address down, please?	a1	communication,city,questions		formal	usted		escribir-la-direccion	Luis	ask-it-in-writing
+001108	Sí, aquí tiene una nota.	Yes, here's a note for you.	a1	communication		formal	usted		escribir-la-direccion	Recepcionista	
+001109	¿Y cómo se dice esta palabra?	And how do you say this word?	a1	communication,language,questions		formal	usted		escribir-la-direccion	Luis	ask-for-a-word
+001110	Es Río, el nombre de la calle.	It's "Río", the name of the street.	a1	communication,city,language		formal	usted		escribir-la-direccion	Recepcionista	
+001111	Entonces, la calle del Río, número diez. ¿Es correcto?	So, Río Street, number ten. Is that correct?	a1	communication,city		formal	usted		escribir-la-direccion	Luis	check-you-were-understood
+001112	Correcto. Hasta el martes.	Correct. See you on Tuesday.	a1	communication,greetings		formal	usted		escribir-la-direccion	Recepcionista	
+001113	Hasta el martes. Muchas gracias.	See you on Tuesday. Thank you very much.	a1	communication,greetings		formal	usted		escribir-la-direccion	Luis	
+
+# ── Response palette: saying you have not understood ─────────────────────────
+001114	Perdón, no entiendo.	Sorry, I don't understand.	a1	communication	The one to have ready before anything else.	neutral					say-you-did-not-understand
+001115	Perdón, no entiendo muy bien.	Sorry, I don't understand very well.	a1	communication	Softer: you caught some of it.	neutral					say-you-did-not-understand
+001116	Perdón, ¿cómo?	Sorry, what?	a1	communication,questions	The shortest one, and very common.	neutral					say-you-did-not-understand
+001117	Hablo muy poco español.	I speak very little Spanish.	a1	communication,language	Explains why, so the other person adjusts.	neutral					say-you-did-not-understand
+001118	No entiendo esa palabra.	I don't understand that word.	a1	communication,language	Names the problem: one word, not the sentence.	neutral					say-you-did-not-understand
+001119	Mi español no es muy bueno.	My Spanish is not very good.	a1	communication,language	Useful at the start of a conversation.	neutral					say-you-did-not-understand
+001120	Perdón, es un poco difícil para mí.	Sorry, it's a little difficult for me.	a1	communication	Honest, and asks for patience without demanding it.	neutral					say-you-did-not-understand
+
+# ── Response palette: asking for it again ────────────────────────────────────
+001121	¿Puede repetir, por favor?	Could you repeat that, please?	a1	communication,questions	The dependable formal one.	formal	usted				ask-to-repeat
+001122	¿Cómo dice?	Sorry, what did you say?	a1	communication,questions	Formal, and asks for the whole thing again.	formal	usted				ask-to-repeat
+001123	La última palabra, por favor.	The last word, please.	a1	communication,language	Asks for the part you missed instead of all of it.	neutral					ask-to-repeat
+001124	¿Puede repetir el número?	Could you repeat the number?	a1	communication,numbers,questions	Numbers are the thing most often missed.	formal	usted				ask-to-repeat
+001125	¿Puede repetir más alto, por favor?	Could you repeat that louder, please?	a1	communication,questions	For a noisy street or a bad line.	formal	usted				ask-to-repeat
+
+# ── Response palette: asking someone to slow down ────────────────────────────
+001126	¿Puede hablar más despacio?	Could you speak more slowly?	a1	communication,questions	A full formal request.	formal	usted				ask-to-slow-down
+001127	¿Puedes hablar más despacio?	Could you speak more slowly?	a1	communication,questions	The same in tú.	colloquial	tu				ask-to-slow-down
+001128	Habla muy rápido para mí.	You speak very fast for me.	a1	communication	Says it is about your ear, not their speech.	neutral					ask-to-slow-down
+001129	Un poco más despacio, por favor.	A little more slowly, please.	a1	communication	Asks for less, so it is easier to grant.	neutral					ask-to-slow-down
+001130	Necesito un poco más de tiempo.	I need a little more time.	a1	communication,time	For when the problem is thinking, not hearing.	neutral					ask-to-slow-down
+001131	Palabra por palabra, por favor.	Word by word, please.	a1	communication,language	When a whole sentence is too much at once.	neutral					ask-to-slow-down
+
+# ── Response palette: finding the word you need ──────────────────────────────
+001132	¿Cómo se dice esta palabra?	How do you say this word?	a1	communication,language,questions	While pointing at something written.	neutral					ask-for-a-word
+001133	No sé la palabra en español.	I don't know the word in Spanish.	a1	communication,language	Says what is missing, and invites help.	neutral					ask-for-a-word
+001134	¿Hay otra palabra más fácil?	Is there an easier word?	a1	communication,language,questions	Asks for a simpler one instead of the same one again.	neutral					ask-for-a-word
+001135	¿Cómo se llama esta cosa?	What is this thing called?	a1	communication,language,questions	When you can point at it.	neutral					ask-for-a-word
+001136	Quiero decir algo, pero no sé la palabra.	I want to say something, but I don't know the word.	a1	communication,language	Buys you a moment and keeps the turn.	neutral					ask-for-a-word
+001137	¿Se dice así en español?	Is that how you say it in Spanish?	a1	communication,language,questions	Checks a word you have guessed.	neutral					ask-for-a-word
+
+# ── Response palette: asking what something means ────────────────────────────
+001138	¿Qué significa?	What does it mean?	a1	communication,language,questions	The bare question.	neutral					ask-what-something-means
+001139	¿Qué significa esa palabra?	What does that word mean?	a1	communication,language,questions	For a word they just said rather than one you can see.	neutral					ask-what-something-means
+001140	No sé qué significa.	I don't know what it means.	a1	communication,language	A statement, when a question would interrupt.	neutral					ask-what-something-means
+001141	¿Puede explicar la palabra?	Could you explain the word?	a1	communication,language,questions	Asks for an explanation, not a translation.	formal	usted				ask-what-something-means
+001142	¿Puede dar un ejemplo?	Could you give an example?	a1	communication,language,questions	Often clearer than a definition.	formal	usted				ask-what-something-means
+001143	¿Es una cosa o una persona?	Is it a thing or a person?	a1	communication,language,questions	Narrows it down when nothing else works.	neutral					ask-what-something-means
+
+# ── Response palette: checking you got it right ──────────────────────────────
+001144	¿Es correcto?	Is that correct?	a1	communication,questions	Add it after repeating back what you heard.	neutral					check-you-were-understood
+001145	¿Está bien así?	Is that right?	a1	communication,questions	Lighter, and very common.	neutral					check-you-were-understood
+001146	¿Entiendo bien?	Am I understanding correctly?	a1	communication,questions	Puts the doubt on you rather than on them.	neutral					check-you-were-understood
+001147	¿Me entiende?	Do you understand me?	a1	communication,questions	The other direction: checking your own Spanish landed.	formal	usted				check-you-were-understood
+001148	¿Está claro para usted?	Is that clear for you?	a1	communication,questions	Formal, and useful at work.	formal	usted				check-you-were-understood
+001149	Repito para estar bien seguro.	Let me repeat it to be sure.	a1	communication	Announces the read-back so it does not sound like doubt.	neutral					check-you-were-understood
+001150	Entonces, ¿el martes a las cuatro?	So, Tuesday at four?	a1	communication,clock,questions	Reads back the detail that matters most.	neutral					check-you-were-understood
+
+# ── Response palette: asking for it in writing ───────────────────────────────
+001151	¿Puede escribir la dirección?	Could you write the address down?	a1	communication,city,questions	An address heard once is an address lost.	formal	usted				ask-it-in-writing
+001152	¿Me escribe el número, por favor?	Could you write the number down for me, please?	a1	communication,numbers,questions	For a phone number or a price.	formal	usted				ask-it-in-writing
+001153	¿Puede escribir la hora aquí?	Could you write the time here?	a1	communication,clock,questions	For an appointment.	formal	usted				ask-it-in-writing
+001154	¿Puede escribir el nombre de la calle?	Could you write the name of the street down?	a1	communication,city,questions	A street name is hard to hear and easy to read.	formal	usted				ask-it-in-writing
+001155	Un momento, escribo la dirección.	One moment, I am writing the address down.	a1	communication,city	You do the writing, and they wait.	neutral					ask-it-in-writing
+001156	¿Puede escribir el precio?	Could you write the price down?	a1	communication,shopping,questions	Prices in a foreign language go by fast.	formal	usted				ask-it-in-writing
+001157	¿Me lo escribes en una nota?	Could you write it on a note for me?	a1	communication,questions	The tú version, for a friend or a classmate.	colloquial	tu				ask-it-in-writing

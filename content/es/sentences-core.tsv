@@ -15,10 +15,10 @@
 000011	No hablo mucho español.	I don't speak much Spanish.	a1	communication
 000012	Hablo un poco de español.	I speak a little Spanish.	a1	communication
 000013	No entiendo.	I don't understand.	a1	communication
-000014	¿Puedes repetir, por favor?	Can you repeat, please?	a1	communication
-000015	Más despacio, por favor.	Slower, please.	a1	communication
-000016	¿Qué significa esta palabra?	What does this word mean?	a1	language
-000017	¿Cómo se dice en español?	How do you say it in Spanish?	a1	language
+000014	¿Puedes repetir, por favor?	Can you repeat, please?	a1	communication							ask-to-repeat
+000015	Más despacio, por favor.	Slower, please.	a1	communication							ask-to-slow-down
+000016	¿Qué significa esta palabra?	What does this word mean?	a1	language							ask-what-something-means
+000017	¿Cómo se dice en español?	How do you say it in Spanish?	a1	language							ask-for-a-word
 000018	Gracias por tu ayuda.	Thanks for your help.	a1	greetings		colloquial	tu	
 000019	De nada.	You're welcome.	a1	greetings		neutral		
 000020	Perdón, no te oigo.	Sorry, I can't hear you.	a1	communication		colloquial	tu	

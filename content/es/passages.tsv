@@ -63,3 +63,9 @@
 700055	familia-fiesta	dialogue	En una fiesta	At a party	a1	family
 700056	familia-hermana	dialogue	Hablar de una hermana	Talking about a sister	a1	family
 700057	familia-nueva	dialogue	Presentar a la familia	Introducing the family	a1	family
+
+# Making yourself understood: the repair moves, in four situations.
+700058	no-entiendo	dialogue	No entiendo	I don't understand	a1	communication
+700059	mas-despacio	dialogue	Más despacio, por favor	More slowly, please	a1	communication
+700060	como-se-dice	dialogue	¿Cómo se dice?	How do you say it?	a1	communication,language
+700061	escribir-la-direccion	dialogue	¿Me lo escribe?	Could you write it down?	a1	communication

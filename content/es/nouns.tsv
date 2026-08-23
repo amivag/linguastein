@@ -400,3 +400,5 @@
 500386	wifi	wifi	m		a2	objects
 500387	vecina	neighbour (female)	f		a1	people
 500388	médica	doctor (female)	f		a1	health
+500389	dirección	address	f		a1	city,communication
+500390	nota	note	f		a1	communication,school

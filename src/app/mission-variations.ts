@@ -128,6 +128,50 @@ export const MISSION_VARIATIONS: Readonly<Record<string, readonly VariationPatte
       ],
     },
   ],
+  'make-yourself-understood': [
+    {
+      id: 'build-a-repair',
+      title: 'Ask for what you need',
+      cue: 'Open politely, then name the one thing that would help. Both halves are swappable.',
+      targetTemplate: '{opener} {request}',
+      referenceTemplate: '{opener} {request}',
+      slots: [
+        {
+          id: 'opener',
+          label: 'How to open',
+          choices: [
+            { id: 'perdon', target: 'Perdón,', reference: 'Sorry,' },
+            { id: 'disculpe', target: 'Disculpe,', reference: 'Excuse me,' },
+            { id: 'una-cosa', target: 'Una cosa,', reference: 'One thing,' },
+          ],
+        },
+        {
+          id: 'request',
+          label: 'What would help',
+          choices: [
+            { id: 'no-entiendo', target: 'no entiendo.', reference: "I don't understand." },
+            { id: 'repetir', target: '¿puede repetir?', reference: 'could you repeat that?' },
+            {
+              id: 'despacio',
+              target: '¿puede hablar más despacio?',
+              reference: 'could you speak more slowly?',
+            },
+            {
+              id: 'como-se-dice',
+              target: '¿cómo se dice en español?',
+              reference: 'how do you say it in Spanish?',
+            },
+            { id: 'significa', target: '¿qué significa?', reference: 'what does it mean?' },
+            {
+              id: 'escribir',
+              target: '¿puede escribir la dirección?',
+              reference: 'could you write the address down?',
+            },
+          ],
+        },
+      ],
+    },
+  ],
   'cafe-order': [
     {
       id: 'build-cafe-order',

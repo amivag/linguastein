@@ -50,6 +50,13 @@
 {"id":"core-es:skill:ask-what-someone-does","kind":"function","label":"Preguntar a qué se dedica alguien","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
 {"id":"core-es:skill:ask-about-free-time","kind":"function","label":"Preguntar por el tiempo libre","level":"a1","prerequisites":["core-es:skill:greet-someone"]}
 {"id":"core-es:skill:talk-about-free-time","kind":"function","label":"Hablar del tiempo libre","level":"a1","prerequisites":["core-es:skill:ask-about-free-time"]}
+{"id":"core-es:skill:say-you-did-not-understand","kind":"function","label":"Decir que no entiendes","level":"a1"}
+{"id":"core-es:skill:ask-to-repeat","kind":"function","label":"Pedir que lo repitan","level":"a1","prerequisites":["core-es:skill:say-you-did-not-understand"]}
+{"id":"core-es:skill:ask-to-slow-down","kind":"function","label":"Pedir que hablen más despacio","level":"a1","prerequisites":["core-es:skill:say-you-did-not-understand"]}
+{"id":"core-es:skill:ask-for-a-word","kind":"function","label":"Preguntar cómo se dice algo","level":"a1"}
+{"id":"core-es:skill:ask-what-something-means","kind":"function","label":"Preguntar qué significa","level":"a1","prerequisites":["core-es:skill:ask-for-a-word"]}
+{"id":"core-es:skill:ask-it-in-writing","kind":"function","label":"Pedir que lo escriban","level":"a1","prerequisites":["core-es:skill:ask-to-repeat"]}
+{"id":"core-es:skill:check-you-were-understood","kind":"function","label":"Comprobar que lo has entendido","level":"a1","prerequisites":["core-es:skill:ask-to-repeat"]}
 {"id":"core-es:skill:describe-a-symptom","kind":"function","label":"Decir qué te duele","level":"a2"}
 {"id":"core-es:skill:say-since-when","kind":"function","label":"Decir desde cuándo","level":"a2","prerequisites":["core-es:skill:describe-a-symptom"]}
 {"id":"core-es:skill:answer-health-questions","kind":"function","label":"Responder a las preguntas del médico","level":"a2","prerequisites":["core-es:skill:describe-a-symptom"]}

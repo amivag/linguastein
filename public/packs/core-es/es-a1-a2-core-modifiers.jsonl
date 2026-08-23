@@ -247,6 +247,7 @@
 {"id":"core-es:lexeme:perfecto","lemma":"perfecto","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:pasado","lemma":"pasado","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:tercero","lemma":"tercero","pos":"ADJ","level":"a1"}
+{"id":"core-es:lexeme:correcto","lemma":"correcto","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:griego","lemma":"griego","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:italiano","lemma":"italiano","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:regular","lemma":"regular","pos":"ADV","level":"a1"}

@@ -194,11 +194,11 @@
 {"id":"core-es:item:500193","pack":"core-es","type":"word","text":"lápiz","level":"a1","topics":["school"],"lexemes":["core-es:lexeme:lapiz"],"examples":["core-es:item:000189"]}
 {"id":"core-es:item:500194","pack":"core-es","type":"word","text":"bolígrafo","level":"a1","topics":["school"],"lexemes":["core-es:lexeme:boligrafo"],"examples":["core-es:item:000189"]}
 {"id":"core-es:item:500195","pack":"core-es","type":"word","text":"papel","level":"a1","topics":["school"],"lexemes":["core-es:lexeme:papel"],"examples":["core-es:item:000190"]}
-{"id":"core-es:item:500196","pack":"core-es","type":"word","text":"palabra","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:palabra"],"examples":["core-es:item:000016","core-es:item:000358"]}
+{"id":"core-es:item:500196","pack":"core-es","type":"word","text":"palabra","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:palabra"],"examples":["core-es:item:000016","core-es:item:000358","core-es:item:001071"]}
 {"id":"core-es:item:500197","pack":"core-es","type":"word","text":"pregunta","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:pregunta"],"examples":["core-es:item:000191","core-es:item:000357"]}
 {"id":"core-es:item:500198","pack":"core-es","type":"word","text":"respuesta","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:respuesta"],"examples":["core-es:item:000191"]}
 {"id":"core-es:item:500199","pack":"core-es","type":"word","text":"idioma","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:idioma"],"examples":["core-es:item:000192","core-es:item:000353"]}
-{"id":"core-es:item:500200","pack":"core-es","type":"word","text":"número","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:numero"],"examples":["core-es:item:000193","core-es:item:000663"]}
+{"id":"core-es:item:500200","pack":"core-es","type":"word","text":"número","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:numero"],"examples":["core-es:item:000193","core-es:item:000663","core-es:item:001102"]}
 {"id":"core-es:item:500201","pack":"core-es","type":"word","text":"letra","level":"a2","topics":["language"],"lexemes":["core-es:lexeme:letra"],"examples":["core-es:item:000194"]}
 {"id":"core-es:item:500202","pack":"core-es","type":"word","text":"frase","level":"a2","topics":["language"],"lexemes":["core-es:lexeme:frase"],"examples":["core-es:item:000362"]}
 {"id":"core-es:item:500203","pack":"core-es","type":"word","text":"tiempo","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:tiempo"],"examples":["core-es:item:000035","core-es:item:000037","core-es:item:000080"]}
@@ -216,7 +216,7 @@
 {"id":"core-es:item:500215","pack":"core-es","type":"word","text":"cumpleaños","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:cumpleanos"],"examples":["core-es:item:000198","core-es:item:000391"]}
 {"id":"core-es:item:500216","pack":"core-es","type":"word","text":"fiesta","level":"a1","topics":["social"],"lexemes":["core-es:lexeme:fiesta"],"examples":["core-es:item:000071","core-es:item:000389"]}
 {"id":"core-es:item:500217","pack":"core-es","type":"word","text":"vacaciones","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:vacaciones"],"examples":["core-es:item:000199","core-es:item:000331","core-es:item:001024"]}
-{"id":"core-es:item:500218","pack":"core-es","type":"word","text":"momento","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:momento"],"examples":["core-es:item:000065","core-es:item:000746"]}
+{"id":"core-es:item:500218","pack":"core-es","type":"word","text":"momento","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:momento"],"examples":["core-es:item:000065","core-es:item:000746","core-es:item:001155"]}
 {"id":"core-es:item:500219","pack":"core-es","type":"word","text":"vez","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:vez"],"examples":["core-es:item:000373","core-es:item:000404","core-es:item:000405"]}
 {"id":"core-es:item:500220","pack":"core-es","type":"word","text":"rato","level":"a2","topics":["time"],"lexemes":["core-es:lexeme:rato"],"examples":["core-es:item:000200"]}
 {"id":"core-es:item:500221","pack":"core-es","type":"word","text":"sol","level":"a1","topics":["weather"],"lexemes":["core-es:lexeme:sol"],"examples":["core-es:item:000219","core-es:item:000411","core-es:item:000415"]}
@@ -275,7 +275,7 @@
 {"id":"core-es:item:500275","pack":"core-es","type":"word","text":"tarjeta","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:tarjeta"],"examples":["core-es:item:000277","core-es:item:000550","core-es:item:000817"]}
 {"id":"core-es:item:500276","pack":"core-es","type":"word","text":"bolsa","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:bolsa"],"examples":["core-es:item:000226","core-es:item:000550"]}
 {"id":"core-es:item:500277","pack":"core-es","type":"word","text":"caja","level":"a2","topics":["objects"],"lexemes":["core-es:lexeme:caja"],"examples":["core-es:item:000299"]}
-{"id":"core-es:item:500278","pack":"core-es","type":"word","text":"cosa","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:cosa"],"examples":["core-es:item:000227"]}
+{"id":"core-es:item:500278","pack":"core-es","type":"word","text":"cosa","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:cosa"],"examples":["core-es:item:000227","core-es:item:001135","core-es:item:001143"]}
 {"id":"core-es:item:500279","pack":"core-es","type":"word","text":"vida","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:vida"],"examples":["core-es:item:000228"]}
 {"id":"core-es:item:500280","pack":"core-es","type":"word","text":"mundo","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:mundo"],"examples":["core-es:item:000229"]}
 {"id":"core-es:item:500281","pack":"core-es","type":"word","text":"amor","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:amor"],"examples":["core-es:item:000230"]}
@@ -286,14 +286,14 @@
 {"id":"core-es:item:500286","pack":"core-es","type":"word","text":"suerte","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:suerte"],"examples":["core-es:item:000232"]}
 {"id":"core-es:item:500287","pack":"core-es","type":"word","text":"miedo","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:miedo"],"examples":["core-es:item:000031","core-es:item:000230"]}
 {"id":"core-es:item:500288","pack":"core-es","type":"word","text":"ayuda","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ayuda"],"examples":["core-es:item:000018","core-es:item:000079","core-es:item:000562"]}
-{"id":"core-es:item:500289","pack":"core-es","type":"word","text":"ejemplo","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ejemplo"],"examples":["core-es:item:000233","core-es:item:000254"]}
+{"id":"core-es:item:500289","pack":"core-es","type":"word","text":"ejemplo","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ejemplo"],"examples":["core-es:item:000233","core-es:item:000254","core-es:item:001142"]}
 {"id":"core-es:item:500290","pack":"core-es","type":"word","text":"manera","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:manera"],"examples":["core-es:item:000234"]}
-{"id":"core-es:item:500291","pack":"core-es","type":"word","text":"parte","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:parte"],"examples":["core-es:item:000235","core-es:item:001042"]}
+{"id":"core-es:item:500291","pack":"core-es","type":"word","text":"parte","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:parte"],"examples":["core-es:item:000235","core-es:item:001042","core-es:item:001074"]}
 {"id":"core-es:item:500292","pack":"core-es","type":"word","text":"lugar","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:lugar"],"examples":["core-es:item:000236"]}
 {"id":"core-es:item:500293","pack":"core-es","type":"word","text":"sitio","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:sitio"],"examples":["core-es:item:000237"]}
 {"id":"core-es:item:500294","pack":"core-es","type":"word","text":"edad","level":"a1","topics":["people"],"lexemes":["core-es:lexeme:edad"],"examples":["core-es:item:000238"]}
 {"id":"core-es:item:500295","pack":"core-es","type":"word","text":"color","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:color"],"examples":["core-es:item:000239"]}
-{"id":"core-es:item:500296","pack":"core-es","type":"word","text":"precio","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:precio"],"examples":["core-es:item:000240","core-es:item:000576"]}
+{"id":"core-es:item:500296","pack":"core-es","type":"word","text":"precio","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:precio"],"examples":["core-es:item:000240","core-es:item:000576","core-es:item:001156"]}
 {"id":"core-es:item:500297","pack":"core-es","type":"word","text":"error","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:error"],"examples":["core-es:item:000241"]}
 {"id":"core-es:item:500298","pack":"core-es","type":"word","text":"razón","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:razon"],"examples":["core-es:item:000397"]}
 {"id":"core-es:item:500299","pack":"core-es","type":"word","text":"historia","level":"a1","topics":["entertainment"],"lexemes":["core-es:lexeme:historia"],"examples":["core-es:item:000242"]}
@@ -305,7 +305,7 @@
 {"id":"core-es:item:500305","pack":"core-es","type":"word","text":"partido","level":"a2","topics":["sport"],"lexemes":["core-es:lexeme:partido"],"examples":["core-es:item:000378"]}
 {"id":"core-es:item:500306","pack":"core-es","type":"word","text":"ejercicio","level":"a2","topics":["sport"],"lexemes":["core-es:lexeme:ejercicio"],"examples":["core-es:item:000373"]}
 {"id":"core-es:item:500307","pack":"core-es","type":"word","text":"lunes","level":"a1","topics":["time","days-of-week"],"lexemes":["core-es:lexeme:lunes"],"examples":["core-es:item:000201","core-es:item:000460","core-es:item:000481"]}
-{"id":"core-es:item:500308","pack":"core-es","type":"word","text":"martes","level":"a1","topics":["time","days-of-week"],"lexemes":["core-es:lexeme:martes"],"examples":["core-es:item:000201","core-es:item:000819"]}
+{"id":"core-es:item:500308","pack":"core-es","type":"word","text":"martes","level":"a1","topics":["time","days-of-week"],"lexemes":["core-es:lexeme:martes"],"examples":["core-es:item:000201","core-es:item:000819","core-es:item:001066"]}
 {"id":"core-es:item:500309","pack":"core-es","type":"word","text":"miércoles","level":"a1","topics":["time","days-of-week"],"lexemes":["core-es:lexeme:miercoles"],"examples":["core-es:item:000202"]}
 {"id":"core-es:item:500310","pack":"core-es","type":"word","text":"jueves","level":"a1","topics":["time","days-of-week"],"lexemes":["core-es:lexeme:jueves"],"examples":["core-es:item:000203","core-es:item:000546","core-es:item:000829"]}
 {"id":"core-es:item:500311","pack":"core-es","type":"word","text":"viernes","level":"a1","topics":["time","days-of-week"],"lexemes":["core-es:lexeme:viernes"],"examples":["core-es:item:000204","core-es:item:000387"]}
@@ -335,7 +335,7 @@
 {"id":"core-es:item:500335","pack":"core-es","type":"word","text":"pasaporte","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:pasaporte"],"examples":["core-es:item:000330"]}
 {"id":"core-es:item:500336","pack":"core-es","type":"word","text":"derecha","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:derecha"],"examples":["core-es:item:000316","core-es:item:000572","core-es:item:000641"]}
 {"id":"core-es:item:500337","pack":"core-es","type":"word","text":"izquierda","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:izquierda"],"examples":["core-es:item:000317","core-es:item:000600","core-es:item:000650"]}
-{"id":"core-es:item:500338","pack":"core-es","type":"word","text":"inglés","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:ingles"],"examples":["core-es:item:000010","core-es:item:000489"]}
+{"id":"core-es:item:500338","pack":"core-es","type":"word","text":"inglés","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:ingles"],"examples":["core-es:item:000010","core-es:item:000489","core-es:item:001095"]}
 {"id":"core-es:item:500339","pack":"core-es","type":"word","text":"español","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:espanol"],"examples":["core-es:item:000011","core-es:item:000012","core-es:item:000017"]}
 {"id":"core-es:item:500340","pack":"core-es","type":"word","text":"patata","level":"a1","topics":["food-drink"],"regions":["es-ES"],"lexemes":["core-es:lexeme:patata"],"examples":["core-es:item:000444","core-es:item:000445","core-es:item:000969"]}
 {"id":"core-es:item:500341","pack":"core-es","type":"word","text":"carro","level":"a1","topics":["travel"],"regions":["es-419"],"lexemes":["core-es:lexeme:carro"],"examples":["core-es:item:000446","core-es:item:000447"]}
@@ -386,6 +386,8 @@
 {"id":"core-es:item:500386","pack":"core-es","type":"word","text":"wifi","level":"a2","topics":["objects"],"lexemes":["core-es:lexeme:wifi"],"examples":["core-es:item:000328"]}
 {"id":"core-es:item:500387","pack":"core-es","type":"word","text":"vecina","level":"a1","topics":["people"],"lexemes":["core-es:lexeme:vecina"],"examples":["core-es:item:000723","core-es:item:000981"]}
 {"id":"core-es:item:500388","pack":"core-es","type":"word","text":"médica","level":"a1","topics":["health"],"lexemes":["core-es:lexeme:medica"],"examples":["core-es:item:000040","core-es:item:000948"]}
+{"id":"core-es:item:500389","pack":"core-es","type":"word","text":"dirección","level":"a1","topics":["city","communication"],"lexemes":["core-es:lexeme:direccion"],"examples":["core-es:item:001103","core-es:item:001107","core-es:item:001151"]}
+{"id":"core-es:item:500390","pack":"core-es","type":"word","text":"nota","level":"a1","topics":["communication","school"],"lexemes":["core-es:lexeme:nota"],"examples":["core-es:item:001108","core-es:item:001157"]}
 {"id":"core-es:item:800001","pack":"core-es","type":"word","text":"ser","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ser"],"examples":["core-es:item:000008","core-es:item:000009","core-es:item:000039"]}
 {"id":"core-es:item:800002","pack":"core-es","type":"word","text":"estar","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:estar"],"examples":["core-es:item:000001","core-es:item:000046","core-es:item:000047"]}
 {"id":"core-es:item:800003","pack":"core-es","type":"word","text":"tener","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:tener"],"examples":["core-es:item:000024","core-es:item:000025","core-es:item:000026"]}
@@ -394,7 +396,7 @@
 {"id":"core-es:item:800006","pack":"core-es","type":"word","text":"ir","level":"a1","topics":["core","travel"],"lexemes":["core-es:lexeme:ir"],"examples":["core-es:item:000064","core-es:item:000067","core-es:item:000068"]}
 {"id":"core-es:item:800007","pack":"core-es","type":"word","text":"poder","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:poder"],"examples":["core-es:item:000014","core-es:item:000062","core-es:item:000063"]}
 {"id":"core-es:item:800008","pack":"core-es","type":"word","text":"querer","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:querer"],"examples":["core-es:item:000056","core-es:item:000057","core-es:item:000058"]}
-{"id":"core-es:item:800009","pack":"core-es","type":"word","text":"decir","level":"a1","topics":["core","communication"],"lexemes":["core-es:lexeme:decir"],"examples":["core-es:item:000017"]}
+{"id":"core-es:item:800009","pack":"core-es","type":"word","text":"decir","level":"a1","topics":["core","communication"],"lexemes":["core-es:lexeme:decir"],"examples":["core-es:item:000017","core-es:item:001071","core-es:item:001095"]}
 {"id":"core-es:item:800010","pack":"core-es","type":"word","text":"ver","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ver"],"examples":["core-es:item:000060","core-es:item:000111","core-es:item:000130"]}
 {"id":"core-es:item:800011","pack":"core-es","type":"word","text":"dar","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:dar"],"examples":["core-es:item:000233","core-es:item:000506","core-es:item:000540"]}
 {"id":"core-es:item:800012","pack":"core-es","type":"word","text":"saber","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:saber"],"examples":["core-es:item:000191","core-es:item:000399","core-es:item:000565"]}
@@ -446,7 +448,7 @@
 {"id":"core-es:item:800058","pack":"core-es","type":"word","text":"ganar","level":"a2","topics":["work"],"lexemes":["core-es:lexeme:ganar"],"examples":["core-es:item:000351","core-es:item:000378","core-es:item:000459"]}
 {"id":"core-es:item:800059","pack":"core-es","type":"word","text":"traer","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:traer"],"examples":["core-es:item:000167","core-es:item:000268","core-es:item:000276"]}
 {"id":"core-es:item:800060","pack":"core-es","type":"word","text":"comprender","level":"a2","topics":["communication"],"lexemes":["core-es:lexeme:comprender"],"examples":["core-es:item:000251"]}
-{"id":"core-es:item:800061","pack":"core-es","type":"word","text":"explicar","level":"a2","topics":["communication"],"lexemes":["core-es:lexeme:explicar"],"examples":["core-es:item:000356"]}
+{"id":"core-es:item:800061","pack":"core-es","type":"word","text":"explicar","level":"a2","topics":["communication"],"lexemes":["core-es:lexeme:explicar"],"examples":["core-es:item:000356","core-es:item:001141"]}
 {"id":"core-es:item:800062","pack":"core-es","type":"word","text":"preguntar","level":"a1","topics":["communication"],"lexemes":["core-es:lexeme:preguntar"],"examples":["core-es:item:000139","core-es:item:000720"]}
 {"id":"core-es:item:800063","pack":"core-es","type":"word","text":"tocar","level":"a2","topics":["music"],"lexemes":["core-es:lexeme:tocar"],"examples":["core-es:item:000256","core-es:item:000994"]}
 {"id":"core-es:item:800064","pack":"core-es","type":"word","text":"estudiar","level":"a1","topics":["school"],"lexemes":["core-es:lexeme:estudiar"],"examples":["core-es:item:000070","core-es:item:000106","core-es:item:000187"]}
@@ -461,7 +463,7 @@
 {"id":"core-es:item:800073","pack":"core-es","type":"word","text":"intentar","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:intentar"],"examples":["core-es:item:000251"]}
 {"id":"core-es:item:800074","pack":"core-es","type":"word","text":"usar","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:usar"],"examples":["core-es:item:000222"]}
 {"id":"core-es:item:800075","pack":"core-es","type":"word","text":"decidir","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:decidir"],"examples":["core-es:item:000252","core-es:item:000262"]}
-{"id":"core-es:item:800076","pack":"core-es","type":"word","text":"repetir","level":"a1","topics":["school"],"lexemes":["core-es:lexeme:repetir"],"examples":["core-es:item:000014","core-es:item:000362"]}
+{"id":"core-es:item:800076","pack":"core-es","type":"word","text":"repetir","level":"a1","topics":["school"],"lexemes":["core-es:lexeme:repetir"],"examples":["core-es:item:000014","core-es:item:000362","core-es:item:001067"]}
 {"id":"core-es:item:800077","pack":"core-es","type":"word","text":"olvidar","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:olvidar"],"examples":["core-es:item:000361"]}
 {"id":"core-es:item:800078","pack":"core-es","type":"word","text":"comer","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:comer"],"examples":["core-es:item:000054","core-es:item:000069","core-es:item:000125"]}
 {"id":"core-es:item:800079","pack":"core-es","type":"word","text":"beber","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:beber"],"examples":["core-es:item:000158","core-es:item:000176","core-es:item:000281"]}
@@ -498,7 +500,7 @@
 {"id":"core-es:item:800110","pack":"core-es","type":"word","text":"nacer","level":"a2","topics":["people"],"lexemes":["core-es:lexeme:nacer"],"examples":["core-es:item:000437","core-es:item:001019"]}
 {"id":"core-es:item:800111","pack":"core-es","type":"word","text":"conducir","level":"a2","topics":["travel"],"lexemes":["core-es:lexeme:conducir"],"examples":["core-es:item:000434"]}
 {"id":"core-es:item:800112","pack":"core-es","type":"word","text":"recomendar","level":"a2","topics":["restaurant"],"lexemes":["core-es:lexeme:recomendar"],"examples":["core-es:item:000269"]}
-{"id":"core-es:item:800113","pack":"core-es","type":"word","text":"significar","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:significar"],"examples":["core-es:item:000016"]}
+{"id":"core-es:item:800113","pack":"core-es","type":"word","text":"significar","level":"a1","topics":["language"],"lexemes":["core-es:lexeme:significar"],"examples":["core-es:item:000016","core-es:item:001073","core-es:item:001093"]}
 {"id":"core-es:item:800114","pack":"core-es","type":"word","text":"mandar","level":"a2","topics":["communication"],"lexemes":["core-es:lexeme:mandar"],"examples":["core-es:item:000224"]}
 {"id":"core-es:item:800115","pack":"core-es","type":"word","text":"reservar","level":"a2","topics":["travel"],"lexemes":["core-es:lexeme:reservar"],"examples":["core-es:item:000061"]}
 {"id":"core-es:item:800116","pack":"core-es","type":"word","text":"girar","level":"a2","topics":["travel"],"lexemes":["core-es:lexeme:girar"],"examples":["core-es:item:000316","core-es:item:000600","core-es:item:000641"]}
@@ -530,7 +532,7 @@
 {"id":"core-es:item:600016","pack":"core-es","type":"word","text":"feo","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:feo"],"examples":["core-es:item:000471"]}
 {"id":"core-es:item:600017","pack":"core-es","type":"word","text":"limpio","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:limpio"],"examples":["core-es:item:000117","core-es:item:000178","core-es:item:000846"]}
 {"id":"core-es:item:600018","pack":"core-es","type":"word","text":"sucio","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:sucio"],"examples":["core-es:item:000426","core-es:item:000841"]}
-{"id":"core-es:item:600019","pack":"core-es","type":"word","text":"fácil","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:facil"],"examples":["core-es:item:000468","core-es:item:000848"]}
+{"id":"core-es:item:600019","pack":"core-es","type":"word","text":"fácil","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:facil"],"examples":["core-es:item:000468","core-es:item:000848","core-es:item:001134"]}
 {"id":"core-es:item:600020","pack":"core-es","type":"word","text":"difícil","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:dificil"],"examples":["core-es:item:000043","core-es:item:000194","core-es:item:000345"]}
 {"id":"core-es:item:600021","pack":"core-es","type":"word","text":"importante","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:importante"],"examples":["core-es:item:000042","core-es:item:000154","core-es:item:000936"]}
 {"id":"core-es:item:600022","pack":"core-es","type":"word","text":"interesante","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:interesante"],"examples":["core-es:item:000044","core-es:item:000338","core-es:item:000943"]}
@@ -543,7 +545,7 @@
 {"id":"core-es:item:600029","pack":"core-es","type":"word","text":"enfermo","level":"a1","topics":["health"],"lexemes":["core-es:lexeme:enfermo"],"examples":["core-es:item:000052","core-es:item:000368"]}
 {"id":"core-es:item:600030","pack":"core-es","type":"word","text":"fuerte","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:fuerte"],"examples":["core-es:item:000152","core-es:item:000230"]}
 {"id":"core-es:item:600031","pack":"core-es","type":"word","text":"débil","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:debil"],"examples":["core-es:item:000473"]}
-{"id":"core-es:item:600032","pack":"core-es","type":"word","text":"rápido","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:rapido"],"examples":["core-es:item:000474","core-es:item:000696"]}
+{"id":"core-es:item:600032","pack":"core-es","type":"word","text":"rápido","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:rapido"],"examples":["core-es:item:000474","core-es:item:000696","core-es:item:001128"]}
 {"id":"core-es:item:600033","pack":"core-es","type":"word","text":"lento","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:lento"],"examples":["core-es:item:000474"]}
 {"id":"core-es:item:600034","pack":"core-es","type":"word","text":"caro","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:caro"],"examples":["core-es:item:000293"]}
 {"id":"core-es:item:600035","pack":"core-es","type":"word","text":"barato","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:barato"],"examples":["core-es:item:000294","core-es:item:000295"]}
@@ -563,7 +565,7 @@
 {"id":"core-es:item:600049","pack":"core-es","type":"word","text":"abierto","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:abierto"],"examples":["core-es:item:000480"]}
 {"id":"core-es:item:600050","pack":"core-es","type":"word","text":"cerrado","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:cerrado"],"examples":["core-es:item:000481"]}
 {"id":"core-es:item:600051","pack":"core-es","type":"word","text":"primero","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:primero"],"examples":["core-es:item:000404","core-es:item:000624","core-es:item:000579"]}
-{"id":"core-es:item:600052","pack":"core-es","type":"word","text":"último","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ultimo"],"examples":["core-es:item:000482","core-es:item:000894"]}
+{"id":"core-es:item:600052","pack":"core-es","type":"word","text":"último","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ultimo"],"examples":["core-es:item:000482","core-es:item:000894","core-es:item:001085"]}
 {"id":"core-es:item:600053","pack":"core-es","type":"word","text":"mismo","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:mismo"],"examples":["core-es:item:000483","core-es:item:000842","core-es:item:000864"]}
 {"id":"core-es:item:600054","pack":"core-es","type":"word","text":"otro","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:otro"],"examples":["core-es:item:000234","core-es:item:000405","core-es:item:000435"]}
 {"id":"core-es:item:600055","pack":"core-es","type":"word","text":"próximo","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:proximo"],"examples":["core-es:item:000322","core-es:item:000869","core-es:item:000964"]}
@@ -620,5 +622,6 @@
 {"id":"core-es:item:600106","pack":"core-es","type":"word","text":"perfecto","level":"a1","topics":["feelings"],"lexemes":["core-es:lexeme:perfecto"],"examples":["core-es:item:000603","core-es:item:000622","core-es:item:000639"]}
 {"id":"core-es:item:600107","pack":"core-es","type":"word","text":"pasado","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:pasado"],"examples":["core-es:item:000433","core-es:item:000976"]}
 {"id":"core-es:item:600108","pack":"core-es","type":"word","text":"tercero","level":"a1","topics":["numbers"],"lexemes":["core-es:lexeme:tercero"],"examples":["core-es:item:000678"]}
+{"id":"core-es:item:600111","pack":"core-es","type":"word","text":"correcto","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:correcto"],"examples":["core-es:item:001088","core-es:item:001111","core-es:item:001112"]}
 {"id":"core-es:item:600109","pack":"core-es","type":"word","text":"griego","level":"a1","topics":["people"],"lexemes":["core-es:lexeme:griego"],"examples":["core-es:item:001061","core-es:item:001016"]}
 {"id":"core-es:item:600110","pack":"core-es","type":"word","text":"italiano","level":"a1","topics":["people"],"lexemes":["core-es:lexeme:italiano"],"examples":["core-es:item:001018"]}

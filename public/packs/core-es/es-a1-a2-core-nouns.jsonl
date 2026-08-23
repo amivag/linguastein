@@ -389,3 +389,5 @@
 {"id":"core-es:lexeme:wifi","lemma":"wifi","pos":"NOUN","level":"a2","gender":"masculine"}
 {"id":"core-es:lexeme:vecina","lemma":"vecina","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:medica","lemma":"médica","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:direccion","lemma":"dirección","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:nota","lemma":"nota","pos":"NOUN","level":"a1","gender":"feminine"}

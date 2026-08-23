@@ -64,7 +64,7 @@
 000402	Espero que sí.	I hope so.	a2	core		neutral		
 000403	Depende del tiempo.	It depends on the weather.	a2	core
 000404	Es la primera vez.	It's the first time.	a1	core
-000405	Otra vez, por favor.	Again, please.	a1	core
+000405	Otra vez, por favor.	Again, please.	a1	core							ask-to-repeat
 000406	Poco a poco.	Little by little.	a1	core		colloquial		
 000407	Claro que sí.	Of course.	a1	core		colloquial		
 000408	Está bien.	It's fine.	a1	core		colloquial		

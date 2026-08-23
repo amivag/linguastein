@@ -14,9 +14,10 @@ describe('missions', () => {
   it('orders the authored journey and respects the course ceiling', () => {
     const a1 = missionsForCourse(MISSIONS, { language: 'es', level: 'a1' });
 
-    expect(a1).toHaveLength(12);
+    expect(a1).toHaveLength(13);
     expect(a1.map((mission) => mission.id)).toEqual([
       'greet-and-respond',
+      'make-yourself-understood',
       'cafe-order',
       'ask-directions',
       'shop-clothes',

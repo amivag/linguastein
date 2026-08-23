@@ -39,6 +39,13 @@ say-if-you-like-a-place	function	Decir si te gusta el sitio	Say whether you like
 ask-what-someone-does	function	Preguntar a qué se dedica alguien	Ask what someone does for a living	a1	greet-someone
 ask-about-free-time	function	Preguntar por el tiempo libre	Ask what someone does in their free time	a1	greet-someone
 talk-about-free-time	function	Hablar del tiempo libre	Say what you do in your free time	a1	ask-about-free-time
+say-you-did-not-understand	function	Decir que no entiendes	Say you have not understood	a1	
+ask-to-repeat	function	Pedir que lo repitan	Ask for something again	a1	say-you-did-not-understand
+ask-to-slow-down	function	Pedir que hablen más despacio	Ask someone to slow down	a1	say-you-did-not-understand
+ask-for-a-word	function	Preguntar cómo se dice algo	Ask how to say something	a1	
+ask-what-something-means	function	Preguntar qué significa	Ask what a word means	a1	ask-for-a-word
+ask-it-in-writing	function	Pedir que lo escriban	Ask for it in writing	a1	ask-to-repeat
+check-you-were-understood	function	Comprobar que lo has entendido	Check you got it right	a1	ask-to-repeat
 describe-a-symptom	function	Decir qué te duele	Say what hurts, or how you feel	a2	
 say-since-when	function	Decir desde cuándo	Say how long you have felt it	a2	describe-a-symptom
 answer-health-questions	function	Responder a las preguntas del médico	Answer a health professional's follow-up questions	a2	describe-a-symptom

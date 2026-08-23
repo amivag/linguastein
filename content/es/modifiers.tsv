@@ -258,6 +258,7 @@ ni	nor, neither	CCONJ	a2	grammar
 600106	perfecto	perfect	ADJ	a1	feelings
 600107	pasado	last, past	ADJ	a1	time
 600108	tercero	third	ADJ	a1	numbers	tercer
+600111	correcto	correct, right	ADJ	a1	core
 600109	griego	Greek	ADJ	a1	people
 600110	italiano	Italian	ADJ	a1	people
 -	regular	so-so, not great	ADV	a1	feelings	

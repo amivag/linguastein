@@ -2,7 +2,7 @@
 
 **Status:** ready to start — the id prerequisite is cleared, so content is safe to edit
 **Written:** 2026-08-17
-**Revised:** 2026-08-24 — re-measured against pack `0.13.0`. Goals 2, 3 and half
+**Revised:** 2026-08-24 — re-measured against pack `0.14.0`. Goals 2, 3 and half
 of 5 are now met, so the numbers throughout were restated; the recycling gate
 (goal 1, §6.2) is still the open work and is now the only thing standing between
 this brief and done.
@@ -43,7 +43,7 @@ because content landed and the paragraph describing it did not:
 npm run build:data
 ```
 
-**Re-measured 2026-08-24**, against pack `0.13.0`. Goals 2 and 3 of §5 have since
+**Re-measured 2026-08-24**, against pack `0.14.0`. Goals 2 and 3 of §5 have since
 been met — read the table before planning volume work, because the figures this
 brief was written against are less than half of what now ships.
 
@@ -55,25 +55,25 @@ method §3.1 describes, confirmed on a level where nothing had to be retrofitted
 
 | Measure                              | Now                                       |
 | ------------------------------------ | ----------------------------------------- |
-| Practisable items                    | 3,490                                     |
-| — sentences and phrases              | 2,690                                     |
+| Practisable items                    | 3,787                                     |
+| — sentences and phrases              | 2,987                                     |
 | — word cards                         | 800                                       |
 | Lexemes                              | 985 (185 verbs, 476 nouns, 324 other)     |
 | Generated verb forms                 | 7,770 (42 per verb, subjunctive included) |
 | Generated noun and adjective forms   | 1,372                                     |
-| Running words of Spanish             | **16,654 (~139 minutes of reading)**      |
+| Running words of Spanish             | **18,409 (~153 minutes of reading)**      |
 | Average sentence length              | 6.2 words                                 |
 | Longest single item                  | 13 words                                  |
 | Multi-sentence texts                 | **123 (59 texts, 64 dialogues)**          |
-| — sentences read in context          | 1251, averaging 10.2 per passage          |
-| Tokens linked to a lexeme            | 16,607 of 16,654 (100%)                   |
+| — sentences read in context          | 1548, averaging 12.6 per passage          |
+| Tokens linked to a lexeme            | 18,361 of 18,409 (100%)                   |
 | Lexemes appearing in ≥1 sentence     | 971 of 985                                |
-| Lexemes appearing in exactly one     | **72 (7%)**                               |
-| Lexemes with ≥6 encounters           | **516 (52%)**                             |
-| Questions / statements               | 437 / 2,253, with **5** minimal pairs     |
+| Lexemes appearing in exactly one     | **63 (6%)**                               |
+| Lexemes with ≥6 encounters           | **540 (55%)**                             |
+| Questions / statements               | 527 / 2,460, with **5** minimal pairs     |
 | Items marked with register           | 1,084                                     |
-| Items marked with address (tú/usted) | 571                                       |
-| Items marked with a region           | 113                                       |
+| Items marked with address (tú/usted) | 578                                       |
+| Items marked with a region           | 127                                       |
 | Items containing `¡`                 | 15                                        |
 | Items with audio                     | 0                                         |
 | Senses                               | 0                                         |

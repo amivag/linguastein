@@ -80,7 +80,7 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   `no hables` as a pattern, because the negative command is the one place the
   mood is not optional-feeling
 - core-es pack: 185 verbs (7,770 generated forms), 476 nouns, 324 modifiers,
-  2,690 sentences — 3,490 practisable items, 100% of sentence words linked to a lexeme
+  2,987 sentences — 3,787 practisable items, 100% of sentence words linked to a lexeme
 - Three B1 missions — a complaint, a flatshare negotiation and asking for advice
   — each a model passage plus three transfers, and the mission list now says
   which level a mission is: `MissionDefinition.level` had always existed and

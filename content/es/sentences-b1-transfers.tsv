@@ -19,6 +19,11 @@
 002273	Espero que sea un error.	I hope it is a mistake.	b1	money					queja-factura-b1	Cliente	express-a-hope
 002274	Tiene razón, hay un error en el total.	You are right, there is a mistake in the total.	b1	money		formal	usted		queja-factura-b1	Empleada	
 002275	¿Me devuelven la diferencia?	Will you give me the difference back?	b1	money					queja-factura-b1	Cliente	ask-someone-to-do
+002899	¿Y la factura del mes que viene?	And next month's bill?	b1	money,time					queja-factura-b1	Cliente	
+002900	Será normal, no se preocupe.	It will be normal, do not worry.	b1	money					queja-factura-b1	Empleada	
+002901	Prefiero que me lo digan por correo.	I would rather you confirmed it by email.	b1	money,communication					queja-factura-b1	Cliente	
+002902	Se lo mando hoy mismo.	I will send it to you today.	b1	money,communication					queja-factura-b1	Empleada	
+002903	Muchas gracias por resolverlo.	Thank you very much for sorting it out.	b1	social					queja-factura-b1	Cliente	
 002276	Sí, le devolvemos el dinero este mes.	Yes, we will refund you this month.	b1	money		formal	usted		queja-factura-b1	Empleada	
 002277	Compré una cosa hace dos semanas y no ha llegado.	I bought something two weeks ago and it has not arrived.	b1	shopping					queja-paquete-b1	Cliente	make-a-complaint
 002278	¿Tiene el número del paquete?	Do you have the parcel number?	b1	shopping		formal	usted		queja-paquete-b1	Empleado	
@@ -67,6 +72,11 @@
 002321	El de internet es más económico.	The online one is cheaper.	b1	school,money					consejo-curso-b1	Ana	
 002322	Pero dudo que aprendas sin un profesor.	But I doubt you learn without a teacher.	b1	school					consejo-curso-b1	Luis	express-doubt
 002323	Es verdad. La escuela tiene más ventajas.	That is true. The school has more advantages.	b1	school					consejo-curso-b1	Ana	weigh-two-options
+002904	El curso de la escuela empieza en octubre.	The school course starts in October.	b1	school,months					consejo-curso-b1	Ana	
+002905	¿Y cuántas horas por semana son?	And how many hours a week is it?	b1	school,clock					consejo-curso-b1	Luis	
+002906	Cuatro, dos días por la tarde.	Four, two afternoons.	b1	school,time					consejo-curso-b1	Ana	
+002907	Eso me parece bastante razonable.	That seems quite reasonable to me.	b1	core					consejo-curso-b1	Luis	
+002908	Creo que voy a elegir la escuela.	I think I am going to choose the school.	b1	school					consejo-curso-b1	Ana	
 002324	Es lógico que quieras hablar con gente.	It is only natural that you want to talk to people.	b1	school,social					consejo-curso-b1	Luis	react-to-news
 002325	Quiero comprar un coche, pero es caro.	I want to buy a car, but it is expensive.	b1	money,travel					consejo-dinero-b1	Ana	
 002326	¿Tienes algún ahorro?	Do you have anything saved?	b1	money					consejo-dinero-b1	Luis	
@@ -83,6 +93,11 @@
 002337	No creo que sea nada grave.	I do not think it is anything serious.	b1	health					consejo-salud-b1	Ana	express-doubt
 002338	Puede ser, pero es mejor que lo mires.	Maybe, but it is better to get it looked at.	b1	health					consejo-salud-b1	Luis	give-advice
 002339	Tienes razón. Pido cita mañana.	You are right. I will make an appointment tomorrow.	b1	health					consejo-salud-b1	Ana	
+002909	Es que trabajo hasta muy tarde.	The thing is I work until very late.	b1	health,work					consejo-salud-b1	Ana	
+002910	Te aconsejo que dejes el ordenador antes de las once.	I advise you to leave the computer before eleven.	b1	health,technology					consejo-salud-b1	Luis	
+002911	Puedo intentarlo esta semana.	I can try that this week.	b1	health					consejo-salud-b1	Ana	
+002912	Ojalá te ayude.	I hope it helps.	b1	health,feelings					consejo-salud-b1	Luis	
+002913	Gracias por preocuparte.	Thank you for caring.	b1	social,feelings					consejo-salud-b1	Ana	
 002340	Y cuida el horario, duerme más temprano.	And watch your hours, sleep earlier.	b1	health,daily-routine			tu		consejo-salud-b1	Luis	give-advice
 002342	Espero que la próxima vez llegue a tiempo.	I hope it arrives on time next time.	b1	shopping					queja-paquete-b1	Cliente	express-a-hope
 002343	Ojalá podamos dormir bien esta semana.	I hope we can sleep well this week.	b1	city,health					queja-ruido-b1	Vecina	express-a-hope

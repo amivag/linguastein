@@ -2644,7 +2644,7 @@
 002641	sentence	active	Es mejor que compremos menos plástico.
 002642	sentence	active	Me molesta que todavía haya basura en la calle.
 002643	sentence	active	El artículo tiene dos páginas y muchos datos.
-002644	sentence	active	Dudo que todo el mundo lo lea entero.
+002644	sentence	active	Dudo que todo el mundo lo lea.
 002645	sentence	active	Es una pena que la gente no cambie.
 002646	sentence	active	Te aconsejo que uses más el transporte público.
 002647	sentence	active	Ojalá que el próximo verano sea más fresco.
@@ -2662,7 +2662,7 @@
 002659	sentence	active	Es difícil elegir entre los dos.
 002660	sentence	active	Elige el siguiente ejercicio.
 002661	sentence	active	En invierno hacemos fuego en casa.
-002662	sentence	active	Nos sentamos alrededor del fuego en silencio.
+002662	sentence	active	Estuvimos alrededor del fuego en silencio.
 002663	sentence	active	No me importa esperar un poco.
 002664	sentence	active	Al final no importa quién gana.
 002665	sentence	active	¿Te importa cerrar la ventana?
@@ -2691,6 +2691,303 @@
 002688	sentence	active	Los dos hermanos hablan igual.
 002689	sentence	active	Nos reímos mucho con la película.
 002690	sentence	active	Pidió silencio en la sala.
+002691	sentence	active	A las once tengo una reunión corta.
+002692	sentence	active	Almuerzo a la una con mis compañeros.
+002693	sentence	active	Por la tarde escribo correos.
+002694	sentence	active	Salgo de la oficina a las seis.
+002695	sentence	active	Vuelvo a casa en autobús y leo un poco.
+002696	sentence	active	Ceno con mi familia a las ocho.
+002697	sentence	active	Me acuesto temprano porque mañana trabajo.
+002698	sentence	active	Antes de salir, hago la cama.
+002699	sentence	active	El parque está a diez minutos de casa.
+002700	sentence	active	Muchas familias pasan la mañana allí.
+002701	sentence	active	A la una vuelvo a casa y cocino.
+002702	sentence	active	Por la tarde veo una película.
+002703	sentence	active	Los sábados son mis días favoritos.
+002704	sentence	active	El salón tiene un sofá azul y una mesa pequeña.
+002705	sentence	active	En la pared hay dos fotos de mi familia.
+002706	sentence	active	El baño es pequeño pero tiene una ventana.
+002707	sentence	active	Mi vecina es muy amable y vive arriba.
+002708	sentence	active	La plaza tiene árboles y un bar.
+002709	sentence	active	Desde mi ventana veo toda la calle.
+002710	sentence	active	El piso no es caro para esta ciudad.
+002711	sentence	active	Mi mesa está al lado de la ventana.
+002712	sentence	active	Trabajo con un ordenador y dos pantallas.
+002713	sentence	active	Por la mañana bebo dos cafés.
+002714	sentence	active	Mis compañeros son simpáticos y hablamos mucho.
+002715	sentence	active	Los martes tenemos una reunión larga.
+002716	sentence	active	A veces salgo a caminar diez minutos.
+002717	sentence	active	¿Lo quiere aquí o para llevar?
+002718	sentence	active	Aquí, gracias. Me siento un momento.
+002719	sentence	active	Muy bien. ¿Quiere azúcar?
+002720	sentence	active	No, así está bien.
+002721	sentence	active	¿Se puede pagar con tarjeta?
+002722	sentence	active	Sí, claro. Aquí tiene.
+002723	sentence	active	¿El té es con leche fría o caliente?
+002724	sentence	active	Caliente, si no dice otra cosa.
+002725	sentence	active	Caliente está bien, gracias.
+002726	sentence	active	¿Se sienta dentro o fuera?
+002727	sentence	active	Fuera, hace buen tiempo.
+002728	sentence	active	¿El banco abre por la tarde?
+002729	sentence	active	No, solo por la mañana.
+002730	sentence	active	¿Hay otro banco en el centro?
+002731	sentence	active	Sí, uno cerca de la plaza.
+002732	sentence	active	¿Está muy lejos la plaza?
+002733	sentence	active	A diez minutos a pie.
+002734	sentence	active	Me queda un poco grande.
+002735	sentence	active	Tenemos otra talla más pequeña.
+002736	sentence	active	¿La tiene en azul también?
+002737	sentence	active	Sí, en azul y en gris.
+002738	sentence	active	Prefiero la negra, gracias.
+002739	sentence	active	Es un poco caro para mí.
+002740	sentence	active	Tenemos otro más barato allí.
+002741	sentence	active	¿De qué color es?
+002742	sentence	active	Verde y blanco.
+002743	sentence	active	Voy a probar los dos.
+002744	sentence	active	¿Puedo ir a pie o mejor en autobús?
+002745	sentence	active	A pie está bien, el camino es fácil.
+002746	sentence	active	¿Hay una farmacia por aquí?
+002747	sentence	active	Sí, al lado de la estación.
+002748	sentence	active	¿Y un banco cerca?
+002749	sentence	active	Al lado de la farmacia.
+002750	sentence	active	¿A qué hora tengo que salir el último día?
+002751	sentence	active	Antes de las doce, por favor.
+002752	sentence	active	¿Hay wifi en la habitación?
+002753	sentence	active	Sí, la contraseña está en la mesa.
+002754	sentence	active	Muchas gracias por todo.
+002755	sentence	active	¿El bar abre por la noche?
+002756	sentence	active	Hasta las doce todos los días.
+002757	sentence	active	¿Hay una farmacia cerca del hotel?
+002758	sentence	active	Sí, a dos minutos a la derecha.
+002759	sentence	active	Muy bien, muchas gracias.
+002760	sentence	active	¿Comió algo especial ayer?
+002761	sentence	active	Cené en un restaurante nuevo.
+002762	sentence	active	Puede ser eso. ¿Le duele ahora?
+002763	sentence	active	Un poco menos que ayer.
+002764	sentence	active	Le doy unas pastillas para dos días.
+002765	sentence	active	¿Puedo trabajar mañana?
+002766	sentence	active	Mejor no. Vuelva el viernes.
+002767	sentence	active	¿Dónde quieres cenar?
+002768	sentence	active	Hay un restaurante italiano cerca del cine.
+002769	sentence	active	Perfecto. ¿Compramos las entradas antes?
+002770	sentence	active	Sí, mejor. Los sábados hay mucha gente.
+002771	sentence	active	¿Vienen también tus hermanas?
+002772	sentence	active	Solo una. La otra trabaja esta noche.
+002773	sentence	active	¿Llevo algo de comer?
+002774	sentence	active	Sí, un poco de fruta está bien.
+002775	sentence	active	¿Y si llueve por la tarde?
+002776	sentence	active	Entonces vamos al bar de la plaza.
+002777	sentence	active	Muy bien. ¿Viene alguien más?
+002778	sentence	active	Mi hermana, si termina el trabajo.
+002779	sentence	active	¿El zumo es de naranja?
+002780	sentence	active	Sí, lo hacemos aquí cada mañana.
+002781	sentence	active	Perfecto. ¿Tienen fruta también?
+002782	sentence	active	Sí, manzanas y plátanos.
+002783	sentence	active	Entonces una manzana también, por favor.
+002784	sentence	active	¿Quiere el café en una taza grande?
+002785	sentence	active	Sí, grande, por favor.
+002786	sentence	active	¿Va al trabajo ahora?
+002787	sentence	active	Sí, empiezo a las nueve.
+002788	sentence	active	Entonces se lo preparo rápido.
+002789	sentence	active	Gracias, muy amable.
+002790	sentence	active	¿El museo abre los lunes?
+002791	sentence	active	No, los lunes está cerrado.
+002792	sentence	active	¿Y cuánto cuesta la entrada?
+002793	sentence	active	Ocho euros, creo.
+002794	sentence	active	¿Hay un café cerca del museo?
+002795	sentence	active	Sí, muy cerca.
+002796	sentence	active	¿Qué autobús va al centro?
+002797	sentence	active	El número dos, cada quince minutos.
+002798	sentence	active	¿Dónde compro el billete?
+002799	sentence	active	En la misma parada, o al entrar.
+002800	sentence	active	¿Qué precio tiene el billete?
+002801	sentence	active	Dos euros hasta el centro.
+002802	sentence	active	¿Los tienen en gris también?
+002803	sentence	active	En gris no, solo en azul y negro.
+002804	sentence	active	¿Puedo cambiarlos si no me quedan bien?
+002805	sentence	active	Sí, con el papel, hasta el día quince.
+002806	sentence	active	Entonces me los llevo.
+002807	sentence	active	¿Tienen el mismo en gris?
+002808	sentence	active	En gris no queda su número.
+002809	sentence	active	No importa, prefiero los negros.
+002810	sentence	active	Son muy cómodos para caminar.
+002811	sentence	active	¿Se puede pagar en efectivo?
+002812	sentence	active	Claro, sin problema.
+002813	sentence	active	¿Hay ascensor en el hotel?
+002814	sentence	active	Sí, a la derecha de la entrada.
+002815	sentence	active	¿Puedo dejar la maleta aquí el último día?
+002816	sentence	active	Sí, hasta las seis de la tarde.
+002817	sentence	active	Estupendo, muchas gracias.
+002818	sentence	active	¿Puedo cenar algo a esta hora?
+002819	sentence	active	La cocina está cerrada, pero hay un bar abierto.
+002820	sentence	active	¿Está lejos del hotel?
+002821	sentence	active	A dos minutos, en la misma calle.
+002822	sentence	active	Muy bien. Buenas noches.
+002823	sentence	active	¿Reservo una mesa para dos?
+002824	sentence	active	Sí, mejor. Los viernes está lleno.
+002825	sentence	active	¿Y la película, a qué hora empieza?
+002826	sentence	active	A las diez y media, creo.
+002827	sentence	active	Entonces tenemos mucho tiempo.
+002828	sentence	active	Perfecto. Hasta el viernes.
+002829	sentence	active	¿Vamos en tren o en autobús?
+002830	sentence	active	En tren es más rápido.
+002831	sentence	active	¿Compro las entradas por internet?
+002832	sentence	active	Sí, así no esperamos.
+002833	sentence	active	¿Y si llueve el domingo?
+002834	sentence	active	El museo está dentro, no importa.
+002835	sentence	active	En el tren leo los correos del día.
+002836	sentence	active	La reunión empieza a las ocho y media.
+002837	sentence	active	Hablo poco y escucho mucho.
+002838	sentence	active	A las diez bebo el segundo café.
+002839	sentence	active	Como algo rápido delante del ordenador.
+002840	sentence	active	Los lunes siempre pasan muy rápido.
+002841	sentence	active	En el mercado compramos fruta y pan.
+002842	sentence	active	Después tomamos un café en la plaza.
+002843	sentence	active	Hablamos de la semana y de los planes.
+002844	sentence	active	A las dos vuelvo a casa y cocino.
+002845	sentence	active	Por la tarde no hago casi nada.
+002846	sentence	active	Los domingos son tranquilos y me gustan así.
+002847	sentence	active	¿Puedo tomarla con comida?
+002848	sentence	active	Mejor después de comer.
+002849	sentence	active	¿Y si sigo igual mañana?
+002850	sentence	active	Entonces vaya al médico.
+002851	sentence	active	¿Cuánto cuestan las pastillas?
+002852	sentence	active	Cuatro euros con cincuenta.
+002853	sentence	active	¿Está muchas horas en la misma silla?
+002854	sentence	active	Sí, delante del ordenador.
+002855	sentence	active	Levántese cada hora un momento.
+002856	sentence	active	¿Puedo hacer deporte?
+002857	sentence	active	Caminar sí, correr todavía no.
+002858	sentence	active	¿Vuelvo la semana que viene?
+002859	sentence	active	Nadie me llama antes de las nueve.
+002860	sentence	active	Escribo mejor en casa que en la oficina.
+002861	sentence	active	A veces salgo a caminar después de comer.
+002862	sentence	active	Por la tarde tengo una reunión corta.
+002863	sentence	active	Mi gato duerme encima de la mesa.
+002864	sentence	active	Los martes son mis días favoritos de trabajo.
+002865	sentence	active	Por la mañana pongo la ropa nueva en la mesa.
+002866	sentence	active	Muchos clientes buscan una talla u otra.
+002867	sentence	active	Me gusta ayudar a elegir un color.
+002868	sentence	active	Los sábados hay el doble de gente.
+002869	sentence	active	Mi compañera es muy simpática con todos.
+002870	sentence	active	Es un trabajo cansado, pero no aburrido.
+002871	sentence	active	La primera reunión duró casi dos horas.
+002872	sentence	active	Después tuve que escribir un correo largo.
+002873	sentence	active	Mi jefe me pidió otro proyecto para el lunes.
+002874	sentence	active	Comí un poco de pan delante del ordenador.
+002875	sentence	active	A las cinco todavía tenía tres correos.
+002876	sentence	active	El viernes fue un día mucho más tranquilo.
+002877	sentence	active	El salón tiene una ventana muy grande.
+002878	sentence	active	En invierno hacen fuego en la cocina.
+002879	sentence	active	En el jardín hay flores y dos árboles viejos.
+002880	sentence	active	Mi madre tiene un gato blanco y negro.
+002881	sentence	active	Por la noche no se oye nada.
+002882	sentence	active	El pueblo tiene una tienda y un bar.
+002883	sentence	active	La ventana da a la calle y entra mucha luz.
+002884	sentence	active	Encima de la mesa tengo una lámpara vieja.
+002885	sentence	active	Estudio por la noche, cuando hay silencio.
+002886	sentence	active	Comparto la cocina con otros tres estudiantes.
+002887	sentence	active	Los domingos limpiamos todos juntos.
+002888	sentence	active	La universidad está a diez minutos a pie.
+002889	sentence	active	¿Cuándo llega el dinero a mi cuenta?
+002890	sentence	active	En dos o tres días.
+002891	sentence	active	Espero que sea antes del fin de semana.
+002892	sentence	active	Le mando un correo cuando esté hecho.
+002893	sentence	active	Se lo agradezco.
+002894	sentence	active	¿Cuándo tienes que contestar?
+002895	sentence	active	El viernes, como muy tarde.
+002896	sentence	active	Entonces pide más información el lunes.
+002897	sentence	active	Es verdad, no pregunté por el horario.
+002898	sentence	active	Es importante que lo sepas antes de decidir.
+002899	sentence	active	¿Y la factura del mes que viene?
+002900	sentence	active	Será normal, no se preocupe.
+002901	sentence	active	Prefiero que me lo digan por correo.
+002902	sentence	active	Se lo mando hoy mismo.
+002903	sentence	active	Muchas gracias por resolverlo.
+002904	sentence	active	El curso de la escuela empieza en octubre.
+002905	sentence	active	¿Y cuántas horas por semana son?
+002906	sentence	active	Cuatro, dos días por la tarde.
+002907	sentence	active	Eso me parece bastante razonable.
+002908	sentence	active	Creo que voy a elegir la escuela.
+002909	sentence	active	Es que trabajo hasta muy tarde.
+002910	sentence	active	Te aconsejo que dejes el ordenador antes de las once.
+002911	sentence	active	Puedo intentarlo esta semana.
+002912	sentence	active	Ojalá te ayude.
+002913	sentence	active	Gracias por preocuparte.
+002914	sentence	active	No queremos pagar más de setecientos euros.
+002915	sentence	active	Vimos tres pisos la semana pasada.
+002916	sentence	active	El primero era grande pero muy caro.
+002917	sentence	active	El segundo no tenía luz por la mañana.
+002918	sentence	active	El tercero está cerca del parque y nos gusta.
+002919	sentence	active	Vamos a verlo otra vez el sábado.
+002920	sentence	active	¿El tren para en muchos sitios?
+002921	sentence	active	En tres, y el viaje dura tres horas.
+002922	sentence	active	¿Puedo llevar una maleta grande?
+002923	sentence	active	Sí, sin problema.
+002924	sentence	active	¿Hay algo de comer en el tren?
+002925	sentence	active	Hay un bar en el coche cinco.
+002926	sentence	active	¿Cuántas horas dura el viaje?
+002927	sentence	active	Unas cuatro horas, con una parada.
+002928	sentence	active	¿A qué hora llega a Granada?
+002929	sentence	active	Sobre las diez y media de la noche.
+002930	sentence	active	¿Y el billete cuánto vale?
+002931	sentence	active	Veinte euros, en efectivo o tarjeta.
+002932	sentence	active	¿El billete de vuelta tiene hora?
+002933	sentence	active	Puede volver en el tren que quiera el domingo.
+002934	sentence	active	¿Y si perdemos el tren de ida?
+002935	sentence	active	Entonces hay que comprar otro billete.
+002936	sentence	active	Entendido. ¿Los asientos están juntos?
+002937	sentence	active	Sí, los dos juntos.
+002938	sentence	active	¿El billete vale para el autobús también?
+002939	sentence	active	Sí, para los dos.
+002940	sentence	active	¿Tengo que cambiar de línea para el museo?
+002941	sentence	active	No, la línea dos pasa por allí.
+002942	sentence	active	¿Y por la noche pasa igual?
+002943	sentence	active	Cada diez minutos después de las once.
+002944	sentence	active	¿Las manzanas son de aquí?
+002945	sentence	active	Sí, del campo de al lado.
+002946	sentence	active	¿Tiene fresas hoy?
+002947	sentence	active	Hoy no, mejor el jueves.
+002948	sentence	active	Entonces vuelvo el jueves.
+002949	sentence	active	¿A qué hora sale el pan por la mañana?
+002950	sentence	active	A las siete, y otra vez a las cinco.
+002951	sentence	active	¿Abren los domingos?
+002952	sentence	active	Solo por la mañana.
+002953	sentence	active	Muy bien, entonces vengo temprano.
+002954	sentence	active	¿Cómo lo preparo mejor?
+002955	sentence	active	Con aceite y sal, nada más.
+002956	sentence	active	¿Cuánto tiempo hay que cocinarlo?
+002957	sentence	active	Veinte minutos, no más.
+002958	sentence	active	Muy bien, lo hago esta noche.
+002959	sentence	active	¿Le queda ajo?
+002960	sentence	active	Sí, ¿cuánto quiere?
+002961	sentence	active	Poco, solo para esta semana.
+002962	sentence	active	Le pongo dos, entonces.
+002963	sentence	active	Perfecto, y ya está todo.
+002964	sentence	active	¿Y tu padre también vive aquí?
+002965	sentence	active	No, él vive en un pueblo cerca del mar.
+002966	sentence	active	¿Lo ves a menudo?
+002967	sentence	active	Cada dos semanas, más o menos.
+002968	sentence	active	¿Y tu hermana, qué estudia?
+002969	sentence	active	Estudia música en la universidad.
+002970	sentence	active	¿Y vive solo en Valencia?
+002971	sentence	active	No, con dos amigos de la universidad.
+002972	sentence	active	¿Habla otros idiomas?
+002973	sentence	active	Inglés muy bien, y un poco de italiano.
+002974	sentence	active	¿Le gusta la música?
+002975	sentence	active	Toca la guitarra desde niño.
+002976	sentence	active	¿Cuántos años tienen los niños?
+002977	sentence	active	Seis y tres. El mayor ya va a la escuela.
+002978	sentence	active	¿Y tu hermana trabaja por la noche?
+002979	sentence	active	A veces, en el hospital.
+002980	sentence	active	Debe de ser cansado.
+002981	sentence	active	Lo es, pero le gusta mucho.
+002982	sentence	active	¿Duerme toda la noche?
+002983	sentence	active	Casi siempre, desde el mes pasado.
+002984	sentence	active	¿Y vosotros descansáis un poco?
+002985	sentence	active	Un poco más que antes.
+002986	sentence	active	¿Vive alguien de la familia cerca?
+002987	sentence	active	Mi madre viene dos días por semana.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer

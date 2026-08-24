@@ -29,6 +29,11 @@
 002196	El dinero, gracias. No es la primera vez que pasa.	The money, thank you. It is not the first time this has happened.	b1	shopping					queja-b1	Cliente	
 002197	Le pido disculpas. Es raro que ocurra dos veces.	I apologise. It is odd that it should happen twice.	b1	shopping		formal	usted		queja-b1	Dependiente	react-to-news
 002198	Espero que no vuelva a pasar.	I hope it does not happen again.	b1	shopping					queja-b1	Cliente	express-a-hope
+002889	¿Cuándo llega el dinero a mi cuenta?	When does the money reach my account?	b1	shopping,money					queja-b1	Cliente	
+002890	En dos o tres días.	In two or three days.	b1	shopping,money					queja-b1	Dependiente	
+002891	Espero que sea antes del fin de semana.	I hope it is before the weekend.	b1	shopping,money					queja-b1	Cliente	
+002892	Le mando un correo cuando esté hecho.	I will email you when it is done.	b1	shopping,communication					queja-b1	Dependiente	
+002893	Se lo agradezco.	I am grateful to you.	b1	social					queja-b1	Cliente	
 002199	Le devolvemos el dinero hoy mismo.	We will give you your money back today.	b1	shopping,money		formal	usted		queja-b1	Dependiente	
 002200	Quiero que hablemos del ruido por la noche.	I want us to talk about the noise at night.	b1	home,city					piso-b1	Marta	ask-someone-to-do
 002201	Tienes razón. ¿Te molesta la música?	You are right. Does the music bother you?	b1	home,music					piso-b1	Pablo	
@@ -59,6 +64,11 @@
 002220	Ya lo hice. Dudo que sea una buena decisión.	I already have. I doubt it is a good decision.	b1	work					consejo-b1	Ana	express-doubt
 002221	Es normal que dudes. Es un riesgo.	It is normal that you have doubts. It is a risk.	b1	work					consejo-b1	Luis	react-to-news
 002222	Yo esperaría a que te den más información.	I would wait until they give you more information.	b1	work					consejo-b1	Luis	give-advice
+002894	¿Cuándo tienes que contestar?	When do you have to give an answer?	b1	work,communication					consejo-b1	Luis	
+002895	El viernes, como muy tarde.	By Friday at the latest.	b1	work,time					consejo-b1	Ana	
+002896	Entonces pide más información el lunes.	Then ask for more detail on Monday.	b1	work,communication					consejo-b1	Luis	
+002897	Es verdad, no pregunté por el horario.	That is true, I did not ask about the hours.	b1	work					consejo-b1	Ana	
+002898	Es importante que lo sepas antes de decidir.	It is important that you know before you decide.	b1	work					consejo-b1	Luis	
 002223	Buen consejo. Gracias.	Good advice. Thank you.	b1	work					consejo-b1	Ana	
 002224	El periódico publica hoy un artículo sobre el clima.	The paper publishes an article about the climate today.	b1	news,environment					clima-b1		
 002225	La temperatura del mar subió otra vez este verano.	The sea temperature rose again this summer.	b1	news,environment					clima-b1		
@@ -68,7 +78,7 @@
 002229	No es una solución sencilla ni económica.	It is not a simple or a cheap solution.	b1	news,environment					clima-b1		
 002230	Pero es necesario que empecemos ahora.	But it is necessary that we start now.	b1	news,environment					clima-b1		give-advice
 002643	El artículo tiene dos páginas y muchos datos.	The article is two pages long and full of figures.	b1	news					clima-b1		
-002644	Dudo que todo el mundo lo lea entero.	I doubt everyone reads all of it.	b1	news					clima-b1		
+002644	Dudo que todo el mundo lo lea.	I doubt everyone reads all of it.	b1	news					clima-b1		
 002645	Es una pena que la gente no cambie.	It is a shame people do not change.	b1	news,environment					clima-b1		
 002646	Te aconsejo que uses más el transporte público.	I advise you to use public transport more.	b1	environment,travel					clima-b1		
 002647	Ojalá que el próximo verano sea más fresco.	I hope next summer is cooler.	b1	environment,weather					clima-b1		

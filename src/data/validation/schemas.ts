@@ -251,12 +251,39 @@ export const packTopicSchema = z
   })
   .loose();
 
+export const packAuthorSchema = z
+  .object({
+    name: z.string().min(1),
+    role: z.string().optional(),
+    url: z.string().optional(),
+  })
+  .loose();
+
+/**
+ * `YYYY-MM-DD`, and a real day.
+ *
+ * The pattern alone would accept `2026-02-31`, so the round trip is what makes it
+ * a date: parsing and re-formatting has to give back the same string. A pack
+ * claiming a day that does not exist is a pack whose provenance cannot be trusted
+ * on anything else either.
+ */
+const isoDate = z.string().refine(
+  (value) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const parsed = new Date(`${value}T00:00:00Z`);
+    return !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(value);
+  },
+  { message: 'expected a real YYYY-MM-DD date' },
+);
+
 export const packManifestSchema = z
   .object({
     id: packId,
     name: z.string().min(1),
     targetLanguage: languageTag,
     version: z.string().min(1),
+    updated: isoDate.optional(),
+    authors: z.array(packAuthorSchema).optional(),
     description: z.string().optional(),
     license: z.string().optional(),
     levels: z.array(level).optional(),

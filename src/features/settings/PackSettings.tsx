@@ -111,6 +111,15 @@ function Pack({ pack }: { readonly pack: PackContents }) {
             {manifest.license}
           </li>
         )}
+        {/* How old the thing you installed is. A version alone does not say
+            whether `0.7.0` was cut last week or two years ago, which is the
+            question a learner actually has about an add-on. */}
+        {manifest.updated && (
+          <li className={styles.chip}>
+            <Icon name="history" size="sm" />
+            Updated {manifest.updated}
+          </li>
+        )}
         {/*
           Provenance, stated rather than implied. Generated material that has not
           been read by an editor must stay distinguishable from material that
@@ -137,6 +146,36 @@ function Pack({ pack }: { readonly pack: PackContents }) {
         <p className={styles.hint}>
           Meanings in{' '}
           {pack.referenceLanguages.map((tag) => languageOption(tag).englishName).join(', ')}.
+        </p>
+      )}
+
+      {/*
+        Credits, because a pack is an add-on. Once one can come from somewhere
+        other than this build, "who made the thing I installed" is a question the
+        app has to be able to answer — and the role matters as much as the name:
+        `generation` beside a name is the difference between a pack somebody wrote
+        and a pack a model produced.
+
+        Linked where a url is given, plain text where it is not. An invented link
+        would be worse than none, which is why the field is optional in the data.
+      */}
+      {manifest.authors && manifest.authors.length > 0 && (
+        <p className={styles.hint}>
+          By{' '}
+          {manifest.authors.map((author, index) => (
+            <span key={author.name}>
+              {index > 0 && ', '}
+              {author.url ? (
+                <a href={author.url} rel="noreferrer noopener" target="_blank">
+                  {author.name}
+                </a>
+              ) : (
+                author.name
+              )}
+              {author.role ? ` (${author.role})` : ''}
+            </span>
+          ))}
+          .
         </p>
       )}
 

@@ -342,16 +342,46 @@ const authoredSkillRows: AuthoredSkillRow[] = existsSync(join(CONTENT_DIR, SKILL
 interface PackRow {
   version: string;
   items: number;
+  /** `YYYY-MM-DD`, authored beside the version. See the guard below for why. */
+  updated: string;
 }
 
 const packRow: PackRow | undefined = existsSync(join(CONTENT_DIR, PACK_FILE))
   ? (() => {
       const [row] = readSource(PACK_FILE).rows;
       if (!row) return undefined;
-      const [version, items] = row.fields;
-      return { version: version!, items: Number(items ?? Number.NaN) };
+      const [version, items, updated] = row.fields;
+      return {
+        version: version!,
+        items: Number(items ?? Number.NaN),
+        updated: (updated ?? '').trim(),
+      };
     })()
   : undefined;
+
+/**
+ * Who made the pack, one row per contributor.
+ *
+ * A list rather than a single `author`, for the reason `voices.tsv` is a list:
+ * content has contributors rather than an owner, they hold different roles, and a
+ * generated pack's honest author is a tool rather than a person. Optional, so a
+ * pack that has not decided yet simply ships without the field rather than with
+ * an invented one.
+ */
+const AUTHORS_FILE = 'authors.tsv';
+
+interface AuthorRow {
+  name: string;
+  role: string;
+  url: string;
+}
+
+const authorRows: AuthorRow[] = existsSync(join(CONTENT_DIR, AUTHORS_FILE))
+  ? readSource(AUTHORS_FILE).rows.map((row) => {
+      const [name, role, url] = row.fields;
+      return { name: (name ?? '').trim(), role: (role ?? '').trim(), url: (url ?? '').trim() };
+    })
+  : [];
 
 // ── guards ──────────────────────────────────────────────────────────────────
 
@@ -363,6 +393,44 @@ if (!packRow) {
   problems.push(`${PACK_FILE}: "${packRow.version}" is not a semver version`);
 } else if (!Number.isInteger(packRow.items)) {
   problems.push(`${PACK_FILE}: "${packRow.items}" is not an item count`);
+}
+
+/*
+ * The release date is authored, and checked rather than trusted.
+ *
+ * Not stamped from the clock, and that is the whole design: the build has to be
+ * reproducible — CI fails when a rebuild changes `public/packs` — so a date read
+ * at build time would make every build differ from the last and turn the drift
+ * check into noise. Authoring it costs one field on a row a human already has to
+ * edit, because the item-count guard forces a visit here whenever content moves.
+ *
+ * Two things are worth rejecting. A shape that is not `YYYY-MM-DD`, and a day
+ * that does not exist — `2026-02-31` matches the pattern and is not a date, so
+ * the round trip through `Date` is what actually validates it. A date in the
+ * future is rejected too: it means someone typed next month by accident, and a
+ * pack that claims to be newer than it is cannot be reasoned about at all.
+ */
+if (packRow?.updated) {
+  const shaped = /^\d{4}-\d{2}-\d{2}$/.test(packRow.updated);
+  const parsed = new Date(`${packRow.updated}T00:00:00Z`);
+  const real =
+    shaped && !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(packRow.updated);
+  if (!real) {
+    problems.push(`${PACK_FILE}: "${packRow.updated}" is not a real YYYY-MM-DD date`);
+  } else if (parsed.getTime() > Date.now()) {
+    problems.push(`${PACK_FILE}: "${packRow.updated}" is in the future`);
+  }
+} else if (packRow) {
+  problems.push(
+    `${PACK_FILE}: no updated date — add one as YYYY-MM-DD in the third column, ` +
+      'so a learner can see how old the pack they installed is',
+  );
+}
+
+for (const author of authorRows) {
+  if (!author.name) {
+    problems.push(`${AUTHORS_FILE}: a row with no name`);
+  }
 }
 
 /**
@@ -2243,6 +2311,16 @@ const manifest = {
   targetLanguage: 'es',
   // Authored in `content/es/pack.tsv`, beside the content it describes.
   version: packRow?.version ?? '0.0.0',
+  ...(packRow?.updated ? { updated: packRow.updated } : {}),
+  ...(authorRows.length > 0
+    ? {
+        authors: authorRows.map((author) => ({
+          name: author.name,
+          ...(author.role ? { role: author.role } : {}),
+          ...(author.url ? { url: author.url } : {}),
+        })),
+      }
+    : {}),
   description:
     'High-frequency Spanish verbs, nouns, modifiers and everyday sentences. Generated from content/es and not yet reviewed by a human editor.',
   license: 'CC0-1.0',

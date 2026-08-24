@@ -283,11 +283,37 @@ export interface PackTopic {
 }
 
 /** A published, independently versioned collection of content (spec §10, §20). */
+/**
+ * Somebody who made a pack, and what they did.
+ *
+ * A list rather than one `author` string, for the reason {@link PackVoice} is a
+ * list: content has contributors rather than an owner, they hold different roles,
+ * and a generated pack's honest author is a tool rather than a person. One field
+ * would flatten all three into a claim that is wrong in at least one direction.
+ */
+export interface PackAuthor {
+  readonly name: string;
+  /** What this name did — `content`, `engineering`, `review`, `generation`. */
+  readonly role?: string;
+  /** Where a reader can check the claim: a profile, a repository, a model card. */
+  readonly url?: string;
+}
+
 export interface PackManifest {
   readonly id: PackId;
   readonly name: string;
   readonly targetLanguage: LanguageTag;
   readonly version: string;
+  /**
+   * The day this version was cut, `YYYY-MM-DD`.
+   *
+   * Authored beside the version rather than stamped from the clock, because the
+   * build has to be reproducible: CI fails when a rebuild changes `public/packs`,
+   * and a date read at build time would make every build differ from the last.
+   */
+  readonly updated?: string;
+  /** Who made it. See {@link PackAuthor} for why this is a list. */
+  readonly authors?: readonly PackAuthor[];
   readonly description?: string;
   readonly license?: string;
   readonly levels?: readonly CefrLevel[];

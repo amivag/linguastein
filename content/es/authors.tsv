@@ -1,0 +1,27 @@
+# Who made this pack. Shipped in the manifest so a pack can be credited and traced.
+#
+# Columns: name	role	url
+#
+# A pack is an add-on: it ships, versions and is licensed separately from the app,
+# and once packs can come from more than one place a learner has to be able to see
+# who made the one they installed. `id` says which pack, `version` says which cut
+# of it, and this says who stands behind it.
+#
+# A **list**, not a single `author` string, and for the same reason `voices.tsv`
+# is a list: content has contributors rather than an owner, they hold different
+# roles, and a generated pack's "author" is honestly a tool rather than a person.
+# Squashing that into one field is how attribution becomes a lie by omission.
+#
+# `role` is free text and describes what this name did — `content`, `engineering`,
+# `review`, `generation`. It is not an enum because the honest answer for the next
+# pack may be a word this one has no use for.
+#
+# `url` is optional and is where a reader can check the claim: a profile, a
+# repository, a model card. Leave it off rather than inventing one.
+#
+# One rule, and it is the same one `voices.tsv` and the `review` field follow:
+# **do not credit a human for generated material.** This pack is machine-generated
+# and unreviewed, so the generation is credited as generation and the editorial
+# line stays empty until somebody actually reads the Spanish.
+Linguastein	engineering	https://github.com/amivag/linguastein
+Claude (Anthropic)	generation	https://www.anthropic.com/claude

@@ -1,7 +1,7 @@
 # The pack's own version — the one thing about core-es a human versions rather
 # than the build derives.
 #
-# Columns: version	items	note
+# Columns: version	items	updated	note
 #
 # Content packs version independently of the app: a dataset ships without an app
 # release, and does. `package.json` is the app's version and has nothing to say
@@ -21,5 +21,14 @@
 # changing the level scheme. A wording or accent fix changes no count, needs no
 # bump, and should not get one.
 #
+# `updated` is the date this version was cut, as `YYYY-MM-DD`. **Authored, not
+# stamped**, and that is not laziness: the build has to be reproducible — CI fails
+# when a rebuild changes `public/packs` — so a date read from the clock would make
+# every build differ from the last and the drift check useless. It sits on this row
+# because it changes with the version, and because the item-count guard already
+# forces an edit here whenever content moves, which is exactly the moment the date
+# should change too. The build rejects a date it cannot parse, or one in the
+# future.
+#
 # Run `npm run build:data` to learn the current count; it prints it either way.
-0.7.0	2266	Twenty-eight A2 passages; A2 lexemes short of four down from 160 to 61
+0.7.0	2266	2026-08-24	Twenty-eight A2 passages; A2 lexemes short of four down from 160 to 61

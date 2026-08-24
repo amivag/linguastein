@@ -52,7 +52,7 @@ Two consequences for ordinary work here:
 ## Architecture rules
 
 These are load-bearing. Breaking one is a design change, not a refactor. Rules
-1, 5 and the icon seam are enforced by `eslint.config.js`; a violation fails
+1, 5 and the icon seam are enforced by `.oxlintrc.json`; a violation fails
 `npm run lint` rather than waiting for review.
 
 1. **Content, exercises and learner state are separate systems.** `src/domain`
@@ -626,6 +626,26 @@ Releasing is: bump `version`, move the `Unreleased` section of
 [CHANGELOG.md](CHANGELOG.md) under the new number, commit, tag. Settings shows
 `Linguastein <version> (<commit>)`, which is what a bug report should quote.
 
+**A pack carries its own identity, because it is an add-on.** Once a pack can come
+from somewhere other than this build, "who made the thing I installed, which cut
+is it, and how old is that cut" are questions the app has to answer. `id`, `name`
+and `levels` are derived; `version` and `updated` are authored on one row of
+`content/es/pack.tsv`; `authors` is a list in `content/es/authors.tsv`, one row per
+contributor with a role, mirroring `voices.tsv`.
+
+Two rules hold that, and both are asserted. **`updated` is authored, never
+stamped**: the build must be reproducible, CI fails when a rebuild changes
+`public/packs`, and a date read from the clock would make every build differ from
+the last. It costs nothing to author, because the item-count guard already forces
+an edit to that row whenever content moves — which is exactly when the date should
+change. The build rejects a shape that is not `YYYY-MM-DD`, a day that does not
+exist (`2026-02-31` matches the pattern and is not a date, so the check round-trips
+through `Date`), and a date in the future. And **`authors` is a list with roles
+rather than one string**, for the reason `voices.tsv` is a list: a generated pack's
+honest author is a tool, `generation` beside a name is not the same claim as
+`content`, and one field would flatten both into something wrong in at least one
+direction. Do not credit a person for generated material.
+
 Content packs version separately in their own `pack.json` — a dataset can ship
 without an app release, and does. That version is authored in
 `content/es/pack.tsv`, beside the content it describes, along with the item count
@@ -791,11 +811,21 @@ briefly became "que".
 
 ## Known constraints
 
-- **TypeScript is pinned to 5.9 on purpose.** TypeScript 7 is released, but
-  `typescript-eslint` (latest 8.67) supports `<6.1.0`; upgrading would silently
-  disable type-aware linting. Revisit when typescript-eslint supports 7.
+- **Linting is two tools, and the split is not about speed.** `.oxlintrc.json` is
+  the main config: the architecture boundaries, the icon seam, and the core and
+  TypeScript rule sets. `eslint.config.js` survives for the React rules alone,
+  because oxlint 1.78 implements two of the sixteen rules `react-hooks` v7
+  enables and has no `react-refresh` plugin at all. `npm run lint` runs oxlint
+  first. Add a rule to the oxlint config unless it is a React rule.
+- **TypeScript is pinned to 5.9 by that second tool.** ESLint cannot parse `.tsx`
+  without `@typescript-eslint/parser`, which declares
+  `typescript: >=4.8.4 <6.1.0`. The next step is TypeScript **6**, not 7 — 7 is
+  the native port and no longer ships the JS compiler API that
+  `typescript-eslint` is built on, which is why neither its stable nor its canary
+  release accepts it. Full reasoning in
+  [docs/tasks/tanstack-router.md](docs/tasks/tanstack-router.md#8-two-things-that-will-bite).
 - The React Compiler lint rules (`react-hooks` v7) are on. Do not call
   `Date.now()` or other impure functions during render — read the clock in an
-  effect or an event handler.
+  effect or an event handler. This is the rule the split above exists to keep.
 - Device speech only speaks a language when a matching voice exists; silence
   plus an explanation is deliberate, not a bug.

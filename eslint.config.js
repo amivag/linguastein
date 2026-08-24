@@ -1,64 +1,50 @@
-import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
+import tsParser from '@typescript-eslint/parser';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
 
 /**
- * The architecture, as rules rather than as prose.
+ * ESLint, kept for the React rules alone.
  *
- * `AGENTS.md` has stated these since the first commit and every one of them was
- * being obeyed — by discipline, with nothing checking. That is fine for one app
- * with one author. It is not fine for a skeleton other projects are scaffolded
- * from: the next agent will read the document or it will not, and either way
- * nothing failed. So the load-bearing ones are spelled out below, where breaking
- * them stops the build.
+ * Everything else moved to `.oxlintrc.json` — the architecture boundaries, the
+ * import seam, the core and TypeScript rule sets — because oxlint runs them in a
+ * fraction of the time and, on the 91 rules this project actually enforced,
+ * implements 88. The three it does not cannot fire in strict-mode ES modules.
  *
- * `no-restricted-imports` is deliberately the mechanism, rather than a boundary
- * plugin: it needs no new dependency, and a violation reports the reason at the
- * import that caused it, which is where somebody can act on it.
+ * These two plugins are the exception, and the reason is not performance:
  *
- * One flat-config subtlety worth knowing before editing: for a given file, the
- * *last* matching block wins a rule outright — options are replaced, not merged.
- * So the engine block below has to restate the vendor restriction rather than
- * relying on the broader block above it.
+ * - `eslint-plugin-react-hooks` v7 enables **16** rules, of which oxlint 1.78
+ *   implements two (`rules-of-hooks`, `exhaustive-deps`). The other fourteen are
+ *   the React Compiler set — `purity`, `immutability`, `set-state-in-effect`,
+ *   `preserve-manual-memoization` and the rest. `AGENTS.md` names one of them as
+ *   a standing constraint ("do not call `Date.now()` during render"), so dropping
+ *   them would turn an enforced rule back into a paragraph. That is the trade this
+ *   repository exists to refuse.
+ * - `react-refresh` has no oxlint equivalent at all, not even a partial one.
+ *
+ * So `npm run lint` runs both, oxlint first because it is the one that will fail
+ * fast. Delete this file the day oxlint ports the compiler rules; nothing else
+ * depends on it.
+ *
+ * The parser is the cost of keeping ESLint. `@typescript-eslint/parser` is what
+ * lets ESLint read `.tsx` at all — plain espree treats the first type annotation
+ * as a syntax error — and it declares `typescript: >=4.8.4 <6.1.0`. That ceiling
+ * is the whole reason TypeScript stays on 5.9; see **Known constraints** in
+ * `AGENTS.md`.
+ *
+ * Only `src` is matched, so `eslint .` lints the app and leaves tests, scripts and
+ * config to oxlint. `ignores` is still required despite that: ESLint applies an
+ * implicit config to every `.js` file it walks, which is enough to make it report
+ * the `eslint-disable` headers in generated `coverage/` output as unused.
  */
-
-/** Vendors that mean "this code is running in a browser, in this app's UI". */
-const UI_VENDORS = ['react', 'react-dom', 'react-dom/*', 'react-router', 'react-router-dom'];
-
-const ICON_VENDOR = {
-  group: ['lucide-react', 'lucide-react/*'],
-  message:
-    'The icon set lives behind a seam: import from `components/Icon` (or add a semantic name to `components/icons.ts`, the only file allowed to name the vendor). Swapping icon sets should be one edit, not forty.',
-};
-
-export default tseslint.config(
+export default [
   { ignores: ['dist', 'dev-dist', 'coverage', 'node_modules'] },
-  js.configs.recommended,
-  tseslint.configs.recommended,
-  prettier,
-  {
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      ecmaVersion: 2022,
-      globals: { ...globals.browser, ...globals.node },
-    },
-    rules: {
-      '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
-      eqeqeq: ['error', 'smart'],
-    },
-  },
-  {
-    // CLI tooling talks to the terminal.
-    files: ['scripts/**/*.ts'],
-    rules: { 'no-console': 'off' },
-  },
   {
     files: ['src/**/*.{ts,tsx}'],
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 2022,
+      sourceType: 'module',
+    },
     plugins: { 'react-hooks': reactHooks },
     rules: reactHooks.configs.recommended.rules,
   },
@@ -69,95 +55,4 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },
-
-  /*
-   * Seam: the icon vendor is named in exactly one file.
-   *
-   * `icons.ts` is excluded rather than special-cased inside the rule, so the
-   * exception is visible in the config instead of buried in a message.
-   */
-  {
-    files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/components/icons.ts'],
-    rules: {
-      'no-restricted-imports': ['error', { patterns: [ICON_VENDOR] }],
-    },
-  },
-
-  /*
-   * The engine may not know it is in a browser.
-   *
-   * `src/domain` is the content, exercise, session and progress model;
-   * `src/languages` is build-time morphology. Both are pure TypeScript, which is
-   * what makes them cheap to test — the coverage floors hold them far higher than
-   * the app as a whole precisely because nothing in them needs a DOM.
-   *
-   * Importing React into either is not a small mistake. It makes the model
-   * unrunnable outside a browser, unusable from a build script, and impossible to
-   * hold at that coverage. It is also the single easiest rule to break by
-   * accident, because the fix for "I need this in the UI" always looks local.
-   */
-  {
-    files: ['src/domain/**/*.ts', 'src/languages/**/*.ts'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            ICON_VENDOR,
-            {
-              group: UI_VENDORS,
-              message:
-                'The engine is pure TypeScript: no React, no router, no DOM. If the UI needs something from here, export the data and let a component render it.',
-            },
-            {
-              group: [
-                '**/components/**',
-                '**/features/**',
-                '**/app/**',
-                '**/storage/**',
-                '**/data/**',
-                '**/audio/**',
-                '**/ai/**',
-              ],
-              message:
-                'The engine may not import the layers built on top of it. Dependencies point inward: features → domain, never the reverse.',
-            },
-          ],
-        },
-      ],
-    },
-  },
-
-  /*
-   * Shared components stay shared.
-   *
-   * A component under `src/components` is one every screen may use, so it must
-   * not reach into a particular screen. `AppNav` and `CourseBar` legitimately use
-   * `app/course`, which is composition rather than a feature — the restriction is
-   * on `features/`, not on `app/`.
-   */
-  {
-    files: ['src/components/**/*.{ts,tsx}'],
-    // The seam file again. It is under `src/components`, so this block would
-    // otherwise re-apply the vendor ban that the block above excludes it from —
-    // the last-block-wins behaviour noted at the top of this file, which caught
-    // the author of that note within a minute of writing it.
-    ignores: ['src/components/icons.ts'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            ICON_VENDOR,
-            {
-              group: ['**/features/**'],
-              message:
-                'A shared component cannot depend on one screen. Take what it needs as a prop, or move the component into that feature.',
-            },
-          ],
-        },
-      ],
-    },
-  },
-);
+];

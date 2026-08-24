@@ -1,0 +1,172 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+
+  /*
+   * The architecture, as rules rather than as prose.
+   *
+   * `AGENTS.md` has stated these since the first commit and every one of them was
+   * being obeyed — by discipline, with nothing checking. That is fine for one app
+   * with one author. It is not fine for a skeleton other projects are scaffolded
+   * from: the next agent will read the document or it will not, and either way
+   * nothing failed. So the load-bearing ones are spelled out below, where breaking
+   * them stops the build.
+   *
+   * `no-restricted-imports` is deliberately the mechanism, rather than a boundary
+   * plugin: it needs no new dependency, and a violation reports the reason at the
+   * import that caused it, which is where somebody can act on it.
+   *
+   * Two things to know before editing. For a given file the *last* matching
+   * `overrides` block wins a rule outright — options are replaced, not merged — so
+   * the engine block below has to restate the vendor restriction rather than
+   * relying on the broader block above it. And `plugins` is load-bearing: drop
+   * `"react"` and the `react-hooks` rules stop running without saying so.
+   *
+   * The React rules are not here. They live in `eslint.config.js`, which exists
+   * for that alone — see the note at the top of that file for why.
+   */
+
+  "plugins": ["typescript", "react"],
+
+  /*
+   * `correctness` stands in for what `eslint:recommended` and
+   * `typescript-eslint`'s recommended set used to do here. Not a literal mapping:
+   * of the 91 rules those two enabled, oxlint implements 88, and the three it
+   * does not — `no-dupe-args`, `no-new-symbol`, `no-octal` — cannot fire in this
+   * codebase, because the first and third are syntax errors in strict-mode ES
+   * modules and TypeScript rejects the second outright.
+   *
+   * The louder categories stay off on purpose. On this source `suspicious` adds
+   * 1,506 findings, `restriction` 2,591 and `style` 11,246 — a gate nobody can
+   * keep green is a gate that gets skipped.
+   */
+  "categories": { "correctness": "error" },
+
+  "ignorePatterns": ["dist", "dev-dist", "coverage", "node_modules"],
+
+  "rules": {
+    "typescript/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }],
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "eqeqeq": ["error", "smart"]
+  },
+
+  "overrides": [
+    {
+      // CLI tooling talks to the terminal.
+      "files": ["scripts/**/*.ts"],
+      "rules": { "no-console": "off" }
+    },
+
+    /*
+     * Seam: the icon vendor is named in exactly one file.
+     *
+     * `icons.ts` is exempted by the last block in this list rather than by a
+     * carve-out inside the rule, so the exception is visible in the config
+     * instead of buried in a message.
+     */
+    {
+      "files": ["src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["lucide-react", "lucide-react/*"],
+                "message": "The icon set lives behind a seam: import from `components/Icon` (or add a semantic name to `components/icons.ts`, the only file allowed to name the vendor). Swapping icon sets should be one edit, not forty."
+              }
+            ]
+          }
+        ]
+      }
+    },
+
+    /*
+     * The engine may not know it is in a browser.
+     *
+     * `src/domain` is the content, exercise, session and progress model;
+     * `src/languages` is build-time morphology. Both are pure TypeScript, which is
+     * what makes them cheap to test — the coverage floors hold them far higher than
+     * the app as a whole precisely because nothing in them needs a DOM.
+     *
+     * Importing React into either is not a small mistake. It makes the model
+     * unrunnable outside a browser, unusable from a build script, and impossible to
+     * hold at that coverage. It is also the single easiest rule to break by
+     * accident, because the fix for "I need this in the UI" always looks local.
+     */
+    {
+      "files": ["src/domain/**/*.ts", "src/languages/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["lucide-react", "lucide-react/*"],
+                "message": "The icon set lives behind a seam: import from `components/Icon` (or add a semantic name to `components/icons.ts`, the only file allowed to name the vendor). Swapping icon sets should be one edit, not forty."
+              },
+              {
+                "group": ["react", "react-dom", "react-dom/*", "react-router", "react-router-dom"],
+                "message": "The engine is pure TypeScript: no React, no router, no DOM. If the UI needs something from here, export the data and let a component render it."
+              },
+              {
+                "group": [
+                  "**/components/**",
+                  "**/features/**",
+                  "**/app/**",
+                  "**/storage/**",
+                  "**/data/**",
+                  "**/audio/**",
+                  "**/ai/**"
+                ],
+                "message": "The engine may not import the layers built on top of it. Dependencies point inward: features → domain, never the reverse."
+              }
+            ]
+          }
+        ]
+      }
+    },
+
+    /*
+     * Shared components stay shared.
+     *
+     * A component under `src/components` is one every screen may use, so it must
+     * not reach into a particular screen. `AppNav` and `CourseBar` legitimately use
+     * `app/course`, which is composition rather than a feature — the restriction is
+     * on `features/`, not on `app/`.
+     */
+    {
+      "files": ["src/components/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["lucide-react", "lucide-react/*"],
+                "message": "The icon set lives behind a seam: import from `components/Icon` (or add a semantic name to `components/icons.ts`, the only file allowed to name the vendor). Swapping icon sets should be one edit, not forty."
+              },
+              {
+                "group": ["**/features/**"],
+                "message": "A shared component cannot depend on one screen. Take what it needs as a prop, or move the component into that feature."
+              }
+            ]
+          }
+        ]
+      }
+    },
+
+    /*
+     * The seam file itself, and the only exemption in this config.
+     *
+     * It is under `src/components`, so both blocks above apply to it and both ban
+     * the icon vendor it exists to name. Last block wins, so this one clears the
+     * rule — the same shape the old flat config used, where `icons.ts` was listed
+     * as an `ignores` on the blocks instead.
+     */
+    {
+      "files": ["src/components/icons.ts"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ]
+}

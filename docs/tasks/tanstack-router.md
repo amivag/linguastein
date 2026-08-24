@@ -28,7 +28,7 @@ than the version bump it looks like.
 
 **The router is the last vendor in this codebase with no seam.** TTS, speech
 recognition, storage, the dataset source, AI and the icon set all sit behind
-interfaces chosen once — architecture rule 5, enforced by `eslint.config.js`.
+interfaces chosen once — architecture rule 5, enforced by `.oxlintrc.json`.
 `react-router` is named directly in **18 files under `src/`** and **15 under
 `tests/`**. That is why this migration is measured in days rather than the hour
 React Router 8 would cost: not because TanStack is hard, but because there is no
@@ -212,11 +212,12 @@ the `useLocation` probes change their import only.
 - **`/design`'s `lazy` + `Suspense`** can stay as it is. TanStack has
   `lazyRouteComponent`, but React's own lazy still works and the split is already
   correct.
-- **`eslint.config.js`**: add `@tanstack/react-router` to `UI_VENDORS` so the
-  engine still cannot import it, and — the point of section 1 — add a seam block
-  banning the vendor everywhere under `src/` _except_ `src/app/navigation.tsx`,
-  exactly as `src/components/icons.ts` is excluded today. Mind the
-  last-block-wins note at the top of that file.
+- **`.oxlintrc.json`**: add `@tanstack/react-router` to the vendor list in the
+  engine block so the engine still cannot import it, and — the point of section 1
+  — add a seam block banning the vendor everywhere under `src/`, then clear it for
+  `src/app/navigation.tsx` in a later block, exactly as `src/components/icons.ts`
+  is handled today. Mind the last-block-wins note at the top of that file: the
+  exemption has to come after the ban, not inside it.
 - **Scroll restoration** comes free and is currently absent. Do not enable it in
   the same change; it is a behaviour change and belongs in its own commit.
 
@@ -248,8 +249,8 @@ Each step ends with `npm run check` green. Do not batch them.
 1. **The seam, still on React Router.** Create `src/app/navigation.tsx` exporting
    `useSearchParams`, `useAppNavigate`, `AppLink`, `useBack` and
    `useCourseParams`, implemented over `react-router`. Move all 18 `src/` files
-   onto it. Add the eslint seam rule. This commit changes no behaviour and lands
-   on its own merit — after it, the router is behind a seam whichever destination
+   onto it. Add the seam block to `.oxlintrc.json`. This commit changes no
+   behaviour and lands on its own merit — after it, the router is behind a seam whichever destination
    is chosen.
 2. **The route tree.** Extract the 15 routes from `App.tsx` into
    `src/app/routes.tsx`, exporting `APP_ROUTE_PATHS` for the fixture. Still
@@ -317,9 +318,13 @@ The path forward is **TypeScript 6**, not 7. `typescript@6.0.0-beta` still ships
 `main: ./lib/typescript.js`, and typescript-eslint's `<6.1.0` ceiling is drawn to
 include it. When 6.0 goes stable it should be an ordinary bump.
 
-If type-aware linting on TS 7 ever becomes the goal, the tool that exists is
-`oxlint` plus `oxlint-tsgolint` (type-aware, powered by typescript-go). Note what
-that costs here before reaching for it: architecture rules 1 and 5 are
-`no-restricted-imports` blocks in `eslint.config.js`, and they are enforcement
-rather than documentation. A linter swap has to carry all of them across, plus
-`react-hooks` and `react-refresh`, or the rules quietly become prose again.
+Since 2026-08-24 the ceiling is narrower than it was, and worth knowing exactly.
+Linting moved to oxlint for everything except the React rules, so
+`typescript-eslint`'s meta package is gone. What still pins TypeScript is
+`@typescript-eslint/parser`, kept only so ESLint can read `.tsx` for
+`react-hooks` v7 — oxlint implements two of that plugin's sixteen rules, and the
+fourteen missing ones are the React Compiler set. So the pin now has a single
+cause with a single fix: the day oxlint ports those rules, `eslint.config.js` and
+its parser both go, and nothing in the toolchain needs the TypeScript JS API any
+more. If that day comes before TS 6 ships, `oxlint-tsgolint` is the type-aware
+piece to look at.

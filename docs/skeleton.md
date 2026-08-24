@@ -31,7 +31,7 @@ merely written down:
 | `tests/a11y/motion.test.ts`          | A hard-coded duration or easing outside `primitives.css`.                                         |
 | `tests/a11y/hover-states.test.ts`    | A control whose hover can repaint it in a colour its label was not chosen for.                    |
 | `tests/a11y/design-language.test.ts` | A border outside two enumerated exceptions; a colour outside a theme file.                        |
-| `eslint.config.js`                   | React in the engine; the icon vendor outside its seam; a shared component reaching into a screen. |
+| `.oxlintrc.json`                     | React in the engine; the icon vendor outside its seam; a shared component reaching into a screen. |
 
 Four of the five are **fully app-agnostic** — copy them unchanged. The reason this
 matters more than it sounds: an agent reads a convention document or it does not,
@@ -95,7 +95,7 @@ src/storage/**               IndexedDB + in-memory, behind one interface
 src/utils/**                 seeded RNG, clipboard
 tests/a11y/{contrast,motion,hover-states,axe}   zero app-specific references
 tests/setup.ts               jest-dom, fake-indexeddb, a matchMedia stub
-eslint.config.js  tsconfig.*  .github/workflows/ci.yml  .prettierrc.json
+.oxlintrc.json  eslint.config.js  tsconfig.*  .github/workflows/ci.yml  .prettierrc.json
 ```
 
 ### Delete or replace
@@ -150,7 +150,7 @@ something.
    shape: one async factory returning one object, every vendor chosen there and
    nowhere else.
 
-5. **Re-point the lint boundaries.** `eslint.config.js` restricts `src/domain/**`
+5. **Re-point the lint boundaries.** `.oxlintrc.json` restricts `src/domain/**`
    and `src/languages/**`. Rename those globs to your pure layers. If you have
    none, say so out loud rather than deleting the block — a project with no pure
    core is a decision, not an omission.

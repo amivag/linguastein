@@ -403,8 +403,14 @@
   list-style: none;
 }
 
+/*
+ * Two recipes, and the split is the point: `kindSurface` is what the row is made
+ * of and `pressable` is what it does. It used to hand-roll the second one, with
+ * the hover lift copied across and the press state missing entirely — so on the
+ * screen a learner lands on, tapping a row gave nothing back.
+ */
 .contentRow {
-  composes: kindSurface from '../../styles/surfaces.module.css';
+  composes: kindSurface pressable from '../../styles/surfaces.module.css';
 
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
@@ -413,18 +419,6 @@
   min-height: var(--tap-target);
   padding: var(--space-3) var(--space-4);
   padding-left: var(--space-5);
-  color: inherit;
-  text-decoration: none;
-  transition:
-    translate var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .contentRow:hover {
-    translate: 0 -2px;
-    box-shadow: var(--shadow-md);
-  }
 }
 
 /* The count is the second-biggest thing in the row, so it takes the hue too —

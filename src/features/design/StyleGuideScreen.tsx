@@ -201,8 +201,15 @@ export function StyleGuideScreen() {
 
       <Section title="Surfaces">
         <p className={styles.note}>
-          Three recipes, in <code>styles/surfaces.module.css</code>, composed into a screen&rsquo;s
+          Four recipes, in <code>styles/surfaces.module.css</code>, composed into a screen&rsquo;s
           own classes. They replaced the same four declarations written out in six files.
+        </p>
+        <p className={styles.note}>
+          Press and hold the interactive one. A press is a <strong>scale</strong> everywhere in the
+          app — buttons, chips, cards, rows, the nav pill — and it dips faster than it returns: the
+          finger is already down before anything is drawn, so the dip has to land under the
+          threshold where it reads as movement, while the return is the half that gets to feel
+          physical.
         </p>
         <div className={styles.surfaces}>
           <div className={styles.demoCard}>
@@ -215,7 +222,7 @@ export function StyleGuideScreen() {
           </div>
           <button type="button" className={styles.demoInteractive}>
             <strong>cardInteractive</strong>
-            <span className={styles.note}>Lifts on hover.</span>
+            <span className={styles.note}>Lifts on hover, dips on press.</span>
           </button>
           <div className={styles.demoWell}>
             <strong>well</strong>

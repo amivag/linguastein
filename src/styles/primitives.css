@@ -147,6 +147,7 @@
    * only thing saying it. `global.css` collapses all of it under
    * `prefers-reduced-motion`, so a component never has to.
    */
+  --duration-instant: 60ms; /* a touch landing: read as a state, not a motion */
   --duration-fast: 120ms; /* a state echoing a touch: hover, focus, colour */
   --duration-base: 200ms; /* something actually moving: progress, a reveal */
   --duration-slow: 320ms; /* something arriving: a panel, a summary */
@@ -162,6 +163,32 @@
   --transition-base: var(--duration-base) var(--ease-out);
   --transition-slow: var(--duration-slow) var(--ease-out);
   --transition-spring: var(--duration-base) var(--ease-spring);
+
+  /*
+   * A press, going down. Pair it with `--transition-spring` coming back up.
+   *
+   * This is the app's one press idiom, and the asymmetry *is* the idiom: the
+   * finger is already down before anything is drawn, so the dip has to arrive
+   * faster than the eye reads as movement — 60ms is under that threshold, which
+   * is why it needs a duration of its own rather than borrowing `fast`. Coming
+   * back up is the opposite: nothing is touching the control any more, so the
+   * return is the only part with a chance to feel physical, and it springs.
+   *
+   * Written at a call site as two rules rather than one, which is what makes the
+   * asymmetry work at all: the resting rule owns the release and the `:active`
+   * rule owns the press, so each direction is governed by whichever rule applies
+   * at the time.
+   *
+   *   .thing        { transition: scale var(--transition-spring); }
+   *   .thing:active { scale: 0.97; transition: scale var(--transition-press); }
+   *
+   * A press is a **scale**, never a translate — one control cannot move down
+   * while the next one shrinks. How far it scales goes with how big the target
+   * is, because a fixed ratio reads as a twitch on a 28px pill and as a lurch on
+   * a full-width row: roughly 0.88 for a glyph the size of a thumb-tip, 0.96 for
+   * a chip, 0.97 for a button, 0.98 for a card or a row.
+   */
+  --transition-press: var(--duration-instant) var(--ease-out);
 }
 
 /*

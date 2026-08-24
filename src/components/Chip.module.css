@@ -40,12 +40,16 @@
    * Deliberately not transitioning colour. A filter should answer instantly;
    * only the press is animated, because that is confirming a touch rather than
    * reporting a result.
+   *
+   * The resting rule owns the release, the `:active` rule owns the press — the
+   * one press idiom, timed as `--transition-press` describes.
    */
-  transition: scale var(--transition-fast);
+  transition: scale var(--transition-spring);
 }
 
 .chip:active {
   scale: 0.96;
+  transition: scale var(--transition-press);
 }
 
 /*

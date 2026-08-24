@@ -36,33 +36,61 @@
 }
 
 /*
- * A card you can press: a search result that opens, a passage in a list.
+ * The interaction of something you can press, with no opinion about what it is
+ * made of.
  *
- * The lift on hover is the affordance, replacing the border that used to darken.
- * `translate` rather than `margin` so nothing below it moves, and only on a real
- * pointer — a phone has no hover, and a tap that left a row raised would look
- * like the row had been selected.
+ * Split out from `cardInteractive` because it had been written three times: the
+ * card recipe here, Home's course rows — which compose `kindSurface` for their
+ * material and so could not compose a card — and the style guide's own sample.
+ * Home's copy had the hover lift and *no press state at all*, so tapping a row
+ * on the one screen a learner lands on did nothing until the next page arrived.
+ * That is the drift a shared recipe exists to stop, and it is the reason this is
+ * a recipe rather than four more lines in `cardInteractive`.
+ *
+ * The lift on hover is the affordance that replaced the border that used to
+ * darken. `translate` rather than `margin` so nothing below it moves, and only on
+ * a real pointer — a phone has no hover, and a tap that left a row raised would
+ * look like the row had been selected.
+ *
+ * The press is a scale, and the two directions are timed differently on purpose:
+ * see `--transition-press` in `primitives.css` for why, and for why 0.98 here
+ * rather than the 0.97 a button takes.
  */
-.cardInteractive {
-  composes: card;
-
+.pressable {
   color: inherit;
   text-decoration: none;
   transition:
-    translate var(--transition-fast),
-    box-shadow var(--transition-fast);
+    translate var(--transition-spring),
+    scale var(--transition-spring),
+    box-shadow var(--transition-base);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .cardInteractive:hover {
+  .pressable:hover {
     translate: 0 -2px;
     box-shadow: var(--shadow-md);
   }
 }
 
-.cardInteractive:active {
+/*
+ * Back down onto the page and a hair smaller.
+ *
+ * `translate` is reset rather than moved: the hover lift has to be cancelled or a
+ * pointer press would scale a card that is still floating, which reads as the
+ * card retreating rather than as it being pushed.
+ */
+.pressable:active {
   translate: 0 0;
+  scale: 0.98;
   box-shadow: var(--shadow-sm);
+  transition:
+    scale var(--transition-press),
+    box-shadow var(--transition-press);
+}
+
+/* A card you can press: a search result that opens, a passage in a list. */
+.cardInteractive {
+  composes: card pressable;
 }
 
 /*

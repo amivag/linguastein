@@ -21,7 +21,9 @@
   /* The band the button sits on and presses down onto. Transparent by default,
      so only the variants that want the effect pay for it. */
   --button-edge: transparent;
-  --button-lift: 2px;
+  /* How deep the edge band is. It was the press travel too, until the press
+     became a scale; the band is what is left, and what compresses. */
+  --button-edge-depth: 2px;
   /*
    * The resting elevation, composed with the edge below rather than replacing it.
    *
@@ -54,26 +56,45 @@
    */
   box-shadow:
     var(--button-shadow),
-    0 var(--button-lift) 0 var(--button-edge);
+    0 var(--button-edge-depth) 0 var(--button-edge);
   color: var(--color-text);
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
+  /* The resting rule owns the *release*, which is the half with a chance to feel
+     physical — see `--transition-press`. Colour stays on `fast`: a hover is a
+     state echoing a pointer, not a thing moving. */
   transition:
-    translate var(--transition-fast),
-    box-shadow var(--transition-fast),
+    scale var(--transition-spring),
+    box-shadow var(--transition-spring),
     background-color var(--transition-fast);
 }
 
 /*
- * Pressing moves the button down onto its own edge, so the travel and the edge
- * always agree: one token, two properties. `translate` rather than `transform`
- * so a variant may still scale or rotate without having to restate the shift.
+ * Pressing takes the button in rather than down.
+ *
+ * It used to travel the depth of its edge band downwards onto it — a keycap, and a
+ * good one, but a keycap is not the idiom the rest of the app settled on: a chip,
+ * a nav pill, a play control and now every card and row all dip by *scale*. One
+ * app cannot have two press metaphors, and the scale is the one that works on a
+ * full-width row, where there is no edge to push onto and 2px of travel is
+ * invisible.
+ *
+ * The edge still compresses, so `--button-edge` keeps doing its job on the accent
+ * button — but it is now the second thing happening rather than the whole of it.
+ * 0.97 because a button is a button: see the sizes noted with the token.
+ *
+ * A side benefit worth the change on its own: the label no longer moves. Two
+ * variants below used to opt out of the travel precisely because it shifted their
+ * contents by a pixel.
  */
 .button:active:not(:disabled) {
-  translate: 0 var(--button-lift);
+  scale: 0.97;
   box-shadow:
     var(--button-shadow),
     0 0 0 var(--button-edge);
+  transition:
+    scale var(--transition-press),
+    box-shadow var(--transition-press);
 }
 
 .button:disabled {
@@ -135,10 +156,9 @@
   box-shadow: var(--shadow-inset);
 }
 
-/* Pressing a recessed control cannot push it further down — there is nowhere to
-   go — so it dips in colour instead of in space. */
+/* Recessed, so it keeps its inset shadow while it dips: the base press rule would
+   otherwise replace the shadow that is the whole of the recess. */
 .option:active:not(:disabled) {
-  translate: none;
   box-shadow: var(--shadow-inset);
 }
 
@@ -149,10 +169,6 @@
   --button-shadow: 0 0 0 transparent;
 
   color: var(--color-text-muted);
-}
-
-.ghost:active:not(:disabled) {
-  translate: none;
 }
 
 /*
@@ -214,7 +230,6 @@
 }
 
 .outline:active:not(:disabled) {
-  translate: none;
   box-shadow: inset 0 0 0 1px var(--color-border-strong);
 }
 

@@ -73,6 +73,13 @@
     scale var(--transition-spring);
 }
 
+/* A tap that lands: the pill dips under the finger and springs back. The route
+   has already changed by then, so it is confirming rather than reporting. */
+.link:active .pill {
+  scale: 0.88;
+  transition: scale var(--transition-press);
+}
+
 .label {
   font-size: var(--text-xs);
   letter-spacing: 0.02em;
@@ -85,12 +92,6 @@
 
 .active .pill {
   background: var(--color-accent-soft);
-}
-
-/* A tap that lands: the pill dips under the finger and springs back. The route
-   has already changed by then, so it is confirming rather than reporting. */
-.link:active .pill {
-  scale: 0.88;
 }
 
 @media (hover: hover) and (pointer: fine) {

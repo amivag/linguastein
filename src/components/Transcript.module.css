@@ -168,13 +168,15 @@
   transition:
     background-color var(--transition-fast),
     color var(--transition-fast),
-    scale var(--transition-fast);
+    scale var(--transition-spring);
 }
 
 /* The one control repeated on every line, so also the one whose press most needs
-   confirming — a tap that dips is how a learner knows which turn spoke. */
+   confirming — a tap that dips is how a learner knows which turn spoke. 0.88 is
+   the ratio a glyph this size takes; see `--transition-press`. */
 .play:active {
   scale: 0.88;
+  transition: scale var(--transition-press);
 }
 
 @media (hover: hover) and (pointer: fine) {

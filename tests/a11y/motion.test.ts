@@ -116,6 +116,86 @@ describe('the motion scale', () => {
     expect(header.slice(0, header.indexOf('}'))).not.toMatch(/animation/);
   });
 
+  it('declares the press pair, and only in primitives', () => {
+    const primitives = read(PRIMITIVES);
+    expect(primitives).toContain('--duration-instant:');
+    expect(primitives).toContain('--transition-press:');
+  });
+
+  /*
+   * One press idiom.
+   *
+   * The app had two. A chip, a nav pill and a play control dipped by `scale`;
+   * a button travelled downwards onto a hard-edged shadow acting as a keycap
+   * edge; a card un-lifted from its hover; and Home's course rows — the screen a
+   * learner lands on — had no press state at all. Four answers to one question,
+   * and only the first of them works on a full-width row, where there is no edge
+   * to push onto and two pixels of travel are invisible.
+   *
+   * So: a press is a scale. The assertion is not "everything scales" — plenty of
+   * rules are pressed and want no geometry — but that nothing presses by *moving*,
+   * because that is the metaphor that cannot coexist with the other one.
+   */
+  describe('a press is a scale, never a travel', () => {
+    /** Every `:active` rule in the tree, as selector plus body. */
+    const pressed = files.flatMap((file) => {
+      const css = withoutComments(read(file));
+      return [...css.matchAll(/([^{}]*:active[^{}]*)\{([^}]*)\}/g)].map(([, selector, body]) => ({
+        file,
+        selector: selector!.trim(),
+        body: body!,
+      }));
+    });
+
+    it('finds the pressed rules at all', () => {
+      // A silent zero would make both assertions below vacuously true.
+      expect(pressed.length).toBeGreaterThan(5);
+    });
+
+    it('never translates a control on press', () => {
+      /*
+       * A reset is allowed and is the only allowed value: a card that lifted on
+       * hover has to come back down before it scales, or the press reads as the
+       * card retreating. Anything else is the keycap coming back.
+       */
+      const moving = pressed
+        .filter(({ body }) => /(?<![-\w])translate\s*:/.test(body))
+        .filter(({ body }) => {
+          const value = /(?<![-\w])translate\s*:([^;}]+)/.exec(body)?.[1]?.trim();
+          return value !== 'none' && value !== '0 0' && value !== '0';
+        })
+        .map(({ file, selector }) => `${file}: ${selector}`);
+
+      expect(moving).toEqual([]);
+    });
+
+    it('times the dip faster than the return, wherever it dips at all', () => {
+      /*
+       * The asymmetry is the idiom rather than a detail of it: the finger is down
+       * before anything is drawn, so the dip has to land under the threshold where
+       * it reads as motion, and the return is the only half with a chance to feel
+       * physical. A rule that scales on the same timing as its rest state has the
+       * shape of a press and not the feel of one.
+       */
+      const untimed = pressed
+        .filter(({ body }) => /(?<![-\w])scale\s*:/.test(body))
+        .filter(({ body }) => !body.includes('var(--transition-press)'))
+        .map(({ file, selector }) => `${file}: ${selector}`);
+
+      expect(untimed).toEqual([]);
+    });
+
+    it('is what the shared pressable recipe does, so a screen need not restate it', () => {
+      // The recipe exists because this was written three times and one of the
+      // three forgot the press. Cards and Home's rows both compose it now.
+      const surfaces = withoutComments(read('styles/surfaces.module.css'));
+      expect(surfaces).toMatch(/\.pressable:active\s*\{[^}]*scale:/);
+      expect(withoutComments(read('features/home/HomeScreen.module.css'))).toMatch(
+        /composes:[^;]*pressable/,
+      );
+    });
+  });
+
   it('collapses every animation under prefers-reduced-motion, once, globally', () => {
     // The reason a component may add motion freely: it is already handled. Delete
     // this block and every transition in the app becomes an accessibility bug at

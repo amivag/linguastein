@@ -303,7 +303,7 @@ describe('shipped packs', () => {
     const missing = MISSIONS.flatMap((mission) => [
       missionPassageForStage(mission, 'understand'),
       ...missionTransfers(mission).map((transfer) => transfer.passage),
-    ]).filter((localId) => repository.passageByLocalId(localId) === undefined);
+    ]).filter((localId) => repository.passageByRef(localId) === undefined);
 
     expect(missing).toEqual([]);
   });
@@ -322,12 +322,12 @@ describe('shipped packs', () => {
         })),
       ];
       for (const context of contexts) {
-        const passage = repository.passageByLocalId(context.passage);
+        const passage = repository.passageByRef(context.passage);
         const used = new Set(
           passage ? repository.itemsOfPassage(passage.id).flatMap((item) => item.skills ?? []) : [],
         );
         for (const localId of mission.capabilities) {
-          const skill = repository.skillByLocalId(localId);
+          const skill = repository.skillByRef(localId);
           if (!skill || skill.kind !== 'function' || !used.has(skill.id)) {
             missing.push(`${mission.id}/${context.name}/${localId}`);
           }
@@ -344,7 +344,7 @@ describe('shipped packs', () => {
 
     for (const mission of MISSIONS) {
       for (const palette of mission.responsePalettes ?? []) {
-        const capability = repository.skillByLocalId(palette.capability);
+        const capability = repository.skillByRef(palette.capability);
         if (!capability || capability.kind !== 'function') {
           broken.push(`${mission.id}/${palette.id}/capability`);
         }

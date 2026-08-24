@@ -45,12 +45,32 @@ the Spanish A-level content, or a B1 pack — two packs can claim `700001` or
 failure shape available**: not an error, not an empty screen, but confidently the
 wrong text.
 
-**Already done, so it is not redone:** the collision is now _detected_.
-`validateAcrossPacks` in `src/data/validation/validate.ts` reports it as an
-error, wired into both `npm run validate:data` and `loadPacks`, with tests in
-`tests/data/across-packs.test.ts`. That converts a silent-wrong-content bug into
-a loud one. It does **not** make two packs able to coexist — it tells you they
-cannot, which is the honest position until this task is done.
+**Already done, so it is not redone.** Two halves, and they are complementary
+rather than redundant:
+
+- **Detection.** `validateAcrossPacks` reports a collision as an error, wired
+  into `npm run validate:data` and into `loadPacks`. Covers packs built together.
+- **Resolution.** `resolveRef` in `repository.ts` replaced the `find(id =>
+id.endsWith(…))` lookups. It accepts a bare `700001` _and_ a qualified
+  `core-es:700001`, resolves the bare form while exactly one pack claims it, and
+  returns `ambiguous` — naming the packs — when several do. **It never guesses.**
+  `PassageScreen` says which packs contested the link, because "no pack has this"
+  and "two packs have this" need different words: only the second is fixed by
+  qualifying the link. Covers the case validation cannot see, which is a learner
+  installing two packs whose authors never met.
+
+So a second pack can be added _safely_ today: the failure mode is now a legible
+message rather than the wrong text.
+
+**What is left is one thing, and §3 is still the decision for it: nothing
+_writes_ the qualified form yet.** `readPath` and `sessionPath` still emit bare
+refs, so a link is portable only while the id is uncontested on the device that
+opens it. That was deferred rather than forgotten, for a reason worth weighing
+before picking it up: switching the writers churns ~84 URL assertions across the
+tests, and the benefit — a link that means the same thing on a device with a
+different pack set — only materialises once a second pack exists. Detection and
+resolution had to come first because they are what stop a collision being
+_silent_; writing qualified is what makes links _portable_.
 
 ## 2. What else is already in place
 
@@ -169,8 +189,9 @@ lists what is bundled. Making a pack a real add-on needs, roughly in order:
 
 - [ ] The decision in §3 is written down here, with its reasoning
 - [ ] `session-url.ts` and `read-url.ts` spell the chosen form in both directions
-- [ ] Two packs claiming one local id resolve unambiguously — with a test that
-      loads two fixtures which would previously have collided
+- [x] Two packs claiming one local id resolve unambiguously — `resolveRef`, with
+      tests loading two fixtures that would previously have collided
+- [ ] `readPath` and `sessionPath` emit the chosen form, so a link is portable
 - [ ] An old-style link still resolves, or degrades to broader rather than empty
 - [ ] `validateAcrossPacks` is relaxed to match whatever §3 makes legal, rather
       than left contradicting it

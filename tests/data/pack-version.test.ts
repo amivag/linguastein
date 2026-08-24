@@ -72,6 +72,61 @@ describe('the authored pack version', () => {
   });
 });
 
+/**
+ * The levels the manifest advertises, which used to be the literal
+ * `levels: ['a1', 'a2']` beside the name `Spanish Core A1–A2`.
+ *
+ * `courseOptions` derives a course's levels from the items, so the picker would
+ * have grown a B1 entry on its own the day B1 content arrived. The manifest
+ * would have gone on claiming A1–A2 — and `PackSettings` reads the manifest, so
+ * the pack would have advertised a scope it no longer had, on the one screen
+ * whose job is describing the pack. Exactly the failure the version above was.
+ */
+describe('the levels the manifest advertises', () => {
+  const levelsOfShippedItems = () => {
+    const items = ['es-a1-a2-core-sentences.jsonl', 'es-a1-a2-core-vocabulary.jsonl'].flatMap(
+      (file) => readJsonl<{ level?: string }>(join(repoRoot, 'public/packs/core-es', file)),
+    );
+    return [...new Set(items.map((item) => item.level).filter(Boolean))].sort();
+  };
+
+  it('are the levels the pack actually holds', () => {
+    expect([...(shipped.levels ?? [])].sort()).toEqual(levelsOfShippedItems());
+  });
+
+  it('name the pack after the span they cover', () => {
+    const levels = shipped.levels ?? [];
+    const first = levels[0]?.toUpperCase();
+    const last = levels[levels.length - 1]?.toUpperCase();
+    expect(shipped.name).toContain(first === last ? String(first) : `${first}–${last}`);
+  });
+
+  it('grow when a higher level arrives, with no edit to the build', () => {
+    const scratch = createScratchPack('pack-levels');
+    try {
+      scratch.append(
+        'sentences-core.tsv',
+        [
+          'Habría venido si me lo hubieras dicho.',
+          'I would have come if you had told me.',
+          'b1',
+          'core',
+        ].join('	'),
+      );
+      scratch.build();
+
+      const grown = JSON.parse(
+        readFileSync(join(scratch.packs, 'core-es/pack.json'), 'utf8'),
+      ) as PackManifest;
+
+      expect(grown.levels).toContain('b1');
+      expect(grown.name).toContain('A1–B1');
+    } finally {
+      scratch.dispose();
+    }
+  });
+});
+
 describe('the guard against it freezing again', () => {
   const scratch = createScratchPack('pack-version');
   afterAll(() => scratch.dispose());

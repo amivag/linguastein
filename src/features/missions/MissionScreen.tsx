@@ -87,14 +87,13 @@ export function MissionScreen() {
         : undefined;
   const passageLocalId = chosenStage === 'use' ? transferStep?.transfer.passage : mission?.passage;
   const requestedPassage = passageLocalId
-    ? services.repository.passageByLocalId(passageLocalId)
+    ? services.repository.passageByRef(passageLocalId)
     : undefined;
   // A curriculum may run against a compatible pack version that predates its
   // optional transfer passage. Widen to the taught exchange instead of making
   // the whole mission unavailable.
   const passage =
-    requestedPassage ??
-    (mission ? services.repository.passageByLocalId(mission.passage) : undefined);
+    requestedPassage ?? (mission ? services.repository.passageByRef(mission.passage) : undefined);
   const isTransfer = requestedPassage !== undefined && passageLocalId !== mission?.passage;
   const items = useMemo(
     () => (passage ? services.repository.itemsOfPassage(passage.id) : []),
@@ -120,11 +119,11 @@ export function MissionScreen() {
           .map((attempt) => attempt.itemId),
       );
       const availableTransfers = missionTransfers(mission).filter((transfer) =>
-        services.repository.passageByLocalId(transfer.passage),
+        services.repository.passageByRef(transfer.passage),
       );
       const complete = new Set<string>();
       for (const transfer of availableTransfers) {
-        const candidate = services.repository.passageByLocalId(transfer.passage);
+        const candidate = services.repository.passageByRef(transfer.passage);
         if (!candidate) continue;
         const learnerItems = services.repository
           .itemsOfPassage(candidate.id)
@@ -161,7 +160,7 @@ export function MissionScreen() {
   const capabilities = useMemo(
     () =>
       (mission?.capabilities ?? []).flatMap((slug): readonly MissionCapability[] => {
-        const skill = services.repository.skillByLocalId(slug);
+        const skill = services.repository.skillByRef(slug);
         if (!skill || skill.kind !== 'function') return [];
         const label =
           services.repository.translationOf(skill.id, preferences.referenceLanguage)?.text ??
@@ -174,7 +173,7 @@ export function MissionScreen() {
   const responsePalettes = useMemo(
     () =>
       (mission?.responsePalettes ?? []).flatMap((palette): readonly ResolvedResponsePalette[] => {
-        const capability = services.repository.skillByLocalId(palette.capability);
+        const capability = services.repository.skillByRef(palette.capability);
         if (!capability || capability.kind !== 'function') return [];
         const responses = palette.responses.flatMap((response) => {
           const item = services.repository.itemByLocalId(response.item);

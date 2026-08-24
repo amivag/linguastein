@@ -117,7 +117,7 @@ export function missionStandings(
     repository.itemsOfPassage(passage.id).some((item) => courseItemIds.has(item.id));
 
   const authored = missionsForCourse(catalog, course).flatMap((mission) => {
-    const passage = repository.passageByLocalId(mission.passage);
+    const passage = repository.passageByRef(mission.passage);
     return passage && inCourse(passage) ? [{ mission, passage }] : [];
   });
 
@@ -128,7 +128,7 @@ export function missionStandings(
     // transfer passages, so the ladder is what actually resolves rather than
     // what was authored.
     const transfers = missionTransfers(mission).flatMap((transfer) => {
-      const candidate = repository.passageByLocalId(transfer.passage);
+      const candidate = repository.passageByRef(transfer.passage);
       return candidate ? [candidate] : [];
     });
 

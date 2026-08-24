@@ -216,15 +216,18 @@ export class ContentRepository {
   }
 
   /**
-   * Resolves the local part of a skill id — `preterite` for
-   * `core-es:skill:preterite` — so a link can say `?skill=preterite` rather than
-   * carrying a pack namespace a shared URL would outlive.
-   *
-   * The same first-match-wins caveat as {@link passageByLocalId}: with several
-   * packs loaded a route is only unambiguous while local ids are.
+   * Resolves a skill reference — `preterite`, or `core-es:preterite` when a link
+   * needs to say which pack. See {@link resolveRef} for why both are accepted
+   * and why an ambiguous bare reference resolves to nothing.
    */
-  skillByLocalId(local: string): Skill | undefined {
-    return this.allSkills().find((skill) => skill.id.endsWith(`:skill:${local}`));
+  skillByRef(ref: string): Skill | undefined {
+    const found = this.resolveSkill(ref);
+    return found.kind === 'found' ? found.value : undefined;
+  }
+
+  /** As {@link skillByRef}, but says *why* when it did not resolve. */
+  resolveSkill(ref: string): RefResolution<Skill> {
+    return resolveRef(this.allSkills(), 'skill', ref);
   }
 
   getForm(id: FormId): InflectedForm | undefined {
@@ -254,13 +257,17 @@ export class ContentRepository {
   }
 
   /**
-   * Resolves the local part of a passage id — `700001` for
-   * `core-es:passage:700001` — which is what a route carries so URLs stay
-   * readable. With several packs loaded the first match wins, so a shared route
-   * is only unambiguous while local ids are.
+   * Resolves a passage reference — `700001`, or `core-es:700001` when a link
+   * needs to say which pack. See {@link resolveRef}.
    */
-  passageByLocalId(local: string): Passage | undefined {
-    return this.allPassages().find((passage) => passage.id.endsWith(`:passage:${local}`));
+  passageByRef(ref: string): Passage | undefined {
+    const found = this.resolvePassage(ref);
+    return found.kind === 'found' ? found.value : undefined;
+  }
+
+  /** As {@link passageByRef}, but says *why* when it did not resolve. */
+  resolvePassage(ref: string): RefResolution<Passage> {
+    return resolveRef(this.allPassages(), 'passage', ref);
   }
 
   /** The passages a sentence reads as part of, usually none or one. */
@@ -593,4 +600,69 @@ export function splitWords(text: string): readonly string[] {
     .replace(PUNCTUATION, ' ')
     .split(/\s+/)
     .filter((word) => word.length > 0);
+}
+
+/**
+ * How a content reference resolved — found, ambiguous, or nothing.
+ *
+ * Ambiguity is a *distinct* outcome rather than a miss, because the two need
+ * different words on screen: "no pack has this" tells a learner their link is
+ * wrong, while "two packs have this" tells them the link is under-specified, and
+ * only the second is fixable by qualifying it.
+ */
+export type RefResolution<T> =
+  | { readonly kind: 'found'; readonly value: T }
+  | { readonly kind: 'ambiguous'; readonly packs: readonly string[] }
+  | { readonly kind: 'missing' };
+
+/**
+ * Resolves `local` or `pack:local` against records whose ids are
+ * `<pack>:<kind>:<local>`.
+ *
+ * A URL carries the **local** part by design — `?skill=preterite`,
+ * `/read/700001` — so a shared link does not haul a pack namespace it will
+ * outlive. That was free while one pack shipped. It stops being free the moment
+ * a second one does: id ranges are partitioned by *kind* rather than by pack, so
+ * two independently authored Spanish packs both start their passages at `700001`
+ * and both want `preterite` as a skill slug. Collision is the default, not the
+ * exception.
+ *
+ * This used to be `find(id => id.endsWith(':passage:' + local))`, which returns
+ * whichever pack loaded first — confidently the wrong text, which is worse than
+ * an error because nothing announces it. So:
+ *
+ * - **Qualified** (`core-es:700001`) resolves inside that pack only, and is
+ *   portable: it means the same thing on a device with a different pack set.
+ * - **Bare** (`700001`) resolves while exactly one pack claims it, which keeps
+ *   every link written before this change working.
+ * - **Bare and contested** resolves to `ambiguous`, naming the packs. Never to a
+ *   guess — the same rule `disambiguate` follows when it declines to pick a
+ *   lexeme, and for the same reason.
+ *
+ * Local ids cannot contain `:` (see `LOCAL` in `ids.ts`), so the first colon is
+ * unambiguously the pack separator.
+ */
+function resolveRef<T extends { readonly id: string }>(
+  entries: readonly T[],
+  kind: string,
+  ref: string,
+): RefResolution<T> {
+  const trimmed = ref.trim();
+  if (trimmed.length === 0) return { kind: 'missing' };
+
+  const separator = trimmed.indexOf(':');
+  if (separator !== -1) {
+    const pack = trimmed.slice(0, separator);
+    const local = trimmed.slice(separator + 1);
+    const exact = entries.find((entry) => entry.id === `${pack}:${kind}:${local}`);
+    return exact ? { kind: 'found', value: exact } : { kind: 'missing' };
+  }
+
+  const claimants = entries.filter((entry) => entry.id.endsWith(`:${kind}:${trimmed}`));
+  if (claimants.length === 1) return { kind: 'found', value: claimants[0]! };
+  if (claimants.length === 0) return { kind: 'missing' };
+  return {
+    kind: 'ambiguous',
+    packs: claimants.map((entry) => entry.id.slice(0, entry.id.indexOf(':'))),
+  };
 }

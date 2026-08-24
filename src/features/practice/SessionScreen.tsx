@@ -39,7 +39,7 @@ export function SessionScreen() {
     // `?passage=` practises exactly one text; facets narrow it further, since
     // the repository ANDs an id allow-list with everything else.
     const passageItems = url.passage
-      ? (repository.passageByLocalId(url.passage)?.items ?? [])
+      ? (repository.passageByRef(url.passage)?.items ?? [])
       : undefined;
     /*
      * `?batch=` practises exactly the set a learner assembled.
@@ -57,7 +57,7 @@ export function SessionScreen() {
     // widens to a broader session rather than planning an empty one — a facet
     // like every other, not an id allow-list.
     const skills = (url.skills ?? [])
-      .map((slug) => repository.skillByLocalId(slug)?.id)
+      .map((slug) => repository.skillByRef(slug)?.id)
       .filter((id): id is SkillId => id !== undefined);
     // Both spell "exactly these items", so a link carrying both would have one
     // quietly overwrite the other. A passage is the narrower and the authored

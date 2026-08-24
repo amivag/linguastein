@@ -3,13 +3,18 @@
  *
  * This is the add-on failure mode. A URL addresses a passage and a skill by
  * their **local** id — `/es/all/read/700001`, `?skill=preterite` — deliberately,
- * so a shared link does not carry a pack namespace it will outlive. That makes
- * `passageByLocalId` and `skillByLocalId` first-match-wins, which is free with
- * one pack and silently wrong with two.
+ * so a shared link does not carry a pack namespace it will outlive. That used to
+ * make the lookups first-match-wins: free with one pack, silently wrong with two.
+ *
+ * Two things hold it now, and they are complementary rather than redundant.
+ * `validateAcrossPacks` refuses to *ship* a collision, which covers packs built
+ * together. `resolveRef` refuses to *guess* on one, which covers the case
+ * validation cannot see — a learner installing two packs whose authors never met.
  */
 
 import { describe, expect, it } from 'vitest';
 import { validateAcrossPacks } from '../../src/data/validation';
+import { ContentRepository } from '../../src/domain/content';
 import type { ContentPack, PassageId, SkillId } from '../../src/domain/content';
 import { id, TEST_PACK, TEST_PACK_FR } from '../fixtures/pack';
 
@@ -81,5 +86,67 @@ describe('validateAcrossPacks', () => {
     const doubled = withPassage(withPassage(TEST_PACK, '700001'), '700001');
 
     expect(validateAcrossPacks([doubled])).toEqual([]);
+  });
+});
+
+/**
+ * Resolving a reference once two packs can answer it.
+ *
+ * `validateAcrossPacks` above refuses to *ship* a collision, but a learner can
+ * install two packs the pack authors never saw together, so the resolver has to
+ * hold on its own.
+ */
+describe('resolving a content reference', () => {
+  const twoPacks = () =>
+    ContentRepository.from([withPassage(TEST_PACK, '700001'), withPassage(TEST_PACK_FR, '700001')]);
+
+  it('resolves a bare reference while exactly one pack claims it', () => {
+    const one = ContentRepository.from([withPassage(TEST_PACK, '700001')]);
+    expect(one.passageByRef('700001')?.id).toBe('test-es:passage:700001');
+  });
+
+  it('resolves a qualified reference to the pack it names', () => {
+    const both = twoPacks();
+    expect(both.passageByRef('test-es:700001')?.id).toBe('test-es:passage:700001');
+    expect(both.passageByRef('test-fr:700001')?.id).toBe('test-fr:passage:700001');
+  });
+
+  /**
+   * The whole point. `find(id => id.endsWith(':passage:700001'))` returned
+   * whichever pack loaded first — confidently the wrong text, which is worse
+   * than an error because nothing announces it.
+   */
+  it('refuses to guess when a bare reference is contested', () => {
+    const both = twoPacks();
+    expect(both.passageByRef('700001')).toBeUndefined();
+
+    const resolved = both.resolvePassage('700001');
+    expect(resolved.kind).toBe('ambiguous');
+    // Named, so a screen can say which packs rather than only that it failed.
+    expect(resolved.kind === 'ambiguous' && resolved.packs).toEqual(['test-es', 'test-fr']);
+  });
+
+  it('separates "no pack has this" from "several do"', () => {
+    const both = twoPacks();
+    expect(both.resolvePassage('nope').kind).toBe('missing');
+    expect(both.resolvePassage('test-es:nope').kind).toBe('missing');
+    expect(both.resolvePassage('no-such-pack:700001').kind).toBe('missing');
+  });
+
+  it('treats an empty reference as missing rather than matching everything', () => {
+    expect(twoPacks().resolvePassage('').kind).toBe('missing');
+    expect(twoPacks().resolvePassage('   ').kind).toBe('missing');
+  });
+
+  it('applies the same rules to skills, which collide more readily', () => {
+    // Skill slugs are English-ish words, so two Spanish packs colliding on
+    // `preterite` is close to certain where passage ids are merely likely.
+    const both = ContentRepository.from([
+      withSkill(TEST_PACK, 'preterite'),
+      withSkill(TEST_PACK_FR, 'preterite'),
+    ]);
+    expect(both.skillByRef('preterite')).toBeUndefined();
+    expect(both.resolveSkill('preterite').kind).toBe('ambiguous');
+    expect(both.skillByRef('test-fr:preterite')?.id).toBe('test-fr:skill:preterite');
   });
 });

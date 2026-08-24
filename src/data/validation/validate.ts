@@ -265,15 +265,18 @@ function duplicates(values: readonly string[]): readonly string[] {
  *
  * A URL addresses a passage and a skill by their **local** id — `/es/all/read/700001`,
  * `?skill=preterite` — deliberately, so a shared link does not carry a pack
- * namespace it will outlive. `passageByLocalId` and `skillByLocalId` therefore
- * resolve by first match, and both say so in a comment: a route is unambiguous
- * only while local ids are.
+ * namespace it will outlive. `resolveRef` in the repository accepts both that
+ * bare form and a qualified `pack:local` one, and declines to guess when a bare
+ * reference is contested — so a collision is never *resolved* wrongly.
  *
  * With one pack that is free. The moment a second is loaded — an add-on to the
  * Spanish A-level content, or a B1 pack — two packs can claim `700001`, and the
  * link silently opens whichever loaded first. That is the worst failure shape
  * available: not an error, not an empty screen, but confidently the wrong text.
  * So the collision is reported where content is validated, rather than waited on.
+ * This and the resolver are complementary: validation covers packs built
+ * together, and the resolver covers the pair a learner installs whose authors
+ * never met.
  *
  * An error rather than a warning, because the alternative to failing here is
  * shipping a link that means two things.

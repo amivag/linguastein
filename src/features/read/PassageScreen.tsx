@@ -9,8 +9,12 @@ import { TokenizedText } from '../../components/TokenizedText';
 import { UsageBadges } from '../../components/UsageBadges';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
+import type { LearningItem } from '../../domain/content';
 import { sessionPath } from '../practice/session-url';
 import styles from './Read.module.css';
+
+/** Stable, so an unresolved passage does not hand back a new array each render. */
+const EMPTY_ITEMS: readonly LearningItem[] = [];
 
 /**
  * One passage, read end to end.
@@ -28,21 +32,40 @@ export function PassageScreen() {
   const [showTranslations, setShowTranslations] = useState(false);
   const words = useWordSelection();
 
-  const passage = services.repository.passageByLocalId(id);
-  const sentences = useMemo(
-    () => (passage ? services.repository.itemsOfPassage(passage.id) : []),
-    [services.repository, passage],
-  );
+  // Resolved once and memoised together with the sentences it decides, because
+  // `resolvePassage` returns a fresh object each call: reading it inline made the
+  // dependency below change on every render, which the React Compiler rejects
+  // rather than silently re-running.
+  const { resolved, sentences } = useMemo(() => {
+    const found = services.repository.resolvePassage(id);
+    return {
+      resolved: found,
+      sentences:
+        found.kind === 'found' ? services.repository.itemsOfPassage(found.value.id) : EMPTY_ITEMS,
+    };
+  }, [services.repository, id]);
+  const passage = resolved.kind === 'found' ? resolved.value : undefined;
 
   if (!passage) {
     return (
       <AppShell title="Read" onBack="history">
-        {/* Says which text and where it would come from, because "not found" on
-            its own leaves a learner unable to tell a broken link from a pack
-            they have not installed — and those have different fixes. */}
+        {/* Three different things, said differently. "Not found" alone cannot
+            distinguish a broken link from a pack a learner has not installed
+            from a link that is merely under-specified — and only the last of
+            those is fixed by the learner doing nothing at all. */}
         <p className={styles.empty} role="status">
-          There is no text <strong>{id}</strong> in the packs you have. It may belong to a pack that
-          is not installed.
+          {resolved.kind === 'ambiguous' ? (
+            <>
+              More than one pack has a text called <strong>{id}</strong> —{' '}
+              {resolved.packs.join(' and ')}. This link does not say which, so it cannot be opened
+              safely.
+            </>
+          ) : (
+            <>
+              There is no text <strong>{id}</strong> in the packs you have. It may belong to a pack
+              that is not installed.
+            </>
+          )}
         </p>
         <div className={styles.emptyActions}>
           <Button variant="primary" block onClick={() => void navigate(path('read'))}>

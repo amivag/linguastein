@@ -325,18 +325,18 @@ describe('skills', () => {
   });
 
   it('resolves the local part of a skill id, as a route carries it', () => {
-    expect(repository.skillByLocalId('tener-que')?.id).toBe('test-es:skill:tener-que');
-    expect(repository.skillByLocalId('nope')).toBeUndefined();
+    expect(repository.skillByRef('tener-que')?.id).toBe('test-es:skill:tener-que');
+    expect(repository.skillByRef('nope')).toBeUndefined();
   });
 
   it('does not match a local id by suffix alone', () => {
     // `que` ends `tener-que`, but it is not the local id — `endsWith` has to be
     // anchored on the `:skill:` separator or a short slug matches the wrong row.
-    expect(repository.skillByLocalId('que')).toBeUndefined();
+    expect(repository.skillByRef('que')).toBeUndefined();
   });
 
   it('narrows to the items a skill is attached to', () => {
-    const skill = repository.skillByLocalId('tener-que');
+    const skill = repository.skillByRef('tener-que');
     expect(skill).toBeDefined();
     expect(repository.query({ skills: [skill!.id] }).map((item) => item.text)).toEqual([
       'Tengo que trabajar.',

@@ -45,8 +45,8 @@ describe('passages in the repository', () => {
   });
 
   it('resolves the local id a route carries', () => {
-    expect(repository.passageByLocalId('700001')?.id).toBe(TEXT);
-    expect(repository.passageByLocalId('nope')).toBeUndefined();
+    expect(repository.passageByRef('700001')?.id).toBe(TEXT);
+    expect(repository.passageByRef('nope')).toBeUndefined();
   });
 
   it('names a speaker per line of a dialogue', () => {

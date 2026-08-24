@@ -16,7 +16,7 @@
 
 import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
+import { CEFR_LEVELS, PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
 import { sentenceMood } from '../src/domain/content/mood.ts';
 import { conjugate } from '../src/languages/es/conjugation.ts';
 import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
@@ -2211,16 +2211,42 @@ for (const file of files) {
   writeFileSync(join(OUT_DIR, file.path), `${header}${body}\n`, 'utf8');
 }
 
+/**
+ * The levels the pack actually holds, in CEFR order, and the label built from
+ * them.
+ *
+ * Both used to be literals — `levels: ['a1', 'a2']` and the name `Spanish Core
+ * A1–A2` — which is the same shape of bug as the pack version written once in
+ * this script and left there while the content quadrupled. `courseOptions`
+ * derives a course's levels from the items, so the picker would have grown a B1
+ * entry on its own; the *manifest* would have gone on claiming A1–A2, and
+ * Settings reads the manifest. So the pack would have advertised a scope it no
+ * longer had, to the one screen whose job is describing the pack.
+ *
+ * Derived from the emitted items rather than from the source rows, so a level
+ * that is authored but filtered out before shipping is not advertised.
+ */
+const presentLevels = CEFR_LEVELS.filter((level) =>
+  [...sentenceItems, ...vocabularyItems].some((item) => item.level === level),
+);
+
+const levelSpan = (levels: readonly string[]): string => {
+  const first = levels[0]?.toUpperCase();
+  const last = levels[levels.length - 1]?.toUpperCase();
+  if (!first) return '';
+  return first === last ? first : `${first}–${last}`;
+};
+
 const manifest = {
   id: PACK_ID,
-  name: 'Spanish Core A1–A2',
+  name: `Spanish Core ${levelSpan(presentLevels)}`.trim(),
   targetLanguage: 'es',
   // Authored in `content/es/pack.tsv`, beside the content it describes.
   version: packRow?.version ?? '0.0.0',
   description:
     'High-frequency Spanish verbs, nouns, modifiers and everyday sentences. Generated from content/es and not yet reviewed by a human editor.',
   license: 'CC0-1.0',
-  levels: ['a1', 'a2'],
+  levels: presentLevels,
   referenceLanguages: ['en'],
   pronunciationLocales: ['es-ES', 'es-MX'],
   // Declared rather than inferred from the items: a category the pack means to

@@ -298,7 +298,28 @@ newest, and do not fight it: that setting is supply-chain hygiene and worth more
 than a patch release.
 
 **Do not take TypeScript 7 along for the ride.** It is out (7.0.2) and tempting
-while touching types, but `typescript-eslint@8.67.0` declares
-`typescript: >=4.8.4 <6.1.0`. Upgrading TypeScript takes `npm run lint` down with
-it, and the gate is the thing that makes this migration safe. Stay on 5.9 until
-typescript-eslint ships support.
+while touching types, but it would take `npm run lint` down with it, and the gate
+is the thing that makes this migration safe.
+
+This is worth understanding rather than just avoiding, because "wait for a newer
+typescript-eslint" is the wrong model of the wait. TypeScript 7 is the native
+port: `typescript@7.0.2` ships per-platform Go binaries and its root export is
+`./lib/version.cjs`, with the JS surface reduced to `./unstable/ast`,
+`./unstable/sync`, `./unstable/async` and `./unstable/proto`. The
+`lib/typescript.js` compiler API that typescript-eslint's type-aware rules are
+built on — `ts.createProgram`, `TypeChecker` — is simply not there any more.
+Which is why both `typescript-eslint@8.67.0` and its canary
+(`8.67.1-alpha.29`) still declare `typescript: >=4.8.4 <6.1.0`, and why there is
+no v9 line: it is a re-plumbing onto an API still marked unstable, not a peer
+range someone forgot to widen.
+
+The path forward is **TypeScript 6**, not 7. `typescript@6.0.0-beta` still ships
+`main: ./lib/typescript.js`, and typescript-eslint's `<6.1.0` ceiling is drawn to
+include it. When 6.0 goes stable it should be an ordinary bump.
+
+If type-aware linting on TS 7 ever becomes the goal, the tool that exists is
+`oxlint` plus `oxlint-tsgolint` (type-aware, powered by typescript-go). Note what
+that costs here before reaching for it: architecture rules 1 and 5 are
+`no-restricted-imports` blocks in `eslint.config.js`, and they are enforcement
+rather than documentation. A linter swap has to carry all of them across, plus
+`react-hooks` and `react-refresh`, or the rules quietly become prose again.

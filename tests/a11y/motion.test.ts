@@ -94,6 +94,28 @@ describe('the motion scale', () => {
     expect(offenders).toEqual([]);
   });
 
+  it('gives a navigation a transition, and gives the chrome none', () => {
+    /*
+     * A screen used to replace the last one between two frames, which on a phone
+     * is indistinguishable from a reload. The entrance is on `main` rather than on
+     * the shell, and that placement is the whole design: every screen renders its
+     * own `AppShell`, so a navigation remounts `main` and the animation plays,
+     * while a change to the query string keeps the same screen mounted and does
+     * not re-animate a filtered list.
+     *
+     * The header is deliberately outside it — the way back and the voice control
+     * are the same on both sides of a navigation, so animating them would report
+     * a change that did not happen.
+     */
+    const css = withoutComments(read('components/AppShell.module.css'));
+    const main = css.slice(css.indexOf('.main {'));
+    expect(main.slice(0, main.indexOf('}'))).toMatch(/animation:\s*\w+\s+var\(--transition-/);
+    expect(css).toMatch(/@keyframes\s+\w+/);
+
+    const header = css.slice(css.indexOf('.header {'));
+    expect(header.slice(0, header.indexOf('}'))).not.toMatch(/animation/);
+  });
+
   it('collapses every animation under prefers-reduced-motion, once, globally', () => {
     // The reason a component may add motion freely: it is already handled. Delete
     // this block and every transition in the app becomes an accessibility bug at

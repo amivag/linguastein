@@ -151,8 +151,24 @@ export function tenseHue(tense: Tense | undefined, mood?: Mood | undefined): Kin
 
 const TENSE_HUES: Record<Tense, KindHue> = {
   present: 12,
-  // Opposite sides of the wheel, deliberately. See above.
-  preterite: 7,
+  /*
+   * Opposite sides of the wheel, deliberately. See above.
+   *
+   * The preterite was 7 until the reference facets were added and the word sheet
+   * got looked at properly — and 7 is also `VERB`. A verb in the preterite
+   * therefore wore the same hue twice, in two adjacent pills, for two unrelated
+   * reasons: exactly the collision the note above calls "worse than a card
+   * showing none", and the one the gender guard exists to prevent. Only verbs
+   * carry a tense, so `VERB` is the single part of speech a tense can meet, and
+   * it is now the one hue no tense may take.
+   *
+   * 8 rather than another free number because nothing is free: it is feminine
+   * gender's hue, and gender and tense are the one pair that provably cannot
+   * co-occur — a verb has no gender and a noun has no tense. It also puts the
+   * preterite six steps from the imperfect instead of five, which is the most
+   * the wheel allows.
+   */
+  preterite: 8,
   imperfect: 2,
   future: 5,
   'present-perfect': 9,
@@ -186,4 +202,74 @@ const GENDER_LABELS: Record<Gender, string> = {
   masculine: 'el',
   feminine: 'la',
   neuter: 'lo',
+};
+
+/**
+ * The facets of a phrase a card can state *about* it, rather than in it.
+ *
+ * Two closed sets, and they are here for the same reason gender and tense are:
+ * there are three of one and three of the other, a language actually has them,
+ * and which colour each one gets is the point rather than an implementation
+ * detail. What is new is only that these describe an *annotation* — the English
+ * meaning, an authored note, who you may say it to — where the sets above
+ * describe a word.
+ *
+ * ## Why these six may not collide with each other
+ *
+ * The doc above says reuse across the three grammatical systems is safe because
+ * "nothing draws both as the same shape in the same place". These six break that
+ * assumption, and so are treated as one set: a practice card shows the meaning,
+ * the note and all three usage badges *at once*, in one column, as the same
+ * shape. Two of them in one hue there would read as one fact split in two. So
+ * {@link ANNOTATION_HUES} and {@link USAGE_HUES} share no value, and neither
+ * reuses one of the three {@link GENDER_HUES} — the word sheet puts a gender pill
+ * in its heading and usage badges directly underneath it.
+ *
+ * That leaves the tense and part-of-speech hues, which are reused. A tense pill
+ * and a usage badge do meet in the word sheet, and the collision is tolerable
+ * there for the reason the file already gives: they are different shapes — a pill
+ * of grammatical type in the heading against a labelled badge row in the body —
+ * and both carry the word they mean.
+ */
+export type AnnotationFacet = 'meaning' | 'note' | 'ability';
+
+/**
+ * The learner-language meaning, an authored note, and a real-world ability.
+ *
+ * `meaning` takes the hue furthest from the accent of the three, because it is
+ * the one a learner looks for on every card and the accent is what the app's own
+ * controls wear. `ability` is the odd one out of the three — it is not a fact
+ * about the phrase but about the learner — and it is the only one of the three
+ * that also appears on its own, in the mission capability list.
+ */
+export function annotationHue(facet: AnnotationFacet): KindHue {
+  return ANNOTATION_HUES[facet];
+}
+
+const ANNOTATION_HUES: Record<AnnotationFacet, KindHue> = {
+  meaning: 9,
+  note: 6,
+  ability: 10,
+};
+
+/** Who you may say a phrase to, how it sounds, and where it is said. */
+export type UsageFacet = 'address' | 'register' | 'region';
+
+/**
+ * The three usage facets.
+ *
+ * `address` is the choice with social consequences — call a stranger `tú` and you
+ * are rude — so it takes the hue with the most presence of the three. It used to
+ * take `--color-accent` outright, which was the app's own colour spent on a piece
+ * of reference data: rule 5 reserves the accent for the app acting, and a badge
+ * that says "you would say this to a friend" is not the app acting.
+ */
+export function usageHue(facet: UsageFacet): KindHue {
+  return USAGE_HUES[facet];
+}
+
+const USAGE_HUES: Record<UsageFacet, KindHue> = {
+  address: 5,
+  register: 12,
+  region: 2,
 };

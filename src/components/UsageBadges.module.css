@@ -1,10 +1,16 @@
 /*
- * Usage metadata as pills: register, who you would say it to, where it is said.
+ * Usage metadata as pills: who you would say it to, how it sounds, where it is
+ * said.
  *
- * All three were outlined, one of them dashed, which gave three pieces of
- * reference data the visual weight of three controls. They are tinted now and
- * differ from each other by *fill*, so the set still reads as three kinds of
- * thing without three kinds of border.
+ * All three were outlined once, one of them dashed, which gave three pieces of
+ * reference data the visual weight of three controls. They were then tinted and
+ * told apart by *fill* — better, and still only two of the three had a colour at
+ * all, with `address` wearing `--color-accent`. That was the app's own colour
+ * spent on a piece of reference data, which rule 5 reserves for the app acting.
+ *
+ * All three now come off the categorical wheel through `kindPill`, one hue each
+ * from `usageHue`, each with a glyph for the facet and the word itself as the
+ * label. Nothing new is declared here, so nothing new needs asserting.
  */
 
 .badges {
@@ -16,35 +22,14 @@
 }
 
 .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 2px var(--space-2);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface-sunken);
-  color: var(--color-text-muted);
+  composes: kindPill from '../styles/surfaces.module.css';
+
+  /* `kindPill` is `--text-xs` and set in caps-adjacent tracking for a one-word
+     grammatical fact. A usage badge carries `vosotros` and `es-MX`, so it stays
+     at the small body size and keeps its own letterforms. */
   font-size: var(--text-sm);
+  letter-spacing: normal;
   line-height: 1.4;
-  white-space: nowrap;
-}
-
-/* Address is the choice with social consequences, so it carries the accent. */
-.address {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
-  font-weight: var(--weight-semibold);
-}
-
-.register {
-  color: var(--color-text-muted);
-}
-
-/* Regional usage is the one worth noticing before you repeat a phrase abroad,
-   so it takes the warm tint — where it used to take a dashed border, which read
-   as "provisional" rather than as "somewhere specific". */
-.region {
-  background: var(--color-highlight-soft);
-  color: var(--color-highlight);
 }
 
 .compact .badge {

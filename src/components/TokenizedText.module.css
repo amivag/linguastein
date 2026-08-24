@@ -21,7 +21,12 @@
   text-decoration-thickness: 1px;
   text-decoration-skip-ink: none;
   text-underline-offset: 0.2em;
-  transition: text-decoration-color var(--transition-fast);
+  /* The tint is in the transition as well as the underline: a word is selected by
+     a tap, and a highlight that snaps on reads as a repaint rather than as the
+     app answering. */
+  transition:
+    text-decoration-color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
 .token:hover,

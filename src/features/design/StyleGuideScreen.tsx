@@ -7,6 +7,9 @@ import { ICON_NAMES } from '../../components/icons';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { UsageBadges } from '../../components/UsageBadges';
+import { Annotation } from '../../components/Annotation';
+import { GrammarTags } from '../../components/GrammarTags';
+import type { AnnotationFacet } from '../../styles/semantics';
 import { ungrouped, group, type Token } from '../../styles/tokens';
 import { PALETTE_OPTIONS, THEME_OPTIONS } from '../../styles/themes';
 import { CONTRAST_OPTIONS } from '../../styles/contrast';
@@ -222,7 +225,36 @@ export function StyleGuideScreen() {
       </Section>
 
       <Section title="Badges">
+        <p className={styles.note}>
+          Usage: who you may say it to, how it sounds, where it is said. One categorical hue and one
+          glyph each, over a label that still says the word.
+        </p>
         <UsageBadges address="tu" register="colloquial" regions={['es-MX', 'es-AR']} />
+        <p className={styles.note}>
+          Grammatical facts, from `semantics.ts`. The hue is chosen by hand; the label is the
+          signal.
+        </p>
+        {/*
+          Two rows, because one would have been a word that cannot exist. A noun
+          carries a part of speech and a gender; a verb carries a part of speech
+          and a tense. Putting all three on one row would have shown feminine and
+          the preterite side by side — and they share a hue precisely because
+          nothing can wear both.
+        */}
+        <GrammarTags pos="NOUN" posLabel="noun" gender="feminine" />
+        <GrammarTags pos="VERB" posLabel="verb" tense="preterite" tenseLabel="preterite" />
+      </Section>
+
+      <Section title="Annotations" count={ANNOTATION_FACETS.length}>
+        <p className={styles.note}>
+          What a card says <em>about</em> a phrase, rather than in it. Each facet names itself, so
+          the hue is a shortcut and never the information.
+        </p>
+        {ANNOTATION_FACETS.map((facet) => (
+          <Annotation key={facet} facet={facet}>
+            {ANNOTATION_EXAMPLES[facet]}
+          </Annotation>
+        ))}
       </Section>
 
       <Section title="Overlays">
@@ -345,6 +377,15 @@ const RULES: readonly { icon: IconName; title: string; body: string }[] = [
     body: 'An animation may accompany a state change; it may never be the state change. Every one of them collapses under prefers-reduced-motion.',
   },
 ];
+
+/** Every facet an `Annotation` can carry, so a new one appears here unasked. */
+const ANNOTATION_FACETS: readonly AnnotationFacet[] = ['meaning', 'note', 'ability'];
+
+const ANNOTATION_EXAMPLES: Record<AnnotationFacet, string> = {
+  meaning: 'I have to work.',
+  note: 'tener que + infinitivo — obligation, and the most common way to say it.',
+  ability: 'Say what you have to do today',
+};
 
 function Section({
   title,

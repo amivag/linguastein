@@ -28,11 +28,6 @@
   font-size: var(--text-sm);
 }
 
-.gloss {
-  font-size: var(--text-lg);
-  color: var(--color-success);
-}
-
 /*
  * Growing the selection. A row of buttons that scrolls sideways rather than
  * wrapping, so a long phrase cannot make the pinned area taller than the entry
@@ -79,6 +74,9 @@
 .blockTitle {
   composes: sectionLabel from '../styles/surfaces.module.css';
 
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
 }
 

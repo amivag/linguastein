@@ -108,7 +108,6 @@
   font-size: var(--text-base);
 }
 
-.palettePanel > div:first-child > p:last-child,
 .paletteGroup > p {
   color: var(--color-text-muted);
   font-size: var(--text-sm);
@@ -177,7 +176,6 @@
   font-size: var(--text-base);
 }
 
-.variationPanel > div:first-child > p:last-child,
 .variationBuilder > div:first-child > p {
   color: var(--color-text-muted);
   font-size: var(--text-sm);
@@ -270,6 +268,34 @@
   white-space: nowrap;
 }
 
+/*
+ * The goal card's controls. A row rather than a block, so a mission with one
+ * control and a mission with three are the same shape.
+ */
+.briefActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* How much is behind the control. Quieter than the label and never hidden —
+   the same treatment, and the same reasoning, as `Chip`'s count. */
+.count {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunken);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-semibold);
+}
+
+/* One line, where the two sentences of instruction above the dialogue used to
+   be. It describes the list underneath it, so it sits against it. */
+.hint {
+  margin-top: calc(var(--space-2) * -1);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
 .eyebrow {
   color: var(--color-accent);
   font-size: var(--text-sm);
@@ -296,14 +322,41 @@
   gap: var(--space-2);
 }
 
+/*
+ * A turn in the exchange.
+ *
+ * The surface is on the line's own class rather than on `.lines li`, and that is
+ * load-bearing rather than tidiness: a toned line and a plain one are two
+ * different recipes, and a descendant selector here would outrank both of them
+ * on specificity and repaint whichever one won.
+ */
 .lines li {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: var(--space-1) var(--space-2);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
+}
+
+/* A monologue, or a passage whose speakers the pack does not record. */
+.linePlain {
+  composes: card from '../../styles/surfaces.module.css';
+}
+
+/*
+ * A dialogue, one hue per speaker.
+ *
+ * Four turns in one grey column is a wall of Spanish that a learner has to read
+ * to find out who is talking; the names were printed and still are, but a name
+ * is something you read and a colour is something you see. `kindSurface` gives
+ * each turn the hue's own tint and a spine at full strength down its leading
+ * edge, which is the part that survives being glanced at.
+ *
+ * The hue comes from the speaker's name through `kindHue`, so it belongs to the
+ * speaker rather than to the row — the same rule the categories follow, and what
+ * makes the waiter the same colour in every line he has.
+ */
+.lineToned {
+  composes: kindSurface from '../../styles/surfaces.module.css';
 }
 
 .speaker {
@@ -318,8 +371,23 @@
   line-height: var(--leading-prose);
 }
 
+/*
+ * The English under a line, once a learner asks for it.
+ *
+ * `Show meaning` reveals seventeen of these at once in the shipped A1 mission,
+ * which as an instant swap reads as the page having been replaced. Fading them in
+ * says the lines are the same lines with something added — and it is the same
+ * intent, and the same token, as a card revealing its meaning.
+ */
 .meaning {
   color: var(--color-text-muted);
+  animation: reveal var(--transition-base);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
 }
 
 .lines .meaning {
@@ -339,6 +407,21 @@
   background: transparent;
   color: var(--color-text-muted);
   cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    scale var(--transition-fast);
+}
+
+/* The one control repeated on every line, so it is also the one whose press most
+   needs confirming — a tap that dips is how a learner knows which line spoke. */
+.linePlay:active {
+  scale: 0.88;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .linePlay:hover {
+    color: var(--color-text);
+  }
 }
 
 .roleProgress {

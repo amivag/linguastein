@@ -10,9 +10,10 @@ import {
   type TokenId,
   type WordInfo,
 } from '../domain/content';
+import { Annotation } from './Annotation';
 import { Button } from './Button';
 import { GrammarTags } from './GrammarTags';
-import { Icon } from './Icon';
+import { Icon, type IconName } from './Icon';
 import { Sheet } from './Sheet';
 import { UsageBadges } from './UsageBadges';
 import styles from './WordInfoSheet.module.css';
@@ -206,13 +207,23 @@ function Lemma({ info }: { readonly info: WordInfo }) {
 function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanings: boolean }) {
   return (
     <>
-      {info.gloss && <p className={styles.gloss}>{info.gloss}</p>}
+      {info.gloss && (
+        <Annotation facet="meaning" lead>
+          {info.gloss}
+        </Annotation>
+      )}
       <UsageBadges register={info.register} regions={info.regions} />
-      {info.grammar && <p className={styles.grammar}>{info.grammar}</p>}
+      {/* Labelled `Grammar` rather than `Note`: it is the same *kind* of aside —
+          same hue, same glyph — about something narrower. */}
+      {info.grammar && (
+        <Annotation facet="note" label="Grammar">
+          {info.grammar}
+        </Annotation>
+      )}
 
       {info.constructions.length > 0 && (
         <div className={styles.block}>
-          <h3 className={styles.blockTitle}>Pattern</h3>
+          <BlockTitle icon="grammar">Pattern</BlockTitle>
           {info.constructions.map((construction) => (
             <p key={construction.label}>
               <strong lang="es">{construction.label}</strong>
@@ -224,7 +235,7 @@ function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanin
 
       {info.forms.length > 0 && (
         <div className={styles.block}>
-          <h3 className={styles.blockTitle}>Other forms</h3>
+          <BlockTitle icon="word">Other forms</BlockTitle>
           <ul className={styles.forms}>
             {info.forms.map((form) => (
               <li key={`${form.form}-${form.label}`} className={form.current ? styles.current : ''}>
@@ -241,7 +252,7 @@ function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanin
 
       {info.examples.length > 0 && (
         <div className={styles.block}>
-          <h3 className={styles.blockTitle}>In other phrases</h3>
+          <BlockTitle icon="passage">In other phrases</BlockTitle>
           <Examples examples={info.examples} />
         </div>
       )}
@@ -267,7 +278,7 @@ function PhraseBody({ info, meanings }: { readonly info: PhraseInfo; readonly me
     <>
       {known && (
         <div className={styles.block}>
-          <h3 className={styles.blockTitle}>Pattern</h3>
+          <BlockTitle icon="grammar">Pattern</BlockTitle>
           {info.constructions.map((construction) => (
             <p key={construction.label}>
               <strong lang="es">{construction.label}</strong>
@@ -278,7 +289,7 @@ function PhraseBody({ info, meanings }: { readonly info: PhraseInfo; readonly me
       )}
 
       <div className={styles.block}>
-        <h3 className={styles.blockTitle}>Word by word</h3>
+        <BlockTitle icon="word">Word by word</BlockTitle>
         <ul className={styles.words}>
           {info.words.map((entry) => (
             <li key={entry.token.id}>
@@ -296,14 +307,14 @@ function PhraseBody({ info, meanings }: { readonly info: PhraseInfo; readonly me
 
       {info.context && (
         <div className={styles.block}>
-          <h3 className={styles.blockTitle}>In this sentence</h3>
+          <BlockTitle icon="explain">In this sentence</BlockTitle>
           <p className={styles.grammar}>{info.context}</p>
         </div>
       )}
 
       {info.examples.length > 0 && (
         <div className={styles.block}>
-          <h3 className={styles.blockTitle}>Same pattern elsewhere</h3>
+          <BlockTitle icon="grammar">Same pattern elsewhere</BlockTitle>
           <Examples examples={info.examples} />
         </div>
       )}
@@ -316,6 +327,24 @@ function PhraseBody({ info, meanings }: { readonly info: PhraseInfo; readonly me
         </p>
       )}
     </>
+  );
+}
+
+/**
+ * A block's heading, with the glyph for what the block is about.
+ *
+ * The sheet stacks up to five of these — Pattern, Other forms, In other phrases
+ * — in one scrolling column of near-identical small headings, and a learner
+ * scrolling back for "the one with the conjugations" was reading every one of
+ * them. The glyph is a second channel on a heading that still says the words;
+ * `aria-hidden`, because the heading is already the name.
+ */
+function BlockTitle({ icon, children }: { readonly icon: IconName; readonly children: string }) {
+  return (
+    <h3 className={styles.blockTitle}>
+      <Icon name={icon} size="sm" />
+      {children}
+    </h3>
   );
 }
 

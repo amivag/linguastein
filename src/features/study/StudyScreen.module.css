@@ -163,7 +163,22 @@
   font-weight: var(--weight-medium);
 }
 
+/*
+ * The mission's goal, held to two lines.
+ *
+ * A goal is one real-world outcome written as a sentence, and the authored ones
+ * run to twenty words — "Greet someone, say where you are from and what you do,
+ * ask them back, and keep the conversation going." Four of those in a column is
+ * a page of prose with the titles and the standings lost inside it, and the
+ * standing is the thing a learner scanning this list is looking for. Two lines
+ * is enough to tell two missions apart; the whole sentence is on the mission's
+ * own screen, at the top, as its heading.
+ */
 .missionGoal {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   color: var(--color-text-muted);
   font-size: var(--text-xs);
   line-height: var(--leading-body);

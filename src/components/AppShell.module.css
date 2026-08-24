@@ -75,11 +75,42 @@
   }
 }
 
+/*
+ * The content region, and the app's page transition.
+ *
+ * A screen used to replace the last one between two frames, which on a phone is
+ * indistinguishable from the page having reloaded — there was nothing to say
+ * whether you had arrived somewhere or the app had restarted. The entrance is a
+ * short rise and fade: it confirms the navigation and carries nothing on its
+ * own, which is rule 6.
+ *
+ * It runs on *mount*, which is what makes it a page transition rather than a
+ * flourish. Every screen renders its own `AppShell`, so a navigation between two
+ * of them remounts this element and the animation plays; a change to the query
+ * string keeps the same screen mounted, so filtering Browse or switching a
+ * Study tab does not re-animate the whole page. That distinction is exactly the
+ * one worth making, and it comes for free from where the element sits.
+ *
+ * The header is deliberately outside it: the way back and the voice control are
+ * the same on both sides of a navigation, so animating them would say something
+ * changed that did not.
+ *
+ * No fill mode, for the reason `Sheet` gives — a renderer that never runs the
+ * animation shows the page where it belongs rather than stranded at frame one.
+ */
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  animation: pageEnter var(--transition-base);
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    translate: 0 var(--space-3);
+  }
 }
 
 /* Visible only when focused, so keyboard users can jump past the header. */

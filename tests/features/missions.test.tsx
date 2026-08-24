@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes, useLocation } from 'react-router';
 import { describe, expect, it } from 'vitest';
@@ -75,6 +75,99 @@ describe('MissionScreen', () => {
     expect(screen.getByTestId('where')).toHaveTextContent('passage=700001');
     expect(screen.getByTestId('where')).toHaveTextContent('mission=morning-routine');
     expect(screen.getByTestId('where')).toHaveTextContent('order=sequential');
+  });
+
+  /*
+   * The order of the Understand stage, which is the one thing about it a learner
+   * cannot work around.
+   *
+   * It shipped the other way up: eleven capability rows, up to nine response
+   * palettes and a variation lab all sat above the exchange, so a screen whose
+   * own text said "first understand the connected example" put two phone screens
+   * of English between a learner and the example. Nothing was broken, every
+   * assertion passed, and the screen was unusable on a phone.
+   *
+   * Document order is the assertion because document order is the bug — jsdom has
+   * no layout, but "the dialogue comes before the panels about it" is a fact
+   * about the tree rather than about pixels.
+   */
+  it('puts the exchange above everything written about it', async () => {
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand',
+      services: await shippedServices(),
+    });
+
+    const exchange = await screen.findByRole('list', { name: /lines$/ });
+    const palettes = screen.getByRole('region', { name: 'Natural response palettes' });
+    const lab = screen.getByRole('region', { name: 'Variation lab' });
+
+    expect(exchange.compareDocumentPosition(palettes)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(exchange.compareDocumentPosition(lab)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+
+    // The goal is still the first thing said, and it is still said in full.
+    const goal = screen.getByRole('heading', { level: 2 });
+    expect(goal.compareDocumentPosition(exchange)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it('offers what the mission will teach without spending the screen on it', async () => {
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand',
+      services: await shippedServices(),
+    });
+
+    // Eleven abilities, as one control that says so. The count is in the name
+    // rather than only beside it: a control that reads "What you'll be able to
+    // do" and hides an unknown amount is a control nobody opens twice.
+    const opener = await screen.findByRole('button', {
+      name: 'What you\u2019ll be able to do: 11 abilities',
+    });
+    expect(opener).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByText('Greet someone')).not.toBeInTheDocument();
+
+    await user.click(opener);
+
+    const sheet = await screen.findByRole('dialog', { name: 'What you\u2019ll be able to do' });
+    expect(sheet).toHaveTextContent('Greet someone');
+    // Named once. The sheet's own heading is the list's name, so the list must
+    // not repeat it — two identical headings is what makes an agent guess.
+    expect(within(sheet).queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
+
+    await user.click(within(sheet).getByRole('button', { name: 'Close' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  /*
+   * The dialogue, as a dialogue.
+   *
+   * Four turns in one grey column is a wall of Spanish, and the speaker names
+   * above each line are something a learner has to read rather than see. Each
+   * turn now carries its speaker's own categorical hue — and the hue belongs to
+   * the *speaker*, so the same person is the same colour in every line they have.
+   */
+  it('gives each speaker in an exchange a hue of their own, and keeps it', async () => {
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand',
+      services: await shippedServices(),
+    });
+
+    const exchange = await screen.findByRole('list', { name: /lines$/ });
+    const turns = [...exchange.querySelectorAll('li')];
+    expect(turns.length).toBeGreaterThan(2);
+
+    const bySpeaker = new Map<string, Set<string>>();
+    for (const turn of turns) {
+      const speaker = turn.querySelector('p')?.textContent ?? '';
+      const hue = turn.getAttribute('data-kind');
+      expect(hue).not.toBeNull();
+      bySpeaker.set(speaker, (bySpeaker.get(speaker) ?? new Set()).add(hue!));
+    }
+
+    // Two speakers at least, one hue each, and no speaker wearing two.
+    expect(bySpeaker.size).toBeGreaterThan(1);
+    for (const hues of bySpeaker.values()) expect(hues.size).toBe(1);
+    const distinct = new Set([...bySpeaker.values()].map((hues) => [...hues][0]));
+    expect(distinct.size).toBe(bySpeaker.size);
   });
 
   it('introduces a small response palette before revealing its full range', async () => {

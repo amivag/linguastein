@@ -7,6 +7,7 @@ import { isSelfRated } from '../../domain/exercises';
 import type { TokenId } from '../../domain/content';
 import { REVIEW_GRADES, type ReviewGrade } from '../../domain/progress';
 import { AudioControls } from './AudioControls';
+import { Annotation } from '../../components/Annotation';
 import { UsageBadges } from '../../components/UsageBadges';
 import { ItemDetails } from './ItemDetails';
 import { SpeakCheck } from './SpeakCheck';
@@ -126,7 +127,9 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           <p className={styles.hint}>Listen, then say it aloud.</p>
           <SpeakCheck expected={item.text} />
           {revealed && exercise.translation ? (
-            <p className={styles.reveal}>{exercise.translation.text}</p>
+            <Annotation facet="meaning" lead>
+              {exercise.translation.text}
+            </Annotation>
           ) : (
             <Button block onClick={() => setRevealed(true)}>
               Meaning
@@ -145,7 +148,9 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           />
           <AudioControls item={item} />
           {revealed && exercise.translation ? (
-            <p className={styles.reveal}>{exercise.translation.text}</p>
+            <Annotation facet="meaning" lead>
+              {exercise.translation.text}
+            </Annotation>
           ) : (
             <Button block large onClick={() => setRevealed(true)}>
               Reveal
@@ -156,7 +161,12 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
 
       {exercise.kind === 'think-say' && (
         <>
-          <p className={styles.promptSecondary}>{exercise.prompt}</p>
+          {/* The English is the *cue* here rather than the answer, and it wears
+              the same shape it wears when a card reveals it — one fact, one
+              look, wherever on the card it happens to fall. */}
+          <Annotation facet="meaning" lead>
+            {exercise.prompt}
+          </Annotation>
           <p className={styles.hint}>Say it in Spanish, then reveal.</p>
           {revealed ? (
             <>
@@ -221,7 +231,9 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
 
       {exercise.kind === 'tap-to-build' && (
         <>
-          <p className={styles.promptSecondary}>{exercise.prompt}</p>
+          <Annotation facet="meaning" lead>
+            {exercise.prompt}
+          </Annotation>
           <p className={styles.built} lang="es">
             {builtWords.join(' ') || ' '}
           </p>

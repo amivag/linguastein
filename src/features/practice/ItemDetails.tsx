@@ -1,4 +1,5 @@
 import { useServices } from '../../app/services-context';
+import { Annotation } from '../../components/Annotation';
 import { TokenizedText } from '../../components/TokenizedText';
 import type { ItemId, LearningItem, TokenId } from '../../domain/content';
 import { ShareActions } from '../sharing/ShareActions';
@@ -32,20 +33,28 @@ export function ItemDetails({ item, onSelectWord, selectedTokens }: ItemDetailsP
 
   return (
     <div className={styles.details}>
-      {item.note && <p>{item.note}</p>}
+      {item.note && <Annotation facet="note">{item.note}</Annotation>}
 
+      {/*
+        What this phrase lets you do, as one labelled group rather than as bullets.
+        One hue for the whole list rather than one per skill: these are several
+        facets of the *same* claim, and a colour each would say they were several
+        kinds of thing.
+      */}
       {skills.length > 0 && (
-        <ul className={styles.examples}>
-          {skills.map((skill) => {
-            const gloss = repository.translationOf(skill.id, language);
-            return (
-              <li key={skill.id}>
-                <strong>{skill.label}</strong>
-                {gloss ? ` — ${gloss.text}` : ''}
-              </li>
-            );
-          })}
-        </ul>
+        <Annotation facet="ability" label={skills.length === 1 ? 'Ability' : 'Abilities'}>
+          <ul className={styles.abilities}>
+            {skills.map((skill) => {
+              const gloss = repository.translationOf(skill.id, language);
+              return (
+                <li key={skill.id}>
+                  <strong>{skill.label}</strong>
+                  {gloss ? <span className={styles.hint}>{gloss.text}</span> : null}
+                </li>
+              );
+            })}
+          </ul>
+        </Annotation>
       )}
 
       {examples.length > 0 && (
@@ -56,11 +65,12 @@ export function ItemDetails({ item, onSelectWord, selectedTokens }: ItemDetailsP
               <li key={example.id}>
                 <TokenizedText
                   item={example}
+                  className={styles.exampleText}
                   onSelect={onSelectWord ? (token) => onSelectWord(example.id, token) : undefined}
                   selected={selectedTokens?.(example.id)}
                   contextLabel={example.text}
                 />
-                {translation ? <span className={styles.hint}> {translation.text}</span> : null}
+                {translation ? <span className={styles.hint}>{translation.text}</span> : null}
               </li>
             );
           })}

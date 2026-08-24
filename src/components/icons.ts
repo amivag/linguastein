@@ -30,6 +30,9 @@ import {
   Lightbulb,
   ListChecks,
   ListFilter,
+  MapPin,
+  MessageCircle,
+  MessageSquareQuote,
   Mic,
   MicOff,
   Minus,
@@ -53,6 +56,7 @@ import {
   Shuffle,
   SlidersHorizontal,
   Sparkles,
+  StickyNote,
   Sun,
   Tag,
   Trash2,
@@ -62,6 +66,7 @@ import {
   TrendingUp,
   Trophy,
   Type,
+  Users,
   Volume2,
   VolumeX,
   Waves,
@@ -165,6 +170,23 @@ export const ICONS = {
      legible is how much of it is done. */
   batch: ListChecks,
   shuffle: Shuffle,
+
+  // Reference facets: the kinds of thing a card says *about* a phrase, as
+  // opposed to the phrase itself. Each one is a colour and a glyph in
+  // `src/styles/semantics.ts`, so the set here and the hue set there have to
+  // stay the same length.
+  /* What it says in the learner's own language. Deliberately not `language`,
+     which is the target-language axis — the same drawing for both would say
+     that choosing Spanish and reading an English gloss are one idea. */
+  meaning: MessageSquareQuote,
+  /* An authored aside about a phrase: when to use it, what it implies. */
+  note: StickyNote,
+  /* Who you may say this to — the `tu`/`usted` choice, and its consequences. */
+  audience: Users,
+  /* How it sounds: casual, formal, slang, vulgar. */
+  tone: MessageCircle,
+  /* Where it is said. A pin rather than a globe: the fact is regional. */
+  place: MapPin,
 
   // Progress and reward. Kept few on purpose: every icon here is a claim about
   // what a learner achieved, and the app only makes claims it can evidence.

@@ -1,4 +1,6 @@
 import { regionLabel, type AddressForm, type LanguageTag, type Register } from '../domain/content';
+import { usageHue, type UsageFacet } from '../styles/semantics';
+import { Icon, type IconName } from './Icon';
 import styles from './UsageBadges.module.css';
 
 interface UsageBadgesProps {
@@ -16,6 +18,14 @@ interface UsageBadgesProps {
  * and neither is recoverable from a translation. Showing them beside the phrase
  * is the difference between knowing words and knowing how to use them.
  *
+ * Three facets, and the whole design problem is that they are three: `usted`,
+ * `formal` and `es-MX` in a row all look like the same kind of tag, so a learner
+ * has to read all three to find the one they wanted. Each facet now carries its
+ * own hue from `usageHue` and its own glyph — who you are talking to, how it
+ * sounds, where it is said — over a label that still says the word. The colour is
+ * a shortcut for someone who has seen the row before; the label is the
+ * information, and it is what reaches the accessibility tree.
+ *
  * Neutral, unmarked content renders nothing: a badge on everything is noise.
  */
 export function UsageBadges({ register, address, regions, compact = false }: UsageBadgesProps) {
@@ -26,7 +36,7 @@ export function UsageBadges({ register, address, regions, compact = false }: Usa
       key: region,
       label: regionLabel(region),
       title: `Said in ${regionLabel(region)}`,
-      tone: 'region' as const,
+      facet: 'region' as const,
     })),
   ];
 
@@ -35,55 +45,65 @@ export function UsageBadges({ register, address, regions, compact = false }: Usa
   return (
     <ul className={`${styles.badges} ${compact ? styles.compact : ''}`} aria-label="Usage">
       {badges.map((badge) => (
-        <li key={badge.key} className={`${styles.badge} ${styles[badge.tone]}`} title={badge.title}>
-          {badge.label}
+        <li key={badge.key} className={styles.badge} data-kind={usageHue(badge.facet)}>
+          {/* `aria-hidden`, like every glyph inside something that names itself:
+              the badge's own text is beside it, and `title` carries the rest. */}
+          <Icon name={FACET_ICONS[badge.facet]} size="sm" />
+          <span title={badge.title}>{badge.label}</span>
         </li>
       ))}
     </ul>
   );
 }
 
-const ADDRESS: Record<AddressForm, { label: string; title: string; tone: 'address' }> = {
+/** Which glyph each facet wears. The hues are in `src/styles/semantics.ts`. */
+const FACET_ICONS: Record<UsageFacet, IconName> = {
+  address: 'audience',
+  register: 'tone',
+  region: 'place',
+};
+
+const ADDRESS: Record<AddressForm, { label: string; title: string; facet: 'address' }> = {
   tu: {
     label: 'tú',
     title: 'Informal: someone you address as tú — a friend, a peer, a child',
-    tone: 'address',
+    facet: 'address',
   },
   usted: {
     label: 'usted',
     title: 'Formal: someone you address as usted — a stranger, an official, an elder',
-    tone: 'address',
+    facet: 'address',
   },
   vosotros: {
     label: 'vosotros',
     title: 'Informal plural, used in Spain',
-    tone: 'address',
+    facet: 'address',
   },
   ustedes: {
     label: 'ustedes',
     title: 'Plural: formal in Spain, the everyday plural in Latin America',
-    tone: 'address',
+    facet: 'address',
   },
 };
 
 const REGISTER: Record<
   Exclude<Register, 'neutral'>,
-  { label: string; title: string; tone: 'register' }
+  { label: string; title: string; facet: 'register' }
 > = {
   colloquial: {
     label: 'casual',
     title: 'Everyday speech: fine with friends, too casual for formal writing',
-    tone: 'register',
+    facet: 'register',
   },
   slang: {
     label: 'slang',
     title: 'In-group speech: marks where you are from, and can date you',
-    tone: 'register',
+    facet: 'register',
   },
   formal: {
     label: 'formal',
     title: 'Polite or professional: service, officials, people you have just met',
-    tone: 'register',
+    facet: 'register',
   },
-  vulgar: { label: 'vulgar', title: 'Crude — know it, do not use it lightly', tone: 'register' },
+  vulgar: { label: 'vulgar', title: 'Crude — know it, do not use it lightly', facet: 'register' },
 };

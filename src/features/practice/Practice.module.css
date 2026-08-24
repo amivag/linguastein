@@ -93,16 +93,6 @@
   text-wrap: balance;
 }
 
-.promptSecondary {
-  font-size: var(--text-lg);
-  color: var(--color-text-muted);
-}
-
-.reveal {
-  font-size: var(--text-lg);
-  color: var(--color-success);
-}
-
 /*
  * What happened, and what to do next — one region.
  *
@@ -320,11 +310,51 @@
   color: var(--color-text-muted);
 }
 
-.examples {
+/*
+ * The abilities inside their annotation. Rows rather than bullets: the group
+ * already has a label and a tint saying what it is, and a bullet in front of
+ * each line would be a third marker for the same fact.
+ */
+.abilities {
+  composes: listReset from '../../styles/surfaces.module.css';
+
   display: grid;
   gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.abilities li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+  align-items: baseline;
+}
+
+/*
+ * Other phrases that use this word.
+ *
+ * The Spanish and its translation used to run together on one line, separated by
+ * a space — two languages, one size, one colour. The Spanish now leads its own
+ * line in the display face, the way Spanish is set everywhere else in the app,
+ * and the translation follows it quietly underneath. Still bulleted: unlike the
+ * abilities above, these are a list of separate things rather than facets of one.
+ */
+.examples {
+  display: grid;
+  gap: var(--space-2);
   padding-left: var(--space-4);
   margin: 0;
+}
+
+.examples li {
+  display: grid;
+  gap: 2px;
+}
+
+.exampleText {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  color: var(--color-text);
 }
 
 .summaryScreen {

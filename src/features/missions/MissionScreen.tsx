@@ -7,6 +7,7 @@ import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
+import { Sheet } from '../../components/Sheet';
 import { TokenizedText } from '../../components/TokenizedText';
 import { useWordSelection, type WordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
@@ -32,6 +33,7 @@ import {
   type MasteryRecord,
   type ReviewGrade,
 } from '../../domain/progress';
+import { kindHue } from '../../styles/kinds';
 import { SpeakCheck } from '../practice/SpeakCheck';
 import { studyPath } from '../study/study-url';
 import { MissionJourney } from './MissionJourney';
@@ -394,31 +396,62 @@ function UnderstandStage({
   readonly onPractise: () => void;
 }) {
   const [showMeanings, setShowMeanings] = useState(false);
+  const [showCapabilities, setShowCapabilities] = useState(false);
+  const capabilitySheetId = `${id}-capabilities`;
   // The palette is most of the language on this screen, and its phrases are
   // exactly the ones a learner has not read before — so the sheet has to be
   // openable from there too, not only from the dialogue.
   const openItem = words.item ? inspectable(stageItems, stagePalettes, words.item) : undefined;
 
+  /*
+    The order is the whole point of this stage, and it used to be wrong.
+
+    The screen said "First understand the connected example" and then put four
+    things between the learner and the example: eleven capability rows, up to
+    nine response palettes, a variation lab and a pair of buttons. On the shipped
+    A1 greeting mission that is two phone screens of English before the first
+    line of Spanish — a screen whose subject was reachable only by scrolling past
+    everything written about it.
+
+    So the exchange comes second now, directly under the goal it serves, and the
+    English that used to precede it either moved behind a control or was cut:
+
+    - The capability preview is a sheet. It is the longest block on the screen
+      and the least urgent — "what you will be able to do" is a promise about
+      afterwards, and a learner reads it once. Behind a control it also states
+      its own count, which is more than eleven rows managed.
+    - The palettes and the lab stay on the page, below the exchange. They are
+      *material* rather than chrome, and a mission's language is mostly in them:
+      putting them behind a tap would be the opposite mistake. It is also not
+      available — their phrases open the word sheet, and a sheet cannot open a
+      sheet.
+    - The two sentences of instruction went. "Tap any word for help" now sits
+      with the dialogue it describes, as one line, where it is true.
+  */
   return (
     <>
       <MissionJourney current="understand" />
       <section className={styles.brief} aria-labelledby={`${id}-goal`}>
         <p className={styles.eyebrow}>Your goal</p>
         <h2 id={`${id}-goal`}>{missionGoal}</h2>
-        <p>First understand the connected example. Tap any word when you need help.</p>
+        {stageCapabilities.length > 0 && (
+          <div className={styles.briefActions}>
+            <Button
+              // Named with its count, so the control says how much is behind it
+              // rather than only that something is.
+              aria-label={`What you’ll be able to do: ${stageCapabilities.length} ${
+                stageCapabilities.length === 1 ? 'ability' : 'abilities'
+              }`}
+              aria-expanded={showCapabilities}
+              aria-controls={capabilitySheetId}
+              onClick={() => setShowCapabilities(true)}
+            >
+              <Icon name="study" /> What you’ll be able to do
+              <span className={styles.count}>{stageCapabilities.length}</span>
+            </Button>
+          </div>
+        )}
       </section>
-
-      {stageCapabilities.length > 0 && (
-        <CapabilityList capabilities={stageCapabilities} variant="preview" />
-      )}
-
-      {stagePalettes.length > 0 && (
-        <ResponsePalettePanel palettes={stagePalettes} onListen={speak} words={words} />
-      )}
-
-      {stageVariations.length > 0 && (
-        <VariationLabPanel patterns={stageVariations} language={language} onListen={speakText} />
-      )}
 
       <div className={styles.actions}>
         <Button onClick={() => speakText(stageItems.map((item) => item.text).join(' '))}>
@@ -428,36 +461,71 @@ function UnderstandStage({
           {showMeanings ? 'Hide meaning' : 'Show meaning'}
         </Button>
       </div>
+      <p className={styles.hint}>Tap any word for help.</p>
 
       <ol className={styles.lines} aria-label={`${passageTitle}, ${stageItems.length} lines`}>
-        {stageItems.map((item, index) => (
-          <li key={item.id}>
-            {speakers?.[index] && <p className={styles.speaker}>{speakers[index]}</p>}
-            <TokenizedText
-              item={item}
-              className={styles.lineText}
-              onSelect={(token) => words.open(item.id, token)}
-              selected={words.tokensFor(item.id)}
-              contextLabel={item.text}
-            />
-            {showMeanings && translationOf(item) && (
-              <p className={styles.meaning}>{translationOf(item)}</p>
-            )}
-            <button
-              type="button"
-              className={styles.linePlay}
-              onClick={() => speak(item)}
-              aria-label={`Listen to “${item.text}”`}
+        {stageItems.map((item, index) => {
+          const speaker = speakers?.[index];
+          return (
+            /*
+              One hue per speaker, so a four-turn exchange reads as an exchange.
+              The name is still printed above the line — the colour is recognition
+              from the second turn onwards, and a monologue has no speakers and so
+              takes the plain surface.
+            */
+            <li
+              key={item.id}
+              className={speaker ? styles.lineToned : styles.linePlain}
+              {...(speaker ? { 'data-kind': kindHue(speaker) } : {})}
             >
-              <Icon name="speak" size="lg" />
-            </button>
-          </li>
-        ))}
+              {speaker && <p className={styles.speaker}>{speaker}</p>}
+              <TokenizedText
+                item={item}
+                className={styles.lineText}
+                onSelect={(token) => words.open(item.id, token)}
+                selected={words.tokensFor(item.id)}
+                contextLabel={item.text}
+              />
+              {showMeanings && translationOf(item) && (
+                <p className={styles.meaning}>{translationOf(item)}</p>
+              )}
+              <button
+                type="button"
+                className={styles.linePlay}
+                onClick={() => speak(item)}
+                aria-label={`Listen to “${item.text}”`}
+              >
+                <Icon name="speak" size="lg" />
+              </button>
+            </li>
+          );
+        })}
       </ol>
+
+      {stagePalettes.length > 0 && (
+        <ResponsePalettePanel palettes={stagePalettes} onListen={speak} words={words} />
+      )}
+
+      {stageVariations.length > 0 && (
+        <VariationLabPanel patterns={stageVariations} language={language} onListen={speakText} />
+      )}
 
       <Button variant="primary" block large onClick={onPractise}>
         Start practice <Icon name="forward" />
       </Button>
+
+      {showCapabilities && (
+        <Sheet
+          id={capabilitySheetId}
+          title="What you’ll be able to do"
+          width="wide"
+          onClose={() => setShowCapabilities(false)}
+        >
+          {/* Untitled: the sheet's own heading is already this list's name, and
+              a dialog that says the same thing twice makes an agent choose. */}
+          <CapabilityList capabilities={stageCapabilities} variant="preview" titled={false} />
+        </Sheet>
+      )}
 
       {openItem && (
         <WordInfoSheet
@@ -823,7 +891,6 @@ function ResponsePalettePanel({
       <div>
         <p className={styles.eyebrow}>Response palette</p>
         <h3>Choose what you really mean</h3>
-        <p>Learn the conversational move, then vary the words, tone and feeling.</p>
       </div>
       {palettes.map((palette) => {
         const isExpanded = expanded.has(palette.id);
@@ -920,7 +987,6 @@ function VariationLabPanel({
       <div>
         <p className={styles.eyebrow}>Variation lab</p>
         <h3>Keep the pattern. Change the message.</h3>
-        <p>Swap meaningful pieces, then practise the new sentence from its meaning.</p>
       </div>
       {patterns.map((pattern) => (
         <VariationBuilder
@@ -1012,13 +1078,18 @@ function VariationBuilder({
 function CapabilityList({
   capabilities,
   variant,
+  titled = true,
 }: {
   readonly capabilities: readonly MissionCapability[];
   readonly variant: 'preview' | 'evidence';
+  /** Off where the container already names the list — inside its own sheet. */
+  readonly titled?: boolean;
 }) {
   return (
     <section className={styles.capabilityPanel} aria-label="Mission capabilities">
-      <h3>{variant === 'preview' ? 'What you’ll be able to do' : 'Capability evidence'}</h3>
+      {titled && (
+        <h3>{variant === 'preview' ? 'What you’ll be able to do' : 'Capability evidence'}</h3>
+      )}
       <ul className={styles.capabilities}>
         {capabilities.map((capability) => (
           <li key={capability.id}>

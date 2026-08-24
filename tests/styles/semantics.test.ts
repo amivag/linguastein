@@ -13,9 +13,20 @@
 import { describe, expect, it } from 'vitest';
 import { MOODS, POS_TAGS, STUDYABLE_POS, TENSES } from '../../src/domain/content';
 import { KIND_HUE_COUNT } from '../../src/styles/kinds';
-import { genderHue, genderLabel, posHue, tenseHue } from '../../src/styles/semantics';
+import {
+  annotationHue,
+  genderHue,
+  genderLabel,
+  posHue,
+  tenseHue,
+  usageHue,
+  type AnnotationFacet,
+  type UsageFacet,
+} from '../../src/styles/semantics';
 
 const GENDERS = ['masculine', 'feminine', 'neuter'] as const;
+const ANNOTATIONS: readonly AnnotationFacet[] = ['meaning', 'note', 'ability'];
+const USAGES: readonly UsageFacet[] = ['address', 'register', 'region'];
 
 /** Steps around a twelve-hue wheel, the short way. */
 function wheelDistance(a: number, b: number): number {
@@ -29,6 +40,8 @@ describe('every assignment names a hue the palettes declare', () => {
     ['part of speech', POS_TAGS.map((pos) => posHue(pos))],
     ['tense', TENSES.map((tense) => tenseHue(tense))],
     ['mood', MOODS.map((mood) => tenseHue('present', mood))],
+    ['annotation', ANNOTATIONS.map((facet) => annotationHue(facet))],
+    ['usage', USAGES.map((facet) => usageHue(facet))],
   ])('%s', (_label, hues) => {
     for (const hue of hues) {
       if (hue === undefined) continue;
@@ -120,6 +133,21 @@ describe('tenseHue', () => {
     expect(wheelDistance(preterite, imperfect)).toBeGreaterThanOrEqual(4);
   });
 
+  it('shares no hue with the part of speech that carries it', () => {
+    /*
+     * The same argument as `posHue`'s gender guard, and it was being broken: the
+     * preterite and `VERB` were both hue 7, so a verb in the preterite showed one
+     * colour twice in one pill row for two unrelated reasons.
+     *
+     * Only verbs inflect for tense, so `VERB` is the whole of the constraint —
+     * `ADJ` sharing a hue with the conditional is unreachable, and spending a
+     * hue to avoid it would cost one of the distinctions that is reachable.
+     */
+    const verb = posHue('VERB');
+    for (const tense of TENSES) expect(tenseHue(tense)).not.toBe(verb);
+    for (const mood of MOODS) expect(tenseHue('present', mood)).not.toBe(verb);
+  });
+
   it('gives every tense a hue', () => {
     for (const tense of TENSES) expect(tenseHue(tense)).toBeDefined();
   });
@@ -143,5 +171,46 @@ describe('tenseHue', () => {
     // It is a mood and a tense in this model. A conjugation table asks one way
     // and a grammar skill the other; they must not come out different colours.
     expect(tenseHue('conditional')).toBe(tenseHue(undefined, 'conditional'));
+  });
+});
+
+/*
+ * The reference facets, which are the one set here that has to be internally
+ * collision-free rather than merely collision-free against gender.
+ *
+ * The reason is the practice card: it shows the meaning, an authored note, the
+ * abilities, and all three usage badges *at once*, in one column, as the same
+ * shape. The grammatical maps above may reuse a hue because a tense pill and a
+ * gender pill are never the same shape in the same place; these six are.
+ */
+describe('the reference facets', () => {
+  it('gives all six a hue of their own', () => {
+    const hues = [
+      ...ANNOTATIONS.map((facet) => annotationHue(facet)),
+      ...USAGES.map((facet) => usageHue(facet)),
+    ];
+    expect(new Set(hues).size).toBe(hues.length);
+  });
+
+  it('shares no hue with gender', () => {
+    // The word sheet puts a gender pill in its heading and the usage badges
+    // directly under it, so this is the same argument `posHue` makes.
+    const genders = new Set(GENDERS.map((gender) => genderHue(gender)));
+    for (const facet of ANNOTATIONS) expect(genders.has(annotationHue(facet))).toBe(false);
+    for (const facet of USAGES) expect(genders.has(usageHue(facet))).toBe(false);
+  });
+
+  it('keeps the meaning far from the note it sits above', () => {
+    // The two that appear together most often, and in that order, on both the
+    // practice card and the word sheet.
+    expect(wheelDistance(annotationHue('meaning'), annotationHue('note'))).toBeGreaterThanOrEqual(
+      3,
+    );
+  });
+
+  it('keeps who you say it to far from where it is said', () => {
+    // The two usage facets a learner acts on: `usted` changes what you say next,
+    // and `es-MX` changes whether you say it at all.
+    expect(wheelDistance(usageHue('address'), usageHue('region'))).toBeGreaterThanOrEqual(3);
   });
 });

@@ -22,4 +22,4 @@
 # bump, and should not get one.
 #
 # Run `npm run build:data` to learn the current count; it prints it either way.
-0.5.0	2142	Twelve A2 passages narrated in the past, from vocabulary the pack already had
+0.6.0	2205	Twenty A2 passages narrated in the past; A2 median encounters 1 to 3

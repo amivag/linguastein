@@ -1515,6 +1515,69 @@
 001512	sentence	active	Después lo dejé en casa y me llevé el bolso pequeño.
 001513	sentence	active	Reservé una habitación doble para dos noches.
 001514	sentence	active	Salimos juntos muy temprano y el viaje duró tres horas.
+001515	sentence	active	El verano pasado pasamos la frontera en camión.
+001516	sentence	active	Mi primo conducía y yo miraba el camino.
+001517	sentence	active	Reservamos los billetes una semana antes.
+001518	sentence	active	El viaje duró nueve horas y llegamos de noche.
+001519	sentence	active	En el hotel había un extranjero que hablaba cuatro idiomas.
+001520	sentence	active	Nos mostró un sitio muy tranquilo cerca del lago.
+001521	sentence	active	Pagamos todo en efectivo porque no querían tarjeta.
+001522	sentence	active	Fue un viaje estupendo y vamos a volver juntos.
+001523	sentence	active	La empresa cambió de oficina en septiembre.
+001524	sentence	active	Un empleado nos mostró la sala del equipo.
+001525	sentence	active	Cada mesa tenía una pantalla grande y una lámpara.
+001526	sentence	active	Las paredes eran grises y el suelo de madera.
+001527	sentence	active	Mi jefe explicó que el proyecto dependía de dos personas.
+001528	sentence	active	Debíamos acabar antes de diciembre.
+001529	sentence	active	Nadie habló del sueldo, y eso me pareció normal.
+001530	sentence	active	La oficina nueva me gustó, quizá por la luz.
+001531	sentence	active	Ayer tuvimos un examen y estaba muy nervioso.
+001532	sentence	active	Éramos veinte alumnos en una sala pequeña.
+001533	sentence	active	La profesora escribió una frase en la pared.
+001534	sentence	active	Yo escribí todas las letras en mi cuaderno.
+001535	sentence	active	El primer ejercicio no lo comprendí bien.
+001536	sentence	active	Lo intenté otra vez y después me pareció fácil.
+001537	sentence	active	Acabé diez minutos antes de la hora.
+001538	sentence	active	La profesora nos enseñó las respuestas después.
+001539	sentence	active	El viernes cociné para cuatro amigos.
+001540	sentence	active	Compré uvas, fresas, lechuga y dos zanahorias.
+001541	sentence	active	Preparé la pasta con ajo y mucho aceite.
+001542	sentence	active	Una amiga es vegetariana, así que serví dos platos.
+001543	sentence	active	Puse una servilleta al lado de cada plato.
+001544	sentence	active	Todo estaba delicioso, o eso me dijeron.
+001545	sentence	active	Recomendé las fresas con azúcar y se acabaron.
+001546	sentence	active	Nadie dejó propina en mi casa, claro.
+001547	sentence	active	Cuando entramos, la casa estaba vacía.
+001548	sentence	active	Solo había una lámpara vieja en el suelo.
+001549	sentence	active	Las paredes estaban feas y la madera muy vieja.
+001550	sentence	active	En el baño no había toallas ni jabón.
+001551	sentence	active	La nevera estaba abierta y no funcionaba.
+001552	sentence	active	Saqué dos bolsas de basura el primer día.
+001553	sentence	active	Una silla se cayó cuando la toqué.
+001554	sentence	active	Ahora la casa parece otra y pienso en ese día a menudo.
+001555	sentence	active	El invierno pasado nevó mucho en el pueblo.
+001556	sentence	active	Por la mañana había nubes bajas y mucho frío.
+001557	sentence	active	Los caballos y las vacas estaban en la casa de madera.
+001558	sentence	active	El camino hasta el puente estaba blanco.
+001559	sentence	active	El lago se veía gris desde el bosque.
+001560	sentence	active	Por la noche salieron la luna y las estrellas.
+001561	sentence	active	Nunca vi un sitio tan tranquilo.
+001562	sentence	active	La semana pasada perdí el bolso en el teatro.
+001563	sentence	active	Llevaba una revista, las llaves y un cinturón.
+001564	sentence	active	Volví a la esquina de la iglesia, pero no estaba.
+001565	sentence	active	Olvidé preguntar en la panadería de al lado.
+001566	sentence	active	Dos días después recibí un mensaje del teatro.
+001567	sentence	active	Descubrí que alguien lo había dejado en una caja.
+001568	sentence	active	Me mandaron un mensaje con la dirección.
+001569	sentence	active	Estaba todo, hasta los calcetines y el sombrero.
+001570	sentence	active	Tenía una cita con el médico el martes por la tarde.
+001571	sentence	active	Me dolía el cuello y también el estómago.
+001572	sentence	active	Me tocó el músculo del cuello despacio.
+001573	sentence	active	Me miró la piel de la espalda muy despacio.
+001574	sentence	active	Dijo que era normal y que no era nada.
+001575	sentence	active	Me dio unas pastillas y me recomendó dormir más.
+001576	sentence	active	El centro sanitario estaba lleno y esperé un rato largo.
+001577	sentence	active	Salí más tranquilo, pero todavía un poco débil.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -2097,6 +2160,14 @@
 700077	passage	active	Vendí mi guitarra
 700078	passage	active	Anoche no dormí
 700079	passage	active	La ropa del viaje
+700080	passage	active	El viaje en camión
+700081	passage	active	La oficina nueva
+700082	passage	active	El examen de español
+700083	passage	active	Una cena con amigos
+700084	passage	active	La casa vacía
+700085	passage	active	Nevó en el pueblo
+700086	passage	active	Perdí el bolso
+700087	passage	active	La cita con el médico
 800001	verb-card	active	ser
 800002	verb-card	active	estar
 800003	verb-card	active	tener

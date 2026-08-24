@@ -43,31 +43,31 @@ because content landed and the paragraph describing it did not:
 npm run build:data
 ```
 
-**Re-measured 2026-08-24**, against pack `0.3.0`. Goals 2 and 3 of §5 have since
+**Re-measured 2026-08-24**, against pack `0.6.0`. Goals 2 and 3 of §5 have since
 been met — read the table before planning volume work, because the figures this
 brief was written against are less than half of what now ships.
 
 | Measure                              | Now                                    |
 | ------------------------------------ | -------------------------------------- |
-| Practisable items                    | 2,142                                  |
-| — sentences and phrases              | 1,514                                  |
+| Practisable items                    | 2,205                                  |
+| — sentences and phrases              | 1,577                                  |
 | — word cards                         | 628                                    |
 | Lexemes                              | 803 (127 verbs, 393 nouns, 283 other)  |
 | Generated verb forms                 | 3,024 (24 per verb, commands included) |
 | Generated noun and adjective forms   | 1,122                                  |
-| Running words of Spanish             | **8,385 (~70 minutes of reading)**     |
-| Average sentence length              | 5.5 words                              |
+| Running words of Spanish             | **8,900 (~74 minutes of reading)**     |
+| Average sentence length              | 5.6 words                              |
 | Longest single item                  | 13 words                               |
-| Multi-sentence texts                 | **79 (29 texts, 50 dialogues)**        |
-| — sentences read in context          | 596, averaging 7.5 per passage         |
-| Tokens linked to a lexeme            | 8,352 of 8,385 (100%)                  |
+| Multi-sentence texts                 | **87 (37 texts, 50 dialogues)**        |
+| — sentences read in context          | 659, averaging 7.6 per passage         |
+| Tokens linked to a lexeme            | 8,866 of 8,900 (100%)                  |
 | Lexemes appearing in ≥1 sentence     | 781 of 803                             |
-| Lexemes appearing in exactly one     | **161 (20%)**                          |
-| Lexemes with ≥6 encounters           | **251 (31%)**                          |
+| Lexemes appearing in exactly one     | **132 (16%)**                          |
+| Lexemes with ≥6 encounters           | **266 (33%)**                          |
 | Questions / statements               | 391 / 1,034, with **5** minimal pairs  |
-| Items marked with register           | 844                                    |
+| Items marked with register           | 907                                    |
 | Items marked with address (tú/usted) | 443                                    |
-| Items marked with a region           | 50                                     |
+| Items marked with a region           | 56                                     |
 | Items containing `¡`                 | 14                                     |
 | Items with audio                     | 0                                      |
 | Senses                               | 0                                      |
@@ -146,8 +146,8 @@ lexemes as it fixed. The passage pass was written from words the pack already
 had, so every sentence paid into the recycling target instead of borrowing from
 it. This is the whole argument for §3.2.
 
-Measured cost of what remains: **1,927 missing encounters**, which at 5.4 linked
-words per sentence is **359 more sentences at an absolute minimum**, and only if
+Measured cost of what remains: **1,555 missing encounters**, which at 5.6 linked
+words per sentence is **277 more sentences at an absolute minimum**, and only if
 every one is built entirely from words that are already short. Write them as
 passages (§6.4) rather than standalone sentences.
 
@@ -158,7 +158,7 @@ constraint. Shape is.
 
 ### 3.2 There is still not much to read or listen to
 
-**This is the part that is now done.** 8,385 running words is about an hour of
+**This is the part that is now done.** 8,900 running words is about an hour of
 material, and 65 passages carry 489 sentences read in context against a target of
 30–60 — so both the mechanism and the content have arrived, and the spec's
 assumption of extended input (Kató Lomb, §2.2; §16–§17) is met. No item is longer
@@ -193,7 +193,7 @@ recycling target and produces better input than 449 unrelated sentences would.
 - **`frequencyRank`**: absent, so nothing can sequence learning by payoff.
 - ~~**Skill `prerequisites`**~~: **done** — 58 authored skills declare one, so i+1
   ordering is possible and only `frequencyRank` is left of goal 5.
-- **Usage marking**: 844 items of 1,514 carry register and 443 carry address, up
+- **Usage marking**: 907 items of 1,577 carry register and 443 carry address, up
   from 46 and 60 — largely a side effect of the mission palettes, which are
   authored with both. The machinery is now well applied; what remains is whether
   it is _correct_, which is §9's second bullet. Two specifics for that pass: `register` is inconsistently
@@ -202,7 +202,7 @@ recycling target and produces better input than 449 unrelated sentences would.
   propagate from a lexeme to the sentences that use it — the sentences built on
   `plata` and `pasta` had to be marked colloquial by hand. Decide whether it
   should propagate and make it uniform either way.
-- **Exclamations**: 14 items of 2,142 contain `¡` — up from zero, and still
+- **Exclamations**: 14 items of 2,205 contain `¡` — up from zero, and still
   under 1%. A learner needs to read `¡…!` as much as `¿…?`, and almost nothing in
   the pack carries exclamatory intonation for audio to demonstrate. Surfaced by
   the audio sampler, which reports that it cannot test that prosody; cheap to fix
@@ -299,20 +299,20 @@ finishing condition.
 
 1. **Recycling — the content half is still open; the gate is not.** Every A1
    lexeme appears in **≥6 different sentences**; every A2 lexeme in **≥4**.
-   Currently **384 of 624** A1 lexemes and **139 of 179** A2 lexemes are short.
+   Currently **374 of 624** A1 lexemes and **103 of 179** A2 lexemes are short.
 
    The gate asked for here now exists, and is a **ratchet** rather than the
    threshold itself: `content/es/recycling.tsv` records where we are, and the
    build fails both when the number gets worse and when an improvement is left
-   unrecorded. Turning the real threshold on today would fail the build on 384
+   unrecorded. Turning the real threshold on today would fail the build on 374
    lexemes and block every other kind of work — the same reason
    `vite.config.ts` sets coverage floors just under what the suite reaches. So
    the remaining work is writing the contexts and walking the ceiling down.
 
-2. ~~**Volume.**~~ **Done** — 1,514 sentences and 8,385 running words, against a
+2. ~~**Volume.**~~ **Done** — 1,577 sentences and 8,900 running words, against a
    target of 1,200–1,500 and 8,000–10,000. About an hour of material.
-3. ~~**Extended input.**~~ **Done and past the target** — 79 passages averaging
-   7.5 sentences, against 30–60. Per §3.2 this was also meant to be the cheapest
+3. ~~**Extended input.**~~ **Done and past the target** — 87 passages averaging
+   7.6 sentences, against 30–60. Per §3.2 this was also meant to be the cheapest
    route to goal 1, and it only partly was: see the note under §3.1.
 4. **Usage marking.** Register on every service, social and idiomatic phrase;
    address on every sentence spoken to someone (mostly automatic once §3.4's
@@ -437,7 +437,7 @@ unreviewed`. Do not mark anything reviewed, and do not describe the pack as
 - [ ] The build fails when recycling drops below the threshold — **the open item,
       and the one the rest of this list now waits on**
 - [ ] Every A1 lexeme appears in ≥6 sentences; A2 in ≥4 — 398 and 161 short
-- [x] 1,200+ sentences, 8,000+ running words — 1,514 sentences, 8,385 words
+- [x] 1,200+ sentences, 8,000+ running words — 1,577 sentences, 8,900 words
 - [x] 30+ multi-sentence texts or dialogues, reachable in the app — **65**,
       averaging 7.5 sentences, with the reading view that shows them
 - [x] Register, address and region marked across the content that needs it — 755

@@ -131,3 +131,68 @@
 001512	Después lo dejé en casa y me llevé el bolso pequeño.	Then I left it at home and took the small bag.	a2	clothes,travel		neutral			ropa-viaje
 001513	Reservé una habitación doble para dos noches.	I booked a double room for two nights.	a2	travel		neutral			ropa-viaje
 001514	Salimos juntos muy temprano y el viaje duró tres horas.	We left together very early and the journey lasted three hours.	a2	travel,clock		neutral			ropa-viaje
+
+# == Batch three: topping up the words sitting at two and three ================
+001515	El verano pasado pasamos la frontera en camión.	Last summer we crossed the border by coach.	a2	travel		neutral			viaje-camion
+001516	Mi primo conducía y yo miraba el camino.	My cousin was driving and I was watching the road.	a2	travel,family		neutral			viaje-camion
+001517	Reservamos los billetes una semana antes.	We booked the tickets a week before.	a2	travel,communication		neutral		es-ES	viaje-camion
+001518	El viaje duró nueve horas y llegamos de noche.	The journey lasted nine hours and we arrived at night.	a2	travel,clock		neutral			viaje-camion
+001519	En el hotel había un extranjero que hablaba cuatro idiomas.	At the hotel there was a foreigner who spoke four languages.	a2	travel,people		neutral			viaje-camion
+001520	Nos mostró un sitio muy tranquilo cerca del lago.	He showed us a very quiet spot near the lake.	a2	travel,nature		neutral			viaje-camion
+001521	Pagamos todo en efectivo porque no querían tarjeta.	We paid everything in cash because they did not want cards.	a2	travel,numbers		neutral			viaje-camion
+001522	Fue un viaje estupendo y vamos a volver juntos.	It was a great trip and we are going back together.	a2	travel,feelings		neutral			viaje-camion
+001523	La empresa cambió de oficina en septiembre.	The company moved office in September.	a2	work,time		neutral			oficina-nueva
+001524	Un empleado nos mostró la sala del equipo.	An employee showed us the team room.	a2	work		neutral			oficina-nueva
+001525	Cada mesa tenía una pantalla grande y una lámpara.	Each desk had a big screen and a lamp.	a2	work,objects		neutral			oficina-nueva
+001526	Las paredes eran grises y el suelo de madera.	The walls were grey and the floor wooden.	a2	work,home		neutral			oficina-nueva
+001527	Mi jefe explicó que el proyecto dependía de dos personas.	My boss explained that the project depended on two people.	a2	work		neutral			oficina-nueva
+001528	Debíamos acabar antes de diciembre.	We had to finish before December.	a2	work,time		neutral			oficina-nueva
+001529	Nadie habló del sueldo, y eso me pareció normal.	Nobody mentioned the salary, and that seemed normal to me.	a2	work,feelings		neutral			oficina-nueva
+001530	La oficina nueva me gustó, quizá por la luz.	I liked the new office, maybe because of the light.	a2	work,feelings		neutral			oficina-nueva
+001531	Ayer tuvimos un examen y estaba muy nervioso.	Yesterday we had an exam and I was very nervous.	a2	school,feelings		neutral			examen-espanol
+001532	Éramos veinte alumnos en una sala pequeña.	There were twenty of us students in a small room.	a2	school,people		neutral			examen-espanol
+001533	La profesora escribió una frase en la pared.	The teacher wrote a sentence on the wall.	a2	school,language		neutral			examen-espanol
+001534	Yo escribí todas las letras en mi cuaderno.	I wrote all the letters into my notebook.	a2	school,language		neutral			examen-espanol
+001535	El primer ejercicio no lo comprendí bien.	I did not understand the first exercise properly.	a2	school,language		neutral			examen-espanol
+001536	Lo intenté otra vez y después me pareció fácil.	I tried again and afterwards it seemed easy.	a2	school,feelings		neutral			examen-espanol
+001537	Acabé diez minutos antes de la hora.	I finished ten minutes before time.	a2	school,clock		neutral			examen-espanol
+001538	La profesora nos enseñó las respuestas después.	The teacher showed us the answers afterwards.	a2	school		neutral			examen-espanol
+001539	El viernes cociné para cuatro amigos.	On Friday I cooked for four friends.	a2	food-drink,social		neutral			cena-amigos
+001540	Compré uvas, fresas, lechuga y dos zanahorias.	I bought grapes, strawberries, lettuce and two carrots.	a2	food-drink,shopping		neutral			cena-amigos
+001541	Preparé la pasta con ajo y mucho aceite.	I made the pasta with garlic and plenty of oil.	a2	food-drink		neutral			cena-amigos
+001542	Una amiga es vegetariana, así que serví dos platos.	One friend is vegetarian, so I served two dishes.	a2	food-drink,social		neutral			cena-amigos
+001543	Puse una servilleta al lado de cada plato.	I put a napkin next to each plate.	a2	food-drink		neutral			cena-amigos
+001544	Todo estaba delicioso, o eso me dijeron.	Everything was delicious, or so they told me.	a2	food-drink,feelings		neutral			cena-amigos
+001545	Recomendé las fresas con azúcar y se acabaron.	I recommended the strawberries with sugar and they were all gone.	a2	food-drink		neutral			cena-amigos
+001546	Nadie dejó propina en mi casa, claro.	Nobody left a tip at my house, of course.	a2	food-drink,social		neutral			cena-amigos
+001547	Cuando entramos, la casa estaba vacía.	When we went in, the house was empty.	a2	home		neutral			casa-vacia
+001548	Solo había una lámpara vieja en el suelo.	There was only an old lamp on the floor.	a2	home		neutral			casa-vacia
+001549	Las paredes estaban feas y la madera muy vieja.	The walls looked ugly and the wood very old.	a2	home		neutral			casa-vacia
+001550	En el baño no había toallas ni jabón.	In the bathroom there were no towels and no soap.	a2	home		neutral			casa-vacia
+001551	La nevera estaba abierta y no funcionaba.	The fridge was open and did not work.	a2	home		neutral		es-ES,es-CO,es-VE,es-CU,es-DO,es-PR	casa-vacia
+001552	Saqué dos bolsas de basura el primer día.	I took out two bags of rubbish the first day.	a2	home		neutral			casa-vacia
+001553	Una silla se cayó cuando la toqué.	A chair fell over when I touched it.	a2	home		neutral			casa-vacia
+001554	Ahora la casa parece otra y pienso en ese día a menudo.	Now the house looks different and I think about that day often.	a2	home,feelings		neutral			casa-vacia
+001555	El invierno pasado nevó mucho en el pueblo.	Last winter it snowed a lot in the village.	a2	nature,weather		neutral			nevo-pueblo
+001556	Por la mañana había nubes bajas y mucho frío.	In the morning there were low clouds and it was very cold.	a2	nature,weather		neutral			nevo-pueblo
+001557	Los caballos y las vacas estaban en la casa de madera.	The horses and the cows were in the wooden building.	a2	nature,animals		neutral			nevo-pueblo
+001558	El camino hasta el puente estaba blanco.	The path to the bridge was white.	a2	nature		neutral			nevo-pueblo
+001559	El lago se veía gris desde el bosque.	The lake looked grey from the woods.	a2	nature		neutral			nevo-pueblo
+001560	Por la noche salieron la luna y las estrellas.	At night the moon and the stars came out.	a2	nature,time		neutral			nevo-pueblo
+001561	Nunca vi un sitio tan tranquilo.	I never saw such a quiet place.	a2	nature,feelings		neutral			nevo-pueblo
+001562	La semana pasada perdí el bolso en el teatro.	Last week I lost my bag at the theatre.	a2	objects,city		neutral			perdi-bolso
+001563	Llevaba una revista, las llaves y un cinturón.	I had a magazine, my keys and a belt in it.	a2	objects		neutral			perdi-bolso
+001564	Volví a la esquina de la iglesia, pero no estaba.	I went back to the corner by the church, but it was not there.	a2	objects,city		neutral			perdi-bolso
+001565	Olvidé preguntar en la panadería de al lado.	I forgot to ask at the bakery next door.	a2	objects,city		neutral			perdi-bolso
+001566	Dos días después recibí un mensaje del teatro.	Two days later I got a message from the theatre.	a2	objects,communication		neutral			perdi-bolso
+001567	Descubrí que alguien lo había dejado en una caja.	I found out someone had left it in a box.	a2	objects		neutral			perdi-bolso
+001568	Me mandaron un mensaje con la dirección.	They sent me a message with the address.	a2	objects,communication		neutral			perdi-bolso
+001569	Estaba todo, hasta los calcetines y el sombrero.	Everything was there, even the socks and the hat.	a2	objects,clothes		neutral			perdi-bolso
+001570	Tenía una cita con el médico el martes por la tarde.	I had a doctor appointment on Tuesday afternoon.	a2	health,clock		neutral			cita-medico
+001571	Me dolía el cuello y también el estómago.	My neck hurt and my stomach did too.	a2	health,body		neutral			cita-medico
+001572	Me tocó el músculo del cuello despacio.	He pressed the muscle in my neck slowly.	a2	health,body		neutral			cita-medico
+001573	Me miró la piel de la espalda muy despacio.	He looked at the skin on my back very slowly.	a2	health,body		neutral			cita-medico
+001574	Dijo que era normal y que no era nada.	He said it was normal and that it was nothing.	a2	health		neutral			cita-medico
+001575	Me dio unas pastillas y me recomendó dormir más.	He gave me some tablets and recommended sleeping more.	a2	health		neutral			cita-medico
+001576	El centro sanitario estaba lleno y esperé un rato largo.	The health centre was full and I waited a good while.	a2	health		neutral			cita-medico
+001577	Salí más tranquilo, pero todavía un poco débil.	I came out calmer, but still a little weak.	a2	health,feelings		neutral			cita-medico

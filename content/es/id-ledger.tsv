@@ -1578,6 +1578,67 @@
 001575	sentence	active	Me dio unas pastillas y me recomendó dormir más.
 001576	sentence	active	El centro sanitario estaba lleno y esperé un rato largo.
 001577	sentence	active	Salí más tranquilo, pero todavía un poco débil.
+001578	sentence	active	El mes pasado le conté una mentira a mi hermana.
+001579	sentence	active	No fue nada grande, pero me sentí mal un rato.
+001580	sentence	active	Le dije que no tenía dinero para el viaje.
+001581	sentence	active	La verdad era otra y ella lo descubrió.
+001582	sentence	active	Me perdonó de una manera muy tranquila.
+001583	sentence	active	Me contó que ella hizo algo parecido de niña.
+001584	sentence	active	Decidí no olvidar ese día.
+001585	sentence	active	Quizá las mentiras pequeñas son más difíciles.
+001586	sentence	active	El domingo vimos un partido con los vecinos.
+001587	sentence	active	Éramos ocho y estábamos todos juntos en el salón.
+001588	sentence	active	Un equipo llevaba camisas azules y el otro blancas.
+001589	sentence	active	El partido duró dos horas y fue estupendo.
+001590	sentence	active	Los vecinos eran muy ruidosos, pero nadie dijo nada.
+001591	sentence	active	Comimos demasiado y bebimos suficiente café.
+001592	sentence	active	Al terminar, todos estábamos cansados y contentos.
+001593	sentence	active	Normalmente el camión de la basura llega muy temprano.
+001594	sentence	active	Pasa por la esquina de la iglesia a las seis.
+001595	sentence	active	Esta mañana me despertó porque era muy ruidoso.
+001596	sentence	active	Yo vivo arriba y la ventana estaba abierta.
+001597	sentence	active	Salí con dos bolsas de basura recién llenas.
+001598	sentence	active	El empleado me dijo buenos días y siguió.
+001599	sentence	active	Después no pude dormir y preparé el desayuno.
+001600	sentence	active	El refrigerador viejo dejó de funcionar en agosto.
+001601	sentence	active	Debíamos comprar otro, pero no teníamos suficiente plata.
+001602	sentence	active	Vendimos la mesa del comedor a un vecino.
+001603	sentence	active	Con eso pagamos casi todo el refrigerador nuevo.
+001604	sentence	active	Lo mandaron a casa el martes por la tarde.
+001605	sentence	active	Recibimos también dos toallas nuevas.
+001606	sentence	active	El wifi no funcionaba ese día y no pude pagar por el móvil.
+001607	sentence	active	Ahora la cocina parece otra.
+001608	sentence	active	Ayer comimos en el restaurante de la esquina.
+001609	sentence	active	La camarera era nueva y estaba un poco nerviosa.
+001610	sentence	active	Nos ofreció el menú del día y dos servilletas.
+001611	sentence	active	Sirvió la sopa muy despacio y todo estaba normal.
+001612	sentence	active	Mi hermano es vegetariano y ella le preparó otro plato.
+001613	sentence	active	Esperamos un rato largo, pero no dijimos nada.
+001614	sentence	active	Le dejamos una buena propina al salir.
+001615	sentence	active	El sábado pasado me caí en el bosque.
+001616	sentence	active	Iba en bicicleta por un camino muy malo.
+001617	sentence	active	Me dolía la mano y salió un poco de sangre.
+001618	sentence	active	También me dolía un músculo de la pierna.
+001619	sentence	active	Un hombre con dos caballos me ayudó mucho.
+001620	sentence	active	La piel de la mano estaba roja, nada más.
+001621	sentence	active	Pedí una cita para el lunes por la mañana.
+001622	sentence	active	Por la noche había nubes y no se veían las estrellas.
+001623	sentence	active	El verano pasado descubrí un cuaderno de mi abuelo.
+001624	sentence	active	Nació en un pueblo pequeño y pobre.
+001625	sentence	active	Su letra era grande y muy clara.
+001626	sentence	active	En la primera frase contaba un cuento de su madre.
+001627	sentence	active	Comenzó a escribir a los diez años.
+001628	sentence	active	Mi madre me mostró otros dos cuadernos.
+001629	sentence	active	Comprendí mejor de dónde venía mi familia.
+001630	sentence	active	Fue lo más humano que leí ese año.
+001631	sentence	active	En abril pasamos la frontera en camión.
+001632	sentence	active	Mi hermana conducía y yo dormía a su lado.
+001633	sentence	active	Reservamos un hotel pequeño para dos noches.
+001634	sentence	active	Al llegar dimos una vuelta alrededor de la plaza.
+001635	sentence	active	Yo no comprendía nada y ella tampoco.
+001636	sentence	active	Intentamos hablar con una mujer de la iglesia.
+001637	sentence	active	Nos explicó todo perfectamente y muy despacio.
+001638	sentence	active	El viaje duró tres días y nunca olvidé ese pueblo.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -2168,6 +2229,14 @@
 700085	passage	active	Nevó en el pueblo
 700086	passage	active	Perdí el bolso
 700087	passage	active	La cita con el médico
+700088	passage	active	Una mentira pequeña
+700089	passage	active	El partido del domingo
+700090	passage	active	El camión de la basura
+700091	passage	active	Compramos un refrigerador
+700092	passage	active	La camarera nueva
+700093	passage	active	Me caí en el bosque
+700094	passage	active	El cuaderno de mi abuelo
+700095	passage	active	Cruzar la frontera
 800001	verb-card	active	ser
 800002	verb-card	active	estar
 800003	verb-card	active	tener

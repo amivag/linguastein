@@ -10,3 +10,10 @@ docs/spec/
 # `git diff --exit-code public/packs` — so formatting this directory makes one of
 # the two fail whichever way the files are committed.
 public/packs/
+
+# Written by oxlint's rule probe while it runs. Tool artifacts, not source: the
+# two loose files are transient, which is worse than untidy — a `prettier --check`
+# running beside a lint can see them and fail on files that no longer exist.
+.oxprobe/
+.probelist.json
+.rulelist.json

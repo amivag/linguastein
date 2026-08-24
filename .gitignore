@@ -53,3 +53,10 @@ audio-samples/
 # clips are content-addressed, so every regeneration is a new blob that would
 # stay in history for ever. Un-ignore when the voice is settled and shipping.
 public/packs/*/audio/
+
+# Written by oxlint's rule probe while it runs. Tool artifacts, not source, and
+# the two loose files are transient — a lint running beside a format check can
+# leave one behind for long enough to be noticed.
+.oxprobe/
+.probelist.json
+.rulelist.json

@@ -196,3 +196,66 @@
 001575	Me dio unas pastillas y me recomendó dormir más.	He gave me some tablets and recommended sleeping more.	a2	health		neutral			cita-medico
 001576	El centro sanitario estaba lleno y esperé un rato largo.	The health centre was full and I waited a good while.	a2	health		neutral			cita-medico
 001577	Salí más tranquilo, pero todavía un poco débil.	I came out calmer, but still a little weak.	a2	health,feelings		neutral			cita-medico
+
+# == Batch four: the ones at one and two, sweeping up the threes =================
+001578	El mes pasado le conté una mentira a mi hermana.	Last month I told my sister a lie.	a2	social,family		neutral			mentira-pequena
+001579	No fue nada grande, pero me sentí mal un rato.	It was nothing big, but I felt bad for a while.	a2	social,feelings		neutral			mentira-pequena
+001580	Le dije que no tenía dinero para el viaje.	I told her I had no money for the trip.	a2	social,numbers		neutral			mentira-pequena
+001581	La verdad era otra y ella lo descubrió.	The truth was different and she found out.	a2	social		neutral			mentira-pequena
+001582	Me perdonó de una manera muy tranquila.	She forgave me in a very calm way.	a2	social,feelings		neutral			mentira-pequena
+001583	Me contó que ella hizo algo parecido de niña.	She told me she did something similar as a girl.	a2	social,family		neutral			mentira-pequena
+001584	Decidí no olvidar ese día.	I decided not to forget that day.	a2	social,feelings		neutral			mentira-pequena
+001585	Quizá las mentiras pequeñas son más difíciles.	Maybe small lies are harder.	a2	social,feelings		neutral			mentira-pequena
+001586	El domingo vimos un partido con los vecinos.	On Sunday we watched a match with the neighbours.	a2	sport,social		neutral			partido-domingo
+001587	Éramos ocho y estábamos todos juntos en el salón.	There were eight of us all together in the living room.	a2	sport,home		neutral			partido-domingo
+001588	Un equipo llevaba camisas azules y el otro blancas.	One team wore blue shirts and the other white.	a2	sport,clothes		neutral			partido-domingo
+001589	El partido duró dos horas y fue estupendo.	The match lasted two hours and was great.	a2	sport,clock		neutral			partido-domingo
+001590	Los vecinos eran muy ruidosos, pero nadie dijo nada.	The neighbours were very noisy, but nobody said anything.	a2	sport,people		neutral			partido-domingo
+001591	Comimos demasiado y bebimos suficiente café.	We ate too much and drank enough coffee.	a2	sport,food-drink		neutral			partido-domingo
+001592	Al terminar, todos estábamos cansados y contentos.	When it finished, we were all tired and happy.	a2	sport,feelings		neutral			partido-domingo
+001593	Normalmente el camión de la basura llega muy temprano.	Normally the rubbish lorry comes very early.	a2	city,clock		neutral			camion-basura
+001594	Pasa por la esquina de la iglesia a las seis.	It goes past the corner by the church at six.	a2	city,clock		neutral			camion-basura
+001595	Esta mañana me despertó porque era muy ruidoso.	This morning it woke me because it was very noisy.	a2	city,feelings		neutral			camion-basura
+001596	Yo vivo arriba y la ventana estaba abierta.	I live upstairs and the window was open.	a2	city,home		neutral			camion-basura
+001597	Salí con dos bolsas de basura recién llenas.	I went out with two bags of rubbish just filled.	a2	city,home		neutral			camion-basura
+001598	El empleado me dijo buenos días y siguió.	The man working there said good morning and carried on.	a2	city,people		neutral			camion-basura
+001599	Después no pude dormir y preparé el desayuno.	Afterwards I could not sleep and made breakfast.	a2	city,food-drink		neutral			camion-basura
+001600	El refrigerador viejo dejó de funcionar en agosto.	The old fridge stopped working in August.	a2	home		neutral		es-419	compramos-refri
+001601	Debíamos comprar otro, pero no teníamos suficiente plata.	We had to buy another one, but we did not have enough money.	a2	home,numbers		neutral		es-419	compramos-refri
+001602	Vendimos la mesa del comedor a un vecino.	We sold the dining room table to a neighbour.	a2	home,people		neutral			compramos-refri
+001603	Con eso pagamos casi todo el refrigerador nuevo.	With that we paid for almost all of the new fridge.	a2	home,numbers		neutral		es-419	compramos-refri
+001604	Lo mandaron a casa el martes por la tarde.	They sent it to the house on Tuesday afternoon.	a2	home,clock		neutral			compramos-refri
+001605	Recibimos también dos toallas nuevas.	We also got two new towels.	a2	home		neutral			compramos-refri
+001606	El wifi no funcionaba ese día y no pude pagar por el móvil.	The wifi was not working that day and I could not pay by phone.	a2	home,communication		neutral		es-ES	compramos-refri
+001607	Ahora la cocina parece otra.	Now the kitchen looks different.	a2	home		neutral			compramos-refri
+001608	Ayer comimos en el restaurante de la esquina.	Yesterday we ate at the restaurant on the corner.	a2	restaurant,city		neutral			camarera-nueva
+001609	La camarera era nueva y estaba un poco nerviosa.	The waitress was new and a little nervous.	a2	restaurant,feelings		neutral			camarera-nueva
+001610	Nos ofreció el menú del día y dos servilletas.	She offered us the set menu and two napkins.	a2	restaurant		neutral			camarera-nueva
+001611	Sirvió la sopa muy despacio y todo estaba normal.	She served the soup very slowly and everything was fine.	a2	restaurant,food-drink		neutral			camarera-nueva
+001612	Mi hermano es vegetariano y ella le preparó otro plato.	My brother is vegetarian and she made him another dish.	a2	restaurant,food-drink		neutral			camarera-nueva
+001613	Esperamos un rato largo, pero no dijimos nada.	We waited a good while, but we said nothing.	a2	restaurant,clock		neutral			camarera-nueva
+001614	Le dejamos una buena propina al salir.	We left her a good tip on the way out.	a2	restaurant,numbers		neutral			camarera-nueva
+001615	El sábado pasado me caí en el bosque.	Last Saturday I fell over in the woods.	a2	nature,health		neutral			cai-bosque
+001616	Iba en bicicleta por un camino muy malo.	I was going by bike along a very bad path.	a2	nature,travel		neutral			cai-bosque
+001617	Me dolía la mano y salió un poco de sangre.	My hand hurt and there was a little blood.	a2	health,body		neutral			cai-bosque
+001618	También me dolía un músculo de la pierna.	A muscle in my leg hurt too.	a2	health,body		neutral			cai-bosque
+001619	Un hombre con dos caballos me ayudó mucho.	A man with two horses helped me a lot.	a2	nature,people		neutral			cai-bosque
+001620	La piel de la mano estaba roja, nada más.	The skin on my hand was red, nothing more.	a2	health,body		neutral			cai-bosque
+001621	Pedí una cita para el lunes por la mañana.	I made an appointment for Monday morning.	a2	health		neutral			cai-bosque
+001622	Por la noche había nubes y no se veían las estrellas.	At night there were clouds and you could not see the stars.	a2	nature,time		neutral			cai-bosque
+001623	El verano pasado descubrí un cuaderno de mi abuelo.	Last summer I found a notebook of my grandfather's.	a2	family		neutral			cuaderno-abuelo
+001624	Nació en un pueblo pequeño y pobre.	He was born in a small, poor village.	a2	family		neutral			cuaderno-abuelo
+001625	Su letra era grande y muy clara.	His handwriting was big and very clear.	a2	family		neutral			cuaderno-abuelo
+001626	En la primera frase contaba un cuento de su madre.	In the first sentence he told a story of his mother's.	a2	family		neutral			cuaderno-abuelo
+001627	Comenzó a escribir a los diez años.	He started writing at the age of ten.	a2	family,time		neutral			cuaderno-abuelo
+001628	Mi madre me mostró otros dos cuadernos.	My mother showed me two more notebooks.	a2	family		neutral			cuaderno-abuelo
+001629	Comprendí mejor de dónde venía mi familia.	I understood better where my family came from.	a2	family,feelings		neutral			cuaderno-abuelo
+001630	Fue lo más humano que leí ese año.	It was the most human thing I read that year.	a2	family,feelings		neutral			cuaderno-abuelo
+001631	En abril pasamos la frontera en camión.	In April we crossed the border by coach.	a2	travel		neutral			cruzar-frontera
+001632	Mi hermana conducía y yo dormía a su lado.	My sister was driving and I was sleeping beside her.	a2	travel,family		neutral			cruzar-frontera
+001633	Reservamos un hotel pequeño para dos noches.	We booked a small hotel for two nights.	a2	travel		neutral			cruzar-frontera
+001634	Al llegar dimos una vuelta alrededor de la plaza.	When we arrived we walked around the square.	a2	travel,city		neutral			cruzar-frontera
+001635	Yo no comprendía nada y ella tampoco.	I did not understand anything and neither did she.	a2	travel,language		neutral			cruzar-frontera
+001636	Intentamos hablar con una mujer de la iglesia.	We tried to talk to a woman from the church.	a2	travel,people		neutral			cruzar-frontera
+001637	Nos explicó todo perfectamente y muy despacio.	She explained everything to us perfectly and very slowly.	a2	travel,language		neutral			cruzar-frontera
+001638	El viaje duró tres días y nunca olvidé ese pueblo.	The trip lasted three days and I never forgot that village.	a2	travel,feelings		neutral			cruzar-frontera

@@ -6,6 +6,13 @@
 {"ref":"core-es:item:001430","lang":"en","text":"I put the mirror next to the window.","type":"natural"}
 {"ref":"core-es:item:001431","lang":"en","text":"My neighbour helped me with the wardrobe.","type":"natural"}
 {"ref":"core-es:item:001432","lang":"en","text":"We finished very late, but I liked the place a lot.","type":"natural"}
+{"ref":"core-es:item:002390","lang":"en","text":"The kitchen was small but it had a new fridge.","type":"natural"}
+{"ref":"core-es:item:002391","lang":"en","text":"In the bedroom I put a bed and a chair.","type":"natural"}
+{"ref":"core-es:item:002392","lang":"en","text":"I cleaned the floor twice before moving in.","type":"natural"}
+{"ref":"core-es:item:002393","lang":"en","text":"My sister brought me a lamp for the dining room.","type":"natural"}
+{"ref":"core-es:item:002394","lang":"en","text":"I put a big photo above the sofa.","type":"natural"}
+{"ref":"core-es:item:002395","lang":"en","text":"The first night I could not sleep because of the noise from the street.","type":"natural"}
+{"ref":"core-es:item:002396","lang":"en","text":"After a month, everything was in its place.","type":"natural"}
 {"ref":"core-es:item:001433","lang":"en","text":"Now the dining room is full of my things.","type":"natural","note":"Closes in the present, which is what makes the rest read as past."}
 {"ref":"core-es:item:001434","lang":"en","text":"Yesterday I was at the market very early.","type":"natural"}
 {"ref":"core-es:item:001435","lang":"en","text":"I bought grapes, strawberries and a lettuce.","type":"natural"}
@@ -15,12 +22,26 @@
 {"ref":"core-es:item:001439","lang":"en","text":"I came home with two full boxes.","type":"natural"}
 {"ref":"core-es:item:001440","lang":"en","text":"I put the butter and the milk in the fridge.","type":"natural"}
 {"ref":"core-es:item:001441","lang":"en","text":"I made a salad with lettuce, carrot and oil.","type":"natural"}
+{"ref":"core-es:item:002397","lang":"en","text":"I also bought eggs and a little cheese.","type":"natural"}
+{"ref":"core-es:item:002398","lang":"en","text":"The fish was very good, but it cost a lot.","type":"natural"}
+{"ref":"core-es:item:002399","lang":"en","text":"A woman gave me some strawberries to try.","type":"natural"}
+{"ref":"core-es:item:002400","lang":"en","text":"I paid cash because the card was not working.","type":"natural"}
+{"ref":"core-es:item:002401","lang":"en","text":"At the bakery I bought a cake for Sunday.","type":"natural"}
+{"ref":"core-es:item:002402","lang":"en","text":"As I left it started to rain and I ran back.","type":"natural"}
+{"ref":"core-es:item:002403","lang":"en","text":"In the afternoon I cooked soup for the whole week.","type":"natural"}
 {"ref":"core-es:item:001442","lang":"en","text":"Last Sunday we were out in the country.","type":"natural"}
 {"ref":"core-es:item:001443","lang":"en","text":"There were a lot of clouds in the morning, but then the sun came out.","type":"natural","note":"`había` for the background, `salió` for the event — the whole preterite-imperfect contrast in one line."}
 {"ref":"core-es:item:001444","lang":"en","text":"We walked along a long path to a bridge.","type":"natural"}
 {"ref":"core-es:item:001445","lang":"en","text":"Next to the lake there were horses and cows.","type":"natural"}
 {"ref":"core-es:item:001446","lang":"en","text":"We ate in the woods, under a tree.","type":"natural"}
 {"ref":"core-es:item:001447","lang":"en","text":"At night you could see the moon and lots of stars.","type":"natural"}
+{"ref":"core-es:item:002404","lang":"en","text":"We took bread, cheese and a bottle of water.","type":"natural"}
+{"ref":"core-es:item:002405","lang":"en","text":"My son ran after the birds.","type":"natural"}
+{"ref":"core-es:item:002406","lang":"en","text":"We saw flowers of many colours beside the path.","type":"natural"}
+{"ref":"core-es:item:002407","lang":"en","text":"My wife took photos of the lake and the mountains.","type":"natural"}
+{"ref":"core-es:item:002408","lang":"en","text":"We rested for a while under a big tree.","type":"natural"}
+{"ref":"core-es:item:002409","lang":"en","text":"We went back to the car when it started to get cold.","type":"natural"}
+{"ref":"core-es:item:002410","lang":"en","text":"On the way back nobody spoke.","type":"natural"}
 {"ref":"core-es:item:001448","lang":"en","text":"I couldn't remember such a quiet Sunday.","type":"natural"}
 {"ref":"core-es:item:001449","lang":"en","text":"I started at the new company in March.","type":"natural"}
 {"ref":"core-es:item:001450","lang":"en","text":"I was very nervous on the first day.","type":"natural"}
@@ -29,12 +50,25 @@
 {"ref":"core-es:item:001453","lang":"en","text":"I worked all morning in front of a screen.","type":"natural"}
 {"ref":"core-es:item:001454","lang":"en","text":"Nobody talked to me about the salary that day.","type":"natural"}
 {"ref":"core-es:item:001455","lang":"en","text":"I decided to ask on Monday.","type":"natural"}
+{"ref":"core-es:item:002411","lang":"en","text":"At two I went to lunch with two colleagues.","type":"natural"}
+{"ref":"core-es:item:002412","lang":"en","text":"They told me how the company worked.","type":"natural"}
+{"ref":"core-es:item:002413","lang":"en","text":"In the afternoon I wrote my first email to a client.","type":"natural"}
+{"ref":"core-es:item:002414","lang":"en","text":"My boss read the email and told me it was fine.","type":"natural"}
+{"ref":"core-es:item:002415","lang":"en","text":"I left at six, still nervous but happy.","type":"natural"}
+{"ref":"core-es:item:002416","lang":"en","text":"On the train I thought about everything I had learned.","type":"natural"}
+{"ref":"core-es:item:002417","lang":"en","text":"That night I slept very well.","type":"natural"}
 {"ref":"core-es:item:001456","lang":"en","text":"Last week my back hurt a lot.","type":"natural"}
 {"ref":"core-es:item:001457","lang":"en","text":"My neck hurt in the mornings too.","type":"natural"}
 {"ref":"core-es:item:001458","lang":"en","text":"I asked for an appointment at the health centre.","type":"natural"}
 {"ref":"core-es:item:001459","lang":"en","text":"The doctor looked at my back and my neck.","type":"natural"}
 {"ref":"core-es:item:001460","lang":"en","text":"He told me it was a muscle and nothing more.","type":"natural"}
 {"ref":"core-es:item:001461","lang":"en","text":"He gave me some tablets for a week.","type":"natural"}
+{"ref":"core-es:item:002418","lang":"en","text":"I could not sleep well because of the pain.","type":"natural"}
+{"ref":"core-es:item:002419","lang":"en","text":"I could not sit at the computer either.","type":"natural"}
+{"ref":"core-es:item:002420","lang":"en","text":"The first tablet helped me within two days.","type":"natural"}
+{"ref":"core-es:item:002421","lang":"en","text":"The doctor told me I have to walk every day.","type":"natural"}
+{"ref":"core-es:item:002422","lang":"en","text":"I started walking for half an hour in the morning.","type":"natural"}
+{"ref":"core-es:item:002423","lang":"en","text":"I also stopped carrying my bag on the same side.","type":"natural"}
 {"ref":"core-es:item:001462","lang":"en","text":"Now I'm much better, just a little weak.","type":"natural"}
 {"ref":"core-es:item:001463","lang":"en","text":"When I was a child, I used to spend the summers at my grandmother's.","type":"natural","note":"The imperfect for what used to happen, which is the tense this passage exists to show."}
 {"ref":"core-es:item:001464","lang":"en","text":"The house was old and had a very big mirror on the wall.","type":"natural"}
@@ -43,6 +77,13 @@
 {"ref":"core-es:item:001467","lang":"en","text":"My cousin and I used to play on the floor.","type":"natural"}
 {"ref":"core-es:item:001468","lang":"en","text":"In the bathroom there were always soap and clean towels.","type":"natural"}
 {"ref":"core-es:item:001469","lang":"en","text":"We had no wifi and we didn't need it.","type":"natural"}
+{"ref":"core-es:item:002424","lang":"en","text":"In the garden there was a very old tree.","type":"natural"}
+{"ref":"core-es:item:002425","lang":"en","text":"My grandmother used to make cakes on Sundays.","type":"natural"}
+{"ref":"core-es:item:002426","lang":"en","text":"We drank cold milk from blue cups.","type":"natural"}
+{"ref":"core-es:item:002427","lang":"en","text":"In the afternoon my cousin and I would go to the river.","type":"natural"}
+{"ref":"core-es:item:002428","lang":"en","text":"Sometimes we came back with our shoes full of water.","type":"natural"}
+{"ref":"core-es:item:002429","lang":"en","text":"My grandfather read the paper in the same chair.","type":"natural"}
+{"ref":"core-es:item:002430","lang":"en","text":"Nobody was ever in a hurry in that house.","type":"natural"}
 {"ref":"core-es:item:001470","lang":"en","text":"I was born in that house and I still remember it well.","type":"natural"}
 {"ref":"core-es:item:001471","lang":"en","text":"Last Saturday we walked around the town centre.","type":"natural"}
 {"ref":"core-es:item:001472","lang":"en","text":"We started in the square, next to the church.","type":"natural"}
@@ -50,6 +91,13 @@
 {"ref":"core-es:item:001474","lang":"en","text":"We bought bread at a bakery on the corner.","type":"natural"}
 {"ref":"core-es:item:001475","lang":"en","text":"From the bridge you could see the whole city.","type":"natural"}
 {"ref":"core-es:item:001476","lang":"en","text":"Upstairs, the theatre was too full.","type":"natural"}
+{"ref":"core-es:item:002431","lang":"en","text":"In the square there was music and a lot of people.","type":"natural"}
+{"ref":"core-es:item:002432","lang":"en","text":"A boy was playing the guitar on a corner.","type":"natural"}
+{"ref":"core-es:item:002433","lang":"en","text":"We went into a clothes shop to look around.","type":"natural"}
+{"ref":"core-es:item:002434","lang":"en","text":"My friend tried on a skirt and a coat.","type":"natural"}
+{"ref":"core-es:item:002435","lang":"en","text":"We did not buy anything, we just looked.","type":"natural"}
+{"ref":"core-es:item:002436","lang":"en","text":"Afterwards we had a coffee in a bar.","type":"natural"}
+{"ref":"core-es:item:002437","lang":"en","text":"The church clock struck seven.","type":"natural"}
 {"ref":"core-es:item:001477","lang":"en","text":"We took a walk around the square and went home.","type":"natural"}
 {"ref":"core-es:item:001478","lang":"en","text":"Last year I was studying Spanish two days a week.","type":"natural"}
 {"ref":"core-es:item:001479","lang":"en","text":"There were eight of us students and a very calm teacher.","type":"natural"}
@@ -58,6 +106,13 @@
 {"ref":"core-es:item:001482","lang":"en","text":"The first few days I understood almost nothing.","type":"natural"}
 {"ref":"core-es:item:001483","lang":"en","text":"The teacher would repeat the exercise slowly.","type":"natural"}
 {"ref":"core-es:item:001484","lang":"en","text":"After a while, everything seemed easier.","type":"natural"}
+{"ref":"core-es:item:002438","lang":"en","text":"On Mondays we did listening exercises.","type":"natural"}
+{"ref":"core-es:item:002439","lang":"en","text":"On Thursdays we read a short story.","type":"natural"}
+{"ref":"core-es:item:002440","lang":"en","text":"I always took a pencil and a blue pen.","type":"natural"}
+{"ref":"core-es:item:002441","lang":"en","text":"Once I wrote a letter in Spanish.","type":"natural"}
+{"ref":"core-es:item:002442","lang":"en","text":"The teacher read it out in front of everyone.","type":"natural"}
+{"ref":"core-es:item:002443","lang":"en","text":"I went red, but I was pleased.","type":"natural"}
+{"ref":"core-es:item:002444","lang":"en","text":"At the end of the year we did an easy exam.","type":"natural"}
 {"ref":"core-es:item:001485","lang":"en","text":"I never forgot that class.","type":"natural"}
 {"ref":"core-es:item:001486","lang":"en","text":"Last night we had dinner at a new restaurant.","type":"natural"}
 {"ref":"core-es:item:001487","lang":"en","text":"The waitress offered us a table next to the window.","type":"natural"}
@@ -66,6 +121,12 @@
 {"ref":"core-es:item:001490","lang":"en","text":"Each person had two napkins.","type":"natural"}
 {"ref":"core-es:item:001491","lang":"en","text":"I didn't fancy anything else, just a coffee.","type":"natural"}
 {"ref":"core-es:item:001492","lang":"en","text":"We paid in cash and left a tip.","type":"natural"}
+{"ref":"core-es:item:002445","lang":"en","text":"To start we ordered a soup and a salad.","type":"natural"}
+{"ref":"core-es:item:002446","lang":"en","text":"The bread was warm and delicious.","type":"natural"}
+{"ref":"core-es:item:002447","lang":"en","text":"My brother had a beer and I had a wine.","type":"natural"}
+{"ref":"core-es:item:002448","lang":"en","text":"The knife and fork were very big.","type":"natural"}
+{"ref":"core-es:item:002449","lang":"en","text":"For dessert we had a chocolate ice cream.","type":"natural"}
+{"ref":"core-es:item:002450","lang":"en","text":"The bill came quickly and it was not expensive.","type":"natural"}
 {"ref":"core-es:item:001493","lang":"en","text":"Everything worked perfectly and we're going to go back.","type":"natural"}
 {"ref":"core-es:item:001494","lang":"en","text":"Last month I sold my old guitar.","type":"natural"}
 {"ref":"core-es:item:001495","lang":"en","text":"I had it in the wardrobe, in a grey box.","type":"natural"}
@@ -73,6 +134,12 @@
 {"ref":"core-es:item:001497","lang":"en","text":"I tried the newspaper too, but nobody called.","type":"natural"}
 {"ref":"core-es:item:001498","lang":"en","text":"A foreigner bought it on Thursday.","type":"natural"}
 {"ref":"core-es:item:001499","lang":"en","text":"He paid me in cash and I took the money out of my bag.","type":"natural"}
+{"ref":"core-es:item:002451","lang":"en","text":"I had not played it for years.","type":"natural"}
+{"ref":"core-es:item:002452","lang":"en","text":"It was in very good condition, just a little dusty.","type":"natural"}
+{"ref":"core-es:item:002453","lang":"en","text":"I asked for a hundred euros and the foreigner did not argue.","type":"natural"}
+{"ref":"core-es:item:002454","lang":"en","text":"I told him the story of the guitar.","type":"natural"}
+{"ref":"core-es:item:002455","lang":"en","text":"He thanked me and left happy.","type":"natural"}
+{"ref":"core-es:item:002456","lang":"en","text":"That day I was lucky.","type":"natural"}
 {"ref":"core-es:item:001500","lang":"en","text":"The guitar had been mine since I was a child and I remember it well.","type":"natural"}
 {"ref":"core-es:item:001501","lang":"en","text":"Last night I hardly slept at all.","type":"natural"}
 {"ref":"core-es:item:001502","lang":"en","text":"The neighbours upstairs were very noisy.","type":"natural"}
@@ -80,6 +147,12 @@
 {"ref":"core-es:item:001504","lang":"en","text":"My stomach hurt and I didn't want to eat either.","type":"natural"}
 {"ref":"core-es:item:001505","lang":"en","text":"I drank too much coffee in the afternoon, maybe that's why.","type":"natural"}
 {"ref":"core-es:item:001506","lang":"en","text":"This morning I felt very weak.","type":"natural"}
+{"ref":"core-es:item:002457","lang":"en","text":"At two I could still hear the television upstairs.","type":"natural"}
+{"ref":"core-es:item:002458","lang":"en","text":"I thought about knocking on the door, but I did not.","type":"natural"}
+{"ref":"core-es:item:002459","lang":"en","text":"I got up and drank a glass of milk.","type":"natural"}
+{"ref":"core-es:item:002460","lang":"en","text":"I read for a while with the small lamp.","type":"natural"}
+{"ref":"core-es:item:002461","lang":"en","text":"At five it finally went quiet.","type":"natural"}
+{"ref":"core-es:item:002462","lang":"en","text":"I slept only two hours before work.","type":"natural"}
 {"ref":"core-es:item:001507","lang":"en","text":"I slept all afternoon and now I'm better.","type":"natural"}
 {"ref":"core-es:item:001508","lang":"en","text":"I packed the suitcase the night before the trip.","type":"natural"}
 {"ref":"core-es:item:001509","lang":"en","text":"I took two shirts and a belt out of the wardrobe.","type":"natural"}
@@ -88,6 +161,13 @@
 {"ref":"core-es:item:001512","lang":"en","text":"Then I left it at home and took the small bag.","type":"natural"}
 {"ref":"core-es:item:001513","lang":"en","text":"I booked a double room for two nights.","type":"natural"}
 {"ref":"core-es:item:001514","lang":"en","text":"We left together very early and the journey lasted three hours.","type":"natural"}
+{"ref":"core-es:item:002463","lang":"en","text":"On the train I opened the case to look for a book.","type":"natural"}
+{"ref":"core-es:item:002464","lang":"en","text":"I was also carrying a T-shirt and a skirt.","type":"natural"}
+{"ref":"core-es:item:002465","lang":"en","text":"I carried the coat over my arm the whole journey.","type":"natural"}
+{"ref":"core-es:item:002466","lang":"en","text":"It was hot and I took my shoes off.","type":"natural"}
+{"ref":"core-es:item:002467","lang":"en","text":"At the hotel I hung the clothes in the wardrobe.","type":"natural"}
+{"ref":"core-es:item:002468","lang":"en","text":"I left my watch at home and I did not mind.","type":"natural"}
+{"ref":"core-es:item:002469","lang":"en","text":"That trip was the calmest of the year.","type":"natural"}
 {"ref":"core-es:item:001515","lang":"en","text":"Last summer we crossed the border by coach.","type":"natural"}
 {"ref":"core-es:item:001516","lang":"en","text":"My cousin was driving and I was watching the road.","type":"natural"}
 {"ref":"core-es:item:001517","lang":"en","text":"We booked the tickets a week before.","type":"natural"}
@@ -95,6 +175,13 @@
 {"ref":"core-es:item:001519","lang":"en","text":"At the hotel there was a foreigner who spoke four languages.","type":"natural"}
 {"ref":"core-es:item:001520","lang":"en","text":"He showed us a very quiet spot near the lake.","type":"natural"}
 {"ref":"core-es:item:001521","lang":"en","text":"We paid everything in cash because they did not want cards.","type":"natural"}
+{"ref":"core-es:item:002470","lang":"en","text":"We set off at six in the morning in the cold.","type":"natural"}
+{"ref":"core-es:item:002471","lang":"en","text":"We ate and drank water twice along the way.","type":"natural"}
+{"ref":"core-es:item:002472","lang":"en","text":"Through the window we saw mountains and green fields.","type":"natural"}
+{"ref":"core-es:item:002473","lang":"en","text":"My cousin put music on and we sang for almost an hour.","type":"natural"}
+{"ref":"core-es:item:002474","lang":"en","text":"At the border we waited with our passports in hand.","type":"natural"}
+{"ref":"core-es:item:002475","lang":"en","text":"The hotel was cheap but very clean.","type":"natural"}
+{"ref":"core-es:item:002476","lang":"en","text":"We had fish for dinner and drank a cold beer.","type":"natural"}
 {"ref":"core-es:item:001522","lang":"en","text":"It was a great trip and we are going back together.","type":"natural"}
 {"ref":"core-es:item:001523","lang":"en","text":"The company moved office in September.","type":"natural"}
 {"ref":"core-es:item:001524","lang":"en","text":"An employee showed us the team room.","type":"natural"}
@@ -103,6 +190,12 @@
 {"ref":"core-es:item:001527","lang":"en","text":"My boss explained that the project depended on two people.","type":"natural"}
 {"ref":"core-es:item:001528","lang":"en","text":"We had to finish before December.","type":"natural"}
 {"ref":"core-es:item:001529","lang":"en","text":"Nobody mentioned the salary, and that seemed normal to me.","type":"natural"}
+{"ref":"core-es:item:002477","lang":"en","text":"The room had a very big window.","type":"natural"}
+{"ref":"core-es:item:002478","lang":"en","text":"From my desk you could see the park.","type":"natural"}
+{"ref":"core-es:item:002479","lang":"en","text":"There was a small kitchen with a bit of coffee.","type":"natural"}
+{"ref":"core-es:item:002480","lang":"en","text":"Every morning we drank the coffee from white cups.","type":"natural"}
+{"ref":"core-es:item:002481","lang":"en","text":"A colleague brought flowers for the table by the entrance.","type":"natural"}
+{"ref":"core-es:item:002482","lang":"en","text":"On the first day nobody could find the toilet.","type":"natural"}
 {"ref":"core-es:item:001530","lang":"en","text":"I liked the new office, maybe because of the light.","type":"natural"}
 {"ref":"core-es:item:001531","lang":"en","text":"Yesterday we had an exam and I was very nervous.","type":"natural"}
 {"ref":"core-es:item:001532","lang":"en","text":"There were twenty of us students in a small room.","type":"natural"}
@@ -112,6 +205,13 @@
 {"ref":"core-es:item:001536","lang":"en","text":"I tried again and afterwards it seemed easy.","type":"natural"}
 {"ref":"core-es:item:001537","lang":"en","text":"I finished ten minutes before time.","type":"natural"}
 {"ref":"core-es:item:001538","lang":"en","text":"The teacher showed us the answers afterwards.","type":"natural"}
+{"ref":"core-es:item:002483","lang":"en","text":"I wrote the answers with a blue pencil.","type":"natural"}
+{"ref":"core-es:item:002484","lang":"en","text":"Next to me I had a blue pen.","type":"natural"}
+{"ref":"core-es:item:002485","lang":"en","text":"The room was silent and it was hot.","type":"natural"}
+{"ref":"core-es:item:002486","lang":"en","text":"A student finished before me and left.","type":"natural"}
+{"ref":"core-es:item:002487","lang":"en","text":"Afterwards we talked about the exam outside the room.","type":"natural"}
+{"ref":"core-es:item:002488","lang":"en","text":"Nobody knew the answer to the last exercise.","type":"natural"}
+{"ref":"core-es:item:002489","lang":"en","text":"A week later I got a very good mark.","type":"natural"}
 {"ref":"core-es:item:001539","lang":"en","text":"On Friday I cooked for four friends.","type":"natural"}
 {"ref":"core-es:item:001540","lang":"en","text":"I bought grapes, strawberries, lettuce and two carrots.","type":"natural"}
 {"ref":"core-es:item:001541","lang":"en","text":"I made the pasta with garlic and plenty of oil.","type":"natural"}
@@ -119,6 +219,13 @@
 {"ref":"core-es:item:001543","lang":"en","text":"I put a napkin next to each plate.","type":"natural"}
 {"ref":"core-es:item:001544","lang":"en","text":"Everything was delicious, or so they told me.","type":"natural"}
 {"ref":"core-es:item:001545","lang":"en","text":"I recommended the strawberries with sugar and they were all gone.","type":"natural"}
+{"ref":"core-es:item:002490","lang":"en","text":"I started cooking at six in the evening.","type":"natural"}
+{"ref":"core-es:item:002491","lang":"en","text":"I put music on and opened a bottle of wine.","type":"natural"}
+{"ref":"core-es:item:002492","lang":"en","text":"My friends arrived with a chocolate cake.","type":"natural"}
+{"ref":"core-es:item:002493","lang":"en","text":"Everyone brought something, even the napkins.","type":"natural"}
+{"ref":"core-es:item:002494","lang":"en","text":"We ate slowly and talked until very late.","type":"natural"}
+{"ref":"core-es:item:002495","lang":"en","text":"For dessert we had ice cream with strawberries.","type":"natural"}
+{"ref":"core-es:item:002496","lang":"en","text":"I washed the dishes the next day, not that night.","type":"natural"}
 {"ref":"core-es:item:001546","lang":"en","text":"Nobody left a tip at my house, of course.","type":"natural"}
 {"ref":"core-es:item:001547","lang":"en","text":"When we went in, the house was empty.","type":"natural"}
 {"ref":"core-es:item:001548","lang":"en","text":"There was only an old lamp on the floor.","type":"natural"}
@@ -127,6 +234,13 @@
 {"ref":"core-es:item:001551","lang":"en","text":"The fridge was open and did not work.","type":"natural"}
 {"ref":"core-es:item:001552","lang":"en","text":"I took out two bags of rubbish the first day.","type":"natural"}
 {"ref":"core-es:item:001553","lang":"en","text":"A chair fell over when I touched it.","type":"natural"}
+{"ref":"core-es:item:002497","lang":"en","text":"The first week we cleaned every day.","type":"natural"}
+{"ref":"core-es:item:002498","lang":"en","text":"We bought soap, towels and a new lamp.","type":"natural"}
+{"ref":"core-es:item:002499","lang":"en","text":"My brother painted the walls white.","type":"natural"}
+{"ref":"core-es:item:002500","lang":"en","text":"I fixed the chair that had fallen over.","type":"natural"}
+{"ref":"core-es:item:002501","lang":"en","text":"We put flowers in the kitchen window.","type":"natural"}
+{"ref":"core-es:item:002502","lang":"en","text":"The new fridge arrived on a Thursday afternoon.","type":"natural"}
+{"ref":"core-es:item:002503","lang":"en","text":"The first dinner in that house was very simple.","type":"natural"}
 {"ref":"core-es:item:001554","lang":"en","text":"Now the house looks different and I think about that day often.","type":"natural"}
 {"ref":"core-es:item:001555","lang":"en","text":"Last winter it snowed a lot in the village.","type":"natural"}
 {"ref":"core-es:item:001556","lang":"en","text":"In the morning there were low clouds and it was very cold.","type":"natural"}
@@ -134,6 +248,12 @@
 {"ref":"core-es:item:001558","lang":"en","text":"The path to the bridge was white.","type":"natural"}
 {"ref":"core-es:item:001559","lang":"en","text":"The lake looked grey from the woods.","type":"natural"}
 {"ref":"core-es:item:001560","lang":"en","text":"At night the moon and the stars came out.","type":"natural"}
+{"ref":"core-es:item:002504","lang":"en","text":"The children played in the snow in front of the church.","type":"natural"}
+{"ref":"core-es:item:002505","lang":"en","text":"Nobody could get to the village by car.","type":"natural"}
+{"ref":"core-es:item:002506","lang":"en","text":"A neighbour brought us bread and milk on foot.","type":"natural"}
+{"ref":"core-es:item:002507","lang":"en","text":"At home we drank hot tea beside the fire.","type":"natural"}
+{"ref":"core-es:item:002508","lang":"en","text":"The birds looked for food near the door.","type":"natural"}
+{"ref":"core-es:item:002509","lang":"en","text":"In the afternoon the sky turned red.","type":"natural"}
 {"ref":"core-es:item:001561","lang":"en","text":"I never saw such a quiet place.","type":"natural"}
 {"ref":"core-es:item:001562","lang":"en","text":"Last week I lost my bag at the theatre.","type":"natural"}
 {"ref":"core-es:item:001563","lang":"en","text":"I had a magazine, my keys and a belt in it.","type":"natural"}
@@ -142,6 +262,12 @@
 {"ref":"core-es:item:001566","lang":"en","text":"Two days later I got a message from the theatre.","type":"natural"}
 {"ref":"core-es:item:001567","lang":"en","text":"I found out someone had left it in a box.","type":"natural"}
 {"ref":"core-es:item:001568","lang":"en","text":"They sent me a message with the address.","type":"natural"}
+{"ref":"core-es:item:002510","lang":"en","text":"The first two days I was very anxious.","type":"natural"}
+{"ref":"core-es:item:002511","lang":"en","text":"Inside I was also carrying a photo of my grandmother.","type":"natural"}
+{"ref":"core-es:item:002512","lang":"en","text":"I called the theatre three times and nobody answered.","type":"natural"}
+{"ref":"core-es:item:002513","lang":"en","text":"I thought I had been very unlucky.","type":"natural"}
+{"ref":"core-es:item:002514","lang":"en","text":"A boy at the theatre had kept it since Saturday.","type":"natural"}
+{"ref":"core-es:item:002515","lang":"en","text":"I went to pick it up on Thursday morning.","type":"natural"}
 {"ref":"core-es:item:001569","lang":"en","text":"Everything was there, even the socks and the hat.","type":"natural"}
 {"ref":"core-es:item:001570","lang":"en","text":"I had a doctor appointment on Tuesday afternoon.","type":"natural"}
 {"ref":"core-es:item:001571","lang":"en","text":"My neck hurt and my stomach did too.","type":"natural"}
@@ -150,6 +276,13 @@
 {"ref":"core-es:item:001574","lang":"en","text":"He said it was normal and that it was nothing.","type":"natural"}
 {"ref":"core-es:item:001575","lang":"en","text":"He gave me some tablets and recommended sleeping more.","type":"natural"}
 {"ref":"core-es:item:001576","lang":"en","text":"The health centre was full and I waited a good while.","type":"natural"}
+{"ref":"core-es:item:002516","lang":"en","text":"In the waiting room there were a lot of people.","type":"natural"}
+{"ref":"core-es:item:002517","lang":"en","text":"I read an old magazine for half an hour.","type":"natural"}
+{"ref":"core-es:item:002518","lang":"en","text":"A woman told me her whole story.","type":"natural"}
+{"ref":"core-es:item:002519","lang":"en","text":"The doctor asked me about work and about sleep.","type":"natural"}
+{"ref":"core-es:item:002520","lang":"en","text":"He looked at my eyes and my mouth too.","type":"natural"}
+{"ref":"core-es:item:002521","lang":"en","text":"He typed everything into the computer very quickly.","type":"natural"}
+{"ref":"core-es:item:002522","lang":"en","text":"At the chemist they cost me four euros.","type":"natural"}
 {"ref":"core-es:item:001577","lang":"en","text":"I came out calmer, but still a little weak.","type":"natural"}
 {"ref":"core-es:item:001578","lang":"en","text":"Last month I told my sister a lie.","type":"natural"}
 {"ref":"core-es:item:001579","lang":"en","text":"It was nothing big, but I felt bad for a while.","type":"natural"}
@@ -158,6 +291,12 @@
 {"ref":"core-es:item:001582","lang":"en","text":"She forgave me in a very calm way.","type":"natural"}
 {"ref":"core-es:item:001583","lang":"en","text":"She told me she did something similar as a girl.","type":"natural"}
 {"ref":"core-es:item:001584","lang":"en","text":"I decided not to forget that day.","type":"natural"}
+{"ref":"core-es:item:002523","lang":"en","text":"She did not ask me anything that afternoon.","type":"natural"}
+{"ref":"core-es:item:002524","lang":"en","text":"I did not say anything either for two weeks.","type":"natural"}
+{"ref":"core-es:item:002525","lang":"en","text":"One Sunday we ate together at my parents' house.","type":"natural"}
+{"ref":"core-es:item:002526","lang":"en","text":"I told her the truth before dessert.","type":"natural"}
+{"ref":"core-es:item:002527","lang":"en","text":"She laughed and told me she already knew.","type":"natural"}
+{"ref":"core-es:item:002528","lang":"en","text":"Since that day we talk about everything.","type":"natural"}
 {"ref":"core-es:item:001585","lang":"en","text":"Maybe small lies are harder.","type":"natural"}
 {"ref":"core-es:item:001586","lang":"en","text":"On Sunday we watched a match with the neighbours.","type":"natural"}
 {"ref":"core-es:item:001587","lang":"en","text":"There were eight of us all together in the living room.","type":"natural"}
@@ -165,6 +304,12 @@
 {"ref":"core-es:item:001589","lang":"en","text":"The match lasted two hours and was great.","type":"natural"}
 {"ref":"core-es:item:001590","lang":"en","text":"The neighbours were very noisy, but nobody said anything.","type":"natural"}
 {"ref":"core-es:item:001591","lang":"en","text":"We ate too much and drank enough coffee.","type":"natural"}
+{"ref":"core-es:item:002529","lang":"en","text":"I made food for everyone before it started.","type":"natural"}
+{"ref":"core-es:item:002530","lang":"en","text":"My neighbour brought a case of cold beer.","type":"natural"}
+{"ref":"core-es:item:002531","lang":"en","text":"In the first half almost nothing happened.","type":"natural"}
+{"ref":"core-es:item:002532","lang":"en","text":"Then the blue team played much better.","type":"natural"}
+{"ref":"core-es:item:002533","lang":"en","text":"When they won, we all talked at once.","type":"natural"}
+{"ref":"core-es:item:002534","lang":"en","text":"My daughter fell asleep on the sofa at the end.","type":"natural"}
 {"ref":"core-es:item:001592","lang":"en","text":"When it finished, we were all tired and happy.","type":"natural"}
 {"ref":"core-es:item:001593","lang":"en","text":"Normally the rubbish lorry comes very early.","type":"natural"}
 {"ref":"core-es:item:001594","lang":"en","text":"It goes past the corner by the church at six.","type":"natural"}
@@ -173,6 +318,12 @@
 {"ref":"core-es:item:001597","lang":"en","text":"I went out with two bags of rubbish just filled.","type":"natural"}
 {"ref":"core-es:item:001598","lang":"en","text":"The man working there said good morning and carried on.","type":"natural"}
 {"ref":"core-es:item:001599","lang":"en","text":"Afterwards I could not sleep and made breakfast.","type":"natural"}
+{"ref":"core-es:item:002535","lang":"en","text":"I drank a black coffee and ate bread and butter.","type":"natural"}
+{"ref":"core-es:item:002536","lang":"en","text":"It was still dark and the street was empty.","type":"natural"}
+{"ref":"core-es:item:002537","lang":"en","text":"I looked at the clock: it was only half past six.","type":"natural"}
+{"ref":"core-es:item:002538","lang":"en","text":"I washed my face and showered slowly.","type":"natural"}
+{"ref":"core-es:item:002539","lang":"en","text":"I left home an hour earlier than usual.","type":"natural"}
+{"ref":"core-es:item:002540","lang":"en","text":"I got to work before anyone else.","type":"natural"}
 {"ref":"core-es:item:001600","lang":"en","text":"The old fridge stopped working in August.","type":"natural"}
 {"ref":"core-es:item:001601","lang":"en","text":"We had to buy another one, but we did not have enough money.","type":"natural"}
 {"ref":"core-es:item:001602","lang":"en","text":"We sold the dining room table to a neighbour.","type":"natural"}
@@ -180,6 +331,12 @@
 {"ref":"core-es:item:001604","lang":"en","text":"They sent it to the house on Tuesday afternoon.","type":"natural"}
 {"ref":"core-es:item:001605","lang":"en","text":"We also got two new towels.","type":"natural"}
 {"ref":"core-es:item:001606","lang":"en","text":"The wifi was not working that day and I could not pay by phone.","type":"natural"}
+{"ref":"core-es:item:002541","lang":"en","text":"The first day we lost almost all the food.","type":"natural"}
+{"ref":"core-es:item:002542","lang":"en","text":"My mother lent us her small fridge for a week.","type":"natural"}
+{"ref":"core-es:item:002543","lang":"en","text":"We looked in three shops before deciding.","type":"natural"}
+{"ref":"core-es:item:002544","lang":"en","text":"The new one is white and makes very little noise.","type":"natural"}
+{"ref":"core-es:item:002545","lang":"en","text":"A lot more fits inside than in the old one.","type":"natural"}
+{"ref":"core-es:item:002546","lang":"en","text":"We put the fruit and the milk in the same day.","type":"natural"}
 {"ref":"core-es:item:001607","lang":"en","text":"Now the kitchen looks different.","type":"natural"}
 {"ref":"core-es:item:001608","lang":"en","text":"Yesterday we ate at the restaurant on the corner.","type":"natural"}
 {"ref":"core-es:item:001609","lang":"en","text":"The waitress was new and a little nervous.","type":"natural"}
@@ -187,6 +344,12 @@
 {"ref":"core-es:item:001611","lang":"en","text":"She served the soup very slowly and everything was fine.","type":"natural"}
 {"ref":"core-es:item:001612","lang":"en","text":"My brother is vegetarian and she made him another dish.","type":"natural"}
 {"ref":"core-es:item:001613","lang":"en","text":"We waited a good while, but we said nothing.","type":"natural"}
+{"ref":"core-es:item:002547","lang":"en","text":"At first she forgot the bread and the water.","type":"natural"}
+{"ref":"core-es:item:002548","lang":"en","text":"She came back straight away and apologised.","type":"natural"}
+{"ref":"core-es:item:002549","lang":"en","text":"The manager came out to talk to us.","type":"natural"}
+{"ref":"core-es:item:002550","lang":"en","text":"The food was delicious and very hot.","type":"natural"}
+{"ref":"core-es:item:002551","lang":"en","text":"For dessert we had a strawberry ice cream.","type":"natural"}
+{"ref":"core-es:item:002552","lang":"en","text":"We liked it a lot and went back on Thursday.","type":"natural"}
 {"ref":"core-es:item:001614","lang":"en","text":"We left her a good tip on the way out.","type":"natural"}
 {"ref":"core-es:item:001615","lang":"en","text":"Last Saturday I fell over in the woods.","type":"natural"}
 {"ref":"core-es:item:001616","lang":"en","text":"I was going by bike along a very bad path.","type":"natural"}
@@ -195,6 +358,12 @@
 {"ref":"core-es:item:001619","lang":"en","text":"A man with two horses helped me a lot.","type":"natural"}
 {"ref":"core-es:item:001620","lang":"en","text":"The skin on my hand was red, nothing more.","type":"natural"}
 {"ref":"core-es:item:001621","lang":"en","text":"I made an appointment for Monday morning.","type":"natural"}
+{"ref":"core-es:item:002553","lang":"en","text":"The bicycle lay on the ground for a while.","type":"natural"}
+{"ref":"core-es:item:002554","lang":"en","text":"I washed my hand with water from a bottle.","type":"natural"}
+{"ref":"core-es:item:002555","lang":"en","text":"The man gave me a clean towel.","type":"natural"}
+{"ref":"core-es:item:002556","lang":"en","text":"I went home very slowly and carefully.","type":"natural"}
+{"ref":"core-es:item:002557","lang":"en","text":"That night my arm hurt too.","type":"natural"}
+{"ref":"core-es:item:002558","lang":"en","text":"I could not sleep well until very late.","type":"natural"}
 {"ref":"core-es:item:001622","lang":"en","text":"At night there were clouds and you could not see the stars.","type":"natural"}
 {"ref":"core-es:item:001623","lang":"en","text":"Last summer I found a notebook of my grandfather's.","type":"natural"}
 {"ref":"core-es:item:001624","lang":"en","text":"He was born in a small, poor village.","type":"natural"}
@@ -203,6 +372,12 @@
 {"ref":"core-es:item:001627","lang":"en","text":"He started writing at the age of ten.","type":"natural"}
 {"ref":"core-es:item:001628","lang":"en","text":"My mother showed me two more notebooks.","type":"natural"}
 {"ref":"core-es:item:001629","lang":"en","text":"I understood better where my family came from.","type":"natural"}
+{"ref":"core-es:item:002559","lang":"en","text":"He used to write almost every Sunday afternoon.","type":"natural"}
+{"ref":"core-es:item:002560","lang":"en","text":"He wrote about the work in the fields and the weather.","type":"natural"}
+{"ref":"core-es:item:002561","lang":"en","text":"On one page he talked about his first watch.","type":"natural"}
+{"ref":"core-es:item:002562","lang":"en","text":"On another he told how he met my grandmother.","type":"natural"}
+{"ref":"core-es:item:002563","lang":"en","text":"He never wrote anything about money.","type":"natural"}
+{"ref":"core-es:item:002564","lang":"en","text":"I put the notebook away in a wooden box.","type":"natural"}
 {"ref":"core-es:item:001630","lang":"en","text":"It was the most human thing I read that year.","type":"natural"}
 {"ref":"core-es:item:001631","lang":"en","text":"In April we crossed the border by coach.","type":"natural"}
 {"ref":"core-es:item:001632","lang":"en","text":"My sister was driving and I was sleeping beside her.","type":"natural"}
@@ -211,6 +386,12 @@
 {"ref":"core-es:item:001635","lang":"en","text":"I did not understand anything and neither did she.","type":"natural"}
 {"ref":"core-es:item:001636","lang":"en","text":"We tried to talk to a woman from the church.","type":"natural"}
 {"ref":"core-es:item:001637","lang":"en","text":"She explained everything to us perfectly and very slowly.","type":"natural"}
+{"ref":"core-es:item:002565","lang":"en","text":"At the border we waited almost two hours.","type":"natural"}
+{"ref":"core-es:item:002566","lang":"en","text":"A man looked at the passports one by one.","type":"natural"}
+{"ref":"core-es:item:002567","lang":"en","text":"The first day we ate in a small square.","type":"natural"}
+{"ref":"core-es:item:002568","lang":"en","text":"The food was new to us and very good.","type":"natural"}
+{"ref":"core-es:item:002569","lang":"en","text":"We bought a T-shirt for our brother.","type":"natural"}
+{"ref":"core-es:item:002570","lang":"en","text":"The second night we sang with the people in the bar.","type":"natural"}
 {"ref":"core-es:item:001638","lang":"en","text":"The trip lasted three days and I never forgot that village.","type":"natural"}
 {"ref":"core-es:item:001639","lang":"en","text":"Yesterday I listened to the news in the kitchen.","type":"natural"}
 {"ref":"core-es:item:001640","lang":"en","text":"The first news item lasted less than a minute.","type":"natural"}
@@ -219,6 +400,12 @@
 {"ref":"core-es:item:001643","lang":"en","text":"She said the first news item was a lie.","type":"natural"}
 {"ref":"core-es:item:001644","lang":"en","text":"I got a message from my sister about the same thing.","type":"natural"}
 {"ref":"core-es:item:001645","lang":"en","text":"I sent her the news and waited for her reply.","type":"natural"}
+{"ref":"core-es:item:002571","lang":"en","text":"The radio was next to the fridge.","type":"natural"}
+{"ref":"core-es:item:002572","lang":"en","text":"While I listened, I made breakfast.","type":"natural"}
+{"ref":"core-es:item:002573","lang":"en","text":"After the news they played a song.","type":"natural"}
+{"ref":"core-es:item:002574","lang":"en","text":"It was a very old song of my mother's.","type":"natural"}
+{"ref":"core-es:item:002575","lang":"en","text":"I listened to all of it before leaving the house.","type":"natural"}
+{"ref":"core-es:item:002576","lang":"en","text":"That day I arrived late, but happy.","type":"natural"}
 {"ref":"core-es:item:001646","lang":"en","text":"We should have talked about it, but there was no time.","type":"natural"}
 {"ref":"core-es:item:001647","lang":"en","text":"On Sunday my mother showed me an old photo.","type":"natural"}
 {"ref":"core-es:item:001648","lang":"en","text":"My uncle was very fat and my aunt very thin.","type":"natural"}
@@ -226,6 +413,12 @@
 {"ref":"core-es:item:001650","lang":"en","text":"My cousin looked similar to me as a child.","type":"natural"}
 {"ref":"core-es:item:001651","lang":"en","text":"The family was poor and lived in a village.","type":"natural"}
 {"ref":"core-es:item:001652","lang":"en","text":"My mother told a story about her grandmother.","type":"natural"}
+{"ref":"core-es:item:002577","lang":"en","text":"In the photo they were all looking the same way.","type":"natural"}
+{"ref":"core-es:item:002578","lang":"en","text":"Nobody looked happy in the photo.","type":"natural"}
+{"ref":"core-es:item:002579","lang":"en","text":"My grandmother wore a long black dress.","type":"natural"}
+{"ref":"core-es:item:002580","lang":"en","text":"Behind them you could see the door of an old house.","type":"natural"}
+{"ref":"core-es:item:002581","lang":"en","text":"My mother told me the name of each one.","type":"natural"}
+{"ref":"core-es:item:002582","lang":"en","text":"We put the photo away on top of the wardrobe.","type":"natural"}
 {"ref":"core-es:item:001653","lang":"en","text":"It was the most human moment of the whole day.","type":"natural"}
 {"ref":"core-es:item:001654","lang":"en","text":"On Monday I went to the health centre at eight.","type":"natural"}
 {"ref":"core-es:item:001655","lang":"en","text":"There were a lot of people and I waited more than an hour.","type":"natural"}
@@ -234,6 +427,12 @@
 {"ref":"core-es:item:001658","lang":"en","text":"The skin on my arm was red afterwards.","type":"natural"}
 {"ref":"core-es:item:001659","lang":"en","text":"I washed my hands with soap before leaving.","type":"natural"}
 {"ref":"core-es:item:001660","lang":"en","text":"I asked for another appointment for May.","type":"natural"}
+{"ref":"core-es:item:002583","lang":"en","text":"Before I went in they took my temperature.","type":"natural"}
+{"ref":"core-es:item:002584","lang":"en","text":"The doctor asked my age and my surname.","type":"natural"}
+{"ref":"core-es:item:002585","lang":"en","text":"She looked at my eyes and my mouth for a moment.","type":"natural"}
+{"ref":"core-es:item:002586","lang":"en","text":"Nothing hurt, I was just thirsty.","type":"natural"}
+{"ref":"core-es:item:002587","lang":"en","text":"I drank a glass of water before leaving.","type":"natural"}
+{"ref":"core-es:item:002588","lang":"en","text":"It was all over in less than ten minutes.","type":"natural"}
 {"ref":"core-es:item:001661","lang":"en","text":"I came out with clean hands and in a bit of a hurry.","type":"natural"}
 {"ref":"core-es:item:001662","lang":"en","text":"On Tuesday it snowed from very early on.","type":"natural"}
 {"ref":"core-es:item:001663","lang":"en","text":"It never snows like this in this city.","type":"natural"}
@@ -242,6 +441,12 @@
 {"ref":"core-es:item:001666","lang":"en","text":"We spent the afternoon together around the table.","type":"natural"}
 {"ref":"core-es:item:001667","lang":"en","text":"The fridge was full, so we ate well.","type":"natural"}
 {"ref":"core-es:item:001668","lang":"en","text":"At night you could see the moon between the clouds.","type":"natural"}
+{"ref":"core-es:item:002589","lang":"en","text":"The children went out to play in the snow.","type":"natural"}
+{"ref":"core-es:item:002590","lang":"en","text":"They came back with their hands red from the cold.","type":"natural"}
+{"ref":"core-es:item:002591","lang":"en","text":"I made hot chocolate for everyone.","type":"natural"}
+{"ref":"core-es:item:002592","lang":"en","text":"We played a board game all afternoon.","type":"natural"}
+{"ref":"core-es:item:002593","lang":"en","text":"My daughter won twice and was very happy.","type":"natural"}
+{"ref":"core-es:item:002594","lang":"en","text":"Nobody looked at a phone all afternoon.","type":"natural"}
 {"ref":"core-es:item:001669","lang":"en","text":"The wifi came back at eleven at night.","type":"natural"}
 {"ref":"core-es:item:001670","lang":"en","text":"In March we started a project in the Spanish class.","type":"natural"}
 {"ref":"core-es:item:001671","lang":"en","text":"There were four of us students and we had two weeks.","type":"natural"}
@@ -249,6 +454,12 @@
 {"ref":"core-es:item:001673","lang":"en","text":"I did not start on the first day, nor on the second.","type":"natural"}
 {"ref":"core-es:item:001674","lang":"en","text":"One student did it all perfectly in one afternoon.","type":"natural"}
 {"ref":"core-es:item:001675","lang":"en","text":"The teacher said a teacher's salary is small.","type":"natural"}
+{"ref":"core-es:item:002595","lang":"en","text":"The last week we worked every afternoon.","type":"natural"}
+{"ref":"core-es:item:002596","lang":"en","text":"I wrote my part in two days.","type":"natural"}
+{"ref":"core-es:item:002597","lang":"en","text":"One student painted the first page.","type":"natural"}
+{"ref":"core-es:item:002598","lang":"en","text":"We read it out in front of the class on Friday.","type":"natural"}
+{"ref":"core-es:item:002599","lang":"en","text":"Nobody got nervous, me included.","type":"natural"}
+{"ref":"core-es:item:002600","lang":"en","text":"I learned more in those two weeks than in a month.","type":"natural"}
 {"ref":"core-es:item:001676","lang":"en","text":"But everyone liked the project a lot.","type":"natural"}
 {"ref":"core-es:item:001677","lang":"en","text":"On Saturday I sold vegetables at the market with my uncle.","type":"natural"}
 {"ref":"core-es:item:001678","lang":"en","text":"We took grapes, garlic and two boxes of strawberries.","type":"natural"}
@@ -256,6 +467,12 @@
 {"ref":"core-es:item:001680","lang":"en","text":"She paid us with cash and a few notes.","type":"natural"}
 {"ref":"core-es:item:001681","lang":"en","text":"By two the table was empty.","type":"natural"}
 {"ref":"core-es:item:001682","lang":"en","text":"My uncle said it was a great day.","type":"natural"}
+{"ref":"core-es:item:002601","lang":"en","text":"We arrived at seven to get a good spot.","type":"natural"}
+{"ref":"core-es:item:002602","lang":"en","text":"My uncle talked to all the neighbouring stalls.","type":"natural"}
+{"ref":"core-es:item:002603","lang":"en","text":"A woman showed me how to set out the boxes.","type":"natural"}
+{"ref":"core-es:item:002604","lang":"en","text":"By eleven there were no strawberries left.","type":"natural"}
+{"ref":"core-es:item:002605","lang":"en","text":"I was hungry and ate bread and cheese.","type":"natural"}
+{"ref":"core-es:item:002606","lang":"en","text":"We kept the money in a small box.","type":"natural"}
 {"ref":"core-es:item:001683","lang":"en","text":"I bought a magazine and a coffee before going back.","type":"natural"}
 {"ref":"core-es:item:001684","lang":"en","text":"On Sunday my brother had an important match.","type":"natural"}
 {"ref":"core-es:item:001685","lang":"en","text":"He looked for the clean socks in the wardrobe.","type":"natural"}
@@ -263,6 +480,12 @@
 {"ref":"core-es:item:001687","lang":"en","text":"I drove to the pitch, very slowly.","type":"natural"}
 {"ref":"core-es:item:001688","lang":"en","text":"The match lasted almost two hours.","type":"natural"}
 {"ref":"core-es:item:001689","lang":"en","text":"Afterwards we told my mother about the match like a story.","type":"natural"}
+{"ref":"core-es:item:002607","lang":"en","text":"My brother put on a blue team T-shirt.","type":"natural"}
+{"ref":"core-es:item:002608","lang":"en","text":"His shoes were under the bed.","type":"natural"}
+{"ref":"core-es:item:002609","lang":"en","text":"We left home fifteen minutes late.","type":"natural"}
+{"ref":"core-es:item:002610","lang":"en","text":"At the pitch it was windy and quite cold.","type":"natural"}
+{"ref":"core-es:item:002611","lang":"en","text":"His team lost, but he played very well.","type":"natural"}
+{"ref":"core-es:item:002612","lang":"en","text":"We came home with our clothes covered in mud.","type":"natural"}
 {"ref":"core-es:item:001690","lang":"en","text":"She listened to it all and said nothing about the clothes.","type":"natural"}
 {"ref":"core-es:item:001691","lang":"en","text":"Last year we worked out the cost of the trip.","type":"natural"}
 {"ref":"core-es:item:001692","lang":"en","text":"The train tickets cost two hundred euros.","type":"natural"}
@@ -280,6 +503,12 @@
 {"ref":"core-es:item:001704","lang":"en","text":"The family was poor, but there was always food.","type":"natural"}
 {"ref":"core-es:item:001705","lang":"en","text":"They are both good people, in a very human way.","type":"natural"}
 {"ref":"core-es:item:001706","lang":"en","text":"Now they live together in the same city.","type":"natural"}
+{"ref":"core-es:item:002613","lang":"en","text":"The elder one has worked in a bank since he was young.","type":"natural"}
+{"ref":"core-es:item:002614","lang":"en","text":"The younger one studies and plays the guitar.","type":"natural"}
+{"ref":"core-es:item:002615","lang":"en","text":"They both come to the house for my birthday.","type":"natural"}
+{"ref":"core-es:item:002616","lang":"en","text":"They always bring something to eat or drink.","type":"natural"}
+{"ref":"core-es:item:002617","lang":"en","text":"As children we played together in the garden.","type":"natural"}
+{"ref":"core-es:item:002618","lang":"en","text":"I love them both a great deal.","type":"natural"}
 {"ref":"core-es:item:001707","lang":"en","text":"Someone in the family sees them every week.","type":"natural"}
 {"ref":"core-es:item:001708","lang":"en","text":"In August we spent three days in the country.","type":"natural"}
 {"ref":"core-es:item:001709","lang":"en","text":"There was a very old cow next to the house.","type":"natural"}
@@ -288,6 +517,12 @@
 {"ref":"core-es:item:001712","lang":"en","text":"The man from the country explained to me that it was normal.","type":"natural"}
 {"ref":"core-es:item:001713","lang":"en","text":"In a second the animal got up on its own.","type":"natural"}
 {"ref":"core-es:item:001714","lang":"en","text":"I never saw anything like it, not even on television.","type":"natural"}
+{"ref":"core-es:item:002619","lang":"en","text":"The mother cleaned it with her mouth straight away.","type":"natural"}
+{"ref":"core-es:item:002620","lang":"en","text":"The little animal looked for milk within minutes.","type":"natural"}
+{"ref":"core-es:item:002621","lang":"en","text":"My children said nothing for a long while.","type":"natural"}
+{"ref":"core-es:item:002622","lang":"en","text":"The man offered us a glass of fresh milk.","type":"natural"}
+{"ref":"core-es:item:002623","lang":"en","text":"In the afternoon we also saw two horses.","type":"natural"}
+{"ref":"core-es:item:002624","lang":"en","text":"We took a photo in front of the house.","type":"natural"}
 {"ref":"core-es:item:001715","lang":"en","text":"We came home together very happy.","type":"natural"}
 {"ref":"core-es:item:001716","lang":"en","text":"On Saturday I called my cousins about the match.","type":"natural"}
 {"ref":"core-es:item:001717","lang":"en","text":"I asked whether the two of you were coming together.","type":"natural"}
@@ -295,6 +530,12 @@
 {"ref":"core-es:item:001719","lang":"en","text":"They said that was not true, not one bit.","type":"natural"}
 {"ref":"core-es:item:001720","lang":"en","text":"Someone had to bring the food and the chairs.","type":"natural"}
 {"ref":"core-es:item:001721","lang":"en","text":"Afterwards they both came together, very happy.","type":"natural"}
+{"ref":"core-es:item:002625","lang":"en","text":"They brought bread, cheese and two bottles of water.","type":"natural"}
+{"ref":"core-es:item:002626","lang":"en","text":"We put the chairs around the table.","type":"natural"}
+{"ref":"core-es:item:002627","lang":"en","text":"You never bring dessert, I said.","type":"natural"}
+{"ref":"core-es:item:002628","lang":"en","text":"They laughed and pulled out a cake.","type":"natural"}
+{"ref":"core-es:item:002629","lang":"en","text":"We ate before the match started.","type":"natural"}
+{"ref":"core-es:item:002630","lang":"en","text":"It was a very good afternoon for everyone.","type":"natural"}
 {"ref":"core-es:item:001722","lang":"en","text":"You are the best, said my younger cousin.","type":"natural"}
 {"ref":"core-es:item:001723","lang":"en","text":"In yesterday's meeting nobody said anything for a second.","type":"natural"}
 {"ref":"core-es:item:001724","lang":"en","text":"Someone had said something rather ugly.","type":"natural"}
@@ -303,6 +544,12 @@
 {"ref":"core-es:item:001727","lang":"en","text":"The two are similar in the way they talk.","type":"natural"}
 {"ref":"core-es:item:001728","lang":"en","text":"Nobody said anything else, neither the boss nor his brother.","type":"natural"}
 {"ref":"core-es:item:001729","lang":"en","text":"A newly arrived employee started talking about something else.","type":"natural"}
+{"ref":"core-es:item:002631","lang":"en","text":"Nobody looked at anybody during that moment.","type":"natural"}
+{"ref":"core-es:item:002632","lang":"en","text":"I was looking at the computer screen.","type":"natural"}
+{"ref":"core-es:item:002633","lang":"en","text":"The silence lasted less time than it seemed.","type":"natural"}
+{"ref":"core-es:item:002634","lang":"en","text":"An employee opened the window in the room.","type":"natural"}
+{"ref":"core-es:item:002635","lang":"en","text":"Cold air came in and we all felt better.","type":"natural"}
+{"ref":"core-es:item:002636","lang":"en","text":"When the meeting ended nobody mentioned it.","type":"natural"}
 {"ref":"core-es:item:001730","lang":"en","text":"After a second, we all went back to the project.","type":"natural"}
 {"ref":"core-es:item:002232","lang":"en","text":"The Spanish alphabet has twenty-seven letters.","type":"natural","note":"Twenty-nine until 2010, when ch and ll stopped counting as letters of their own. An older textbook will say twenty-nine."}
 {"ref":"core-es:item:002233","lang":"en","text":"The five vowels are called the way they sound.","type":"natural","note":"So the names of a, e, i, o and u need no learning — which is why the letters worth drilling are the consonants."}
@@ -311,7 +558,7 @@
 {"ref":"core-es:item:002236","lang":"en","text":"The letter H is never pronounced.","type":"natural","note":"Which is why hola and ola sound identical, and why a Spanish speaker writing English drops the h."}
 {"ref":"core-es:item:002237","lang":"en","text":"H is the only silent letter.","type":"natural"}
 {"ref":"core-es:item:002238","lang":"en","text":"Is it written with a B or a V?","type":"natural","note":"The most useful question in this file: be and uve sound the same in Spanish, so this is asked constantly by native speakers too."}
-{"ref":"core-es:item:002239","lang":"en","text":"Vaca with a V, baca with a B.","type":"natural"}
+{"ref":"core-es:item:002239","lang":"en","text":"Beber with a B, vivir with a V.","type":"natural"}
 {"ref":"core-es:item:002240","lang":"en","text":"It is written with a B, as in bueno.","type":"natural"}
 {"ref":"core-es:item:002241","lang":"en","text":"G and J sound the same before an e.","type":"natural"}
 {"ref":"core-es:item:002242","lang":"en","text":"Gente is written with a G.","type":"natural"}
@@ -487,7 +734,7 @@
 {"ref":"core-es:item:001929","lang":"en","text":"I downloaded the app in five minutes.","type":"natural"}
 {"ref":"core-es:item:001930","lang":"en","text":"Download the file before you leave.","type":"natural"}
 {"ref":"core-es:item:001931","lang":"en","text":"Do not download anything from that site.","type":"natural"}
-{"ref":"core-es:item:001932","lang":"en","text":"The app downloads the photos by itself.","type":"natural"}
+{"ref":"core-es:item:001932","lang":"en","text":"The app downloads the photos on its own.","type":"natural"}
 {"ref":"core-es:item:001933","lang":"en","text":"The computer will not connect to the wifi.","type":"natural"}
 {"ref":"core-es:item:001934","lang":"en","text":"Connect the phone to the screen.","type":"natural"}
 {"ref":"core-es:item:001935","lang":"en","text":"I go online in the morning to read my email.","type":"natural"}
@@ -678,7 +925,7 @@
 {"ref":"core-es:item:002120","lang":"en","text":"Everything has to be above board.","type":"natural"}
 {"ref":"core-es:item:002121","lang":"en","text":"It is the legal age to drive.","type":"natural"}
 {"ref":"core-es:item:002122","lang":"en","text":"The contract is legal and clear.","type":"natural"}
-{"ref":"core-es:item:002123","lang":"en","text":"It is a temporary post, not a permanent one.","type":"natural"}
+{"ref":"core-es:item:002123","lang":"en","text":"It is a temporary post, not for ever.","type":"natural"}
 {"ref":"core-es:item:002124","lang":"en","text":"It was a temporary solution.","type":"natural"}
 {"ref":"core-es:item:002125","lang":"en","text":"I have a temporary problem with the network.","type":"natural"}
 {"ref":"core-es:item:002126","lang":"en","text":"I got a ticket for Saturday.","type":"natural"}
@@ -686,7 +933,7 @@
 {"ref":"core-es:item:002128","lang":"en","text":"I cannot manage to open the file.","type":"natural"}
 {"ref":"core-es:item:002129","lang":"en","text":"It is a chance that will not come again.","type":"natural"}
 {"ref":"core-es:item:002130","lang":"en","text":"I had the chance to work in Mexico.","type":"natural"}
-{"ref":"core-es:item:002131","lang":"en","text":"Make the most of the chance.","type":"natural"}
+{"ref":"core-es:item:002131","lang":"en","text":"Take the chance.","type":"natural"}
 {"ref":"core-es:item:002132","lang":"en","text":"The success of the show surprised everybody.","type":"natural"}
 {"ref":"core-es:item:002133","lang":"en","text":"It was very successful in Italy.","type":"natural"}
 {"ref":"core-es:item:002134","lang":"en","text":"Success depends on effort.","type":"natural"}
@@ -732,7 +979,7 @@
 {"ref":"core-es:item:002174","lang":"en","text":"Public transport cuts pollution.","type":"natural"}
 {"ref":"core-es:item:002175","lang":"en","text":"I propose a simple solution.","type":"natural"}
 {"ref":"core-es:item:002176","lang":"en","text":"They proposed a new course for September.","type":"natural"}
-{"ref":"core-es:item:002177","lang":"en","text":"I suggest this page for practice.","type":"natural"}
+{"ref":"core-es:item:002177","lang":"en","text":"I suggest this page for practising at home.","type":"natural"}
 {"ref":"core-es:item:002178","lang":"en","text":"I suggest another part of the city.","type":"natural"}
 {"ref":"core-es:item:002179","lang":"en","text":"It is not a serious illness.","type":"natural"}
 {"ref":"core-es:item:002180","lang":"en","text":"The company laid off ten people.","type":"natural"}
@@ -770,6 +1017,12 @@
 {"ref":"core-es:item:002212","lang":"en","text":"It is important that we all recycle.","type":"natural"}
 {"ref":"core-es:item:002213","lang":"en","text":"If we cut down on plastic, the air and the sea are cleaner.","type":"natural"}
 {"ref":"core-es:item:002214","lang":"en","text":"Even if it is little, every effort counts.","type":"natural"}
+{"ref":"core-es:item:002637","lang":"en","text":"At first I did not know where to throw each thing.","type":"natural"}
+{"ref":"core-es:item:002638","lang":"en","text":"A neighbour explained it to me in five minutes.","type":"natural"}
+{"ref":"core-es:item:002639","lang":"en","text":"Now I recycle bottles as well.","type":"natural"}
+{"ref":"core-es:item:002640","lang":"en","text":"In my street there is a place for paper.","type":"natural"}
+{"ref":"core-es:item:002641","lang":"en","text":"It is better if we buy less plastic.","type":"natural"}
+{"ref":"core-es:item:002642","lang":"en","text":"It annoys me that there is still rubbish in the street.","type":"natural"}
 {"ref":"core-es:item:002215","lang":"en","text":"I hope more people do it.","type":"natural"}
 {"ref":"core-es:item:002216","lang":"en","text":"I have been offered another post.","type":"natural"}
 {"ref":"core-es:item:002217","lang":"en","text":"How good! And what is the problem?","type":"natural"}
@@ -786,6 +1039,12 @@
 {"ref":"core-es:item:002228","lang":"en","text":"For the climate to improve, private transport has to be cut.","type":"natural"}
 {"ref":"core-es:item:002229","lang":"en","text":"It is not a simple or a cheap solution.","type":"natural"}
 {"ref":"core-es:item:002230","lang":"en","text":"But it is necessary that we start now.","type":"natural"}
+{"ref":"core-es:item:002643","lang":"en","text":"The article is two pages long and full of figures.","type":"natural"}
+{"ref":"core-es:item:002644","lang":"en","text":"I doubt everyone reads all of it.","type":"natural"}
+{"ref":"core-es:item:002645","lang":"en","text":"It is a shame people do not change.","type":"natural"}
+{"ref":"core-es:item:002646","lang":"en","text":"I advise you to use public transport more.","type":"natural"}
+{"ref":"core-es:item:002647","lang":"en","text":"I hope next summer is cooler.","type":"natural"}
+{"ref":"core-es:item:002648","lang":"en","text":"I shared the article with two colleagues.","type":"natural"}
 {"ref":"core-es:item:002231","lang":"en","text":"Even if the change is slow, the planet is grateful for it.","type":"natural"}
 {"ref":"core-es:item:002341","lang":"en","text":"Even if it is not perfect, it is a good agreement.","type":"natural"}
 {"ref":"core-es:item:001731","lang":"en","text":"I want you to help me with this file.","type":"natural","note":"English uses an infinitive here — «I want you to help». Spanish cannot: a second person needs a second clause."}
@@ -831,7 +1090,7 @@
 {"ref":"core-es:item:001771","lang":"en","text":"It is unlikely they will hire us both.","type":"natural"}
 {"ref":"core-es:item:001772","lang":"en","text":"I do not think the effort is worth it.","type":"natural"}
 {"ref":"core-es:item:001773","lang":"en","text":"I doubt this article is impartial.","type":"natural"}
-{"ref":"core-es:item:001774","lang":"en","text":"It does not look as if the network is connected properly.","type":"natural"}
+{"ref":"core-es:item:001774","lang":"en","text":"It does not look as if the network is working properly.","type":"natural"}
 {"ref":"core-es:item:001775","lang":"en","text":"Maybe the user does not remember their password.","type":"natural"}
 {"ref":"core-es:item:001776","lang":"en","text":"It is not obvious that the decision is fair.","type":"natural"}
 {"ref":"core-es:item:001777","lang":"en","text":"I am glad you are finding work.","type":"natural"}
@@ -1608,6 +1867,48 @@
 {"ref":"core-es:item:000513","lang":"en","text":"The weather is bad today.","type":"natural"}
 {"ref":"core-es:item:000514","lang":"en","text":"It's a bad idea.","type":"natural"}
 {"ref":"core-es:item:000515","lang":"en","text":"We study together on Saturdays.","type":"natural"}
+{"ref":"core-es:item:002649","lang":"en","text":"I hung my coat near the fire.","type":"natural"}
+{"ref":"core-es:item:002650","lang":"en","text":"We hung the photos on the living-room wall.","type":"natural"}
+{"ref":"core-es:item:002651","lang":"en","text":"Where do I hang the towel?","type":"natural"}
+{"ref":"core-es:item:002652","lang":"en","text":"I did not answer the phone.","type":"natural"}
+{"ref":"core-es:item:002653","lang":"en","text":"Answer when you can.","type":"natural"}
+{"ref":"core-es:item:002654","lang":"en","text":"She answered the next question without hesitating.","type":"natural"}
+{"ref":"core-es:item:002655","lang":"en","text":"I want to go to the market with you.","type":"natural"}
+{"ref":"core-es:item:002656","lang":"en","text":"I like practising with you.","type":"natural"}
+{"ref":"core-es:item:002657","lang":"en","text":"I am counting on you for Saturday.","type":"natural"}
+{"ref":"core-es:item:002658","lang":"en","text":"I chose the only one left.","type":"natural"}
+{"ref":"core-es:item:002659","lang":"en","text":"It is hard to choose between the two.","type":"natural"}
+{"ref":"core-es:item:002660","lang":"en","text":"Choose the next exercise.","type":"natural"}
+{"ref":"core-es:item:002661","lang":"en","text":"In winter we light a fire at home.","type":"natural"}
+{"ref":"core-es:item:002662","lang":"en","text":"We sat around the fire in silence.","type":"natural"}
+{"ref":"core-es:item:002663","lang":"en","text":"I do not mind waiting a little.","type":"natural"}
+{"ref":"core-es:item:002664","lang":"en","text":"In the end it does not matter who wins.","type":"natural"}
+{"ref":"core-es:item:002665","lang":"en","text":"Do you mind closing the window?","type":"natural"}
+{"ref":"core-es:item:002666","lang":"en","text":"I practise Spanish every day.","type":"natural"}
+{"ref":"core-es:item:002667","lang":"en","text":"I practise with the radio in the morning.","type":"natural"}
+{"ref":"core-es:item:002668","lang":"en","text":"I took my coat off as I came in.","type":"natural"}
+{"ref":"core-es:item:002669","lang":"en","text":"Take your shoes off, it is warm inside.","type":"natural"}
+{"ref":"core-es:item:002670","lang":"en","text":"The doctor took me off the tablets.","type":"natural"}
+{"ref":"core-es:item:002671","lang":"en","text":"I listen to the radio while I cook.","type":"natural"}
+{"ref":"core-es:item:002672","lang":"en","text":"The car radio does not work.","type":"natural"}
+{"ref":"core-es:item:002673","lang":"en","text":"The next stop is mine.","type":"natural"}
+{"ref":"core-es:item:002674","lang":"en","text":"At first I was the only student.","type":"natural"}
+{"ref":"core-es:item:002675","lang":"en","text":"It is the only free day of the week.","type":"natural"}
+{"ref":"core-es:item:002676","lang":"en","text":"The keys are inside the bag.","type":"natural"}
+{"ref":"core-es:item:002677","lang":"en","text":"Inside the box there was a letter.","type":"natural"}
+{"ref":"core-es:item:002678","lang":"en","text":"I will be right back.","type":"natural"}
+{"ref":"core-es:item:002679","lang":"en","text":"He answered the message straight away.","type":"natural"}
+{"ref":"core-es:item:002680","lang":"en","text":"I liked the end better than the beginning.","type":"natural"}
+{"ref":"core-es:item:002681","lang":"en","text":"I often go out walking in the afternoon.","type":"natural"}
+{"ref":"core-es:item:002682","lang":"en","text":"We often eat out on Fridays.","type":"natural"}
+{"ref":"core-es:item:002683","lang":"en","text":"I painted the door white.","type":"natural"}
+{"ref":"core-es:item:002684","lang":"en","text":"Next week we are painting the kitchen.","type":"natural"}
+{"ref":"core-es:item:002685","lang":"en","text":"At first I did not understand anything.","type":"natural"}
+{"ref":"core-es:item:002686","lang":"en","text":"Can you spell your surname?","type":"natural"}
+{"ref":"core-es:item:002687","lang":"en","text":"Parents and children came together.","type":"natural"}
+{"ref":"core-es:item:002688","lang":"en","text":"The two brothers talk the same way.","type":"natural"}
+{"ref":"core-es:item:002689","lang":"en","text":"We laughed a lot at the film.","type":"natural"}
+{"ref":"core-es:item:002690","lang":"en","text":"She asked for quiet in the room.","type":"natural"}
 {"ref":"core-es:item:000516","lang":"en","text":"I wake up early, at seven.","type":"natural"}
 {"ref":"core-es:item:000517","lang":"en","text":"It's cold and I don't want to get out of bed.","type":"natural"}
 {"ref":"core-es:item:000518","lang":"en","text":"I eat bread and butter and drink a coffee.","type":"natural"}
@@ -1633,25 +1934,64 @@
 {"ref":"core-es:item:000533","lang":"en","text":"Then I go to the market to buy fruit and vegetables.","type":"natural"}
 {"ref":"core-es:item:000534","lang":"en","text":"In the afternoon I play football with my friends.","type":"natural"}
 {"ref":"core-es:item:000535","lang":"en","text":"In the evening we have dinner together at a restaurant.","type":"natural"}
+{"ref":"core-es:item:002351","lang":"en","text":"At the restaurant we order fish and a beer.","type":"natural"}
+{"ref":"core-es:item:002352","lang":"en","text":"My sister has wine and I drink water.","type":"natural"}
+{"ref":"core-es:item:002353","lang":"en","text":"We talk about the week and laugh a lot.","type":"natural"}
+{"ref":"core-es:item:002354","lang":"en","text":"We get home at eleven.","type":"natural"}
+{"ref":"core-es:item:002355","lang":"en","text":"Before sleeping I read for a while.","type":"natural"}
+{"ref":"core-es:item:002356","lang":"en","text":"I look at the clock: it is very late already.","type":"natural"}
+{"ref":"core-es:item:002357","lang":"en","text":"Saturday is my favourite day.","type":"natural"}
+{"ref":"core-es:item:002358","lang":"en","text":"It is the day I really rest.","type":"natural"}
 {"ref":"core-es:item:000536","lang":"en","text":"Yesterday I didn't feel well.","type":"natural"}
 {"ref":"core-es:item:000537","lang":"en","text":"My head hurt and I had a fever.","type":"natural"}
 {"ref":"core-es:item:000538","lang":"en","text":"I couldn't sleep at night.","type":"natural"}
 {"ref":"core-es:item:000539","lang":"en","text":"This morning I went to the doctor.","type":"natural"}
 {"ref":"core-es:item:000540","lang":"en","text":"He gave me some medicine and now I'm better.","type":"natural"}
+{"ref":"core-es:item:002359","lang":"en","text":"My nose is still bad.","type":"natural"}
+{"ref":"core-es:item:002360","lang":"en","text":"But I do not have a fever any more.","type":"natural"}
+{"ref":"core-es:item:002361","lang":"en","text":"The doctor said I have to rest for two days.","type":"natural"}
+{"ref":"core-es:item:002362","lang":"en","text":"I cannot go to work until Thursday.","type":"natural"}
+{"ref":"core-es:item:002363","lang":"en","text":"My mother brought me soup and fruit.","type":"natural"}
+{"ref":"core-es:item:002364","lang":"en","text":"I drink a lot of water and sleep in the afternoon.","type":"natural"}
+{"ref":"core-es:item:002365","lang":"en","text":"Next week I will go back to running.","type":"natural"}
+{"ref":"core-es:item:002366","lang":"en","text":"It is important to sleep well.","type":"natural"}
 {"ref":"core-es:item:000541","lang":"en","text":"Last summer we travelled to Mexico.","type":"natural"}
 {"ref":"core-es:item:000542","lang":"en","text":"We went by plane and arrived at night.","type":"natural"}
 {"ref":"core-es:item:000543","lang":"en","text":"The hotel was near the beach.","type":"natural"}
 {"ref":"core-es:item:000544","lang":"en","text":"Every day we ate fish and drank orange juice.","type":"natural"}
 {"ref":"core-es:item:000545","lang":"en","text":"It was a lovely trip.","type":"natural"}
+{"ref":"core-es:item:002367","lang":"en","text":"In the mornings we used to walk along the beach.","type":"natural"}
+{"ref":"core-es:item:002368","lang":"en","text":"My brother swam in the sea every day.","type":"natural"}
+{"ref":"core-es:item:002369","lang":"en","text":"One afternoon we visited a very interesting museum.","type":"natural"}
+{"ref":"core-es:item:002370","lang":"en","text":"We ate at a small restaurant near the centre.","type":"natural"}
+{"ref":"core-es:item:002371","lang":"en","text":"The waiter was very friendly and told us about the city.","type":"natural"}
+{"ref":"core-es:item:002372","lang":"en","text":"We bought a hat and a pair of sunglasses.","type":"natural"}
+{"ref":"core-es:item:002373","lang":"en","text":"We took a lot of photos.","type":"natural"}
+{"ref":"core-es:item:002374","lang":"en","text":"We came back on Sunday, tired and happy.","type":"natural"}
 {"ref":"core-es:item:000546","lang":"en","text":"I go to the market on Thursdays.","type":"natural"}
 {"ref":"core-es:item:000547","lang":"en","text":"I buy apples, tomatoes and onions.","type":"natural"}
 {"ref":"core-es:item:000548","lang":"en","text":"The fish is delicious.","type":"natural"}
 {"ref":"core-es:item:000549","lang":"en","text":"Everything costs little and the people are very kind.","type":"natural"}
 {"ref":"core-es:item:000550","lang":"en","text":"I pay by card and go home with two bags.","type":"natural"}
+{"ref":"core-es:item:002375","lang":"en","text":"At the first stall I buy bread and cheese.","type":"natural"}
+{"ref":"core-es:item:002376","lang":"en","text":"Then I look for eggs and milk.","type":"natural"}
+{"ref":"core-es:item:002377","lang":"en","text":"The woman at the market always gives me a piece of fruit.","type":"natural"}
+{"ref":"core-es:item:002378","lang":"en","text":"Sometimes I buy flowers for the table.","type":"natural"}
+{"ref":"core-es:item:002379","lang":"en","text":"It all fits in two bags.","type":"natural"}
+{"ref":"core-es:item:002380","lang":"en","text":"I walk home because it is not far.","type":"natural"}
+{"ref":"core-es:item:002381","lang":"en","text":"In the afternoon I cook with what I bought.","type":"natural"}
+{"ref":"core-es:item:002382","lang":"en","text":"I like the market better than the supermarket.","type":"natural"}
 {"ref":"core-es:item:000551","lang":"en","text":"It's been raining a lot since yesterday.","type":"natural"}
 {"ref":"core-es:item:000552","lang":"en","text":"The sky is grey and it's windy.","type":"natural"}
 {"ref":"core-es:item:000553","lang":"en","text":"I can't cycle to work.","type":"natural"}
 {"ref":"core-es:item:000554","lang":"en","text":"I go by train and read the newspaper.","type":"natural"}
+{"ref":"core-es:item:002383","lang":"en","text":"I wear a coat and an old pair of shoes.","type":"natural"}
+{"ref":"core-es:item:002384","lang":"en","text":"On the train it is hot and there are a lot of people.","type":"natural"}
+{"ref":"core-es:item:002385","lang":"en","text":"I get to the office a little late.","type":"natural"}
+{"ref":"core-es:item:002386","lang":"en","text":"I drink a hot coffee in a big cup.","type":"natural"}
+{"ref":"core-es:item:002387","lang":"en","text":"Through the window I see the water in the street.","type":"natural"}
+{"ref":"core-es:item:002388","lang":"en","text":"My colleagues talk about the weather all morning.","type":"natural"}
+{"ref":"core-es:item:002389","lang":"en","text":"At lunchtime it is still raining.","type":"natural"}
 {"ref":"core-es:item:000555","lang":"en","text":"But tomorrow it's going to be sunny.","type":"natural"}
 {"ref":"core-es:item:000556","lang":"en","text":"Good morning, what would you like?","type":"natural"}
 {"ref":"core-es:item:000557","lang":"en","text":"A coffee with milk, please.","type":"natural"}
@@ -2813,6 +3153,15 @@
 {"ref":"core-es:item:500463","lang":"en","text":"the letter X","type":"natural"}
 {"ref":"core-es:item:500464","lang":"en","text":"the letter Y","type":"natural"}
 {"ref":"core-es:item:500465","lang":"en","text":"the letter Z","type":"natural"}
+{"ref":"core-es:item:500466","lang":"en","text":"silence","type":"natural"}
+{"ref":"core-es:item:500467","lang":"en","text":"fire","type":"natural"}
+{"ref":"core-es:item:500468","lang":"en","text":"end","type":"natural"}
+{"ref":"core-es:item:500469","lang":"en","text":"alphabet","type":"natural"}
+{"ref":"core-es:item:500470","lang":"en","text":"vowel","type":"natural"}
+{"ref":"core-es:item:500471","lang":"en","text":"accent, stress mark","type":"natural"}
+{"ref":"core-es:item:500472","lang":"en","text":"surname","type":"natural"}
+{"ref":"core-es:item:500473","lang":"en","text":"beginning","type":"natural"}
+{"ref":"core-es:item:500474","lang":"en","text":"radio","type":"natural"}
 {"ref":"core-es:item:800001","lang":"en","text":"to be (identity, characteristics)","type":"natural"}
 {"ref":"core-es:item:800002","lang":"en","text":"to be (state, location)","type":"natural"}
 {"ref":"core-es:item:800003","lang":"en","text":"to have","type":"natural"}
@@ -2988,6 +3337,16 @@
 {"ref":"core-es:item:800173","lang":"en","text":"to be worth, to cost","type":"natural"}
 {"ref":"core-es:item:800174","lang":"en","text":"to argue, to discuss","type":"natural"}
 {"ref":"core-es:item:800175","lang":"en","text":"to give back, to return","type":"natural"}
+{"ref":"core-es:item:800176","lang":"en","text":"to take off, to remove","type":"natural"}
+{"ref":"core-es:item:800177","lang":"en","text":"to hang, to hang up","type":"natural"}
+{"ref":"core-es:item:800178","lang":"en","text":"to matter; to mind","type":"natural"}
+{"ref":"core-es:item:800180","lang":"en","text":"to paint","type":"natural"}
+{"ref":"core-es:item:800181","lang":"en","text":"to answer, to reply","type":"natural"}
+{"ref":"core-es:item:800182","lang":"en","text":"to sound, to ring","type":"natural"}
+{"ref":"core-es:item:800183","lang":"en","text":"to spell out","type":"natural"}
+{"ref":"core-es:item:800184","lang":"en","text":"to laugh","type":"natural"}
+{"ref":"core-es:item:800185","lang":"en","text":"to choose","type":"natural"}
+{"ref":"core-es:item:800186","lang":"en","text":"to practise","type":"natural"}
 {"ref":"core-es:item:600001","lang":"en","text":"good","type":"natural"}
 {"ref":"core-es:item:600002","lang":"en","text":"bad","type":"natural"}
 {"ref":"core-es:item:600003","lang":"en","text":"big","type":"natural"}
@@ -3126,6 +3485,10 @@
 {"ref":"core-es:item:600136","lang":"en","text":"unlikely","type":"natural"}
 {"ref":"core-es:item:600137","lang":"en","text":"free of charge","type":"natural"}
 {"ref":"core-es:item:600138","lang":"en","text":"odd, strange","type":"natural"}
+{"ref":"core-es:item:600139","lang":"en","text":"next, following","type":"natural"}
+{"ref":"core-es:item:600140","lang":"en","text":"silent, mute","type":"natural"}
+{"ref":"core-es:item:600141","lang":"en","text":"only, unique","type":"natural"}
+{"ref":"core-es:item:600142","lang":"en","text":"twenty-seven (27)","type":"natural"}
 {"ref":"core-es:lexeme:ser","lang":"en","text":"to be (identity, characteristics)"}
 {"ref":"core-es:lexeme:estar","lang":"en","text":"to be (state, location)"}
 {"ref":"core-es:lexeme:tener","lang":"en","text":"to have"}
@@ -3301,6 +3664,16 @@
 {"ref":"core-es:lexeme:valer","lang":"en","text":"to be worth, to cost"}
 {"ref":"core-es:lexeme:discutir","lang":"en","text":"to argue, to discuss"}
 {"ref":"core-es:lexeme:devolver","lang":"en","text":"to give back, to return"}
+{"ref":"core-es:lexeme:quitar","lang":"en","text":"to take off, to remove"}
+{"ref":"core-es:lexeme:colgar","lang":"en","text":"to hang, to hang up"}
+{"ref":"core-es:lexeme:importar","lang":"en","text":"to matter; to mind"}
+{"ref":"core-es:lexeme:pintar","lang":"en","text":"to paint"}
+{"ref":"core-es:lexeme:contestar","lang":"en","text":"to answer, to reply"}
+{"ref":"core-es:lexeme:sonar","lang":"en","text":"to sound, to ring"}
+{"ref":"core-es:lexeme:deletrear","lang":"en","text":"to spell out"}
+{"ref":"core-es:lexeme:reir","lang":"en","text":"to laugh"}
+{"ref":"core-es:lexeme:elegir","lang":"en","text":"to choose"}
+{"ref":"core-es:lexeme:practicar","lang":"en","text":"to practise"}
 {"ref":"core-es:lexeme:persona","lang":"en","text":"person"}
 {"ref":"core-es:lexeme:hombre","lang":"en","text":"man"}
 {"ref":"core-es:lexeme:mujer","lang":"en","text":"woman"}
@@ -3768,6 +4141,15 @@
 {"ref":"core-es:lexeme:equis","lang":"en","text":"the letter X"}
 {"ref":"core-es:lexeme:ye","lang":"en","text":"the letter Y"}
 {"ref":"core-es:lexeme:zeta","lang":"en","text":"the letter Z"}
+{"ref":"core-es:lexeme:silencio","lang":"en","text":"silence"}
+{"ref":"core-es:lexeme:fuego","lang":"en","text":"fire"}
+{"ref":"core-es:lexeme:final","lang":"en","text":"end"}
+{"ref":"core-es:lexeme:alfabeto","lang":"en","text":"alphabet"}
+{"ref":"core-es:lexeme:vocal","lang":"en","text":"vowel"}
+{"ref":"core-es:lexeme:acento","lang":"en","text":"accent, stress mark"}
+{"ref":"core-es:lexeme:apellido","lang":"en","text":"surname"}
+{"ref":"core-es:lexeme:principio","lang":"en","text":"beginning"}
+{"ref":"core-es:lexeme:radio","lang":"en","text":"radio"}
 {"ref":"core-es:lexeme:bueno","lang":"en","text":"good"}
 {"ref":"core-es:lexeme:malo","lang":"en","text":"bad"}
 {"ref":"core-es:lexeme:grande","lang":"en","text":"big"}
@@ -4082,6 +4464,16 @@
 {"ref":"core-es:lexeme:improbable","lang":"en","text":"unlikely"}
 {"ref":"core-es:lexeme:gratuito","lang":"en","text":"free of charge"}
 {"ref":"core-es:lexeme:raro","lang":"en","text":"odd, strange"}
+{"ref":"core-es:lexeme:siguiente","lang":"en","text":"next, following"}
+{"ref":"core-es:lexeme:mudo","lang":"en","text":"silent, mute"}
+{"ref":"core-es:lexeme:unico","lang":"en","text":"only, unique"}
+{"ref":"core-es:lexeme:durante","lang":"en","text":"during, for"}
+{"ref":"core-es:lexeme:dentro","lang":"en","text":"inside"}
+{"ref":"core-es:lexeme:igual","lang":"en","text":"the same, equally"}
+{"ref":"core-es:lexeme:e","lang":"en","text":"and (before i- or hi-)"}
+{"ref":"core-es:lexeme:enseguida","lang":"en","text":"straight away"}
+{"ref":"core-es:lexeme:contigo","lang":"en","text":"with you"}
+{"ref":"core-es:lexeme:veintisiete","lang":"en","text":"twenty-seven (27)"}
 {"ref":"core-es:skill:tener-que-infinitive","lang":"en","text":"to have to do something"}
 {"ref":"core-es:skill:ir-a-infinitive","lang":"en","text":"going to do something (near future)"}
 {"ref":"core-es:skill:querer-infinitive","lang":"en","text":"to want to do something"}

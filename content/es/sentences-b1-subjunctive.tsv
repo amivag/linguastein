@@ -59,7 +59,7 @@
 001771	Es improbable que nos contraten a los dos.	It is unlikely they will hire us both.	b1	work							express-doubt
 001772	No creo que valga la pena el esfuerzo.	I do not think the effort is worth it.	b1	core							express-doubt
 001773	Dudo que este artículo sea imparcial.	I doubt this article is impartial.	b1	news							express-doubt
-001774	No parece que la red esté bien conectada.	It does not look as if the network is connected properly.	b1	technology							express-doubt
+001774	No parece que la red funcione bien.	It does not look as if the network is working properly.	b1	technology							express-doubt
 001775	Quizá el usuario no recuerde su contraseña.	Maybe the user does not remember their password.	b1	technology							express-doubt
 001776	No es evidente que la decisión sea justa.	It is not obvious that the decision is fair.	b1	core							express-doubt
 001777	Me alegro de que encuentres trabajo.	I am glad you are finding work.	b1	work,feelings							react-to-news

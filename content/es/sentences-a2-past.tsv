@@ -37,6 +37,13 @@
 001430	Puse el espejo al lado de la ventana.	I put the mirror next to the window.	a2	home		neutral			piso-nuevo
 001431	Mi vecino me ayudó con el armario.	My neighbour helped me with the wardrobe.	a2	home,people		neutral			piso-nuevo
 001432	Terminamos muy tarde, pero el sitio me gustó mucho.	We finished very late, but I liked the place a lot.	a2	home,feelings		neutral			piso-nuevo
+002390	La cocina era pequeña pero tenía una nevera nueva.	The kitchen was small but it had a new fridge.	a2	home					piso-nuevo		
+002391	En el dormitorio puse una cama y una silla.	In the bedroom I put a bed and a chair.	a2	home					piso-nuevo		
+002392	Limpié el suelo dos veces antes de entrar.	I cleaned the floor twice before moving in.	a2	home					piso-nuevo		
+002393	Mi hermana me trajo una lámpara para el comedor.	My sister brought me a lamp for the dining room.	a2	home,family					piso-nuevo		
+002394	Puse una foto grande encima del sofá.	I put a big photo above the sofa.	a2	home					piso-nuevo		
+002395	La primera noche no pude dormir por el ruido de la calle.	The first night I could not sleep because of the noise from the street.	a2	home,city					piso-nuevo		
+002396	Después de un mes, todo estaba en su sitio.	After a month, everything was in its place.	a2	home					piso-nuevo		
 001433	Ahora el comedor está lleno de cosas mías.	Now the dining room is full of my things.	a2	home	Closes in the present, which is what makes the rest read as past.	neutral			piso-nuevo
 
 # ── Un día en el mercado (food and shopping, in the preterite) ────────────────
@@ -48,6 +55,13 @@
 001439	Volví a casa con dos cajas llenas.	I came home with two full boxes.	a2	shopping,home		neutral			mercado-ayer
 001440	Puse la mantequilla y la leche en la nevera.	I put the butter and the milk in the fridge.	a2	home,food-drink		neutral		es-ES,es-CO,es-VE,es-CU,es-DO,es-PR	mercado-ayer
 001441	Preparé una ensalada con lechuga, zanahoria y aceite.	I made a salad with lettuce, carrot and oil.	a2	food-drink		neutral			mercado-ayer
+002397	También compré huevos y un poco de queso.	I also bought eggs and a little cheese.	a2	shopping,food-drink					mercado-ayer		
+002398	El pescado era muy bueno, pero costaba mucho.	The fish was very good, but it cost a lot.	a2	shopping,food-drink					mercado-ayer		
+002399	Una señora me dio a probar unas fresas.	A woman gave me some strawberries to try.	a2	shopping,food-drink					mercado-ayer		
+002400	Pagué en efectivo porque la tarjeta no funcionaba.	I paid cash because the card was not working.	a2	shopping,money					mercado-ayer		
+002401	En la panadería compré un pastel para el domingo.	At the bakery I bought a cake for Sunday.	a2	shopping,food-drink					mercado-ayer		
+002402	Al salir empezó a llover y volví corriendo.	As I left it started to rain and I ran back.	a2	weather					mercado-ayer		
+002403	Por la tarde cociné sopa para toda la semana.	In the afternoon I cooked soup for the whole week.	a2	home,food-drink					mercado-ayer		
 
 # ── Un domingo en el campo (nature, preterite and imperfect together) ─────────
 001442	El domingo pasado estuvimos en el campo.	Last Sunday we were out in the country.	a2	nature		neutral			domingo-campo
@@ -56,6 +70,13 @@
 001445	Al lado del lago había caballos y vacas.	Next to the lake there were horses and cows.	a2	nature,animals		neutral			domingo-campo
 001446	Comimos en el bosque, debajo de un árbol.	We ate in the woods, under a tree.	a2	nature,food-drink		neutral			domingo-campo
 001447	Por la noche se veían la luna y muchas estrellas.	At night you could see the moon and lots of stars.	a2	nature,time		neutral			domingo-campo
+002404	Llevamos pan, queso y una botella de agua.	We took bread, cheese and a bottle of water.	a2	food-drink,nature					domingo-campo		
+002405	Mi hijo corría detrás de los pájaros.	My son ran after the birds.	a2	family,animals					domingo-campo		
+002406	Vimos flores de muchos colores al lado del camino.	We saw flowers of many colours beside the path.	a2	nature,colours					domingo-campo		
+002407	Mi mujer sacó fotos del lago y de las montañas.	My wife took photos of the lake and the mountains.	a2	nature,family					domingo-campo		
+002408	Descansamos un rato debajo de un árbol grande.	We rested for a while under a big tree.	a2	nature					domingo-campo		
+002409	Volvimos al coche cuando empezó a hacer frío.	We went back to the car when it started to get cold.	a2	weather,travel					domingo-campo		
+002410	En el camino de vuelta nadie habló.	On the way back nobody spoke.	a2	travel					domingo-campo		
 001448	No recordaba un domingo tan tranquilo.	I couldn't remember such a quiet Sunday.	a2	nature,feelings		neutral			domingo-campo
 
 # ── El primer día de trabajo (work, in the preterite) ─────────────────────────
@@ -66,6 +87,13 @@
 001453	Trabajé toda la mañana delante de una pantalla.	I worked all morning in front of a screen.	a2	work		neutral			primer-dia
 001454	Nadie me habló del sueldo ese día.	Nobody talked to me about the salary that day.	a2	work,numbers		neutral			primer-dia
 001455	Decidí preguntar el lunes.	I decided to ask on Monday.	a2	work,days-of-week		neutral			primer-dia
+002411	A las dos fui a comer con dos compañeras.	At two I went to lunch with two colleagues.	a2	work,clock					primer-dia		
+002412	Me contaron cómo funcionaba la empresa.	They told me how the company worked.	a2	work					primer-dia		
+002413	Por la tarde escribí mi primer correo a un cliente.	In the afternoon I wrote my first email to a client.	a2	work,communication					primer-dia		
+002414	Mi jefe leyó el correo y me dijo que estaba bien.	My boss read the email and told me it was fine.	a2	work					primer-dia		
+002415	Salí a las seis, todavía nervioso pero contento.	I left at six, still nervous but happy.	a2	work,feelings					primer-dia		
+002416	En el tren pensé en todo lo que aprendí.	On the train I thought about everything I had learned.	a2	work,travel					primer-dia		
+002417	Esa noche dormí muy bien.	That night I slept very well.	a2	daily-routine					primer-dia		
 
 # ── Me dolía la espalda (health, in the past) ─────────────────────────────────
 001456	La semana pasada me dolía mucho la espalda.	Last week my back hurt a lot.	a2	health,body		neutral			espalda-cita
@@ -74,6 +102,12 @@
 001459	El médico me miró la espalda y el cuello.	The doctor looked at my back and my neck.	a2	health,body		neutral			espalda-cita
 001460	Me dijo que era un músculo y nada más.	He told me it was a muscle and nothing more.	a2	health,body		neutral			espalda-cita
 001461	Me dio unas pastillas para una semana.	He gave me some tablets for a week.	a2	health		neutral			espalda-cita
+002418	No podía dormir bien por el dolor.	I could not sleep well because of the pain.	a2	health					espalda-cita		
+002419	Tampoco podía sentarme delante del ordenador.	I could not sit at the computer either.	a2	health,work					espalda-cita		
+002420	La primera pastilla me ayudó en dos días.	The first tablet helped me within two days.	a2	health					espalda-cita		
+002421	El médico me dijo que tengo que caminar todos los días.	The doctor told me I have to walk every day.	a2	health					espalda-cita		
+002422	Empecé a caminar media hora por la mañana.	I started walking for half an hour in the morning.	a2	health,sport					espalda-cita		
+002423	También dejé de llevar el bolso en el mismo lado.	I also stopped carrying my bag on the same side.	a2	health,objects					espalda-cita		
 001462	Ahora estoy mucho mejor, solo un poco débil.	Now I'm much better, just a little weak.	a2	health,feelings		neutral			espalda-cita
 
 # ── La casa de mi abuela (family and home, in the imperfect) ──────────────────
@@ -84,6 +118,13 @@
 001467	Mi primo y yo jugábamos en el suelo.	My cousin and I used to play on the floor.	a2	family		neutral			casa-abuela
 001468	En el baño siempre había jabón y toallas limpias.	In the bathroom there were always soap and clean towels.	a2	home		neutral			casa-abuela
 001469	No teníamos wifi y no lo necesitábamos.	We had no wifi and we didn't need it.	a2	home,communication		neutral			casa-abuela
+002424	En el jardín había un árbol muy viejo.	In the garden there was a very old tree.	a2	home,nature					casa-abuela		
+002425	Mi abuela preparaba pasteles los domingos.	My grandmother used to make cakes on Sundays.	a2	family,food-drink					casa-abuela		
+002426	Bebíamos leche fría en unas tazas azules.	We drank cold milk from blue cups.	a2	food-drink,objects					casa-abuela		
+002427	Por la tarde mi primo y yo íbamos al río.	In the afternoon my cousin and I would go to the river.	a2	family,nature					casa-abuela		
+002428	A veces volvíamos con los zapatos llenos de agua.	Sometimes we came back with our shoes full of water.	a2	clothes,nature					casa-abuela		
+002429	Mi abuelo leía el periódico en la misma silla.	My grandfather read the paper in the same chair.	a2	family,home					casa-abuela		
+002430	Nadie tenía prisa en aquella casa.	Nobody was ever in a hurry in that house.	a2	family,home					casa-abuela		
 001470	Nací en esa casa y todavía la recuerdo bien.	I was born in that house and I still remember it well.	a2	family,home		neutral			casa-abuela
 
 # == Batch two: the clusters still short after the first six ===================
@@ -93,6 +134,13 @@
 001474	Compramos pan en una panadería de la esquina.	We bought bread at a bakery on the corner.	a2	city,food-drink		neutral			centro-tarde
 001475	Desde el puente se veía toda la ciudad.	From the bridge you could see the whole city.	a2	city		neutral			centro-tarde
 001476	Arriba, el teatro estaba demasiado lleno.	Upstairs, the theatre was too full.	a2	city		neutral			centro-tarde
+002431	En la plaza había música y mucha gente.	In the square there was music and a lot of people.	a2	city,music					centro-tarde		
+002432	Un chico tocaba la guitarra en una esquina.	A boy was playing the guitar on a corner.	a2	city,music					centro-tarde		
+002433	Entramos en una tienda de ropa a mirar.	We went into a clothes shop to look around.	a2	shopping,clothes					centro-tarde		
+002434	Mi amiga se probó una falda y un abrigo.	My friend tried on a skirt and a coat.	a2	shopping,clothes					centro-tarde		
+002435	No compramos nada, solo miramos.	We did not buy anything, we just looked.	a2	shopping					centro-tarde		
+002436	Después tomamos un café en un bar.	Afterwards we had a coffee in a bar.	a2	restaurant,city					centro-tarde		
+002437	El reloj de la iglesia dio las siete.	The church clock struck seven.	a2	city,clock					centro-tarde		
 001477	Dimos una vuelta alrededor de la plaza y volvimos a casa.	We took a walk around the square and went home.	a2	city		neutral			centro-tarde
 001478	El año pasado estudiaba español dos días por semana.	Last year I was studying Spanish two days a week.	a2	school,language		neutral			clase-espanol
 001479	Éramos ocho alumnos y una profesora muy tranquila.	There were eight of us students and a very calm teacher.	a2	school,people		neutral			clase-espanol
@@ -101,6 +149,13 @@
 001482	Los primeros días no comprendía casi nada.	The first few days I understood almost nothing.	a2	school,feelings		neutral			clase-espanol
 001483	La profesora repetía el ejercicio despacio.	The teacher would repeat the exercise slowly.	a2	school,language		neutral			clase-espanol
 001484	Después de un rato, todo parecía más fácil.	After a while, everything seemed easier.	a2	school,feelings		neutral			clase-espanol
+002438	Los lunes hacíamos ejercicios de escuchar.	On Mondays we did listening exercises.	a2	school,language					clase-espanol		
+002439	Los jueves leíamos un cuento corto.	On Thursdays we read a short story.	a2	school,language					clase-espanol		
+002440	Yo llevaba siempre un lápiz y un bolígrafo azul.	I always took a pencil and a blue pen.	a2	school,objects					clase-espanol		
+002441	Una vez escribí una carta en español.	Once I wrote a letter in Spanish.	a2	school,language					clase-espanol		
+002442	La profesora la leyó delante de todos.	The teacher read it out in front of everyone.	a2	school					clase-espanol		
+002443	Me puse rojo, pero estaba contento.	I went red, but I was pleased.	a2	feelings,colours					clase-espanol		
+002444	Al final del año hicimos un examen fácil.	At the end of the year we did an easy exam.	a2	school					clase-espanol		
 001485	Nunca olvidé esa clase.	I never forgot that class.	a2	school		neutral			clase-espanol
 001486	Anoche cenamos en un restaurante nuevo.	Last night we had dinner at a new restaurant.	a2	restaurant		neutral			restaurante-nuevo
 001487	La camarera nos ofreció una mesa al lado de la ventana.	The waitress offered us a table next to the window.	a2	restaurant		neutral			restaurante-nuevo
@@ -109,6 +164,12 @@
 001490	Cada persona tenía dos servilletas.	Each person had two napkins.	a2	restaurant		neutral			restaurante-nuevo
 001491	No me apetecía nada más, solo un café.	I didn't fancy anything else, just a coffee.	a2	restaurant,food-drink		neutral			restaurante-nuevo
 001492	Pagamos en efectivo y dejamos propina.	We paid in cash and left a tip.	a2	restaurant,numbers		neutral			restaurante-nuevo
+002445	De primero pedimos una sopa y una ensalada.	To start we ordered a soup and a salad.	a2	restaurant,food-drink					restaurante-nuevo		
+002446	El pan estaba caliente y muy rico.	The bread was warm and delicious.	a2	restaurant,food-drink					restaurante-nuevo		
+002447	Mi hermano bebió una cerveza y yo un vino.	My brother had a beer and I had a wine.	a2	restaurant,food-drink					restaurante-nuevo		
+002448	El cuchillo y el tenedor eran muy grandes.	The knife and fork were very big.	a2	restaurant,objects					restaurante-nuevo		
+002449	De postre tomamos un helado de chocolate.	For dessert we had a chocolate ice cream.	a2	restaurant,food-drink					restaurante-nuevo		
+002450	La cuenta llegó rápido y no era cara.	The bill came quickly and it was not expensive.	a2	restaurant,money					restaurante-nuevo		
 001493	Todo funcionó perfectamente y vamos a volver.	Everything worked perfectly and we're going to go back.	a2	restaurant		neutral			restaurante-nuevo
 001494	El mes pasado vendí mi guitarra vieja.	Last month I sold my old guitar.	a2	objects		neutral			vendi-guitarra
 001495	La tenía en el armario, en una caja gris.	I had it in the wardrobe, in a grey box.	a2	objects,home		neutral			vendi-guitarra
@@ -116,6 +177,12 @@
 001497	También lo intenté en el periódico, pero nadie llamó.	I tried the newspaper too, but nobody called.	a2	objects,communication		neutral			vendi-guitarra
 001498	Un extranjero la compró el jueves.	A foreigner bought it on Thursday.	a2	objects,people		neutral			vendi-guitarra
 001499	Me pagó en efectivo y saqué el dinero del bolso.	He paid me in cash and I took the money out of my bag.	a2	objects,numbers		neutral			vendi-guitarra
+002451	No la tocaba desde hacía años.	I had not played it for years.	a2	music					vendi-guitarra		
+002452	Estaba en muy buen estado, solo un poco sucia.	It was in very good condition, just a little dusty.	a2	music,objects					vendi-guitarra		
+002453	Pedí cien euros y el extranjero no discutió.	I asked for a hundred euros and the foreigner did not argue.	a2	money					vendi-guitarra		
+002454	Le expliqué la historia de la guitarra.	I told him the story of the guitar.	a2	music,communication					vendi-guitarra		
+002455	Me dio las gracias y se fue contento.	He thanked me and left happy.	a2	social,feelings					vendi-guitarra		
+002456	Ese día tuve suerte.	That day I was lucky.	a2	core					vendi-guitarra		
 001500	La guitarra era mía desde niño y la recuerdo bien.	The guitar had been mine since I was a child and I remember it well.	a2	objects,feelings		neutral			vendi-guitarra
 001501	Anoche no dormí casi nada.	Last night I hardly slept at all.	a2	feelings,time		neutral			anoche-ruido
 001502	Los vecinos de arriba eran muy ruidosos.	The neighbours upstairs were very noisy.	a2	home,people		neutral			anoche-ruido
@@ -123,6 +190,12 @@
 001504	Me dolía el estómago y tampoco quería comer.	My stomach hurt and I didn't want to eat either.	a2	health,body		neutral			anoche-ruido
 001505	Bebí demasiado café por la tarde, quizá por eso.	I drank too much coffee in the afternoon, maybe that's why.	a2	health,food-drink		neutral			anoche-ruido
 001506	Esta mañana me sentía muy débil.	This morning I felt very weak.	a2	health,feelings		neutral			anoche-ruido
+002457	A las dos todavía oía la televisión de arriba.	At two I could still hear the television upstairs.	a2	home,city					anoche-ruido		
+002458	Pensé en llamar a la puerta, pero no lo hice.	I thought about knocking on the door, but I did not.	a2	home,social					anoche-ruido		
+002459	Me levanté y bebí un vaso de leche.	I got up and drank a glass of milk.	a2	home,food-drink					anoche-ruido		
+002460	Leí un rato con la lámpara pequeña.	I read for a while with the small lamp.	a2	home					anoche-ruido		
+002461	A las cinco por fin se hizo el silencio.	At five it finally went quiet.	a2	home					anoche-ruido		
+002462	Dormí solo dos horas antes del trabajo.	I slept only two hours before work.	a2	daily-routine,work					anoche-ruido		
 001507	Dormí toda la tarde y ahora estoy mejor.	I slept all afternoon and now I'm better.	a2	health,time		neutral			anoche-ruido
 001508	Preparé la maleta la noche antes del viaje.	I packed the suitcase the night before the trip.	a2	clothes,travel		neutral			ropa-viaje
 001509	Saqué del armario dos camisas y un cinturón.	I took two shirts and a belt out of the wardrobe.	a2	clothes,home		neutral			ropa-viaje
@@ -131,6 +204,13 @@
 001512	Después lo dejé en casa y me llevé el bolso pequeño.	Then I left it at home and took the small bag.	a2	clothes,travel		neutral			ropa-viaje
 001513	Reservé una habitación doble para dos noches.	I booked a double room for two nights.	a2	travel		neutral			ropa-viaje
 001514	Salimos juntos muy temprano y el viaje duró tres horas.	We left together very early and the journey lasted three hours.	a2	travel,clock		neutral			ropa-viaje
+002463	En el tren abrí la maleta para buscar un libro.	On the train I opened the case to look for a book.	a2	travel,objects					ropa-viaje		
+002464	Llevaba también una camiseta y una falda.	I was also carrying a T-shirt and a skirt.	a2	clothes					ropa-viaje		
+002465	El abrigo lo llevé en el brazo todo el viaje.	I carried the coat over my arm the whole journey.	a2	clothes,travel					ropa-viaje		
+002466	Hacía calor y me quité los zapatos.	It was hot and I took my shoes off.	a2	clothes,weather					ropa-viaje		
+002467	En el hotel colgué la ropa en el armario.	At the hotel I hung the clothes in the wardrobe.	a2	travel,clothes					ropa-viaje		
+002468	Olvidé el reloj en casa y no me importó.	I left my watch at home and I did not mind.	a2	objects,travel					ropa-viaje		
+002469	Aquel viaje fue el más tranquilo del año.	That trip was the calmest of the year.	a2	travel					ropa-viaje		
 
 # == Batch three: topping up the words sitting at two and three ================
 001515	El verano pasado pasamos la frontera en camión.	Last summer we crossed the border by coach.	a2	travel		neutral			viaje-camion
@@ -140,6 +220,13 @@
 001519	En el hotel había un extranjero que hablaba cuatro idiomas.	At the hotel there was a foreigner who spoke four languages.	a2	travel,people		neutral			viaje-camion
 001520	Nos mostró un sitio muy tranquilo cerca del lago.	He showed us a very quiet spot near the lake.	a2	travel,nature		neutral			viaje-camion
 001521	Pagamos todo en efectivo porque no querían tarjeta.	We paid everything in cash because they did not want cards.	a2	travel,numbers		neutral			viaje-camion
+002470	Salimos a las seis de la mañana con mucho frío.	We set off at six in the morning in the cold.	a2	travel,weather					viaje-camion		
+002471	Comimos y bebimos agua dos veces por el camino.	We ate and drank water twice along the way.	a2	travel,food-drink					viaje-camion		
+002472	Por la ventana veíamos montañas y campos verdes.	Through the window we saw mountains and green fields.	a2	travel,nature					viaje-camion		
+002473	Mi primo puso música y cantamos casi una hora.	My cousin put music on and we sang for almost an hour.	a2	travel,music					viaje-camion		
+002474	En la frontera esperamos con el pasaporte en la mano.	At the border we waited with our passports in hand.	a2	travel					viaje-camion		
+002475	El hotel era barato pero muy limpio.	The hotel was cheap but very clean.	a2	travel					viaje-camion		
+002476	Cenamos pescado y bebimos una cerveza fría.	We had fish for dinner and drank a cold beer.	a2	restaurant,food-drink					viaje-camion		
 001522	Fue un viaje estupendo y vamos a volver juntos.	It was a great trip and we are going back together.	a2	travel,feelings		neutral			viaje-camion
 001523	La empresa cambió de oficina en septiembre.	The company moved office in September.	a2	work,time		neutral			oficina-nueva
 001524	Un empleado nos mostró la sala del equipo.	An employee showed us the team room.	a2	work		neutral			oficina-nueva
@@ -148,6 +235,12 @@
 001527	Mi jefe explicó que el proyecto dependía de dos personas.	My boss explained that the project depended on two people.	a2	work		neutral			oficina-nueva
 001528	Debíamos acabar antes de diciembre.	We had to finish before December.	a2	work,time		neutral			oficina-nueva
 001529	Nadie habló del sueldo, y eso me pareció normal.	Nobody mentioned the salary, and that seemed normal to me.	a2	work,feelings		neutral			oficina-nueva
+002477	La sala tenía una ventana muy grande.	The room had a very big window.	a2	work					oficina-nueva		
+002478	Desde mi mesa se veía el parque.	From my desk you could see the park.	a2	work,city					oficina-nueva		
+002479	Había una cocina pequeña con un poco de café.	There was a small kitchen with a bit of coffee.	a2	work,food-drink					oficina-nueva		
+002480	Cada mañana bebíamos el café en tazas blancas.	Every morning we drank the coffee from white cups.	a2	work,objects					oficina-nueva		
+002481	Un compañero trajo flores para la mesa de la entrada.	A colleague brought flowers for the table by the entrance.	a2	work,nature					oficina-nueva		
+002482	El primer día nadie encontraba el baño.	On the first day nobody could find the toilet.	a2	work,home					oficina-nueva		
 001530	La oficina nueva me gustó, quizá por la luz.	I liked the new office, maybe because of the light.	a2	work,feelings		neutral			oficina-nueva
 001531	Ayer tuvimos un examen y estaba muy nervioso.	Yesterday we had an exam and I was very nervous.	a2	school,feelings		neutral			examen-espanol
 001532	Éramos veinte alumnos en una sala pequeña.	There were twenty of us students in a small room.	a2	school,people		neutral			examen-espanol
@@ -157,6 +250,13 @@
 001536	Lo intenté otra vez y después me pareció fácil.	I tried again and afterwards it seemed easy.	a2	school,feelings		neutral			examen-espanol
 001537	Acabé diez minutos antes de la hora.	I finished ten minutes before time.	a2	school,clock		neutral			examen-espanol
 001538	La profesora nos enseñó las respuestas después.	The teacher showed us the answers afterwards.	a2	school		neutral			examen-espanol
+002483	Escribí las respuestas con un lápiz azul.	I wrote the answers with a blue pencil.	a2	school,objects					examen-espanol		
+002484	Al lado tenía un bolígrafo azul.	Next to me I had a blue pen.	a2	school,objects					examen-espanol		
+002485	La sala estaba en silencio y hacía calor.	The room was silent and it was hot.	a2	school					examen-espanol		
+002486	Un alumno acabó antes que yo y se fue.	A student finished before me and left.	a2	school					examen-espanol		
+002487	Después hablamos del examen fuera de la sala.	Afterwards we talked about the exam outside the room.	a2	school					examen-espanol		
+002488	Nadie sabía la respuesta del último ejercicio.	Nobody knew the answer to the last exercise.	a2	school					examen-espanol		
+002489	Una semana después recibí una nota muy buena.	A week later I got a very good mark.	a2	school					examen-espanol		
 001539	El viernes cociné para cuatro amigos.	On Friday I cooked for four friends.	a2	food-drink,social		neutral			cena-amigos
 001540	Compré uvas, fresas, lechuga y dos zanahorias.	I bought grapes, strawberries, lettuce and two carrots.	a2	food-drink,shopping		neutral			cena-amigos
 001541	Preparé la pasta con ajo y mucho aceite.	I made the pasta with garlic and plenty of oil.	a2	food-drink		neutral			cena-amigos
@@ -164,6 +264,13 @@
 001543	Puse una servilleta al lado de cada plato.	I put a napkin next to each plate.	a2	food-drink		neutral			cena-amigos
 001544	Todo estaba delicioso, o eso me dijeron.	Everything was delicious, or so they told me.	a2	food-drink,feelings		neutral			cena-amigos
 001545	Recomendé las fresas con azúcar y se acabaron.	I recommended the strawberries with sugar and they were all gone.	a2	food-drink		neutral			cena-amigos
+002490	Empecé a cocinar a las seis de la tarde.	I started cooking at six in the evening.	a2	home,clock					cena-amigos		
+002491	Puse música y abrí una botella de vino.	I put music on and opened a bottle of wine.	a2	home,food-drink					cena-amigos		
+002492	Mis amigos llegaron con un pastel de chocolate.	My friends arrived with a chocolate cake.	a2	social,food-drink					cena-amigos		
+002493	Cada uno trajo algo, hasta las servilletas.	Everyone brought something, even the napkins.	a2	social,objects					cena-amigos		
+002494	Comimos despacio y hablamos hasta muy tarde.	We ate slowly and talked until very late.	a2	social					cena-amigos		
+002495	De postre tomamos helado con fresas.	For dessert we had ice cream with strawberries.	a2	food-drink					cena-amigos		
+002496	Lavé los platos al día siguiente, no esa noche.	I washed the dishes the next day, not that night.	a2	home					cena-amigos		
 001546	Nadie dejó propina en mi casa, claro.	Nobody left a tip at my house, of course.	a2	food-drink,social		neutral			cena-amigos
 001547	Cuando entramos, la casa estaba vacía.	When we went in, the house was empty.	a2	home		neutral			casa-vacia
 001548	Solo había una lámpara vieja en el suelo.	There was only an old lamp on the floor.	a2	home		neutral			casa-vacia
@@ -172,6 +279,13 @@
 001551	La nevera estaba abierta y no funcionaba.	The fridge was open and did not work.	a2	home		neutral		es-ES,es-CO,es-VE,es-CU,es-DO,es-PR	casa-vacia
 001552	Saqué dos bolsas de basura el primer día.	I took out two bags of rubbish the first day.	a2	home		neutral			casa-vacia
 001553	Una silla se cayó cuando la toqué.	A chair fell over when I touched it.	a2	home		neutral			casa-vacia
+002497	La primera semana limpiamos todos los días.	The first week we cleaned every day.	a2	home					casa-vacia		
+002498	Compramos jabón, toallas y una lámpara nueva.	We bought soap, towels and a new lamp.	a2	home,shopping					casa-vacia		
+002499	Mi hermano pintó las paredes de blanco.	My brother painted the walls white.	a2	home,colours					casa-vacia		
+002500	Yo arreglé la silla que se había caído.	I fixed the chair that had fallen over.	a2	home					casa-vacia		
+002501	Pusimos flores en la ventana de la cocina.	We put flowers in the kitchen window.	a2	home,nature					casa-vacia		
+002502	La nevera nueva llegó un jueves por la tarde.	The new fridge arrived on a Thursday afternoon.	a2	home					casa-vacia		
+002503	La primera cena en esa casa fue muy sencilla.	The first dinner in that house was very simple.	a2	home,food-drink					casa-vacia		
 001554	Ahora la casa parece otra y pienso en ese día a menudo.	Now the house looks different and I think about that day often.	a2	home,feelings		neutral			casa-vacia
 001555	El invierno pasado nevó mucho en el pueblo.	Last winter it snowed a lot in the village.	a2	nature,weather		neutral			nevo-pueblo
 001556	Por la mañana había nubes bajas y mucho frío.	In the morning there were low clouds and it was very cold.	a2	nature,weather		neutral			nevo-pueblo
@@ -179,6 +293,12 @@
 001558	El camino hasta el puente estaba blanco.	The path to the bridge was white.	a2	nature		neutral			nevo-pueblo
 001559	El lago se veía gris desde el bosque.	The lake looked grey from the woods.	a2	nature		neutral			nevo-pueblo
 001560	Por la noche salieron la luna y las estrellas.	At night the moon and the stars came out.	a2	nature,time		neutral			nevo-pueblo
+002504	Los niños jugaban en la nieve delante de la iglesia.	The children played in the snow in front of the church.	a2	nature,city					nevo-pueblo		
+002505	Nadie podía llegar al pueblo en coche.	Nobody could get to the village by car.	a2	travel,weather					nevo-pueblo		
+002506	Un vecino nos trajo pan y leche a pie.	A neighbour brought us bread and milk on foot.	a2	social,food-drink					nevo-pueblo		
+002507	En casa bebíamos té caliente al lado del fuego.	At home we drank hot tea beside the fire.	a2	home,food-drink					nevo-pueblo		
+002508	Los pájaros buscaban comida cerca de la puerta.	The birds looked for food near the door.	a2	animals,nature					nevo-pueblo		
+002509	Por la tarde el cielo se puso rojo.	In the afternoon the sky turned red.	a2	nature,colours					nevo-pueblo		
 001561	Nunca vi un sitio tan tranquilo.	I never saw such a quiet place.	a2	nature,feelings		neutral			nevo-pueblo
 001562	La semana pasada perdí el bolso en el teatro.	Last week I lost my bag at the theatre.	a2	objects,city		neutral			perdi-bolso
 001563	Llevaba una revista, las llaves y un cinturón.	I had a magazine, my keys and a belt in it.	a2	objects		neutral			perdi-bolso
@@ -187,6 +307,12 @@
 001566	Dos días después recibí un mensaje del teatro.	Two days later I got a message from the theatre.	a2	objects,communication		neutral			perdi-bolso
 001567	Descubrí que alguien lo había dejado en una caja.	I found out someone had left it in a box.	a2	objects		neutral			perdi-bolso
 001568	Me mandaron un mensaje con la dirección.	They sent me a message with the address.	a2	objects,communication		neutral			perdi-bolso
+002510	Los dos primeros días estuve muy nervioso.	The first two days I was very anxious.	a2	feelings					perdi-bolso		
+002511	Dentro llevaba también una foto de mi abuela.	Inside I was also carrying a photo of my grandmother.	a2	objects,family					perdi-bolso		
+002512	Llamé al teatro tres veces y nadie contestó.	I called the theatre three times and nobody answered.	a2	communication					perdi-bolso		
+002513	Pensé que había tenido muy mala suerte.	I thought I had been very unlucky.	a2	feelings					perdi-bolso		
+002514	Un chico del teatro lo había guardado desde el sábado.	A boy at the theatre had kept it since Saturday.	a2	objects					perdi-bolso		
+002515	Fui a buscarlo el jueves por la mañana.	I went to pick it up on Thursday morning.	a2	city					perdi-bolso		
 001569	Estaba todo, hasta los calcetines y el sombrero.	Everything was there, even the socks and the hat.	a2	objects,clothes		neutral			perdi-bolso
 001570	Tenía una cita con el médico el martes por la tarde.	I had a doctor appointment on Tuesday afternoon.	a2	health,clock		neutral			cita-medico
 001571	Me dolía el cuello y también el estómago.	My neck hurt and my stomach did too.	a2	health,body		neutral			cita-medico
@@ -195,6 +321,13 @@
 001574	Dijo que era normal y que no era nada.	He said it was normal and that it was nothing.	a2	health		neutral			cita-medico
 001575	Me dio unas pastillas y me recomendó dormir más.	He gave me some tablets and recommended sleeping more.	a2	health		neutral			cita-medico
 001576	El centro sanitario estaba lleno y esperé un rato largo.	The health centre was full and I waited a good while.	a2	health		neutral			cita-medico
+002516	En la sala de espera había mucha gente.	In the waiting room there were a lot of people.	a2	health					cita-medico		
+002517	Leí una revista vieja durante media hora.	I read an old magazine for half an hour.	a2	health,objects					cita-medico		
+002518	Una señora me contó toda su historia.	A woman told me her whole story.	a2	health,social					cita-medico		
+002519	El médico me preguntó por el trabajo y por el sueño.	The doctor asked me about work and about sleep.	a2	health,work					cita-medico		
+002520	Me miró los ojos y la boca también.	He looked at my eyes and my mouth too.	a2	health,body					cita-medico		
+002521	Escribió todo en el ordenador muy rápido.	He typed everything into the computer very quickly.	a2	health,technology					cita-medico		
+002522	En la farmacia me costaron cuatro euros.	At the chemist they cost me four euros.	a2	health,money					cita-medico		
 001577	Salí más tranquilo, pero todavía un poco débil.	I came out calmer, but still a little weak.	a2	health,feelings		neutral			cita-medico
 
 # == Batch four: the ones at one and two, sweeping up the threes =================
@@ -205,6 +338,12 @@
 001582	Me perdonó de una manera muy tranquila.	She forgave me in a very calm way.	a2	social,feelings		neutral			mentira-pequena
 001583	Me contó que ella hizo algo parecido de niña.	She told me she did something similar as a girl.	a2	social,family		neutral			mentira-pequena
 001584	Decidí no olvidar ese día.	I decided not to forget that day.	a2	social,feelings		neutral			mentira-pequena
+002523	Ella no me preguntó nada aquella tarde.	She did not ask me anything that afternoon.	a2	family					mentira-pequena		
+002524	Yo tampoco dije nada durante dos semanas.	I did not say anything either for two weeks.	a2	family					mentira-pequena		
+002525	Un domingo comimos juntos en casa de mis padres.	One Sunday we ate together at my parents' house.	a2	family,food-drink					mentira-pequena		
+002526	Le conté la verdad antes del postre.	I told her the truth before dessert.	a2	family,food-drink					mentira-pequena		
+002527	Se rió y me dijo que ya lo sabía.	She laughed and told me she already knew.	a2	family,feelings					mentira-pequena		
+002528	Desde ese día hablamos de todo.	Since that day we talk about everything.	a2	family,communication					mentira-pequena		
 001585	Quizá las mentiras pequeñas son más difíciles.	Maybe small lies are harder.	a2	social,feelings		neutral			mentira-pequena
 001586	El domingo vimos un partido con los vecinos.	On Sunday we watched a match with the neighbours.	a2	sport,social		neutral			partido-domingo
 001587	Éramos ocho y estábamos todos juntos en el salón.	There were eight of us all together in the living room.	a2	sport,home		neutral			partido-domingo
@@ -212,6 +351,12 @@
 001589	El partido duró dos horas y fue estupendo.	The match lasted two hours and was great.	a2	sport,clock		neutral			partido-domingo
 001590	Los vecinos eran muy ruidosos, pero nadie dijo nada.	The neighbours were very noisy, but nobody said anything.	a2	sport,people		neutral			partido-domingo
 001591	Comimos demasiado y bebimos suficiente café.	We ate too much and drank enough coffee.	a2	sport,food-drink		neutral			partido-domingo
+002529	Preparé comida para todos antes de empezar.	I made food for everyone before it started.	a2	food-drink,social					partido-domingo		
+002530	Mi vecino trajo una caja de cerveza fría.	My neighbour brought a case of cold beer.	a2	social,food-drink					partido-domingo		
+002531	En el primer tiempo no pasó casi nada.	In the first half almost nothing happened.	a2	sport					partido-domingo		
+002532	Después el equipo azul jugó mucho mejor.	Then the blue team played much better.	a2	sport,colours					partido-domingo		
+002533	Cuando ganaron, todos hablamos a la vez.	When they won, we all talked at once.	a2	sport,social					partido-domingo		
+002534	Mi hija se durmió en el sofá al final.	My daughter fell asleep on the sofa at the end.	a2	family,home					partido-domingo		
 001592	Al terminar, todos estábamos cansados y contentos.	When it finished, we were all tired and happy.	a2	sport,feelings		neutral			partido-domingo
 001593	Normalmente el camión de la basura llega muy temprano.	Normally the rubbish lorry comes very early.	a2	city,clock		neutral			camion-basura
 001594	Pasa por la esquina de la iglesia a las seis.	It goes past the corner by the church at six.	a2	city,clock		neutral			camion-basura
@@ -220,6 +365,12 @@
 001597	Salí con dos bolsas de basura recién llenas.	I went out with two bags of rubbish just filled.	a2	city,home		neutral			camion-basura
 001598	El empleado me dijo buenos días y siguió.	The man working there said good morning and carried on.	a2	city,people		neutral			camion-basura
 001599	Después no pude dormir y preparé el desayuno.	Afterwards I could not sleep and made breakfast.	a2	city,food-drink		neutral			camion-basura
+002535	Bebí un café solo y comí pan con mantequilla.	I drank a black coffee and ate bread and butter.	a2	food-drink					camion-basura		
+002536	Todavía era de noche y la calle estaba vacía.	It was still dark and the street was empty.	a2	city					camion-basura		
+002537	Miré el reloj: solo eran las seis y media.	I looked at the clock: it was only half past six.	a2	clock,objects					camion-basura		
+002538	Me lavé la cara y me duché despacio.	I washed my face and showered slowly.	a2	daily-routine,body					camion-basura		
+002539	Salí de casa una hora antes de lo normal.	I left home an hour earlier than usual.	a2	daily-routine					camion-basura		
+002540	Llegué al trabajo el primero de todos.	I got to work before anyone else.	a2	work					camion-basura		
 001600	El refrigerador viejo dejó de funcionar en agosto.	The old fridge stopped working in August.	a2	home		neutral		es-419	compramos-refri
 001601	Debíamos comprar otro, pero no teníamos suficiente plata.	We had to buy another one, but we did not have enough money.	a2	home,numbers		neutral		es-419	compramos-refri
 001602	Vendimos la mesa del comedor a un vecino.	We sold the dining room table to a neighbour.	a2	home,people		neutral			compramos-refri
@@ -227,6 +378,12 @@
 001604	Lo mandaron a casa el martes por la tarde.	They sent it to the house on Tuesday afternoon.	a2	home,clock		neutral			compramos-refri
 001605	Recibimos también dos toallas nuevas.	We also got two new towels.	a2	home		neutral			compramos-refri
 001606	El wifi no funcionaba ese día y no pude pagar por el móvil.	The wifi was not working that day and I could not pay by phone.	a2	home,communication		neutral		es-ES	compramos-refri
+002541	El primer día perdimos casi toda la comida.	The first day we lost almost all the food.	a2	home,food-drink					compramos-refri		
+002542	Mi madre nos dejó su nevera pequeña una semana.	My mother lent us her small fridge for a week.	a2	home,family					compramos-refri		
+002543	Miramos tres tiendas antes de decidir.	We looked in three shops before deciding.	a2	shopping					compramos-refri		
+002544	El nuevo es blanco y hace muy poco ruido.	The new one is white and makes very little noise.	a2	home,colours					compramos-refri		
+002545	Dentro entra mucho más que en el viejo.	A lot more fits inside than in the old one.	a2	home					compramos-refri		
+002546	Guardamos la fruta y la leche el mismo día.	We put the fruit and the milk in the same day.	a2	home,food-drink					compramos-refri		
 001607	Ahora la cocina parece otra.	Now the kitchen looks different.	a2	home		neutral			compramos-refri
 001608	Ayer comimos en el restaurante de la esquina.	Yesterday we ate at the restaurant on the corner.	a2	restaurant,city		neutral			camarera-nueva
 001609	La camarera era nueva y estaba un poco nerviosa.	The waitress was new and a little nervous.	a2	restaurant,feelings		neutral			camarera-nueva
@@ -234,6 +391,12 @@
 001611	Sirvió la sopa muy despacio y todo estaba normal.	She served the soup very slowly and everything was fine.	a2	restaurant,food-drink		neutral			camarera-nueva
 001612	Mi hermano es vegetariano y ella le preparó otro plato.	My brother is vegetarian and she made him another dish.	a2	restaurant,food-drink		neutral			camarera-nueva
 001613	Esperamos un rato largo, pero no dijimos nada.	We waited a good while, but we said nothing.	a2	restaurant,clock		neutral			camarera-nueva
+002547	Al principio se olvidó del pan y del agua.	At first she forgot the bread and the water.	a2	restaurant					camarera-nueva		
+002548	Volvió enseguida y nos pidió perdón.	She came back straight away and apologised.	a2	restaurant,social					camarera-nueva		
+002549	El jefe del restaurante salió a hablar con nosotros.	The manager came out to talk to us.	a2	restaurant,people					camarera-nueva		
+002550	La comida estaba muy rica y muy caliente.	The food was delicious and very hot.	a2	restaurant,food-drink					camarera-nueva		
+002551	De postre tomamos un helado de fresa.	For dessert we had a strawberry ice cream.	a2	restaurant,food-drink					camarera-nueva		
+002552	Nos gustó mucho y volvimos el jueves.	We liked it a lot and went back on Thursday.	a2	restaurant					camarera-nueva		
 001614	Le dejamos una buena propina al salir.	We left her a good tip on the way out.	a2	restaurant,numbers		neutral			camarera-nueva
 001615	El sábado pasado me caí en el bosque.	Last Saturday I fell over in the woods.	a2	nature,health		neutral			cai-bosque
 001616	Iba en bicicleta por un camino muy malo.	I was going by bike along a very bad path.	a2	nature,travel		neutral			cai-bosque
@@ -242,6 +405,12 @@
 001619	Un hombre con dos caballos me ayudó mucho.	A man with two horses helped me a lot.	a2	nature,people		neutral			cai-bosque
 001620	La piel de la mano estaba roja, nada más.	The skin on my hand was red, nothing more.	a2	health,body		neutral			cai-bosque
 001621	Pedí una cita para el lunes por la mañana.	I made an appointment for Monday morning.	a2	health		neutral			cai-bosque
+002553	La bicicleta se quedó en el suelo un rato.	The bicycle lay on the ground for a while.	a2	travel					cai-bosque		
+002554	Me lavé la mano con el agua de una botella.	I washed my hand with water from a bottle.	a2	health,body					cai-bosque		
+002555	El hombre me dio una toalla limpia.	The man gave me a clean towel.	a2	health,objects					cai-bosque		
+002556	Volví a casa muy despacio y con cuidado.	I went home very slowly and carefully.	a2	travel					cai-bosque		
+002557	Esa noche me dolía también el brazo.	That night my arm hurt too.	a2	health,body					cai-bosque		
+002558	No pude dormir bien hasta muy tarde.	I could not sleep well until very late.	a2	health					cai-bosque		
 001622	Por la noche había nubes y no se veían las estrellas.	At night there were clouds and you could not see the stars.	a2	nature,time		neutral			cai-bosque
 001623	El verano pasado descubrí un cuaderno de mi abuelo.	Last summer I found a notebook of my grandfather's.	a2	family		neutral			cuaderno-abuelo
 001624	Nació en un pueblo pequeño y pobre.	He was born in a small, poor village.	a2	family		neutral			cuaderno-abuelo
@@ -250,6 +419,12 @@
 001627	Comenzó a escribir a los diez años.	He started writing at the age of ten.	a2	family,time		neutral			cuaderno-abuelo
 001628	Mi madre me mostró otros dos cuadernos.	My mother showed me two more notebooks.	a2	family		neutral			cuaderno-abuelo
 001629	Comprendí mejor de dónde venía mi familia.	I understood better where my family came from.	a2	family,feelings		neutral			cuaderno-abuelo
+002559	Escribía casi todos los domingos por la tarde.	He used to write almost every Sunday afternoon.	a2	family					cuaderno-abuelo		
+002560	Contaba el trabajo del campo y el tiempo.	He wrote about the work in the fields and the weather.	a2	family,nature					cuaderno-abuelo		
+002561	En una página hablaba de su primer reloj.	On one page he talked about his first watch.	a2	family,objects					cuaderno-abuelo		
+002562	En otra contaba cómo conoció a mi abuela.	On another he told how he met my grandmother.	a2	family,people					cuaderno-abuelo		
+002563	Nunca escribió nada sobre el dinero.	He never wrote anything about money.	a2	family,money					cuaderno-abuelo		
+002564	Guardé el cuaderno en una caja de madera.	I put the notebook away in a wooden box.	a2	family,objects					cuaderno-abuelo		
 001630	Fue lo más humano que leí ese año.	It was the most human thing I read that year.	a2	family,feelings		neutral			cuaderno-abuelo
 001631	En abril pasamos la frontera en camión.	In April we crossed the border by coach.	a2	travel		neutral			cruzar-frontera
 001632	Mi hermana conducía y yo dormía a su lado.	My sister was driving and I was sleeping beside her.	a2	travel,family		neutral			cruzar-frontera
@@ -258,6 +433,12 @@
 001635	Yo no comprendía nada y ella tampoco.	I did not understand anything and neither did she.	a2	travel,language		neutral			cruzar-frontera
 001636	Intentamos hablar con una mujer de la iglesia.	We tried to talk to a woman from the church.	a2	travel,people		neutral			cruzar-frontera
 001637	Nos explicó todo perfectamente y muy despacio.	She explained everything to us perfectly and very slowly.	a2	travel,language		neutral			cruzar-frontera
+002565	En la frontera esperamos casi dos horas.	At the border we waited almost two hours.	a2	travel					cruzar-frontera		
+002566	Un hombre miró los pasaportes uno por uno.	A man looked at the passports one by one.	a2	travel					cruzar-frontera		
+002567	El primer día comimos en una plaza pequeña.	The first day we ate in a small square.	a2	travel,city					cruzar-frontera		
+002568	La comida era nueva para nosotros y muy buena.	The food was new to us and very good.	a2	food-drink					cruzar-frontera		
+002569	Compramos una camiseta para nuestro hermano.	We bought a T-shirt for our brother.	a2	shopping,clothes					cruzar-frontera		
+002570	La segunda noche cantamos con la gente del bar.	The second night we sang with the people in the bar.	a2	social,music					cruzar-frontera		
 001638	El viaje duró tres días y nunca olvidé ese pueblo.	The trip lasted three days and I never forgot that village.	a2	travel,feelings		neutral			cruzar-frontera
 
 # == Batch five: closing on the A2 target ======================================
@@ -268,6 +449,12 @@
 001643	Dijo que la primera noticia era una mentira.	She said the first news item was a lie.	a2	communication		neutral			noticias-manana
 001644	Recibí un mensaje de mi hermana sobre lo mismo.	I got a message from my sister about the same thing.	a2	communication,family		neutral			noticias-manana
 001645	Le mandé la noticia y esperé su respuesta.	I sent her the news and waited for her reply.	a2	communication,family		neutral			noticias-manana
+002571	La radio estaba al lado de la nevera.	The radio was next to the fridge.	a2	home,objects					noticias-manana		
+002572	Mientras escuchaba, preparaba el desayuno.	While I listened, I made breakfast.	a2	daily-routine,food-drink					noticias-manana		
+002573	Después de las noticias pusieron una canción.	After the news they played a song.	a2	music					noticias-manana		
+002574	Era una canción muy vieja de mi madre.	It was a very old song of my mother's.	a2	music,family					noticias-manana		
+002575	La escuché toda antes de salir de casa.	I listened to all of it before leaving the house.	a2	music,daily-routine					noticias-manana		
+002576	Ese día llegué tarde, pero contento.	That day I arrived late, but happy.	a2	daily-routine,feelings					noticias-manana		
 001646	Debíamos hablar de eso, pero no había tiempo.	We should have talked about it, but there was no time.	a2	communication,clock		neutral			noticias-manana
 001647	El domingo mi madre me mostró una foto vieja.	On Sunday my mother showed me an old photo.	a2	family		neutral			familia-antigua
 001648	Mi tío era muy gordo y mi tía muy delgada.	My uncle was very fat and my aunt very thin.	a2	family,people		neutral			familia-antigua
@@ -275,6 +462,12 @@
 001650	Mi primo era parecido a mí de pequeño.	My cousin looked similar to me as a child.	a2	family,people		neutral			familia-antigua
 001651	La familia era pobre y vivía en un pueblo.	The family was poor and lived in a village.	a2	family		neutral			familia-antigua
 001652	Mi madre contó un cuento de su abuela.	My mother told a story about her grandmother.	a2	family		neutral			familia-antigua
+002577	En la foto todos miraban al mismo sitio.	In the photo they were all looking the same way.	a2	family					familia-antigua		
+002578	Nadie estaba contento en la foto.	Nobody looked happy in the photo.	a2	family,feelings					familia-antigua		
+002579	Mi abuela llevaba un vestido negro y largo.	My grandmother wore a long black dress.	a2	family,clothes					familia-antigua		
+002580	Detrás se veía la puerta de una casa vieja.	Behind them you could see the door of an old house.	a2	home					familia-antigua		
+002581	Mi madre me dijo el nombre de cada uno.	My mother told me the name of each one.	a2	family,people					familia-antigua		
+002582	Guardamos la foto encima del armario.	We put the photo away on top of the wardrobe.	a2	home,objects					familia-antigua		
 001653	Fue el momento más humano de todo el día.	It was the most human moment of the whole day.	a2	family,feelings		neutral			familia-antigua
 001654	El lunes fui al centro sanitario a las ocho.	On Monday I went to the health centre at eight.	a2	health,clock		neutral			centro-sanitario
 001655	Había mucha gente y esperé más de una hora.	There were a lot of people and I waited more than an hour.	a2	health,clock		neutral			centro-sanitario
@@ -283,6 +476,12 @@
 001658	La piel del brazo estaba roja después.	The skin on my arm was red afterwards.	a2	health,body		neutral			centro-sanitario
 001659	Me lavé las manos con jabón antes de salir.	I washed my hands with soap before leaving.	a2	health,home		neutral			centro-sanitario
 001660	Pedí otra cita para el mes de mayo.	I asked for another appointment for May.	a2	health,time		neutral			centro-sanitario
+002583	Antes de entrar me tomaron la temperatura.	Before I went in they took my temperature.	a2	health					centro-sanitario		
+002584	La médica me preguntó la edad y el apellido.	The doctor asked my age and my surname.	a2	health,people					centro-sanitario		
+002585	Me miró los ojos y la boca un momento.	She looked at my eyes and my mouth for a moment.	a2	health,body					centro-sanitario		
+002586	No me dolía nada, solo tenía sed.	Nothing hurt, I was just thirsty.	a2	health,body					centro-sanitario		
+002587	Bebí un vaso de agua antes de salir.	I drank a glass of water before leaving.	a2	health,food-drink					centro-sanitario		
+002588	Todo terminó en menos de diez minutos.	It was all over in less than ten minutes.	a2	health,clock					centro-sanitario		
 001661	Salí con las manos limpias y un poco de prisa.	I came out with clean hands and in a bit of a hurry.	a2	health		neutral			centro-sanitario
 001662	El martes nevó desde muy temprano.	On Tuesday it snowed from very early on.	a2	weather,clock		neutral			dia-nevo
 001663	Nunca nieva así en esta ciudad.	It never snows like this in this city.	a2	weather,city		neutral			dia-nevo
@@ -291,6 +490,12 @@
 001666	Pasamos la tarde juntos alrededor de la mesa.	We spent the afternoon together around the table.	a2	weather,home		neutral			dia-nevo
 001667	La nevera estaba llena, así que comimos bien.	The fridge was full, so we ate well.	a2	weather,food-drink		neutral		es-ES,es-CO,es-VE,es-CU,es-DO,es-PR	dia-nevo
 001668	Por la noche se veía la luna entre las nubes.	At night you could see the moon between the clouds.	a2	weather,nature		neutral			dia-nevo
+002589	Los niños salieron a jugar con la nieve.	The children went out to play in the snow.	a2	family,nature					dia-nevo		
+002590	Volvieron con las manos rojas de frío.	They came back with their hands red from the cold.	a2	body,weather					dia-nevo		
+002591	Preparé chocolate caliente para todos.	I made hot chocolate for everyone.	a2	food-drink,family					dia-nevo		
+002592	Jugamos a un juego de mesa toda la tarde.	We played a board game all afternoon.	a2	entertainment,family					dia-nevo		
+002593	Mi hija ganó dos veces y estaba muy contenta.	My daughter won twice and was very happy.	a2	family,feelings					dia-nevo		
+002594	Nadie miró el móvil en toda la tarde.	Nobody looked at a phone all afternoon.	a2	technology,family					dia-nevo		
 001669	El wifi volvió a las once de la noche.	The wifi came back at eleven at night.	a2	weather,communication		neutral			dia-nevo
 001670	En marzo comenzamos un proyecto en la clase de español.	In March we started a project in the Spanish class.	a2	school,time		neutral			proyecto-clase
 001671	Éramos cuatro alumnos y teníamos dos semanas.	There were four of us students and we had two weeks.	a2	school,time		neutral			proyecto-clase
@@ -298,6 +503,12 @@
 001673	Yo no comencé el primer día y tampoco el segundo.	I did not start on the first day, nor on the second.	a2	school,time		neutral			proyecto-clase
 001674	Un alumno lo hizo todo perfectamente en una tarde.	One student did it all perfectly in one afternoon.	a2	school		neutral			proyecto-clase
 001675	La profesora dijo que el sueldo de un profesor es pequeño.	The teacher said a teacher's salary is small.	a2	school,work		neutral			proyecto-clase
+002595	La última semana trabajamos todas las tardes.	The last week we worked every afternoon.	a2	school					proyecto-clase		
+002596	Yo escribí mi parte en dos días.	I wrote my part in two days.	a2	school					proyecto-clase		
+002597	Un alumno pintó la primera página.	One student painted the first page.	a2	school					proyecto-clase		
+002598	Lo leímos delante de la clase el viernes.	We read it out in front of the class on Friday.	a2	school					proyecto-clase		
+002599	Nadie se puso nervioso, tampoco yo.	Nobody got nervous, me included.	a2	school,feelings					proyecto-clase		
+002600	Aprendí más en esas dos semanas que en un mes.	I learned more in those two weeks than in a month.	a2	school					proyecto-clase		
 001676	Pero el proyecto le gustó mucho a todo el mundo.	But everyone liked the project a lot.	a2	school,feelings		neutral			proyecto-clase
 001677	El sábado vendí verduras en el mercado con mi tío.	On Saturday I sold vegetables at the market with my uncle.	a2	shopping,food-drink		neutral			mercado-sabado
 001678	Llevamos uvas, ajos y dos cajas de fresas.	We took grapes, garlic and two boxes of strawberries.	a2	shopping,food-drink		neutral			mercado-sabado
@@ -305,6 +516,12 @@
 001680	Nos pagó con plata y algunos billetes.	She paid us with cash and a few notes.	a2	shopping,numbers		neutral		es-419	mercado-sabado
 001681	A las dos la mesa estaba vacía.	By two the table was empty.	a2	shopping,clock		neutral			mercado-sabado
 001682	Mi tío dijo que fue un día estupendo.	My uncle said it was a great day.	a2	shopping,feelings		neutral			mercado-sabado
+002601	Llegamos a las siete para tener buen sitio.	We arrived at seven to get a good spot.	a2	shopping,clock					mercado-sabado		
+002602	Mi tío habló con todos los vecinos del mercado.	My uncle talked to all the neighbouring stalls.	a2	shopping,social					mercado-sabado		
+002603	Una señora me enseñó a preparar las cajas.	A woman showed me how to set out the boxes.	a2	shopping					mercado-sabado		
+002604	A las once ya no quedaban fresas.	By eleven there were no strawberries left.	a2	shopping,food-drink					mercado-sabado		
+002605	Tenía hambre y comí pan con queso.	I was hungry and ate bread and cheese.	a2	food-drink					mercado-sabado		
+002606	Guardamos el dinero en una caja pequeña.	We kept the money in a small box.	a2	money,objects					mercado-sabado		
 001683	Compré una revista y un café antes de volver.	I bought a magazine and a coffee before going back.	a2	shopping,communication		neutral			mercado-sabado
 001684	El domingo mi hermano tenía un partido importante.	On Sunday my brother had an important match.	a2	sport,family		neutral			partido-ropa
 001685	Buscó los calcetines limpios en el armario.	He looked for the clean socks in the wardrobe.	a2	sport,clothes		neutral			partido-ropa
@@ -312,6 +529,12 @@
 001687	Yo conduje hasta el campo, muy despacio.	I drove to the pitch, very slowly.	a2	sport,travel		neutral			partido-ropa
 001688	El partido duró casi dos horas.	The match lasted almost two hours.	a2	sport,clock		neutral			partido-ropa
 001689	Después contamos el partido a mi madre como un cuento.	Afterwards we told my mother about the match like a story.	a2	sport,family		neutral			partido-ropa
+002607	Mi hermano se puso una camiseta azul del equipo.	My brother put on a blue team T-shirt.	a2	clothes,sport					partido-ropa		
+002608	Los zapatos estaban debajo de la cama.	His shoes were under the bed.	a2	clothes,home					partido-ropa		
+002609	Salimos de casa quince minutos tarde.	We left home fifteen minutes late.	a2	clock					partido-ropa		
+002610	En el campo hacía viento y bastante frío.	At the pitch it was windy and quite cold.	a2	sport,weather					partido-ropa		
+002611	Su equipo perdió, pero él jugó muy bien.	His team lost, but he played very well.	a2	sport					partido-ropa		
+002612	Volvimos a casa con la ropa llena de suelo.	We came home with our clothes covered in mud.	a2	clothes,sport					partido-ropa		
 001690	Ella escuchó todo y no dijo nada de la ropa.	She listened to it all and said nothing about the clothes.	a2	sport,family		neutral			partido-ropa
 
 # == Batch six: the last of the A2 target, hundreds included ====================
@@ -331,6 +554,12 @@
 001704	La familia era pobre, pero siempre había comida.	The family was poor, but there was always food.	a2	people,family		neutral			dos-primos
 001705	Los dos son buena gente, de una manera muy humana.	They are both good people, in a very human way.	a2	people,feelings		neutral			dos-primos
 001706	Ahora viven juntos en la misma ciudad.	Now they live together in the same city.	a2	people,city		neutral			dos-primos
+002613	El mayor trabaja en un banco desde joven.	The elder one has worked in a bank since he was young.	a2	family,work					dos-primos		
+002614	El pequeño estudia y toca la guitarra.	The younger one studies and plays the guitar.	a2	family,music					dos-primos		
+002615	Los dos vienen a casa por mi cumpleaños.	They both come to the house for my birthday.	a2	family,social					dos-primos		
+002616	Siempre traen algo de comer o de beber.	They always bring something to eat or drink.	a2	family,food-drink					dos-primos		
+002617	De niños jugábamos juntos en el jardín.	As children we played together in the garden.	a2	family,home					dos-primos		
+002618	Quiero mucho a los dos.	I love them both a great deal.	a2	family,feelings					dos-primos		
 001707	Alguien de la familia los ve cada semana.	Someone in the family sees them every week.	a2	people,family		neutral			dos-primos
 001708	En agosto pasamos tres días en el campo.	In August we spent three days in the country.	a2	nature,travel		neutral			segundo-campo
 001709	Había una vaca muy vieja al lado de la casa.	There was a very old cow next to the house.	a2	nature,animals		neutral			segundo-campo
@@ -339,6 +568,12 @@
 001712	El hombre del campo me explicó que era normal.	The man from the country explained to me that it was normal.	a2	nature,people		neutral			segundo-campo
 001713	En un segundo el animal se levantó solo.	In a second the animal got up on its own.	a2	nature,animals		neutral			segundo-campo
 001714	Nunca vi nada parecido, ni en la televisión.	I never saw anything like it, not even on television.	a2	nature,feelings		neutral			segundo-campo
+002619	La madre lo limpió con la boca enseguida.	The mother cleaned it with her mouth straight away.	a2	animals,body					segundo-campo		
+002620	El animal pequeño buscó leche a los pocos minutos.	The little animal looked for milk within minutes.	a2	animals,food-drink					segundo-campo		
+002621	Mis hijos no dijeron nada durante un rato largo.	My children said nothing for a long while.	a2	family					segundo-campo		
+002622	El hombre nos ofreció un vaso de leche fresca.	The man offered us a glass of fresh milk.	a2	food-drink,nature					segundo-campo		
+002623	Por la tarde vimos también dos caballos.	In the afternoon we also saw two horses.	a2	animals,nature					segundo-campo		
+002624	Sacamos una foto delante de la casa.	We took a photo in front of the house.	a2	nature,family					segundo-campo		
 001715	Volvimos juntos a casa muy contentos.	We came home together very happy.	a2	nature,feelings		neutral			segundo-campo
 
 # == Batch seven: the last nine, and plural you a learner can actually meet ====
@@ -348,6 +583,12 @@
 001719	Ellos dijeron que no era verdad ni un poco.	They said that was not true, not one bit.	a2	social,feelings		neutral			venis-vosotros
 001720	Alguien tenía que llevar la comida y las sillas.	Someone had to bring the food and the chairs.	a2	social,food-drink		neutral			venis-vosotros
 001721	Después vinieron los dos juntos, muy contentos.	Afterwards they both came together, very happy.	a2	social,feelings		neutral			venis-vosotros
+002625	Trajeron pan, queso y dos botellas de agua.	They brought bread, cheese and two bottles of water.	a2	food-drink,social					venis-vosotros		
+002626	Pusimos las sillas alrededor de la mesa.	We put the chairs around the table.	a2	home,social					venis-vosotros		
+002627	Vosotros nunca traéis postre, dije yo.	You never bring dessert, I said.	a2	food-drink,social					venis-vosotros		
+002628	Ellos se rieron y sacaron un pastel.	They laughed and pulled out a cake.	a2	social,food-drink					venis-vosotros		
+002629	Comimos antes de empezar el partido.	We ate before the match started.	a2	food-drink,sport					venis-vosotros		
+002630	Fue una tarde muy buena para todos.	It was a very good afternoon for everyone.	a2	social					venis-vosotros		
 001722	Vosotros sois los mejores, dijo mi primo pequeño.	You are the best, said my younger cousin.	a2	social,family		neutral			venis-vosotros
 001723	En la reunión de ayer nadie dijo nada un segundo.	In yesterday's meeting nobody said anything for a second.	a2	people,work		neutral			segundo-sin-hablar
 001724	Alguien había dicho algo bastante feo.	Someone had said something rather ugly.	a2	people,feelings		neutral			segundo-sin-hablar
@@ -356,4 +597,10 @@
 001727	Los dos son parecidos en la manera de hablar.	The two are similar in the way they talk.	a2	people		neutral			segundo-sin-hablar
 001728	Nadie dijo nada más, ni el jefe ni su hermano.	Nobody said anything else, neither the boss nor his brother.	a2	people,work		neutral			segundo-sin-hablar
 001729	Un empleado recién llegado empezó a hablar de otra cosa.	A newly arrived employee started talking about something else.	a2	people,work		neutral			segundo-sin-hablar
+002631	Nadie miró a nadie durante ese momento.	Nobody looked at anybody during that moment.	a2	work					segundo-sin-hablar		
+002632	Yo miraba la pantalla del ordenador.	I was looking at the computer screen.	a2	work,technology					segundo-sin-hablar		
+002633	El silencio duró menos de lo que parecía.	The silence lasted less time than it seemed.	a2	work					segundo-sin-hablar		
+002634	Un empleado abrió la ventana de la sala.	An employee opened the window in the room.	a2	work					segundo-sin-hablar		
+002635	Entró aire frío y todos estábamos mejor.	Cold air came in and we all felt better.	a2	work,body					segundo-sin-hablar		
+002636	Al terminar la reunión nadie habló de eso.	When the meeting ended nobody mentioned it.	a2	work					segundo-sin-hablar		
 001730	Después de un segundo, todos volvimos al proyecto.	After a second, we all went back to the project.	a2	people,work		neutral			segundo-sin-hablar

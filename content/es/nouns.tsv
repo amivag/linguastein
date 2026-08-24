@@ -488,3 +488,12 @@
 500463	equis	the letter X	f	equis	a1	alphabet
 500464	ye	the letter Y	f		a1	alphabet
 500465	zeta	the letter Z	f		a1	alphabet
+500466	silencio	silence	m		a2	core
+500467	fuego	fire	m		a2	home
+500468	final	end	m		a2	core
+500469	alfabeto	alphabet	m		a1	alphabet
+500470	vocal	vowel	f		a1	alphabet
+500471	acento	accent, stress mark	m		a1	alphabet
+500472	apellido	surname	m		a1	people
+500473	principio	beginning	m		a2	core
+500474	radio	radio	f		a2	news

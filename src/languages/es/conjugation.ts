@@ -441,7 +441,9 @@ function gerund(lemma: string, conjugation: Conjugation, irregular: Irregularity
   const base = irregular.preteriteStemChange
     ? applyStemChange(stem, irregular.preteriteStemChange === 'e-i' ? 'e-i' : 'o-u')
     : stem;
-  // leer → leyendo, oír → oyendo: i becomes y between vowels.
+  // leer → leyendo, oír → oyendo: i becomes y between vowels. A stem already
+  // ending in `i` absorbs it instead, exactly as in the preterite: `riendo`.
+  if (base.endsWith('i')) return `${base}endo`;
   return endsWithVowel(base) ? `${base}yendo` : `${base}iendo`;
 }
 
@@ -512,9 +514,20 @@ function hardenBeforeE(stem: string): string {
   return stem;
 }
 
-/** `ió`/`ieron` become `yó`/`yeron` after a vowel: leyó, cayeron. */
+/**
+ * `ió`/`ieron` become `yó`/`yeron` after a vowel: leyó, cayeron.
+ *
+ * Unless that vowel is itself an `i`, in which case the ending's `i` is absorbed
+ * rather than hardened. `reír` takes an `e → i` change in the third person, so
+ * its stem is `ri`, and the rule above turned that into `riyó` and `riyeron` —
+ * forms no Spanish speaker writes. `rió` and `rieron` are two `i`s becoming one.
+ *
+ * `leer` and `oír` are unaffected because their stems end in `e` and `o`, and
+ * `seguir` because `endsWithVowel` already declines to count the silent `u`.
+ */
 function softenI(stem: string, ending: string): string {
   if (!endsWithVowel(stem) || !ending.startsWith('i')) return ending;
+  if (stem.endsWith('i')) return ending.slice(1);
   return `y${ending.slice(1)}`;
 }
 

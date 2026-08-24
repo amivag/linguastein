@@ -313,3 +313,13 @@
 {"id":"core-es:lexeme:improbable","lemma":"improbable","pos":"ADJ","level":"b1"}
 {"id":"core-es:lexeme:gratuito","lemma":"gratuito","pos":"ADJ","level":"b1"}
 {"id":"core-es:lexeme:raro","lemma":"raro","pos":"ADJ","level":"b1"}
+{"id":"core-es:lexeme:siguiente","lemma":"siguiente","pos":"ADJ","level":"a2"}
+{"id":"core-es:lexeme:mudo","lemma":"mudo","pos":"ADJ","level":"a1"}
+{"id":"core-es:lexeme:unico","lemma":"único","pos":"ADJ","level":"a2"}
+{"id":"core-es:lexeme:durante","lemma":"durante","pos":"ADP","level":"a2"}
+{"id":"core-es:lexeme:dentro","lemma":"dentro","pos":"ADV","level":"a2"}
+{"id":"core-es:lexeme:igual","lemma":"igual","pos":"ADV","level":"a2"}
+{"id":"core-es:lexeme:e","lemma":"e","pos":"CCONJ","level":"a2"}
+{"id":"core-es:lexeme:enseguida","lemma":"enseguida","pos":"ADV","level":"a2"}
+{"id":"core-es:lexeme:contigo","lemma":"contigo","pos":"PRON","level":"a2"}
+{"id":"core-es:lexeme:veintisiete","lemma":"veintisiete","pos":"NUM","level":"a1"}

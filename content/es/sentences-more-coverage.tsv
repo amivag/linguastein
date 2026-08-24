@@ -80,3 +80,45 @@
 000513	Hace mal tiempo hoy.	The weather is bad today.	a1	weather
 000514	Es una mala idea.	It's a bad idea.	a1	core
 000515	Estudiamos juntos los sábados.	We study together on Saturdays.	a2	school,days-of-week
+002649	Colgué el abrigo cerca del fuego.	I hung my coat near the fire.	a2	home,clothes
+002650	Colgamos las fotos en la pared del salón.	We hung the photos on the living-room wall.	a2	home
+002651	¿Dónde cuelgo la toalla?	Where do I hang the towel?	a2	home
+002652	No contesté el teléfono.	I did not answer the phone.	a2	communication
+002653	Contesta cuando puedas.	Answer when you can.	a2	communication
+002654	Contestó a la siguiente pregunta sin dudar.	She answered the next question without hesitating.	a2	communication
+002655	Quiero ir contigo al mercado.	I want to go to the market with you.	a2	shopping,social
+002656	Me gusta practicar contigo.	I like practising with you.	a2	language,social
+002657	Cuento contigo para el sábado.	I am counting on you for Saturday.	a2	social
+002658	Elegí el único que quedaba.	I chose the only one left.	a2	shopping
+002659	Es difícil elegir entre los dos.	It is hard to choose between the two.	a2	core
+002660	Elige el siguiente ejercicio.	Choose the next exercise.	a2	school
+002661	En invierno hacemos fuego en casa.	In winter we light a fire at home.	a2	home,weather
+002662	Nos sentamos alrededor del fuego en silencio.	We sat around the fire in silence.	a2	home,social
+002663	No me importa esperar un poco.	I do not mind waiting a little.	a2	core
+002664	Al final no importa quién gana.	In the end it does not matter who wins.	a2	sport,core
+002665	¿Te importa cerrar la ventana?	Do you mind closing the window?	a2	home,social
+002666	Practico español todos los días.	I practise Spanish every day.	a2	language
+002667	Practico con la radio por la mañana.	I practise with the radio in the morning.	a2	language,news
+002668	Me quité el abrigo al entrar.	I took my coat off as I came in.	a2	clothes,home
+002669	Quítate los zapatos, dentro hace calor.	Take your shoes off, it is warm inside.	a2	clothes,home
+002670	El médico me quitó las pastillas.	The doctor took me off the tablets.	a2	health
+002671	Escucho la radio mientras cocino.	I listen to the radio while I cook.	a2	news,home
+002672	La radio del coche no funciona.	The car radio does not work.	a2	news,travel
+002673	La siguiente parada es la mía.	The next stop is mine.	a2	travel
+002674	Al principio era el único alumno.	At first I was the only student.	a2	school
+002675	Es el único día libre de la semana.	It is the only free day of the week.	a2	time
+002676	Las llaves están dentro del bolso.	The keys are inside the bag.	a2	objects
+002677	Dentro de la caja había una carta.	Inside the box there was a letter.	a2	objects,communication
+002678	Vuelvo enseguida.	I will be right back.	a2	social
+002679	Contestó enseguida al mensaje.	He answered the message straight away.	a2	communication
+002680	El final me gustó más que el principio.	I liked the end better than the beginning.	a2	entertainment
+002681	A menudo salgo a caminar por la tarde.	I often go out walking in the afternoon.	a2	sport,daily-routine
+002682	A menudo comemos fuera los viernes.	We often eat out on Fridays.	a2	restaurant,daily-routine
+002683	Pinté la puerta de blanco.	I painted the door white.	a2	home,colours
+002684	La siguiente semana pintamos la cocina.	Next week we are painting the kitchen.	a2	home
+002685	Al principio no entendía nada.	At first I did not understand anything.	a2	language
+002686	¿Puedes deletrear tu apellido?	Can you spell your surname?	a2	alphabet,people
+002687	Padres e hijos vinieron juntos.	Parents and children came together.	a2	family
+002688	Los dos hermanos hablan igual.	The two brothers talk the same way.	a2	family
+002689	Nos reímos mucho con la película.	We laughed a lot at the film.	a2	entertainment,feelings
+002690	Pidió silencio en la sala.	She asked for quiet in the room.	a2	school

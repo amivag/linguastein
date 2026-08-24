@@ -41,6 +41,14 @@
 000533	Después voy al mercado a comprar fruta y verduras.	Then I go to the market to buy fruit and vegetables.	a1	shopping					sabado
 000534	Por la tarde juego al fútbol con mis amigos.	In the afternoon I play football with my friends.	a1	sport					sabado
 000535	Por la noche cenamos juntos en un restaurante.	In the evening we have dinner together at a restaurant.	a1	social					sabado
+002351	En el restaurante pedimos pescado y una cerveza.	At the restaurant we order fish and a beer.	a1	restaurant,food-drink					sabado		
+002352	Mi hermana toma vino y yo bebo agua.	My sister has wine and I drink water.	a1	restaurant,food-drink					sabado		
+002353	Hablamos de la semana y reímos mucho.	We talk about the week and laugh a lot.	a1	social					sabado		
+002354	Volvemos a casa a las once.	We get home at eleven.	a1	daily-routine,clock					sabado		
+002355	Antes de dormir leo un poco.	Before sleeping I read for a while.	a1	daily-routine					sabado		
+002356	Miro el reloj: ya es muy tarde.	I look at the clock: it is very late already.	a1	clock,objects					sabado		
+002357	El sábado es mi día favorito.	Saturday is my favourite day.	a1	days-of-week					sabado		
+002358	Es el día que descanso de verdad.	It is the day I really rest.	a1	daily-routine					sabado		
 #
 # ── No me siento bien ─────────────────────────────────────────────────────────
 000536	Ayer no me sentí bien.	Yesterday I didn't feel well.	a2	health					enfermo
@@ -48,6 +56,14 @@
 000538	No pude dormir por la noche.	I couldn't sleep at night.	a2	health					enfermo
 000539	Esta mañana fui al médico.	This morning I went to the doctor.	a2	health					enfermo
 000540	Me dio una medicina y ahora estoy mejor.	He gave me some medicine and now I'm better.	a2	health					enfermo
+002359	Todavía tengo mal la nariz.	My nose is still bad.	a1	health,body					enfermo		
+002360	Pero ya no tengo fiebre.	But I do not have a fever any more.	a1	health					enfermo		
+002361	El médico dijo que tengo que descansar dos días.	The doctor said I have to rest for two days.	a1	health					enfermo		
+002362	No puedo ir al trabajo hasta el jueves.	I cannot go to work until Thursday.	a1	health,work					enfermo		
+002363	Mi madre me trajo sopa y fruta.	My mother brought me soup and fruit.	a1	family,food-drink					enfermo		
+002364	Bebo mucha agua y duermo por la tarde.	I drink a lot of water and sleep in the afternoon.	a1	health					enfermo		
+002365	La próxima semana vuelvo a correr.	Next week I will go back to running.	a1	sport,health					enfermo		
+002366	Es importante dormir bien.	It is important to sleep well.	a1	health					enfermo		
 #
 # ── El verano pasado ──────────────────────────────────────────────────────────
 000541	El verano pasado viajamos a México.	Last summer we travelled to Mexico.	a2	travel					verano
@@ -55,6 +71,14 @@
 000543	El hotel estaba cerca de la playa.	The hotel was near the beach.	a2	travel					verano
 000544	Todos los días comíamos pescado y bebíamos jugo de naranja.	Every day we ate fish and drank orange juice.	a2	food-drink					verano
 000545	Fue un viaje muy bonito.	It was a lovely trip.	a2	travel					verano
+002367	Por las mañanas caminábamos por la playa.	In the mornings we used to walk along the beach.	a2	travel,nature					verano		
+002368	Mi hermano nadaba en el mar todos los días.	My brother swam in the sea every day.	a2	sport,nature					verano		
+002369	Una tarde visitamos un museo muy interesante.	One afternoon we visited a very interesting museum.	a2	entertainment,city					verano		
+002370	Comimos en un restaurante pequeño cerca del centro.	We ate at a small restaurant near the centre.	a2	restaurant,city					verano		
+002371	El camarero era muy simpático y nos habló de la ciudad.	The waiter was very friendly and told us about the city.	a2	restaurant,city					verano		
+002372	Compramos un sombrero y unas gafas.	We bought a hat and a pair of sunglasses.	a2	shopping,clothes					verano		
+002373	Sacamos muchas fotos.	We took a lot of photos.	a2	travel					verano		
+002374	Volvimos el domingo, cansados y contentos.	We came back on Sunday, tired and happy.	a2	travel,feelings					verano		
 #
 # ── En el mercado ─────────────────────────────────────────────────────────────
 000546	Voy al mercado los jueves.	I go to the market on Thursdays.	a1	shopping,days-of-week					mercado
@@ -62,12 +86,27 @@
 000548	El pescado está muy rico.	The fish is delicious.	a1	food-drink					mercado
 000549	Todo cuesta poco y la gente es muy amable.	Everything costs little and the people are very kind.	a1	shopping					mercado
 000550	Pago con tarjeta y vuelvo a casa con dos bolsas.	I pay by card and go home with two bags.	a1	shopping,numbers					mercado
+002375	En la primera tienda compro pan y queso.	At the first stall I buy bread and cheese.	a1	shopping,food-drink					mercado		
+002376	Después busco huevos y leche.	Then I look for eggs and milk.	a1	shopping,food-drink					mercado		
+002377	La señora del mercado siempre me da una fruta.	The woman at the market always gives me a piece of fruit.	a1	shopping,people					mercado		
+002378	A veces compro flores para la mesa.	Sometimes I buy flowers for the table.	a1	shopping,nature					mercado		
+002379	Todo entra en dos bolsas.	It all fits in two bags.	a1	shopping,objects					mercado		
+002380	Vuelvo a casa a pie porque no está lejos.	I walk home because it is not far.	a1	city,place					mercado		
+002381	Por la tarde cocino con lo que compré.	In the afternoon I cook with what I bought.	a1	home,food-drink					mercado		
+002382	Me gusta más el mercado que el supermercado.	I like the market better than the supermarket.	a1	shopping					mercado		
 #
 # ── Un día de lluvia ──────────────────────────────────────────────────────────
 000551	Llueve mucho desde ayer.	It's been raining a lot since yesterday.	a1	weather					lluvia
 000552	El cielo está gris y hace viento.	The sky is grey and it's windy.	a1	weather,colours					lluvia
 000553	No puedo ir en bicicleta al trabajo.	I can't cycle to work.	a1	weather					lluvia
 000554	Voy en tren y leo el periódico.	I go by train and read the newspaper.	a1	travel					lluvia
+002383	Llevo un abrigo y unos zapatos viejos.	I wear a coat and an old pair of shoes.	a1	clothes,weather					lluvia		
+002384	En el tren hace calor y hay mucha gente.	On the train it is hot and there are a lot of people.	a1	travel					lluvia		
+002385	Llego a la oficina un poco tarde.	I get to the office a little late.	a1	work					lluvia		
+002386	Bebo un café caliente en una taza grande.	I drink a hot coffee in a big cup.	a1	food-drink,objects					lluvia		
+002387	Por la ventana veo el agua en la calle.	Through the window I see the water in the street.	a1	home,city					lluvia		
+002388	Mis compañeros hablan del tiempo toda la mañana.	My colleagues talk about the weather all morning.	a1	work,weather					lluvia		
+002389	A la hora de comer todavía llueve.	At lunchtime it is still raining.	a1	weather,clock					lluvia		
 000555	Pero mañana va a hacer sol.	But tomorrow it's going to be sunny.	a1	weather					lluvia
 #
 # ── En la cafetería (dialogue) ────────────────────────────────────────────────

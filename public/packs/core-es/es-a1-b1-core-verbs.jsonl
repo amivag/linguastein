@@ -174,3 +174,13 @@
 {"id":"core-es:lexeme:valer","lemma":"valer","pos":"VERB","level":"b1","tags":["irregular"]}
 {"id":"core-es:lexeme:discutir","lemma":"discutir","pos":"VERB","level":"b1"}
 {"id":"core-es:lexeme:devolver","lemma":"devolver","pos":"VERB","level":"b1","tags":["irregular"]}
+{"id":"core-es:lexeme:quitar","lemma":"quitar","pos":"VERB","level":"a2"}
+{"id":"core-es:lexeme:colgar","lemma":"colgar","pos":"VERB","level":"a2","tags":["irregular"]}
+{"id":"core-es:lexeme:importar","lemma":"importar","pos":"VERB","level":"a2"}
+{"id":"core-es:lexeme:pintar","lemma":"pintar","pos":"VERB","level":"a2"}
+{"id":"core-es:lexeme:contestar","lemma":"contestar","pos":"VERB","level":"a2"}
+{"id":"core-es:lexeme:sonar","lemma":"sonar","pos":"VERB","level":"a2","tags":["irregular"]}
+{"id":"core-es:lexeme:deletrear","lemma":"deletrear","pos":"VERB","level":"a2"}
+{"id":"core-es:lexeme:reir","lemma":"reír","pos":"VERB","level":"a2","tags":["irregular"]}
+{"id":"core-es:lexeme:elegir","lemma":"elegir","pos":"VERB","level":"a2","tags":["irregular"]}
+{"id":"core-es:lexeme:practicar","lemma":"practicar","pos":"VERB","level":"a2"}

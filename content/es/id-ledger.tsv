@@ -1774,7 +1774,7 @@
 001771	sentence	active	Es improbable que nos contraten a los dos.
 001772	sentence	active	No creo que valga la pena el esfuerzo.
 001773	sentence	active	Dudo que este artículo sea imparcial.
-001774	sentence	active	No parece que la red esté bien conectada.
+001774	sentence	active	No parece que la red funcione bien.
 001775	sentence	active	Quizá el usuario no recuerde su contraseña.
 001776	sentence	active	No es evidente que la decisión sea justa.
 001777	sentence	active	Me alegro de que encuentres trabajo.
@@ -1932,7 +1932,7 @@
 001929	sentence	active	Descargué la aplicación en cinco minutos.
 001930	sentence	active	Descarga el archivo antes de salir.
 001931	sentence	active	No descargues nada de esa página.
-001932	sentence	active	La aplicación descarga las fotos sola.
+001932	sentence	active	La aplicación descarga las fotos sin ayuda.
 001933	sentence	active	El ordenador no se conecta al wifi.
 001934	sentence	active	Conecta el teléfono a la pantalla.
 001935	sentence	active	Me conecto por la mañana para leer el correo.
@@ -2123,7 +2123,7 @@
 002120	sentence	active	Todo tiene que ser legal.
 002121	sentence	active	Es la edad legal para conducir.
 002122	sentence	active	El contrato es legal y claro.
-002123	sentence	active	Es un puesto temporal, no fijo.
+002123	sentence	active	Es un puesto temporal, no para siempre.
 002124	sentence	active	Fue una solución temporal.
 002125	sentence	active	Tengo un problema temporal con la red.
 002126	sentence	active	Conseguí una entrada para el sábado.
@@ -2131,7 +2131,7 @@
 002128	sentence	active	No consigo abrir el archivo.
 002129	sentence	active	Es una oportunidad que no vuelve.
 002130	sentence	active	Tuve la oportunidad de trabajar en México.
-002131	sentence	active	Aprovecha la oportunidad.
+002131	sentence	active	Toma la oportunidad.
 002132	sentence	active	El éxito del programa sorprendió a todos.
 002133	sentence	active	Tuvo mucho éxito en Italia.
 002134	sentence	active	El éxito depende del esfuerzo.
@@ -2177,7 +2177,7 @@
 002174	sentence	active	El transporte público reduce la contaminación.
 002175	sentence	active	Propongo una solución sencilla.
 002176	sentence	active	Propusieron un curso nuevo para septiembre.
-002177	sentence	active	Te sugiero esta página para practicar.
+002177	sentence	active	Te sugiero esta página para practicar en casa.
 002178	sentence	active	Le sugiero otra zona de la ciudad.
 002179	sentence	active	No es una enfermedad grave.
 002180	sentence	active	La empresa despidió a diez personas.
@@ -2239,7 +2239,7 @@
 002236	sentence	active	La hache no suena nunca.
 002237	sentence	active	Hache es la única letra muda.
 002238	sentence	active	¿Se escribe con be o con uve?
-002239	sentence	active	Vaca con uve, baca con be.
+002239	sentence	active	Beber con be, vivir con uve.
 002240	sentence	active	Se escribe con be, como en bueno.
 002241	sentence	active	La ge y la jota suenan igual delante de e.
 002242	sentence	active	Gente se escribe con ge.
@@ -2351,6 +2351,346 @@
 002348	sentence	active	Te pido que no pongas música esa noche.
 002349	sentence	active	Me alegro de que venga tu hermana.
 002350	sentence	active	Dudo que sea el mejor momento.
+002351	sentence	active	En el restaurante pedimos pescado y una cerveza.
+002352	sentence	active	Mi hermana toma vino y yo bebo agua.
+002353	sentence	active	Hablamos de la semana y reímos mucho.
+002354	sentence	active	Volvemos a casa a las once.
+002355	sentence	active	Antes de dormir leo un poco.
+002356	sentence	active	Miro el reloj: ya es muy tarde.
+002357	sentence	active	El sábado es mi día favorito.
+002358	sentence	active	Es el día que descanso de verdad.
+002359	sentence	active	Todavía tengo mal la nariz.
+002360	sentence	active	Pero ya no tengo fiebre.
+002361	sentence	active	El médico dijo que tengo que descansar dos días.
+002362	sentence	active	No puedo ir al trabajo hasta el jueves.
+002363	sentence	active	Mi madre me trajo sopa y fruta.
+002364	sentence	active	Bebo mucha agua y duermo por la tarde.
+002365	sentence	active	La próxima semana vuelvo a correr.
+002366	sentence	active	Es importante dormir bien.
+002367	sentence	active	Por las mañanas caminábamos por la playa.
+002368	sentence	active	Mi hermano nadaba en el mar todos los días.
+002369	sentence	active	Una tarde visitamos un museo muy interesante.
+002370	sentence	active	Comimos en un restaurante pequeño cerca del centro.
+002371	sentence	active	El camarero era muy simpático y nos habló de la ciudad.
+002372	sentence	active	Compramos un sombrero y unas gafas.
+002373	sentence	active	Sacamos muchas fotos.
+002374	sentence	active	Volvimos el domingo, cansados y contentos.
+002375	sentence	active	En la primera tienda compro pan y queso.
+002376	sentence	active	Después busco huevos y leche.
+002377	sentence	active	La señora del mercado siempre me da una fruta.
+002378	sentence	active	A veces compro flores para la mesa.
+002379	sentence	active	Todo entra en dos bolsas.
+002380	sentence	active	Vuelvo a casa a pie porque no está lejos.
+002381	sentence	active	Por la tarde cocino con lo que compré.
+002382	sentence	active	Me gusta más el mercado que el supermercado.
+002383	sentence	active	Llevo un abrigo y unos zapatos viejos.
+002384	sentence	active	En el tren hace calor y hay mucha gente.
+002385	sentence	active	Llego a la oficina un poco tarde.
+002386	sentence	active	Bebo un café caliente en una taza grande.
+002387	sentence	active	Por la ventana veo el agua en la calle.
+002388	sentence	active	Mis compañeros hablan del tiempo toda la mañana.
+002389	sentence	active	A la hora de comer todavía llueve.
+002390	sentence	active	La cocina era pequeña pero tenía una nevera nueva.
+002391	sentence	active	En el dormitorio puse una cama y una silla.
+002392	sentence	active	Limpié el suelo dos veces antes de entrar.
+002393	sentence	active	Mi hermana me trajo una lámpara para el comedor.
+002394	sentence	active	Puse una foto grande encima del sofá.
+002395	sentence	active	La primera noche no pude dormir por el ruido de la calle.
+002396	sentence	active	Después de un mes, todo estaba en su sitio.
+002397	sentence	active	También compré huevos y un poco de queso.
+002398	sentence	active	El pescado era muy bueno, pero costaba mucho.
+002399	sentence	active	Una señora me dio a probar unas fresas.
+002400	sentence	active	Pagué en efectivo porque la tarjeta no funcionaba.
+002401	sentence	active	En la panadería compré un pastel para el domingo.
+002402	sentence	active	Al salir empezó a llover y volví corriendo.
+002403	sentence	active	Por la tarde cociné sopa para toda la semana.
+002404	sentence	active	Llevamos pan, queso y una botella de agua.
+002405	sentence	active	Mi hijo corría detrás de los pájaros.
+002406	sentence	active	Vimos flores de muchos colores al lado del camino.
+002407	sentence	active	Mi mujer sacó fotos del lago y de las montañas.
+002408	sentence	active	Descansamos un rato debajo de un árbol grande.
+002409	sentence	active	Volvimos al coche cuando empezó a hacer frío.
+002410	sentence	active	En el camino de vuelta nadie habló.
+002411	sentence	active	A las dos fui a comer con dos compañeras.
+002412	sentence	active	Me contaron cómo funcionaba la empresa.
+002413	sentence	active	Por la tarde escribí mi primer correo a un cliente.
+002414	sentence	active	Mi jefe leyó el correo y me dijo que estaba bien.
+002415	sentence	active	Salí a las seis, todavía nervioso pero contento.
+002416	sentence	active	En el tren pensé en todo lo que aprendí.
+002417	sentence	active	Esa noche dormí muy bien.
+002418	sentence	active	No podía dormir bien por el dolor.
+002419	sentence	active	Tampoco podía sentarme delante del ordenador.
+002420	sentence	active	La primera pastilla me ayudó en dos días.
+002421	sentence	active	El médico me dijo que tengo que caminar todos los días.
+002422	sentence	active	Empecé a caminar media hora por la mañana.
+002423	sentence	active	También dejé de llevar el bolso en el mismo lado.
+002424	sentence	active	En el jardín había un árbol muy viejo.
+002425	sentence	active	Mi abuela preparaba pasteles los domingos.
+002426	sentence	active	Bebíamos leche fría en unas tazas azules.
+002427	sentence	active	Por la tarde mi primo y yo íbamos al río.
+002428	sentence	active	A veces volvíamos con los zapatos llenos de agua.
+002429	sentence	active	Mi abuelo leía el periódico en la misma silla.
+002430	sentence	active	Nadie tenía prisa en aquella casa.
+002431	sentence	active	En la plaza había música y mucha gente.
+002432	sentence	active	Un chico tocaba la guitarra en una esquina.
+002433	sentence	active	Entramos en una tienda de ropa a mirar.
+002434	sentence	active	Mi amiga se probó una falda y un abrigo.
+002435	sentence	active	No compramos nada, solo miramos.
+002436	sentence	active	Después tomamos un café en un bar.
+002437	sentence	active	El reloj de la iglesia dio las siete.
+002438	sentence	active	Los lunes hacíamos ejercicios de escuchar.
+002439	sentence	active	Los jueves leíamos un cuento corto.
+002440	sentence	active	Yo llevaba siempre un lápiz y un bolígrafo azul.
+002441	sentence	active	Una vez escribí una carta en español.
+002442	sentence	active	La profesora la leyó delante de todos.
+002443	sentence	active	Me puse rojo, pero estaba contento.
+002444	sentence	active	Al final del año hicimos un examen fácil.
+002445	sentence	active	De primero pedimos una sopa y una ensalada.
+002446	sentence	active	El pan estaba caliente y muy rico.
+002447	sentence	active	Mi hermano bebió una cerveza y yo un vino.
+002448	sentence	active	El cuchillo y el tenedor eran muy grandes.
+002449	sentence	active	De postre tomamos un helado de chocolate.
+002450	sentence	active	La cuenta llegó rápido y no era cara.
+002451	sentence	active	No la tocaba desde hacía años.
+002452	sentence	active	Estaba en muy buen estado, solo un poco sucia.
+002453	sentence	active	Pedí cien euros y el extranjero no discutió.
+002454	sentence	active	Le expliqué la historia de la guitarra.
+002455	sentence	active	Me dio las gracias y se fue contento.
+002456	sentence	active	Ese día tuve suerte.
+002457	sentence	active	A las dos todavía oía la televisión de arriba.
+002458	sentence	active	Pensé en llamar a la puerta, pero no lo hice.
+002459	sentence	active	Me levanté y bebí un vaso de leche.
+002460	sentence	active	Leí un rato con la lámpara pequeña.
+002461	sentence	active	A las cinco por fin se hizo el silencio.
+002462	sentence	active	Dormí solo dos horas antes del trabajo.
+002463	sentence	active	En el tren abrí la maleta para buscar un libro.
+002464	sentence	active	Llevaba también una camiseta y una falda.
+002465	sentence	active	El abrigo lo llevé en el brazo todo el viaje.
+002466	sentence	active	Hacía calor y me quité los zapatos.
+002467	sentence	active	En el hotel colgué la ropa en el armario.
+002468	sentence	active	Olvidé el reloj en casa y no me importó.
+002469	sentence	active	Aquel viaje fue el más tranquilo del año.
+002470	sentence	active	Salimos a las seis de la mañana con mucho frío.
+002471	sentence	active	Comimos y bebimos agua dos veces por el camino.
+002472	sentence	active	Por la ventana veíamos montañas y campos verdes.
+002473	sentence	active	Mi primo puso música y cantamos casi una hora.
+002474	sentence	active	En la frontera esperamos con el pasaporte en la mano.
+002475	sentence	active	El hotel era barato pero muy limpio.
+002476	sentence	active	Cenamos pescado y bebimos una cerveza fría.
+002477	sentence	active	La sala tenía una ventana muy grande.
+002478	sentence	active	Desde mi mesa se veía el parque.
+002479	sentence	active	Había una cocina pequeña con un poco de café.
+002480	sentence	active	Cada mañana bebíamos el café en tazas blancas.
+002481	sentence	active	Un compañero trajo flores para la mesa de la entrada.
+002482	sentence	active	El primer día nadie encontraba el baño.
+002483	sentence	active	Escribí las respuestas con un lápiz azul.
+002484	sentence	active	Al lado tenía un bolígrafo azul.
+002485	sentence	active	La sala estaba en silencio y hacía calor.
+002486	sentence	active	Un alumno acabó antes que yo y se fue.
+002487	sentence	active	Después hablamos del examen fuera de la sala.
+002488	sentence	active	Nadie sabía la respuesta del último ejercicio.
+002489	sentence	active	Una semana después recibí una nota muy buena.
+002490	sentence	active	Empecé a cocinar a las seis de la tarde.
+002491	sentence	active	Puse música y abrí una botella de vino.
+002492	sentence	active	Mis amigos llegaron con un pastel de chocolate.
+002493	sentence	active	Cada uno trajo algo, hasta las servilletas.
+002494	sentence	active	Comimos despacio y hablamos hasta muy tarde.
+002495	sentence	active	De postre tomamos helado con fresas.
+002496	sentence	active	Lavé los platos al día siguiente, no esa noche.
+002497	sentence	active	La primera semana limpiamos todos los días.
+002498	sentence	active	Compramos jabón, toallas y una lámpara nueva.
+002499	sentence	active	Mi hermano pintó las paredes de blanco.
+002500	sentence	active	Yo arreglé la silla que se había caído.
+002501	sentence	active	Pusimos flores en la ventana de la cocina.
+002502	sentence	active	La nevera nueva llegó un jueves por la tarde.
+002503	sentence	active	La primera cena en esa casa fue muy sencilla.
+002504	sentence	active	Los niños jugaban en la nieve delante de la iglesia.
+002505	sentence	active	Nadie podía llegar al pueblo en coche.
+002506	sentence	active	Un vecino nos trajo pan y leche a pie.
+002507	sentence	active	En casa bebíamos té caliente al lado del fuego.
+002508	sentence	active	Los pájaros buscaban comida cerca de la puerta.
+002509	sentence	active	Por la tarde el cielo se puso rojo.
+002510	sentence	active	Los dos primeros días estuve muy nervioso.
+002511	sentence	active	Dentro llevaba también una foto de mi abuela.
+002512	sentence	active	Llamé al teatro tres veces y nadie contestó.
+002513	sentence	active	Pensé que había tenido muy mala suerte.
+002514	sentence	active	Un chico del teatro lo había guardado desde el sábado.
+002515	sentence	active	Fui a buscarlo el jueves por la mañana.
+002516	sentence	active	En la sala de espera había mucha gente.
+002517	sentence	active	Leí una revista vieja durante media hora.
+002518	sentence	active	Una señora me contó toda su historia.
+002519	sentence	active	El médico me preguntó por el trabajo y por el sueño.
+002520	sentence	active	Me miró los ojos y la boca también.
+002521	sentence	active	Escribió todo en el ordenador muy rápido.
+002522	sentence	active	En la farmacia me costaron cuatro euros.
+002523	sentence	active	Ella no me preguntó nada aquella tarde.
+002524	sentence	active	Yo tampoco dije nada durante dos semanas.
+002525	sentence	active	Un domingo comimos juntos en casa de mis padres.
+002526	sentence	active	Le conté la verdad antes del postre.
+002527	sentence	active	Se rió y me dijo que ya lo sabía.
+002528	sentence	active	Desde ese día hablamos de todo.
+002529	sentence	active	Preparé comida para todos antes de empezar.
+002530	sentence	active	Mi vecino trajo una caja de cerveza fría.
+002531	sentence	active	En el primer tiempo no pasó casi nada.
+002532	sentence	active	Después el equipo azul jugó mucho mejor.
+002533	sentence	active	Cuando ganaron, todos hablamos a la vez.
+002534	sentence	active	Mi hija se durmió en el sofá al final.
+002535	sentence	active	Bebí un café solo y comí pan con mantequilla.
+002536	sentence	active	Todavía era de noche y la calle estaba vacía.
+002537	sentence	active	Miré el reloj: solo eran las seis y media.
+002538	sentence	active	Me lavé la cara y me duché despacio.
+002539	sentence	active	Salí de casa una hora antes de lo normal.
+002540	sentence	active	Llegué al trabajo el primero de todos.
+002541	sentence	active	El primer día perdimos casi toda la comida.
+002542	sentence	active	Mi madre nos dejó su nevera pequeña una semana.
+002543	sentence	active	Miramos tres tiendas antes de decidir.
+002544	sentence	active	El nuevo es blanco y hace muy poco ruido.
+002545	sentence	active	Dentro entra mucho más que en el viejo.
+002546	sentence	active	Guardamos la fruta y la leche el mismo día.
+002547	sentence	active	Al principio se olvidó del pan y del agua.
+002548	sentence	active	Volvió enseguida y nos pidió perdón.
+002549	sentence	active	El jefe del restaurante salió a hablar con nosotros.
+002550	sentence	active	La comida estaba muy rica y muy caliente.
+002551	sentence	active	De postre tomamos un helado de fresa.
+002552	sentence	active	Nos gustó mucho y volvimos el jueves.
+002553	sentence	active	La bicicleta se quedó en el suelo un rato.
+002554	sentence	active	Me lavé la mano con el agua de una botella.
+002555	sentence	active	El hombre me dio una toalla limpia.
+002556	sentence	active	Volví a casa muy despacio y con cuidado.
+002557	sentence	active	Esa noche me dolía también el brazo.
+002558	sentence	active	No pude dormir bien hasta muy tarde.
+002559	sentence	active	Escribía casi todos los domingos por la tarde.
+002560	sentence	active	Contaba el trabajo del campo y el tiempo.
+002561	sentence	active	En una página hablaba de su primer reloj.
+002562	sentence	active	En otra contaba cómo conoció a mi abuela.
+002563	sentence	active	Nunca escribió nada sobre el dinero.
+002564	sentence	active	Guardé el cuaderno en una caja de madera.
+002565	sentence	active	En la frontera esperamos casi dos horas.
+002566	sentence	active	Un hombre miró los pasaportes uno por uno.
+002567	sentence	active	El primer día comimos en una plaza pequeña.
+002568	sentence	active	La comida era nueva para nosotros y muy buena.
+002569	sentence	active	Compramos una camiseta para nuestro hermano.
+002570	sentence	active	La segunda noche cantamos con la gente del bar.
+002571	sentence	active	La radio estaba al lado de la nevera.
+002572	sentence	active	Mientras escuchaba, preparaba el desayuno.
+002573	sentence	active	Después de las noticias pusieron una canción.
+002574	sentence	active	Era una canción muy vieja de mi madre.
+002575	sentence	active	La escuché toda antes de salir de casa.
+002576	sentence	active	Ese día llegué tarde, pero contento.
+002577	sentence	active	En la foto todos miraban al mismo sitio.
+002578	sentence	active	Nadie estaba contento en la foto.
+002579	sentence	active	Mi abuela llevaba un vestido negro y largo.
+002580	sentence	active	Detrás se veía la puerta de una casa vieja.
+002581	sentence	active	Mi madre me dijo el nombre de cada uno.
+002582	sentence	active	Guardamos la foto encima del armario.
+002583	sentence	active	Antes de entrar me tomaron la temperatura.
+002584	sentence	active	La médica me preguntó la edad y el apellido.
+002585	sentence	active	Me miró los ojos y la boca un momento.
+002586	sentence	active	No me dolía nada, solo tenía sed.
+002587	sentence	active	Bebí un vaso de agua antes de salir.
+002588	sentence	active	Todo terminó en menos de diez minutos.
+002589	sentence	active	Los niños salieron a jugar con la nieve.
+002590	sentence	active	Volvieron con las manos rojas de frío.
+002591	sentence	active	Preparé chocolate caliente para todos.
+002592	sentence	active	Jugamos a un juego de mesa toda la tarde.
+002593	sentence	active	Mi hija ganó dos veces y estaba muy contenta.
+002594	sentence	active	Nadie miró el móvil en toda la tarde.
+002595	sentence	active	La última semana trabajamos todas las tardes.
+002596	sentence	active	Yo escribí mi parte en dos días.
+002597	sentence	active	Un alumno pintó la primera página.
+002598	sentence	active	Lo leímos delante de la clase el viernes.
+002599	sentence	active	Nadie se puso nervioso, tampoco yo.
+002600	sentence	active	Aprendí más en esas dos semanas que en un mes.
+002601	sentence	active	Llegamos a las siete para tener buen sitio.
+002602	sentence	active	Mi tío habló con todos los vecinos del mercado.
+002603	sentence	active	Una señora me enseñó a preparar las cajas.
+002604	sentence	active	A las once ya no quedaban fresas.
+002605	sentence	active	Tenía hambre y comí pan con queso.
+002606	sentence	active	Guardamos el dinero en una caja pequeña.
+002607	sentence	active	Mi hermano se puso una camiseta azul del equipo.
+002608	sentence	active	Los zapatos estaban debajo de la cama.
+002609	sentence	active	Salimos de casa quince minutos tarde.
+002610	sentence	active	En el campo hacía viento y bastante frío.
+002611	sentence	active	Su equipo perdió, pero él jugó muy bien.
+002612	sentence	active	Volvimos a casa con la ropa llena de suelo.
+002613	sentence	active	El mayor trabaja en un banco desde joven.
+002614	sentence	active	El pequeño estudia y toca la guitarra.
+002615	sentence	active	Los dos vienen a casa por mi cumpleaños.
+002616	sentence	active	Siempre traen algo de comer o de beber.
+002617	sentence	active	De niños jugábamos juntos en el jardín.
+002618	sentence	active	Quiero mucho a los dos.
+002619	sentence	active	La madre lo limpió con la boca enseguida.
+002620	sentence	active	El animal pequeño buscó leche a los pocos minutos.
+002621	sentence	active	Mis hijos no dijeron nada durante un rato largo.
+002622	sentence	active	El hombre nos ofreció un vaso de leche fresca.
+002623	sentence	active	Por la tarde vimos también dos caballos.
+002624	sentence	active	Sacamos una foto delante de la casa.
+002625	sentence	active	Trajeron pan, queso y dos botellas de agua.
+002626	sentence	active	Pusimos las sillas alrededor de la mesa.
+002627	sentence	active	Vosotros nunca traéis postre, dije yo.
+002628	sentence	active	Ellos se rieron y sacaron un pastel.
+002629	sentence	active	Comimos antes de empezar el partido.
+002630	sentence	active	Fue una tarde muy buena para todos.
+002631	sentence	active	Nadie miró a nadie durante ese momento.
+002632	sentence	active	Yo miraba la pantalla del ordenador.
+002633	sentence	active	El silencio duró menos de lo que parecía.
+002634	sentence	active	Un empleado abrió la ventana de la sala.
+002635	sentence	active	Entró aire frío y todos estábamos mejor.
+002636	sentence	active	Al terminar la reunión nadie habló de eso.
+002637	sentence	active	Al principio no sabía dónde tirar cada cosa.
+002638	sentence	active	Un vecino me lo explicó en cinco minutos.
+002639	sentence	active	Ahora reciclo también las botellas.
+002640	sentence	active	En mi calle hay un sitio para el papel.
+002641	sentence	active	Es mejor que compremos menos plástico.
+002642	sentence	active	Me molesta que todavía haya basura en la calle.
+002643	sentence	active	El artículo tiene dos páginas y muchos datos.
+002644	sentence	active	Dudo que todo el mundo lo lea entero.
+002645	sentence	active	Es una pena que la gente no cambie.
+002646	sentence	active	Te aconsejo que uses más el transporte público.
+002647	sentence	active	Ojalá que el próximo verano sea más fresco.
+002648	sentence	active	Compartí el artículo con dos compañeros.
+002649	sentence	active	Colgué el abrigo cerca del fuego.
+002650	sentence	active	Colgamos las fotos en la pared del salón.
+002651	sentence	active	¿Dónde cuelgo la toalla?
+002652	sentence	active	No contesté el teléfono.
+002653	sentence	active	Contesta cuando puedas.
+002654	sentence	active	Contestó a la siguiente pregunta sin dudar.
+002655	sentence	active	Quiero ir contigo al mercado.
+002656	sentence	active	Me gusta practicar contigo.
+002657	sentence	active	Cuento contigo para el sábado.
+002658	sentence	active	Elegí el único que quedaba.
+002659	sentence	active	Es difícil elegir entre los dos.
+002660	sentence	active	Elige el siguiente ejercicio.
+002661	sentence	active	En invierno hacemos fuego en casa.
+002662	sentence	active	Nos sentamos alrededor del fuego en silencio.
+002663	sentence	active	No me importa esperar un poco.
+002664	sentence	active	Al final no importa quién gana.
+002665	sentence	active	¿Te importa cerrar la ventana?
+002666	sentence	active	Practico español todos los días.
+002667	sentence	active	Practico con la radio por la mañana.
+002668	sentence	active	Me quité el abrigo al entrar.
+002669	sentence	active	Quítate los zapatos, dentro hace calor.
+002670	sentence	active	El médico me quitó las pastillas.
+002671	sentence	active	Escucho la radio mientras cocino.
+002672	sentence	active	La radio del coche no funciona.
+002673	sentence	active	La siguiente parada es la mía.
+002674	sentence	active	Al principio era el único alumno.
+002675	sentence	active	Es el único día libre de la semana.
+002676	sentence	active	Las llaves están dentro del bolso.
+002677	sentence	active	Dentro de la caja había una carta.
+002678	sentence	active	Vuelvo enseguida.
+002679	sentence	active	Contestó enseguida al mensaje.
+002680	sentence	active	El final me gustó más que el principio.
+002681	sentence	active	A menudo salgo a caminar por la tarde.
+002682	sentence	active	A menudo comemos fuera los viernes.
+002683	sentence	active	Pinté la puerta de blanco.
+002684	sentence	active	La siguiente semana pintamos la cocina.
+002685	sentence	active	Al principio no entendía nada.
+002686	sentence	active	¿Puedes deletrear tu apellido?
+002687	sentence	active	Padres e hijos vinieron juntos.
+002688	sentence	active	Los dos hermanos hablan igual.
+002689	sentence	active	Nos reímos mucho con la película.
+002690	sentence	active	Pidió silencio en la sala.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -2816,6 +3156,15 @@
 500463	noun-card	active	equis
 500464	noun-card	active	ye
 500465	noun-card	active	zeta
+500466	noun-card	active	silencio
+500467	noun-card	active	fuego
+500468	noun-card	active	final
+500469	noun-card	active	alfabeto
+500470	noun-card	active	vocal
+500471	noun-card	active	acento
+500472	noun-card	active	apellido
+500473	noun-card	active	principio
+500474	noun-card	active	radio
 600001	modifier-card	active	bueno
 600002	modifier-card	active	malo
 600003	modifier-card	active	grande
@@ -2954,6 +3303,10 @@
 600136	modifier-card	active	improbable
 600137	modifier-card	active	gratuito
 600138	modifier-card	active	raro
+600139	modifier-card	active	siguiente
+600140	modifier-card	active	mudo
+600141	modifier-card	active	único
+600142	modifier-card	active	veintisiete
 700001	passage	active	Una mañana normal
 700002	passage	active	Mi piso
 700003	passage	active	Un día en la oficina
@@ -3252,3 +3605,14 @@
 800173	verb-card	active	valer
 800174	verb-card	active	discutir
 800175	verb-card	active	devolver
+800176	verb-card	active	quitar
+800177	verb-card	active	colgar
+800178	verb-card	active	importar
+800179	verb-card	retired	parar
+800180	verb-card	active	pintar
+800181	verb-card	active	contestar
+800182	verb-card	active	sonar
+800183	verb-card	active	deletrear
+800184	verb-card	active	reír
+800185	verb-card	active	elegir
+800186	verb-card	active	practicar

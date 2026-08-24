@@ -466,3 +466,12 @@
 {"id":"core-es:lexeme:equis","lemma":"equis","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:ye","lemma":"ye","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:zeta","lemma":"zeta","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:silencio","lemma":"silencio","pos":"NOUN","level":"a2","gender":"masculine"}
+{"id":"core-es:lexeme:fuego","lemma":"fuego","pos":"NOUN","level":"a2","gender":"masculine"}
+{"id":"core-es:lexeme:final","lemma":"final","pos":"NOUN","level":"a2","gender":"masculine"}
+{"id":"core-es:lexeme:alfabeto","lemma":"alfabeto","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:vocal","lemma":"vocal","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:acento","lemma":"acento","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:apellido","lemma":"apellido","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:principio","lemma":"principio","pos":"NOUN","level":"a2","gender":"masculine"}
+{"id":"core-es:lexeme:radio","lemma":"radio","pos":"NOUN","level":"a2","gender":"feminine"}

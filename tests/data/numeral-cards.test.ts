@@ -76,9 +76,13 @@ describe('the shipped number cards', () => {
   });
 
   it('cards the numerals a sentence can show, and only those', () => {
+    // `veintisiete` is here because the alphabet content says how many letters
+    // Spanish has, which is the whole rule working as intended: a numeral row
+    // is a lexeme until a sentence uses it and a card the day one does.
     expect(numeralCards.map((card) => card.text).sort()).toEqual(
       [
         'cien',
+        'veintisiete',
         'cinco',
         'cuatro',
         'diez',

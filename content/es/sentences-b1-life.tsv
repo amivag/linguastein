@@ -129,7 +129,7 @@
 001929	Descargué la aplicación en cinco minutos.	I downloaded the app in five minutes.	b1	technology							
 001930	Descarga el archivo antes de salir.	Download the file before you leave.	b1	technology			tu				
 001931	No descargues nada de esa página.	Do not download anything from that site.	b1	technology							give-advice
-001932	La aplicación descarga las fotos sola.	The app downloads the photos by itself.	b1	technology							
+001932	La aplicación descarga las fotos sin ayuda.	The app downloads the photos on its own.	b1	technology							
 001933	El ordenador no se conecta al wifi.	The computer will not connect to the wifi.	b1	technology							make-a-complaint
 001934	Conecta el teléfono a la pantalla.	Connect the phone to the screen.	b1	technology			tu				
 001935	Me conecto por la mañana para leer el correo.	I go online in the morning to read my email.	b1	technology							
@@ -320,7 +320,7 @@
 002120	Todo tiene que ser legal.	Everything has to be above board.	b1	work							
 002121	Es la edad legal para conducir.	It is the legal age to drive.	b1	travel							
 002122	El contrato es legal y claro.	The contract is legal and clear.	b1	work							
-002123	Es un puesto temporal, no fijo.	It is a temporary post, not a permanent one.	b1	work							
+002123	Es un puesto temporal, no para siempre.	It is a temporary post, not for ever.	b1	work							
 002124	Fue una solución temporal.	It was a temporary solution.	b1	core							
 002125	Tengo un problema temporal con la red.	I have a temporary problem with the network.	b1	technology							
 002126	Conseguí una entrada para el sábado.	I got a ticket for Saturday.	b1	entertainment							
@@ -328,7 +328,7 @@
 002128	No consigo abrir el archivo.	I cannot manage to open the file.	b1	technology							make-a-complaint
 002129	Es una oportunidad que no vuelve.	It is a chance that will not come again.	b1	core							
 002130	Tuve la oportunidad de trabajar en México.	I had the chance to work in Mexico.	b1	work							
-002131	Aprovecha la oportunidad.	Make the most of the chance.	b1	core			tu				
+002131	Toma la oportunidad.	Take the chance.	b1	core			tu				
 002132	El éxito del programa sorprendió a todos.	The success of the show surprised everybody.	b1	news							
 002133	Tuvo mucho éxito en Italia.	It was very successful in Italy.	b1	entertainment							
 002134	El éxito depende del esfuerzo.	Success depends on effort.	b1	core							
@@ -381,7 +381,7 @@
 002174	El transporte público reduce la contaminación.	Public transport cuts pollution.	b1	travel,environment							
 002175	Propongo una solución sencilla.	I propose a simple solution.	b1	communication							weigh-two-options
 002176	Propusieron un curso nuevo para septiembre.	They proposed a new course for September.	b1	school							
-002177	Te sugiero esta página para practicar.	I suggest this page for practice.	b1	technology,language							give-advice
+002177	Te sugiero esta página para practicar en casa.	I suggest this page for practising at home.	b1	technology,language							give-advice
 002178	Le sugiero otra zona de la ciudad.	I suggest another part of the city.	b1	city		formal	usted				give-advice
 002179	No es una enfermedad grave.	It is not a serious illness.	b1	health							
 002180	La empresa despidió a diez personas.	The company laid off ten people.	b1	work							

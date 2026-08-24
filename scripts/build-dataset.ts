@@ -540,12 +540,18 @@ for (const sentence of sentences) {
  * it parses, because it is not what the module would have written.
  */
 /*
- * A row filed under `alphabet` has to be a name `alphabet.ts` would produce.
+ * A row that says it is a letter has to be a letter `alphabet.ts` names.
  *
  * The same guard as the numerals one below, for the same failure: `hache` and
  * `ache` are both plausible to type and only one is the letter. Checked against
- * the module rather than a list here, so the pack and the `spellWord` a drill
- * would read from cannot disagree about what a letter is called.
+ * the module rather than a list, so the pack and the `spellWord` a drill would
+ * read from cannot disagree about what a letter is called.
+ *
+ * Keyed on the **gloss**, not the topic. The topic was the obvious signal and
+ * the wrong one: `alfabeto`, `vocal` and `acento` are all squarely about the
+ * alphabet and none of them is a letter, so filing by topic rejected three
+ * correct rows the first time this ran. What identifies the claim is the row
+ * saying "the letter X".
  *
  * One direction only. Not every letter has a row — the five vowels are named
  * after themselves and would collide head-on with `a`, `e`, `o` and `u` as
@@ -553,12 +559,13 @@ for (const sentence of sentences) {
  * common word in the surface index. Those are taught in sentences instead, so
  * "every letter name has a card" is deliberately not the rule.
  */
+const CLAIMS_LETTER = /^the letter /i;
 for (const noun of nouns) {
-  if (!noun.topics.includes('alphabet')) continue;
+  if (!CLAIMS_LETTER.test(noun.gloss)) continue;
   if (!isLetterName(noun.lemma)) {
     problems.push(
-      `${noun.lemma}: filed under the alphabet topic, but alphabet.ts does not name any ` +
-        'letter that — check the spelling, or use another topic',
+      `${noun.lemma}: glossed as a letter, but alphabet.ts names no letter that — ` +
+        'check the spelling against the module',
     );
   }
 }

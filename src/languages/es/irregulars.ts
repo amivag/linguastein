@@ -173,6 +173,8 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   soler: { stemChange: 'o-ue' },
   aprobar: { stemChange: 'o-ue' },
   resolver: { stemChange: 'o-ue', participle: 'resuelto' },
+  colgar: { stemChange: 'o-ue' },
+  sonar: { stemChange: 'o-ue' },
   jugar: { stemChange: 'u-ue' },
 
   // ── Stem-changing: e → i ───────────────────────────────────────────────

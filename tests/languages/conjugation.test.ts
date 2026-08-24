@@ -173,6 +173,22 @@ describe('spelling changes', () => {
     expect(formsOf('elegir').present[0]).toBe('elijo');
   });
 
+  it('absorbs the ending i after a stem that already ends in one', () => {
+    /*
+     * `reír` takes an e → i change in the third person, leaving the stem `ri` —
+     * and the "i becomes y between vowels" rule above turned that into `riyó`,
+     * `riyeron` and `riyendo`, none of which anybody writes. Two i's become one.
+     *
+     * Checked beside `leer` and `oír` deliberately: the fix must not reach them,
+     * because their stems end in `e` and `o` and `leyó` is right.
+     */
+    const reir = formsOf('reír');
+    expect(reir.preterite).toEqual(['reí', 'reíste', 'rió', 'reímos', 'reísteis', 'rieron']);
+    expect(reir.gerund).toBe('riendo');
+    expect(formsOf('leer').gerund).toBe('leyendo');
+    expect(formsOf('oír').preterite[2]).toBe('oyó');
+  });
+
   it('treats the silent u of -guir as orthography, not a vowel', () => {
     expect(formsOf('seguir').preterite).toEqual([
       'seguí',

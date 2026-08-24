@@ -112,6 +112,65 @@ function collidingGlosses(pack: ContentPack, glosses: Map<string, string>): Find
   return findings;
 }
 
+/**
+ * One word held as two lexemes — where one lexeme's lemma is an inflected **form**
+ * of the other, and both mean the same thing.
+ *
+ * `collidingGlosses` above compares items, so a duplicate escapes it whenever one
+ * half has no word card. `juntos` and `junto` were both glossed "together" and
+ * only `junto` was carded, so the pair was invisible — and the cost was not
+ * cosmetic: the eleven `juntos` tokens split five to one lexeme, four to the other
+ * and two to neither, so both looked under-encountered and a learner's progress
+ * on the word was halved.
+ *
+ * The test is deliberately narrow, because the obvious wider one is nearly all
+ * noise. Two lexemes sharing a gloss is usually *correct* here: `papa` and
+ * `patata` are a regional pair the pack ships on purpose, `entender` and
+ * `comprender` are real synonyms, and the noun `frío` beside the adjective `frío`
+ * is the documented sentinel for one surface with two parts of speech. What none
+ * of those do is make one lemma an inflected form of another lemma. `juntos` is
+ * the plural of `junto`; that is the shape worth reporting, and it reports
+ * one finding rather than seventeen.
+ */
+function wordsHeldTwice(pack: ContentPack, glosses: Map<string, string>): Finding[] {
+  const gloss = (id: string) => (glosses.get(id) ?? '').trim().toLowerCase();
+
+  // Surface → the lexemes that generate it as an inflected form.
+  const formOwners = new Map<string, Set<string>>();
+  for (const form of pack.forms) {
+    const key = form.form.toLowerCase();
+    const owners = formOwners.get(key) ?? new Set<string>();
+    owners.add(form.lexeme);
+    formOwners.set(key, owners);
+  }
+
+  const findings: Finding[] = [];
+  for (const lexeme of pack.lexemes) {
+    const mine = gloss(lexeme.id);
+    if (!mine) continue;
+
+    for (const owner of formOwners.get(lexeme.lemma.toLowerCase()) ?? []) {
+      if (owner === lexeme.id) continue;
+      const other = pack.lexemes.find((candidate) => candidate.id === owner);
+      // Same lemma under two parts of speech is the documented `-` sentinel case,
+      // not a duplicate: see the noun and adjective `frío`.
+      if (!other || other.lemma.toLowerCase() === lexeme.lemma.toLowerCase()) continue;
+      if (gloss(other.id) !== mine) continue;
+
+      findings.push({
+        check: 'one word held as two lexemes',
+        detail:
+          `"${mine}" — ${lexeme.lemma} (${lexeme.pos}) is already a form of ` +
+          `${other.lemma} (${other.pos})\n      ` +
+          'drop one, or distinguish the glosses — otherwise the encounters split ' +
+          'between them and both look under-used',
+        items: [],
+      });
+    }
+  }
+  return findings;
+}
+
 /** An article disagreeing with the gender its noun's lexeme declares. */
 function genderDisagreements(pack: ContentPack): Finding[] {
   const gender = new Map<string, string>();
@@ -240,6 +299,7 @@ for (const entry of catalog.packs) {
   const glosses = glossesOf(pack);
   const raised = [
     ...collidingGlosses(pack, glosses),
+    ...wordsHeldTwice(pack, glosses),
     ...genderDisagreements(pack),
     ...addressDisagreements(pack),
     ...unlinkedWords(pack),

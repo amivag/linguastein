@@ -17,6 +17,82 @@ in the pack's own counts.
 
 ### Added
 
+- **A home screen that says where you are, before it says what to do.** `/es/a1`
+  was the coach and was called **Test** in the navigation — accurate about what it
+  did, wrong about where it sat. It is the address `/` redirects to and the one a
+  learner reaches after three days away, so naming it after an activity meant the
+  app opened _inside_ one of four things you could be doing, with no screen saying
+  what this course holds or where you had got to. It is **Home** now, and it
+  answers that first: the recommendation still leads, then **Where you left off**
+  (the last five distinct items practised, tappable, with the last three sessions
+  under them), then **In this course** (one row per kind of material, with its
+  count and its hue, linking to the Study section that holds it), then the glance
+  version of Progress. Nothing moved: practice is still started from the top of
+  Home and from Free practice underneath it.
+- **"Practise this again", as a link rather than a list of ids.** The new
+  `?focus=recent` orders by what was practised most recently. It is a bias like
+  every other focus, so a fresh install gets an ordinary session rather than an
+  empty screen — but it is the one focus that orders _across_ the planner's
+  buckets instead of permuting them, because "what I was just working on" is
+  orthogonal to whether an item is due, weak or settled. Spelling it as `?ids=`
+  was the alternative and is exactly what `session-url.ts` rules out.
+- **Twelve categorical hues instead of six, and tints that cannot drift.** Six
+  hues over thirty-six categories collided every third row, so a learner never got
+  to learn that Body is the teal one; twelve halves that, and twelve is where it
+  stops — a wheel divided finer than 30 degrees hands neighbours two colours a
+  person cannot reliably separate. Each `-soft` is now a `color-mix` of its own
+  hue with the palette's `paper`, which no contrast level may touch, so a hue and
+  its companion move together and nobody hand-tunes twenty-four values per file.
+- **Colour that teaches: gender, part of speech, tense.** The same wheel, but at
+  _chosen_ positions rather than hashed ones, for the facts about a Spanish word
+  that carry no information a learner can reason their way to — `el mapa` is
+  masculine and `la mano` is feminine and nothing in either word says so. Gender is
+  blue and orange rather than the blue and pink every textbook uses, for two
+  reasons: red-green deficiency collapses pink towards grey-blue, turning the most
+  useful pair in the app into two shades of one thing for roughly one man in
+  twelve, and grammatical gender is not gender. The preterite and the imperfect sit
+  on opposite sides of the wheel, because adjacent hues would be teaching the
+  confusion they exist to prevent. Every hue rides beside the word it means and is
+  `aria-hidden`, so a learner who cannot see the difference loses a mnemonic and no
+  information.
+- **Three more palettes — Slate, Rose and Olive — and they were solved, not
+  picked.** A palette is a few hundred contrast constraints, and hand-tuning
+  converges on mud because the colours easy to find by eye are the desaturated
+  ones. `npm run build:palette` takes hue angles and finds values that clear WCAG
+  AA against every ground the contrast levels can produce, staying as close as it
+  can to one target tone — which is what makes twelve hues read as a family rather
+  than as a rainbow. Maximising chroma instead walks every hue to the edge of the
+  sRGB gamut, and the result is neon.
+- **A fifth appearance axis: colour intensity.** Calm, Normal and Vivid, beside
+  the contrast axis in Settings, because those are the two halves of "this is too
+  much" — the greys being too sharp, and the colour-coding being too loud. They
+  cannot interfere: a contrast level restates only neutrals and an intensity only
+  hues, which the test asserts rather than assumes. Every palette is now held to
+  AA at every contrast level × every intensity, 84 combinations.
+
+### Changed
+
+- **Colours that mean different things now have to stay apart, and it is
+  tested.** A WCAG ratio is a _lightness_ comparison, so a crimson accent and a
+  crimson `danger` pass every floor in the suite and are still the same colour to
+  look at. The contrast test measures the six meaning pairs in OKLab with lightness
+  excluded. It caught three generated palettes the day it was written — an Ember
+  whose accent sat 0.011 from `danger`, a Forest whose accent sat 0.012 from
+  `success`, and a Slate whose highlight sat 0.011 from `danger` — two of which had
+  to be redesigned rather than nudged, because a palette whose identity _is_
+  crimson cannot coexist with a crimson verdict.
+- **One mechanism for all five appearance axes.** Each axis used to write out its
+  own storage key, validator, `apply` and `try`/`catch` around a storage write:
+  five copies of one shape, and five chances to spell a dataset key differently
+  from the CSS reading it. `defineAxis` in `src/styles/appearance.ts` is that shape
+  once, and adding an axis is now a declaration rather than six edits.
+- **The pre-paint duplication is gone rather than guarded.** `index.html` could
+  not import a module, so its script repeated every axis's values as literal
+  arrays with a test comparing the two lists. `vite.config.ts` now injects the
+  registry as `%APPEARANCE_AXES%`, exactly as it injects the app id, so adding a
+  palette or a whole new axis needs no edit to the HTML. The test that compared the
+  copies now only checks that nobody puts one back.
+
 - **The pack versions itself now, and cannot freeze again.** `core-es` versions
   independently of the app, but the version was a literal inside
   `scripts/build-dataset.ts` and had been written exactly once: the pack went from

@@ -6,6 +6,7 @@ import {
 } from '../domain/content';
 import { DEFAULT_SESSION_FOCUS } from '../domain/sessions';
 import { DEFAULT_CONTRAST } from '../styles/contrast';
+import { DEFAULT_INTENSITY } from '../styles/intensity';
 import { DEFAULT_PALETTE } from '../styles/themes';
 import type { Preferences } from './types';
 
@@ -26,6 +27,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   theme: 'system',
   palette: DEFAULT_PALETTE,
   contrast: DEFAULT_CONTRAST,
+  intensity: DEFAULT_INTENSITY,
   readingSize: 'small',
 };
 

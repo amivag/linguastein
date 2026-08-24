@@ -14,6 +14,7 @@ import { courseOptions, coursePath, resolveCourse } from '../domain/content';
 import { mergePreferences, type Preferences } from '../storage';
 import { applyPalette, applyTheme, DEFAULT_PALETTE } from '../styles/themes';
 import { applyContrast, DEFAULT_CONTRAST } from '../styles/contrast';
+import { applyIntensity, DEFAULT_INTENSITY } from '../styles/intensity';
 import { applyReadingSize } from '../styles/reading-size';
 import { ErrorBoundary } from './ErrorBoundary';
 import { createServices, type AppServices } from './services';
@@ -150,6 +151,11 @@ export function App() {
   useEffect(() => {
     applyContrast(contrast);
   }, [contrast]);
+
+  const intensity = preferences?.intensity ?? DEFAULT_INTENSITY;
+  useEffect(() => {
+    applyIntensity(intensity);
+  }, [intensity]);
 
   const readingSize = preferences?.readingSize ?? 'small';
   useEffect(() => {

@@ -17,7 +17,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ContrastControl } from '../../src/components/ContrastControl';
 import { PaletteControl } from '../../src/components/PaletteControl';
 import { applyContrast, CONTRAST_STORAGE_KEY } from '../../src/styles/contrast';
-import { applyPalette, PALETTE_STORAGE_KEY } from '../../src/styles/themes';
+import { applyPalette, PALETTE_STORAGE_KEY, PALETTES } from '../../src/styles/themes';
 import { DEFAULT_PREFERENCES } from '../../src/storage';
 import { renderWithServices, testServices } from '../fixtures/services';
 
@@ -67,13 +67,12 @@ describe('the palette', () => {
       }),
     });
 
+    // Compared against the registry rather than a literal list: the picker's job
+    // is to offer every palette that exists, so a palette added to `PALETTES`
+    // and missing here should fail as "the picker dropped one" rather than as
+    // "somebody forgot to update a test".
     const previews = [...container.querySelectorAll('[data-palette]')];
-    expect(previews.map((element) => element.getAttribute('data-palette'))).toEqual([
-      'indigo',
-      'teal',
-      'plum',
-      'sand',
-    ]);
+    expect(previews.map((element) => element.getAttribute('data-palette'))).toEqual([...PALETTES]);
     // And at the contrast the learner has chosen: a preview that ignored the
     // other axis would advertise a page they are not going to get.
     for (const preview of previews) {

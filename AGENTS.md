@@ -108,15 +108,42 @@ content/es/      hand-authored dataset sources (TSV)
 public/packs/    GENERATED datasets — never edit by hand
 ```
 
-## Study and Test
+## Home and Study
 
-There are two sections, and the split is the domain's rather than the nav's
-invention: `mode: 'study'` records nothing and only `mode: 'practice'` feeds the
-scheduler. **Study** (`/study`) is the material — sheets of words, phrases,
-sentences, texts and grammar patterns; **Test** (the course home) is where a
-session starts. Browse and Read are sheets _inside_ Study, not destinations of
-their own: `AppNav` gives the Study item an `owns` list so the section stays
-marked while a learner is on one, and both keep working as deep links.
+Two sections, and the split is the domain's rather than the nav's invention:
+`mode: 'study'` records nothing and only `mode: 'practice'` feeds the scheduler.
+**Study** (`/study`) is the material — sheets of words, phrases, sentences, texts
+and grammar patterns; **Home** (the course home, `/`) is where a learner lands and
+where a session starts. Browse and Read are sheets _inside_ Study, not
+destinations of their own: `AppNav` gives the Study item an `owns` list so the
+section stays marked while a learner is on one, and both keep working as deep
+links.
+
+Home used to be called **Test**, which was accurate about what it did and wrong
+about where it sat. It is the address `/` redirects to, the one every deep link
+resolves into, and the screen a learner sees after three days away — so naming it
+after an activity meant the app opened _inside_ one of four things you could be
+doing, with nothing that said what this course is or where you had got to.
+
+So Home answers that first and recommends second, in this order:
+
+1. **The recommendation**, unchanged: due reviews if there are any, otherwise the
+   next unfinished mission, then at most two follow-ups.
+2. **Where you left off** — the last five _distinct_ items practised, tappable
+   like language anywhere else, plus the last three sessions. "Practise this
+   again" starts a session at `?focus=recent`.
+3. **In this course** — one row per kind of material with its count and its
+   categorical hue, each linking to the Study section that holds it. Counted with
+   the filter the row links to, and a row with nothing in it is not offered.
+4. **How far you are** — the glance version of Progress, which keeps the detail.
+
+`focus=recent` is worth understanding before touching the planner. It is a _bias_,
+like every other focus, so it cannot hand back an empty session — but it is the
+one focus that orders **across** the planner's buckets rather than permuting them,
+because "what I was just working on" is orthogonal to whether an item is due, weak
+or settled. `domain/sessions/planner.ts` says so where it special-cases it. The
+alternative was `?ids=`, which `session-url.ts` rules out: a session has to be
+describable by its address, and thirty item ids is not a link.
 
 Nothing on Study is a hard-coded list. Word kinds, categories and grammar
 patterns are counted from the packs over the current course, so a second
@@ -554,37 +581,65 @@ read it before changing `registerSW` options or the workbox config.
 
 ## Theming
 
-Appearance is **four independent axes**, never one combined id: `data-theme`
+Appearance is **five independent axes**, never one combined id: `data-theme`
 (light/dark), `data-palette` (which hues), `data-contrast` (how far apart the
-neutrals sit) and `data-reading-size` (the type scale). Combining them would need
-`dark-teal-large-more`, and every palette added would multiply the files.
+neutrals sit), `data-intensity` (how loud the hues are) and `data-reading-size`
+(the type scale). Combining them would need `dark-teal-large-more-vivid`, and
+every palette added would multiply the files.
+
+**One mechanism, five uses.** An axis is a declaration through `defineAxis` in
+[`src/styles/appearance.ts`](src/styles/appearance.ts) — a key, a closed set of
+values, a default — and the storage key, the validator and the `apply` that writes
+the root attribute come with it. [`src/styles/axes.ts`](src/styles/axes.ts) lists
+all five. Adding an axis is a declaration plus a control; it used to be six
+places, five of which were copies of something.
 
 Palettes are colour-only and live in `src/styles/themes/<palette>-<mode>.css`,
 registered in `src/styles/themes.ts`; contrast levels live in
 `src/styles/contrast/<level>-<mode>.css`, registered in `src/styles/contrast.ts`.
 Primitives (spacing, type, layout) are axis-independent and belong in
 `primitives.css`. Never hard-code a colour in a component — use a role token, and
-add a role rather than inventing a one-off. Adding a palette is documented in
-[docs/theming.md](docs/theming.md).
+add a role rather than inventing a one-off.
 
-Three rules do the load-bearing work, and all three are asserted:
+**Palettes are solved, not picked.** `npm run build:palette` finds values from a
+handful of hue angles. A palette is a few hundred contrast constraints, and hand
+tuning converges on mud — the colours that are easy to find by eye are the
+desaturated ones, because those are the ones with contrast to spare. Adding one is
+documented in [docs/theming.md](docs/theming.md).
+
+Five rules do the load-bearing work, and all five are asserted:
 
 - **A contrast level declares no hue.** It restates the neutral roles as mixes
   along the palette's own `--color-ink` → `--color-paper` axis, which is what lets
   one level serve a palette written after it — More contrast in Sand stays warm
   instead of turning grey.
+- **An intensity declares no neutral.** The mirror of the rule above, and what
+  lets the two compose instead of fighting: one owns the neutrals, the other owns
+  the hues. Intensity blocks live _inside_ each palette file, because a custom
+  property cannot refer to itself — so a new palette has to generate its own, and
+  the test fails until it does. Re-run `npm run build:palette -- intensity` after
+  editing a palette's hues by hand.
 - **Every combination is checked, not just the default.** `contrast.test.ts`
-  discovers palettes and levels from the directories and holds each palette to
-  WCAG AA at each level, evaluating the `color-mix` itself. Soft is quieter, not
-  less legible, and the levels are asserted to come out in order.
+  discovers palettes from the directory and holds each to WCAG AA at every
+  contrast level × every intensity, evaluating the `color-mix` itself. Soft is
+  quieter, not less legible, and the levels are asserted to come out in order.
+- **Colours that mean different things stay apart.** A WCAG ratio is a
+  _lightness_ comparison, so a crimson accent and a crimson `danger` can pass
+  every floor and still be the same colour to look at. The test measures the six
+  meaning pairs in OKLab with lightness excluded. It caught three generated
+  palettes on the day it was written, two of which had to be redesigned rather
+  than nudged: a palette whose identity _is_ crimson cannot coexist with a crimson
+  verdict.
 - **A preview is the real palette.** Each palette file also selects a
-  _descendant_ carrying `data-palette`, so the settings picker shows four live
-  palettes with no colour leaving `src/styles/themes/`. Never build a swatch from
-  a hex.
+  _descendant_ carrying `data-palette`, so the settings pickers show live palettes
+  and live intensities with no colour leaving `src/styles/themes/`. Never build a
+  swatch from a hex.
 
-`<html>` always carries all four attributes. The pre-paint script in `index.html`
-repeats the four lists as literals because it cannot import a module — that is the
-one duplication, and the contrast test asserts it matches the registries.
+`<html>` always carries all five attributes. The pre-paint script in `index.html`
+cannot import a module, so `vite.config.ts` **injects** the axis registry into it
+as `%APPEARANCE_AXES%`, the same way it injects the app id. That used to be a
+literal copy of every list guarded by a drift test; the copy is gone, and the test
+now only checks that nobody puts it back.
 
 ## The design language
 

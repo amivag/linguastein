@@ -10,6 +10,7 @@ import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionFocus, SessionRecord } from '../domain/sessions';
 import type { PaletteId, ThemePreference } from '../styles/themes';
 import type { ContrastLevel } from '../styles/contrast';
+import type { Intensity } from '../styles/intensity';
 import type { ReadingSize } from '../styles/reading-size';
 
 export interface Preferences {
@@ -59,6 +60,12 @@ export interface Preferences {
   readonly palette: PaletteId;
   /** How far apart the palette's neutrals sit. Never below WCAG AA. */
   readonly contrast: ContrastLevel;
+  /**
+   * How loud the palette's hues are. The mirror of `contrast`, which moves the
+   * neutrals: a learner who wants the colour-coding quieter should not have to
+   * give up legibility to get it, and vice versa.
+   */
+  readonly intensity: Intensity;
   /** Global type scale, deliberately independent of palette and contrast. */
   readonly readingSize: ReadingSize;
 }

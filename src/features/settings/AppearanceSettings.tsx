@@ -1,4 +1,5 @@
 import { ContrastControl } from '../../components/ContrastControl';
+import { IntensityControl } from '../../components/IntensityControl';
 import { Icon } from '../../components/Icon';
 import { PaletteControl } from '../../components/PaletteControl';
 import { ReadingSizeControl } from '../../components/ReadingSizeControl';
@@ -6,16 +7,23 @@ import { ThemeToggle } from '../../components/ThemeToggle';
 import styles from './Settings.module.css';
 
 /**
- * Four independent axes, in the order they narrow each other.
+ * Five independent axes, in the order they narrow each other.
  *
  * Light or dark first, because it is the one the operating system has an opinion
- * about. Then the palette, then how far apart that palette's neutrals sit, then
- * the type scale. They are deliberately not one control: a learner who wants
- * large type in a warm palette at high contrast should not have to find a theme
- * called `sand-large-more`, which is what a combined id would have needed.
+ * about. Then the palette, then the two axes that adjust it — how far apart its
+ * neutrals sit, and how loud its hues are — then the type scale. They are
+ * deliberately not one control: a learner who wants large type in a warm palette
+ * at high contrast with quiet colour should not have to find a theme called
+ * `sand-large-more-calm`, which is what a combined id would have needed.
  *
- * Every combination is a real, checked combination — `contrast.test.ts` holds
- * each palette to WCAG AA at each contrast level — so there is no pairing here
+ * Contrast and intensity sit next to each other because they are the two halves of
+ * the same complaint. "This is too much" can mean the greys are too sharp or the
+ * colour-coding is too loud, and one control for both meant every learner got the
+ * same compromise. They cannot interfere: a contrast level restates only neutrals
+ * and an intensity only hues, which `contrast.test.ts` asserts rather than assumes.
+ *
+ * Every combination is a real, checked combination — each palette is held to WCAG
+ * AA at every contrast level *and* every intensity — so there is no pairing here
  * that produces something illegible.
  */
 export function AppearanceSettings() {
@@ -53,6 +61,18 @@ export function AppearanceSettings() {
         <span className={styles.hint}>
           How far apart the greys sit. Soft is quieter, not less legible — every step still meets
           the same minimum.
+        </span>
+      </div>
+
+      <div className={styles.field}>
+        <span className={styles.label}>
+          <Icon name="tune" size="sm" className={styles.labelIcon} />
+          Colour intensity
+        </span>
+        <IntensityControl />
+        <span className={styles.hint}>
+          How strong the colours are. Calm keeps the coding and turns the volume down; every step
+          still meets the same minimum.
         </span>
       </div>
 

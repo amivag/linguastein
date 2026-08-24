@@ -1,0 +1,76 @@
+/*
+ * A three-step scale in a shared sunken track — the same shape the theme,
+ * contrast and text-size controls use, because it is one choice with three
+ * settings rather than three actions.
+ */
+.group {
+  --control-bg: var(--color-surface-sunken);
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+  background: var(--control-bg);
+  box-shadow: var(--shadow-inset);
+}
+
+.option {
+  --control-bg: transparent;
+
+  display: grid;
+  gap: var(--space-1);
+  justify-items: center;
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--control-bg);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.active {
+  --control-bg: var(--color-surface);
+
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+/*
+ * The preview: a card at this intensity carrying six of the categorical hues.
+ *
+ * The wheel rather than the accent, because that is what the axis is really for —
+ * a page of thirty-six coloured categories is where calm and vivid differ, and a
+ * lone accent swatch barely moves between them.
+ */
+.sample {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.dot {
+  composes: kindTone from '../styles/surfaces.module.css';
+
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--kind);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    background: color-mix(in srgb, var(--control-bg) 90%, var(--color-text));
+    color: var(--color-text);
+  }
+}

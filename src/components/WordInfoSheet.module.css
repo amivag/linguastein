@@ -143,3 +143,9 @@
 .wordItem {
   font-weight: var(--weight-semibold);
 }
+
+/* The grammatical pills sit under the lemma line, with the same rhythm as the
+   text blocks around them. Colour and shape are `GrammarTags`' own. */
+.tags {
+  margin-top: var(--space-2);
+}

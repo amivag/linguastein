@@ -33,21 +33,33 @@
   --color-danger: #b3261e;
   --color-danger-soft: #fde4e1;
 
-  /* The categorical family — six hues for *which kind of material*, never a
+  /* The categorical family — twelve hues for *which kind of material*, never a
      fifth meaning. The reasoning, and why they are numbered rather than named,
      is in `indigo-dark.css`. Rotated to this palette's own temperature. */
-  --color-kind-1: #0c749a;
-  --color-kind-1-soft: #e4f3f8;
-  --color-kind-2: #2a7f0a;
-  --color-kind-2-soft: #eaf8e4;
-  --color-kind-3: #92650c;
-  --color-kind-3-soft: #f8f2e4;
-  --color-kind-4: #cb104f;
-  --color-kind-4-soft: #f8e4eb;
-  --color-kind-5: #ad11cd;
-  --color-kind-5-soft: #f5e4f8;
-  --color-kind-6: #1c5aed;
-  --color-kind-6-soft: #e4eaf8;
+  --color-kind-1: #02746c;
+  --color-kind-1-soft: color-mix(in srgb, var(--color-kind-1) 12%, var(--color-paper));
+  --color-kind-2: #026f83;
+  --color-kind-2-soft: color-mix(in srgb, var(--color-kind-2) 12%, var(--color-paper));
+  --color-kind-3: #0069a9;
+  --color-kind-3-soft: color-mix(in srgb, var(--color-kind-3) 12%, var(--color-paper));
+  --color-kind-4: #4e56b6;
+  --color-kind-4-soft: color-mix(in srgb, var(--color-kind-4) 12%, var(--color-paper));
+  --color-kind-5: #7846a5;
+  --color-kind-5-soft: color-mix(in srgb, var(--color-kind-5) 12%, var(--color-paper));
+  --color-kind-6: #943a83;
+  --color-kind-6-soft: color-mix(in srgb, var(--color-kind-6) 12%, var(--color-paper));
+  --color-kind-7: #a43355;
+  --color-kind-7-soft: color-mix(in srgb, var(--color-kind-7) 12%, var(--color-paper));
+  --color-kind-8: #a6391a;
+  --color-kind-8-soft: color-mix(in srgb, var(--color-kind-8) 12%, var(--color-paper));
+  --color-kind-9: #915600;
+  --color-kind-9-soft: color-mix(in srgb, var(--color-kind-9) 12%, var(--color-paper));
+  --color-kind-10: #766300;
+  --color-kind-10-soft: color-mix(in srgb, var(--color-kind-10) 12%, var(--color-paper));
+  --color-kind-11: #537200;
+  --color-kind-11-soft: color-mix(in srgb, var(--color-kind-11) 12%, var(--color-paper));
+  --color-kind-12: #017845;
+  --color-kind-12-soft: color-mix(in srgb, var(--color-kind-12) 12%, var(--color-paper));
   --color-chrome: #fafdfd;
   --color-track: #d7e3e1;
 
@@ -58,4 +70,56 @@
   --shadow-accent: 0 6px 20px rgb(14 111 104 / 24%);
 
   --backdrop: rgb(15 23 25 / 40%);
+}
+
+/* generated: intensity — npm run build:palette -- intensity */
+[data-theme='light'][data-palette='teal'][data-intensity='calm'],
+[data-theme='light'] [data-palette='teal'][data-intensity='calm'] {
+  --color-accent: #0e6f68;
+  --color-accent-soft: #dcf1ee;
+  --color-highlight: #9a4a06;
+  --color-highlight-soft: #fdf0dd;
+  --color-success: #0b6b3a;
+  --color-success-soft: #dcf5e6;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fde4e1;
+  --color-accent-edge: #094c47;
+  --color-kind-1: #436d68;
+  --color-kind-2: #426a75;
+  --color-kind-3: #41698b;
+  --color-kind-4: #565e92;
+  --color-kind-5: #6e5688;
+  --color-kind-6: #805075;
+  --color-kind-7: #8a4e5b;
+  --color-kind-8: #8b5141;
+  --color-kind-9: #7f5f3e;
+  --color-kind-10: #6e643e;
+  --color-kind-11: #5b6d3f;
+  --color-kind-12: #437054;
+}
+
+/* generated: intensity — npm run build:palette -- intensity */
+[data-theme='light'][data-palette='teal'][data-intensity='vivid'],
+[data-theme='light'] [data-palette='teal'][data-intensity='vivid'] {
+  --color-accent: #00746b;
+  --color-accent-soft: #d5f3ef;
+  --color-highlight: #ad3600;
+  --color-highlight-soft: #ffefd4;
+  --color-success: #007129;
+  --color-success-soft: #d4f8e3;
+  --color-danger: #ce0000;
+  --color-danger-soft: #ffe1dd;
+  --color-accent-edge: #005049;
+  --color-kind-1: #00776e;
+  --color-kind-2: #007391;
+  --color-kind-3: #0067c7;
+  --color-kind-4: #4a47da;
+  --color-kind-5: #822bc2;
+  --color-kind-6: #a60791;
+  --color-kind-7: #bb004f;
+  --color-kind-8: #bf0000;
+  --color-kind-9: #a24a00;
+  --color-kind-10: #7e6100;
+  --color-kind-11: #4a7600;
+  --color-kind-12: #007a40;
 }

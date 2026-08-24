@@ -77,6 +77,10 @@ src/app/identity.ts          app name, id, base path — the file you edit first
 src/app/ErrorBoundary.tsx    the screen of last resort
 src/app/version.ts           build identity injected by Vite
 src/styles/**                every token, theme, surface recipe, the token reader
+                             — see "The appearance system" below; it is the most
+                             reusable thing here and the most worth understanding
+scripts/build-palette.ts     solves a palette from hue angles; app-agnostic
+scripts/palette/colour.ts    sRGB / OKLab / OKLCH / WCAG maths, pure functions
 src/components/AppShell      header + main + nav, one h1 and one main per screen
 src/components/AppNav        tab bar on a phone, rail on a desktop
 src/components/Button        variants, the pressable edge, the elevation scale
@@ -222,3 +226,43 @@ A shared working tree means `git add -A` picks up the other agent's in-flight
 edits and commits them under your message — which happened during the design
 work, and was caught by reading the staged file list rather than by anything
 automatic. Distinct worktrees share the same `.git` and cost nothing.
+
+## The appearance system
+
+The part of this repository most likely to be reused unchanged, so it is worth
+saying exactly what is generic and what is this app.
+
+**Generic — take as-is:**
+
+- `src/styles/appearance.ts` — the axis mechanism. One `defineAxis` gives an axis
+  its storage key, validator and `apply`. It knows nothing about palettes,
+  contrast or language, and it does not assume a DOM: outside a browser `apply` is
+  a no-op, which is what lets `vite.config.ts` read the registry at build time
+  without the config project having to compile against the DOM lib.
+- `src/styles/axes.ts` — the registry, and the `%APPEARANCE_AXES%` injection that
+  removes the pre-paint duplication entirely.
+- `src/styles/contrast/**` and `contrast.ts` — the four levels are expressed as
+  positions along each palette's own `ink → paper` line, so they work for palettes
+  authored later. Nothing in them is Spanish or even language-shaped.
+- `scripts/build-palette.ts` — solves palettes and regenerates intensity blocks.
+  Every decision it makes comes from one `SHAPE` object at the top: the role list,
+  the target tones, where `normal` sits on the axis. A different app edits `SHAPE`.
+- `tests/a11y/contrast.test.ts` — discovers palettes and levels from the
+  directories rather than listing them, so it holds a palette added in another app
+  to the same bar with no edit.
+
+**This app — replace:**
+
+- The palette list itself, and the seven `src/styles/themes/*.css` pairs. Generate
+  new ones rather than editing hex by hand.
+- `src/styles/kinds.ts` and `semantics.ts`. The _mechanism_ (a stable id hashed to
+  a hue; a chosen hue per grammatical fact) ports; the assignments are about
+  Spanish, and an app with no grammar has no use for `semantics.ts` at all.
+- The role list, if the app needs different meanings. Adding a role means adding a
+  row to `PAIRS` in the contrast test naming what it sits on and at what ratio — a
+  role absent from `PAIRS` is unchecked, which is the same as unspecified.
+
+**The two invariants to preserve when porting**, because everything else rests on
+them: a contrast level declares no hue, and an intensity declares no neutral. They
+are what let five axes compose instead of multiplying into a matrix of themes, and
+both are asserted rather than documented.

@@ -14,8 +14,10 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { CONTRAST_LEVELS, DEFAULT_CONTRAST } from '../../src/styles/contrast';
+import { DEFAULT_INTENSITY, INTENSITIES } from '../../src/styles/intensity';
+import { prePaintAxes } from '../../src/styles/axes';
 import { KIND_HUE_COUNT } from '../../src/styles/kinds';
-import { DEFAULT_PALETTE, PALETTES, THEME_PREFERENCES } from '../../src/styles/themes';
+import { PALETTES, THEME_PREFERENCES } from '../../src/styles/themes';
 import { READING_SIZES } from '../../src/styles/reading-size';
 
 const THEME_DIR = resolve(process.cwd(), 'src/styles/themes');
@@ -35,13 +37,31 @@ function cssFiles(directory: string): string[] {
     .sort();
 }
 
-/** Declared custom properties, later declarations winning, comments stripped. */
-function declarations(file: string): Record<string, string> {
+/**
+ * Declared custom properties, later declarations winning, comments stripped.
+ *
+ * `intensity` selects which block of a palette file is read, and it has to be
+ * asked for explicitly. A palette file now holds three: the authored one, plus a
+ * `calm` and a `vivid` restatement of its hues — see `src/styles/intensity.ts`
+ * for why those live here rather than in a directory of their own. Reading the
+ * file as one flat list would silently return `vivid` for every palette, since it
+ * is last, and every assertion below would then be checking one intensity while
+ * claiming to check the default.
+ */
+function declarations(file: string, intensity: string = DEFAULT_INTENSITY): Record<string, string> {
   const css = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const values: Record<string, string> = {};
-  for (const [, name, value] of css.matchAll(/(--color-[\w-]+)\s*:\s*([^;}]+);/g)) {
-    values[name!] = value!.trim();
+
+  for (const [, selector, body] of css.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+    const declared = /\[data-intensity='([\w-]+)'\]/.exec(selector!)?.[1];
+    // A block with no `data-intensity` is the palette as authored, which *is* the
+    // default intensity; one that names an intensity applies only to that one.
+    if (declared !== undefined && declared !== intensity) continue;
+    for (const [, name, value] of body!.matchAll(/(--color-[\w-]+)\s*:\s*([^;}]+);/g)) {
+      values[name!] = value!.trim();
+    }
   }
+
   return values;
 }
 
@@ -200,6 +220,90 @@ const PAIRS: readonly [string, string, number, string][] = [
   ),
 ];
 
+/**
+ * OKLab, for the one question a contrast ratio cannot answer.
+ *
+ * WCAG contrast is a *lightness* comparison, so two colours can pass every floor
+ * in this file and still be the same colour to look at — a crimson accent against
+ * a crimson danger differ in luminance by nothing that matters and in meaning by
+ * everything. This is the perceptual space, so the distance below is measured in
+ * it rather than in sRGB, where a fixed step means different things per hue.
+ */
+function oklab(hex: string): readonly [number, number, number] {
+  const [r, g, b] = channels(hex)
+    .map((value) => value / 255)
+    .map((channel) => (channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4));
+  const l = Math.cbrt(0.4122214708 * r! + 0.5363325363 * g! + 0.0514459929 * b!);
+  const m = Math.cbrt(0.2119034982 * r! + 0.6806995451 * g! + 0.1073969566 * b!);
+  const s = Math.cbrt(0.0883024619 * r! + 0.2817188376 * g! + 0.6299787005 * b!);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+
+/**
+ * How far apart two roles are in hue and chroma, ignoring lightness.
+ *
+ * Lightness is deliberately excluded: it is the contrast axis's variable, so two
+ * roles that differ only in it are the *same colour* at two brightnesses — which
+ * is exactly the confusion this measures. A learner distinguishes the primary
+ * button from an incorrect verdict by hue, not by how light it is.
+ */
+function chromaDistance(a: string, b: string): number {
+  const [, aA, aB] = oklab(a);
+  const [, bA, bB] = oklab(b);
+  return Math.hypot(aA - bA, aB - bB);
+}
+
+/**
+ * The floor for "these two must not be mistaken for each other".
+ *
+ * Measured rather than chosen, and set immediately beneath the tightest thing
+ * already shipped: Teal leaves 0.0637 between its deep teal accent and its green
+ * success, which is legible but is as close as this app goes. So the floor sits
+ * just under it. Nothing new may be tighter than the tightest existing palette,
+ * and Teal itself is on the line rather than grandfathered past it.
+ *
+ * It caught three palettes on the day it was written. A generated Ember put a
+ * crimson accent 0.011 from `danger`, a generated Forest put a green accent 0.012
+ * from `success`, and a generated Slate put a coral highlight 0.011 from
+ * `danger` — every one of which passed every contrast floor above, because
+ * lightness was never the problem. Two of the three had to be redesigned rather
+ * than nudged: a palette whose identity *is* crimson cannot coexist with a
+ * crimson verdict.
+ */
+const MEANING_DISTANCE = 0.063;
+
+/**
+ * The floor, per intensity.
+ *
+ * Calm exists to pull chroma out of every hue, which necessarily pulls them all
+ * towards the same grey — so holding it to the same separation as Normal would be
+ * asking the axis not to work. It gets the floor scaled by the same factor the
+ * generator scales chroma by, which is the honest statement: *calm may be quieter,
+ * and it may not be proportionally more confusing than normal.*
+ *
+ * Vivid keeps Normal's floor rather than a raised one. More chroma should mean
+ * more separation, but it is clipped at the sRGB gamut, and two hues that both
+ * clip land closer together than they started — so the floor stays where it is and
+ * Vivid has to clear it like everything else.
+ */
+function distanceFloor(intensity: string): number {
+  return intensity === 'calm' ? Number((MEANING_DISTANCE * 0.55).toFixed(4)) : MEANING_DISTANCE;
+}
+
+/** The pairs whose meanings must never be confused with one another. */
+const DISTINCT: readonly [string, string][] = [
+  ['--color-accent', '--color-success'],
+  ['--color-accent', '--color-danger'],
+  ['--color-accent', '--color-highlight'],
+  ['--color-highlight', '--color-success'],
+  ['--color-highlight', '--color-danger'],
+  ['--color-success', '--color-danger'],
+];
+
 /** Every role a palette must define; the app breaks silently without them. */
 const REQUIRED_ROLES = [...new Set(PAIRS.flatMap(([a, b]) => [a, b]))];
 
@@ -208,13 +312,23 @@ const levelFiles = cssFiles(CONTRAST_DIR);
 
 const modeOf = (file: string): Mode => file.replace('.css', '').split('-')[1]! as Mode;
 
-/** Palette tokens with a level's overrides applied, every mix resolved. */
-function combination(paletteFile: string, level: string): Record<string, string> {
-  const base = declarations(resolve(THEME_DIR, paletteFile));
+/** Palette tokens at one intensity, with a level's overrides applied. */
+function combination(
+  paletteFile: string,
+  level: string,
+  intensity: string = DEFAULT_INTENSITY,
+): Record<string, string> {
+  const base = declarations(resolve(THEME_DIR, paletteFile), intensity);
   const overlay =
     level === DEFAULT_CONTRAST
       ? {}
       : declarations(resolve(CONTRAST_DIR, `${level}-${modeOf(paletteFile)}.css`));
+  /*
+   * The level goes on top, and the two cannot fight: a level restates only
+   * neutrals and an intensity only hues, which is the invariant that lets this be
+   * a spread rather than a merge strategy. The two assertions at the bottom of
+   * this file are what keep it true.
+   */
   return flattenAll({ ...base, ...overlay });
 }
 
@@ -246,23 +360,60 @@ describe('the appearance registry and the stylesheets agree', () => {
     expect(lastPalette).toBeLessThan(firstLevel);
   });
 
-  it('offers the same values before first paint as it does afterwards', () => {
+  it('takes its pre-paint values from the registry rather than a copy of it', () => {
     /*
-     * The pre-paint script cannot import a module, so it repeats the four axes
-     * as literal lists. That is the one duplication the appearance system has,
-     * and this is what stops it drifting: a palette added to the registry and
-     * not to `index.html` would only be applied after boot, which reads as a
-     * flash of the wrong colours rather than as a bug in a list.
+     * This used to be a drift test. The pre-paint script cannot import a module,
+     * so it repeated every axis's values as literal arrays and this compared the
+     * two lists — which worked, and was a guard around a duplication that did not
+     * have to exist. `vite.config.ts` now substitutes `%APPEARANCE_AXES%` from
+     * `src/styles/axes.ts` at build and dev time, exactly as it substitutes the
+     * app id, so there is one list.
+     *
+     * What is left to check is that nobody puts the copy back. A literal axis
+     * array in the HTML would work — and would silently stop tracking the
+     * registry the moment a value was added, which is the failure the old test
+     * existed to catch and the new arrangement makes impossible.
      */
     const html = readFileSync(INDEX_HTML, 'utf8');
-    const list = (values: readonly string[]) => values.map((value) => `'${value}'`).join(', ');
+    const literal = (values: readonly string[]) =>
+      `[${values.map((value) => `'${value}'`).join(', ')}]`;
 
-    expect(html).toContain(`[${list(THEME_PREFERENCES)}]`);
-    expect(html).toContain(`[${list(PALETTES)}]`);
-    expect(html).toContain(`[${list(CONTRAST_LEVELS)}]`);
-    expect(html).toContain(`[${list(READING_SIZES)}]`);
-    expect(html).toContain(`'${DEFAULT_PALETTE}'`);
-    expect(html).toContain(`'${DEFAULT_CONTRAST}'`);
+    expect(html).toContain('%APPEARANCE_AXES%');
+    for (const values of [
+      THEME_PREFERENCES,
+      PALETTES,
+      CONTRAST_LEVELS,
+      READING_SIZES,
+      INTENSITIES,
+    ]) {
+      expect(html, 'an axis is spelled out in the HTML again').not.toContain(literal(values));
+    }
+  });
+
+  it('offers every axis to the pre-paint script', () => {
+    /*
+     * The registry is what the HTML gets, so an axis missing from it is an axis
+     * that applies only after boot — a flash of the wrong colours, and the one
+     * failure mode this whole arrangement exists to prevent. Checked by value
+     * rather than by count so the message names what is missing.
+     */
+    const axes = prePaintAxes();
+    const byKey = new Map(axes.map((axis) => [axis.key, axis]));
+
+    expect([...byKey.keys()].sort()).toEqual(
+      ['contrast', 'intensity', 'palette', 'reading-size', 'theme'].sort(),
+    );
+    expect(byKey.get('palette')?.values).toEqual([...PALETTES]);
+    expect(byKey.get('contrast')?.values).toEqual([...CONTRAST_LEVELS]);
+    expect(byKey.get('intensity')?.values).toEqual([...INTENSITIES]);
+    expect(byKey.get('reading-size')?.values).toEqual([...READING_SIZES]);
+    // `data-reading-size` is the attribute; `readingSize` is how `dataset` spells
+    // it, and the script assigns through `dataset`. A mismatch here is a stylesheet
+    // that never matches anything.
+    expect(byKey.get('reading-size')?.dataset).toBe('readingSize');
+    // Only the theme resolves against an OS preference, and the script branches on
+    // this flag rather than on the axis's name.
+    expect(axes.filter((axis) => axis.system).map((axis) => axis.key)).toEqual(['theme']);
   });
 });
 
@@ -275,17 +426,48 @@ describe.each(paletteFiles)('%s', (file) => {
 
   it('meets every contrast minimum at every level a learner can pick', () => {
     /*
-     * Collected rather than one case per pairing: four levels times thirty-two
-     * pairings times a palette is a lot of test names, and a failure is easier
-     * to act on as a list of what broke than as the first assertion to throw.
+     * Collected rather than one case per pairing: four contrast levels times
+     * three intensities times sixty-odd pairings times a palette is far too many
+     * test names, and a failure is easier to act on as a list of what broke than
+     * as the first assertion to throw.
      */
-    const failures = CONTRAST_LEVELS.flatMap((level) => {
-      const tokens = combination(file, level);
-      return PAIRS.flatMap(([foreground, background, minimum, use]) => {
-        const ratio = contrast(tokens[foreground]!, tokens[background]!);
-        if (Number(ratio.toFixed(2)) >= minimum) return [];
+    const failures = CONTRAST_LEVELS.flatMap((level) =>
+      INTENSITIES.flatMap((intensity) => {
+        const tokens = combination(file, level, intensity);
+        return PAIRS.flatMap(([foreground, background, minimum, use]) => {
+          const ratio = contrast(tokens[foreground]!, tokens[background]!);
+          if (Number(ratio.toFixed(2)) >= minimum) return [];
+          return [
+            `${level}/${intensity}: ${foreground} on ${background} = ${ratio.toFixed(2)}, needs ${minimum} (${use})`,
+          ];
+        });
+      }),
+    );
+
+    expect(failures).toEqual([]);
+  });
+
+  it('keeps every colour that means something apart from every other', () => {
+    /*
+     * Rule 5 of the design language says four hues carry four meanings. That is
+     * only true while a learner can tell them apart, and no floor above this one
+     * checks it: contrast is a lightness comparison, and these six pairs can each
+     * pass it while being the same colour.
+     *
+     * Checked once per intensity and not per contrast level, because a level may
+     * not touch a hue — so if this holds for the three intensities it holds
+     * everywhere. Calm is the interesting one: pulling chroma out of every hue
+     * pulls them all towards the same grey, which is exactly how two meanings
+     * converge.
+     */
+    const failures = INTENSITIES.flatMap((intensity) => {
+      const tokens = combination(file, DEFAULT_CONTRAST, intensity);
+      const floor = distanceFloor(intensity);
+      return DISTINCT.flatMap(([first, second]) => {
+        const distance = chromaDistance(tokens[first]!, tokens[second]!);
+        if (distance >= floor) return [];
         return [
-          `${level}: ${foreground} on ${background} = ${ratio.toFixed(2)}, needs ${minimum} (${use})`,
+          `${intensity}: ${first} and ${second} are ${distance.toFixed(3)} apart, needs ${floor}`,
         ];
       });
     });
@@ -341,5 +523,76 @@ describe.each(levelFiles)('%s', (file) => {
     expect(
       declared.filter((role) => /accent|highlight|success|danger|ink|paper/.test(role)),
     ).toEqual([]);
+  });
+});
+
+describe.each(paletteFiles)('%s intensity blocks', (file) => {
+  /** Roles a contrast level owns, and which an intensity must therefore not set. */
+  const NEUTRALS = [
+    '--color-bg',
+    '--color-bg-tint',
+    '--color-surface',
+    '--color-surface-raised',
+    '--color-surface-sunken',
+    '--color-chrome',
+    '--color-border',
+    '--color-border-strong',
+    '--color-track',
+    '--color-text',
+    '--color-text-muted',
+    '--color-ink',
+    '--color-paper',
+  ];
+
+  it('ships a block for every intensity a learner can pick', () => {
+    /*
+     * Unlike a contrast level, an intensity is not palette-agnostic — it is a
+     * transformation of this palette's own hues, so only this palette can express
+     * it (see `src/styles/intensity.ts`). The cost of that is exactly this test:
+     * a palette added without its two blocks would silently be stuck at one
+     * volume while the picker offered three.
+     */
+    const css = readFileSync(resolve(THEME_DIR, file), 'utf8');
+    for (const intensity of INTENSITIES) {
+      if (intensity === DEFAULT_INTENSITY) continue;
+      expect(css, `${file} declares no ${intensity} block`).toContain(
+        `[data-intensity='${intensity}']`,
+      );
+    }
+  });
+
+  it('leaves every neutral to the contrast axis', () => {
+    /*
+     * The invariant that lets a level and an intensity compose instead of
+     * fighting: one owns the neutrals, the other owns the hues. An intensity that
+     * set `--color-surface` would silently override whichever contrast level the
+     * learner had chosen, and the failure would look like a broken contrast level.
+     */
+    const css = readFileSync(resolve(THEME_DIR, file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    const offences: string[] = [];
+
+    for (const [, selector, body] of css.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+      if (!/\[data-intensity='/.test(selector!)) continue;
+      // Whitespace out, then a plain substring test: a role name is not a regex,
+      // and building one per role invites escaping bugs for no benefit.
+      const declared = body!.replace(/\s+/g, '');
+      for (const role of NEUTRALS) {
+        if (declared.includes(`${role}:`)) offences.push(role);
+      }
+    }
+
+    expect([...new Set(offences)]).toEqual([]);
+  });
+
+  it('actually changes the hues it claims to', () => {
+    // A block that parsed but changed nothing would pass every other assertion
+    // here and leave the picker offering three identical choices.
+    const normal = combination(file, DEFAULT_CONTRAST, DEFAULT_INTENSITY);
+    for (const intensity of INTENSITIES) {
+      if (intensity === DEFAULT_INTENSITY) continue;
+      const other = combination(file, DEFAULT_CONTRAST, intensity);
+      const moved = Object.keys(normal).filter((role) => normal[role] !== other[role]);
+      expect(moved.length, `${intensity} moved nothing`).toBeGreaterThan(6);
+    }
   });
 });

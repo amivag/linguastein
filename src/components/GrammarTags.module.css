@@ -1,0 +1,26 @@
+/*
+ * The row of grammatical pills. Layout only — every colour is `kindPill`'s, and
+ * every hue arrives as `data-kind` from `src/styles/semantics.ts`.
+ *
+ * A pill with no `data-kind` is a real state rather than a mistake: a function
+ * word has a part of speech worth naming and no hue worth spending, so it falls
+ * back to the ordinary raised surface. That is the same withholding pattern
+ * `StudyScreen` uses to let a finished mission go green.
+ */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin: 0;
+}
+
+.tag {
+  composes: kindPill from '../styles/surfaces.module.css';
+}
+
+.tag:not([data-kind]) {
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+}

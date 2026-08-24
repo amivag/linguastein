@@ -12,12 +12,25 @@
  * asserts they come out in this order. Soft is quieter, not less legible.
  */
 
-import { storageKey } from '../app/identity';
+import { defineAxis } from './appearance';
 
 export const CONTRAST_LEVELS = ['soft', 'normal', 'more', 'max'] as const;
 export type ContrastLevel = (typeof CONTRAST_LEVELS)[number];
 
 export const DEFAULT_CONTRAST: ContrastLevel = 'normal';
+
+/**
+ * The axis itself, declared through the shared mechanism in `appearance.ts`.
+ *
+ * The names below are re-exported rather than removed: they are what forty call
+ * sites and three tests already say, and the point of the refactor was to delete
+ * the *duplicated mechanism*, not to make every screen learn a new spelling.
+ */
+export const CONTRAST_AXIS = defineAxis({
+  key: 'contrast',
+  values: CONTRAST_LEVELS,
+  fallback: DEFAULT_CONTRAST,
+});
 
 export interface ContrastOption {
   readonly id: ContrastLevel;
@@ -33,23 +46,9 @@ export const CONTRAST_OPTIONS: readonly ContrastOption[] = [
   { id: 'max', shortLabel: 'Max', label: 'Maximum contrast' },
 ];
 
-export const CONTRAST_STORAGE_KEY = storageKey('contrast');
+export const CONTRAST_STORAGE_KEY = CONTRAST_AXIS.storageKey;
 
-export function isContrastLevel(value: unknown): value is ContrastLevel {
-  return typeof value === 'string' && (CONTRAST_LEVELS as readonly string[]).includes(value);
-}
+export const isContrastLevel = CONTRAST_AXIS.is;
 
-/**
- * `normal` is written out like any other level even though no stylesheet
- * matches it. A missing attribute and an explicit `normal` then mean the same
- * thing, which is what lets the pickers pass a level down to a preview swatch
- * without a special case.
- */
-export function applyContrast(level: ContrastLevel): void {
-  document.documentElement.dataset['contrast'] = level;
-  try {
-    localStorage.setItem(CONTRAST_STORAGE_KEY, level);
-  } catch {
-    // The in-memory preference still applies when private browsing blocks storage.
-  }
-}
+/** See `AppearanceAxis.apply` for why `normal` is written out like any other. */
+export const applyContrast = CONTRAST_AXIS.apply;

@@ -7,7 +7,7 @@
  * lexeme, verb form, skill and translation records (spec §13, §14, §15).
  */
 
-import type { Morphology, PartOfSpeech, Token, TokenId } from './annotation';
+import type { Gender, Morphology, PartOfSpeech, Token, TokenId } from './annotation';
 import type { ItemId, LexemeId, SkillId } from './ids';
 import type { LanguageTag } from './language';
 import type { LearningItem, Register } from './model';
@@ -41,6 +41,16 @@ export interface WordInfo {
   readonly lemma?: string;
   readonly pos?: PartOfSpeech;
   readonly posLabel?: string;
+  /**
+   * The word's own gender, where it has one.
+   *
+   * Separate from {@link grammar} even though that string already contains it,
+   * because the two are different questions. `grammar` describes *this
+   * occurrence* — `3rd sg · present` — and is prose meant to be read; this is a
+   * fact about the lexeme, meant to be looked up. A screen that wants to mark
+   * `mano` as feminine cannot do it by parsing a sentence out of `grammar`.
+   */
+  readonly gender?: Gender;
   /** Meaning in the reference language, if known. */
   readonly gloss?: string;
   /** Grammar of this occurrence, e.g. `1st sg · present · indicative`. */
@@ -181,6 +191,10 @@ function describeWord(
     ...(lexeme?.regions?.length ? { regions: lexeme.regions } : {}),
     ...(lemma ? { lemma } : {}),
     ...(pos ? { pos, posLabel: POS_LABELS[pos] } : {}),
+    // The occurrence first, then the lexeme: an inflected form can be feminine
+    // where its lemma is not (`la profesora` from `profesor`), and the form in
+    // front of the learner is the one being explained.
+    ...optional('gender', token.morph?.gender ?? lexeme?.gender),
     ...(lexemeId && meanings ? optional('gloss', glossOf(repository, lexemeId, language)) : {}),
     ...optional('grammar', describeMorphology(token.morph)),
   };

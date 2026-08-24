@@ -101,11 +101,11 @@ option and the summary.
 
 There is now exactly one fifth meaning, and it is a _family_ rather than a hue:
 
-| Role               | Means                                         |
-| ------------------ | --------------------------------------------- |
-| `--color-kind-1…6` | Which kind of material this is. Nothing more. |
+| Role                | Means                                         |
+| ------------------- | --------------------------------------------- |
+| `--color-kind-1…12` | Which kind of material this is. Nothing more. |
 
-Six hues, one meaning between them — the relationship a chart's series colours
+Twelve hues, one meaning between them — the relationship a chart's series colours
 have to each other, not six new semantics. It exists because Study lists
 thirty-five categories, seven word kinds and a ladder of missions as identical
 grey cards, and a page you scan by reading every label is a page you scroll past.
@@ -132,10 +132,62 @@ one that matters:
   position looks identical and throws away the recognition the moment a pack
   gains a row.
 
-They sit close to the accent or the highlight in some palettes; six hues around a
+They sit close to the accent or the highlight in some palettes; twelve hues around a
 wheel that already has four occupants leaves no room not to. That is accepted
 rather than worked around, because proximity only misleads if two colours can
 appear in the same role, and these never do.
+
+### Colour that teaches, not just colour that sorts
+
+The categorical family answers "which kind of material is this". A second, smaller
+use of the same wheel answers something harder: **what kind of word is this**.
+
+| Question       | Values                                 | Where                          |
+| -------------- | -------------------------------------- | ------------------------------ |
+| Gender         | masculine, feminine, neuter            | word cards, word inspection    |
+| Part of speech | noun, verb, adjective, adverb, numeral | word cards, Study's word tiles |
+| Tense or mood  | seven tenses, subjunctive, imperative  | conjugation, grammar skills    |
+
+These are **chosen** positions on the wheel rather than hashed ones, and that is
+the difference from a topic's colour. There are three genders and five open word
+classes; they are closed sets a language actually has, and _which_ colour each one
+gets is the point rather than an implementation detail. They live in
+[`src/styles/semantics.ts`](../src/styles/semantics.ts) with the reasoning beside
+each assignment.
+
+The justification is narrow and worth holding to. These are the facts about a
+Spanish word that carry no information a learner can reason their way to — `el
+mapa` is masculine and `la mano` is feminine and nothing in either word says so.
+That is exactly the kind of arbitrary pairing a second channel helps with, and it
+is why polyglots colour their own notes. It is not decoration, and it is not a
+reward.
+
+Four rules keep it honest, and `tests/styles/semantics.test.ts` asserts the ones
+it can:
+
+- **The colour never travels without its label.** Every hue is a background and a
+  foreground on an element whose content is the word it means — `el`, `la`,
+  "noun", "preterite". Colour never reaches the accessibility tree and the label
+  always does, so a learner who cannot tell two hues apart loses a mnemonic and no
+  information. These pills are therefore _not_ `aria-hidden`, unlike the
+  categorical badges above, which carry no text of their own. `GrammarTags` exists
+  so the rule is written once rather than in each of three screens.
+- **Gender and part of speech share no hue.** A noun wears both at once, and one
+  colour appearing twice on a card for two unrelated reasons is worse than none.
+- **`undefined` is a real answer.** A verb has no gender; the indicative is the
+  unmarked mood. Both withhold `data-kind` rather than reaching for a colour that
+  means "not applicable" — the same mechanism a finished mission uses to let its
+  verdict colour win.
+- **Confusable things get distant hues.** The preterite and the imperfect sit on
+  opposite sides of the wheel, not next to each other. They are the distinction
+  learners get wrong for years; adjacent hues would be teaching the confusion.
+
+Gender is deliberately **blue and orange**, against the convention. Spanish
+teaching materials overwhelmingly use blue and pink, and both halves of that are
+worth rejecting: red-green deficiency collapses pink towards grey-blue, turning the
+most useful pair in the app into two shades of one thing for roughly one man in
+twelve — and grammatical gender is not gender, so importing the human category
+teaches something false about both.
 
 The mapping from a number to a pair of colours is written once, as `kindTone` in
 `surfaces.module.css`. Nothing else may spell out `--color-kind-3`.

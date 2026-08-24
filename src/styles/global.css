@@ -17,6 +17,12 @@
 @import './themes/plum-light.css';
 @import './themes/sand-dark.css';
 @import './themes/sand-light.css';
+@import './themes/slate-dark.css';
+@import './themes/slate-light.css';
+@import './themes/rose-dark.css';
+@import './themes/rose-light.css';
+@import './themes/olive-dark.css';
+@import './themes/olive-light.css';
 @import './contrast/soft-dark.css';
 @import './contrast/soft-light.css';
 @import './contrast/more-dark.css';

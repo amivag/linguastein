@@ -11,6 +11,7 @@ import {
   type WordInfo,
 } from '../domain/content';
 import { Button } from './Button';
+import { GrammarTags } from './GrammarTags';
 import { Icon } from './Icon';
 import { Sheet } from './Sheet';
 import { UsageBadges } from './UsageBadges';
@@ -172,18 +173,34 @@ function SpanControls({
   );
 }
 
+/**
+ * Where the word came from, and what it is.
+ *
+ * The part of speech used to be appended to the lemma line as ` · noun`, which
+ * made it a footnote to a footnote. It is now a coloured pill beside the gender,
+ * because those two together are the answer to "what kind of word is this" — and
+ * gender in particular is the fact a learner comes back for, since nothing in
+ * `mano` says feminine. The colour is a second channel on that; the label is
+ * still the signal.
+ */
 function Lemma({ info }: { readonly info: WordInfo }) {
   const derived = info.lemma && info.lemma !== info.token.text.toLowerCase();
 
-  if (derived) {
-    return (
-      <p className={styles.lemma} lang="es">
-        from <strong>{info.lemma}</strong>
-        {info.posLabel ? ` · ${info.posLabel}` : ''}
-      </p>
-    );
-  }
-  return info.posLabel ? <p className={styles.lemma}>{info.posLabel}</p> : null;
+  return (
+    <>
+      {derived && (
+        <p className={styles.lemma} lang="es">
+          from <strong>{info.lemma}</strong>
+        </p>
+      )}
+      <GrammarTags
+        pos={info.pos}
+        posLabel={info.posLabel}
+        gender={info.gender}
+        className={styles.tags}
+      />
+    </>
+  );
 }
 
 function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanings: boolean }) {

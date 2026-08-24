@@ -80,13 +80,14 @@
   --color-danger-soft: #3a1a1c;
 
   /*
-   * The categorical family: six hues that say *which kind of material* a tile
-   * holds, and nothing else.
+   * The categorical family: twelve hues that say *which kind of material* a
+   * tile holds, and nothing else.
    *
    * This is the one place the palette carries more than the four meanings in
    * rule 5 of the design language, and it is a scale rather than six new
    * meanings — the same relationship a chart's series colours have to each
-   * other. Study lists thirty-five categories, seven word kinds and a ladder of
+   * other. Twelve of them because six collided every third row across
+   * thirty-five categories; see `src/styles/kinds.ts` for why it stops at twelve. Study lists thirty-five categories, seven word kinds and a ladder of
    * missions as identical grey cards; a hue per kind is what makes that page
    * scannable, and a learner who has learnt that Body is the teal one is using
    * colour as recall rather than as decoration.
@@ -103,29 +104,50 @@
    *   `--color-kind-amber`: each palette rotates the wheel to its own
    *   temperature, so a hue name would be a lie in three files out of four.
    *
-   * They sit close to the accent or the highlight in some palettes — six hues
-   * around a wheel that already has four occupants leaves no room not to. That
+   * They sit close to the accent or the highlight in some palettes — twelve
+   * hues around a wheel that already has four occupants leaves no room not to. That
    * is accepted rather than worked around: proximity only misleads if two
    * colours can appear in the same role, and these never do.
    *
-   * The tint is solved *first* and the hue against it, not the other way round:
+   * The hues themselves are picked by the search described in
+   * `docs/theming.md`: one target lightness and chroma per mode, twelve angles
+   * 30 degrees apart, each hue pulled off that target only as far as the
+   * contrast floors force it. That is what makes them a family rather than a
+   * rainbow, and it is why they are not maximally saturated.
+   *
+   * Each tint is now derived rather than authored — `color-mix` of the hue with
+   * this palette's own `paper` — so a hue and its companion cannot drift apart,
+   * and a contrast level cannot move one without the other. The tint is solved
+   * *first* and the hue against it, not the other way round:
    * in a light palette the tint is the darker of the two grounds, so a hue that
    * clears its own panel clears the card for free — and the argument runs in
    * reverse in a dark palette, where the tint is the deeper ground. Both
    * directions are asserted in `contrast.test.ts`, at every contrast level.
    */
-  --color-kind-1: #1c95ae;
-  --color-kind-1-soft: #0c1d21;
-  --color-kind-2: #4aa71b;
-  --color-kind-2-soft: #13210c;
-  --color-kind-3: #ac811c;
-  --color-kind-3-soft: #211b0c;
-  --color-kind-4: #e4577c;
-  --color-kind-4-soft: #210c12;
-  --color-kind-5: #c25ce4;
-  --color-kind-5-soft: #1c0c21;
-  --color-kind-6: #4589e1;
-  --color-kind-6-soft: #0c1521;
+  --color-kind-1: #06bcbd;
+  --color-kind-1-soft: color-mix(in srgb, var(--color-kind-1) 16%, var(--color-paper));
+  --color-kind-2: #0db5e5;
+  --color-kind-2-soft: color-mix(in srgb, var(--color-kind-2) 16%, var(--color-paper));
+  --color-kind-3: #65a6fd;
+  --color-kind-3-soft: color-mix(in srgb, var(--color-kind-3) 16%, var(--color-paper));
+  --color-kind-4: #9e95fa;
+  --color-kind-4-soft: color-mix(in srgb, var(--color-kind-4) 16%, var(--color-paper));
+  --color-kind-5: #c787e1;
+  --color-kind-5-soft: color-mix(in srgb, var(--color-kind-5) 16%, var(--color-paper));
+  --color-kind-6: #e47db8;
+  --color-kind-6-soft: color-mix(in srgb, var(--color-kind-6) 16%, var(--color-paper));
+  --color-kind-7: #f17b86;
+  --color-kind-7-soft: color-mix(in srgb, var(--color-kind-7) 16%, var(--color-paper));
+  --color-kind-8: #ed8551;
+  --color-kind-8-soft: color-mix(in srgb, var(--color-kind-8) 16%, var(--color-paper));
+  --color-kind-9: #d7961e;
+  --color-kind-9-soft: color-mix(in srgb, var(--color-kind-9) 16%, var(--color-paper));
+  --color-kind-10: #b1a923;
+  --color-kind-10-soft: color-mix(in srgb, var(--color-kind-10) 16%, var(--color-paper));
+  --color-kind-11: #7ab959;
+  --color-kind-11-soft: color-mix(in srgb, var(--color-kind-11) 16%, var(--color-paper));
+  --color-kind-12: #1ec090;
+  --color-kind-12-soft: color-mix(in srgb, var(--color-kind-12) 16%, var(--color-paper));
 
   /*
    * Chrome that content scrolls behind: the header and the navigation.
@@ -164,4 +186,58 @@
   --shadow-accent: 0 6px 20px rgb(138 162 255 / 22%);
 
   --backdrop: rgb(0 0 0 / 55%);
+}
+
+/* generated: intensity — npm run build:palette -- intensity */
+[data-theme='dark'][data-intensity='calm'],
+[data-theme='dark'][data-palette='indigo'][data-intensity='calm'],
+[data-theme='dark'] [data-palette='indigo'][data-intensity='calm'] {
+  --color-accent: #97a6d9;
+  --color-accent-soft: #1f2334;
+  --color-highlight: #e6bd8e;
+  --color-highlight-soft: #27221a;
+  --color-success: #8ec6a0;
+  --color-success-soft: #223226;
+  --color-danger: #d98985;
+  --color-danger-soft: #312020;
+  --color-accent-edge: #5e6b9a;
+  --color-kind-1: #70b2b2;
+  --color-kind-2: #70afc9;
+  --color-kind-3: #84a7d6;
+  --color-kind-4: #a09dd4;
+  --color-kind-5: #b896c7;
+  --color-kind-6: #ca91af;
+  --color-kind-7: #d29094;
+  --color-kind-8: #cf967b;
+  --color-kind-9: #c19e6b;
+  --color-kind-10: #aba86d;
+  --color-kind-11: #8fb17f;
+  --color-kind-12: #72b499;
+}
+
+/* generated: intensity — npm run build:palette -- intensity */
+[data-theme='dark'][data-intensity='vivid'],
+[data-theme='dark'][data-palette='indigo'][data-intensity='vivid'],
+[data-theme='dark'] [data-palette='indigo'][data-intensity='vivid'] {
+  --color-accent: #839eff;
+  --color-accent-soft: #1a1f47;
+  --color-highlight: #ffad00;
+  --color-highlight-soft: #2c200e;
+  --color-success: #2cd77f;
+  --color-success-soft: #0b371b;
+  --color-danger: #ff515a;
+  --color-danger-soft: #3f1619;
+  --color-accent-edge: #4c61d1;
+  --color-kind-1: #00c5c8;
+  --color-kind-2: #00b9ff;
+  --color-kind-3: #3ba2ff;
+  --color-kind-4: #9e89ff;
+  --color-kind-5: #d574fb;
+  --color-kind-6: #fc63c0;
+  --color-kind-7: #ff5e78;
+  --color-kind-8: #ff6e00;
+  --color-kind-9: #ec8b00;
+  --color-kind-10: #b8a900;
+  --color-kind-11: #61c012;
+  --color-kind-12: #00ca86;
 }

@@ -7,6 +7,7 @@ import { defineConfig } from 'vitest/config';
 // With the extension: Vite's future native config loader refuses an
 // extensionless import, and it already warns about one today.
 import { APP } from './src/app/identity.ts';
+import { prePaintAxes } from './src/styles/axes.ts';
 
 const pkg = JSON.parse(
   readFileSync(fileURLToPath(new URL('./package.json', import.meta.url)), 'utf8'),
@@ -53,13 +54,18 @@ export default defineConfig({
   },
   plugins: [
     /**
-     * Identity into the HTML shell.
+     * Identity and appearance into the HTML shell.
      *
-     * `index.html` cannot import TypeScript, so its pre-paint theme script used
-     * to carry a duplicate of the storage key with a comment asking whoever read
-     * it to keep the two in sync. That is a contract no test can check. The
-     * placeholders below are replaced from `identity.ts` at build *and* dev time,
-     * so there is one spelling of the key and one of the name.
+     * `index.html` cannot import TypeScript, so its pre-paint script used to
+     * carry duplicates of things it had no way to read: the storage-key prefix,
+     * and a literal copy of every appearance axis's values. Both were kept in
+     * step by a comment and a test — a contract, in other words, rather than a
+     * mechanism.
+     *
+     * The placeholders below are replaced at build *and* dev time, so there is
+     * one spelling of the app id and one list of the axes. Adding a palette or a
+     * whole new axis needs no edit to the HTML, which is the property that makes
+     * this layer reusable in another app rather than merely tidy in this one.
      */
     {
       name: 'app-identity-html',
@@ -69,7 +75,8 @@ export default defineConfig({
           html
             .replaceAll('%APP_ID%', APP.id)
             .replaceAll('%APP_NAME%', APP.name)
-            .replaceAll('%APP_TAGLINE%', APP.tagline),
+            .replaceAll('%APP_TAGLINE%', APP.tagline)
+            .replaceAll('%APPEARANCE_AXES%', JSON.stringify(prePaintAxes())),
       },
     },
     react(),

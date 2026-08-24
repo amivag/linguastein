@@ -18,36 +18,55 @@
     <link rel="apple-touch-icon" href="/icons/icon.svg" />
     <title>%APP_NAME% — %APP_TAGLINE%</title>
     <script>
-      // Resolve appearance before first paint, so neither colour nor type size
-      // flashes. Four independent axes, each with its own cache key and its own
-      // root attribute: theme (light/dark), palette (which hues), contrast (how
-      // far apart they sit) and reading size. `%APP_ID%` is substituted from
-      // src/app/identity.ts, so these keys cannot drift from the app identity.
+      /*
+        Resolve appearance before first paint, so neither colour nor type size
+        flashes.
+
+        The axes are *injected*: `%APPEARANCE_AXES%` is replaced from
+        `src/styles/axes.ts` at build and dev time, the same way `%APP_ID%` comes
+        from `src/app/identity.ts`. This script used to repeat every axis's values
+        as literal arrays with a test comparing the two lists, which is a guard
+        around a duplication that did not need to exist. Adding an axis now needs
+        no edit here.
+
+        Deliberately ES5 and dependency-free: it runs before any module loads, and
+        a syntax error in it is a blank page.
+      */
       (function () {
         var root = document.documentElement;
-        // Each axis falls back to its default rather than aborting the rest: a
-        // single unreadable key must not leave the page unthemed.
-        function pick(name, allowed, fallback) {
+        var axes = %APPEARANCE_AXES%;
+
+        // Each axis falls back to its default rather than aborting the rest: one
+        // unreadable key must not leave the page unthemed.
+        function stored(axis) {
           try {
-            var stored = localStorage.getItem('%APP_ID%.' + name);
-            return allowed.indexOf(stored) >= 0 ? stored : fallback;
+            var value = localStorage.getItem('%APP_ID%.' + axis.key);
+            return axis.values.indexOf(value) >= 0 ? value : axis.fallback;
           } catch (error) {
-            return fallback;
+            return axis.fallback;
           }
         }
-        var theme = pick('theme', ['system', 'dark', 'light'], 'system');
-        var dark = theme === 'dark';
-        if (theme === 'system') {
-          try {
-            dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          } catch (error) {
-            dark = true;
+
+        for (var i = 0; i < axes.length; i += 1) {
+          var axis = axes[i];
+          var value = stored(axis);
+          /*
+            One axis stores a preference rather than a value: `system` is not a
+            theme, so what the root carries is always a resolved light or dark.
+            Flagged in the registry rather than matched on the axis name, so the
+            script never has to know which axis is which.
+          */
+          if (axis.system && value === 'system') {
+            var dark = true;
+            try {
+              dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            } catch (error) {
+              dark = true;
+            }
+            value = dark ? 'dark' : 'light';
           }
+          root.dataset[axis.dataset] = value;
         }
-        root.dataset.theme = dark ? 'dark' : 'light';
-        root.dataset.palette = pick('palette', ['indigo', 'teal', 'plum', 'sand'], 'indigo');
-        root.dataset.contrast = pick('contrast', ['soft', 'normal', 'more', 'max'], 'normal');
-        root.dataset.readingSize = pick('reading-size', ['small', 'medium', 'large'], 'small');
       })();
     </script>
   </head>

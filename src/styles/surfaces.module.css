@@ -117,7 +117,7 @@
  * `kindTone` is the only place in the app that turns a `data-kind` number into a
  * pair of colours; everything that wears a categorical hue composes it and reads
  * `--kind` and `--kind-soft`. Written this way because the alternative is the
- * six-way mapping repeated per shape — a badge, a dot, a bar — and a seventh hue
+ * twelve-way mapping repeated per shape — a badge, a dot, a bar — and a thirteenth hue
  * then arrives in some of them and not others.
  *
  * The hue arrives as an attribute rather than as an inline `style`. Two reasons:
@@ -161,8 +161,38 @@
   --kind-soft: var(--color-kind-6-soft);
 }
 
+.kindTone[data-kind='7'] {
+  --kind: var(--color-kind-7);
+  --kind-soft: var(--color-kind-7-soft);
+}
+
+.kindTone[data-kind='8'] {
+  --kind: var(--color-kind-8);
+  --kind-soft: var(--color-kind-8-soft);
+}
+
+.kindTone[data-kind='9'] {
+  --kind: var(--color-kind-9);
+  --kind-soft: var(--color-kind-9-soft);
+}
+
+.kindTone[data-kind='10'] {
+  --kind: var(--color-kind-10);
+  --kind-soft: var(--color-kind-10-soft);
+}
+
+.kindTone[data-kind='11'] {
+  --kind: var(--color-kind-11);
+  --kind-soft: var(--color-kind-11-soft);
+}
+
+.kindTone[data-kind='12'] {
+  --kind: var(--color-kind-12);
+  --kind-soft: var(--color-kind-12-soft);
+}
+
 /*
- * A filled disc in one of the six hues, carrying a glyph or a digit in that
+ * A filled disc in one of the twelve hues, carrying a glyph or a digit in that
  * hue's own tint.
  *
  * Filled rather than tinted on purpose. A pale wash behind a coloured glyph is
@@ -207,4 +237,37 @@
   flex: none;
   border-radius: var(--radius-pill);
   background: var(--kind);
+}
+
+/*
+ * A hue's own tint, carrying a word in that hue: the shape a *grammatical fact*
+ * wears — `el`, `noun`, `preterite`.
+ *
+ * Tinted rather than filled, which is the opposite call from `kindBadge` above,
+ * and the difference is what the colour is for. A badge is a wayfinding mark on a
+ * page of thirty-five tiles, so it has to survive being glanced at; a pill sits
+ * inside a word card next to the language itself, and rule 4 still says the
+ * learner's eye lands on the Spanish. A row of solid discs beside a lemma would
+ * win that competition, which is the wrong outcome even when it looks livelier.
+ *
+ * Both pairings this needs are already asserted at every contrast level: the hue
+ * against its own tint, and body text against that tint. Nothing new to check,
+ * because nothing new was declared — see `src/styles/semantics.ts` for why a
+ * grammatical fact deliberately reuses the categorical wheel instead of asking
+ * for roles of its own.
+ */
+.kindPill {
+  composes: kindTone;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--kind-soft);
+  color: var(--kind);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  white-space: nowrap;
 }

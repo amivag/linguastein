@@ -1,4 +1,4 @@
-import { storageKey } from '../app/identity';
+import { defineAxis } from './appearance';
 
 export const READING_SIZES = ['small', 'medium', 'large'] as const;
 export type ReadingSize = (typeof READING_SIZES)[number];
@@ -15,17 +15,17 @@ export const READING_SIZE_OPTIONS: readonly ReadingSizeOption[] = [
   { id: 'large', shortLabel: 'L', label: 'Large' },
 ];
 
-export const READING_SIZE_STORAGE_KEY = storageKey('reading-size');
-
 /**
- * Reading size is independent of palette and contrast. Keeping it on the root
- * lets every rem-based type role scale together without component overrides.
+ * Reading size is independent of palette, contrast and intensity. Keeping it on
+ * the root lets every rem-based type role scale together without per-component
+ * overrides.
  */
-export function applyReadingSize(size: ReadingSize): void {
-  document.documentElement.dataset['readingSize'] = size;
-  try {
-    localStorage.setItem(READING_SIZE_STORAGE_KEY, size);
-  } catch {
-    // The in-memory preference still applies when private browsing blocks storage.
-  }
-}
+export const READING_SIZE_AXIS = defineAxis({
+  key: 'reading-size',
+  values: READING_SIZES,
+  fallback: 'small' as ReadingSize,
+});
+
+export const READING_SIZE_STORAGE_KEY = READING_SIZE_AXIS.storageKey;
+export const applyReadingSize = READING_SIZE_AXIS.apply;
+export const isReadingSize = READING_SIZE_AXIS.is;

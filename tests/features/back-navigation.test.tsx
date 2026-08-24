@@ -15,9 +15,11 @@
 
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useLocation } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
+import { MissionScreen } from '../../src/features/missions/MissionScreen';
+import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { StudyScreen } from '../../src/features/study/StudyScreen';
 import { renderWithServices } from '../fixtures/services';
@@ -136,5 +138,90 @@ describe('study links out to a sheet', () => {
 
     expect(sheets.length).toBeGreaterThan(0);
     for (const href of sheets) expect(href).toContain('from=words');
+  });
+});
+
+/**
+ * A mission is a place inside Study, and a session is a thing you do *to*
+ * something. Both hid the tab bar and answered Back with `history`, which made
+ * the way out however many taps the learner had made.
+ *
+ * The other half of that fix — that switching an Understand section replaces
+ * rather than pushes, so the tabs a learner tried do not stand between them and
+ * the list — is held in `missions.test.tsx`, which loads the shipped packs a
+ * mission with sections needs.
+ */
+describe('leaving a mission', () => {
+  const missionRoutes = (
+    <>
+      <Routes>
+        <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
+        <Route path="*" element={null} />
+      </Routes>
+      <Where />
+    </>
+  );
+
+  it('leaves to the missions list rather than into history', async () => {
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes, { route: '/es/all/mission/morning-routine/understand' });
+
+    await screen.findByRole('heading', { name: 'Describe your morning' });
+    await goBack(user);
+
+    // Named, not remembered: a mission reached from a shared link has no history
+    // to walk, and "back" must still mean the list it belongs to.
+    expect(where()).toBe('/es/all/study?tab=missions');
+  });
+
+  it('leaves a mission session for the mission it is over', async () => {
+    const user = userEvent.setup();
+    renderWithServices(
+      <>
+        <Routes>
+          <Route path="/:language/:level/session" element={<SessionScreen />} />
+          <Route path="*" element={null} />
+        </Routes>
+        <Where />
+      </>,
+      {
+        route:
+          '/es/all/session?preset=quick&size=all&passage=700001&mission=morning-routine&order=sequential',
+      },
+    );
+
+    await screen.findByRole('button', { name: 'Go back' });
+    await goBack(user);
+
+    expect(where()).toBe('/es/all/mission/morning-routine/understand');
+  });
+});
+
+/**
+ * The other half of the same problem. A session and a mission hide `AppNav` so
+ * the activity fills the screen, and for a while that made them the only two
+ * places in the app with no way home — Back was the single exit, and it walked a
+ * stack the learner had built by accident.
+ */
+describe('a screen with no tab bar', () => {
+  it('still offers the way home', async () => {
+    renderWithServices(
+      <Routes>
+        <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
+      </Routes>,
+      { route: '/es/all/mission/morning-routine/understand' },
+    );
+
+    await screen.findByRole('heading', { name: 'Describe your morning' });
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/es/all');
+  });
+
+  it('does not double up on it where the tab bar is already there', async () => {
+    renderWithServices(<StudyScreen />, { route: '/es/all/study?tab=missions' });
+
+    await screen.findByRole('heading', { name: 'Study' });
+    // `AppNav` has its own Home, and two links called Home on one screen is a
+    // choice an agent has to make and a screen reader has to explain.
+    expect(screen.getAllByRole('link', { name: 'Home' })).toHaveLength(1);
   });
 });

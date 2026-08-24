@@ -47,6 +47,12 @@ export function SectionTabs({ label, tabs, current }: SectionTabsProps) {
             <li key={tab.id}>
               <Link
                 to={tab.to}
+                // Replaced, not pushed. A section is a rewrite of the screen you
+                // are already on, so pushing makes Back walk the sections you
+                // looked at before it leaves — and Back is allowed to cost one
+                // step, never seven. Browse's filters are replaced for the same
+                // reason; `tests/features/back-navigation.test.tsx` holds the rule.
+                replace
                 className={`${styles.tab} ${active ? styles.tabActive : ''}`}
                 aria-current={active ? 'page' : undefined}
               >

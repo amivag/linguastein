@@ -265,7 +265,11 @@ export function MissionScreen() {
 
   if (chosenStage === 'use' && transferStep === undefined) {
     return (
-      <AppShell title={mission?.title ?? 'Mission'} onBack="history" showNav={false}>
+      <AppShell
+        title={mission?.title ?? 'Mission'}
+        onBack={() => void navigate(studyPath(course, 'missions'))}
+        showNav={false}
+      >
         <p role="status">Preparing your next transfer challenge…</p>
       </AppShell>
     );
@@ -273,7 +277,11 @@ export function MissionScreen() {
 
   if (!mission || !passage || !available) {
     return (
-      <AppShell title="Mission" onBack="history" showNav={false}>
+      <AppShell
+        title="Mission"
+        onBack={() => void navigate(studyPath(course, 'missions'))}
+        showNav={false}
+      >
         <section className={styles.empty}>
           <Icon name="passage" size="xl" />
           <p role="status">
@@ -299,7 +307,11 @@ export function MissionScreen() {
   const journeyHrefs = missionJourneyHrefs(course, mission);
 
   return (
-    <AppShell title={mission.title} onBack="history" showNav={false}>
+    <AppShell
+      title={mission.title}
+      onBack={() => void navigate(studyPath(course, 'missions'))}
+      showNav={false}
+    >
       {chosenStage === 'understand' ? (
         <UnderstandStage
           key={passage.id}

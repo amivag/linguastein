@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { documentTitle } from '../app/identity';
 import { AppNav } from './AppNav';
+import { HomeLink } from './HomeLink';
 import { Icon } from './Icon';
 import { UpdateBanner } from './UpdateBanner';
 import { VoicePresence } from './VoicePresence';
@@ -9,6 +10,13 @@ import styles from './AppShell.module.css';
 
 interface AppShellProps {
   readonly title: string;
+  /**
+   * A second line under the title, for a screen whose name and whose mode are
+   * two different facts — a session is *what* you are practising, drawn large,
+   * and *how*, drawn small. Kept out of the `<h1>` so the heading stays the
+   * subject rather than becoming a sentence about it.
+   */
+  readonly subtitle?: string;
   readonly children: ReactNode;
   readonly onBack?: 'history' | (() => void);
   readonly action?: ReactNode;
@@ -40,6 +48,7 @@ interface AppShellProps {
  */
 export function AppShell({
   title,
+  subtitle,
   children,
   onBack,
   action,
@@ -50,8 +59,10 @@ export function AppShell({
   const back = onBack === 'history' ? () => void navigate(-1) : onBack;
 
   useEffect(() => {
-    document.title = documentTitle(title);
-  }, [title]);
+    // Both, where there are both: a tab reading "Quick practice" says nothing
+    // about which of five open sessions it is.
+    document.title = documentTitle(subtitle ? `${title} · ${subtitle}` : title);
+  }, [title, subtitle]);
 
   return (
     <div className={`${styles.shell} ${showNav ? styles.withNav : ''} ${wide ? styles.wide : ''}`}>
@@ -64,7 +75,14 @@ export function AppShell({
             <Icon name="back" size="lg" />
           </button>
         )}
-        <h1 className={styles.title}>{title}</h1>
+        <div className={styles.heading}>
+          <h1 className={styles.title}>{title}</h1>
+          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+        </div>
+        {/* A screen without the tab bar still has to offer the way out of it.
+            Paired with the shell's own rule rather than passed in, so a screen
+            cannot hide the nav and forget. */}
+        {!showNav && <HomeLink />}
         {/* Every screen, pinned: the app's voice is a running condition, not a
             setup step, so what is speaking — or that nothing is — stays visible
             and adjustable wherever you are. */}

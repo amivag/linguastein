@@ -20,6 +20,7 @@ import { parseSessionUrl } from './session-url';
 import { useSessionRunner } from './useSessionRunner';
 import { MissionJourney } from '../missions/MissionJourney';
 import { missionJourneyHrefs, missionPath } from '../missions/mission-url';
+import { studyPath } from '../study/study-url';
 
 /** A session is fully described by the URL, so it survives a reload or a share. */
 export function SessionScreen() {
@@ -34,14 +35,13 @@ export function SessionScreen() {
   // query string is the dependency, so the plan changes only when the link does.
   const search = params.toString();
   const repository = services.repository;
-  const { preset, config, mission, emptyBatch } = useMemo(() => {
+  const { preset, config, mission, batchLabel, passageTitle, emptyBatch } = useMemo(() => {
     const url = parseSessionUrl(new URLSearchParams(search));
     const chosen = PRESETS[url.preset];
     // `?passage=` practises exactly one text; facets narrow it further, since
     // the repository ANDs an id allow-list with everything else.
-    const passageItems = url.passage
-      ? (repository.passageByRef(url.passage)?.items ?? [])
-      : undefined;
+    const passageRecord = url.passage ? repository.passageByRef(url.passage) : undefined;
+    const passageItems = url.passage ? (passageRecord?.items ?? []) : undefined;
     /*
      * `?batch=` practises exactly the set a learner assembled.
      *
@@ -83,6 +83,11 @@ export function SessionScreen() {
     return {
       preset: chosen,
       mission: url.mission,
+      // What the session is *over*, in the two shapes that have a name of their
+      // own. The mission's title beats both and is resolved outside, where the
+      // catalogue is.
+      batchLabel: batch?.label,
+      passageTitle: passageRecord?.title,
       emptyBatch: batchOutOfScope ? batch.label : undefined,
       config: buildSessionConfig(chosen, {
         repository,
@@ -101,9 +106,33 @@ export function SessionScreen() {
 
   const runner = useSessionRunner(config, course);
   const activeMission = mission ? missionById(MISSIONS, course, mission) : undefined;
+  /*
+   * What is being practised, which is the question the header used to answer
+   * with the preset. "Quick practice" is *how*, and it is the same five words
+   * over a mission, a set and the whole course — so the subject leads and the
+   * preset becomes the line under it. A session with no subject keeps the
+   * preset as its name, because then that genuinely is what the screen is.
+   */
+  const subject = activeMission?.title ?? batchLabel ?? passageTitle;
+  /*
+   * One step, to the thing the session is over. `history` was the other option
+   * and it is the one the rule in `tests/features/back-navigation.test.tsx`
+   * forbids: a learner who reached a mission session through three sections and
+   * a stage was that many taps from the screen that sent them here.
+   */
+  const back = activeMission
+    ? missionPath(course, activeMission.id, 'understand')
+    : batchLabel !== undefined
+      ? studyPath(course, 'batches')
+      : path();
 
   return (
-    <AppShell title={preset.label} onBack="history" showNav={false}>
+    <AppShell
+      title={subject ?? preset.label}
+      {...(subject ? { subtitle: preset.label } : {})}
+      onBack={() => void navigate(back)}
+      showNav={false}
+    >
       {runner.status === 'loading' && <p className={styles.hint}>Preparing…</p>}
 
       {runner.status === 'empty' && (

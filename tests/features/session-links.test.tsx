@@ -255,3 +255,20 @@ describe('review due', () => {
     expect(await screen.findByText('1/1')).toBeInTheDocument();
   });
 });
+
+/**
+ * The other side of naming a session by its subject: a session that has no
+ * subject keeps the preset as its name, because then that genuinely is what the
+ * screen is. A header reading "Practice · Quick practice" would be the shape of
+ * an answer with nothing in it.
+ */
+describe('a session with nothing in particular to name', () => {
+  it('keeps the preset as its title, with no second line', async () => {
+    renderWithServices(<SessionScreen />, {
+      route: '/session?preset=flashcards&size=items:2&order=sequential',
+    });
+
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Flashcards');
+    expect(document.title).toBe('Flashcards · Linguastein');
+  });
+});

@@ -44,12 +44,65 @@
   }
 }
 
-.title {
+/* Carries the flex the title used to, so a two-line heading and a one-line
+   heading leave the controls beside them in the same place. */
+.heading {
   flex: 1;
   min-width: 0;
+}
+
+/*
+ * Two lines, then ellipsis.
+ *
+ * The header is sticky, so its height is paid on every screen of every scroll,
+ * and a screen whose name is a sentence — a mission is called "Meet someone and
+ * keep talking" — took three lines and 135px of an 812px phone. The clamp is
+ * visual only: the heading's accessible name is still the whole title, so a
+ * screen reader and an agent get the name a sighted reader has to open the tab
+ * title to finish.
+ */
+.title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
   font-size: var(--text-xl);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-display);
+}
+
+/* Quieter than the title and on its own line: it is the mode, and the subject
+   above it is what a learner is looking for. */
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Sized and shaped like `.back`, because it is the same kind of thing: one of
+   the two fixed ways off a screen that has no tab bar. */
+.home {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-target);
+  height: var(--tap-target);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home:hover {
+    background: var(--color-surface-sunken);
+    color: var(--color-text);
+  }
 }
 
 .back {

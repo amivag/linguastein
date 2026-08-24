@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes, useLocation } from 'react-router';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import type { SpeechRecognitionProvider } from '../../src/audio';
 import { loadCatalog, loadPack, type DatasetSource } from '../../src/data/loaders';
@@ -10,6 +10,7 @@ import { ContentRepository } from '../../src/domain/content';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { missionPracticePath } from '../../src/features/missions/mission-url';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
+import { StudyScreen } from '../../src/features/study/StudyScreen';
 import { MISSIONS } from '../../src/app/missions';
 import { renderWithServices, testServices } from '../fixtures/services';
 
@@ -33,6 +34,23 @@ async function shippedServices(speech?: SpeechRecognitionProvider) {
 function Where() {
   const location = useLocation();
   return <output data-testid="where">{`${location.pathname}${location.search}`}</output>;
+}
+
+/**
+ * The device's own Back — the one a screen cannot style away.
+ *
+ * A screen's Back button can be pointed anywhere, and this one is: it names the
+ * missions list. The hardware button on a phone and the browser's arrow walk the
+ * history stack regardless, so only this can catch a screen that quietly pushed
+ * an entry per tap.
+ */
+function Rewind() {
+  const navigate = useNavigate();
+  return (
+    <button type="button" onClick={() => void navigate(-1)}>
+      Rewind
+    </button>
+  );
 }
 
 function missionRoutes() {
@@ -144,6 +162,43 @@ describe('MissionScreen', () => {
       '/es/a1/mission/greet-and-respond/understand',
     );
     expect(screen.getByRole('list', { name: /lines$/ })).toBeInTheDocument();
+  });
+
+  /*
+   * The cost of the switcher, which must not be paid in history.
+   *
+   * `tests/features/back-navigation.test.tsx` holds the rule: Back may cost one
+   * step, never two. A section is a rewrite of the screen you are already on, so
+   * it replaces — otherwise every tab a learner tried on the way through is an
+   * entry standing between them and the list they came from.
+   */
+  it('does not deepen the way out when a section is switched', async () => {
+    const user = userEvent.setup();
+    renderWithServices(
+      <>
+        <Routes>
+          <Route path="/:language/:level/study" element={<StudyScreen />} />
+          <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
+          <Route path="*" element={null} />
+        </Routes>
+        <Rewind />
+        <Where />
+      </>,
+      { route: '/es/a1/study?tab=missions', services: await shippedServices() },
+    );
+
+    await user.click(await screen.findByRole('link', { name: /Meet someone and keep talking/ }));
+    expect(screen.getByTestId('where')).toHaveTextContent(
+      '/es/a1/mission/greet-and-respond/understand',
+    );
+
+    await user.click(await screen.findByRole('link', { name: /^Responses/ }));
+    await user.click(screen.getByRole('link', { name: /^Variations/ }));
+    expect(screen.getByTestId('where')).toHaveTextContent('section=variations');
+
+    // One rewind, not three.
+    await user.click(screen.getByRole('button', { name: 'Rewind' }));
+    expect(screen.getByTestId('where')).toHaveTextContent('/es/a1/study?tab=missions');
   });
 
   it('opens the exchange when the section in the link no longer exists', async () => {
@@ -372,6 +427,33 @@ describe('MissionScreen', () => {
     // replaced the whole subtree and the tap fell on a detached button.
     expect(document.body.contains(word)).toBe(true);
     expect(word).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  /*
+   * What a session is over, which the header used to leave unsaid.
+   *
+   * It was the preset's label and nothing else — "Quick practice", the same five
+   * words over a mission, a set and the whole course. The preset is *how*; a
+   * learner mid-session wants *what*, and the document title had the same gap,
+   * so two sessions open in two tabs were indistinguishable.
+   */
+  it('names what a mission session is practising, and keeps the preset under it', async () => {
+    renderWithServices(
+      <Routes>
+        <Route path="/:language/:level/session" element={<SessionScreen />} />
+      </Routes>,
+      {
+        route:
+          '/es/a1/session?preset=quick&size=all&passage=700033&mission=greet-and-respond&order=sequential',
+        services: await shippedServices(),
+      },
+    );
+
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
+      'Meet someone and keep talking',
+    );
+    expect(screen.getByText('Quick practice')).toBeInTheDocument();
+    expect(document.title).toBe('Meet someone and keep talking · Quick practice · Linguastein');
   });
 
   it('lets the learner ask about a word in what the other person just said', async () => {

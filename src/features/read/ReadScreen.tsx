@@ -7,6 +7,8 @@ import { Icon } from '../../components/Icon';
 import { CourseBar } from '../../components/CourseBar';
 import { UsageBadges } from '../../components/UsageBadges';
 import { CEFR_LEVELS, type PassageKind } from '../../domain/content';
+import { kindHue } from '../../styles/kinds';
+import surfaces from '../../styles/surfaces.module.css';
 import { studyPath } from '../study/study-url';
 import { parseReadUrl } from './read-url';
 import styles from './Read.module.css';
@@ -86,17 +88,36 @@ export function ReadScreen() {
           );
           return (
             <li key={passage.id}>
-              <Link className={styles.card} to={path(`read/${localId(passage.id)}`)}>
-                <span className={styles.cardTitle} lang={lang}>
-                  {passage.title}
+              {/* The hue is declared on the card, not on the badge inside it, for the
+                  reason the home screen's rows record: custom properties inherit, so
+                  the ground, the spine, the disc and the kind's own name resolve from
+                  one `data-kind` and cannot disagree. */}
+              <Link
+                className={styles.card}
+                data-kind={kindHue(passage.id)}
+                to={path(`read/${localId(passage.id)}`)}
+              >
+                {/* Decoration over a link that names itself: the glyph says text or
+                    conversation, and the word beside it says the same in text. */}
+                <span className={surfaces.kindBadge} aria-hidden="true">
+                  <Icon name={passage.kind === 'dialogue' ? 'dialogue' : 'passage'} size="sm" />
                 </span>
-                {translation && <span className={styles.cardMeaning}>{translation.text}</span>}
-                <span className={styles.cardMeta}>
-                  {passage.kind === 'dialogue' ? 'Dialogue' : 'Text'} · {passage.items.length}{' '}
-                  sentences
-                  {passage.level ? ` · ${passage.level.toUpperCase()}` : ''}
+                <span className={styles.cardBody}>
+                  <span className={styles.cardTitle} lang={lang}>
+                    {passage.title}
+                  </span>
+                  {translation && <span className={styles.cardMeaning}>{translation.text}</span>}
+                  <span className={styles.cardMeta}>
+                    <span className={styles.cardKind}>
+                      {passage.kind === 'dialogue' ? 'Dialogue' : 'Text'}
+                    </span>
+                    <span className={styles.cardFacts}>
+                      {passage.items.length} sentences
+                      {passage.level ? ` · ${passage.level.toUpperCase()}` : ''}
+                    </span>
+                    <UsageBadges compact regions={passage.regions} />
+                  </span>
                 </span>
-                <UsageBadges compact regions={passage.regions} />
                 <Icon name="next" size="sm" className={styles.cardChevron} />
               </Link>
             </li>

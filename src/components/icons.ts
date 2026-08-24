@@ -33,6 +33,7 @@ import {
   MapPin,
   MessageCircle,
   MessageSquareQuote,
+  MessagesSquare,
   Mic,
   MicOff,
   Minus,
@@ -161,6 +162,9 @@ export const ICONS = {
   word: Type,
   grammar: Ruler,
   passage: NotebookPen,
+  /* A dialogue: a passage that is two people talking rather than one voice
+     writing. Two bubbles rather than one, which is the whole distinction. */
+  dialogue: MessagesSquare,
   /* A content pack: an add-on with its own version, licence and contents. */
   pack: Package,
   /* A mission — a route through material towards one real-world outcome. */

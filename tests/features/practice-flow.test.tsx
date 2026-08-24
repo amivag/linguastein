@@ -23,11 +23,17 @@ describe('HomeScreen', () => {
     expect(screen.getByText('Mission 1 of 2')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Begin mission/ })).toBeInTheDocument();
 
+    // The scope the mission and free-practice choices will draw from, on the
+    // screen itself rather than inside the sheet: the pressed level carries the
+    // count, because a level is a ceiling and so includes everything below it.
+    expect(screen.getByRole('button', { name: 'All levels, 7 items' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+
     await user.click(screen.getByRole('button', { name: /Free practice/ }));
     expect(screen.getByRole('button', { name: '5 min' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Flashcards/ })).toBeInTheDocument();
-    // The scope the mission and free-practice choices will draw from.
-    expect(screen.getByText(/7 items in your course/)).toBeInTheDocument();
   });
 
   it('starts the recommended mission journey in the current course', async () => {

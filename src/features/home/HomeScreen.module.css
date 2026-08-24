@@ -1,9 +1,3 @@
-.scopeNote {
-  margin-top: calc(var(--space-3) * -1);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
 /*
  * The screen's subject, and the largest single object on it — so it is the one
  * place a flat grey costs the most. It carries the accent as a wash rather than

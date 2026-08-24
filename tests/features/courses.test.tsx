@@ -83,12 +83,12 @@ describe('the level in the path', () => {
 
 describe('the course bar', () => {
   it('offers the levels with content, each with what it puts in scope', async () => {
-    const user = userEvent.setup();
     const services = testServices({ repository: multilingualRepository() });
 
     renderWithServices(courseRoutes({ '': <HomeScreen /> }), { services, route: '/fr/a1' });
 
-    await user.click(await screen.findByRole('button', { name: /Free practice/ }));
+    // On the screen itself, not behind the Free-practice sheet: Home's every
+    // figure is course-scoped, so the control that sets the scope is visible.
     const group = await screen.findByRole('group', { name: 'Course' });
     expect(within(group).getByRole('button', { name: 'A1, 1 item' })).toHaveAttribute(
       'aria-pressed',
@@ -150,10 +150,8 @@ describe('the course bar', () => {
    * content that is not loaded. The level chips still appear.
    */
   it('hides the language picker when only one language is loaded', async () => {
-    const user = userEvent.setup();
     renderWithServices(courseRoutes({ '': <HomeScreen /> }), { route: '/es/all' });
 
-    await user.click(await screen.findByRole('button', { name: /Free practice/ }));
     await screen.findByRole('group', { name: 'Course' });
     expect(screen.queryByRole('combobox', { name: 'Language' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /^A1/ })).toBeInTheDocument();

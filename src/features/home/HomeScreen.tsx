@@ -422,6 +422,20 @@ export function HomeScreen() {
 
   return (
     <AppShell title={title} action={<ThemeToggle variant="compact" />} wide>
+      {/* First, because every number below it is scoped to this course: the
+          mission, the standing, the contents counts. It used to sit inside the
+          Free-practice sheet, which left the one screen whose figures are all
+          course-scoped as the only browsing screen with no visible way to change
+          the scope — three taps from the count to the control that moves it.
+
+          `compact` as on every other browsing screen, and here for a second
+          reason: `design-qa.md` found a course-item count above the mission
+          weakened the primary hierarchy, and the note is the count. Nothing is
+          lost by dropping it, because the pressed chip's own count *is* the
+          number in scope — a level is a ceiling, so "A1 2039" says what the
+          note said. */}
+      <CourseBar compact />
+
       <section className={styles.mission} aria-labelledby="mission-title">
         <p className={styles.eyebrow}>
           {reviewDue
@@ -713,13 +727,6 @@ export function HomeScreen() {
       {practiceOpen && (
         <Sheet id={practiceSheetId} title="Free practice" onClose={() => setPracticeOpen(false)}>
           <div className={styles.practiceSheet}>
-            <div>
-              <h3 className={styles.sheetTitle}>Course</h3>
-              <p className={styles.scopeNote}>
-                {scope.total} {scope.total === 1 ? 'item' : 'items'} in your course
-              </p>
-              <CourseBar compact />
-            </div>
             <div>
               <h3 className={styles.sheetTitle}>Quick session</h3>
               <div className={styles.quick}>

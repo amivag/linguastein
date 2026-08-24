@@ -286,6 +286,32 @@ than an error, so a stale bookmark degrades instead of breaking. Paths written
 before courses existed (`/session?…`, `/read/700001`) redirect into a course and
 keep their query string.
 
+**An address the app does not have is a 404, not a redirect.** Only `/` redirects,
+because the app has no course-less home. Everything else unrecognised gets
+`NotFoundScreen`, which quotes the address back — the one fact the learner does
+not already have, and what separates "the app is broken" from "that link is
+wrong". There are two routes on purpose: `/:language/:level/*` is matched first so
+the 404 keeps the course it was reached from, and the global `*` catches the rest.
+Redirecting instead, which is what this replaced, gave a stale bookmark, a moved
+screen and a typo the same treatment — a working page that was not the one asked
+for, with nothing to say so.
+
+**Missing content says what is missing and what would provide it.** A passage or
+mission id no loaded pack has names the id, says it may belong to a pack that is
+not installed, and links to Settings → Packs. "Not found" alone cannot distinguish
+a broken link from an add-on a learner does not have, and those have different
+fixes.
+
+**A link addresses content by local id, and that is only unambiguous while local
+ids are.** `?passage=mercado` and `?skill=preterite` deliberately carry no pack
+namespace, so `passageByLocalId` and `skillByLocalId` resolve by first match. With
+one pack that is free; with two it opens whichever loaded first, which is worse
+than an error because it is confidently wrong. `validateAcrossPacks` reports the
+collision as an error — in `validate:data` and in `loadPacks` — so it cannot be
+silent. Making two packs genuinely coexist is a decision, briefed in
+[docs/tasks/pack-addressing.md](docs/tasks/pack-addressing.md); do not add a
+second pack of the same language before reading it.
+
 `courseOptions(repository)` derives what is on offer from the packs themselves,
 so a second language pack appears in the picker — and in the URL — with no code
 change. `tests/fixtures/pack.ts` ships a small French pack for exactly this:
@@ -354,7 +380,10 @@ adding content.
 A briefed task for numbers as a generative system — `spellCardinal(1042)` rather
 than a thousand rows — lives in [docs/tasks/numerals.md](docs/tasks/numerals.md),
 and one for making the UI more enjoyable without making it loud lives in
-[docs/tasks/game-feel.md](docs/tasks/game-feel.md).
+[docs/tasks/game-feel.md](docs/tasks/game-feel.md). A third
+([docs/tasks/function-words.md](docs/tasks/function-words.md)) asks whether the
+interrogatives, demonstratives and pronouns should be studiable at all: 123
+lexemes have no card, and `ADV` sits in `STUDYABLE_POS` with none behind it.
 
 **Author the content a mission teaches before authoring the mission.** Six
 missions landed at once because the vocabulary was already there — travel had 148
@@ -440,6 +469,30 @@ above the card set are not rows at all — `spellCardinal` composes them, which 
 why 1042 is askable without existing anywhere. See
 [docs/tasks/numerals.md](docs/tasks/numerals.md). No two items may carry the same text, and the build checks this across
 sentences and word cards together.
+
+**Ordinals are generated too, and recognised rather than declared.** There is no
+`ORD` tag — Spanish ordinals are adjectives, so they are plain `ADJ` rows — and
+the lemma is what declares one: `parseOrdinal` accepts exactly the twenty
+citation forms `numerals.ts` can spell, so no ordinary adjective is mistaken for
+one and a hand-typed `septimo` fails the round trip. Never author `primer` or
+`tercer` in the extra-surfaces column; `spellOrdinal(n, { beforeNoun: true })`
+derives them, and the build rejects a row that types them by hand. The shortened
+form is indexed but is deliberately not a `forms` record: `primer` and `primero`
+are both masculine singular, so the two would be indistinguishable in a paradigm
+list, and the `ordinals` pattern is what teaches the shortening instead.
+
+**Every inflected form is a `forms` record, whatever its part of speech.** Verb
+conjugations were once the only kind, and the record and its pack file both said
+`verb-form`. A noun's plural and an adjective's four agreement forms are the same
+kind of fact from the same language module, so they ship the same way and
+`repository.formsOf` reads them all — which is what lets tapping `verduras`
+answer "what is the plural" and not only "what does it mean". The forms were
+always generated; for a long time the build used them only to link a surface back
+to its lemma and then threw them away. The surface index is now driven from the
+same records, so what a learner can be shown and what a sentence can link to
+cannot drift apart. One exception is deliberate: an adjective's apocopated form
+(`buen`, `gran`, `mal`) is a shortening rather than an agreement, no rule produces
+it, and it stays in the extra-surfaces column.
 
 Passages group several sentences into one connected text (a paragraph or a
 dialogue). Membership is authored in the `passage` column of a sentence row; the
@@ -667,7 +720,7 @@ Six rules, and four test files enforce them:
 5. **Colour means something.** Accent = the app acting, highlight = new
    material, success/danger = verdicts. Tints are roles (`--color-*-soft`), never
    a per-component `color-mix`. No hex or `rgb()` outside `src/styles/themes/`.
-   The one addition is `--color-kind-1…6`: six hues sharing the single meaning
+   The one addition is `--color-kind-1…12`: twelve hues sharing the single meaning
    "which kind of material this is", assigned from a stable id by
    `src/styles/kinds.ts` and mapped to colours only by `kindTone` in
    `surfaces.module.css`. It is never a verdict and never a control — where the

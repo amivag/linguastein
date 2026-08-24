@@ -17,6 +17,103 @@ in the pack's own counts.
 
 ### Added
 
+- **Asking, as a form rather than as a subject.** The pack held 376 questions and
+  1,019 statements and not one place where the _same words_ appeared as both —
+  which is the one thing an English speaker most needs, because Spanish adds no
+  word and moves nothing: `Tienes tiempo.` and `¿Tienes tiempo?` differ by two
+  marks. Twenty-five authored skills were about asking _something_ (the price, the
+  way, who someone is) and every one was a situation; none said how a question is
+  built.
+
+  Now: `yes-no-question` and `question-word` are generated grammar skills beside
+  `imperativo`, classified on what follows the opening `¿` — so `¿Sabes qué hora
+es?` is correctly a yes/no question rather than a `qué` question. Mood itself is
+  a **filter** (`?mood=question`), derived from the punctuation Spanish requires
+  rather than stored, and a word card has no mood so it cannot be counted as a
+  statement. Browse gains an "Asking or telling" facet with honest counts, where
+  the `questions` topic had been standing in for it and covering under half.
+
+  And the content: five minimal pairs, a dialogue of echo questions
+  (`¿Tu hermana vive en Madrid?` answering `Mi hermana vive en Madrid.`) and one of
+  tag questions — `¿verdad?`, `¿no?` and `¿vale?`, none of which appeared anywhere
+  in the pack before. Written from vocabulary the pack already had, so it pays into
+  the recycling target instead of borrowing from it.
+
+  One build rule had to change to allow any of it: the duplicate-text check
+  stripped punctuation, so it declared a statement a duplicate of its own question.
+  Mood is now part of item identity — `Hola` and `Hola.` are still one item, and
+  the pair the pack most needs is two.
+
+- **A recycling ratchet, so a word met once cannot stay that way unnoticed.**
+  Durable vocabulary takes six or more encounters in different sentences, and two
+  content passes here added one-encounter lexemes as fast as they fixed them while
+  the coverage report printed a number nobody had to act on.
+  `content/es/recycling.tsv` records how many lexemes are still short per level;
+  the build fails when the figure is **higher** — naming the short words, worst
+  first — and also when it is **lower**, because an improvement left unrecorded
+  hands the next pass back the room this one earned. Not the threshold itself:
+  switching that on would fail the build on 397 A1 lexemes and block everything
+  else, the same reason `vite.config.ts` sets coverage floors just under what the
+  suite reaches.
+
+- **A real 404, and missing content that says what is missing.** Every
+  unrecognised address used to redirect to the course home silently, so a stale
+  bookmark, a moved screen and a typo all produced a working page that was not the
+  one asked for. `NotFoundScreen` now quotes the address back — the one fact the
+  learner does not have, and what separates "the app is broken" from "that link is
+  wrong" — and offers the course home and Study. `/:language/:level/*` is matched
+  before the global `*` so the 404 keeps the course it was reached from; `/` is
+  still a redirect, because there is no course-less home. A passage or mission id
+  no loaded pack has now names the id, says it may belong to a pack that is not
+  installed, and links to Settings → Packs.
+
+- **Two packs can no longer disagree in silence.** A link addresses a passage and
+  a skill by _local_ id, so `passageByLocalId` resolves by first match — free with
+  one pack, and confidently wrong with two, which is worse than an error.
+  `validateAcrossPacks` reports a collision as an error in both `validate:data`
+  and `loadPacks`. Making two packs genuinely coexist is a decision rather than a
+  patch, briefed in `docs/tasks/pack-addressing.md`.
+
+- **Every noun its plural, every adjective its agreement forms.** `pluralOf` and
+  `adjectiveForms` have generated these since the pack existed, and the build used
+  the result only to link `verduras` in a sentence back to `verdura`. Nothing
+  shipped, so nothing could show it: `formsOf` had verb conjugations to read and
+  nothing else, and tapping a noun answered "what does it mean" but never "what is
+  its plural" — the one question a Spanish noun always raises. The forms were
+  already computed; only the emitting was missing. 1,118 records now ship beside
+  the 3,024 verb forms, so **Other forms** appears on a noun and an adjective the
+  way it always did on a verb.
+
+  The record is `InflectedForm` rather than `VerbForm` and its pack file is
+  `forms` rather than `verb-forms`, because a plural and a conjugation are the same
+  kind of fact from the same language module — two record types for one idea meant
+  two accessors, two schemas and two places to forget. The surface index is now
+  driven from the same records, so what a learner can be shown and what a sentence
+  can link to cannot drift apart.
+
+  An invariable adjective's forms carry **no** gender now, rather than defaulting
+  to masculine: `grande` is as feminine as it is masculine, and describing `una
+casa grande` as masculine teaches the opposite of the rule the entry exists to
+  illustrate. Those morphs are what a sentence token inherits, so the wrong label
+  travelled.
+
+- **Ordinals generated rather than typed, and a floor number that is no longer a
+  unit of time.** `spellOrdinal` was written, tested, and called by nothing. The
+  build now cross-checks an ordinal the way it already cross-checks a cardinal —
+  `parseOrdinal` accepts exactly the twenty citation forms, so `septimo` fails the
+  round trip instead of shipping — and derives `primer` and `tercer` instead of
+  reading them out of the extra-surfaces column, which is a place a human types
+  Spanish and therefore the thing `numerals.ts` exists to prevent.
+
+  `segundo` the ordinal was simply missing, so `segundo` the noun claimed `el
+segundo piso`: a **wrong** link, which the coverage report counts as a success,
+  with four unlinked `segunda` tokens beside it. It is a lexeme now — carded as
+  `-`, since the noun already owns that text — and `disambiguate` reads an ordinal
+  before a noun as the ordinal. Narrowed to ordinals deliberately: the general
+  "adjective before a noun" rule would reopen `la cara` and `mucho frío`. Token
+  linking went from 99% to **100%** (7,497 of 7,531), and the new `ordinals`
+  pattern names the agreement and the shortening.
+
 - **A home screen that says where you are, before it says what to do.** `/es/a1`
   was the coach and was called **Test** in the navigation — accurate about what it
   did, wrong about where it sat. It is the address `/` redirects to and the one a

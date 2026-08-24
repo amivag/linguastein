@@ -620,12 +620,27 @@ function describeBatch(standing: BatchStanding): string {
 }
 
 /** What is left to do, in the words the mission screen itself uses. */
+/**
+ * The state of one mission, led by its level.
+ *
+ * `MissionDefinition.level` has always existed and nothing rendered it, which
+ * was survivable while thirteen of fourteen missions were A1 and no course sat
+ * above them. Selecting B1 made it a lie of omission: a level is a *ceiling*, so
+ * every A1 mission stays in scope, and the list a B1 learner sees is identical
+ * to the A2 one with nothing anywhere saying why.
+ *
+ * Leading with it rather than appending it, because it is the thing being
+ * scanned for — and in the state line rather than as a badge of its own, since
+ * ` · ` is already this row's separator and a level is one more fact about the
+ * mission, not a second kind of thing.
+ */
 function describeStanding(standing: MissionStanding): string {
-  if (standing.complete) return 'Complete';
+  const level = levelLabel(standing.mission.level);
+  if (standing.complete) return `${level} · Complete`;
   if (standing.stage === 'use') {
-    return `Transfer ${standing.transferPosition} of ${standing.transferTotal}`;
+    return `${level} · Transfer ${standing.transferPosition} of ${standing.transferTotal}`;
   }
-  return `${standing.lineCount} lines · about ${standing.mission.estimatedMinutes} min`;
+  return `${level} · ${standing.lineCount} lines · about ${standing.mission.estimatedMinutes} min`;
 }
 
 interface TileProps {

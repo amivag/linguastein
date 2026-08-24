@@ -106,6 +106,7 @@
 {"id":"core-es:skill:react-to-news","kind":"function","label":"Reaccionar a una noticia","level":"b1","prerequisites":["core-es:skill:react-with-interest"]}
 {"id":"core-es:skill:state-a-purpose","kind":"function","label":"Explicar para qué","level":"b1","prerequisites":["core-es:skill:give-a-reason"]}
 {"id":"core-es:skill:talk-about-a-future-moment","kind":"function","label":"Hablar de cuando pase algo","level":"b1","prerequisites":["core-es:skill:say-when-something-happens"]}
+{"id":"core-es:skill:turn-something-down","kind":"function","label":"Decir que no con cortesía","level":"b1","prerequisites":["core-es:skill:respond-to-suggestion"]}
 {"id":"core-es:skill:make-a-complaint","kind":"function","label":"Quejarse y pedir una solución","level":"b1","prerequisites":["core-es:skill:close-service-exchange"]}
 {"id":"core-es:skill:weigh-two-options","kind":"function","label":"Ver ventajas e inconvenientes","level":"b1","prerequisites":["core-es:skill:choose-between-options"]}
 {"id":"core-es:skill:concede-a-point","kind":"function","label":"Conceder y matizar","level":"b1","prerequisites":["core-es:skill:answer-a-tag"]}

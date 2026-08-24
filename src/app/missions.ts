@@ -1837,4 +1837,236 @@ export const MISSIONS: readonly MissionDefinition[] = [
     learnerSpeaker: 'Luis',
     scenarioPartner: 'a friend looking at your photos',
   },
+  /*
+   * ── B1 ────────────────────────────────────────────────────────────────
+   *
+   * The first missions above A2, and the reason the ladder stopped there was
+   * never the engine: `missionsForCourse` has always taken a level ceiling, so
+   * a B1 mission needed B1 *content* and there was none. `more-missions.md` §2.1
+   * named this as the gap and said it was "not solved by writing more a1
+   * missions" — thirteen of fourteen were a1, and a learner who finished them
+   * had one a2 mission and then nothing.
+   *
+   * All three turn on the same grammar and are deliberately not *about* it. A B1
+   * learner does not need a mission called "the subjunctive"; they need to
+   * complain about a bill, settle something with a flatmate and take advice
+   * without taking orders — and find, three passages in, that all of those need
+   * `quiero que`, `es mejor que` and `dudo que` whether anybody named the mood
+   * or not.
+   *
+   * The transfer ladder is steeper here than at A1. The last rung of each drops
+   * more than the script: in `handle-a-complaint` it drops the counter, so there
+   * is nobody paid to be patient with you; in `share-a-flat` the learner becomes
+   * the one asking rather than the one asked.
+   */
+  {
+    id: 'handle-a-complaint',
+    language: 'es',
+    level: 'b1',
+    order: 14,
+    title: 'Say something is wrong, and get it put right',
+    goal: 'Explain what has gone wrong, say what you want done about it, and stay polite while holding the line.',
+    passage: '700109',
+    transfers: [
+      {
+        passage: '700115',
+        support: 'guided',
+        brief:
+          'The same complaint down a phone line, about a bill that is twice what it should be.',
+      },
+      {
+        passage: '700116',
+        support: 'guided',
+        brief:
+          'A parcel that never came — and they offer a replacement when what you want is the money.',
+      },
+      {
+        passage: '700117',
+        support: 'independent',
+        brief:
+          'A neighbour rather than a shop: no counter to stand at, and nobody paid to be patient with you.',
+      },
+    ],
+    capabilities: ['make-a-complaint', 'ask-someone-to-do', 'express-a-hope'],
+    responsePalettes: [
+      {
+        id: 'complaint-opening',
+        capability: 'make-a-complaint',
+        title: 'Saying what is wrong',
+        cue: 'Say what happened, or what it is doing to you. Blame is optional and usually unhelpful.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '001869', nuance: 'Flat and factual; hardest to argue with' },
+          { item: '001873', nuance: 'States exactly what was done' },
+          { item: '001933', nuance: 'Reports the symptom, not the fault' },
+          { item: '001993', nuance: 'Names the effect on you instead of the cause' },
+          { item: '002057', nuance: 'Says how it felt, which a fact alone does not' },
+          { item: '002110', nuance: 'Appeals to fairness rather than to the rules' },
+          { item: '002114', nuance: 'Understated, and about the thing rather than a person' },
+          { item: '002074', nuance: 'Firm: a demand, not a report' },
+        ],
+      },
+      {
+        id: 'complaint-request',
+        capability: 'ask-someone-to-do',
+        title: 'Asking for what you want done',
+        cue: 'A complaint without a request is a mood. Say what would settle it.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '001731', nuance: 'The plainest form of the ask' },
+          { item: '001733', nuance: 'Direct, and with a deadline attached' },
+          { item: '001734', nuance: 'Asking someone to stop rather than to start' },
+          { item: '001735', nuance: 'Offered as a question, which is harder to refuse' },
+          { item: '001736', nuance: 'A preference — softer than a request, still clear' },
+          { item: '001740', nuance: 'Formal, to someone serving you' },
+          { item: '001738', nuance: 'Puts the requirement on an institution, not a person' },
+          { item: '001739', nuance: 'States a rule of your own instead of asking' },
+        ],
+      },
+    ],
+    spotlight: 0,
+    estimatedMinutes: 12,
+    learnerSpeaker: 'Cliente',
+    scenarioPartner: 'someone on the other side of a counter',
+  },
+  {
+    id: 'share-a-flat',
+    language: 'es',
+    level: 'b1',
+    order: 15,
+    title: 'Sort something out with the person you live with',
+    goal: 'Raise something that is bothering you at home, propose a change, and reach an agreement neither of you resents.',
+    passage: '700110',
+    transfers: [
+      {
+        passage: '700118',
+        support: 'guided',
+        brief:
+          'The same conversation about money, where the bills went up and neither of you caused it.',
+      },
+      {
+        passage: '700119',
+        support: 'guided',
+        brief: 'Who cleans what — and the fix is a rota rather than a favour.',
+      },
+      {
+        passage: '700120',
+        support: 'independent',
+        brief: 'You are the one asking this time, and the answer is not a foregone conclusion.',
+      },
+    ],
+    capabilities: ['ask-someone-to-do', 'react-to-news', 'concede-a-point'],
+    responsePalettes: [
+      {
+        id: 'flat-reaction',
+        capability: 'react-to-news',
+        title: 'Reacting without starting a row',
+        cue: 'React to what they have just said before you answer it. The reaction is what keeps it a conversation.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '001777', nuance: 'Glad for them, plainly' },
+          { item: '001778', nuance: 'Surprised, and mildly critical of everyone else' },
+          { item: '001779', nuance: 'Annoyed, but at a situation rather than at them' },
+          { item: '001780', nuance: 'Sorry about it, and says so first' },
+          { item: '001781', nuance: 'Worried, and names the thing worrying you' },
+          { item: '001783', nuance: 'Grateful they told you at all' },
+          { item: '002117', nuance: 'Grants that their feeling makes sense' },
+          { item: '002036', nuance: 'A light regret, for something nobody can help' },
+        ],
+      },
+      {
+        id: 'flat-request',
+        capability: 'ask-someone-to-do',
+        title: 'Proposing the change',
+        cue: 'Ask for the change, not for an apology. A proposal is easier to agree to than a complaint.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '001736', nuance: 'A preference, which leaves them room' },
+          { item: '001731', nuance: 'Direct, and assumes goodwill' },
+          { item: '001734', nuance: 'Asking them to stop doing something' },
+          { item: '001733', nuance: 'With a deadline, for when it has waited long enough' },
+          { item: '001735', nuance: 'Offers to do it yourself instead' },
+          { item: '001737', nuance: 'Reports what somebody else wants of you' },
+          { item: '001739', nuance: 'States your own rule rather than asking for theirs' },
+          { item: '001740', nuance: 'Formal — for a landlord rather than a flatmate' },
+        ],
+      },
+    ],
+    spotlight: 0,
+    estimatedMinutes: 11,
+    learnerSpeaker: 'Marta',
+    scenarioPartner: 'the person you share a flat with',
+  },
+  {
+    id: 'ask-for-advice',
+    language: 'es',
+    level: 'b1',
+    order: 16,
+    title: 'Ask for advice, weigh it, and decide',
+    goal: 'Lay out a choice you cannot settle alone, take advice without taking orders, and say what you have decided.',
+    passage: '700112',
+    transfers: [
+      {
+        passage: '700121',
+        support: 'guided',
+        brief:
+          'The same weighing-up about a course, where the cheaper option is not obviously the worse one.',
+      },
+      {
+        passage: '700122',
+        support: 'guided',
+        brief: 'Money — and the first rung where you push back on the advice instead of taking it.',
+      },
+      {
+        passage: '700123',
+        support: 'independent',
+        brief: 'A worry rather than a decision, and advice you would rather not have been given.',
+      },
+    ],
+    // `weigh-two-options` is deliberately not here. It is what happens in the
+    // model and the first two transfers, and it is not what happens in the
+    // third — a worry about sleeping badly has no two options to weigh — so
+    // declaring it would claim a transfer the last rung does not make.
+    capabilities: ['give-advice', 'express-doubt'],
+    responsePalettes: [
+      {
+        id: 'advice-giving',
+        capability: 'give-advice',
+        title: 'Advising without ordering',
+        cue: 'Advice lands better as a suggestion than as an instruction. Say what you would do, or what is worth doing.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '002177', nuance: 'Softest: a suggestion, easily declined' },
+          { item: '002167', nuance: 'Recommends a specific thing' },
+          { item: '002168', nuance: 'Formal, to someone you do not know well' },
+          { item: '002012', nuance: 'Flags it as advice, then says it bluntly' },
+          { item: '002071', nuance: 'Gives the reason first and the instruction second' },
+          { item: '001830', nuance: 'A warning, phrased in the negative' },
+          { item: '002178', nuance: 'Points elsewhere rather than answering directly' },
+          { item: '001931', nuance: 'Tells them what not to do, and why is left implied' },
+        ],
+      },
+      {
+        id: 'advice-doubt',
+        capability: 'express-doubt',
+        title: 'Not agreeing, without a row',
+        cue: 'Say what you doubt rather than that they are wrong. Spanish moves the second verb for you.',
+        initiallyVisible: 3,
+        responses: [
+          { item: '001767', nuance: 'Doubts the claim itself, mildly' },
+          { item: '001768', nuance: 'Disagrees about degree, not about fact' },
+          { item: '001969', nuance: 'Names the one thing that fails to persuade you' },
+          { item: '001954', nuance: 'Hedged behind «me parece», so it stays an opinion' },
+          { item: '002181', nuance: 'About likelihood rather than truth' },
+          { item: '002160', nuance: 'Doubts that anything will change' },
+          { item: '002001', nuance: 'Flat rejection; the strongest here' },
+          { item: '001967', nuance: 'Rejects the argument rather than the conclusion' },
+        ],
+      },
+    ],
+    spotlight: 0,
+    estimatedMinutes: 12,
+    learnerSpeaker: 'Ana',
+    scenarioPartner: 'a friend who has been through it',
+  },
 ] as const;

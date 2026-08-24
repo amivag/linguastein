@@ -80,9 +80,14 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   `no hables` as a pattern, because the negative command is the one place the
   mood is not optional-feeling
 - core-es pack: 175 verbs (7,350 generated forms), 467 nouns, 314 modifiers,
-  2,268 sentences — 3,045 practisable items, 100% of sentence words linked to a lexeme
+  2,350 sentences — 3,127 practisable items, 100% of sentence words linked to a lexeme
+- Three B1 missions — a complaint, a flatshare negotiation and asking for advice
+  — each a model passage plus three transfers, and the mission list now says
+  which level a mission is: `MissionDefinition.level` had always existed and
+  nothing rendered it, which only became a lie of omission once a B1 course
+  existed for the A1 ladder to sit unchanged inside
 - B1 as a level inside `core-es` rather than a separate pack: 136 B1 lexemes and
-  501 new sentences at that level, every one of those lexemes in four or more of
+  573 new sentences at that level, every one of those lexemes in four or more of
   them, plus six passages. The file names carry the range and the build derives it, so
   `es-a1-b1-core-*` renamed itself when the first B1 sentence landed
 - The alphabet: `src/languages/es/alphabet.ts` holds the 27 letters and their

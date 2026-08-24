@@ -2269,6 +2269,88 @@
 002266	sentence	active	Sí, con ge. Y Elena con una ele.
 002267	sentence	active	Perfecto. ¿Para qué día?
 002268	sentence	active	Para el viernes.
+002269	sentence	active	Buenos días, llamo por la factura de este mes.
+002270	sentence	active	Dígame, ¿cuál es el problema?
+002271	sentence	active	La factura es el doble que otros meses.
+002272	sentence	active	Voy a mirar los datos.
+002273	sentence	active	Espero que sea un error.
+002274	sentence	active	Tiene razón, hay un error en el total.
+002275	sentence	active	¿Me devuelven la diferencia?
+002276	sentence	active	Sí, le devolvemos el dinero este mes.
+002277	sentence	active	Compré una cosa hace dos semanas y no ha llegado.
+002278	sentence	active	¿Tiene el número del paquete?
+002279	sentence	active	Sí, aquí está.
+002280	sentence	active	Es raro que no esté aquí.
+002281	sentence	active	Me molesta mucho, lo necesito para el sábado.
+002282	sentence	active	Le pido disculpas. Le mandamos otro hoy.
+002283	sentence	active	Prefiero que me devuelvan el dinero.
+002284	sentence	active	Como quiera. Lo hacemos ahora mismo.
+002285	sentence	active	Perdona, ¿tienes un momento?
+002286	sentence	active	Claro, dime.
+002287	sentence	active	El ruido de la noche no me deja dormir.
+002288	sentence	active	Lo siento, no sabía que se oía.
+002289	sentence	active	Te pido que bajes la música después de las once.
+002290	sentence	active	Tienes razón. No va a volver a pasar.
+002291	sentence	active	Gracias, es importante que descansemos los dos.
+002292	sentence	active	Avísame si vuelve a ocurrir.
+002293	sentence	active	¿Miramos los gastos de este mes?
+002294	sentence	active	Vale. La luz subió otra vez.
+002295	sentence	active	Es normal en invierno, pero es mucho.
+002296	sentence	active	Te propongo que bajemos la temperatura.
+002297	sentence	active	De acuerdo. Así gastamos menos energía.
+002298	sentence	active	Y es mejor que hagamos un presupuesto.
+002299	sentence	active	Buena idea. ¿Compartimos la factura del wifi?
+002300	sentence	active	Sí, la pagamos entre los dos.
+002301	sentence	active	La cocina está muy sucia.
+002302	sentence	active	Tienes razón. ¿Hacemos un horario?
+002303	sentence	active	Es buena idea. Yo limpio los lunes.
+002304	sentence	active	Y yo los jueves. ¿Te parece justo?
+002305	sentence	active	Me parece bien. Pero quiero que lo escribamos.
+002306	sentence	active	Claro, lo pongo en la pared.
+002307	sentence	active	Así nadie se queja después.
+002308	sentence	active	Y si alguien no puede, que avise.
+002309	sentence	active	¿Te molesta si viene mi hermana el sábado?
+002310	sentence	active	No, claro que no. ¿Cuántos días?
+002311	sentence	active	Dos noches. Duerme en el sofá.
+002312	sentence	active	Perfecto. Avísame cuando llegue.
+002313	sentence	active	Gracias por ser tan amable.
+002314	sentence	active	Es tu casa también.
+002315	sentence	active	Aunque sea poco tiempo, quiero que esté cómoda.
+002316	sentence	active	No te preocupes, hay sitio para todos.
+002317	sentence	active	No sé qué curso hacer este año.
+002318	sentence	active	¿Y qué puedes elegir?
+002319	sentence	active	Inglés por internet o inglés en una escuela.
+002320	sentence	active	Te aconsejo que compares el precio y el horario.
+002321	sentence	active	El de internet es más económico.
+002322	sentence	active	Pero dudo que aprendas sin un profesor.
+002323	sentence	active	Es verdad. La escuela tiene más ventajas.
+002324	sentence	active	Es lógico que quieras hablar con gente.
+002325	sentence	active	Quiero comprar un coche, pero es caro.
+002326	sentence	active	¿Tienes algún ahorro?
+002327	sentence	active	Un poco, pero no es suficiente.
+002328	sentence	active	Te sugiero que esperes unos meses.
+002329	sentence	active	Es que lo necesito para el trabajo.
+002330	sentence	active	Entonces compara las ofertas antes de decidir.
+002331	sentence	active	Sí, y así no gasto todo.
+002332	sentence	active	Es importante que no gastes más de lo que tienes.
+002333	sentence	active	Estos días duermo muy mal.
+002334	sentence	active	¿Desde cuándo te pasa?
+002335	sentence	active	Desde hace un mes.
+002336	sentence	active	Te aconsejo que vayas al médico.
+002337	sentence	active	No creo que sea nada grave.
+002338	sentence	active	Puede ser, pero es mejor que lo mires.
+002339	sentence	active	Tienes razón. Pido cita mañana.
+002340	sentence	active	Y cuida el horario, duerme más temprano.
+002341	sentence	active	Aunque no sea perfecto, es un buen acuerdo.
+002342	sentence	active	Espero que la próxima vez llegue a tiempo.
+002343	sentence	active	Ojalá podamos dormir bien esta semana.
+002344	sentence	active	Me preocupa que la luz suba cada mes.
+002345	sentence	active	Aunque cueste más, no podemos vivir sin luz.
+002346	sentence	active	Aunque no me guste limpiar, es justo.
+002347	sentence	active	Me alegro de que lo hablemos.
+002348	sentence	active	Te pido que no pongas música esa noche.
+002349	sentence	active	Me alegro de que venga tu hermana.
+002350	sentence	active	Dudo que sea el mejor momento.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -2986,6 +3068,15 @@
 700112	passage	active	Un consejo sobre el trabajo
 700113	passage	active	Una noticia sobre el clima
 700114	passage	active	Una reserva por teléfono
+700115	passage	active	Una factura que no es correcta
+700116	passage	active	El paquete que no llegó
+700117	passage	active	El ruido del vecino
+700118	passage	active	Los gastos del piso
+700119	passage	active	Quién hace qué
+700120	passage	active	Una visita el fin de semana
+700121	passage	active	Qué curso elegir
+700122	passage	active	Ahorrar o gastar
+700123	passage	active	Un consejo sobre la salud
 800001	verb-card	active	ser
 800002	verb-card	active	estar
 800003	verb-card	active	tener

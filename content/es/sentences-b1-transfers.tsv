@@ -1,0 +1,95 @@
+# B1 mission transfers: the same move, somewhere else.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+#
+# Leave the id off a new row — omit the column entirely, do not leave it empty.
+#
+# Three missions, three transfers each. A transfer is not a harder version of the
+# model: it is the same communicative move with the details changed, so that Use
+# is not a replay of Understand. The earlier rungs change the setting and keep
+# the scripting; the last one drops the script.
+#
+# The models live in `sentences-b1-passages.tsv` — a shop complaint, a flatmate
+# conversation and a piece of advice about a job. What is here recombines them:
+# the complaint moves to a bill, a parcel and a neighbour; the flat conversation
+# to money, cleaning and a guest; the advice to a course, a car and a doctor.
+002269	Buenos días, llamo por la factura de este mes.	Good morning, I am calling about this month's bill.	b1	money					queja-factura-b1	Cliente	make-a-complaint
+002270	Dígame, ¿cuál es el problema?	Tell me, what is the problem?	b1	money		formal	usted		queja-factura-b1	Empleada	
+002271	La factura es el doble que otros meses.	The bill is double what it is other months.	b1	money					queja-factura-b1	Cliente	make-a-complaint
+002272	Voy a mirar los datos.	I am going to look at the figures.	b1	money,technology					queja-factura-b1	Empleada	
+002273	Espero que sea un error.	I hope it is a mistake.	b1	money					queja-factura-b1	Cliente	express-a-hope
+002274	Tiene razón, hay un error en el total.	You are right, there is a mistake in the total.	b1	money		formal	usted		queja-factura-b1	Empleada	
+002275	¿Me devuelven la diferencia?	Will you give me the difference back?	b1	money					queja-factura-b1	Cliente	ask-someone-to-do
+002276	Sí, le devolvemos el dinero este mes.	Yes, we will refund you this month.	b1	money		formal	usted		queja-factura-b1	Empleada	
+002277	Compré una cosa hace dos semanas y no ha llegado.	I bought something two weeks ago and it has not arrived.	b1	shopping					queja-paquete-b1	Cliente	make-a-complaint
+002278	¿Tiene el número del paquete?	Do you have the parcel number?	b1	shopping		formal	usted		queja-paquete-b1	Empleado	
+002279	Sí, aquí está.	Yes, here it is.	b1	shopping					queja-paquete-b1	Cliente	
+002280	Es raro que no esté aquí.	It is odd that it is not here.	b1	shopping					queja-paquete-b1	Empleado	react-to-news
+002281	Me molesta mucho, lo necesito para el sábado.	It really annoys me, I need it for Saturday.	b1	shopping					queja-paquete-b1	Cliente	make-a-complaint
+002282	Le pido disculpas. Le mandamos otro hoy.	I apologise. We will send you another today.	b1	shopping		formal	usted		queja-paquete-b1	Empleado	
+002283	Prefiero que me devuelvan el dinero.	I would rather you gave me my money back.	b1	shopping,money					queja-paquete-b1	Cliente	ask-someone-to-do
+002284	Como quiera. Lo hacemos ahora mismo.	As you wish. We will do it right now.	b1	shopping		formal	usted		queja-paquete-b1	Empleado	
+002285	Perdona, ¿tienes un momento?	Excuse me, do you have a moment?	b1	city,social					queja-ruido-b1	Vecina	
+002286	Claro, dime.	Of course, go ahead.	b1	city,social					queja-ruido-b1	Vecino	
+002287	El ruido de la noche no me deja dormir.	The noise at night stops me sleeping.	b1	city,home					queja-ruido-b1	Vecina	make-a-complaint
+002288	Lo siento, no sabía que se oía.	I am sorry, I did not know it could be heard.	b1	city					queja-ruido-b1	Vecino	
+002289	Te pido que bajes la música después de las once.	I am asking you to turn the music down after eleven.	b1	city,music					queja-ruido-b1	Vecina	ask-someone-to-do
+002290	Tienes razón. No va a volver a pasar.	You are right. It will not happen again.	b1	city					queja-ruido-b1	Vecino	
+002291	Gracias, es importante que descansemos los dos.	Thank you, it is important that we both get some rest.	b1	city,health					queja-ruido-b1	Vecina	give-advice
+002292	Avísame si vuelve a ocurrir.	Let me know if it happens again.	b1	city,communication			tu		queja-ruido-b1	Vecino	
+002293	¿Miramos los gastos de este mes?	Shall we look at this month's costs?	b1	home,money					piso-gastos-b1	Marta	
+002294	Vale. La luz subió otra vez.	OK. The electricity went up again.	b1	home,money					piso-gastos-b1	Pablo	
+002295	Es normal en invierno, pero es mucho.	It is normal in winter, but it is a lot.	b1	home,weather					piso-gastos-b1	Marta	
+002296	Te propongo que bajemos la temperatura.	I suggest we turn the temperature down.	b1	home,environment					piso-gastos-b1	Pablo	ask-someone-to-do
+002297	De acuerdo. Así gastamos menos energía.	Agreed. That way we use less energy.	b1	home,environment					piso-gastos-b1	Marta	
+002298	Y es mejor que hagamos un presupuesto.	And it is better if we draw up a budget.	b1	home,money					piso-gastos-b1	Pablo	give-advice
+002299	Buena idea. ¿Compartimos la factura del wifi?	Good idea. Shall we share the wifi bill?	b1	home,technology					piso-gastos-b1	Marta	
+002300	Sí, la pagamos entre los dos.	Yes, we will pay it between us.	b1	home,money					piso-gastos-b1	Pablo	
+002301	La cocina está muy sucia.	The kitchen is very dirty.	b1	home					piso-limpieza-b1	Pablo	make-a-complaint
+002302	Tienes razón. ¿Hacemos un horario?	You are right. Shall we draw up a rota?	b1	home,work					piso-limpieza-b1	Marta	
+002303	Es buena idea. Yo limpio los lunes.	That is a good idea. I will clean on Mondays.	b1	home,days-of-week					piso-limpieza-b1	Pablo	
+002304	Y yo los jueves. ¿Te parece justo?	And I will do Thursdays. Does that seem fair to you?	b1	home,days-of-week					piso-limpieza-b1	Marta	weigh-two-options
+002305	Me parece bien. Pero quiero que lo escribamos.	That seems fine to me. But I want us to write it down.	b1	home					piso-limpieza-b1	Pablo	ask-someone-to-do
+002306	Claro, lo pongo en la pared.	Of course, I will put it on the wall.	b1	home					piso-limpieza-b1	Marta	
+002307	Así nadie se queja después.	That way nobody complains afterwards.	b1	home,communication					piso-limpieza-b1	Pablo	
+002308	Y si alguien no puede, que avise.	And if somebody cannot, let them say so.	b1	home,communication					piso-limpieza-b1	Marta	
+002309	¿Te molesta si viene mi hermana el sábado?	Do you mind if my sister comes on Saturday?	b1	home,family					piso-visita-b1	Marta	
+002310	No, claro que no. ¿Cuántos días?	No, of course not. How many days?	b1	home					piso-visita-b1	Pablo	
+002311	Dos noches. Duerme en el sofá.	Two nights. She will sleep on the sofa.	b1	home					piso-visita-b1	Marta	
+002312	Perfecto. Avísame cuando llegue.	Perfect. Let me know when she arrives.	b1	home,communication			tu		piso-visita-b1	Pablo	talk-about-a-future-moment
+002313	Gracias por ser tan amable.	Thank you for being so kind.	b1	home,social					piso-visita-b1	Marta	
+002314	Es tu casa también.	It is your home too.	b1	home					piso-visita-b1	Pablo	
+002315	Aunque sea poco tiempo, quiero que esté cómoda.	Even if it is a short stay, I want her to be comfortable.	b1	home					piso-visita-b1	Marta	concede-a-point
+002316	No te preocupes, hay sitio para todos.	Do not worry, there is room for everybody.	b1	home					piso-visita-b1	Pablo	make-a-complaint
+002317	No sé qué curso hacer este año.	I do not know which course to do this year.	b1	school					consejo-curso-b1	Ana	
+002318	¿Y qué puedes elegir?	And what can you choose from?	b1	school					consejo-curso-b1	Luis	
+002319	Inglés por internet o inglés en una escuela.	English online or English at a school.	b1	school,language					consejo-curso-b1	Ana	
+002320	Te aconsejo que compares el precio y el horario.	I advise you to compare the price and the hours.	b1	school,money					consejo-curso-b1	Luis	give-advice
+002321	El de internet es más económico.	The online one is cheaper.	b1	school,money					consejo-curso-b1	Ana	
+002322	Pero dudo que aprendas sin un profesor.	But I doubt you learn without a teacher.	b1	school					consejo-curso-b1	Luis	express-doubt
+002323	Es verdad. La escuela tiene más ventajas.	That is true. The school has more advantages.	b1	school					consejo-curso-b1	Ana	weigh-two-options
+002324	Es lógico que quieras hablar con gente.	It is only natural that you want to talk to people.	b1	school,social					consejo-curso-b1	Luis	react-to-news
+002325	Quiero comprar un coche, pero es caro.	I want to buy a car, but it is expensive.	b1	money,travel					consejo-dinero-b1	Ana	
+002326	¿Tienes algún ahorro?	Do you have anything saved?	b1	money					consejo-dinero-b1	Luis	
+002327	Un poco, pero no es suficiente.	A little, but it is not enough.	b1	money					consejo-dinero-b1	Ana	
+002328	Te sugiero que esperes unos meses.	I suggest you wait a few months.	b1	money					consejo-dinero-b1	Luis	give-advice
+002329	Es que lo necesito para el trabajo.	The thing is I need it for work.	b1	money,work					consejo-dinero-b1	Ana	turn-something-down
+002330	Entonces compara las ofertas antes de decidir.	Then compare the offers before you decide.	b1	money,shopping			tu		consejo-dinero-b1	Luis	give-advice
+002331	Sí, y así no gasto todo.	Yes, and that way I do not spend everything.	b1	money					consejo-dinero-b1	Ana	
+002332	Es importante que no gastes más de lo que tienes.	It is important that you do not spend more than you have.	b1	money					consejo-dinero-b1	Luis	give-advice
+002333	Estos días duermo muy mal.	These days I am sleeping very badly.	b1	health					consejo-salud-b1	Ana	
+002334	¿Desde cuándo te pasa?	How long has this been going on?	b1	health,time					consejo-salud-b1	Luis	
+002335	Desde hace un mes.	For a month now.	b1	health,time					consejo-salud-b1	Ana	
+002336	Te aconsejo que vayas al médico.	I advise you to go to the doctor.	b1	health					consejo-salud-b1	Luis	give-advice
+002337	No creo que sea nada grave.	I do not think it is anything serious.	b1	health					consejo-salud-b1	Ana	express-doubt
+002338	Puede ser, pero es mejor que lo mires.	Maybe, but it is better to get it looked at.	b1	health					consejo-salud-b1	Luis	give-advice
+002339	Tienes razón. Pido cita mañana.	You are right. I will make an appointment tomorrow.	b1	health					consejo-salud-b1	Ana	
+002340	Y cuida el horario, duerme más temprano.	And watch your hours, sleep earlier.	b1	health,daily-routine			tu		consejo-salud-b1	Luis	give-advice
+002342	Espero que la próxima vez llegue a tiempo.	I hope it arrives on time next time.	b1	shopping					queja-paquete-b1	Cliente	express-a-hope
+002343	Ojalá podamos dormir bien esta semana.	I hope we can sleep well this week.	b1	city,health					queja-ruido-b1	Vecina	express-a-hope
+002344	Me preocupa que la luz suba cada mes.	It worries me that the electricity goes up every month.	b1	home,money					piso-gastos-b1	Marta	react-to-news
+002345	Aunque cueste más, no podemos vivir sin luz.	Even if it costs more, we cannot live without electricity.	b1	home,money					piso-gastos-b1	Pablo	concede-a-point
+002346	Aunque no me guste limpiar, es justo.	Even though I do not enjoy cleaning, it is fair.	b1	home					piso-limpieza-b1	Pablo	concede-a-point
+002347	Me alegro de que lo hablemos.	I am glad we are talking about it.	b1	home,communication					piso-limpieza-b1	Marta	react-to-news
+002348	Te pido que no pongas música esa noche.	I am asking you not to play music that night.	b1	home,music					piso-visita-b1	Marta	ask-someone-to-do
+002349	Me alegro de que venga tu hermana.	I am glad your sister is coming.	b1	home,family					piso-visita-b1	Pablo	react-to-news
+002350	Dudo que sea el mejor momento.	I doubt it is the best moment.	b1	money					consejo-dinero-b1	Luis	express-doubt

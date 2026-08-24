@@ -2,7 +2,7 @@
 
 **Status:** ready to start — the id prerequisite is cleared, so content is safe to edit
 **Written:** 2026-08-17
-**Revised:** 2026-08-24 — re-measured against pack `0.3.0`. Goals 2, 3 and half
+**Revised:** 2026-08-24 — re-measured against pack `0.12.0`. Goals 2, 3 and half
 of 5 are now met, so the numbers throughout were restated; the recycling gate
 (goal 1, §6.2) is still the open work and is now the only thing standing between
 this brief and done.
@@ -43,7 +43,7 @@ because content landed and the paragraph describing it did not:
 npm run build:data
 ```
 
-**Re-measured 2026-08-24**, against pack `0.11.0`. Goals 2 and 3 of §5 have since
+**Re-measured 2026-08-24**, against pack `0.12.0`. Goals 2 and 3 of §5 have since
 been met — read the table before planning volume work, because the figures this
 brief was written against are less than half of what now ships.
 
@@ -55,30 +55,30 @@ method §3.1 describes, confirmed on a level where nothing had to be retrofitted
 
 | Measure                              | Now                                       |
 | ------------------------------------ | ----------------------------------------- |
-| Practisable items                    | 3,045                                     |
-| — sentences and phrases              | 2,268                                     |
+| Practisable items                    | 3,127                                     |
+| — sentences and phrases              | 2,350                                     |
 | — word cards                         | 777                                       |
 | Lexemes                              | 956 (175 verbs, 467 nouns, 314 other)     |
 | Generated verb forms                 | 7,350 (42 per verb, subjunctive included) |
 | Generated noun and adjective forms   | 1,344                                     |
-| Running words of Spanish             | **13,582 (~113 minutes of reading)**      |
+| Running words of Spanish             | **14,109 (~118 minutes of reading)**      |
 | Average sentence length              | 6.0 words                                 |
 | Longest single item                  | 13 words                                  |
-| Multi-sentence texts                 | **114 (59 texts, 55 dialogues)**          |
-| — sentences read in context          | 871, averaging 7.6 per passage            |
-| Tokens linked to a lexeme            | 13,520 of 13,582 (100%)                   |
+| Multi-sentence texts                 | **123 (59 texts, 64 dialogues)**          |
+| — sentences read in context          | 953, averaging 7.7 per passage            |
+| Tokens linked to a lexeme            | 14,046 of 14,109 (100%)                   |
 | Lexemes appearing in ≥1 sentence     | 942 of 956                                |
-| Lexemes appearing in exactly one     | **102 (11%)**                             |
-| Lexemes with ≥6 encounters           | **416 (44%)**                             |
-| Questions / statements               | 421 / 1,847, with **5** minimal pairs     |
-| Items marked with register           | 1,078                                     |
-| Items marked with address (tú/usted) | 570                                       |
-| Items marked with a region           | 99                                        |
+| Lexemes appearing in exactly one     | **100 (10%)**                             |
+| Lexemes with ≥6 encounters           | **441 (46%)**                             |
+| Questions / statements               | 434 / 1,916, with **5** minimal pairs     |
+| Items marked with register           | 1,084                                     |
+| Items marked with address (tú/usted) | 565                                       |
+| Items marked with a region           | 100                                       |
 | Items containing `¡`                 | 15                                        |
 | Items with audio                     | 0                                         |
 | Senses                               | 0                                         |
 | Lexemes with `frequencyRank`         | 0                                         |
-| Skills with `prerequisites`          | 70                                        |
+| Skills with `prerequisites`          | 71                                        |
 
 Two rows moved for reasons worth knowing rather than by growth alone. **Token
 linking reached 100%** when `segundo` the ordinal was added — it was the last

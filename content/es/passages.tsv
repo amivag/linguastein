@@ -126,3 +126,12 @@
 700112	consejo-b1	dialogue	Un consejo sobre el trabajo	A word of advice about work	b1	work
 700113	clima-b1	text	Una noticia sobre el clima	A news item about the climate	b1	environment
 700114	reserva-nombre	dialogue	Una reserva por teléfono	A booking over the phone	a1	travel
+700115	queja-factura-b1	dialogue	Una factura que no es correcta	A bill that is not right	b1	money
+700116	queja-paquete-b1	dialogue	El paquete que no llegó	The parcel that never came	b1	shopping
+700117	queja-ruido-b1	dialogue	El ruido del vecino	The neighbour's noise	b1	city
+700118	piso-gastos-b1	dialogue	Los gastos del piso	The flat's bills	b1	home
+700119	piso-limpieza-b1	dialogue	Quién hace qué	Who does what	b1	home
+700120	piso-visita-b1	dialogue	Una visita el fin de semana	A guest at the weekend	b1	home
+700121	consejo-curso-b1	dialogue	Qué curso elegir	Which course to take	b1	school
+700122	consejo-dinero-b1	dialogue	Ahorrar o gastar	Saving or spending	b1	money
+700123	consejo-salud-b1	dialogue	Un consejo sobre la salud	A word of advice about health	b1	health

@@ -34,10 +34,32 @@
 .tiles {
   composes: listReset from '../../styles/surfaces.module.css';
   display: grid;
-  /* Two up on a phone, more as there is room. `auto-fill` rather than a media
-     query so the count follows the space instead of a guess about the device. */
+  /* Two up on a phone, more as there is room: `auto-fill` so the count follows
+     the space rather than a guess about the device. */
   grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
   gap: var(--space-3);
+}
+
+/*
+ * Past a phone, a wider floor.
+ *
+ * `auto-fill` packs as many columns as the floor allows, so a 9.5rem floor stays
+ * at 9.5rem however wide the window gets: the desktop drew four 163px columns and
+ * wrapped eighteen of the thirty-seven category labels, most of them two ordinary
+ * words — "Days of the week", "Meeting people". That is the wall of fragments the
+ * grammar section already had to escape, and here it also breaks the ranks, since
+ * a wrapped title makes its whole row taller than the one above.
+ *
+ * 13rem is measured rather than guessed: it is the smallest floor that keeps the
+ * ranks whole at every width the shell allows a desktop — all thirty-seven labels
+ * on one line at the widest, four of them on two lines at the narrowest, against
+ * eighteen wrapped to as many as four lines before. The phone keeps the narrow
+ * floor, because two up with a wrapped label beats one tile per row.
+ */
+@media (min-width: 600px) {
+  .tiles {
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  }
 }
 
 .tile {
@@ -49,8 +71,15 @@
   grid-template-areas:
     'icon title count'
     'note note note';
-  grid-template-columns: auto 1fr auto;
+  /* `minmax(0, …)` rather than `1fr`: the title track has to be allowed below its
+     own min-content, or a long word widens the track past the card. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: baseline;
+  /* Fill the row the grid gave the `li`, rather than stopping at the text. The
+     card is the `a`, not its `li`, so without this three tiles side by side end
+     at three different heights depending on whether their note wrapped — which
+     reads as broken rather than as varied. */
+  height: 100%;
   gap: var(--space-1) var(--space-2);
   padding: var(--space-3) var(--space-4);
   min-height: var(--tap-target);
@@ -72,8 +101,12 @@
 
   grid-area: icon;
   /* The row is baseline-aligned for the title and the count; a disc has no
-     baseline worth aligning, so it centres against the cap height instead. */
-  align-self: center;
+     baseline worth aligning. Centring it against the row was right while every
+     title was one word and wrong the moment one wrapped: on a three-line "Days of
+     the week" the disc slid down to sit beside the second line, reading as a
+     bullet for the middle of the label rather than as the tile's mark. It holds
+     the top instead, where the title starts. */
+  align-self: start;
 }
 
 .tileTitle {
@@ -84,6 +117,13 @@
   /* A category label can be long — "Sport and exercise" — and a tile that grows
      is better than one that clips. */
   overflow-wrap: break-word;
+  /* Wrapping alone was not enough, because a grid item will not shrink below its
+     longest word unless it is told to, and the track it sits in then cannot fit
+     inside the card: at a 9.5rem column, "Sentences" plus a four-digit count
+     plus the badge came to 181px inside a 152px tile, and the note underneath
+     ran out over the right edge. Nothing here needs that intrinsic floor — the
+     text wraps, and break-word above handles the one word that cannot. */
+  min-width: 0;
 }
 
 .tileCount {
@@ -95,6 +135,8 @@
 
 .tileNote {
   grid-area: note;
+  /* Shrinks with its track, for the reason the title does. */
+  min-width: 0;
   color: var(--color-text-muted);
   font-size: var(--text-xs);
   line-height: var(--leading-body);

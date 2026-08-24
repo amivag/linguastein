@@ -367,7 +367,16 @@ export function StudyScreen() {
       )}
 
       {current?.id === 'phrases' && (
-        <Section label="Phrases" icon="browse" note="Every word tappable, on every row.">
+        // Wide tiles for the reason Grammar's are: each of the three carries a note
+        // under its title, and two of the titles are two words. The narrow grid put
+        // "Texts and dialogues" on two lines above a three-line note and left the
+        // three cards ending at three different heights.
+        <Section
+          label="Phrases"
+          icon="browse"
+          layout="wide"
+          note="Every word tappable, on every row."
+        >
           <Tile
             to={browsePath(course, { filter: { types: ['phrase'] }, from })}
             title="Set phrases"

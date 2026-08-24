@@ -159,6 +159,7 @@ const PAIRS: readonly [string, string, number, string][] = [
   // level cannot help with: the level moves the text and leaves the tint where
   // the palette put it, so the palette has to leave the room.
   ['--color-text', '--color-accent-soft', 4.5, 'text on an accent-tinted panel'],
+  ['--color-text-muted', '--color-accent-soft', 4.5, 'a muted label on an accent-tinted panel'],
   ['--color-text', '--color-highlight-soft', 4.5, 'text on a warm-tinted panel'],
   // The accent badge — a step number, a mission's position, an icon in its own
   // tint. It carries a digit often enough to be held to text contrast rather
@@ -216,6 +217,18 @@ const PAIRS: readonly [string, string, number, string][] = [
         `categorical hue ${hue} on its own badge`,
       ],
       ['--color-text', `--color-kind-${hue}-soft`, 4.5, `body text on categorical tint ${hue}`],
+      /*
+       * The tint is a *ground* now, not only a badge fill: a row of material on
+       * Home is painted in it and carries a muted note under its label. That
+       * pairing went unchecked when the tint was only ever behind a glyph, which
+       * is precisely how a component invents a background nothing verifies.
+       */
+      [
+        '--color-text-muted',
+        `--color-kind-${hue}-soft`,
+        4.5,
+        `a muted label on categorical tint ${hue}`,
+      ],
     ],
   ),
 ];

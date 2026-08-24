@@ -124,4 +124,13 @@
        keep the content itself centred in the space that is left. */
     max-width: calc(var(--content-width) + var(--rail-width));
   }
+
+  /*
+   * A screen that is a survey rather than a text. See `AppShell`'s `wide` prop
+   * for why this is opt-in: the reading column is a rule about prose, and every
+   * screen that shows language keeps it.
+   */
+  .wide {
+    max-width: calc(var(--wide-width) + var(--rail-width));
+  }
 }

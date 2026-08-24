@@ -407,7 +407,7 @@ export function HomeScreen() {
   const title = `${option?.label ?? 'Practice'} · ${levelLabel(course.level)}`;
 
   return (
-    <AppShell title={title} action={<ThemeToggle variant="compact" />}>
+    <AppShell title={title} action={<ThemeToggle variant="compact" />} wide>
       <section className={styles.mission} aria-labelledby="mission-title">
         <p className={styles.eyebrow}>
           {reviewDue
@@ -541,80 +541,82 @@ export function HomeScreen() {
         </section>
       )}
 
-      {recent.length > 0 && (
-        <section aria-labelledby="recent-title">
-          <h2 id="recent-title" className={styles.sectionTitle}>
-            Where you left off
-          </h2>
-          {/* Tappable, like every other piece of language in the app: "the thing
+      <div className={styles.columns}>
+        {recent.length > 0 && (
+          <section aria-labelledby="recent-title">
+            <h2 id="recent-title" className={styles.sectionTitle}>
+              Where you left off
+            </h2>
+            {/* Tappable, like every other piece of language in the app: "the thing
               I was just working on" is exactly where a learner wants to ask which
               word was the problem, and Progress already answers that question the
               same way on its own list. */}
-          <ul className={styles.recent}>
-            {recent.map(({ item, translation }) => (
-              <li key={item.id} className={styles.recentRow}>
-                <TokenizedText
-                  item={item}
-                  onSelect={(token) => words.open(item.id, token)}
-                  selected={words.tokensFor(item.id)}
-                  contextLabel={item.text}
-                />
-                {translation && <span className={styles.recentMeaning}>{translation}</span>}
-              </li>
-            ))}
-          </ul>
-          <Button block className={styles.recentAgain} onClick={practiseRecent}>
-            <Icon name="again" />
-            Practise this again
-          </Button>
-          {sessions.length > 0 && (
-            <ul className={styles.sessions} aria-label="Recent sessions">
-              {sessions.map((session) => (
-                <li key={session.id}>
-                  <span>{session.when}</span>
-                  <span className={styles.sessionScore}>
-                    {session.score}
-                    {session.duration ? ` · ${session.duration}` : ''}
-                  </span>
+            <ul className={styles.recent}>
+              {recent.map(({ item, translation }) => (
+                <li key={item.id} className={styles.recentRow}>
+                  <TokenizedText
+                    item={item}
+                    onSelect={(token) => words.open(item.id, token)}
+                    selected={words.tokensFor(item.id)}
+                    contextLabel={item.text}
+                  />
+                  {translation && <span className={styles.recentMeaning}>{translation}</span>}
                 </li>
               ))}
             </ul>
-          )}
-        </section>
-      )}
+            <Button block className={styles.recentAgain} onClick={practiseRecent}>
+              <Icon name="again" />
+              Practise this again
+            </Button>
+            {sessions.length > 0 && (
+              <ul className={styles.sessions} aria-label="Recent sessions">
+                {sessions.map((session) => (
+                  <li key={session.id}>
+                    <span>{session.when}</span>
+                    <span className={styles.sessionScore}>
+                      {session.score}
+                      {session.duration ? ` · ${session.duration}` : ''}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
 
-      {contents.length > 0 && (
-        <section aria-labelledby="contents-title">
-          <h2 id="contents-title" className={styles.sectionTitle}>
-            In this course
-          </h2>
-          <ul className={styles.contents}>
-            {contents.map((row) => (
-              <li key={row.id}>
-                {/* The count is inside the link's text rather than beside it, for
+        {contents.length > 0 && (
+          <section aria-labelledby="contents-title">
+            <h2 id="contents-title" className={styles.sectionTitle}>
+              In this course
+            </h2>
+            <ul className={styles.contents}>
+              {contents.map((row) => (
+                <li key={row.id}>
+                  {/* The count is inside the link's text rather than beside it, for
                     the reason Study's tiles record: six rows whose accessible
                     names differ only by a number rendered elsewhere give an agent
                     and a screen reader nothing to choose between. */}
-                <Link className={styles.contentRow} to={row.to}>
-                  <span
-                    className={surfaces.kindBadge}
-                    data-kind={kindHue(row.id)}
-                    aria-hidden="true"
-                  >
-                    <Icon name={row.icon} size="sm" />
-                  </span>
-                  <span className={styles.contentText}>
-                    <strong>{row.label}</strong>
-                    <small>{row.note}</small>
-                  </span>
-                  <span className={styles.contentCount}>{row.count}</span>
-                  <Icon name="next" size="sm" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+                  {/* The hue is declared on the row, not on the badge inside it:
+                    custom properties inherit, so the ground, the spine, the disc
+                    and the count all resolve from one `data-kind` and cannot
+                    disagree about which colour this kind of material is. */}
+                  <Link className={styles.contentRow} data-kind={kindHue(row.id)} to={row.to}>
+                    <span className={surfaces.kindBadge} aria-hidden="true">
+                      <Icon name={row.icon} size="sm" />
+                    </span>
+                    <span className={styles.contentText}>
+                      <strong>{row.label}</strong>
+                      <small>{row.note}</small>
+                    </span>
+                    <span className={styles.contentCount}>{row.count}</span>
+                    <Icon name="next" size="sm" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
 
       <section className={styles.rhythm} aria-label="Learning rhythm">
         <div className={styles.rhythmStat}>

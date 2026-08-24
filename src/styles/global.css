@@ -56,7 +56,27 @@ body,
  */
 body {
   background: var(--color-bg);
-  background-image: linear-gradient(180deg, var(--color-bg-tint), var(--color-bg) 24rem);
+  /*
+   * Two washes rather than one, and the second is the reason.
+   *
+   * The linear fade alone was measured at a luminance difference of 0.006 against
+   * the page under it — real, and below what anyone sees. On a wide screen that
+   * left 97% of the pixels reading as one flat near-black, which is the whole of
+   * the "it feels like a terminal" complaint: not too few hues, but no *light*
+   * anywhere for them to sit in.
+   *
+   * So the top of the page is lit from one corner, in the palette's own accent.
+   * It is a wash over `--color-bg` and never a surface, so nothing reads text off
+   * it that is not already checked against the page — and a palette that wants no
+   * wash still gets none by setting `--color-bg-tint` to `--color-bg`.
+   */
+  background-image:
+    radial-gradient(
+      80% 55% at 12% 0%,
+      color-mix(in srgb, var(--color-accent) 12%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(180deg, var(--color-bg-tint), var(--color-bg) 32rem);
   background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);

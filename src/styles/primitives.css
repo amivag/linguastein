@@ -87,6 +87,10 @@
   /* Layout: one readable column that widens with the viewport rather than
      stretching text to unreadable line lengths on a desktop monitor. */
   --content-width: 640px;
+  /* The cap for a screen that surveys rather than reads — a dashboard of cards,
+     where the reading column leaves a desktop window mostly empty. Opt-in per
+     screen through `AppShell`'s `wide` prop, never the default. */
+  --wide-width: 1040px;
 
   /*
    * The navigation's own size, in one place.

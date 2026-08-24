@@ -4,12 +4,31 @@
   font-size: var(--text-sm);
 }
 
+/*
+ * The screen's subject, and the largest single object on it — so it is the one
+ * place a flat grey costs the most. It carries the accent as a wash rather than
+ * only on its button: the card *is* the recommendation, and a slab with one
+ * coloured control on it reads as a dialog.
+ *
+ * `--color-accent-soft` is a role, not a per-component `color-mix`, and body
+ * text on it is asserted at every contrast level and intensity — which is what
+ * makes a tinted ground safe here where an invented tint would not be.
+ */
 .mission {
+  position: relative;
   display: grid;
   gap: var(--space-4);
   padding: var(--space-5);
   border-radius: var(--radius-xl);
-  background: var(--color-surface);
+  /* Both stops are roles, and body text is asserted against each of them. A
+     blend between two grounds that each carry text is the one gradient this file
+     is entitled to draw; a stop invented with `color-mix` would be a background
+     nothing verifies. */
+  background: radial-gradient(
+    120% 100% at 0% 0%,
+    var(--color-accent-soft),
+    var(--color-surface) 68%
+  );
   box-shadow: var(--shadow-md);
 }
 
@@ -385,21 +404,34 @@
 }
 
 .contentRow {
+  composes: kindSurface from '../../styles/surfaces.module.css';
+
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: var(--space-3);
   min-height: var(--tap-target);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
+  padding-left: var(--space-5);
   color: inherit;
   text-decoration: none;
+  transition:
+    translate var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.contentRow:hover {
-  background: var(--color-surface-raised);
+@media (hover: hover) and (pointer: fine) {
+  .contentRow:hover {
+    translate: 0 -2px;
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* The count is the second-biggest thing in the row, so it takes the hue too —
+   a number set in the material's own colour, which is what makes the list read
+   as six kinds of thing rather than six rows of a table. */
+.contentCount {
+  color: var(--kind);
 }
 
 .contentText {
@@ -418,7 +450,6 @@
 }
 
 .contentCount {
-  color: var(--color-text-muted);
   font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: var(--weight-black);
@@ -462,4 +493,29 @@
 
 .barSeen {
   background: var(--color-accent);
+}
+
+/*
+ * Two columns once there is room for them.
+ *
+ * Not on a phone, where they would be two half-width columns of nothing. At
+ * 1440px the single reading column left a 269px dead gap and used 56% of the
+ * width, which is most of why a screen with plenty on it read as empty — the
+ * complaint was monotony, and a long thin strip of identical cards is what
+ * monotony looks like.
+ *
+ * The recommendation above stays full width, because it is the screen's subject
+ * and there is one of it. These two are surveys, and surveys read better side
+ * by side than stacked.
+ */
+.columns {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
 }

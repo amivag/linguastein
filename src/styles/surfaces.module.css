@@ -271,3 +271,53 @@
   letter-spacing: var(--tracking-label);
   white-space: nowrap;
 }
+
+/*
+ * A card whose *ground* is the hue, not a badge sitting on grey.
+ *
+ * The categorical family shipped as discs: a 28px badge beside a label, on a
+ * card the same near-black as every other card. Measured on the home screen at
+ * desktop width, that put three near-identical greys — luminances 0.005, 0.010
+ * and 0.017 — across 97% of the pixels, with colour reaching under 4%. Twelve
+ * hues cannot make a page scannable from 4% of its area; a learner scanning for
+ * "the teal one" is scanning six dots in a column of slabs.
+ *
+ * So the hue owns the row. The tint carries it, and a spine down the leading
+ * edge states it at full strength — which is the part that survives being
+ * glanced at, and the part a badge was already doing well at its own small size.
+ *
+ * Both grounds this needs are already asserted at every contrast level and every
+ * intensity: the hue against its own tint, and body text against that tint. The
+ * spine is decoration over a row that names itself, so it needs no contrast of
+ * its own.
+ */
+.kindSurface {
+  composes: kindTone;
+
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  /*
+   * The tint, flat and exactly as the palette authored it.
+   *
+   * The first version of this mixed it towards `--color-surface` to soften it,
+   * which was a tint invented per component — the thing rule 5 rules out, and
+   * worse here than usual because this ground carries text. `--color-text` and
+   * `--color-text-muted` are both asserted against `--color-kind-N-soft` at every
+   * contrast level and every intensity; neither is asserted against a blend this
+   * file made up, and no test could have caught that going wrong.
+   */
+  background: var(--kind-soft);
+  box-shadow: var(--shadow-sm);
+}
+
+/* The leading edge, at the hue's full strength. Decorative and `aria-hidden` by
+   construction — it is a pseudo-element, so it cannot reach the accessibility
+   tree at all. */
+.kindSurface::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--kind);
+}

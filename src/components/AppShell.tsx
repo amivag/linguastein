@@ -14,6 +14,19 @@ interface AppShellProps {
   readonly action?: ReactNode;
   /** Practice sessions hide the chrome and fill the screen. */
   readonly showNav?: boolean;
+  /**
+   * Lets a screen use the full width of a desktop window rather than the reading
+   * column.
+   *
+   * The narrow default is a rule about *prose*: a passage set across 1400px is
+   * unreadable, and every screen that shows language keeps the cap. A dashboard
+   * is not prose — Home is a survey of cards, and at 1440px the reading column
+   * left a 269px dead gap with 44% of the width unused, which is most of why the
+   * screen read as empty rather than as calm.
+   *
+   * Off by default, so a screen has to argue for it.
+   */
+  readonly wide?: boolean;
 }
 
 /**
@@ -25,7 +38,14 @@ interface AppShellProps {
  * The header sticks: it carries the way back and the voice control, and both
  * are needed halfway down a long passage as much as at the top of it.
  */
-export function AppShell({ title, children, onBack, action, showNav = true }: AppShellProps) {
+export function AppShell({
+  title,
+  children,
+  onBack,
+  action,
+  showNav = true,
+  wide = false,
+}: AppShellProps) {
   const navigate = useNavigate();
   const back = onBack === 'history' ? () => void navigate(-1) : onBack;
 
@@ -34,7 +54,7 @@ export function AppShell({ title, children, onBack, action, showNav = true }: Ap
   }, [title]);
 
   return (
-    <div className={`${styles.shell} ${showNav ? styles.withNav : ''}`}>
+    <div className={`${styles.shell} ${showNav ? styles.withNav : ''} ${wide ? styles.wide : ''}`}>
       <a className={styles.skipLink} href="#main">
         Skip to content
       </a>

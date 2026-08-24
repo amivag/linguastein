@@ -2869,7 +2869,7 @@
 {"ref":"core-es:skill:imperfect","lang":"en","text":"how things used to be"}
 {"ref":"core-es:skill:imperative","lang":"en","text":"telling someone to do something"}
 {"ref":"core-es:skill:yes-no-question","lang":"en","text":"a yes/no question is the statement itself — Spanish adds no word and moves nothing, only ¿ ? and the rising intonation"}
-{"ref":"core-es:skill:question-word","lang":"en","text":"a question word opens the question, after a preposition if it takes one, and the verb follows it directly"}
+{"ref":"core-es:skill:question-word","lang":"en","text":"a question word opens the question — after «y» or a preposition if there is one — and the verb follows it directly, with no extra word between"}
 {"ref":"core-es:skill:order-food-drink","lang":"en","text":"Order food or a drink politely"}
 {"ref":"core-es:skill:handle-add-on","lang":"en","text":"Accept or decline an additional item"}
 {"ref":"core-es:skill:ask-understand-price","lang":"en","text":"Ask for and understand a simple price"}

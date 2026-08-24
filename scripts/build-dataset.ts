@@ -1330,10 +1330,10 @@ const TENSE_SKILLS: Record<string, { id: string; label: string; gloss: string; l
  * Asking, as a *form* rather than as a situation.
  *
  * Twenty-five authored skills are about asking something — the price, the way,
- * who someone is — and every one of them is a situation. Not one says how a
- * Spanish question is built, and the pack holds 376 of them. So a learner meets
- * hundreds of questions and is never told the rule, which for an English speaker
- * is the single most useful sentence in the language:
+ * who someone is — and every one of them is a situation. Not one said how a
+ * Spanish question is *built*, though the pack holds hundreds. So a learner met
+ * hundreds of questions and was never told the rule, which for an English
+ * speaker is the single most useful sentence in the language:
  *
  *   **A yes/no question is the statement itself.** No inversion, no auxiliary,
  *   no `do`. `Tienes tiempo.` and `¿Tienes tiempo?` are the same four letters of
@@ -1346,9 +1346,10 @@ const TENSE_SKILLS: Record<string, { id: string; label: string; gloss: string; l
  * section, which is where a learner comparing "what kind of thing am I saying"
  * would look for it.
  *
- * Statements get no skill of their own. 1,019 of 1,395 items are statements, so
- * the label would carry no information — the contrast is taught in the glosses
- * of the two that do.
+ * Statements get no skill of their own: most items are statements, so the label
+ * would carry no information — the contrast is taught in the glosses of the two
+ * that do. Counts are deliberately not written here; the build prints the live
+ * ones, and a number in a comment is a number that goes stale.
  */
 const QUESTION_SKILLS = {
   'yes-no-question': {
@@ -1362,7 +1363,7 @@ const QUESTION_SKILLS = {
     id: `${NS}skill:question-word`,
     label: '¿Dónde…? ¿Cuándo…?',
     gloss:
-      'a question word opens the question, after a preposition if it takes one, and the verb follows it directly',
+      'a question word opens the question — after «y» or a preposition if there is one — and the verb follows it directly, with no extra word between',
     level: 'a1',
   },
 } as const;

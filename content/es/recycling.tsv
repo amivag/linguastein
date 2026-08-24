@@ -27,5 +27,5 @@
 # roughly 358 more sentences, and only if every one is built from words that are
 # already short — see §3.1 of the brief for why writing them as passages is the
 # only approach that has ever worked here.
-a1	6	397	Two coverage passes added one-encounter words as fast as they fixed them
-a2	4	160	A2 vocabulary is thinner than A1 and gets a lower target for that reason
+a1	6	384	Two coverage passes added one-encounter words as fast as they fixed them
+a2	4	139	A2 vocabulary is thinner than A1 and gets a lower target for that reason

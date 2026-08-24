@@ -1,0 +1,133 @@
+# A2, narrated in the past — the level the pack had vocabulary for and no contexts.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place. The build assigns one and writes it back.
+#
+# Why this file exists, measured. A2 shipped 210 sentences against A1's 1,215, and
+# the **median A2 word appeared in exactly one sentence**: 160 of 179 A2 lexemes
+# were short of even four encounters. That is not a level, it is a vocabulary list
+# with examples attached. Meanwhile 81% of the whole pack was present indicative
+# and the past tenses — which *are* A2's own grammar — had 45 sentences between
+# them.
+#
+# Those are one problem, not two, and the starved words say so: `contar`,
+# `recordar`, `olvidar`, `decidir`, `nacer`, `comenzar`, `durar`, `descubrir` are
+# narration verbs. They were short of contexts because the pack had almost no
+# narration to put them in.
+#
+# So every passage here is a past-tense account built from A2 words the pack
+# already had, chosen from the coverage report rather than from whatever came to
+# mind. Per §3.1 of the expansion brief that is the shape with the measured
+# return: the passage pass bought ~165 encounters for 77 rows where the
+# new-vocabulary pass bought ~20 for 72. **No new lexeme is introduced by this
+# file** — where a word would have been new, the sentence was rewritten instead.
+#
+# One deliberate omission: `ser` and `ir` share a preterite (`fue`, `fui`,
+# `fuimos`), which the tokeniser declines to disambiguate and a test pins as
+# unlinked. Rather than add eight more unlinked tokens, these passages reach for
+# `estar` where the sense allows — `Ayer estuve en el mercado` rather than
+# `Ayer fui al mercado`. Not a workaround for a bug; the two say slightly
+# different things and the one that links is also the one that is easier to read.
+
+# ── El piso nuevo (home, in the preterite) ────────────────────────────────────
+001426	El año pasado cambié de piso.	Last year I moved flat.	a2	home	Opens the account, so the whole passage reads as the past.	neutral			piso-nuevo
+001427	El comedor estaba vacío y no tenía lámpara.	The dining room was empty and had no lamp.	a2	home	Imperfect for how things stood, beside the preterite for what happened.	neutral			piso-nuevo
+001428	Las paredes eran blancas y el suelo era de madera.	The walls were white and the floor was wooden.	a2	home		neutral			piso-nuevo
+001429	Compré un espejo muy grande y un armario para la ropa.	I bought a very big mirror and a wardrobe for clothes.	a2	home,shopping		neutral			piso-nuevo
+001430	Puse el espejo al lado de la ventana.	I put the mirror next to the window.	a2	home		neutral			piso-nuevo
+001431	Mi vecino me ayudó con el armario.	My neighbour helped me with the wardrobe.	a2	home,people		neutral			piso-nuevo
+001432	Terminamos muy tarde, pero el sitio me gustó mucho.	We finished very late, but I liked the place a lot.	a2	home,feelings		neutral			piso-nuevo
+001433	Ahora el comedor está lleno de cosas mías.	Now the dining room is full of my things.	a2	home	Closes in the present, which is what makes the rest read as past.	neutral			piso-nuevo
+
+# ── Un día en el mercado (food and shopping, in the preterite) ────────────────
+001434	Ayer estuve en el mercado muy temprano.	Yesterday I was at the market very early.	a2	shopping,food-drink		neutral			mercado-ayer
+001435	Compré uvas, fresas y una lechuga.	I bought grapes, strawberries and a lettuce.	a2	shopping,food-drink		neutral			mercado-ayer
+001436	También necesitaba ajo, cebolla y zanahorias.	I also needed garlic, onion and carrots.	a2	shopping,food-drink		neutral			mercado-ayer
+001437	El aceite estaba muy caro esta semana.	The oil was very expensive this week.	a2	shopping,food-drink		neutral			mercado-ayer
+001438	En la panadería me recomendaron el pan de hoy.	At the bakery they recommended today's bread.	a2	shopping,food-drink		neutral			mercado-ayer
+001439	Volví a casa con dos cajas llenas.	I came home with two full boxes.	a2	shopping,home		neutral			mercado-ayer
+001440	Puse la mantequilla y la leche en la nevera.	I put the butter and the milk in the fridge.	a2	home,food-drink		neutral		es-ES,es-CO,es-VE,es-CU,es-DO,es-PR	mercado-ayer
+001441	Preparé una ensalada con lechuga, zanahoria y aceite.	I made a salad with lettuce, carrot and oil.	a2	food-drink		neutral			mercado-ayer
+
+# ── Un domingo en el campo (nature, preterite and imperfect together) ─────────
+001442	El domingo pasado estuvimos en el campo.	Last Sunday we were out in the country.	a2	nature		neutral			domingo-campo
+001443	Había muchas nubes por la mañana, pero después salió el sol.	There were a lot of clouds in the morning, but then the sun came out.	a2	nature,weather	`había` for the background, `salió` for the event — the whole preterite-imperfect contrast in one line.	neutral			domingo-campo
+001444	Caminamos por un camino largo hasta un puente.	We walked along a long path to a bridge.	a2	nature,city		neutral			domingo-campo
+001445	Al lado del lago había caballos y vacas.	Next to the lake there were horses and cows.	a2	nature,animals		neutral			domingo-campo
+001446	Comimos en el bosque, debajo de un árbol.	We ate in the woods, under a tree.	a2	nature,food-drink		neutral			domingo-campo
+001447	Por la noche se veían la luna y muchas estrellas.	At night you could see the moon and lots of stars.	a2	nature,time		neutral			domingo-campo
+001448	No recordaba un domingo tan tranquilo.	I couldn't remember such a quiet Sunday.	a2	nature,feelings		neutral			domingo-campo
+
+# ── El primer día de trabajo (work, in the preterite) ─────────────────────────
+001449	Comencé en la empresa nueva en marzo.	I started at the new company in March.	a2	work,time		neutral			primer-dia
+001450	Estaba muy nervioso el primer día.	I was very nervous on the first day.	a2	work,feelings		neutral			primer-dia
+001451	Un empleado me enseñó la oficina.	An employee showed me the office.	a2	work		neutral			primer-dia
+001452	Mi jefe me explicó el proyecto del equipo.	My boss explained the team's project to me.	a2	work		neutral			primer-dia
+001453	Trabajé toda la mañana delante de una pantalla.	I worked all morning in front of a screen.	a2	work		neutral			primer-dia
+001454	Nadie me habló del sueldo ese día.	Nobody talked to me about the salary that day.	a2	work,numbers		neutral			primer-dia
+001455	Decidí preguntar el lunes.	I decided to ask on Monday.	a2	work,days-of-week		neutral			primer-dia
+
+# ── Me dolía la espalda (health, in the past) ─────────────────────────────────
+001456	La semana pasada me dolía mucho la espalda.	Last week my back hurt a lot.	a2	health,body		neutral			espalda-cita
+001457	También me dolía el cuello por las mañanas.	My neck hurt in the mornings too.	a2	health,body		neutral			espalda-cita
+001458	Pedí una cita en el centro de salud.	I asked for an appointment at the health centre.	a2	health		neutral			espalda-cita
+001459	El médico me miró la espalda y el cuello.	The doctor looked at my back and my neck.	a2	health,body		neutral			espalda-cita
+001460	Me dijo que era un músculo y nada más.	He told me it was a muscle and nothing more.	a2	health,body		neutral			espalda-cita
+001461	Me dio unas pastillas para una semana.	He gave me some tablets for a week.	a2	health		neutral			espalda-cita
+001462	Ahora estoy mucho mejor, solo un poco débil.	Now I'm much better, just a little weak.	a2	health,feelings		neutral			espalda-cita
+
+# ── La casa de mi abuela (family and home, in the imperfect) ──────────────────
+001463	Cuando era niño, pasaba los veranos en casa de mi abuela.	When I was a child, I used to spend the summers at my grandmother's.	a2	family,time	The imperfect for what used to happen, which is the tense this passage exists to show.	neutral			casa-abuela
+001464	La casa era vieja y tenía un espejo muy grande en la pared.	The house was old and had a very big mirror on the wall.	a2	family,home		neutral			casa-abuela
+001465	En el comedor había una lámpara de madera.	In the dining room there was a wooden lamp.	a2	home		neutral			casa-abuela
+001466	Mi abuela contaba cuentos por la noche.	My grandmother used to tell stories at night.	a2	family,time		neutral			casa-abuela
+001467	Mi primo y yo jugábamos en el suelo.	My cousin and I used to play on the floor.	a2	family		neutral			casa-abuela
+001468	En el baño siempre había jabón y toallas limpias.	In the bathroom there were always soap and clean towels.	a2	home		neutral			casa-abuela
+001469	No teníamos wifi y no lo necesitábamos.	We had no wifi and we didn't need it.	a2	home,communication		neutral			casa-abuela
+001470	Nací en esa casa y todavía la recuerdo bien.	I was born in that house and I still remember it well.	a2	family,home		neutral			casa-abuela
+
+# == Batch two: the clusters still short after the first six ===================
+001471	El sábado pasado caminamos por el centro.	Last Saturday we walked around the town centre.	a2	city		neutral			centro-tarde
+001472	Empezamos en la plaza, al lado de la iglesia.	We started in the square, next to the church.	a2	city		neutral			centro-tarde
+001473	El camino hasta el teatro era corto.	The walk to the theatre was short.	a2	city		neutral			centro-tarde
+001474	Compramos pan en una panadería de la esquina.	We bought bread at a bakery on the corner.	a2	city,food-drink		neutral			centro-tarde
+001475	Desde el puente se veía toda la ciudad.	From the bridge you could see the whole city.	a2	city		neutral			centro-tarde
+001476	Arriba, el teatro estaba demasiado lleno.	Upstairs, the theatre was too full.	a2	city		neutral			centro-tarde
+001477	Dimos una vuelta alrededor de la plaza y volvimos a casa.	We took a walk around the square and went home.	a2	city		neutral			centro-tarde
+001478	El año pasado estudiaba español dos días por semana.	Last year I was studying Spanish two days a week.	a2	school,language		neutral			clase-espanol
+001479	Éramos ocho alumnos y una profesora muy tranquila.	There were eight of us students and a very calm teacher.	a2	school,people		neutral			clase-espanol
+001480	Ella nos enseñaba una frase nueva cada día.	She used to teach us a new phrase every day.	a2	school,language		neutral			clase-espanol
+001481	Yo escribía todas las letras en mi cuaderno.	I used to write all the letters in my notebook.	a2	school,language		neutral			clase-espanol
+001482	Los primeros días no comprendía casi nada.	The first few days I understood almost nothing.	a2	school,feelings		neutral			clase-espanol
+001483	La profesora repetía el ejercicio despacio.	The teacher would repeat the exercise slowly.	a2	school,language		neutral			clase-espanol
+001484	Después de un rato, todo parecía más fácil.	After a while, everything seemed easier.	a2	school,feelings		neutral			clase-espanol
+001485	Nunca olvidé esa clase.	I never forgot that class.	a2	school		neutral			clase-espanol
+001486	Anoche cenamos en un restaurante nuevo.	Last night we had dinner at a new restaurant.	a2	restaurant		neutral			restaurante-nuevo
+001487	La camarera nos ofreció una mesa al lado de la ventana.	The waitress offered us a table next to the window.	a2	restaurant		neutral			restaurante-nuevo
+001488	Sirvieron el arroz muy caliente y estaba delicioso.	They served the rice very hot and it was delicious.	a2	restaurant,food-drink		neutral			restaurante-nuevo
+001489	Mi hermana es vegetariana y pidió pasta con verduras.	My sister is vegetarian and ordered pasta with vegetables.	a2	restaurant,food-drink		neutral		es-ES	restaurante-nuevo
+001490	Cada persona tenía dos servilletas.	Each person had two napkins.	a2	restaurant		neutral			restaurante-nuevo
+001491	No me apetecía nada más, solo un café.	I didn't fancy anything else, just a coffee.	a2	restaurant,food-drink		neutral			restaurante-nuevo
+001492	Pagamos en efectivo y dejamos propina.	We paid in cash and left a tip.	a2	restaurant,numbers		neutral			restaurante-nuevo
+001493	Todo funcionó perfectamente y vamos a volver.	Everything worked perfectly and we're going to go back.	a2	restaurant		neutral			restaurante-nuevo
+001494	El mes pasado vendí mi guitarra vieja.	Last month I sold my old guitar.	a2	objects		neutral			vendi-guitarra
+001495	La tenía en el armario, en una caja gris.	I had it in the wardrobe, in a grey box.	a2	objects,home		neutral			vendi-guitarra
+001496	La ofrecí en una revista de la ciudad.	I offered it in a city magazine.	a2	objects,communication		neutral			vendi-guitarra
+001497	También lo intenté en el periódico, pero nadie llamó.	I tried the newspaper too, but nobody called.	a2	objects,communication		neutral			vendi-guitarra
+001498	Un extranjero la compró el jueves.	A foreigner bought it on Thursday.	a2	objects,people		neutral			vendi-guitarra
+001499	Me pagó en efectivo y saqué el dinero del bolso.	He paid me in cash and I took the money out of my bag.	a2	objects,numbers		neutral			vendi-guitarra
+001500	La guitarra era mía desde niño y la recuerdo bien.	The guitar had been mine since I was a child and I remember it well.	a2	objects,feelings		neutral			vendi-guitarra
+001501	Anoche no dormí casi nada.	Last night I hardly slept at all.	a2	feelings,time		neutral			anoche-ruido
+001502	Los vecinos de arriba eran muy ruidosos.	The neighbours upstairs were very noisy.	a2	home,people		neutral			anoche-ruido
+001503	Normalmente son tranquilos, pero anoche no.	Normally they're quiet, but not last night.	a2	home		neutral			anoche-ruido
+001504	Me dolía el estómago y tampoco quería comer.	My stomach hurt and I didn't want to eat either.	a2	health,body		neutral			anoche-ruido
+001505	Bebí demasiado café por la tarde, quizá por eso.	I drank too much coffee in the afternoon, maybe that's why.	a2	health,food-drink		neutral			anoche-ruido
+001506	Esta mañana me sentía muy débil.	This morning I felt very weak.	a2	health,feelings		neutral			anoche-ruido
+001507	Dormí toda la tarde y ahora estoy mejor.	I slept all afternoon and now I'm better.	a2	health,time		neutral			anoche-ruido
+001508	Preparé la maleta la noche antes del viaje.	I packed the suitcase the night before the trip.	a2	clothes,travel		neutral			ropa-viaje
+001509	Saqué del armario dos camisas y un cinturón.	I took two shirts and a belt out of the wardrobe.	a2	clothes,home		neutral			ropa-viaje
+001510	Puse seis calcetines, porque nunca son suficientes.	I put in six socks, because they're never enough.	a2	clothes		neutral			ropa-viaje
+001511	Mi sombrero gris no entraba en la maleta.	My grey hat wouldn't fit in the suitcase.	a2	clothes,travel		neutral			ropa-viaje
+001512	Después lo dejé en casa y me llevé el bolso pequeño.	Then I left it at home and took the small bag.	a2	clothes,travel		neutral			ropa-viaje
+001513	Reservé una habitación doble para dos noches.	I booked a double room for two nights.	a2	travel		neutral			ropa-viaje
+001514	Salimos juntos muy temprano y el viaje duró tres horas.	We left together very early and the journey lasted three hours.	a2	travel,clock		neutral			ropa-viaje

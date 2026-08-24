@@ -79,3 +79,15 @@
 700065	porque-plan	dialogue	¿Por qué no vienes?	Why aren't you coming?	a1	social
 700066	preguntar-contar	dialogue	¿Preguntar o contar?	Asking or telling?	a1	family,questions,grammar
 700067	confirmar-verdad	dialogue	Está cerca, ¿verdad?	It's close, right?	a1	city,questions,grammar
+700068	piso-nuevo	text	El piso nuevo	The new flat	a2	home
+700069	mercado-ayer	text	Un día en el mercado	A day at the market	a2	shopping,food-drink
+700070	domingo-campo	text	Un domingo en el campo	A Sunday in the country	a2	nature
+700071	primer-dia	text	El primer día de trabajo	The first day at work	a2	work
+700072	espalda-cita	text	Me dolía la espalda	My back hurt	a2	health,body
+700073	casa-abuela	text	La casa de mi abuela	My grandmother's house	a2	family,home
+700074	centro-tarde	text	Una tarde en el centro		a2	city
+700075	clase-espanol	text	La clase de español		a2	school
+700076	restaurante-nuevo	text	El restaurante nuevo		a2	restaurant
+700077	vendi-guitarra	text	Vendí mi guitarra		a2	objects
+700078	anoche-ruido	text	Anoche no dormí		a2	feelings
+700079	ropa-viaje	text	La ropa del viaje		a2	clothes

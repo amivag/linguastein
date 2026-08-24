@@ -76,7 +76,7 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
 - core-es pack: 126 verbs (3,024 generated forms), 393 nouns, 284 modifiers,
-  1,638 sentences — 2,266 practisable items, 100% of sentence words linked to a lexeme
+  1,730 sentences — 2,358 practisable items, 100% of sentence words linked to a lexeme
 - Noun plurals and adjective agreement shipped as `forms` records, so a paradigm
   is inspectable rather than only indexed at build time
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,

@@ -396,6 +396,30 @@ if (!packRow) {
 }
 
 /*
+ * A passage key is what a sentence row joins on, so two rows claiming one key
+ * silently merge two texts into one.
+ *
+ * Worth its own check because the symptom is unrecognisable as the cause: reusing
+ * `familia-foto` for a second passage produced *two contradictory* errors — "has
+ * a line with no speaker" and "is not a dialogue but names a speaker" — because
+ * the merged passage was a dialogue and a text at once. Neither message mentions
+ * the duplicate, and both send a reader to inspect sentences that are fine.
+ */
+const passageKeys = new Map<string, number>();
+for (const passage of passageRows) {
+  const seen = passageKeys.get(passage.key);
+  if (seen !== undefined) {
+    problems.push(
+      `passages.tsv line ${passage.row.line}: passage key "${passage.key}" is already used on ` +
+        `line ${seen} — a sentence joins on this key, so two passages sharing one merge into a ` +
+        'single text',
+    );
+  } else {
+    passageKeys.set(passage.key, passage.row.line);
+  }
+}
+
+/*
  * The release date is authored, and checked rather than trusted.
  *
  * Not stamped from the clock, and that is the whole design: the build has to be
@@ -2536,7 +2560,23 @@ for (const rule of recyclingRows) {
     );
     continue;
   }
-  const atLevel = allLexemes.filter((lexeme) => lexeme.level === rule.level);
+  /*
+   * Numerals are counted apart, the same way the coverage report above counts
+   * them apart, and for the same reason: they are a *generated* system rather
+   * than vocabulary met in reading. `spellCardinal` composes any number, so 1042
+   * is askable while existing in no sentence at all, and the numeral drill is how
+   * a learner meets `novecientos` — not by finding it in four different texts.
+   *
+   * Measured rather than assumed: closing the eight hundreds against a target of
+   * four would take twenty-four more sentences, every one of them a variation on
+   * "X cost N hundred euros". That is padding, and padding a recycling target is
+   * how the target stops meaning anything. They still get sentences — they now
+   * have one each, in a passage about what a trip cost — they are simply not held
+   * to a threshold designed for words you learn by rereading.
+   */
+  const atLevel = allLexemes.filter(
+    (lexeme) => lexeme.level === rule.level && lexeme.pos !== 'NUM',
+  );
   const short = atLevel.filter((lexeme) => encountersOf(lexeme) < rule.target);
   console.log(
     `  recycling ${rule.level}: ${atLevel.length - short.length}/${atLevel.length} lexemes ` +

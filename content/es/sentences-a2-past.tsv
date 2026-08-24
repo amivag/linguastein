@@ -259,3 +259,101 @@
 001636	Intentamos hablar con una mujer de la iglesia.	We tried to talk to a woman from the church.	a2	travel,people		neutral			cruzar-frontera
 001637	Nos explicó todo perfectamente y muy despacio.	She explained everything to us perfectly and very slowly.	a2	travel,language		neutral			cruzar-frontera
 001638	El viaje duró tres días y nunca olvidé ese pueblo.	The trip lasted three days and I never forgot that village.	a2	travel,feelings		neutral			cruzar-frontera
+
+# == Batch five: closing on the A2 target ======================================
+001639	Ayer escuché las noticias en la cocina.	Yesterday I listened to the news in the kitchen.	a2	communication,food-drink		neutral			noticias-manana
+001640	La primera noticia duró menos de un minuto.	The first news item lasted less than a minute.	a2	communication,clock		neutral			noticias-manana
+001641	Después hablaron veinte segundos de la lluvia.	Then they talked about the rain for twenty seconds.	a2	communication,weather		neutral			noticias-manana
+001642	Una mujer contó la noticia de una manera muy tranquila.	A woman told the story in a very calm way.	a2	communication		neutral			noticias-manana
+001643	Dijo que la primera noticia era una mentira.	She said the first news item was a lie.	a2	communication		neutral			noticias-manana
+001644	Recibí un mensaje de mi hermana sobre lo mismo.	I got a message from my sister about the same thing.	a2	communication,family		neutral			noticias-manana
+001645	Le mandé la noticia y esperé su respuesta.	I sent her the news and waited for her reply.	a2	communication,family		neutral			noticias-manana
+001646	Debíamos hablar de eso, pero no había tiempo.	We should have talked about it, but there was no time.	a2	communication,clock		neutral			noticias-manana
+001647	El domingo mi madre me mostró una foto vieja.	On Sunday my mother showed me an old photo.	a2	family		neutral			familia-antigua
+001648	Mi tío era muy gordo y mi tía muy delgada.	My uncle was very fat and my aunt very thin.	a2	family,people		neutral			familia-antigua
+001649	Los dos llevaban un sombrero bastante feo.	They were both wearing a rather ugly hat.	a2	family,clothes		neutral			familia-antigua
+001650	Mi primo era parecido a mí de pequeño.	My cousin looked similar to me as a child.	a2	family,people		neutral			familia-antigua
+001651	La familia era pobre y vivía en un pueblo.	The family was poor and lived in a village.	a2	family		neutral			familia-antigua
+001652	Mi madre contó un cuento de su abuela.	My mother told a story about her grandmother.	a2	family		neutral			familia-antigua
+001653	Fue el momento más humano de todo el día.	It was the most human moment of the whole day.	a2	family,feelings		neutral			familia-antigua
+001654	El lunes fui al centro sanitario a las ocho.	On Monday I went to the health centre at eight.	a2	health,clock		neutral			centro-sanitario
+001655	Había mucha gente y esperé más de una hora.	There were a lot of people and I waited more than an hour.	a2	health,clock		neutral			centro-sanitario
+001656	Todo el centro sanitario era muy amable con la gente.	The whole health centre was very kind to people.	a2	health,people		neutral			centro-sanitario
+001657	Me sacaron sangre del brazo muy despacio.	They took blood from my arm very slowly.	a2	health,body		neutral			centro-sanitario
+001658	La piel del brazo estaba roja después.	The skin on my arm was red afterwards.	a2	health,body		neutral			centro-sanitario
+001659	Me lavé las manos con jabón antes de salir.	I washed my hands with soap before leaving.	a2	health,home		neutral			centro-sanitario
+001660	Pedí otra cita para el mes de mayo.	I asked for another appointment for May.	a2	health,time		neutral			centro-sanitario
+001661	Salí con las manos limpias y un poco de prisa.	I came out with clean hands and in a bit of a hurry.	a2	health		neutral			centro-sanitario
+001662	El martes nevó desde muy temprano.	On Tuesday it snowed from very early on.	a2	weather,clock		neutral			dia-nevo
+001663	Nunca nieva así en esta ciudad.	It never snows like this in this city.	a2	weather,city		neutral			dia-nevo
+001664	El wifi dejó de funcionar y no pude trabajar.	The wifi stopped working and I could not work.	a2	weather,communication		neutral			dia-nevo
+001665	Todo dependía de una línea vieja de la calle.	Everything depended on one old line in the street.	a2	weather,city		neutral			dia-nevo
+001666	Pasamos la tarde juntos alrededor de la mesa.	We spent the afternoon together around the table.	a2	weather,home		neutral			dia-nevo
+001667	La nevera estaba llena, así que comimos bien.	The fridge was full, so we ate well.	a2	weather,food-drink		neutral		es-ES,es-CO,es-VE,es-CU,es-DO,es-PR	dia-nevo
+001668	Por la noche se veía la luna entre las nubes.	At night you could see the moon between the clouds.	a2	weather,nature		neutral			dia-nevo
+001669	El wifi volvió a las once de la noche.	The wifi came back at eleven at night.	a2	weather,communication		neutral			dia-nevo
+001670	En marzo comenzamos un proyecto en la clase de español.	In March we started a project in the Spanish class.	a2	school,time		neutral			proyecto-clase
+001671	Éramos cuatro alumnos y teníamos dos semanas.	There were four of us students and we had two weeks.	a2	school,time		neutral			proyecto-clase
+001672	Cada uno debía escribir un ejercicio.	Each of us had to write an exercise.	a2	school		neutral			proyecto-clase
+001673	Yo no comencé el primer día y tampoco el segundo.	I did not start on the first day, nor on the second.	a2	school,time		neutral			proyecto-clase
+001674	Un alumno lo hizo todo perfectamente en una tarde.	One student did it all perfectly in one afternoon.	a2	school		neutral			proyecto-clase
+001675	La profesora dijo que el sueldo de un profesor es pequeño.	The teacher said a teacher's salary is small.	a2	school,work		neutral			proyecto-clase
+001676	Pero el proyecto le gustó mucho a todo el mundo.	But everyone liked the project a lot.	a2	school,feelings		neutral			proyecto-clase
+001677	El sábado vendí verduras en el mercado con mi tío.	On Saturday I sold vegetables at the market with my uncle.	a2	shopping,food-drink		neutral			mercado-sabado
+001678	Llevamos uvas, ajos y dos cajas de fresas.	We took grapes, garlic and two boxes of strawberries.	a2	shopping,food-drink		neutral			mercado-sabado
+001679	Una camarera del bar compró casi todo.	A waitress from the bar bought almost everything.	a2	shopping,restaurant		neutral			mercado-sabado
+001680	Nos pagó con plata y algunos billetes.	She paid us with cash and a few notes.	a2	shopping,numbers		neutral		es-419	mercado-sabado
+001681	A las dos la mesa estaba vacía.	By two the table was empty.	a2	shopping,clock		neutral			mercado-sabado
+001682	Mi tío dijo que fue un día estupendo.	My uncle said it was a great day.	a2	shopping,feelings		neutral			mercado-sabado
+001683	Compré una revista y un café antes de volver.	I bought a magazine and a coffee before going back.	a2	shopping,communication		neutral			mercado-sabado
+001684	El domingo mi hermano tenía un partido importante.	On Sunday my brother had an important match.	a2	sport,family		neutral			partido-ropa
+001685	Buscó los calcetines limpios en el armario.	He looked for the clean socks in the wardrobe.	a2	sport,clothes		neutral			partido-ropa
+001686	No encontró el cinturón y salió sin él.	He could not find the belt and left without it.	a2	sport,clothes		neutral			partido-ropa
+001687	Yo conduje hasta el campo, muy despacio.	I drove to the pitch, very slowly.	a2	sport,travel		neutral			partido-ropa
+001688	El partido duró casi dos horas.	The match lasted almost two hours.	a2	sport,clock		neutral			partido-ropa
+001689	Después contamos el partido a mi madre como un cuento.	Afterwards we told my mother about the match like a story.	a2	sport,family		neutral			partido-ropa
+001690	Ella escuchó todo y no dijo nada de la ropa.	She listened to it all and said nothing about the clothes.	a2	sport,family		neutral			partido-ropa
+
+# == Batch six: the last of the A2 target, hundreds included ====================
+001691	El año pasado hicimos las cuentas del viaje.	Last year we worked out the cost of the trip.	a2	numbers,travel		neutral			costo-viaje
+001692	Los billetes de tren costaron doscientos euros.	The train tickets cost two hundred euros.	a2	numbers,travel		neutral			costo-viaje
+001693	El hotel de la frontera pedía trescientos por tres noches.	The hotel at the border was asking three hundred for three nights.	a2	numbers,travel		neutral			costo-viaje
+001694	Otro hotel más cerca del centro costaba cuatrocientos.	Another hotel nearer the centre cost four hundred.	a2	numbers,travel		neutral			costo-viaje
+001695	La comida de la semana fueron quinientos euros.	The week's food came to five hundred euros.	a2	numbers,food-drink		neutral			costo-viaje
+001696	Un coche pequeño para dos días costaba seiscientos.	A small car for two days cost six hundred.	a2	numbers,travel		neutral			costo-viaje
+001697	Uno más grande costaba setecientos o ochocientos.	A bigger one cost seven or eight hundred.	a2	numbers,travel		neutral			costo-viaje
+001698	Todo el viaje no llegó a novecientos euros.	The whole trip did not reach nine hundred euros.	a2	numbers,travel		neutral			costo-viaje
+001699	Todo dependía del hotel, y el de la frontera era el mejor.	Everything depended on the hotel, and the one at the border was the best.	a2	numbers,travel		neutral			costo-viaje
+001700	Tengo dos primos y no son nada parecidos.	I have two cousins and they are not at all alike.	a2	people,family		neutral			dos-primos
+001701	El mayor es gordo y muy tranquilo.	The older one is fat and very calm.	a2	people,family		neutral			dos-primos
+001702	El pequeño es delgado y habla mucho.	The younger one is thin and talks a lot.	a2	people,family		neutral			dos-primos
+001703	De niños llevaban una ropa bastante fea.	As children they wore rather ugly clothes.	a2	people,clothes		neutral			dos-primos
+001704	La familia era pobre, pero siempre había comida.	The family was poor, but there was always food.	a2	people,family		neutral			dos-primos
+001705	Los dos son buena gente, de una manera muy humana.	They are both good people, in a very human way.	a2	people,feelings		neutral			dos-primos
+001706	Ahora viven juntos en la misma ciudad.	Now they live together in the same city.	a2	people,city		neutral			dos-primos
+001707	Alguien de la familia los ve cada semana.	Someone in the family sees them every week.	a2	people,family		neutral			dos-primos
+001708	En agosto pasamos tres días en el campo.	In August we spent three days in the country.	a2	nature,travel		neutral			segundo-campo
+001709	Había una vaca muy vieja al lado de la casa.	There was a very old cow next to the house.	a2	nature,animals		neutral			segundo-campo
+001710	Otra vaca acababa de tener un hijo recién nacido.	Another cow had just had a newborn calf.	a2	nature,animals		neutral			segundo-campo
+001711	Vi un poco de sangre en el suelo.	I saw a little blood on the ground.	a2	nature,health		neutral			segundo-campo
+001712	El hombre del campo me explicó que era normal.	The man from the country explained to me that it was normal.	a2	nature,people		neutral			segundo-campo
+001713	En un segundo el animal se levantó solo.	In a second the animal got up on its own.	a2	nature,animals		neutral			segundo-campo
+001714	Nunca vi nada parecido, ni en la televisión.	I never saw anything like it, not even on television.	a2	nature,feelings		neutral			segundo-campo
+001715	Volvimos juntos a casa muy contentos.	We came home together very happy.	a2	nature,feelings		neutral			segundo-campo
+
+# == Batch seven: the last nine, and plural you a learner can actually meet ====
+001716	El sábado llamé a mis primos para el partido.	On Saturday I called my cousins about the match.	a2	social,family		neutral			venis-vosotros
+001717	Pregunté si veníais vosotros dos juntos.	I asked whether the two of you were coming together.	a2	social,family		neutral			venis-vosotros
+001718	Vosotros nunca llegáis a la hora, dije.	You never arrive on time, I said.	a2	social,clock		neutral			venis-vosotros
+001719	Ellos dijeron que no era verdad ni un poco.	They said that was not true, not one bit.	a2	social,feelings		neutral			venis-vosotros
+001720	Alguien tenía que llevar la comida y las sillas.	Someone had to bring the food and the chairs.	a2	social,food-drink		neutral			venis-vosotros
+001721	Después vinieron los dos juntos, muy contentos.	Afterwards they both came together, very happy.	a2	social,feelings		neutral			venis-vosotros
+001722	Vosotros sois los mejores, dijo mi primo pequeño.	You are the best, said my younger cousin.	a2	social,family		neutral			venis-vosotros
+001723	En la reunión de ayer nadie dijo nada un segundo.	In yesterday's meeting nobody said anything for a second.	a2	people,work		neutral			segundo-sin-hablar
+001724	Alguien había dicho algo bastante feo.	Someone had said something rather ugly.	a2	people,feelings		neutral			segundo-sin-hablar
+001725	El jefe es un hombre gordo y muy tranquilo.	The boss is a fat man and very calm.	a2	people,work		neutral			segundo-sin-hablar
+001726	Su hermano, más delgado, trabaja en la misma empresa.	His brother, thinner, works at the same company.	a2	people,work		neutral			segundo-sin-hablar
+001727	Los dos son parecidos en la manera de hablar.	The two are similar in the way they talk.	a2	people		neutral			segundo-sin-hablar
+001728	Nadie dijo nada más, ni el jefe ni su hermano.	Nobody said anything else, neither the boss nor his brother.	a2	people,work		neutral			segundo-sin-hablar
+001729	Un empleado recién llegado empezó a hablar de otra cosa.	A newly arrived employee started talking about something else.	a2	people,work		neutral			segundo-sin-hablar
+001730	Después de un segundo, todos volvimos al proyecto.	After a second, we all went back to the project.	a2	people,work		neutral			segundo-sin-hablar

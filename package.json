@@ -22,7 +22,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "validate:data": "tsx scripts/validate-datasets.ts",
-    "check": "npm run typecheck && npm run lint && npm run test:coverage && npm run validate:data && npm run format:check",
+    "check": "npm run typecheck && npm run lint && npm run test:coverage && npm run validate:data && npm run build && npm run format:check",
     "build:data": "tsx scripts/build-dataset.ts",
     "build:palette": "tsx scripts/build-palette.ts",
     "review:data": "tsx scripts/review-dataset.ts",

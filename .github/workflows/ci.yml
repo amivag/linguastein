@@ -32,20 +32,13 @@ jobs:
       - name: Validate datasets
         run: npm run validate:data
 
-      # Last of the correctness steps, deliberately.
-      #
-      # A failed step skips the ones after it. This sat third for a while, so
-      # fourteen commits reached main with the formatting red and their tests and
-      # datasets never checked by CI at all — a whitespace disagreement masking
-      # everything that actually matters. `npm run check` runs the same steps and
-      # now includes this one, so the drift should not recur; the order is the
-      # cheap insurance if it does.
-      - name: Format check
-        run: npm run format:check
-
       # The whole tree, not just public/packs: the build also writes assigned
       # item ids back into content/es, so a row committed without one would
       # otherwise slip through unnoticed.
+      #
+      # The one step `npm run check` deliberately does not run: it needs a clean
+      # working tree to read a diff against, and the gate is run mid-change with
+      # a dirty one. Every other step here is in the gate.
       - name: Datasets match their sources
         run: |
           npm run build:data
@@ -53,3 +46,15 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # Genuinely last, and this is the second time the order has had to be
+      # fixed to make that true.
+      #
+      # A failed step skips the ones after it. Formatting sat third once, and
+      # fourteen commits reached main with it red and their tests and datasets
+      # never checked by CI at all. Moving it to fifth of seven was called
+      # "last" and was not: `Build` still sat behind it, and `Build` is the step
+      # that caught a 2.65 MB dataset the service worker would have refused to
+      # precache — a failure no amount of whitespace should be able to hide.
+      - name: Format check
+        run: npm run format:check

@@ -19,16 +19,26 @@ npm run build          # production PWA build
 fix it rather than working around it.
 
 That claim only holds while the gate runs **every** step CI runs, in the same
-order, so keep the two together when either changes. It came apart once: `check`
-omitted `format:check` while `.github/workflows/ci.yml` ran it third, ahead of
-the tests, the dataset checks and the build. Fourteen commits landed on `main`
-with the formatting step red — and because a failed step skips the ones after it,
-none of those commits had its tests or datasets verified by CI at all. A gate
-that is a subset of CI is worse than no gate, because it is believed.
+order, so keep the two together when either changes. It has come apart twice.
 
-Formatting now runs **last** in both, which is the cheap insurance against a
-repeat: if the two ever drift again, the step that drifts is the one that cannot
-hide a real failure behind it.
+First `check` omitted `format:check` while `.github/workflows/ci.yml` ran it
+third, ahead of the tests, the dataset checks and the build. Fourteen commits
+landed on `main` with the formatting step red — and because a failed step skips
+the ones after it, none of those commits had its tests or datasets verified by CI
+at all. A gate that is a subset of CI is worse than no gate, because it is
+believed.
+
+Then `check` omitted `npm run build`, which is how the B1 dataset reached `main`
+red: the sentences file crossed 2.65 MB, Workbox refuses to precache anything
+over 2 MiB, and the production build failed on a change whose gate had passed
+locally. The fix to the first drift had also been overstated — formatting was
+called "last" while `Build` still sat behind it, so a whitespace failure could
+still skip the step that catches a broken bundle.
+
+So: the gate now runs `build`, formatting is genuinely last in both, and there is
+exactly **one** CI step the gate does not run — "Datasets match their sources",
+which needs a clean working tree to diff against and cannot work mid-change. If
+you add a CI step, add it to `check` too, before `format:check`.
 
 ## This repository is also a skeleton
 

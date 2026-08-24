@@ -107,6 +107,22 @@ export default defineConfig({
       workbox: {
         // App shell + datasets are precached so a session works offline.
         globPatterns: ['**/*.{js,css,html,svg,woff2,json,jsonl}'],
+        /**
+         * Workbox refuses to precache a file over 2 MiB by default, and the
+         * B1 content took the sentences file to 2.65 MB — which failed the
+         * build rather than silently shipping a pack the app could not open
+         * offline. That is the right failure mode and the wrong limit for this
+         * app: the whole point of precaching the datasets is that a session
+         * works on a train, and a learner is not choosing to download the pack
+         * — it is bundled, so it is already in the artifact either way.
+         *
+         * 8 MiB is roughly three times the current largest file. It is a
+         * ceiling to be raised deliberately, not a headroom to grow into: a
+         * pack heading past it wants `runtimeCaching` and an install step, the
+         * add-on story in docs/tasks/pack-addressing.md §4, rather than a
+         * bigger number here.
+         */
+        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
         runtimeCaching: [
           {
             // Canonical audio is fetched on demand and kept for replay.

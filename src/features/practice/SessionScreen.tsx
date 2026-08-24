@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { useCourse } from '../../app/course';
+import { useCourse, usePronunciationLocale } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MISSIONS } from '../../app/missions';
 import { batchById } from '../../domain/batches';
@@ -27,6 +27,7 @@ export function SessionScreen() {
   const navigate = useNavigate();
   const { course, filter: courseScope, path } = useCourse();
   const { services, preferences, batches } = useServices();
+  const pronunciationLocale = usePronunciationLocale();
 
   // The URL is the source of truth for a session; rebuilding the config on
   // every render would replan the session on every keystroke of state. The
@@ -86,6 +87,7 @@ export function SessionScreen() {
       config: buildSessionConfig(chosen, {
         repository,
         preferences,
+        pronunciationLocale,
         size: url.size,
         courseScope,
         scope,
@@ -95,7 +97,7 @@ export function SessionScreen() {
         ...(url.seed !== undefined ? { seed: url.seed } : {}),
       }),
     };
-  }, [search, repository, preferences, courseScope, batches]);
+  }, [search, repository, preferences, pronunciationLocale, courseScope, batches]);
 
   const runner = useSessionRunner(config, course);
   const activeMission = mission ? missionById(MISSIONS, course, mission) : undefined;

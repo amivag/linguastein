@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTargetLanguage } from '../../app/course';
+import { usePronunciationLocale, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MICROPHONE_BUSY, SPEECH_ABORTED, SPEECH_INSECURE_CONTEXT } from '../../audio';
 import { Button } from '../../components/Button';
@@ -70,7 +70,8 @@ const SILENCE_HINT_MS = 2500;
  */
 export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
   const lang = useTargetLanguage();
-  const { services, preferences } = useServices();
+  const { services } = useServices();
+  const locale = usePronunciationLocale();
   const { speech, audio } = services;
   const [state, setState] = useState<State>({ phase: 'idle' });
   const [level, setLevel] = useState(0);
@@ -115,7 +116,7 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
     setState({ phase: 'listening' });
 
     try {
-      const result = await speech.listen(preferences.pronunciationLocale, {
+      const result = await speech.listen(locale, {
         onLevel: (value) => {
           peak.current = Math.max(peak.current, value);
           if (mounted.current) setLevel(value);
@@ -147,9 +148,9 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
     } finally {
       if (mounted.current) setLevel(0);
     }
-  }, [speech, audio, preferences.pronunciationLocale, expected, onComparison]);
+  }, [speech, audio, locale, expected, onComparison]);
 
-  if (!speech.isAvailable() || !speech.supportsLanguage(preferences.pronunciationLocale)) {
+  if (!speech.isAvailable() || !speech.supportsLanguage(locale)) {
     return null;
   }
 

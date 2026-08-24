@@ -11,6 +11,9 @@ import { id, testRepository } from '../fixtures/pack';
 const base = () => ({
   repository: testRepository(),
   preferences: DEFAULT_PREFERENCES,
+  // Resolved by the caller, not read off `preferences`: the stored accent is
+  // global and the effective one depends on the course's language.
+  pronunciationLocale: DEFAULT_PREFERENCES.pronunciationLocale,
   size: { kind: 'items', count: 20 } as const,
 });
 

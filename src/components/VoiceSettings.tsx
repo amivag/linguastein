@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useState } from 'react';
-import { useCourse } from '../app/course';
+import { useCourse, usePronunciationLocale } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
 import { languageOption, pronunciationLocales } from '../domain/content';
@@ -43,7 +43,7 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
   const [voices, setVoices] = useState<readonly TtsVoice[]>([]);
   const [active, setActive] = useState<TtsVoice | undefined>(undefined);
 
-  const locale = preferences.pronunciationLocale;
+  const locale = usePronunciationLocale();
   const accents = useMemo(
     () => pronunciationLocales(services.repository, course.language),
     [services.repository, course.language],

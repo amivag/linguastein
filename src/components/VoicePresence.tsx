@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { useCourse } from '../app/course';
+import { useCourse, usePronunciationLocale } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
 import { Icon } from './Icon';
@@ -25,7 +25,7 @@ export function VoicePresence() {
   const [active, setActive] = useState<TtsVoice | undefined>(undefined);
   const [available, setAvailable] = useState(true);
 
-  const locale = preferences.pronunciationLocale;
+  const locale = usePronunciationLocale();
 
   // Voice discovery is asynchronous, so the chip reports "unknown yet" as
   // available and corrects itself rather than flashing a false "silent".

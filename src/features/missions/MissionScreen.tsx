@@ -2,7 +2,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { MISSIONS } from '../../app/missions';
 import { MISSION_VARIATIONS } from '../../app/mission-variations';
-import { useCourse, useTargetLanguage } from '../../app/course';
+import { useCourse, usePronunciationLocale, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
@@ -65,6 +65,7 @@ export function MissionScreen() {
   const navigate = useNavigate();
   const { course, filter, option } = useCourse();
   const { services, preferences } = useServices();
+  const locale = usePronunciationLocale();
   // Named once for the copy that has to say which language a learner is being
   // asked to respond in. `Respond naturally … in Spanish` was the fallback cue
   // on every mission whose turns declare no communicative function.
@@ -363,7 +364,7 @@ export function MissionScreen() {
   function speakText(text: string) {
     void services.audio.speak({
       text,
-      locale: preferences.pronunciationLocale,
+      locale,
       ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
     });
   }

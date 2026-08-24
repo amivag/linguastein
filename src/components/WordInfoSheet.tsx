@@ -1,4 +1,4 @@
-import { useTargetLanguage } from '../app/course';
+import { usePronunciationLocale, useTargetLanguage } from '../app/course';
 import { useServices } from '../app/services-context';
 import {
   expandSpan,
@@ -62,6 +62,7 @@ export function WordInfoSheet({
   meanings = true,
 }: WordInfoSheetProps) {
   const { services, preferences } = useServices();
+  const locale = usePronunciationLocale();
   const language = preferences.referenceLanguage;
   const lang = useTargetLanguage();
 
@@ -80,7 +81,7 @@ export function WordInfoSheet({
   const speak = () =>
     void services.audio.speak({
       text,
-      locale: preferences.pronunciationLocale,
+      locale,
       ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
     });
 

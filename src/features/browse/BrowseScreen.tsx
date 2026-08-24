@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { useCourse } from '../../app/course';
+import { useCourse, usePronunciationLocale } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Icon } from '../../components/Icon';
@@ -208,7 +208,7 @@ export function BrowseScreen() {
     setLimit(PAGE_SIZE);
   };
   const words = useWordSelection();
-  const locale = preferences.pronunciationLocale;
+  const locale = usePronunciationLocale();
 
   // Voice discovery is asynchronous, so what can be heard is re-read once the
   // provider is ready rather than assumed on the first render — the approach
@@ -436,7 +436,7 @@ export function BrowseScreen() {
           />
           <VoiceInput
             label="Search by voice"
-            locale={preferences.pronunciationLocale}
+            locale={locale}
             onResult={(text) => {
               update({ search: text });
             }}

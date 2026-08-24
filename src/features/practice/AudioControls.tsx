@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { usePronunciationLocale } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { SLOW_RATE } from '../../audio';
 import { Button } from '../../components/Button';
@@ -16,7 +17,7 @@ interface AudioControlsProps {
 export function AudioControls({ item, autoPlay = false }: AudioControlsProps) {
   const { services, preferences } = useServices();
   const { audio } = services;
-  const locale = preferences.pronunciationLocale;
+  const locale = usePronunciationLocale();
   const [playable, setPlayable] = useState(true);
 
   const play = useCallback(

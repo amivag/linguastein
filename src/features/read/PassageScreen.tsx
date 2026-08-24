@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { useCourse } from '../../app/course';
+import { useCourse, usePronunciationLocale } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Icon } from '../../components/Icon';
@@ -28,6 +28,7 @@ export function PassageScreen() {
   const navigate = useNavigate();
   const { course, path } = useCourse();
   const { services, preferences } = useServices();
+  const locale = usePronunciationLocale();
 
   const [showTranslations, setShowTranslations] = useState(false);
   const words = useWordSelection();
@@ -87,7 +88,7 @@ export function PassageScreen() {
   const speak = (text: string) =>
     void services.audio.speak({
       text,
-      locale: preferences.pronunciationLocale,
+      locale,
       ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
     });
 

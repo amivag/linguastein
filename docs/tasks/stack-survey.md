@@ -111,6 +111,7 @@ in files another session was editing the same afternoon.
 | 4   | `PackManifest.pronunciationLocales` populated and read by nothing | concurrent work in flight |
 | 5   | `pronunciationLocale`, `voiceName`, `level` stored globally       | **open** — see §4.5       |
 | 6   | Docs claimed backend/accounts/native were out of scope            | **fixed** (§4.6)          |
+| 7   | A deep link into another language kept the previous accent        | **fixed** (§4.7)          |
 
 ### 4.1 An unreachable category reached the session link — fixed
 
@@ -223,3 +224,40 @@ The honest edges, so nobody trusts it further than it goes.
   was taken (10 failing files, all dataset-count and voice-preference suites) and
   every change made during this survey was verified against it, but "the gate is
   green" was never true on this tree that afternoon.
+
+### 4.7 A deep link into another language kept the previous accent — fixed
+
+Found on 2026-08-24 in code that had just landed, and the third instance of the
+same shape as §4.1: a value correct at one writer and read raw everywhere else.
+
+The accent correction lived only in `CourseBar`'s switch handler, so it fired
+when a learner changed language through the switcher and never otherwise. Nine
+other call sites read `preferences.pronunciationLocale` directly — Browse, the
+mission screen, the passage screen, the practice audio controls, the speech
+check, the voice chip, the word sheet, the voice settings and the session config.
+A shared link, a bookmark or a reload landing on `/fr/b1/browse` therefore kept a
+stored `es-ES` and asked the device for a Spanish voice to read French with,
+which is exactly the failure `CourseBar`'s own comment describes, reached by the
+one path `CourseBar` cannot see.
+
+Fixed by `usePronunciationLocale()` in `app/course.ts`, beside
+`useTargetLanguage()` and for the same reason: the effective value is a function
+of the course, so it is derived at every read rather than written once. All nine
+sites now go through it, `buildSessionConfig` takes the resolved locale as an
+argument because a pure function with a repository but no language cannot resolve
+it, and `CourseBar` still corrects the stored value so the preference converges.
+Four tests in `tests/features/pronunciation-locale.test.tsx` pin both directions:
+a stored accent this language does not offer is corrected, and one it does offer
+survives.
+
+Honest note on the verification: the two tests that pin the bug itself assert
+`fr` where the stored value is Spanish, which the old raw read could not have
+produced. A stash-based "does it fail without the fix?" check was attempted and
+was invalid — reverting two of nine files left the other seven importing a
+missing export, so all four failed for that reason instead — and it was not
+retried, because a concurrent session was editing three of the same files at the
+time.
+
+**The cause is still §4.5.** This closed the symptom; one global accent for every
+course remains the reason a symptom existed. A `CourseState` would make the
+resolution unnecessary rather than merely correct.

@@ -5,7 +5,7 @@
  */
 
 import type { IconName } from '../../components/Icon';
-import type { ContentRepository, ItemFilter } from '../../domain/content';
+import type { ContentRepository, ItemFilter, LanguageTag } from '../../domain/content';
 import type { ExerciseKind } from '../../domain/exercises';
 import type { Ordering, SessionConfig, SessionFocus, SessionSize } from '../../domain/sessions';
 import type { Preferences } from '../../storage';
@@ -145,6 +145,15 @@ export function isPresetId(value: string | null): value is PresetId {
 export interface BuildConfigOptions {
   readonly repository: ContentRepository;
   readonly preferences: Preferences;
+  /**
+   * The accent to speak in, already resolved against the course.
+   *
+   * Passed in rather than read off `preferences`, because the stored value is
+   * global and the effective one depends on the course's language — and this
+   * function cannot resolve it, having a repository but no language. The caller
+   * holds `usePronunciationLocale()`, which is the one place that decides.
+   */
+  readonly pronunciationLocale: LanguageTag;
   readonly size: SessionSize;
   readonly ordering?: Ordering;
   readonly seed?: number;
@@ -182,7 +191,7 @@ export function buildSessionConfig(preset: Preset, options: BuildConfigOptions):
     ordering: options.ordering ?? preset.ordering,
     exerciseKinds: preset.exerciseKinds,
     referenceLanguage: options.preferences.referenceLanguage,
-    pronunciationLocale: options.preferences.pronunciationLocale,
+    pronunciationLocale: options.pronunciationLocale,
     ...(scoped ? {} : { maxNewItems: NEW_ITEM_CAP }),
     ...(options.dueOnly ? { dueOnly: true } : {}),
     ...(options.focus ? { focus: options.focus } : {}),

@@ -19,6 +19,7 @@ import {
   courseOptions,
   coursePath,
   resolveCourse,
+  resolvePronunciationFor,
   type Course,
   type CourseOption,
   type ItemFilter,
@@ -86,4 +87,41 @@ export function useTargetLanguage(): LanguageTag | undefined {
     if (!repository) return undefined;
     return resolveCourse(courseOptions(repository), language, level).language;
   }, [repository, language, level]);
+}
+
+/**
+ * The accent the current course is spoken in.
+ *
+ * The stored preference where this language offers it, and the language's own
+ * first accent where it does not — `resolvePronunciationFor` decides, and this
+ * hook is where every consumer asks.
+ *
+ * Derived at read time rather than only written on a switch, and that is the
+ * whole point. `CourseBar` corrects the stored value when a learner changes
+ * language, which is worth keeping so the preference converges on something
+ * sensible — but the switcher is not the only way into a course. A shared link,
+ * a bookmark, or a reload after the language changed lands on
+ * `/fr/a1/read/700001` without passing through it, and a stored `es-ES` then
+ * asked the device for a Spanish voice to read French: silence at best, and a
+ * Spanish reading of French at worst. That is the same failure the switcher's
+ * own comment describes, reached by the one path the switcher cannot see.
+ *
+ * So nothing outside Settings reads `preferences.pronunciationLocale` directly.
+ * It is the rule `reachableTopics` follows for categories, in a second place: a
+ * stored global is not an effective value until the course has narrowed it, and
+ * the narrowing belongs at every read rather than at one write.
+ */
+export function usePronunciationLocale(): LanguageTag {
+  const { services, preferences } = useServices();
+  const { course } = useCourse();
+
+  return useMemo(
+    () =>
+      resolvePronunciationFor(
+        services.repository,
+        course.language,
+        preferences.pronunciationLocale,
+      ),
+    [services.repository, course.language, preferences.pronunciationLocale],
+  );
 }

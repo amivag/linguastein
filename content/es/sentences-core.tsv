@@ -1,6 +1,8 @@
 # Everyday core sentences.
 # Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
-# Leave the id off a new row: the build assigns one and writes it back, and the
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place. The build assigns one, writes it
+# back, and the
 # row keeps it thereafter however the file is edited, reordered or split.
 000001	Hola, ¿cómo estás?	Hi, how are you?	a1	greetings		colloquial	tu	
 000002	Buenos días.	Good morning.	a1	greetings		neutral		

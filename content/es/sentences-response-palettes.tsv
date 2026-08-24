@@ -2,7 +2,9 @@
 # that teach them. These remain ordinary sentence items; the mission catalog
 # groups them into a response palette without storing an exercise in content.
 # Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
-# Leave the id off a new row: the build assigns one and writes it back.
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place and the build reads a speaker as a
+# skill. The build assigns an id and writes it back.
 
 # ── Conocer a alguien (model dialogue) ────────────────────────────────────────
 000705	Hola, me llamo Luis.	Hello, my name is Luis.	a1	greetings		colloquial	tu		saludo-inicial	Luis	greet-someone

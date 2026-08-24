@@ -4,7 +4,9 @@
 # Put `-` in the id column for a verb that should not get its own card: the
 # lexeme, its gloss and all its generated forms still ship. No row uses it yet —
 # every verb has an example sentence, and auxiliaries get a card like the rest.
-# Leave the id off a new row: the build assigns one and writes it back, and the
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place. The build assigns one, writes it
+# back, and the
 # row keeps it thereafter however the file is edited or reordered.
 # regularity is cross-checked against src/languages/es/irregulars.ts by the build.
 800001	ser	to be (identity, characteristics)	a1	irregular	core

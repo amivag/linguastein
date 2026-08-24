@@ -5,7 +5,9 @@
 # passage key in their `passage` column, so a paragraph stays together in the
 # file a human is reading and each of its sentences stays practisable on its own.
 # `kind` is text or dialogue; a dialogue needs a speaker on every line.
-# Leave the id off a new row: the build assigns one and writes it back.
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place and the build reads a speaker as a
+# skill. The build assigns an id and writes it back.
 700001	mañana	text	Una mañana normal	An ordinary morning	a1	daily-routine
 700002	piso	text	Mi piso	My flat	a1	home
 700003	oficina	text	Un día en la oficina	A day at the office	a1	work

@@ -2,7 +2,9 @@
 # One section per palette; every row is an ordinary sentence item and the mission
 # catalog groups them, so nothing here stores an exercise.
 # Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
-# Leave the id off a new row: the build assigns one and writes it back.
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place and the build reads a speaker as a
+# skill. The build assigns an id and writes it back.
 #
 # Written from words the pack already had wherever possible, and pointing at
 # existing items rather than restating them: a palette entry is an item id, so a

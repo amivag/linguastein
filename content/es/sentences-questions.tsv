@@ -1,6 +1,8 @@
 # The question words, and the answers they are asked for.
 # Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
-# Leave the id off a new row: the build assigns one and writes it back.
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place and the build reads a speaker as a
+# skill. The build assigns an id and writes it back.
 #
 # Why this file exists. `qué`, `dónde`, `cuánto` and `cómo` were well covered by the
 # situations the missions teach -- you cannot order a coffee without them. The

@@ -1,6 +1,8 @@
 # Asking versus telling: the same words, and what changes.
 # Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
-# Leave the id off a new row: the build assigns one and writes it back.
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place and the build reads a speaker as a
+# skill. The build assigns an id and writes it back.
 #
 # Why this file exists. The pack held 376 questions and 1,019 statements and not
 # one place where a learner could see the *same words* as both. Twenty-five

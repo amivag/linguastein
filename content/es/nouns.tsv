@@ -5,7 +5,9 @@
 # lexeme and its meaning still ship, so sentences using it stay inspectable,
 # but no flashcard is generated. Used where a noun and an adjective share a
 # surface form (frío), which would otherwise be two identical cards.
-# Leave the id off a new row: the build assigns one and writes it back, and the
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place. The build assigns one, writes it
+# back, and the
 # row keeps it thereafter however the file is edited or reordered.
 500001	persona	person	f		a1	people
 500002	hombre	man	m		a1	people

@@ -425,8 +425,11 @@ pack identical to one built without the feature.
 `npm run build:data` and CI fails if the two disagree.
 
 Item ids live in the first column of the sentence, noun and modifier sources.
-Leave the column off a new row — the build assigns an id and writes it back — and
-never edit or reorder one afterwards: learner progress references it, so a row
+Leave the column off a new row — **off, not empty**: the reader strips the first
+cell only when it holds an id or the `-` sentinel, so a row starting with a tab
+keeps that empty cell and every field lands one place left, which is how a
+speaker name ends up being read as a skill. The build assigns an id and writes it
+back. Never edit or reorder one afterwards: learner progress references it, so a row
 must keep the same id through a typo fix, a reordering or a move to another file.
 `content/es/id-ledger.tsv` records every id ever issued so a deleted row's id is
 retired rather than reused; it is generated, like the pack. Verb forms come from

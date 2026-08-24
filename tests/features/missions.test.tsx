@@ -140,34 +140,92 @@ describe('MissionScreen', () => {
   /*
    * The dialogue, as a dialogue.
    *
-   * Four turns in one grey column is a wall of Spanish, and the speaker names
-   * above each line are something a learner has to read rather than see. Each
-   * turn now carries its speaker's own categorical hue — and the hue belongs to
-   * the *speaker*, so the same person is the same colour in every line they have.
+   * It was drawn as a list: every turn a full-width slab, evenly spaced, the
+   * speaker's name printed above each one. That is a transcript in the
+   * stenographic sense, and following who was talking meant *reading* the names —
+   * the one thing a conversation should cost nothing to see.
+   *
+   * What is asserted is the structure the layout rests on, because jsdom has no
+   * layout: which side each voice takes, where a run of turns begins, and that
+   * the hue belongs to the speaker rather than to the row.
    */
-  it('gives each speaker in an exchange a hue of their own, and keeps it', async () => {
+  it('casts the learner on their own side of the exchange', async () => {
     renderWithServices(missionRoutes(), {
       route: '/es/a1/mission/greet-and-respond/understand',
       services: await shippedServices(),
     });
 
-    const exchange = await screen.findByRole('list', { name: /lines$/ });
-    const turns = [...exchange.querySelectorAll('li')];
+    const turns = [...(await screen.findByRole('list', { name: /lines$/ })).querySelectorAll('li')];
     expect(turns.length).toBeGreaterThan(2);
 
-    const bySpeaker = new Map<string, Set<string>>();
+    // `greet-and-respond` casts the learner as Luis. Their turns take the end
+    // side and *everyone else* takes the start — which is how a conversation with
+    // three people in it has to work, and the reason this is not simple
+    // alternation.
+    const sides = new Map<string, Set<string>>();
     for (const turn of turns) {
-      const speaker = turn.querySelector('p')?.textContent ?? '';
-      const hue = turn.getAttribute('data-kind');
-      expect(hue).not.toBeNull();
-      bySpeaker.set(speaker, (bySpeaker.get(speaker) ?? new Set()).add(hue!));
+      const speaker = turn.dataset['speaker']!;
+      sides.set(speaker, (sides.get(speaker) ?? new Set()).add(turn.dataset['side']!));
+    }
+    expect(sides.get('Luis')).toEqual(new Set(['end']));
+    expect(sides.size).toBeGreaterThan(1);
+    for (const [speaker, taken] of sides) {
+      expect(taken.size, `${speaker} takes one side`).toBe(1);
+      if (speaker !== 'Luis') expect(taken).toEqual(new Set(['start']));
+    }
+  });
+
+  it('marks a run of turns by one speaker, and still names every one of them', async () => {
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand',
+      services: await shippedServices(),
+    });
+
+    const turns = [...(await screen.findByRole('list', { name: /lines$/ })).querySelectorAll('li')];
+    const speakers = turns.map((turn) => turn.dataset['speaker']);
+
+    turns.forEach((turn, index) => {
+      const startsRun = speakers[index] !== speakers[index - 1];
+      expect(turn.dataset['run'], `turn ${index + 1}`).toBe(startsRun ? 'start' : 'continued');
+
+      /*
+       * The name is in the DOM on every turn, whether or not it is drawn. A
+       * screen reader reads turns one at a time and has no column to see the
+       * grouping in, so a name printed once would be a name it hears once — and
+       * the rest of the exchange arrives as unattributed Spanish. Same trade as
+       * the visual layout, made the other way round for a reader who cannot use
+       * the layout.
+       */
+      const name = turn.firstElementChild!;
+      expect(name.textContent).toBe(speakers[index]);
+      expect(name.className.includes('visually-hidden')).toBe(!startsRun);
+    });
+  });
+
+  it('gives each speaker a hue of their own, and keeps it', async () => {
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand',
+      services: await shippedServices(),
+    });
+
+    const turns = [...(await screen.findByRole('list', { name: /lines$/ })).querySelectorAll('li')];
+    const hues = new Map<string, Set<string>>();
+    for (const turn of turns) {
+      const speaker = turn.dataset['speaker']!;
+      /*
+       * The last child is the bubble's row, and the bubble is what carries the
+       * hue. Queried that way rather than as `[data-kind]` anywhere in the turn,
+       * because the printed name carries the same hue — a loose query would pass
+       * off the label and never notice the turn itself losing its colour.
+       */
+      const row = turn.lastElementChild!;
+      const hue = row.firstElementChild!.getAttribute('data-kind')!;
+      hues.set(speaker, (hues.get(speaker) ?? new Set()).add(hue));
     }
 
-    // Two speakers at least, one hue each, and no speaker wearing two.
-    expect(bySpeaker.size).toBeGreaterThan(1);
-    for (const hues of bySpeaker.values()) expect(hues.size).toBe(1);
-    const distinct = new Set([...bySpeaker.values()].map((hues) => [...hues][0]));
-    expect(distinct.size).toBe(bySpeaker.size);
+    for (const [speaker, taken] of hues) expect(taken.size, speaker).toBe(1);
+    const distinct = new Set([...hues.values()].map((taken) => [...taken][0]));
+    expect(distinct.size).toBe(hues.size);
   });
 
   it('introduces a small response palette before revealing its full range', async () => {

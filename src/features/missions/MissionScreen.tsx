@@ -9,6 +9,7 @@ import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { TokenizedText } from '../../components/TokenizedText';
+import { Transcript } from '../../components/Transcript';
 import { useWordSelection, type WordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
@@ -33,7 +34,6 @@ import {
   type MasteryRecord,
   type ReviewGrade,
 } from '../../domain/progress';
-import { kindHue } from '../../styles/kinds';
 import { SpeakCheck } from '../practice/SpeakCheck';
 import { studyPath } from '../study/study-url';
 import { MissionJourney } from './MissionJourney';
@@ -301,6 +301,7 @@ export function MissionScreen() {
           variationPatterns={variationPatterns}
           items={items}
           {...(passage.speakers ? { speakers: passage.speakers } : {})}
+          {...(mission.learnerSpeaker ? { learnerSpeaker: mission.learnerSpeaker } : {})}
           onPractise={() => void navigate(missionPracticePath(course, mission))}
         />
       ) : (
@@ -378,6 +379,7 @@ function UnderstandStage({
   variationPatterns: stageVariations,
   items: stageItems,
   speakers,
+  learnerSpeaker,
   onPractise,
 }: {
   readonly missionId: string;
@@ -393,6 +395,8 @@ function UnderstandStage({
   readonly translationOf: (item: LearningItem) => string | undefined;
   readonly items: readonly LearningItem[];
   readonly speakers?: readonly string[];
+  /** The part the learner performs in Use, so their side is theirs in Understand. */
+  readonly learnerSpeaker?: string;
   readonly onPractise: () => void;
 }) {
   const [showMeanings, setShowMeanings] = useState(false);
@@ -463,44 +467,24 @@ function UnderstandStage({
       </div>
       <p className={styles.hint}>Tap any word for help.</p>
 
-      <ol className={styles.lines} aria-label={`${passageTitle}, ${stageItems.length} lines`}>
-        {stageItems.map((item, index) => {
-          const speaker = speakers?.[index];
-          return (
-            /*
-              One hue per speaker, so a four-turn exchange reads as an exchange.
-              The name is still printed above the line — the colour is recognition
-              from the second turn onwards, and a monologue has no speakers and so
-              takes the plain surface.
-            */
-            <li
-              key={item.id}
-              className={speaker ? styles.lineToned : styles.linePlain}
-              {...(speaker ? { 'data-kind': kindHue(speaker) } : {})}
-            >
-              {speaker && <p className={styles.speaker}>{speaker}</p>}
-              <TokenizedText
-                item={item}
-                className={styles.lineText}
-                onSelect={(token) => words.open(item.id, token)}
-                selected={words.tokensFor(item.id)}
-                contextLabel={item.text}
-              />
-              {showMeanings && translationOf(item) && (
-                <p className={styles.meaning}>{translationOf(item)}</p>
-              )}
-              <button
-                type="button"
-                className={styles.linePlay}
-                onClick={() => speak(item)}
-                aria-label={`Listen to “${item.text}”`}
-              >
-                <Icon name="speak" size="lg" />
-              </button>
-            </li>
-          );
-        })}
-      </ol>
+      {/*
+        The exchange, drawn as an exchange. `learnerSpeaker` is passed so the lines
+        a learner will be performing in the Use stage are already on their own side
+        of the conversation here — the stages then agree about whose turn is whose
+        before the learner is asked to take one.
+      */}
+      <Transcript
+        label={`${passageTitle}, ${stageItems.length} lines`}
+        lines={stageItems.map((item, index) => ({
+          item,
+          ...(speakers?.[index] ? { speaker: speakers[index] } : {}),
+          ...(showMeanings && translationOf(item) ? { meaning: translationOf(item) } : {}),
+        }))}
+        {...(learnerSpeaker ? { self: learnerSpeaker } : {})}
+        onSelectWord={words.open}
+        selectedTokens={words.tokensFor}
+        onListen={speak}
+      />
 
       {stagePalettes.length > 0 && (
         <ResponsePalettePanel palettes={stagePalettes} onListen={speak} words={words} />

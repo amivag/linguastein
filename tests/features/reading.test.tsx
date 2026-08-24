@@ -74,6 +74,46 @@ describe('a passage', () => {
     expect(screen.getByText('Luis')).toBeInTheDocument();
   });
 
+  /*
+   * A dialogue and a text are two kinds of thing, and `Transcript` draws them as
+   * two shapes rather than as one list with a name on some of the rows.
+   *
+   * The pair below is the assertion that the branch exists at all. It is easy to
+   * lose: both shapes render an `ol` of `li` with a tokenised line in each, so a
+   * regression that drew every passage as prose would break nothing a text query
+   * could see.
+   */
+  it('draws a dialogue as turns, taking a side each', async () => {
+    renderPassage('700002');
+
+    const turns = [...(await screen.findByRole('list', { name: /Tienes tiempo/ })).children];
+    expect(turns.length).toBeGreaterThan(1);
+
+    // Nobody is cast in a passage a learner is only reading, so the voices take
+    // sides in the order they first speak — Ana opens, so Ana is on the start
+    // side and Luis answers from the other.
+    const sides = new Map(
+      turns.map((turn) => [
+        (turn as HTMLElement).dataset['speaker'],
+        (turn as HTMLElement).dataset['side'],
+      ]),
+    );
+    expect(sides.get('Ana')).toBe('start');
+    expect(sides.get('Luis')).toBe('end');
+  });
+
+  it('draws a text as prose, with no sides and no speakers', async () => {
+    renderPassage('700001');
+
+    const lines = [...(await screen.findByRole('list', { name: /Un día de trabajo/ })).children];
+    expect(lines.length).toBeGreaterThan(1);
+
+    // No side, because there is nobody to take one — and the rule between the
+    // sentences is the one border the design language keeps, which only this
+    // half of the component draws.
+    for (const line of lines) expect((line as HTMLElement).dataset['side']).toBeUndefined();
+  });
+
   it('keeps the meaning hidden until asked, so reading comes first', async () => {
     const user = userEvent.setup();
     renderPassage('700001');

@@ -1,0 +1,223 @@
+/*
+ * Two shapes, because a passage is two kinds of thing.
+ *
+ * A **dialogue** is turns between people, and the layout below says so: bubbles
+ * that hug their words, offset to the speaker's side, grouped into runs, with the
+ * name printed once where a run begins. A **text** is prose, and stays a reading
+ * column with a rule between its sentences — the one border in the app that is
+ * doing a job nothing else can, since two runs of prose in the same colour at
+ * the same size have nothing else to separate them.
+ *
+ * Every colour here is `kindTone`'s, arriving as `data-kind` from `kindHue` on the
+ * speaker's name, so nothing new is declared and nothing new needs asserting.
+ */
+
+/* ---- a dialogue ---------------------------------------------------------- */
+
+/*
+ * Tight inside a run, open between them.
+ *
+ * This is the cheapest of the signals here and possibly the strongest: an even
+ * column of equally spaced lines is a list whatever else is done to it, and
+ * grouping by speaker is what makes the same lines read as turns.
+ */
+.dialogue {
+  composes: listReset from '../styles/surfaces.module.css';
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.turn {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+}
+
+/* The learner's own side, or the second voice in a dialogue with no learner in
+   it. Logical rather than physical, so the whole layout mirrors with the text
+   direction rather than needing a second set of rules. */
+.turn[data-side='end'] {
+  justify-items: end;
+}
+
+.turn[data-run='start'] {
+  margin-top: var(--space-4);
+}
+
+.turn[data-run='start']:first-child {
+  margin-top: 0;
+}
+
+/*
+ * The bubble and its play control, side by side, with the control on the outside.
+ *
+ * Outside rather than in: a 44px target inside a bubble sets the minimum width of
+ * every bubble in the conversation, so `Sí.` would be drawn the size of a
+ * sentence and the shape would stop meaning anything.
+ *
+ * 88% so the far edge is always visible. A bubble that reached the full column
+ * would be indistinguishable from the row above it whichever side it was on,
+ * which is the whole point of offsetting them.
+ */
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  max-width: 88%;
+}
+
+.turn[data-side='end'] .row {
+  flex-direction: row-reverse;
+}
+
+/*
+ * The turn itself.
+ *
+ * No spine, unlike `kindSurface`. The spine exists because a full-width row in a
+ * column of full-width rows has nothing but colour to distinguish it, and it
+ * needs one edge stated at full strength to survive a glance. A bubble has its
+ * own outline against the page, sits on one side rather than both, and carries a
+ * name — so the tint is the whole of the colour's job here, and a bar down the
+ * edge would be a fourth signal for something already said three ways.
+ */
+.bubble {
+  composes: kindTone from '../styles/surfaces.module.css';
+
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  /* A speakerless line in a dialogue — a stage direction, a narrator — falls
+     back to the ordinary surface rather than borrowing a voice's colour. */
+  background: var(--kind-soft, var(--color-surface));
+  box-shadow: var(--shadow-sm);
+}
+
+/*
+ * The corner facing the speaker, tightened where a run begins.
+ *
+ * This is the tail, without drawing one: it says "this run starts here, from this
+ * side", and the continuations stay fully round so a run reads as one block of
+ * speech. A drawn tail would be a shape the design language has nowhere else,
+ * and would need a border or a rotated square to make.
+ */
+.turn[data-side='start'][data-run='start'] .bubble {
+  border-start-start-radius: var(--radius-xs);
+}
+
+.turn[data-side='end'][data-run='start'] .bubble {
+  border-start-end-radius: var(--radius-xs);
+}
+
+/*
+ * Who is speaking, in the hue they are speaking in.
+ *
+ * Printed once per run. It is still in the DOM on every turn — `visually-hidden`
+ * at the call site — because a screen reader reads the turns one at a time and
+ * has no column to see the grouping in, so hiding the name outright would make a
+ * four-way exchange a wall of unattributed Spanish.
+ */
+.speaker {
+  composes: kindTone from '../styles/surfaces.module.css';
+
+  padding-inline: var(--space-2);
+  color: var(--kind, var(--color-text-muted));
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.lineText {
+  font-size: var(--text-lg);
+  line-height: var(--leading-prose);
+}
+
+/*
+ * The English under a turn, once a learner asks for it.
+ *
+ * `Show meaning` reveals all of them at once, which as an instant swap reads as
+ * the page having been replaced. Fading them in says these are the same turns
+ * with something added — the same intent, and the same token, as a card revealing
+ * its meaning.
+ */
+.meaning {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+  animation: reveal var(--transition-base);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A round glyph button, the shape "play this" has everywhere else in the app. */
+.play {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-target);
+  min-height: var(--tap-target);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    scale var(--transition-fast);
+}
+
+/* The one control repeated on every line, so also the one whose press most needs
+   confirming — a tap that dips is how a learner knows which turn spoke. */
+.play:active {
+  scale: 0.88;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .play:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+}
+
+/* ---- a text -------------------------------------------------------------- */
+
+.prose {
+  composes: listReset from '../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-3);
+}
+
+/*
+ * A reading column rather than a list of cards: a text should look like a text,
+ * so only the play button sits outside the flow.
+ *
+ * `--color-border` rather than the strong one, because this is decoration between
+ * two paragraphs and not the boundary of a control.
+ */
+.paragraph {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 var(--space-2);
+  align-items: start;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.paragraph:last-child {
+  border-bottom: none;
+}
+
+.paragraph .play {
+  grid-row: span 2;
+  align-self: center;
+}
+
+.paragraph .meaning {
+  grid-column: 1;
+}

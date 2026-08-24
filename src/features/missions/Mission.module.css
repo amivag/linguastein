@@ -315,62 +315,6 @@
   flex: 1;
 }
 
-.lines {
-  composes: listReset from '../../styles/surfaces.module.css';
-
-  display: grid;
-  gap: var(--space-2);
-}
-
-/*
- * A turn in the exchange.
- *
- * The surface is on the line's own class rather than on `.lines li`, and that is
- * load-bearing rather than tidiness: a toned line and a plain one are two
- * different recipes, and a descendant selector here would outrank both of them
- * on specificity and repaint whichever one won.
- */
-.lines li {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-1) var(--space-2);
-  padding: var(--space-3) var(--space-4);
-}
-
-/* A monologue, or a passage whose speakers the pack does not record. */
-.linePlain {
-  composes: card from '../../styles/surfaces.module.css';
-}
-
-/*
- * A dialogue, one hue per speaker.
- *
- * Four turns in one grey column is a wall of Spanish that a learner has to read
- * to find out who is talking; the names were printed and still are, but a name
- * is something you read and a colour is something you see. `kindSurface` gives
- * each turn the hue's own tint and a spine at full strength down its leading
- * edge, which is the part that survives being glanced at.
- *
- * The hue comes from the speaker's name through `kindHue`, so it belongs to the
- * speaker rather than to the row — the same rule the categories follow, and what
- * makes the waiter the same colour in every line he has.
- */
-.lineToned {
-  composes: kindSurface from '../../styles/surfaces.module.css';
-}
-
-.speaker {
-  grid-column: 1 / -1;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-}
-
-.lineText {
-  font-size: var(--text-lg);
-  line-height: var(--leading-prose);
-}
-
 /*
  * The English under a line, once a learner asks for it.
  *
@@ -387,40 +331,6 @@
 @keyframes reveal {
   from {
     opacity: 0;
-  }
-}
-
-.lines .meaning {
-  grid-column: 1;
-}
-
-.linePlay {
-  grid-column: 2;
-  grid-row: 2 / span 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--tap-target);
-  min-height: var(--tap-target);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition:
-    color var(--transition-fast),
-    scale var(--transition-fast);
-}
-
-/* The one control repeated on every line, so it is also the one whose press most
-   needs confirming — a tap that dips is how a learner knows which line spoke. */
-.linePlay:active {
-  scale: 0.88;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .linePlay:hover {
-    color: var(--color-text);
   }
 }
 

@@ -47,9 +47,9 @@ const ALLOWED: readonly { file: string; reason: string }[] = [
       'Native fields — select, input, textarea. A field has no fill and no label inside it, so the boundary genuinely is the only thing identifying it as a control, which is exactly what WCAG 1.4.11 asks 3:1 of.',
   },
   {
-    file: 'features/read/Read.module.css',
+    file: 'components/Transcript.module.css',
     reason:
-      'The rule between lines of a passage. Two runs of prose in the same colour at the same size, and nothing but a line separates them.',
+      'The rule between the sentences of a *text*. Two runs of prose in the same colour at the same size, and nothing but a line separates them. It moved here from Read.module.css with the markup: one component now draws both a passage and a mission exchange, and only the prose half of it rules a line — a dialogue is bubbles, which separate themselves.',
   },
 ];
 

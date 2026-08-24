@@ -5,7 +5,7 @@ import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
-import { TokenizedText } from '../../components/TokenizedText';
+import { Transcript } from '../../components/Transcript';
 import { UsageBadges } from '../../components/UsageBadges';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
@@ -116,38 +116,29 @@ export function PassageScreen() {
         </Button>
       </div>
 
-      <ol className={styles.lines} aria-label={`${passage.title}, ${sentences.length} sentences`}>
-        {sentences.map((item, index) => {
-          const speaker = passage.speakers?.[index];
+      {/*
+        No `self`: nobody is cast in a passage a learner is only reading, so the
+        voices take sides in the order they first speak. A `kind: 'text'` passage
+        has no speakers at all and `Transcript` draws it as prose — which is the
+        one place left in the app that still rules a line between two paragraphs.
+      */}
+      <Transcript
+        label={`${passage.title}, ${sentences.length} sentences`}
+        lines={sentences.map((item, index) => {
           const translation = services.repository.translationOf(
             item.id,
             preferences.referenceLanguage,
           );
-          return (
-            <li key={item.id} className={styles.line}>
-              {speaker && <p className={styles.speaker}>{speaker}</p>}
-              <TokenizedText
-                item={item}
-                className={styles.lineText}
-                onSelect={(token) => words.open(item.id, token)}
-                selected={words.tokensFor(item.id)}
-                contextLabel={item.text}
-              />
-              {showTranslations && translation && (
-                <p className={styles.lineMeaning}>{translation.text}</p>
-              )}
-              <button
-                type="button"
-                className={styles.linePlay}
-                onClick={() => speak(item.text)}
-                aria-label={`Listen to “${item.text}”`}
-              >
-                <Icon name="speak" size="lg" />
-              </button>
-            </li>
-          );
+          return {
+            item,
+            ...(passage.speakers?.[index] ? { speaker: passage.speakers[index] } : {}),
+            ...(showTranslations && translation ? { meaning: translation.text } : {}),
+          };
         })}
-      </ol>
+        onSelectWord={words.open}
+        selectedTokens={words.tokensFor}
+        onListen={(item) => speak(item.text)}
+      />
 
       <Button
         variant="primary"

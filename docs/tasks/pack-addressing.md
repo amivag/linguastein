@@ -179,11 +179,24 @@ lists what is bundled. Making a pack a real add-on needs, roughly in order:
    would show mastery for words no loaded pack defines. Decide whether that reads
    as "retained, greyed out" or is filtered to the installed set. Do **not** solve
    it by deleting progress.
-5. **Levels above A2.** `CEFR_LEVELS` already runs to `c2` and `LevelScope`
-   already has `all`; a B1 pack needs no engine change. What it needs is content
-   and a decision about whether B1 is a separate pack or a level inside `core-es`
-   — and if separate, §3 has to be settled first, because both will want
-   `preterite`.
+5. **Levels above A2 — settled, and it went the other way.** `CEFR_LEVELS`
+   already runs to `c2` and `LevelScope` already has `all`; a B1 pack needs no
+   engine change. The open question was whether B1 should be a separate pack or a
+   level inside `core-es`, and this note said that if separate, §3 had to be
+   settled first because both packs would want `preterite`.
+
+   **B1 shipped as a level inside `core-es`** (pack `0.11.0`), precisely to avoid
+   depending on §3, which is still open. Nothing here is invalidated: the
+   reasoning stands for the _next_ pack, and this item is no longer the thing
+   blocking content above A2 — that content exists.
+
+   What the decision does change is the shape of the remaining question. It is no
+   longer "how do we ship B1" but "when is a second pack worth the addressing
+   work at all", and the honest answer after doing B1 this way is: not until a
+   pack needs to be installable or removable, i.e. item 2 above. A level inside
+   the bundled pack cost one build change — the file-name prefix is derived from
+   the levels present, so `es-a1-a2-core-*` renamed itself — and no engine change
+   whatsoever.
 
 ## 5. Definition of done
 

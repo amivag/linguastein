@@ -340,7 +340,16 @@
 500328	otoño	autumn	m		a1	time
 500329	invierno	winter	m		a1	time
 500330	favor	favour	m		a1	greetings
-500331	nevera	fridge	f		a2	home	es-ES
+# `nevera` is the usual word in Spain *and* in Colombia, Venezuela and the
+# Caribbean — a large share of all speakers. `es-ES` alone was therefore not
+# merely imprecise but backwards: `es-CO` is a filterable locale, so a learner
+# aiming at Colombia was denied the word everyone there uses and shown
+# `refrigerador` instead. Unmarked is wrong in the other direction, because the
+# column means "where this word is the usual choice" and Mexico and Argentina
+# say `refrigerador` and `heladera`. So it carries the regions it actually owns,
+# which `regionCovers` supports and which leaves the `es-419` macro-filter
+# showing `refrigerador` — correctly, as the wider Latin American choice.
+500331	nevera	fridge	f		a2	home	es-ES,es-CO,es-VE,es-CU,es-DO,es-PR
 500332	centro	centre	m		a1	city
 500333	euro	euro	m		a1	shopping
 500334	talla	size	f		a2	shopping

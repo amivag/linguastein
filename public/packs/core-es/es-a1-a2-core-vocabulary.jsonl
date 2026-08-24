@@ -329,7 +329,7 @@
 {"id":"core-es:item:500328","pack":"core-es","type":"word","text":"otoño","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:otono"],"examples":["core-es:item:000208"]}
 {"id":"core-es:item:500329","pack":"core-es","type":"word","text":"invierno","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:invierno"],"examples":["core-es:item:000212","core-es:item:000412","core-es:item:001027"]}
 {"id":"core-es:item:500330","pack":"core-es","type":"word","text":"favor","level":"a1","topics":["greetings"],"lexemes":["core-es:lexeme:favor"],"examples":["core-es:item:000014","core-es:item:000015","core-es:item:000056"]}
-{"id":"core-es:item:500331","pack":"core-es","type":"word","text":"nevera","level":"a2","topics":["home"],"regions":["es-ES"],"lexemes":["core-es:lexeme:nevera"],"examples":["core-es:item:000085"]}
+{"id":"core-es:item:500331","pack":"core-es","type":"word","text":"nevera","level":"a2","topics":["home"],"regions":["es-ES","es-CO","es-VE","es-CU","es-DO","es-PR"],"lexemes":["core-es:lexeme:nevera"],"examples":["core-es:item:000085"]}
 {"id":"core-es:item:500332","pack":"core-es","type":"word","text":"centro","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:centro"],"examples":["core-es:item:000115","core-es:item:000312","core-es:item:000334"]}
 {"id":"core-es:item:500333","pack":"core-es","type":"word","text":"euro","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:euro"],"examples":["core-es:item:001422","core-es:item:000305","core-es:item:001286"]}
 {"id":"core-es:item:500334","pack":"core-es","type":"word","text":"talla","level":"a2","topics":["shopping"],"lexemes":["core-es:lexeme:talla"],"examples":["core-es:item:000297","core-es:item:001183","core-es:item:001184"]}

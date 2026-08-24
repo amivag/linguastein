@@ -35,8 +35,9 @@ fails if the generated pack does not match its sources. Never hand-edit
 
 ## 2. Where things stand, measured
 
-Run this to reproduce these numbers at any time — do not trust the table if it
-disagrees with the build:
+**A dated snapshot, not a live figure.** Run the build and trust _it_ over this
+table whenever the two disagree — the table has gone stale three times, each time
+because content landed and the paragraph describing it did not:
 
 ```bash
 npm run build:data
@@ -48,25 +49,26 @@ brief was written against are less than half of what now ships.
 
 | Measure                              | Now                                    |
 | ------------------------------------ | -------------------------------------- |
-| Practisable items                    | 2,022                                  |
-| — sentences and phrases              | 1,395                                  |
-| — word cards                         | 627                                    |
-| Lexemes                              | 802 (127 verbs, 393 nouns, 282 other)  |
+| Practisable items                    | 2,053                                  |
+| — sentences and phrases              | 1,425                                  |
+| — word cards                         | 628                                    |
+| Lexemes                              | 803 (127 verbs, 393 nouns, 283 other)  |
 | Generated verb forms                 | 3,024 (24 per verb, commands included) |
-| Generated noun and adjective forms   | 1,118                                  |
-| Running words of Spanish             | **7,531 (~60 minutes of reading)**     |
+| Generated noun and adjective forms   | 1,122                                  |
+| Running words of Spanish             | **7,682 (~64 minutes of reading)**     |
 | Average sentence length              | 5.4 words                              |
 | Longest single item                  | 12 words                               |
-| Multi-sentence texts                 | **65 (17 texts, 48 dialogues)**        |
-| — sentences read in context          | 489, averaging 7.5 per passage         |
-| Tokens linked to a lexeme            | 7,497 of 7,531 (100%)                  |
-| Lexemes appearing in ≥1 sentence     | 780 of 802                             |
-| Lexemes appearing in exactly one     | **250 (31%)**                          |
-| Lexemes with ≥6 encounters           | **236 (29%)**                          |
-| Items marked with register           | 725                                    |
-| Items marked with address (tú/usted) | 418                                    |
+| Multi-sentence texts                 | **67 (17 texts, 50 dialogues)**        |
+| — sentences read in context          | 507, averaging 7.6 per passage         |
+| Tokens linked to a lexeme            | 7,648 of 7,682 (100%)                  |
+| Lexemes appearing in ≥1 sentence     | 781 of 803                             |
+| Lexemes appearing in exactly one     | **249 (31%)**                          |
+| Lexemes with ≥6 encounters           | **238 (30%)**                          |
+| Questions / statements               | 391 / 1,034, with **5** minimal pairs  |
+| Items marked with register           | 755                                    |
+| Items marked with address (tú/usted) | 442                                    |
 | Items marked with a region           | 50                                     |
-| Items containing `¡`                 | 12                                     |
+| Items containing `¡`                 | 14                                     |
 | Items with audio                     | 0                                      |
 | Senses                               | 0                                      |
 | Lexemes with `frequencyRank`         | 0                                      |
@@ -156,7 +158,7 @@ constraint. Shape is.
 
 ### 3.2 There is still not much to read or listen to
 
-**This is the part that is now done.** 7,531 running words is about an hour of
+**This is the part that is now done.** 7,682 running words is about an hour of
 material, and 65 passages carry 489 sentences read in context against a target of
 30–60 — so both the mechanism and the content have arrived, and the spec's
 assumption of extended input (Kató Lomb, §2.2; §16–§17) is met. No item is longer
@@ -191,7 +193,7 @@ recycling target and produces better input than 449 unrelated sentences would.
 - **`frequencyRank`**: absent, so nothing can sequence learning by payoff.
 - ~~**Skill `prerequisites`**~~: **done** — 58 authored skills declare one, so i+1
   ordering is possible and only `frequencyRank` is left of goal 5.
-- **Usage marking**: 725 items of 1,395 carry register and 418 carry address, up
+- **Usage marking**: 755 items of 1,425 carry register and 442 carry address, up
   from 46 and 60 — largely a side effect of the mission palettes, which are
   authored with both. The machinery is now well applied; what remains is whether
   it is _correct_, which is §9's second bullet. Two specifics for that pass: `register` is inconsistently
@@ -374,10 +376,35 @@ build green — rather than one enormous commit.
   universal, and shipping one side with an example sentence and the other without
   is the same failure in slower motion.
   Still undecided, deliberately: `piso` (Spain's "flat" but everyone's "floor",
-  so it needs senses before it can be region-marked), `nevera` (Spain _and_ much
-  of the Caribbean, so `es-ES` would be too narrow — `refrigerador` was added
-  alongside it instead), `bolígrafo` and `bolso` and `autobús` (the Latin
-  American side is too fragmented to pick one word for).
+  so it needs senses before it can be region-marked), `bolígrafo` and `bolso` and
+  `autobús` (the Latin American side is too fragmented to pick one word for).
+
+  **`nevera` is decided (2026-08-24), and the answer was neither option this
+  paragraph offered.** It used to say `es-ES` would be too narrow — right — and
+  concluded that the word should stay unmarked, with `refrigerador` added
+  alongside. Two things were wrong with that. The data never matched it: `nevera`
+  shipped marked `es-ES` regardless, and because `es-CO` is a filterable locale,
+  a learner aiming at Colombia was denied the word everyone there uses and shown
+  `refrigerador` instead — the marking was not imprecise, it was inverted. And
+  unmarked would have been wrong in the other direction, because the column means
+  "where this word is the usual choice" and Mexico says `refrigerador` while
+  Argentina says `heladera`; leaving it blank claims a dialect word as universal,
+  which is the same failure as shipping one side of a pair.
+
+  A `regions` list takes more than one locale, and `regionCovers` reads each, so
+  the word now carries the regions it actually owns:
+  `es-ES,es-CO,es-VE,es-CU,es-DO,es-PR`. Spain sees `nevera`; Colombia sees both;
+  Mexico and Argentina see `refrigerador`; and the `es-419` macro-filter sees
+  `refrigerador`, correctly, as the wider Latin American choice. **The general
+  lesson: reach for several locales before reaching for none.** A word can be
+  regional without being confined to one country, and blank does not mean
+  "complicated" — it means "usual everywhere".
+
+  One gap this surfaced and did not close: Argentina is shown `refrigerador`,
+  where an Argentine says `heladera`, which the pack does not have. Adding it is a
+  lexeme plus at least one sentence, so it belongs with a content pass rather than
+  here.
+
 - **Do not invent `frequencyRank` numbers.** Take them from a documented open
   source and record which one in the pack manifest's provenance, or leave the
   field out. A plausible-looking invented ranking is worse than none.
@@ -410,7 +437,7 @@ unreviewed`. Do not mark anything reviewed, and do not describe the pack as
 - [ ] The build fails when recycling drops below the threshold — **the open item,
       and the one the rest of this list now waits on**
 - [ ] Every A1 lexeme appears in ≥6 sentences; A2 in ≥4 — 398 and 161 short
-- [x] 1,200+ sentences, 8,000+ running words — 1,395 sentences, 7,531 words
+- [x] 1,200+ sentences, 8,000+ running words — 1,425 sentences, 7,682 words
 - [x] 30+ multi-sentence texts or dialogues, reachable in the app — **65**,
       averaging 7.5 sentences, with the reading view that shows them
 - [x] Register, address and region marked across the content that needs it — 755

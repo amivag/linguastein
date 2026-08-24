@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MISSIONS } from '../../src/app/missions';
 import { loadCatalog, loadPack, type DatasetSource } from '../../src/data/loaders';
-import { ContentRepository, moodOf } from '../../src/domain/content';
+import { ContentRepository, isUsableIn, moodOf } from '../../src/domain/content';
 import { missionPassageForStage, missionTransfers } from '../../src/domain/missions';
 
 const root = resolve(process.cwd(), 'public/packs');
@@ -76,6 +76,34 @@ describe('shipped packs', () => {
     expect(paradigm('lunes')).toEqual(['lunes', 'lunes']);
     expect(paradigm('cansado')).toEqual(['cansado', 'cansados', 'cansada', 'cansadas']);
     expect(paradigm('grande')).toEqual(['grande', 'grandes']);
+  });
+
+  /**
+   * `nevera` used to ship marked `es-ES`, which was not imprecise but inverted:
+   * `es-CO` is a filterable locale and `nevera` is what everyone in Colombia
+   * says, so a learner aiming there was denied it and shown `refrigerador`. And
+   * blank would have been wrong the other way, because the column means "where
+   * this word is the usual choice" and Mexico says `refrigerador`. A `regions`
+   * list takes more than one locale; the general lesson is to reach for several
+   * before reaching for none.
+   */
+  it('regionalises a word to every region that actually uses it', async () => {
+    const { repository } = await loadAll();
+    const fridge = repository.allItems().filter((item) => /nevera|refrigerador/i.test(item.text));
+    const seenIn = (locale: string) =>
+      fridge.filter((item) => isUsableIn(item.regions, locale as never)).map((item) => item.text);
+
+    // Spain never says refrigerador; Mexico and the macro-region never say nevera.
+    expect(seenIn('es-ES').join(' ')).not.toMatch(/refrigerador/);
+    expect(seenIn('es-MX').join(' ')).not.toMatch(/nevera/);
+    expect(seenIn('es-419').join(' ')).not.toMatch(/nevera/);
+    // Colombia says both, and used to be shown only the one it does not lead with.
+    expect(seenIn('es-CO').join(' ')).toMatch(/nevera/);
+    expect(seenIn('es-CO').join(' ')).toMatch(/refrigerador/);
+    // Nobody is left without a fridge.
+    for (const locale of ['es-ES', 'es-MX', 'es-AR', 'es-CO', 'es-419']) {
+      expect(seenIn(locale).length, locale).toBeGreaterThan(0);
+    }
   });
 
   it('carry the region of the word a form belongs to', async () => {

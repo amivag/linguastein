@@ -3685,8 +3685,8 @@
 {"id":"core-es:form:invierno-n-pl","lexeme":"core-es:lexeme:invierno","form":"inviernos","morph":{"gender":"masculine","number":"plural"},"level":"a1"}
 {"id":"core-es:form:favor-n-sg","lexeme":"core-es:lexeme:favor","form":"favor","morph":{"gender":"masculine","number":"singular"},"level":"a1"}
 {"id":"core-es:form:favor-n-pl","lexeme":"core-es:lexeme:favor","form":"favores","morph":{"gender":"masculine","number":"plural"},"level":"a1"}
-{"id":"core-es:form:nevera-n-sg","lexeme":"core-es:lexeme:nevera","form":"nevera","morph":{"gender":"feminine","number":"singular"},"level":"a2","regions":["es-ES"]}
-{"id":"core-es:form:nevera-n-pl","lexeme":"core-es:lexeme:nevera","form":"neveras","morph":{"gender":"feminine","number":"plural"},"level":"a2","regions":["es-ES"]}
+{"id":"core-es:form:nevera-n-sg","lexeme":"core-es:lexeme:nevera","form":"nevera","morph":{"gender":"feminine","number":"singular"},"level":"a2","regions":["es-ES","es-CO","es-VE","es-CU","es-DO","es-PR"]}
+{"id":"core-es:form:nevera-n-pl","lexeme":"core-es:lexeme:nevera","form":"neveras","morph":{"gender":"feminine","number":"plural"},"level":"a2","regions":["es-ES","es-CO","es-VE","es-CU","es-DO","es-PR"]}
 {"id":"core-es:form:centro-n-sg","lexeme":"core-es:lexeme:centro","form":"centro","morph":{"gender":"masculine","number":"singular"},"level":"a1"}
 {"id":"core-es:form:centro-n-pl","lexeme":"core-es:lexeme:centro","form":"centros","morph":{"gender":"masculine","number":"plural"},"level":"a1"}
 {"id":"core-es:form:euro-n-sg","lexeme":"core-es:lexeme:euro","form":"euro","morph":{"gender":"masculine","number":"singular"},"level":"a1"}

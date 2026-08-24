@@ -15,13 +15,20 @@ import type { Morphology, Tense } from '../../domain/content';
 
 export type Conjugation = 'ar' | 'er' | 'ir';
 
+/**
+ * How advanced a generated form is. Not the full CEFR ladder on purpose: this
+ * module generates nothing above B1, and a union that stopped at what exists is
+ * a union the typechecker can still exhaust.
+ */
+export type FormLevel = 'a1' | 'a2' | 'b1';
+
 export interface GeneratedForm {
   readonly form: string;
   readonly morph: Morphology;
   /** Set for forms that are not used everywhere, e.g. vosotros. */
   readonly regions?: readonly string[];
-  /** Rough level: present is A1, past tenses A2. */
-  readonly level: 'a1' | 'a2';
+  /** Rough level: present is A1, the past and future tenses A2, subjunctive B1. */
+  readonly level: FormLevel;
 }
 
 /** Irregularity declared per verb; everything else follows the regular rules. */
@@ -61,10 +68,20 @@ export interface Irregularity {
    */
   readonly imperativeTu?: string;
   /**
-   * usted and ustedes commands for the handful of verbs whose subjunctive is not
-   * derivable from the yo form — `soy` would give `soya` rather than `sea`.
+   * The whole present subjunctive, for the verbs it cannot be derived for.
+   *
+   * Two kinds of verb need it. Six have no usable yo form to build on — `soy`
+   * would give `soya` rather than `sea` — and `reír` breaks the other way: its
+   * yo form `río` carries an accent that the nosotros and vosotros forms drop
+   * (`riamos`, not `ríamos`), and no rule here predicts that.
+   *
+   * This replaced a narrower `imperativeFormal` field holding just the two
+   * command forms. It was the same six verbs, declared twice over: a usted
+   * command *is* the third person present subjunctive, so two fields meant two
+   * places to get `sepa` right and a way for them to disagree. {@link imperatives}
+   * now reads persons 3 and 6 off this.
    */
-  readonly imperativeFormal?: readonly [string, string];
+  readonly presentSubjunctive?: readonly [string, string, string, string, string, string];
 }
 
 const PRESENT_ENDINGS: Record<Conjugation, readonly string[]> = {
@@ -83,6 +100,19 @@ const IMPERFECT_ENDINGS: Record<Conjugation, readonly string[]> = {
   ar: ['aba', 'abas', 'aba', 'ábamos', 'abais', 'aban'],
   er: ['ía', 'ías', 'ía', 'íamos', 'íais', 'ían'],
   ir: ['ía', 'ías', 'ía', 'íamos', 'íais', 'ían'],
+};
+
+/**
+ * Present subjunctive endings: the *other* conjugation's vowel.
+ *
+ * An `-ar` verb takes the `-er` vowel and both the `-er` and `-ir` verbs take
+ * the `-ar` one, which is the whole of the ending rule and the reason `er` and
+ * `ir` are identical here where the present indicative keeps them apart.
+ */
+const SUBJUNCTIVE_ENDINGS: Record<Conjugation, readonly string[]> = {
+  ar: ['e', 'es', 'e', 'emos', 'éis', 'en'],
+  er: ['a', 'as', 'a', 'amos', 'áis', 'an'],
+  ir: ['a', 'as', 'a', 'amos', 'áis', 'an'],
 };
 
 /** Endings after a strong preterite stem — note the unstressed `e` and `o`. */
@@ -124,17 +154,18 @@ export function stemOf(lemma: string): string {
 }
 
 /**
- * Generates present, preterite and imperfect indicative, the affirmative
- * commands, plus the gerund and the participle. Beginner priority per spec §14;
- * the subjunctive proper (and so the negative commands) and the compound tenses
- * are deliberately left out of this pass.
+ * Generates the present, preterite, imperfect, future and conditional
+ * indicative, the present subjunctive, the affirmative commands, plus the
+ * gerund and the participle. The compound tenses are still out: `haber` is
+ * generated and so is every participle, so `he comido` is two forms the pack
+ * already has rather than a third it lacks.
  */
 export function conjugate(lemma: string, irregular: Irregularity = {}): readonly GeneratedForm[] {
   const conjugation = conjugationOf(lemma);
   if (!conjugation) throw new Error(`not a Spanish infinitive: ${lemma}`);
 
   const forms: GeneratedForm[] = [];
-  const push = (form: string, morph: Morphology, level: 'a1' | 'a2', index?: number) => {
+  const push = (form: string, morph: Morphology, level: FormLevel, index?: number) => {
     forms.push({
       form,
       morph,
@@ -144,6 +175,7 @@ export function conjugate(lemma: string, irregular: Irregularity = {}): readonly
   };
 
   const presentForms = present(lemma, conjugation, irregular);
+  const subjunctiveForms = presentSubjunctive(lemma, conjugation, irregular, presentForms);
 
   presentForms.forEach((form, index) =>
     push(
@@ -172,9 +204,30 @@ export function conjugate(lemma: string, irregular: Irregularity = {}): readonly
     ),
   );
 
-  for (const command of imperatives(lemma, conjugation, irregular, presentForms)) {
+  for (const command of imperatives(lemma, irregular, presentForms, subjunctiveForms)) {
     forms.push(command);
   }
+
+  /*
+   * The present subjunctive, marked B1 — the first thing on this list that is
+   * genuinely a level up rather than a tense a beginner was owed. It is also
+   * where three A-level features turn out to have been the subjunctive all
+   * along: a usted command, an ustedes command and a negative command are all
+   * this paradigm, which is why `imperatives` now reads it instead of deriving
+   * its own.
+   *
+   * Carried as `tense: 'present'` with `mood: 'subjunctive'` rather than as a
+   * seventh tense, because that is what it is — and `tenseHue` already asks mood
+   * first and lets it win, so the colour was waiting for these forms to exist.
+   */
+  subjunctiveForms.forEach((form, index) =>
+    push(
+      form,
+      { ...PERSONS[index], tense: 'present', mood: 'subjunctive', verbForm: 'finite' },
+      'b1',
+      index,
+    ),
+  );
 
   /*
    * Future and conditional, and the reason they are here at all: writing ordinary
@@ -218,19 +271,21 @@ export function conjugate(lemma: string, irregular: Irregularity = {}): readonly
  * mood and person but no time reference.
  *
  * The tú form is the third person present, apart from eight verbs that shorten
- * it. The usted and ustedes forms are the present subjunctive, which for all but
- * six verbs is the yo form with its `-o` swapped for the opposite vowel — the
- * rule a learner is actually taught.
+ * it. The usted and ustedes forms are simply the third person singular and
+ * plural of the present subjunctive — not "derived from" it, but the same two
+ * strings — so they are read straight off the paradigm rather than rebuilt here.
+ * That is what retired the `imperativeFormal` table: `sepa` was declared as a
+ * command and would have had to be declared again as a subjunctive.
  */
 function imperatives(
   lemma: string,
-  conjugation: Conjugation,
   irregular: Irregularity,
   presentForms: readonly string[],
+  subjunctiveForms: readonly string[],
 ): readonly GeneratedForm[] {
   const tu = irregular.imperativeTu ?? presentForms[2]!;
-  const [usted, ustedes] =
-    irregular.imperativeFormal ?? formalCommands(conjugation, presentForms[0]!);
+  const usted = subjunctiveForms[2]!;
+  const ustedes = subjunctiveForms[5]!;
   // hablar → hablad, oír → oíd: the infinitive's -r becomes -d, no exceptions.
   const vosotros = `${lemma.slice(0, -1)}d`;
 
@@ -251,12 +306,53 @@ function imperatives(
   ];
 }
 
-/** `sigo` → `siga`/`sigan`, `giro` → `gire`/`giren`, `juego` → `juegue`. */
-function formalCommands(conjugation: Conjugation, yo: string): [string, string] {
-  const stem = yo.endsWith('o') ? yo.slice(0, -1) : yo;
-  if (conjugation !== 'ar') return [`${stem}a`, `${stem}an`];
-  const spelled = hardenBeforeE(stem);
-  return [`${spelled}e`, `${spelled}en`];
+/**
+ * The present subjunctive, from two facts and one exception.
+ *
+ * **The stem is the yo form.** `tengo` → `tenga`, `conozco` → `conozca`,
+ * `elijo` → `elija`: every consonant irregularity a verb carries in the first
+ * person is already the subjunctive's, so building on `yo` rather than on the
+ * infinitive needs no table of its own. This is also the rule a learner is
+ * actually taught, which is worth something in a module whose output is read.
+ *
+ * **nosotros and vosotros leave the boot, and by conjugation.** An `-ar` or
+ * `-er` stem change does not reach them at all — `pensemos`, `podamos`,
+ * `volvamos` — while an `-ir` verb takes its *preterite* vowel there instead:
+ * `pidamos`, `durmamos`, `sintamos`. That is the same change the gerund and the
+ * third person preterite take, so `preteriteStemChange` is what declares it and
+ * no new field is needed.
+ *
+ * The exception is a verb that spells its own yo form. `tener` declares
+ * `tengo` *and* an `e-ie` stem change; undoing the change outside the boot would
+ * give `tenamos` for `tengamos`, and `ver` would give `vamos` — the wrong verb
+ * entirely — for `veamos`. So a declared yo form holds throughout, and only a
+ * rule-applied change is undone.
+ */
+function presentSubjunctive(
+  lemma: string,
+  conjugation: Conjugation,
+  irregular: Irregularity,
+  presentForms: readonly string[],
+): readonly string[] {
+  if (irregular.presentSubjunctive) return irregular.presentSubjunctive;
+
+  // The yo form minus its -o, which carries tengo/conozco/elijo for free.
+  const boot = presentForms[0]!.replace(/o$/, '');
+  const declaredYo = irregular.yo !== undefined || irregular.present !== undefined;
+  // `preteriteStemChange` is already a `StemChange`, and `applyStemChange`
+  // passes an absent one straight through, so no guard is needed here.
+  const plain = softenBeforeBackVowel(
+    applyStemChange(stemOf(lemma), irregular.preteriteStemChange),
+    lemma,
+  );
+  const outsideBoot = declaredYo || !irregular.stemChange ? boot : plain;
+
+  return SUBJUNCTIVE_ENDINGS[conjugation].map((ending, index) => {
+    const stem = index === 3 || index === VOSOTROS_INDEX ? outsideBoot : boot;
+    // Only the -ar endings begin with a front vowel, so only they can soften a
+    // final c or g: busque, llegue, empiece.
+    return (conjugation === 'ar' ? hardenBeforeE(stem) : stem) + ending;
+  });
 }
 
 function present(
@@ -368,13 +464,34 @@ function applyStemChange(stem: string, change: StemChange | undefined): string {
   return stem.slice(0, index) + to + stem.slice(index + from.length);
 }
 
-/** Orthographic changes in the first person singular present. */
+/**
+ * Orthographic changes in the first person singular present.
+ *
+ * The ending is always `o` here, which is the only reason one call can serve
+ * every case: the softened stem plus the ending *is* `escojo` and `sigo`.
+ */
 function spellPresentYo(stem: string, lemma: string, ending: string): string {
-  // escoger → escojo, dirigir → dirijo: g keeps its soft sound before o.
-  if (lemma.endsWith('ger') || lemma.endsWith('gir')) return `${stem.slice(0, -1)}jo`;
-  // seguir → sigo: the u is only there to keep g hard before e/i.
-  if (lemma.endsWith('guir')) return `${stem.slice(0, -1)}o`;
-  return stem + ending;
+  return softenBeforeBackVowel(stem, lemma) + ending;
+}
+
+/**
+ * Keeps a stem's final `g` sounding the same before `a` or `o`.
+ *
+ * Two rules, opposite in appearance and identical in purpose. `escoger` and
+ * `dirigir` write the soft sound as `j` (`escojo`, `elija`); `seguir` drops the
+ * silent `u` it only needed to keep `g` hard before `e`/`i` (`sigo`, `sigamos`).
+ *
+ * Shared by the present yo form and the subjunctive because it is the same fact
+ * about Spanish spelling, reached from two directions: the yo form is the only
+ * back-vowel ending in the present, and *every* subjunctive ending of an `-er`
+ * or `-ir` verb is one. Having written it once for `-o` and once for `-a`, the
+ * two spellings of `elija`/`elijo` could differ, which is exactly the class of
+ * bug this module exists to make impossible.
+ */
+function softenBeforeBackVowel(stem: string, lemma: string): string {
+  if (lemma.endsWith('ger') || lemma.endsWith('gir')) return `${stem.slice(0, -1)}j`;
+  if (lemma.endsWith('guir')) return stem.slice(0, -1);
+  return stem;
 }
 
 /** Orthographic changes in the first person singular preterite. */

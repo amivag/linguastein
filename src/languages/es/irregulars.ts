@@ -18,7 +18,7 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     gerund: 'siendo',
     participle: 'sido',
     imperativeTu: 'sé',
-    imperativeFormal: ['sea', 'sean'],
+    presentSubjunctive: ['sea', 'seas', 'sea', 'seamos', 'seáis', 'sean'],
   },
   ir: {
     present: ['voy', 'vas', 'va', 'vamos', 'vais', 'van'],
@@ -27,18 +27,18 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     gerund: 'yendo',
     participle: 'ido',
     imperativeTu: 've',
-    imperativeFormal: ['vaya', 'vayan'],
+    presentSubjunctive: ['vaya', 'vayas', 'vaya', 'vayamos', 'vayáis', 'vayan'],
   },
   estar: {
     present: ['estoy', 'estás', 'está', 'estamos', 'estáis', 'están'],
     preteriteStem: 'estuv',
-    imperativeFormal: ['esté', 'estén'],
+    presentSubjunctive: ['esté', 'estés', 'esté', 'estemos', 'estéis', 'estén'],
   },
   haber: {
     futureStem: 'habr',
     present: ['he', 'has', 'ha', 'hemos', 'habéis', 'han'],
     preteriteStem: 'hub',
-    imperativeFormal: ['haya', 'hayan'],
+    presentSubjunctive: ['haya', 'hayas', 'haya', 'hayamos', 'hayáis', 'hayan'],
   },
   ver: {
     yo: 'veo',
@@ -49,7 +49,7 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   dar: {
     yo: 'doy',
     preterite: ['di', 'diste', 'dio', 'dimos', 'disteis', 'dieron'],
-    imperativeFormal: ['dé', 'den'],
+    presentSubjunctive: ['dé', 'des', 'dé', 'demos', 'deis', 'den'],
   },
 
   // ── Irregular yo + strong preterite ────────────────────────────────────
@@ -97,7 +97,7 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     futureStem: 'sabr',
     yo: 'sé',
     preteriteStem: 'sup',
-    imperativeFormal: ['sepa', 'sepan'],
+    presentSubjunctive: ['sepa', 'sepas', 'sepa', 'sepamos', 'sepáis', 'sepan'],
   },
   caer: { yo: 'caigo' },
   oír: { present: ['oigo', 'oyes', 'oye', 'oímos', 'oís', 'oyen'] },
@@ -153,7 +153,16 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   servir: { stemChange: 'e-i', preteriteStemChange: 'e-i' },
   vestir: { stemChange: 'e-i', preteriteStemChange: 'e-i' },
   elegir: { stemChange: 'e-i', preteriteStemChange: 'e-i' },
-  reír: { present: ['río', 'ríes', 'ríe', 'reímos', 'reís', 'ríen'], preteriteStemChange: 'e-i' },
+  reír: {
+    present: ['río', 'ríes', 'ríe', 'reímos', 'reís', 'ríen'],
+    preteriteStemChange: 'e-i',
+    // The only verb here whose subjunctive is declared for a reason other than
+    // an unusable yo form: `río` is a fine stem, but the written accent belongs
+    // to the stressed `í` and nosotros/vosotros move the stress onto the ending
+    // — `riamos`, not `ríamos`. No rule in `conjugation.ts` predicts a stem
+    // *losing* an accent, and inventing one for a single verb would be worse.
+    presentSubjunctive: ['ría', 'rías', 'ría', 'riamos', 'riáis', 'rían'],
+  },
 
   // ── Irregular participle only ──────────────────────────────────────────
   abrir: { participle: 'abierto' },

@@ -8,11 +8,20 @@ import { describe, expect, it } from 'vitest';
 import { conjugate, type GeneratedForm } from '../../src/languages/es/conjugation';
 import { IRREGULAR_VERBS } from '../../src/languages/es/irregulars';
 
+/**
+ * Mood is asked for everywhere here, and that is not defensiveness: the present
+ * subjunctive carries `tense: 'present'`, so a filter naming only the tense
+ * returns twelve forms where a paradigm has six. Every helper below says which
+ * mood it wants for that reason.
+ */
 function formsOf(lemma: string) {
   const generated = conjugate(lemma, IRREGULAR_VERBS[lemma] ?? {});
-  const tense = (name: string) =>
+  const tense = (name: string, mood = 'indicative') =>
     generated
-      .filter((form) => form.morph.tense === name && form.morph.verbForm === 'finite')
+      .filter(
+        (form) =>
+          form.morph.tense === name && form.morph.mood === mood && form.morph.verbForm === 'finite',
+      )
       .map((form) => form.form);
   const nonFinite = (kind: GeneratedForm['morph']['verbForm']) =>
     generated.find((form) => form.morph.verbForm === kind)?.form;
@@ -21,6 +30,7 @@ function formsOf(lemma: string) {
     present: tense('present'),
     preterite: tense('preterite'),
     imperfect: tense('imperfect'),
+    subjunctive: tense('present', 'subjunctive'),
     gerund: nonFinite('gerund'),
     participle: nonFinite('participle'),
     /** tú, usted, vosotros, ustedes — the order the generator emits. */
@@ -28,10 +38,10 @@ function formsOf(lemma: string) {
   };
 }
 
-/** The six forms of one tense, in person order. */
+/** The six forms of one indicative tense, in person order. */
 const tenseOf = (lemma: string, tense: string) =>
   conjugate(lemma, IRREGULAR_VERBS[lemma] ?? {})
-    .filter((form) => form.morph.tense === tense)
+    .filter((form) => form.morph.tense === tense && form.morph.mood === 'indicative')
     .map((form) => form.form);
 
 describe('regular verbs', () => {
@@ -315,9 +325,147 @@ describe('future and conditional', () => {
   });
 });
 
+describe('present subjunctive', () => {
+  it('takes the opposite conjugation vowel', () => {
+    expect(formsOf('hablar').subjunctive).toEqual([
+      'hable',
+      'hables',
+      'hable',
+      'hablemos',
+      'habléis',
+      'hablen',
+    ]);
+    // -er and -ir are identical here, where the present indicative keeps them apart.
+    expect(formsOf('comer').subjunctive).toEqual([
+      'coma',
+      'comas',
+      'coma',
+      'comamos',
+      'comáis',
+      'coman',
+    ]);
+    expect(formsOf('vivir').subjunctive).toEqual([
+      'viva',
+      'vivas',
+      'viva',
+      'vivamos',
+      'viváis',
+      'vivan',
+    ]);
+  });
+
+  it('leaves nosotros and vosotros out of an -ar or -er stem change', () => {
+    expect(formsOf('pensar').subjunctive).toEqual([
+      'piense',
+      'pienses',
+      'piense',
+      'pensemos',
+      'penséis',
+      'piensen',
+    ]);
+    expect(formsOf('poder').subjunctive).toEqual([
+      'pueda',
+      'puedas',
+      'pueda',
+      'podamos',
+      'podáis',
+      'puedan',
+    ]);
+    expect(formsOf('volver').subjunctive.slice(3, 5)).toEqual(['volvamos', 'volváis']);
+    expect(formsOf('querer').subjunctive.slice(3, 5)).toEqual(['queramos', 'queráis']);
+  });
+
+  it('gives an -ir verb its preterite vowel in nosotros and vosotros', () => {
+    // The distinction the -ar and -er verbs above do not have: `pidamos`, not
+    // `pedamos`. It is the gerund's vowel, which is why nothing new declares it.
+    expect(formsOf('pedir').subjunctive).toEqual([
+      'pida',
+      'pidas',
+      'pida',
+      'pidamos',
+      'pidáis',
+      'pidan',
+    ]);
+    expect(formsOf('dormir').subjunctive.slice(3, 5)).toEqual(['durmamos', 'durmáis']);
+    expect(formsOf('sentir').subjunctive.slice(3, 5)).toEqual(['sintamos', 'sintáis']);
+    expect(formsOf('preferir').subjunctive.slice(3, 5)).toEqual(['prefiramos', 'prefiráis']);
+    expect(formsOf('divertir').subjunctive.slice(3, 5)).toEqual(['divirtamos', 'divirtáis']);
+    expect(formsOf('morir').subjunctive.slice(3, 5)).toEqual(['muramos', 'muráis']);
+  });
+
+  it('keeps the consonant sound across every person', () => {
+    // The whole paradigm, not just the boot: `empiece` and `empecemos` both.
+    expect(formsOf('buscar').subjunctive.slice(0, 1)).toEqual(['busque']);
+    expect(formsOf('buscar').subjunctive[3]).toBe('busquemos');
+    expect(formsOf('llegar').subjunctive[3]).toBe('lleguemos');
+    expect(formsOf('empezar').subjunctive).toEqual([
+      'empiece',
+      'empieces',
+      'empiece',
+      'empecemos',
+      'empecéis',
+      'empiecen',
+    ]);
+    expect(formsOf('jugar').subjunctive[3]).toBe('juguemos');
+    // -guir drops the silent u and -gir writes the soft g as j, in all six.
+    expect(formsOf('seguir').subjunctive).toEqual([
+      'siga',
+      'sigas',
+      'siga',
+      'sigamos',
+      'sigáis',
+      'sigan',
+    ]);
+    expect(formsOf('elegir').subjunctive[3]).toBe('elijamos');
+  });
+
+  it('keeps a declared yo form throughout, rather than undoing a stem change', () => {
+    // tener declares `tengo` *and* an e-ie change: undoing the change outside
+    // the boot would give `tenamos`, and ver would give `vamos` — another verb.
+    expect(formsOf('tener').subjunctive).toEqual([
+      'tenga',
+      'tengas',
+      'tenga',
+      'tengamos',
+      'tengáis',
+      'tengan',
+    ]);
+    expect(formsOf('ver').subjunctive).toEqual(['vea', 'veas', 'vea', 'veamos', 'veáis', 'vean']);
+    expect(formsOf('decir').subjunctive[3]).toBe('digamos');
+    expect(formsOf('oír').subjunctive[3]).toBe('oigamos');
+    expect(formsOf('conocer').subjunctive[3]).toBe('conozcamos');
+    expect(formsOf('hacer').subjunctive[3]).toBe('hagamos');
+  });
+
+  it('declares the six that no yo form produces, and reír', () => {
+    expect(formsOf('ser').subjunctive).toEqual(['sea', 'seas', 'sea', 'seamos', 'seáis', 'sean']);
+    expect(formsOf('ir').subjunctive[0]).toBe('vaya');
+    expect(formsOf('estar').subjunctive[0]).toBe('esté');
+    expect(formsOf('haber').subjunctive[0]).toBe('haya');
+    expect(formsOf('saber').subjunctive[0]).toBe('sepa');
+    expect(formsOf('dar').subjunctive).toEqual(['dé', 'des', 'dé', 'demos', 'deis', 'den']);
+    // reír declares one for the opposite reason: the stem loses its accent when
+    // the stress moves onto the ending.
+    expect(formsOf('reír').subjunctive).toEqual(['ría', 'rías', 'ría', 'riamos', 'riáis', 'rían']);
+  });
+
+  it('marks the vosotros form Spain-only, like every other paradigm', () => {
+    const vosotros = conjugate('hablar').find(
+      (form) =>
+        form.morph.mood === 'subjunctive' &&
+        form.morph.person === 2 &&
+        form.morph.number === 'plural',
+    );
+
+    expect(vosotros?.form).toBe('habléis');
+    expect(vosotros?.regions).toEqual(['es-ES']);
+  });
+});
+
 describe('commands', () => {
   it('builds the four affirmative commands of a regular verb', () => {
-    // tú is the third person present; usted and ustedes come from the yo form.
+    // tú is the third person present; usted and ustedes are the third person
+    // singular and plural of the present subjunctive.
     expect(formsOf('hablar').commands).toEqual(['habla', 'hable', 'hablad', 'hablen']);
     expect(formsOf('comer').commands).toEqual(['come', 'coma', 'comed', 'coman']);
     expect(formsOf('vivir').commands).toEqual(['vive', 'viva', 'vivid', 'vivan']);
@@ -355,12 +503,29 @@ describe('commands', () => {
   });
 
   it('declares the formal commands whose yo form cannot produce them', () => {
-    // soy → "soya" is why these six are in the table rather than derived.
+    // soy → "soya" is why these six declare a subjunctive rather than deriving
+    // one. They used to declare the two command forms directly; the paradigm
+    // replaced that, so these values now come from `presentSubjunctive`.
     expect(formsOf('ser').commands.slice(1, 2)).toEqual(['sea']);
     expect(formsOf('ir').commands[1]).toBe('vaya');
     expect(formsOf('saber').commands[1]).toBe('sepa');
     expect(formsOf('dar').commands[1]).toBe('dé');
     expect(formsOf('estar').commands[1]).toBe('esté');
+  });
+
+  it('takes the formal commands from the subjunctive, for every verb it ships', () => {
+    /*
+     * The invariant that let `imperativeFormal` go. A usted command is not
+     * "derived from" the third person subjunctive, it *is* that form, so the two
+     * cannot be allowed to drift — and checking it across the whole shipped
+     * table is what makes a hand-typed subjunctive unable to break a command
+     * that used to be right.
+     */
+    for (const lemma of Object.keys(IRREGULAR_VERBS)) {
+      const { commands, subjunctive } = formsOf(lemma);
+      expect(commands[1], `${lemma} usted`).toBe(subjunctive[2]);
+      expect(commands[3], `${lemma} ustedes`).toBe(subjunctive[5]);
+    }
   });
 
   it('carries mood and person but no tense, because a command has no time', () => {
@@ -391,33 +556,42 @@ describe('generated metadata', () => {
 
     const present = forms.find((form) => form.morph.tense === 'present');
     const preterite = forms.find((form) => form.morph.tense === 'preterite');
+    const subjunctive = forms.find((form) => form.morph.mood === 'subjunctive');
     expect(present?.level).toBe('a1');
     expect(preterite?.level).toBe('a2');
+    expect(subjunctive?.level).toBe('b1');
   });
 
-  it('produces 36 forms per verb', () => {
+  it('produces 42 forms per verb', () => {
     const forms = conjugate('hablar');
 
-    // 30 finite indicative + 4 commands + gerund + participle.
-    expect(forms).toHaveLength(36);
+    // 30 finite indicative + 6 subjunctive + 4 commands + gerund + participle.
+    expect(forms).toHaveLength(42);
     expect(forms.filter((form) => form.morph.mood === 'indicative')).toHaveLength(30);
+    expect(forms.filter((form) => form.morph.mood === 'subjunctive')).toHaveLength(6);
     expect(forms.filter((form) => form.morph.mood === 'imperative')).toHaveLength(4);
   });
 
-  it('gives every finite form a distinct id-worthy tense', () => {
-    // Two tenses with no abbreviation of their own would collide in the pack:
-    // `hablar-x-1s` twice, and the second wins silently.
-    const tenses = new Set(
-      conjugate('hablar')
-        .filter((form) => form.morph.tense)
-        .map((form) => form.morph.tense),
-    );
-    expect([...tenses].sort()).toEqual([
-      'conditional',
-      'future',
-      'imperfect',
-      'present',
-      'preterite',
+  it('gives every finite form a distinct id-worthy tense and mood', () => {
+    // Two finite forms sharing a (tense, mood) key would collide in the pack:
+    // `hablar-pres-1s` twice, and the second wins silently. Tense alone stopped
+    // being that key when the subjunctive arrived — `present` now names two
+    // paradigms — so the pair is what has to be distinct.
+    const keys = conjugate('hablar')
+      .filter((form) => form.morph.verbForm === 'finite' && form.morph.tense)
+      .map(
+        (form) => `${form.morph.tense}/${form.morph.mood}/${form.morph.person}${form.morph.number}`,
+      );
+    expect(new Set(keys).size).toBe(keys.length);
+
+    const pairs = new Set(keys.map((key) => key.split('/').slice(0, 2).join('/')));
+    expect([...pairs].sort()).toEqual([
+      'conditional/indicative',
+      'future/indicative',
+      'imperfect/indicative',
+      'present/indicative',
+      'present/subjunctive',
+      'preterite/indicative',
     ]);
   });
 

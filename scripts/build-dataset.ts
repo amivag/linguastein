@@ -917,7 +917,13 @@ function formSuffix(morph: {
     { present: 'pres', preterite: 'pret', imperfect: 'imp', future: 'fut', conditional: 'cond' }[
       morph.tense ?? ''
     ] ?? 'x';
-  return `${tense}-${morph.person}${plural ? 'p' : 's'}`;
+  // Mood belongs in the key for exactly the same reason, and the subjunctive is
+  // what proved it: it carries `tense: 'present'`, so keying on tense alone
+  // hands `hablo` and `hable` the same `hablar-pres-1s` and the second wins
+  // silently. Only the marked moods are spelled — the indicative is the
+  // unmarked case, and prefixing it would rename every id already issued.
+  const mood = morph.mood === 'subjunctive' ? 'subj-' : '';
+  return `${mood}${tense}-${morph.person}${plural ? 'p' : 's'}`;
 }
 
 // ── surface form index, used to link sentence tokens to lexemes ─────────────
@@ -1179,17 +1185,53 @@ const NOMINAL_CUES = new Set([
 ]);
 
 /**
+ * The words that put the verb straight after them in the subjunctive.
+ *
+ * `que` carries most of the language's triggers on its own — `quiero que`,
+ * `es importante que`, `para que`, `antes de que`, `aunque` — so the rest of
+ * this set is only the words that trigger the mood by themselves. `no` is here
+ * for the negative command: `no entres` is the subjunctive and `no entras` is a
+ * statement.
+ */
+const SUBJUNCTIVE_TRIGGERS = new Set(['que', 'ojalá', 'quizá', 'quizás', 'cuando', 'no', 'aunque']);
+
+/**
  * Picks between lexemes that share a surface form. `trabajo` is the noun in
  * "el trabajo" and the verb in "trabajo en una oficina"; the words around it
  * decide. When the cues are missing or several candidates survive, the token is
  * left unlinked — a wrong lemma is worse than a missing one.
  */
 function disambiguate(
+  before: readonly Token[],
   candidates: SurfaceEntry[],
-  previous: Token | undefined,
   next: string | undefined,
 ): SurfaceEntry | null {
   if (candidates.length === 0) return null;
+  const previous = before.at(-1);
+
+  /*
+   * A subjunctive reading needs a trigger; without one, the ordinary word wins.
+   *
+   * `entre` is the preposition in `entre las dos` and the present subjunctive of
+   * `entrar` in `que entre`. Generating the subjunctive turned the first into an
+   * ambiguity it had never been, and the preposition lost every sentence it had:
+   * `ADP` appears in neither `preferred` set below, so nothing could rescue it
+   * and it went unlinked wherever it occurred.
+   *
+   * The rule is the one the `present-subjunctive` skill is glossed with, which
+   * is why it is trustworthy rather than a patch — the mood does not appear on
+   * its own. The trigger has to be the word immediately before, deliberately:
+   * scanning further left would read `Creo que entre las dos hay tiempo` as a
+   * subjunctive because a `que` appears somewhere earlier in it.
+   */
+  const subjunctive = candidates.filter((entry) => entry.morph?.['mood'] === 'subjunctive');
+  if (subjunctive.length > 0 && subjunctive.length < candidates.length) {
+    const triggered =
+      previous !== undefined && SUBJUNCTIVE_TRIGGERS.has(previous.text.toLowerCase());
+    candidates = triggered
+      ? subjunctive
+      : candidates.filter((entry) => entry.morph?.['mood'] !== 'subjunctive');
+  }
 
   // Several entries for one lexeme (lunes singular and plural are identical)
   // are not an ambiguity at all.
@@ -1391,7 +1433,7 @@ function tokenise(text: string): Token[] {
     // surface as written — see `resolveEnclitic` for why that ordering is what
     // makes it safe rather than merely convenient.
     const entry =
-      disambiguate(candidates, tokens.at(-1), matches[position + 1]) ??
+      disambiguate(tokens, candidates, matches[position + 1]) ??
       (candidates.length === 0 ? resolveEnclitic(surface) : undefined);
     if (!entry) {
       tokens.push({ id, text: surface });
@@ -1427,6 +1469,17 @@ const isWord = (token: Token | undefined, word: string) =>
   token?.text.toLowerCase() === word && token.pos !== 'PUNCT';
 const looksInfinitive = (token: Token | undefined) =>
   token !== undefined && token.pos !== 'PUNCT' && INFINITIVE.test(token.text.toLowerCase());
+
+/**
+ * Object and reflexive pronouns as they appear *before* a finite verb.
+ *
+ * The same pronouns as {@link ENCLITICS}, and a separate list on purpose: these
+ * are whole words (`no te preocupes`) where those are a suffix inside one
+ * (`preocúpate`). Spanish puts them in front of a finite verb and sticks them
+ * onto an infinitive, a gerund or an affirmative command, so a shared list would
+ * have to be filtered by position at every use anyway.
+ */
+const PROCLITICS = new Set(['me', 'te', 'se', 'nos', 'os', 'lo', 'la', 'le', 'los', 'las', 'les']);
 
 const PATTERNS: PatternSpec[] = [
   {
@@ -1514,6 +1567,38 @@ const PATTERNS: PatternSpec[] = [
     gloss: 'there is / there are',
     level: 'a1',
     match: (tokens, i) => (isWord(tokens[i], 'hay') ? [tokens[i]!.id] : null),
+  },
+  {
+    /*
+     * The negative command, which is the subjunctive wearing a different hat.
+     *
+     * Worth its own skill rather than folding into `present-subjunctive`,
+     * because it is the one place the mood is not optional-feeling: a learner
+     * who says `no habla` has said "he does not speak", not "do not speak". The
+     * affirmative and the negative use different forms — `habla` but
+     * `no hables` — and nothing about `habla` hints at that.
+     *
+     * Not emitted as extra `forms` records, deliberately. A negative command is
+     * these exact strings with `no` in front, so a `no hables` form would put a
+     * two-word surface into an index of words and give `hables` two records
+     * differing only in a label. The `ordinals` pattern settles the same
+     * question the same way: index the form once, teach the use as a pattern.
+     */
+    skill: `${NS}skill:negative-command`,
+    label: 'no hables',
+    gloss: 'a negative command uses the subjunctive, not the command form: habla but no hables',
+    level: 'b1',
+    match: (tokens, i) => {
+      if (!isWord(tokens[i], 'no')) return null;
+      // `No te preocupes`, `No se lo digas`: the pronouns sit in between, and
+      // before a finite verb they are written as separate words.
+      let end = i + 1;
+      while (PROCLITICS.has(tokens[end]?.text.toLowerCase() ?? '')) end += 1;
+      const verb = tokens[end];
+      if (!verb || verb.pos === 'PUNCT') return null;
+      if (verb.morph?.['mood'] !== 'subjunctive') return null;
+      return tokens.slice(i, end + 1).map((token) => token.id);
+    },
   },
   {
     skill: `${NS}skill:ordinals`,
@@ -1689,6 +1774,44 @@ const IMPERATIVE_SKILL = {
 };
 
 /**
+ * The subjunctive, which is a mood and so sits here rather than in TENSE_SKILLS.
+ *
+ * The gloss names what *triggers* it rather than what it "means", because the
+ * mood has no meaning a learner can use: `sea` is not a different time or a
+ * different degree of certainty on its own. It appears because something in
+ * front of it put it there — a wish, a doubt, an emotion, a `para que`. Saying
+ * "the subjunctive expresses unreality" is the explanation that leaves an
+ * English speaker unable to produce a single sentence.
+ *
+ * The one form a learner already knows is worth the reminder: they have been
+ * saying `siga` and `dígame` since A1, and those are this paradigm. So this is
+ * less a new tense than a name for something two thirds met already.
+ */
+const SUBJUNCTIVE_SKILL = {
+  id: `${NS}skill:present-subjunctive`,
+  label: 'presente de subjuntivo',
+  gloss:
+    'the form a trigger asks for — querer que, es importante que, para que, ojalá — and the same form as a usted command',
+  level: 'b1',
+};
+
+/**
+ * Every grammar skill the build derives, named once.
+ *
+ * This list used to be spelled out twice — once to emit the skill records and
+ * once to build the gloss map — with the same four sources in both. Adding a
+ * fifth to one and not the other gives either a skill with no gloss or a gloss
+ * for a skill that is never emitted, and neither fails the build. The
+ * subjunctive was the fifth.
+ */
+const GRAMMAR_SKILLS = [
+  ...Object.values(TENSE_SKILLS),
+  IMPERATIVE_SKILL,
+  SUBJUNCTIVE_SKILL,
+  ...Object.values(QUESTION_SKILLS),
+];
+
+/**
  * The numeral rules as practisable skills, one per rule in `numerals.ts`.
  *
  * Typed as a `Record<NumeralRule, …>`, so adding a rule to the module without
@@ -1849,11 +1972,19 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
 
   for (const token of tokens) {
     const tense = token.morph?.['tense'];
-    if (typeof tense === 'string' && TENSE_SKILLS[tense]) {
+    const mood = token.morph?.['mood'];
+    // Mood is asked first, and the tense skill only applies to the indicative.
+    // A subjunctive `hable` carries `tense: 'present'`, so without this guard
+    // every subjunctive sentence would be filed under `presente de indicativo`
+    // — teaching the learner the one thing the form is not.
+    if (mood === 'subjunctive') {
+      skills.add(SUBJUNCTIVE_SKILL.id);
+      usedSkills.add(SUBJUNCTIVE_SKILL.id);
+    } else if (typeof tense === 'string' && TENSE_SKILLS[tense]) {
       skills.add(TENSE_SKILLS[tense]!.id);
       usedSkills.add(TENSE_SKILLS[tense]!.id);
     }
-    if (token.morph?.['mood'] === 'imperative') {
+    if (mood === 'imperative') {
       skills.add(IMPERATIVE_SKILL.id);
       usedSkills.add(IMPERATIVE_SKILL.id);
     }
@@ -2153,14 +2284,12 @@ const derivedSkillRecords: SkillRecord[] = [
     label: pattern.label,
     level: pattern.level,
   })),
-  ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL, ...Object.values(QUESTION_SKILLS)].map(
-    (skill) => ({
-      id: skill.id,
-      kind: 'grammar',
-      label: skill.label,
-      level: skill.level,
-    }),
-  ),
+  ...GRAMMAR_SKILLS.map((skill) => ({
+    id: skill.id,
+    kind: 'grammar',
+    label: skill.label,
+    level: skill.level,
+  })),
 ].filter((skill) => usedSkills.has(skill.id));
 
 const authoredSkillRecords: SkillRecord[] = authoredSkillRows
@@ -2194,9 +2323,7 @@ const skillRecords: SkillRecord[] = [
 
 const skillGlosses = new Map<string, string>([
   ...PATTERNS.map((pattern) => [pattern.skill, pattern.gloss] as const),
-  ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL, ...Object.values(QUESTION_SKILLS)].map(
-    (skill) => [skill.id, skill.gloss] as const,
-  ),
+  ...GRAMMAR_SKILLS.map((skill) => [skill.id, skill.gloss] as const),
   ...authoredSkillRows.map((skill) => [authoredSkillId(skill.slug), skill.gloss] as const),
   ...NUMERAL_RULES.map((rule) => [numeralSkillId(rule), NUMERAL_SKILLS[rule].gloss] as const),
 ]);
@@ -2401,25 +2528,71 @@ const voiceRows: VoiceRow[] = existsSync(join(CONTENT_DIR, VOICES_FILE))
     })
   : [];
 
+/**
+ * The levels the pack actually holds, in CEFR order, and the label built from
+ * them.
+ *
+ * Both used to be literals — `levels: ['a1', 'a2']` and the name `Spanish Core
+ * A1–A2` — which is the same shape of bug as the pack version written once in
+ * this script and left there while the content quadrupled. `courseOptions`
+ * derives a course's levels from the items, so the picker would have grown a B1
+ * entry on its own; the *manifest* would have gone on claiming A1–A2, and
+ * Settings reads the manifest. So the pack would have advertised a scope it no
+ * longer had, to the one screen whose job is describing the pack.
+ *
+ * Derived from the emitted items rather than from the source rows, so a level
+ * that is authored but filtered out before shipping is not advertised.
+ */
+const presentLevels = CEFR_LEVELS.filter((level) =>
+  [...sentenceItems, ...vocabularyItems].some((item) => item.level === level),
+);
+
+const levelSpan = (levels: readonly string[]): string => {
+  const first = levels[0]?.toUpperCase();
+  const last = levels[levels.length - 1]?.toUpperCase();
+  if (!first) return '';
+  return first === last ? first : `${first}–${last}`;
+};
+
+/**
+ * The file-name prefix, derived from the levels rather than typed.
+ *
+ * `es-a1-a2-core` was spelled by hand into ten paths below. The convention in
+ * `docs/dataset-format.md` is that a file name states its level range, so the
+ * day B1 content landed all ten stated something false — and a name is exactly
+ * the kind of thing nobody re-reads once it looks right. Deriving it from the
+ * same `presentLevels` the manifest uses means the range cannot lag the content,
+ * and a single-level pack gets `es-a1-core` rather than `es-a1-a1-core`.
+ *
+ * Renaming these files on a level change is intended, not a side effect: the
+ * loader reads paths out of `pack.json`, which is written in the same pass, so
+ * the two cannot disagree.
+ */
+const filePrefix = ((levels: readonly string[]) => {
+  const first = levels[0] ?? 'a1';
+  const last = levels[levels.length - 1] ?? first;
+  return first === last ? `es-${first}-core` : `es-${first}-${last}-core`;
+})(presentLevels);
+
 // ── write ───────────────────────────────────────────────────────────────────
 
 const files = [
-  { kind: 'skills', path: 'es-a1-a2-core-skills.jsonl', records: skillRecords },
-  { kind: 'lexemes', path: 'es-a1-a2-core-verbs.jsonl', records: clean(verbLexemes) },
-  { kind: 'lexemes', path: 'es-a1-a2-core-nouns.jsonl', records: clean(nounLexemes) },
-  { kind: 'lexemes', path: 'es-a1-a2-core-modifiers.jsonl', records: clean(modifierLexemes) },
+  { kind: 'skills', path: `${filePrefix}-skills.jsonl`, records: skillRecords },
+  { kind: 'lexemes', path: `${filePrefix}-verbs.jsonl`, records: clean(verbLexemes) },
+  { kind: 'lexemes', path: `${filePrefix}-nouns.jsonl`, records: clean(nounLexemes) },
+  { kind: 'lexemes', path: `${filePrefix}-modifiers.jsonl`, records: clean(modifierLexemes) },
   {
     kind: 'forms',
-    path: 'es-a1-a2-core-forms.jsonl',
+    path: `${filePrefix}-forms.jsonl`,
     records: [...verbForms, ...packedNominalForms],
   },
-  { kind: 'items', path: 'es-a1-a2-core-vocabulary.jsonl', records: vocabularyItems },
-  { kind: 'items', path: 'es-a1-a2-core-sentences.jsonl', records: sentenceItems },
-  { kind: 'passages', path: 'es-a1-a2-core-passages.jsonl', records: passageRecords },
-  { kind: 'translations', path: 'es-a1-a2-core-translations-en.jsonl', records: translations },
+  { kind: 'items', path: `${filePrefix}-vocabulary.jsonl`, records: vocabularyItems },
+  { kind: 'items', path: `${filePrefix}-sentences.jsonl`, records: sentenceItems },
+  { kind: 'passages', path: `${filePrefix}-passages.jsonl`, records: passageRecords },
+  { kind: 'translations', path: `${filePrefix}-translations-en.jsonl`, records: translations },
   ...audioLocales.map((locale) => ({
     kind: 'audio',
-    path: `es-a1-a2-core-audio-${locale}.jsonl`,
+    path: `${filePrefix}-audio-${locale}.jsonl`,
     records: audioClips.filter((clip) => clip.locale === locale),
   })),
 ].filter((file) => file.records.length > 0);
@@ -2446,32 +2619,6 @@ for (const file of files) {
   const body = file.records.map((record) => JSON.stringify(record)).join('\n');
   writeFileSync(join(OUT_DIR, file.path), `${header}${body}\n`, 'utf8');
 }
-
-/**
- * The levels the pack actually holds, in CEFR order, and the label built from
- * them.
- *
- * Both used to be literals — `levels: ['a1', 'a2']` and the name `Spanish Core
- * A1–A2` — which is the same shape of bug as the pack version written once in
- * this script and left there while the content quadrupled. `courseOptions`
- * derives a course's levels from the items, so the picker would have grown a B1
- * entry on its own; the *manifest* would have gone on claiming A1–A2, and
- * Settings reads the manifest. So the pack would have advertised a scope it no
- * longer had, to the one screen whose job is describing the pack.
- *
- * Derived from the emitted items rather than from the source rows, so a level
- * that is authored but filtered out before shipping is not advertised.
- */
-const presentLevels = CEFR_LEVELS.filter((level) =>
-  [...sentenceItems, ...vocabularyItems].some((item) => item.level === level),
-);
-
-const levelSpan = (levels: readonly string[]): string => {
-  const first = levels[0]?.toUpperCase();
-  const last = levels[levels.length - 1]?.toUpperCase();
-  if (!first) return '';
-  return first === last ? first : `${first}–${last}`;
-};
 
 const manifest = {
   id: PACK_ID,

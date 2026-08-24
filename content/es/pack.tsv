@@ -31,4 +31,4 @@
 # future.
 #
 # Run `npm run build:data` to learn the current count; it prints it either way.
-0.9.0	2358	2026-08-24	A2 recycling target met: 170 of 171 lexemes in four or more sentences
+0.10.0	2358	2026-08-24	Present subjunctive generated for all 126 verbs: 756 new forms, and the usted commands now read off it

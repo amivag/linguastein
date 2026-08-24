@@ -18,6 +18,7 @@ import {
   parseCardinal,
   rulesFor,
   spellCardinal,
+  parseOrdinal,
   spellOrdinal,
 } from '../../src/languages/es/numerals';
 
@@ -199,6 +200,22 @@ describe('ordinals', () => {
     expect(() => spellOrdinal(0)).toThrow(RangeError);
     expect(() => spellOrdinal(1.5)).toThrow(RangeError);
     expect(() => spellOrdinal(MAX_ORDINAL + 1)).toThrow(RangeError);
+  });
+
+  it('reads a citation form back to its number', () => {
+    for (let value = 1; value <= MAX_ORDINAL; value++) {
+      expect(parseOrdinal(spellOrdinal(value))).toBe(value);
+    }
+  });
+
+  it('rejects anything that is not a citation form', () => {
+    // The dataset build uses this as a round trip, so an accepted variant would
+    // let a hand-typed spelling through: `septimo` has to fail, not resolve.
+    expect(parseOrdinal('septimo')).toBeNull();
+    expect(parseOrdinal('cuarta')).toBeNull();
+    expect(parseOrdinal('primer')).toBeNull();
+    expect(parseOrdinal('cuatro')).toBeNull();
+    expect(parseOrdinal('')).toBeNull();
   });
 });
 

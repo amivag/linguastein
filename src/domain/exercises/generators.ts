@@ -403,7 +403,7 @@ function blankCandidate(item: LearningItem, context: GenerationContext): BlankCa
      * so equally plausible forms keep the shuffled order and the same sentence
      * asks a different question next time.
      */
-    const ranked = shuffle(context.repository.verbFormsOf(token.lexeme), context.rng)
+    const ranked = shuffle(context.repository.formsOf(token.lexeme), context.rng)
       .filter((form) => normalise(form.form) !== normalise(token.text))
       .map((form) => ({ text: form.form, score: formComparability(answer, form.morph) }))
       .sort((a, b) => b.score - a.score);

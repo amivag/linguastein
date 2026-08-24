@@ -46,4 +46,21 @@ describe('adjectiveForms', () => {
     expect(adjectiveForms('feliz').map((entry) => entry.form)).toEqual(['feliz', 'felices']);
     expect(adjectiveForms('fácil').map((entry) => entry.form)).toEqual(['fácil', 'fáciles']);
   });
+
+  it('gives an invariable adjective no gender at all', () => {
+    // Labelling `grande` masculine by default is a claim, and a false one: the
+    // form a learner meets in `una casa grande` would be described as masculine
+    // by the very entry meant to teach agreement. These morphs are also what a
+    // sentence token inherits, so the wrong label would travel.
+    expect(adjectiveForms('grande').map((entry) => entry.morph)).toEqual([
+      { number: 'singular' },
+      { number: 'plural' },
+    ]);
+    expect(adjectiveForms('cansado').map((entry) => entry.morph.gender)).toEqual([
+      'masculine',
+      'masculine',
+      'feminine',
+      'feminine',
+    ]);
+  });
 });

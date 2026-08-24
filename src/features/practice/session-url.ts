@@ -21,6 +21,7 @@ import {
   posFromSlug,
   posSlug,
   REGISTERS,
+  SENTENCE_MOODS,
   type CefrLevel,
   type Course,
   type ItemFilter,
@@ -28,6 +29,7 @@ import {
   type LanguageTag,
   type PartOfSpeech,
   type Register,
+  type SentenceMood,
 } from '../../domain/content';
 import {
   ORDERINGS,
@@ -159,6 +161,7 @@ export function writeItemFilter(params: URLSearchParams, filter: ItemFilter): vo
   if (filter.levels?.length) params.set('level', filter.levels.join(','));
   if (filter.topics?.length) params.set('topic', filter.topics.join(','));
   if (filter.registers?.length) params.set('register', filter.registers.join(','));
+  if (filter.moods?.length) params.set('mood', filter.moods.join(','));
   if (filter.usableIn) params.set('region', filter.usableIn);
   if (filter.initial) params.set('initial', filter.initial);
 }
@@ -171,6 +174,10 @@ export function parseItemFilter(params: URLSearchParams): ItemFilter {
   const pos = parts(params.get('pos'));
   const levels = list(params.get('level'), CEFR_LEVELS as readonly CefrLevel[]);
   const registers = list(params.get('register'), REGISTERS as readonly Register[]);
+  // `?mood=question` — a form, and a narrowing like any other, so it travels
+  // into a session link. Several are allowed for symmetry with the rest, even
+  // though asking *and* telling is the same as neither.
+  const moods = list(params.get('mood'), SENTENCE_MOODS as readonly SentenceMood[]);
   const topics = slugs(params.get('topic'));
   const region = params.get('region');
   // Normalised rather than validated: `initial=c` is a letter, and so is
@@ -185,6 +192,7 @@ export function parseItemFilter(params: URLSearchParams): ItemFilter {
     ...(pos.length ? { pos } : {}),
     ...(levels.length ? { levels } : {}),
     ...(registers.length ? { registers } : {}),
+    ...(moods.length ? { moods } : {}),
     ...(topics.length ? { topics } : {}),
     ...(isRegion(region) ? { usableIn: region } : {}),
   };

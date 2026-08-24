@@ -80,3 +80,10 @@ ask-who-someone-is	function	Preguntar quién es alguien	Ask who someone is	a1
 say-who-someone-is	function	Decir quién es alguien	Say who someone is	a1	ask-who-someone-is
 ask-why	function	Preguntar por qué	Ask why something is so	a1	
 give-a-reason	function	Dar una razón	Give a simple reason	a1	ask-why
+# Asking as a move, not as a topic. `yes-no-question` and `question-word` are the
+# generated grammar skills that say how a question is *built*; these two are what
+# a learner does with the difference — turn what they just heard into a question,
+# and hang a tag on a statement to check it.
+echo-to-check	function	Repetir algo como pregunta	Echo what you just heard back as a question	a1	
+confirm-with-a-tag	function	Confirmar con «¿verdad?»	Turn a statement into a check with ¿verdad? or ¿no?	a1	
+answer-a-tag	function	Responder a una confirmación	Confirm or correct what someone checked with you	a1	confirm-with-a-tag

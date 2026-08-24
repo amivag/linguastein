@@ -54,7 +54,7 @@ const pack: ContentPack = {
   ],
   lexemes: [],
   senses: [],
-  verbForms: [],
+  forms: [],
   skills: [],
   translations: [{ ref: ITEM, lang: 'en', text: 'I watch television at night.' }],
   passages: [],

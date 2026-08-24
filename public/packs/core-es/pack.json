@@ -2,7 +2,7 @@
   "id": "core-es",
   "name": "Spanish Core A1–A2",
   "targetLanguage": "es",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "description": "High-frequency Spanish verbs, nouns, modifiers and everyday sentences. Generated from content/es and not yet reviewed by a human editor.",
   "license": "CC0-1.0",
   "levels": [
@@ -222,8 +222,8 @@
       "path": "es-a1-a2-core-modifiers.jsonl"
     },
     {
-      "kind": "verb-forms",
-      "path": "es-a1-a2-core-verb-forms.jsonl"
+      "kind": "forms",
+      "path": "es-a1-a2-core-forms.jsonl"
     },
     {
       "kind": "items",

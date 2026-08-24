@@ -8,7 +8,8 @@
 import { byLetter, initialLetter } from './alphabet';
 import type { PartOfSpeech } from './annotation';
 import { STUDYABLE_POS } from './annotation';
-import type { ItemId, LexemeId, PackId, PassageId, SenseId, SkillId, VerbFormId } from './ids';
+import type { FormId, ItemId, LexemeId, PackId, PassageId, SenseId, SkillId } from './ids';
+import { moodOf, type SentenceMood } from './mood';
 import {
   isUsableIn,
   type LanguageTag,
@@ -31,8 +32,8 @@ import type {
   Register,
   Sense,
   Skill,
+  InflectedForm,
   Translation,
-  VerbForm,
 } from './model';
 
 /** A declared category plus how many items currently carry it. */
@@ -78,6 +79,15 @@ export interface ItemFilter {
    */
   readonly usableIn?: LanguageTag;
   readonly address?: readonly AddressForm[];
+  /**
+   * Asking, telling or exclaiming — a form, not a theme.
+   *
+   * Beside `address` and `register` rather than in `topics`, because "the
+   * questions" is a grammatical set and `questions` the topic is a subject. A
+   * word card carries no mood and is excluded by any value here, which is the
+   * whole reason {@link moodOf} takes the item and not the text.
+   */
+  readonly moods?: readonly SentenceMood[];
   readonly topics?: readonly string[];
   readonly tags?: readonly string[];
   readonly lexemes?: readonly LexemeId[];
@@ -112,13 +122,13 @@ export class ContentRepository {
   private readonly itemsById = new Map<ItemId, LearningItem>();
   private readonly lexemesById = new Map<LexemeId, Lexeme>();
   private readonly sensesById = new Map<SenseId, Sense>();
-  private readonly verbFormsById = new Map<VerbFormId, VerbForm>();
+  private readonly formsById = new Map<FormId, InflectedForm>();
   private readonly skillsById = new Map<SkillId, Skill>();
   /** ref → language tag → translation */
   private readonly translationsByRef = new Map<string, Map<LanguageTag, Translation>>();
   private readonly itemsByLexeme = new Map<LexemeId, ItemId[]>();
   private readonly itemsBySkill = new Map<SkillId, ItemId[]>();
-  private readonly formsByLexeme = new Map<LexemeId, VerbFormId[]>();
+  private readonly formsByLexeme = new Map<LexemeId, FormId[]>();
   private readonly itemOrder: ItemId[] = [];
   private readonly passagesById = new Map<PassageId, Passage>();
   private readonly passageOrder: PassageId[] = [];
@@ -140,8 +150,8 @@ export class ContentRepository {
     for (const sense of pack.senses) this.sensesById.set(sense.id, sense);
     for (const skill of pack.skills) this.skillsById.set(skill.id, skill);
 
-    for (const form of pack.verbForms) {
-      this.verbFormsById.set(form.id, form);
+    for (const form of pack.forms) {
+      this.formsById.set(form.id, form);
       push(this.formsByLexeme, form.lexeme, form.id);
     }
 
@@ -217,8 +227,8 @@ export class ContentRepository {
     return this.allSkills().find((skill) => skill.id.endsWith(`:skill:${local}`));
   }
 
-  getVerbForm(id: VerbFormId): VerbForm | undefined {
-    return this.verbFormsById.get(id);
+  getForm(id: FormId): InflectedForm | undefined {
+    return this.formsById.get(id);
   }
 
   /** Items in stable pack order — the basis for sequential practice. */
@@ -279,9 +289,9 @@ export class ContentRepository {
       .filter(isDefined);
   }
 
-  verbFormsOf(id: LexemeId): readonly VerbForm[] {
+  formsOf(id: LexemeId): readonly InflectedForm[] {
     return (this.formsByLexeme.get(id) ?? EMPTY)
-      .map((formId) => this.verbFormsById.get(formId))
+      .map((formId) => this.formsById.get(formId))
       .filter(isDefined);
   }
 
@@ -375,6 +385,10 @@ export class ContentRepository {
       }
       if (filter.address?.length && !(item.address && filter.address.includes(item.address))) {
         return false;
+      }
+      if (filter.moods?.length) {
+        const mood = moodOf(item);
+        if (!mood || !filter.moods.includes(mood)) return false;
       }
       if (filter.usableIn && !isUsableIn(item.regions, filter.usableIn)) return false;
       if (filter.topics?.length && !overlaps(item.topics, filter.topics)) return false;

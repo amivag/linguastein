@@ -22,4 +22,4 @@
 # bump, and should not get one.
 #
 # Run `npm run build:data` to learn the current count; it prints it either way.
-0.2.0	2022	The four question words, the demonstratives, and chica beside chico
+0.4.0	2053	Asking versus telling: minimal pairs, echo questions and tag questions

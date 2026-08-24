@@ -75,8 +75,10 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   practised without turning attendance into a resettable streak
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
-- core-es pack: 126 verbs (3,024 generated forms), 393 nouns, 282 modifiers,
-  1,395 sentences — 2,022 practisable items, 99% of sentence words linked to a lexeme
+- core-es pack: 126 verbs (3,024 generated forms), 393 nouns, 284 modifiers,
+  1,425 sentences — 2,053 practisable items, 100% of sentence words linked to a lexeme
+- Noun plurals and adjective agreement shipped as `forms` records, so a paradigm
+  is inspectable rather than only indexed at build time
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,
   and `npm run review:data` reporting content questions by exception
 - Thematic categories: a controlled topic vocabulary declared in
@@ -97,11 +99,20 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 ## Next
 
 The dataset work is briefed in full for a fresh session:
-[docs/tasks/dataset-expansion.md](tasks/dataset-expansion.md). Two content gaps
+[docs/tasks/dataset-expansion.md](tasks/dataset-expansion.md). Three content gaps
 are briefed on their own because each needs deciding before authoring:
 [feelings, mood and state](tasks/feelings-mood-state.md) — fifty-two sentences
-and ten lexemes for the question the greeting mission opens with — and the
-[past-tense mission](tasks/past-tense-mission.md).
+and ten lexemes for the question the greeting mission opens with — the
+[past-tense mission](tasks/past-tense-mission.md), and
+[the function words](tasks/function-words.md), where 123 lexemes have no way to be
+studied and `ADV` sits in `STUDYABLE_POS` with no cards behind it.
+
+Two more are briefed as decisions rather than as content:
+[pack addressing](tasks/pack-addressing.md) — a link identifies a passage and a
+skill by local id, which two packs can both claim — and
+[more missions](tasks/more-missions.md), which records the audit showing the
+existing fourteen are already dense (every capability has a palette, none under
+eight alternatives) and that the real gap is level rather than variation.
 
 0. **Editorial review of core-es** — the pack is machine-generated and marked
    unreviewed. Genders, glosses and sentence naturalness need a human pass
@@ -126,8 +137,12 @@ and ten lexemes for the question the greeting mission opens with — and the
    is tappable and says it is a name, instead of counting as vocabulary the
    dataset forgot.
 
-   The 30 occurrences still unlinked are three principled classes, not an
-   authoring backlog:
+   The occurrences still unlinked are three principled classes, not an
+   authoring backlog — with one caveat added 2026-08-24: `segunda` was in this
+   list for four sentences and was neither principled nor structural, just a
+   missing ordinal row, and `el segundo piso` was linked to the _wrong_ lexeme
+   beside it. A missing lemma is visible in the coverage report; a wrong one is
+   counted as a success. Read the ambiguous resolutions, not only the percentage.
 
    - **`ser` and `ir` share a preterite** (`fue`, `fui`, `fuimos` — 10). Two
      lexemes, one surface, and the tokeniser declines to guess which. Linking to

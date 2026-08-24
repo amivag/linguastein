@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MISSIONS } from '../../src/app/missions';
 import { loadCatalog, loadPack, type DatasetSource } from '../../src/data/loaders';
-import { ContentRepository } from '../../src/domain/content';
+import { ContentRepository, moodOf } from '../../src/domain/content';
 import { missionPassageForStage, missionTransfers } from '../../src/domain/missions';
 
 const root = resolve(process.cwd(), 'public/packs');
@@ -54,11 +54,99 @@ describe('shipped packs', () => {
     const tener = [...new Set(verbs)].find((id) => id.endsWith(':lexeme:tener'));
     expect(tener).toBeDefined();
 
-    const forms = repository.verbFormsOf(tener!).map((form) => form.form);
+    const forms = repository.formsOf(tener!).map((form) => form.form);
     expect(forms).toContain('tengo');
     expect(forms).toContain('tuvimos');
     expect(forms).toContain('tenía');
     expect(forms).toContain('teniendo');
+  });
+
+  it('give every noun its plural and every adjective its agreement forms', async () => {
+    const { repository } = await loadAll();
+    const paradigm = (local: string) =>
+      repository.formsOf(lexemeIn(repository, local)).map((form) => form.form);
+
+    // Generated since the pack existed and used only to link `libros` back to
+    // `libro`, so a learner could never be shown the one thing a Spanish noun
+    // always raises. `formsOf` had verb forms to read and nothing else.
+    expect(paradigm('libro')).toEqual(['libro', 'libros']);
+    // A declared irregular plural, which no rule would produce.
+    expect(paradigm('examen')).toEqual(['examen', 'exámenes']);
+    // An invariable noun still has both, so the sheet can say it does not change.
+    expect(paradigm('lunes')).toEqual(['lunes', 'lunes']);
+    expect(paradigm('cansado')).toEqual(['cansado', 'cansados', 'cansada', 'cansadas']);
+    expect(paradigm('grande')).toEqual(['grande', 'grandes']);
+  });
+
+  it('carry the region of the word a form belongs to', async () => {
+    const { repository } = await loadAll();
+    expect(repository.formsOf(lexemeIn(repository, 'papa')).map((form) => form.regions)).toEqual([
+      ['es-419'],
+      ['es-419'],
+    ]);
+  });
+
+  it('reads an ordinal before a noun as the ordinal', async () => {
+    const { repository } = await loadAll();
+    const tokenIn = (text: string, word: string) => {
+      const item = repository.allItems().find((candidate) => candidate.text === text);
+      expect(item, `no shipped item reads "${text}"`).toBeDefined();
+      return item!.tokens?.find((token) => token.text === word);
+    };
+
+    // `segundo` the ordinal was simply missing, so the noun (a second of time)
+    // claimed `el segundo piso` — a wrong link, which the coverage report counts
+    // as a success, and four `segunda` tokens went unlinked beside it.
+    expect(tokenIn('Sí, está en el segundo piso.', 'segundo')?.pos).toBe('ADJ');
+    expect(tokenIn('Espera un segundo, por favor.', 'segundo')?.pos).toBe('NOUN');
+    expect(tokenIn('A la derecha, en la segunda calle.', 'segunda')?.lemma).toBe('segundo');
+    // The shortened form is derived from `numerals.ts` rather than authored.
+    expect(tokenIn('Sí, está en el primer piso.', 'primer')?.lemma).toBe('primero');
+  });
+
+  it('holds a statement and the question built from it as two items', async () => {
+    const { repository } = await loadAll();
+    const textOf = (text: string) =>
+      repository.allItems().find((candidate) => candidate.text === text);
+
+    // The pack held 376 questions and 1,019 statements and not one place where the
+    // *same words* appeared as both, which is the one contrast an English speaker
+    // most needs: Spanish adds no word and moves nothing. The duplicate-text
+    // check used to forbid exactly this pair, because it stripped the marks that
+    // carry the whole difference.
+    for (const [statement, question] of [
+      ['Tu hermano trabaja aquí.', '¿Tu hermano trabaja aquí?'],
+      ['Hay leche en la nevera.', '¿Hay leche en la nevera?'],
+      ['El tren llega a las ocho.', '¿El tren llega a las ocho?'],
+    ] as const) {
+      const told = textOf(statement);
+      const asked = textOf(question);
+      expect(told, statement).toBeDefined();
+      expect(asked, question).toBeDefined();
+      expect(told!.id).not.toBe(asked!.id);
+      expect(moodOf(told!)).toBe('statement');
+      expect(moodOf(asked!)).toBe('question');
+    }
+  });
+
+  it('names how a question is built, not only what it asks about', async () => {
+    const { repository } = await loadAll();
+    const skillOf = (text: string) =>
+      repository
+        .allItems()
+        .find((candidate) => candidate.text === text)
+        ?.skills?.map((skill) => skill.replace(/^.*:skill:/, ''));
+
+    // A yes/no question is the statement itself; a question word opens its own.
+    expect(skillOf('¿Hay leche en la nevera?')).toContain('yes-no-question');
+    expect(skillOf('¿Cómo te llamas?')).toContain('question-word');
+    // The word has to *open* it: this one holds `qué` and answers sí or no.
+    const embedded = repository.allItems().filter((item) => item.text === '¿Sabes qué hora es?');
+    for (const item of embedded) {
+      expect(item.skills?.map((skill) => skill.replace(/^.*:skill:/, ''))).toContain(
+        'yes-no-question',
+      );
+    }
   });
 
   it('link sentence tokens to lexemes so words can be inspected', async () => {
@@ -278,3 +366,11 @@ describe('shipped packs', () => {
     expect(missing).toEqual([]);
   });
 });
+
+/** A lexeme id read off the items that reference it — the repository indexes by id. */
+function lexemeIn(repository: ContentRepository, local: string) {
+  const ids = new Set(repository.allItems().flatMap((item) => item.lexemes ?? []));
+  const found = [...ids].find((id) => id.endsWith(`:lexeme:${local}`));
+  expect(found, `no shipped lexeme is called "${local}"`).toBeDefined();
+  return found!;
+}

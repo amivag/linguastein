@@ -77,7 +77,7 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
   const lexemeIds = new Set(pack.lexemes.map((lexeme) => lexeme.id));
   const skillIds = new Set(pack.skills.map((skill) => skill.id));
   const senseIds = new Set(pack.senses.map((sense) => sense.id));
-  const formIds = new Set(pack.verbForms.map((form) => form.id));
+  const formIds = new Set(pack.forms.map((form) => form.id));
 
   for (const duplicate of duplicates(pack.lexemes.map((lexeme) => lexeme.id))) {
     report(`duplicate lexeme id: ${duplicate}`);
@@ -139,9 +139,9 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
       report(`sense ${sense.id} references unknown lexeme ${sense.lexeme}`, 'warning', sense.id);
     }
   }
-  for (const form of pack.verbForms) {
+  for (const form of pack.forms) {
     if (!lexemeIds.has(form.lexeme)) {
-      report(`verb form ${form.id} references unknown lexeme ${form.lexeme}`, 'warning', form.id);
+      report(`form ${form.id} references unknown lexeme ${form.lexeme}`, 'warning', form.id);
     }
   }
 
@@ -259,4 +259,58 @@ function duplicates(values: readonly string[]): readonly string[] {
     seen.add(value);
   }
   return [...repeated];
+}
+/**
+ * Checks that hold *between* packs, which no per-pack pass can see.
+ *
+ * A URL addresses a passage and a skill by their **local** id — `/es/all/read/700001`,
+ * `?skill=preterite` — deliberately, so a shared link does not carry a pack
+ * namespace it will outlive. `passageByLocalId` and `skillByLocalId` therefore
+ * resolve by first match, and both say so in a comment: a route is unambiguous
+ * only while local ids are.
+ *
+ * With one pack that is free. The moment a second is loaded — an add-on to the
+ * Spanish A-level content, or a B1 pack — two packs can claim `700001`, and the
+ * link silently opens whichever loaded first. That is the worst failure shape
+ * available: not an error, not an empty screen, but confidently the wrong text.
+ * So the collision is reported where content is validated, rather than waited on.
+ *
+ * An error rather than a warning, because the alternative to failing here is
+ * shipping a link that means two things.
+ */
+export function validateAcrossPacks(packs: readonly ContentPack[]): readonly ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+
+  const kinds = [
+    { kind: 'passage', of: (pack: ContentPack) => pack.passages.map((entry) => entry.id) },
+    { kind: 'skill', of: (pack: ContentPack) => pack.skills.map((entry) => entry.id) },
+  ] as const;
+
+  for (const { kind, of } of kinds) {
+    const owners = new Map<string, string[]>();
+    for (const pack of packs) {
+      for (const id of of(pack)) {
+        const local = id.slice(id.lastIndexOf(':') + 1);
+        const seen = owners.get(local);
+        if (seen) seen.push(pack.manifest.id);
+        else owners.set(local, [pack.manifest.id]);
+      }
+    }
+    for (const [local, claimants] of owners) {
+      // Repeats inside one pack are that pack's own duplicate-id problem, which
+      // `validatePackIntegrity` already reports against the pack that has it.
+      const across = [...new Set(claimants)];
+      if (across.length < 2) continue;
+      issues.push({
+        severity: 'error',
+        source: across.join(' + '),
+        message:
+          `${kind} local id "${local}" is claimed by ${across.length} packs — a link ` +
+          `addressing it by local id would open whichever loaded first`,
+        path: local,
+      });
+    }
+  }
+
+  return issues;
 }

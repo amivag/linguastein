@@ -1396,6 +1396,36 @@
 001393	sentence	active	Estas llaves son de la casa y esas son de la oficina.
 001394	sentence	active	Esta semana trabajo mucho, pero la próxima no.
 001395	sentence	active	Aquel hotel de la plaza es muy bueno.
+001396	sentence	active	Tu hermano trabaja aquí.
+001397	sentence	active	¿Tu hermano trabaja aquí?
+001398	sentence	active	Hay leche en la nevera.
+001399	sentence	active	¿Hay leche en la nevera?
+001400	sentence	active	El tren llega a las ocho.
+001401	sentence	active	¿El tren llega a las ocho?
+001402	sentence	active	Hablas español muy bien.
+001403	sentence	active	¿Hablas español?
+001404	sentence	active	El café está caliente.
+001405	sentence	active	¿El café está caliente?
+001406	sentence	active	Vives cerca del museo.
+001407	sentence	active	¿Vives cerca del museo?
+001408	sentence	active	Mi hermana vive en Madrid.
+001409	sentence	active	¿Tu hermana vive en Madrid?
+001410	sentence	active	Sí, vive allí desde enero.
+001411	sentence	active	¡Qué bien! ¿Y trabaja en un museo?
+001412	sentence	active	Trabaja en un museo muy grande.
+001413	sentence	active	¿Le gusta la ciudad?
+001414	sentence	active	Le gusta mucho. Dice que es perfecta.
+001415	sentence	active	¿Y tú vas a visitarla?
+001416	sentence	active	Voy en abril. ¡Tengo muchas ganas!
+001417	sentence	active	El museo está cerca, ¿verdad?
+001418	sentence	active	Sí, está muy cerca. A diez minutos.
+001419	sentence	active	Y abre por la mañana, ¿no?
+001420	sentence	active	Abre a las diez todos los días.
+001421	sentence	active	No es muy caro, ¿verdad?
+001422	sentence	active	Es barato. Cinco euros.
+001423	sentence	active	Entonces vamos mañana, ¿vale?
+001424	sentence	active	Vale. ¿A las diez, entonces?
+001425	sentence	active	A las diez. Ahora estoy seguro.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -1898,6 +1928,7 @@
 600109	modifier-card	active	griego
 600110	modifier-card	active	italiano
 600111	modifier-card	active	correcto
+600112	modifier-card	active	seguro
 700001	passage	active	Una mañana normal
 700002	passage	active	Mi piso
 700003	passage	active	Un día en la oficina
@@ -1963,6 +1994,8 @@
 700063	passage	active	¿Cuál te gusta más?
 700064	passage	active	¿Quién es el nuevo jefe?
 700065	passage	active	¿Por qué no vienes?
+700066	passage	active	¿Preguntar o contar?
+700067	passage	active	Está cerca, ¿verdad?
 800001	verb-card	active	ser
 800002	verb-card	active	estar
 800003	verb-card	active	tener

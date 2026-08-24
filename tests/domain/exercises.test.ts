@@ -56,7 +56,7 @@ function asking(rows: readonly Row[]): { repository: ContentRepository; target: 
     items,
     lexemes: [],
     senses: [],
-    verbForms: [],
+    forms: [],
     skills: [],
     translations: rows.map((row, index) => ({
       ref: `ask-es:item:${index}`,
@@ -294,7 +294,7 @@ describe('exercise generation', () => {
     const thin = ContentRepository.from([
       {
         ...TEST_PACK,
-        verbForms: TEST_PACK.verbForms.filter((form) => form.morph.verbForm !== 'finite'),
+        forms: TEST_PACK.forms.filter((form) => form.morph.verbForm !== 'finite'),
       },
     ]);
     const exercise = new ExerciseEngine().generate(itemOf('001'), 'cloze-choice', {

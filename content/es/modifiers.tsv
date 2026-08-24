@@ -58,7 +58,7 @@
 600048	vacío	empty	ADJ	a2	core
 600049	abierto	open	ADJ	a1	city
 600050	cerrado	closed	ADJ	a1	city
-600051	primero	first	ADJ	a1	core	primer
+600051	primero	first	ADJ	a1	core	
 600052	último	last	ADJ	a1	core
 600053	mismo	same	ADJ	a1	core
 600054	otro	other, another	ADJ	a1	core
@@ -261,7 +261,16 @@ ni	nor, neither	CCONJ	a2	grammar
 600105	genial	great, brilliant	ADJ	a1	feelings
 600106	perfecto	perfect	ADJ	a1	feelings
 600107	pasado	last, past	ADJ	a1	time
-600108	tercero	third	ADJ	a1	numbers	tercer
+600108	tercero	third	ADJ	a1	numbers	
+# `segundo` the ordinal takes the `-` sentinel because `segundo` the noun (a
+# second of time) already owns that card: two cards reading the same word
+# would split one surface into two ids. The lexeme still ships, so `el segundo
+# piso` links to the ordinal and taps through to this gloss. Properly a senses
+# problem — one word, two readings — and this is the shape available until
+# senses exist.
+-	segundo	second	ADJ	a1	numbers	
+# Already used by `Repito para estar bien seguro.`, which carried no lexeme for it.
+600112	seguro	sure, certain	ADJ	a1	core	
 600111	correcto	correct, right	ADJ	a1	core
 600109	griego	Greek	ADJ	a1	people
 600110	italiano	Italian	ADJ	a1	people

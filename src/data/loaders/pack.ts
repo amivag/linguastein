@@ -15,13 +15,14 @@ import type {
   Passage,
   Sense,
   Skill,
+  InflectedForm,
   Translation,
-  VerbForm,
 } from '../../domain/content';
 import {
   formatIssue,
   hasErrors,
   packManifestSchema,
+  validateAcrossPacks,
   validatePackIntegrity,
   validateRecords,
   type RecordKind,
@@ -81,7 +82,7 @@ export async function loadPack(source: DatasetSource, manifestPath: string): Pro
     items: [],
     lexemes: [],
     senses: [],
-    'verb-forms': [],
+    forms: [],
     skills: [],
     translations: [],
     passages: [],
@@ -104,7 +105,7 @@ export async function loadPack(source: DatasetSource, manifestPath: string): Pro
     items: collected.items as LearningItem[],
     lexemes: collected.lexemes as Lexeme[],
     senses: collected.senses as Sense[],
-    verbForms: collected['verb-forms'] as VerbForm[],
+    forms: collected.forms as InflectedForm[],
     skills: collected.skills as Skill[],
     translations: collected.translations as Translation[],
     passages: collected.passages as Passage[],
@@ -120,9 +121,13 @@ export async function loadPacks(
   manifestPaths: readonly string[],
 ): Promise<{ packs: readonly ContentPack[]; issues: readonly ValidationIssue[] }> {
   const results = await Promise.all(manifestPaths.map((path) => loadPack(source, path)));
+  const packs = results.map((result) => result.pack);
   return {
-    packs: results.map((result) => result.pack),
-    issues: results.flatMap((result) => result.issues),
+    packs,
+    // The cross-pack checks belong here rather than in `loadPack`, which sees one
+    // pack and cannot know what else is installed. This is where an add-on's
+    // local-id collision with the core pack becomes visible.
+    issues: [...results.flatMap((result) => result.issues), ...validateAcrossPacks(packs)],
   };
 }
 

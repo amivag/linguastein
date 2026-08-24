@@ -4,7 +4,7 @@
  * This is pure derivation from stored content — meaning, grammar, the
  * construction the word takes part in, its other forms, and other phrases that
  * use it. Nothing here is stored per token; it is assembled on demand from the
- * lexeme, verb form, skill and translation records (spec §13, §14, §15).
+ * lexeme, inflected-form, skill and translation records (spec §13, §14, §15).
  */
 
 import type { Gender, Morphology, PartOfSpeech, Token, TokenId } from './annotation';
@@ -59,7 +59,7 @@ export interface WordInfo {
   readonly register?: Register;
   readonly regions?: readonly LanguageTag[];
   readonly constructions: readonly WordConstruction[];
-  /** Other forms of the same lexeme — the "variations" of a verb. */
+  /** The rest of the paradigm: a verb's other conjugations, a noun's plural. */
   readonly forms: readonly WordForm[];
   /** Other phrases in the dataset that use this word. */
   readonly examples: readonly WordExample[];
@@ -182,7 +182,7 @@ function describeWord(
   return {
     token,
     constructions: constructionsOf(repository, item, tokenId, language, meanings),
-    forms: lexemeId ? formsOf(repository, lexemeId, token, options.maxForms ?? 8) : [],
+    forms: lexemeId ? paradigmOf(repository, lexemeId, token, options.maxForms ?? 8) : [],
     examples: lexemeId
       ? examplesOf(repository, lexemeId, item.id, language, options.maxExamples ?? 3, meanings)
       : [],
@@ -286,7 +286,14 @@ function constructionsOf(
   return constructions;
 }
 
-function formsOf(
+/**
+ * The paradigm around the form in front of the learner.
+ *
+ * Named for what it produces rather than for what it reads, because
+ * `repository.formsOf` is the read and this is the presentation of it: labels
+ * resolved, the current form marked, the list capped.
+ */
+function paradigmOf(
   repository: ContentRepository,
   lexemeId: LexemeId,
   token: Token,
@@ -294,7 +301,7 @@ function formsOf(
 ): readonly WordForm[] {
   const current = normalise(token.text);
   return repository
-    .verbFormsOf(lexemeId)
+    .formsOf(lexemeId)
     .slice(0, limit)
     .map((form) => ({
       form: form.form,

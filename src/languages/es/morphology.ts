@@ -46,19 +46,33 @@ export interface AdjectiveForm {
 }
 
 /**
- * The four agreement forms. Adjectives ending in -o inflect for gender;
- * the rest only for number (grande/grandes, feliz/felices).
+ * The agreement forms: four where the adjective inflects for gender, two where
+ * it does not (grande/grandes, feliz/felices).
+ *
+ * An invariable adjective's forms carry **no** gender, rather than being labelled
+ * masculine by default. `grande` is as feminine as it is masculine, and the
+ * label is read by a learner: describing `una casa grande` as masculine teaches
+ * the opposite of the agreement rule the word is there to illustrate. It also
+ * keeps the surface index honest, since it is these morphs that a sentence token
+ * inherits.
  */
 export function adjectiveForms(adjective: string): readonly AdjectiveForm[] {
   const masculine = adjective;
   const feminine = adjective.endsWith('o') ? `${adjective.slice(0, -1)}a` : adjective;
+  const invariable = feminine === masculine;
 
   const forms: AdjectiveForm[] = [
-    { form: masculine, morph: { gender: 'masculine', number: 'singular' } },
-    { form: pluralOf(masculine), morph: { gender: 'masculine', number: 'plural' } },
+    {
+      form: masculine,
+      morph: invariable ? { number: 'singular' } : { gender: 'masculine', number: 'singular' },
+    },
+    {
+      form: pluralOf(masculine),
+      morph: invariable ? { number: 'plural' } : { gender: 'masculine', number: 'plural' },
+    },
   ];
 
-  if (feminine !== masculine) {
+  if (!invariable) {
     forms.push(
       { form: feminine, morph: { gender: 'feminine', number: 'singular' } },
       { form: pluralOf(feminine), morph: { gender: 'feminine', number: 'plural' } },

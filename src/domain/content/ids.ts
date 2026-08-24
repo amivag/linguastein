@@ -16,13 +16,13 @@ export type PackId = Brand<string, 'PackId'>;
 export type ItemId = Brand<string, 'ItemId'>;
 export type LexemeId = Brand<string, 'LexemeId'>;
 export type SenseId = Brand<string, 'SenseId'>;
-export type VerbFormId = Brand<string, 'VerbFormId'>;
+export type FormId = Brand<string, 'FormId'>;
 export type SkillId = Brand<string, 'SkillId'>;
 export type PassageId = Brand<string, 'PassageId'>;
 export type AudioId = Brand<string, 'AudioId'>;
 
 /** Any entity that can be referenced by a translation, annotation or progress record. */
-export type EntityId = ItemId | LexemeId | SenseId | VerbFormId | SkillId | PassageId | AudioId;
+export type EntityId = ItemId | LexemeId | SenseId | FormId | SkillId | PassageId | AudioId;
 
 export const ENTITY_KINDS = [
   'item',

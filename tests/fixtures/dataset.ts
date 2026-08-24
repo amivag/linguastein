@@ -85,9 +85,15 @@ export interface ScratchPack {
   /** Records of a built pack file. */
   records<T>(file: string): T[];
   /** Runs the dataset build; throws if it fails. Returns stdout. */
-  build(): string;
-  /** Runs the dataset build, reporting failure instead of throwing. */
-  tryBuild(): RunResult;
+  build(env?: Record<string, string>): string;
+  /**
+   * Runs the dataset build, reporting failure instead of throwing.
+   *
+   * `env` reaches the script, which is how a gate that is deliberately relaxed
+   * for a scratch copy can still be tested — the recycling ratchet only reports
+   * here unless `LINGUASTEIN_RECYCLING=enforce` says otherwise.
+   */
+  tryBuild(env?: Record<string, string>): RunResult;
   /** Runs another dataset script against the same scratch directories. */
   run(script: string): string;
   dispose(): void;
@@ -118,8 +124,8 @@ export function createScratchPack(prefix: string): ScratchPack {
     write: (file, text) => writeFileSync(path(file), text, 'utf8'),
     append: (file, row) => writeFileSync(path(file), `${read(file).trimEnd()}\n${row}\n`, 'utf8'),
     records: <T>(file: string) => readJsonl<T>(join(packs, PACK_DIR, file)),
-    build: () => runScript('scripts/build-dataset.ts', { env }),
-    tryBuild: () => tryRunScript('scripts/build-dataset.ts', { env }),
+    build: (extra) => runScript('scripts/build-dataset.ts', { env: { ...env, ...extra } }),
+    tryBuild: (extra) => tryRunScript('scripts/build-dataset.ts', { env: { ...env, ...extra } }),
     run: (script: string) => runScript(script, { args: [packs], env }),
     dispose: () => rmSync(workspace, { recursive: true, force: true }),
   };

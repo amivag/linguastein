@@ -1,0 +1,72 @@
+# Asking versus telling: the same words, and what changes.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+# Leave the id off a new row: the build assigns one and writes it back.
+#
+# Why this file exists. The pack held 376 questions and 1,019 statements and not
+# one place where a learner could see the *same words* as both. Twenty-five
+# authored skills were about asking something — the price, the way, who someone
+# is — and every one of them was a situation; none said how a Spanish question is
+# built. So a learner met hundreds of questions and was never told the rule that
+# matters most to an English speaker:
+#
+#   A yes/no question is the statement itself. Spanish adds no word and moves
+#   nothing. `Tienes tiempo.` and `¿Tienes tiempo?` differ by two marks.
+#
+# English speakers arrive expecting to invert the verb or add `do`, and produce
+# neither Spanish nor sense. The generated `yes-no-question` and `question-word`
+# grammar skills name the two shapes; this file is the content that shows them.
+#
+# Three sections, in the order a learner needs them:
+#
+# 1. **Minimal pairs**, authored as pairs on purpose. Each statement is followed
+#    by the question built from it with nothing added or moved. They are
+#    standalone rather than in a passage because the pair *is* the lesson, and a
+#    paragraph around them would bury it.
+# 2. **Echo questions** (`preguntar-o-contar`), where the rule appears in real
+#    conversation: you repeat what you just heard, as a question, to check it or
+#    to show interest. This is where a learner will actually first produce one.
+# 3. **Tag questions** (`confirmar-con-verdad`), the other direction — a
+#    statement stays a statement and a tag turns it into a check. `¿verdad?`,
+#    `¿no?` and `¿vale?` appeared nowhere in the pack before this, though they
+#    are how a Spanish speaker checks a fact in nearly every conversation.
+#
+# Written from vocabulary the pack already had, per §3.1 of the expansion brief:
+# every sentence here pays into the recycling target instead of borrowing from it.
+# `seguro` is the one exception and was not new either — it was already used in
+# `Repito para estar bien seguro.` with no lexeme behind it.
+
+# ── 1. Minimal pairs: the statement, then the question ────────────────────────
+001396	Tu hermano trabaja aquí.	Your brother works here.	a1	work,grammar	The statement. Nothing about the words marks it as one.	neutral	tu
+001397	¿Tu hermano trabaja aquí?	Does your brother work here?	a1	work,questions,grammar	The same five words. English needs «does»; Spanish needs the marks.	neutral	tu
+001398	Hay leche en la nevera.	There's milk in the fridge.	a1	food-drink,home,grammar		neutral
+001399	¿Hay leche en la nevera?	Is there milk in the fridge?	a1	food-drink,home,questions,grammar	`hay` does not change to ask.	neutral
+001400	El tren llega a las ocho.	The train arrives at eight.	a1	travel,clock,grammar		neutral
+001401	¿El tren llega a las ocho?	Does the train arrive at eight?	a1	travel,clock,questions,grammar		neutral
+001402	Hablas español muy bien.	You speak Spanish very well.	a1	language,grammar		neutral	tu
+001403	¿Hablas español?	Do you speak Spanish?	a1	language,questions,grammar		neutral	tu
+001404	El café está caliente.	The coffee is hot.	a1	food-drink,grammar		neutral
+001405	¿El café está caliente?	Is the coffee hot?	a1	food-drink,questions,grammar		neutral
+001406	Vives cerca del museo.	You live near the museum.	a1	city,home,grammar		neutral	tu
+001407	¿Vives cerca del museo?	Do you live near the museum?	a1	city,home,questions,grammar		neutral	tu
+
+# ── 2. ¿Preguntar o contar? (echo questions) ──────────────────────────────────
+001408	Mi hermana vive en Madrid.	My sister lives in Madrid.	a1	family,city	Ana states a fact.	colloquial	tu		preguntar-contar	Ana
+001409	¿Tu hermana vive en Madrid?	Your sister lives in Madrid?	a1	family,city,questions	Luis repeats it as a question. Only `mi` becomes `tu`; the shape is untouched.	colloquial	tu		preguntar-contar	Luis	echo-to-check
+001410	Sí, vive allí desde enero.	Yes, she's lived there since January.	a1	family,city,time		colloquial	tu		preguntar-contar	Ana
+001411	¡Qué bien! ¿Y trabaja en un museo?	How nice! And she works at a museum?	a1	family,work,questions		colloquial	tu		preguntar-contar	Luis	echo-to-check
+001412	Trabaja en un museo muy grande.	She works at a very big museum.	a1	work		colloquial	tu		preguntar-contar	Ana
+001413	¿Le gusta la ciudad?	Does she like the city?	a1	city,feelings,questions		colloquial	tu		preguntar-contar	Luis
+001414	Le gusta mucho. Dice que es perfecta.	She likes it a lot. She says it's perfect.	a1	city,feelings		colloquial	tu		preguntar-contar	Ana
+001415	¿Y tú vas a visitarla?	And are you going to visit her?	a1	family,travel,questions		colloquial	tu		preguntar-contar	Luis
+001416	Voy en abril. ¡Tengo muchas ganas!	I'm going in April. I can't wait!	a1	travel,time,feelings		colloquial	tu		preguntar-contar	Ana
+
+# ── 3. Está cerca, ¿verdad? (tag questions) ───────────────────────────────────
+001417	El museo está cerca, ¿verdad?	The museum is close, right?	a1	city,questions	A statement plus a tag. The sentence itself never changes.	colloquial	tu		confirmar-verdad	Luis	confirm-with-a-tag
+001418	Sí, está muy cerca. A diez minutos.	Yes, it's very close. Ten minutes away.	a1	city,clock		colloquial	tu		confirmar-verdad	Ana	answer-a-tag
+001419	Y abre por la mañana, ¿no?	And it opens in the morning, doesn't it?	a1	city,clock,questions	`¿no?` where the speaker expects agreement.	colloquial	tu		confirmar-verdad	Luis	confirm-with-a-tag
+001420	Abre a las diez todos los días.	It opens at ten every day.	a1	city,clock		colloquial	tu		confirmar-verdad	Ana	answer-a-tag
+001421	No es muy caro, ¿verdad?	It isn't very expensive, is it?	a1	city,shopping,questions	A tag on a negative statement keeps the same tag.	colloquial	tu		confirmar-verdad	Luis	confirm-with-a-tag
+001422	Es barato. Cinco euros.	It's cheap. Five euros.	a1	shopping,numbers		colloquial	tu		confirmar-verdad	Ana	answer-a-tag
+001423	Entonces vamos mañana, ¿vale?	Then let's go tomorrow, OK?	a1	social,questions	`¿vale?` asks for agreement to a plan rather than to a fact.	colloquial	tu		confirmar-verdad	Luis	confirm-with-a-tag
+001424	Vale. ¿A las diez, entonces?	OK. At ten, then?	a1	social,clock,questions		colloquial	tu		confirmar-verdad	Ana	echo-to-check
+001425	A las diez. Ahora estoy seguro.	At ten. Now I'm sure.	a1	social,clock		colloquial	tu		confirmar-verdad	Luis

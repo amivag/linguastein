@@ -17,13 +17,16 @@
 import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
+import { sentenceMood } from '../src/domain/content/mood.ts';
 import { conjugate } from '../src/languages/es/conjugation.ts';
 import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
 import { adjectiveForms, pluralOf } from '../src/languages/es/morphology.ts';
 import {
   NUMERAL_RULES,
   parseCardinal,
+  parseOrdinal,
   spellCardinal,
+  spellOrdinal,
   type NumeralRule,
 } from '../src/languages/es/numerals.ts';
 
@@ -465,6 +468,44 @@ for (const modifier of modifiers) {
   numeralValues.set(modifier.lemma, value);
 }
 
+/**
+ * An ordinal is cross-checked the same way, and recognised rather than declared.
+ *
+ * There is no `ORD` tag to carry it: Spanish ordinals are adjectives and the
+ * universal tag set says so, which is why `primero` and `tercero` were always
+ * plain `ADJ` rows. So the *lemma* is the declaration — `parseOrdinal` accepts
+ * exactly the twenty citation forms `numerals.ts` can spell and nothing else, so
+ * no ordinary adjective can be mistaken for one, and a hand-typed `septimo`
+ * fails the round trip instead of shipping.
+ *
+ * The payoff is that `primer` and `tercer` stop being authored. They used to sit
+ * in the extra-surfaces column, which is a place a human types Spanish — the
+ * thing this module exists to prevent. See {@link spellOrdinal}.
+ */
+const ordinalValues = new Map<string, number>();
+
+for (const modifier of modifiers) {
+  if (modifier.pos !== 'ADJ') continue;
+
+  const value = parseOrdinal(modifier.lemma);
+  if (value === null) continue;
+
+  const canonical = spellOrdinal(value);
+  if (canonical !== modifier.lemma) {
+    problems.push(
+      `${modifier.lemma}: numerals.ts spells the ${value}th as "${canonical}" — use that spelling`,
+    );
+    continue;
+  }
+  if (modifier.forms.length > 0) {
+    problems.push(
+      `${modifier.lemma}: an ordinal's forms are derived — drop the extra surfaces column (${modifier.forms.join(', ')})`,
+    );
+    continue;
+  }
+  ordinalValues.set(modifier.lemma, value);
+}
+
 for (const verb of verbs) {
   const declared = verb.regularity === 'irregular';
   const known = Object.hasOwn(IRREGULAR_VERBS, verb.lemma);
@@ -813,31 +854,137 @@ for (const form of verbForms.filter((entry) => !isCommand(entry))) {
   if (lemma) index(form.form, { lexeme: form.lexeme, lemma, pos: 'VERB', morph: form.morph });
 }
 
-for (const noun of nouns) {
-  const lexeme = lexemeId(noun.lemma, 'NOUN');
-  const gender = noun.gender === 'f' ? 'feminine' : 'masculine';
-  index(noun.lemma, {
-    lexeme,
-    lemma: noun.lemma,
-    pos: 'NOUN',
-    morph: { gender, number: 'singular' },
-  });
-  const plural = noun.plural || pluralOf(noun.lemma);
-  index(plural, { lexeme, lemma: noun.lemma, pos: 'NOUN', morph: { gender, number: 'plural' } });
+/**
+ * A noun's plural and an adjective's agreement forms, as records rather than as
+ * index entries that evaporate.
+ *
+ * `pluralOf` and `adjectiveForms` have generated these since the pack existed,
+ * and the build used the result only to link `verduras` in a sentence back to
+ * `verdura`. Nothing shipped, so nothing could show it: `formsOf` had verb forms
+ * to read and nothing else, which is why tapping a noun answered "what does it
+ * mean" but never "what is its plural" — the one question a Spanish noun always
+ * raises. The forms were already computed; only the emitting was missing.
+ *
+ * The surface index is then driven from these same records, so what a learner
+ * can be shown and what a sentence can link to cannot drift apart.
+ */
+interface NominalForm extends FormRecord {
+  /** Carried so the surface index and the record are built from one pass. */
+  lemma: string;
+  pos: 'NOUN' | 'ADJ';
 }
+
+const nominalForms: NominalForm[] = [
+  ...nouns.flatMap((noun): NominalForm[] => {
+    const lexeme = lexemeId(noun.lemma, 'NOUN');
+    const gender = noun.gender === 'f' ? 'feminine' : 'masculine';
+    const key = slug(noun.lemma);
+    // A form of `papa` is as regional as the lexeme: the plural of a word a
+    // learner should not be taught is not a word either.
+    const regions = noun.regions.length > 0 ? { regions: noun.regions } : {};
+    return [
+      {
+        id: `${NS}form:${key}-n-sg`,
+        lexeme,
+        lemma: noun.lemma,
+        pos: 'NOUN',
+        form: noun.lemma,
+        morph: { gender, number: 'singular' },
+        level: noun.level,
+        ...regions,
+      },
+      {
+        id: `${NS}form:${key}-n-pl`,
+        lexeme,
+        lemma: noun.lemma,
+        pos: 'NOUN',
+        // An irregular plural is declared (examen → exámenes, and the invariable
+        // lunes); everything else is derived.
+        form: noun.plural || pluralOf(noun.lemma),
+        morph: { gender, number: 'plural' },
+        level: noun.level,
+        ...regions,
+      },
+    ];
+  }),
+  ...modifiers
+    .filter((modifier) => modifier.pos === 'ADJ')
+    .flatMap((modifier): NominalForm[] => {
+      const lexeme = lexemeId(modifier.lemma, 'ADJ');
+      const key = slug(modifier.lemma);
+      return adjectiveForms(modifier.lemma).map((entry) => ({
+        // Keyed by the agreement it *is*, not by its position in the list, so a
+        // record keeps its id whether or not the adjective has a feminine.
+        id: `${NS}form:${key}-a-${entry.morph.gender?.[0] ?? 'x'}${entry.morph.number === 'plural' ? 'pl' : 'sg'}`,
+        lexeme,
+        lemma: modifier.lemma,
+        pos: 'ADJ' as const,
+        form: entry.form,
+        morph: { ...entry.morph },
+        level: modifier.level,
+      }));
+    }),
+];
+
+for (const form of nominalForms) {
+  index(form.form, {
+    lexeme: form.lexeme,
+    lemma: form.lemma,
+    pos: form.pos,
+    morph: form.morph,
+  });
+}
+
+/**
+ * The same forms without the two fields that were only there to build the index.
+ * `lemma` and `pos` are already on the lexeme a form points at, and a record
+ * that repeats them is a record that can disagree with it.
+ */
+const packedNominalForms: FormRecord[] = nominalForms.map(
+  ({ lemma: _lemma, pos: _pos, ...record }) => record,
+);
+
+/*
+ * The declared extra surfaces, for every modifier including the adjectives.
+ *
+ * An adjective's *agreement* forms are derived above, but its apocopated one is
+ * not: `buen`, `gran` and `mal` are shortenings, not agreements, and no rule in
+ * `morphology.ts` produces them. Dropping this loop for adjectives on the
+ * grounds that `nominalForms` already covered them cost `buen` seven links and
+ * `gran` one — and quietly handed `mal tiempo` to the adverb, which is worse,
+ * because an unlinked token is visible in the coverage report and a wrong one is
+ * not. The citation form is indexed here too for the non-adjectives, which have
+ * no derived forms at all.
+ */
 for (const modifier of modifiers) {
   const lexeme = lexemeId(modifier.lemma, modifier.pos);
-  const derived: { form: string; morph: Readonly<Record<string, unknown>> }[] =
-    modifier.pos === 'ADJ'
-      ? adjectiveForms(modifier.lemma).map((entry) => ({
-          form: entry.form,
-          morph: { ...entry.morph },
-        }))
-      : [{ form: modifier.lemma, morph: {} }];
+  const citation = modifier.pos === 'ADJ' ? [] : [{ form: modifier.lemma, morph: {} }];
   const declared = modifier.forms.map((form) => ({ form, morph: {} }));
-  for (const { form, morph } of [...derived, ...declared]) {
+  for (const { form, morph } of [...citation, ...declared]) {
     index(form, { lexeme, lemma: modifier.lemma, pos: modifier.pos, morph });
   }
+}
+
+/**
+ * An ordinal's shortened form, derived from the same module that spells it.
+ *
+ * `el primer día` is the form a learner meets most and the one they have to
+ * produce, and it used to be typed into the extra-surfaces column beside
+ * `primero`. It is not a *record*: `primer` and `primero` are both masculine
+ * singular, so the two would be indistinguishable in a paradigm list, and
+ * inventing a morphology field for one language's ordinals to fix that would put
+ * a Spanish detail in a model shared by every pack. So the shortened form is
+ * indexed and the pattern below is what teaches it.
+ */
+for (const [lemma, value] of ordinalValues) {
+  const shortened = spellOrdinal(value, { beforeNoun: true });
+  if (shortened === lemma) continue;
+  index(shortened, {
+    lexeme: lexemeId(lemma, 'ADJ'),
+    lemma,
+    pos: 'ADJ',
+    morph: { gender: 'masculine', number: 'singular' },
+  });
 }
 
 /**
@@ -976,12 +1123,37 @@ function disambiguate(
     : candidates.filter((entry) => entry.pos === 'VERB');
 
   if (preferred.length === 1) return preferred[0]!;
+
+  /*
+   * An ordinal immediately before a noun is the ordinal, whatever else shares
+   * its spelling: `el segundo piso` is the second floor, `espera un segundo` is
+   * a second of time. Both sit in nominal position after a determiner, so the
+   * head rule below cannot tell them apart — and it picked the noun, which is
+   * how the pack shipped a floor number linked to a unit of time.
+   *
+   * Narrowed to ordinals rather than expressed as "an adjective before a noun
+   * is an adjective", which is the tempting general rule and the wrong one: it
+   * would reopen `la cara` and `mucho frío`, the exact cases the head rule is
+   * here to settle.
+   */
+  if (next !== undefined && isNoun(next)) {
+    const ordinals = preferred.filter(
+      (entry) => entry.pos === 'ADJ' && ordinalValues.has(entry.lemma),
+    );
+    if (ordinals.length === 1) return ordinals[0]!;
+  }
+
   // The head of a noun phrase wins over the adjective that happens to share its
   // form: "la cara", "mucho frío", "tengo frío".
   const heads = preferred.filter((entry) => entry.pos === 'NOUN' || entry.pos === 'PRON');
   if (nominalPosition && heads.length === 1) return heads[0]!;
 
   return null;
+}
+
+/** Whether any lexeme claims this surface as a noun — "does a noun follow?". */
+function isNoun(surface: string): boolean {
+  return (surfaces.get(surface.toLowerCase()) ?? []).some((entry) => entry.pos === 'NOUN');
 }
 
 function tokenise(text: string): Token[] {
@@ -1119,6 +1291,18 @@ const PATTERNS: PatternSpec[] = [
     level: 'a1',
     match: (tokens, i) => (isWord(tokens[i], 'hay') ? [tokens[i]!.id] : null),
   },
+  {
+    skill: `${NS}skill:ordinals`,
+    label: 'primero, segundo, tercero',
+    gloss:
+      'ordinals agree like adjectives, and primero and tercero shorten before a masculine noun',
+    level: 'a1',
+    match: (tokens, i) => {
+      const token = tokens[i];
+      if (!token || token.pos !== 'ADJ' || token.lemma === undefined) return null;
+      return ordinalValues.has(token.lemma) ? [token.id] : null;
+    },
+  },
 ];
 
 const TENSE_SKILLS: Record<string, { id: string; label: string; gloss: string; level: string }> = {
@@ -1141,6 +1325,88 @@ const TENSE_SKILLS: Record<string, { id: string; label: string; gloss: string; l
     level: 'a2',
   },
 };
+
+/**
+ * Asking, as a *form* rather than as a situation.
+ *
+ * Twenty-five authored skills are about asking something — the price, the way,
+ * who someone is — and every one of them is a situation. Not one says how a
+ * Spanish question is built, and the pack holds 376 of them. So a learner meets
+ * hundreds of questions and is never told the rule, which for an English speaker
+ * is the single most useful sentence in the language:
+ *
+ *   **A yes/no question is the statement itself.** No inversion, no auxiliary,
+ *   no `do`. `Tienes tiempo.` and `¿Tienes tiempo?` are the same four letters of
+ *   difference — the marks and the intonation. English speakers arrive expecting
+ *   to move the verb or add a word, and produce neither Spanish nor sense.
+ *
+ * That is a `grammar` skill rather than a `pattern` for the same reason
+ * `imperativo` is: it classifies the whole utterance rather than naming a
+ * construction inside it. It also puts asking beside commanding in the Grammar
+ * section, which is where a learner comparing "what kind of thing am I saying"
+ * would look for it.
+ *
+ * Statements get no skill of their own. 1,019 of 1,395 items are statements, so
+ * the label would carry no information — the contrast is taught in the glosses
+ * of the two that do.
+ */
+const QUESTION_SKILLS = {
+  'yes-no-question': {
+    id: `${NS}skill:yes-no-question`,
+    label: '¿Tienes tiempo?',
+    gloss:
+      'a yes/no question is the statement itself — Spanish adds no word and moves nothing, only ¿ ? and the rising intonation',
+    level: 'a1',
+  },
+  'question-word': {
+    id: `${NS}skill:question-word`,
+    label: '¿Dónde…? ¿Cuándo…?',
+    gloss:
+      'a question word opens the question, after a preposition if it takes one, and the verb follows it directly',
+    level: 'a1',
+  },
+} as const;
+
+/**
+ * The interrogatives, read off the content rather than listed here.
+ *
+ * `content/es/topics.tsv` registers `questions` and the nine question words are
+ * the rows that carry it, so the closed class is already declared where a human
+ * maintains it. Narrowed to `PRON` and `ADV` because a question word is one or
+ * the other, which stops an ordinary noun about asking from joining the set if
+ * someone files one under that topic later.
+ */
+const INTERROGATIVES = new Set(
+  modifiers
+    .filter(
+      (modifier) =>
+        modifier.topics.includes('questions') &&
+        (modifier.pos === 'PRON' || modifier.pos === 'ADV'),
+    )
+    .map((modifier) => modifier.lemma),
+);
+
+/**
+ * Which of the two a question is, decided on what follows the opening `¿`.
+ *
+ * Position matters, and using "contains an interrogative" instead would be
+ * wrong: `¿Sabes qué hora es?` holds `qué` and is a yes/no question — the answer
+ * is sí or no. So the word has to *open* the question, allowing the preposition
+ * Spanish puts in front of it (`¿De dónde eres?`, `¿Con quién trabajas?`) which
+ * English would strand at the end.
+ */
+function questionSkill(tokens: Token[]): string {
+  const opening = tokens.findIndex((token) => token.text === '¿');
+  let at = opening + 1;
+  // Step over a leading preposition, and only one: `¿De dónde…?` is a question
+  // word, `¿De la casa de quién…?` is not the shape this names.
+  if (tokens[at]?.pos === 'ADP') at += 1;
+  const head = tokens[at];
+  const lemma = head?.lemma;
+  return lemma !== undefined && INTERROGATIVES.has(lemma)
+    ? QUESTION_SKILLS['question-word'].id
+    : QUESTION_SKILLS['yes-no-question'].id;
+}
 
 /**
  * Commands are a mood rather than a tense, so they are not in TENSE_SKILLS —
@@ -1301,6 +1567,14 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
     skills.add(id);
     usedSkills.add(id);
   }
+  // The sentence's own mood, before the tokens' — `¿` is orthography Spanish
+  // requires, so it is the most reliable fact about a sentence in the file.
+  if (sentence.text.includes('¿')) {
+    const skill = questionSkill(tokens);
+    skills.add(skill);
+    usedSkills.add(skill);
+  }
+
   for (const token of tokens) {
     const tense = token.morph?.['tense'];
     if (typeof tense === 'string' && TENSE_SKILLS[tense]) {
@@ -1495,16 +1769,27 @@ const vocabularyItems: ItemRecord[] = vocabularySources.map((entry) => {
  * passage around sentences that already exist — or when a noun and an adjective
  * share a surface form, which is why word cards are checked here as well, and
  * against the sentences rather than only against each other.
+ *
+ * **Mood is part of the identity, and punctuation is otherwise not.** Stripping
+ * the marks is what catches `Hola` against `Hola.`, and it also declared
+ * `Tu hermano trabaja aquí.` a duplicate of `¿Tu hermano trabaja aquí?` — which
+ * is the one pair the pack most needs to be able to hold. They are two sentences
+ * to learn, not one written twice: different intonation, different function,
+ * different reply, and for an English speaker the whole lesson is that the words
+ * did not change. So the key carries the mood, and the marks that *declare* the
+ * mood keep their meaning while the rest stay noise.
  */
 const textOwners = new Map<string, string[]>();
 for (const [item, origin] of [
   ...sentenceItems.map((item, index) => [item, sentences[index]!.source] as const),
   ...vocabularyItems.map((item) => [item, 'word card'] as const),
 ]) {
-  const key = item.text
-    .toLowerCase()
-    .replace(/[¿¡?!.,;:]/g, '')
-    .trim();
+  const key =
+    `${sentenceMood(item.text)}:` +
+    item.text
+      .toLowerCase()
+      .replace(/[¿¡?!.,;:]/g, '')
+      .trim();
   const owners = textOwners.get(key);
   const label = `${item.id} (${origin})`;
   if (owners) owners.push(label);
@@ -1596,12 +1881,14 @@ const derivedSkillRecords: SkillRecord[] = [
     label: pattern.label,
     level: pattern.level,
   })),
-  ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL].map((skill) => ({
-    id: skill.id,
-    kind: 'grammar',
-    label: skill.label,
-    level: skill.level,
-  })),
+  ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL, ...Object.values(QUESTION_SKILLS)].map(
+    (skill) => ({
+      id: skill.id,
+      kind: 'grammar',
+      label: skill.label,
+      level: skill.level,
+    }),
+  ),
 ].filter((skill) => usedSkills.has(skill.id));
 
 const authoredSkillRecords: SkillRecord[] = authoredSkillRows
@@ -1635,7 +1922,7 @@ const skillRecords: SkillRecord[] = [
 
 const skillGlosses = new Map<string, string>([
   ...PATTERNS.map((pattern) => [pattern.skill, pattern.gloss] as const),
-  ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL].map(
+  ...[...Object.values(TENSE_SKILLS), IMPERATIVE_SKILL, ...Object.values(QUESTION_SKILLS)].map(
     (skill) => [skill.id, skill.gloss] as const,
   ),
   ...authoredSkillRows.map((skill) => [authoredSkillId(skill.slug), skill.gloss] as const),
@@ -1710,7 +1997,20 @@ function glossOf(lemma: string, pos: string): string {
   // and it is the one they will meet on a price tag. Derived, never authored, so
   // the digits cannot disagree with the word beside them.
   const value = numeralValues.get(lemma);
-  return value === undefined ? gloss : `${gloss} (${value})`;
+  if (value !== undefined) return `${gloss} (${value})`;
+
+  // An ordinal's digits for the same reason, in the notation a learner reads
+  // them in: "second (2nd)" separates the ordinal from the noun that shares its
+  // spelling, which no English gloss of `segundo` can do on its own.
+  const ordinal = ordinalValues.get(lemma);
+  return ordinal === undefined ? gloss : `${gloss} (${ordinalDigits(ordinal)})`;
+}
+
+/** `1st`, `2nd`, `3rd`, `4th` — the suffix English picks by the final digit. */
+function ordinalDigits(value: number): string {
+  const teens = value % 100;
+  if (teens >= 11 && teens <= 13) return `${value}th`;
+  return `${value}${['th', 'st', 'nd', 'rd'][value % 10] ?? 'th'}`;
 }
 
 // ── audio ───────────────────────────────────────────────────────────────────
@@ -1836,7 +2136,11 @@ const files = [
   { kind: 'lexemes', path: 'es-a1-a2-core-verbs.jsonl', records: clean(verbLexemes) },
   { kind: 'lexemes', path: 'es-a1-a2-core-nouns.jsonl', records: clean(nounLexemes) },
   { kind: 'lexemes', path: 'es-a1-a2-core-modifiers.jsonl', records: clean(modifierLexemes) },
-  { kind: 'verb-forms', path: 'es-a1-a2-core-verb-forms.jsonl', records: verbForms },
+  {
+    kind: 'forms',
+    path: 'es-a1-a2-core-forms.jsonl',
+    records: [...verbForms, ...packedNominalForms],
+  },
   { kind: 'items', path: 'es-a1-a2-core-vocabulary.jsonl', records: vocabularyItems },
   { kind: 'items', path: 'es-a1-a2-core-sentences.jsonl', records: sentenceItems },
   { kind: 'passages', path: 'es-a1-a2-core-passages.jsonl', records: passageRecords },
@@ -1941,7 +2245,9 @@ console.log(`\n${PACK_ID} built into ${OUT_DIR}`);
 console.log(
   `  ${verbLexemes.length} verbs · ${nounLexemes.length} nouns · ${modifierLexemes.length} modifiers`,
 );
-console.log(`  ${verbForms.length} verb forms`);
+console.log(
+  `  ${verbForms.length} verb forms · ${packedNominalForms.length} noun and adjective forms`,
+);
 console.log(`  ${sentenceItems.length} sentences · ${vocabularyItems.length} word cards`);
 console.log(
   `  ${skillRecords.length} skills · ${translations.length} translations` +
@@ -2028,4 +2334,101 @@ if (topicRows.length > 0) {
         thin.map(([slug, count]) => `${slug} (${count})`).join(', '),
     );
   }
+}
+// ── the recycling ratchet ───────────────────────────────────────────────────
+
+/**
+ * A word met once is a word not learned, and this is the gate that says so.
+ *
+ * §5 of the dataset-expansion brief asked for a threshold the build *enforces*
+ * rather than prints, and the reason is measured: two content passes in this
+ * repository added one-encounter lexemes as fast as they fixed them, and the
+ * coverage report reported it to nobody. A number in build output is not a gate.
+ *
+ * It is a ratchet rather than a target, for the reason `vite.config.ts` gives
+ * about coverage floors: turning the real threshold on today would fail the
+ * build on 397 A1 lexemes and block every other kind of work until the whole
+ * content backlog was written. So `recycling.tsv` records where we are, the
+ * build refuses to let it get worse, and refuses to let an improvement go
+ * unrecorded either — which is what keeps the ceiling from going stale in the
+ * direction that costs nothing to ignore.
+ */
+const recyclingRows = readRows('recycling.tsv').map((row) => {
+  const [level, target, short, note] = row.fields;
+  return {
+    level: level ?? '',
+    target: Number(target ?? 0),
+    short: Number(short ?? 0),
+    note: note ?? '',
+    line: row.line,
+  };
+});
+
+const encountersOf = (lexeme: { id: string }) => examplesByLexeme.get(lexeme.id)?.length ?? 0;
+const recyclingProblems: string[] = [];
+
+/**
+ * The ratchet is a claim about the **shipped** dataset, so a scratch copy only
+ * reports.
+ *
+ * A test that appends one row to exercise some other gate — the topic registry,
+ * the review report — adds a lexeme with no contexts behind it, and would trip
+ * this. That is a true statement about that scratch pack and a useless one: the
+ * fixture is not the pack we ship. Requiring every such fixture to also write
+ * six sentences would make an unrelated gate expensive to test, and the usual
+ * escape — loosening the threshold until nothing trips it — would leave the
+ * ratchet unable to bite at all.
+ *
+ * `LINGUASTEIN_CONTENT_DIR` is the signal rather than a bypass flag of its own:
+ * the dataset fixture already sets it to mean "this is a scratch copy", and
+ * nothing else does. `LINGUASTEIN_RECYCLING=enforce` forces the gate back on,
+ * which is how the ratchet's own tests reach it.
+ */
+const recyclingMode =
+  process.env['LINGUASTEIN_RECYCLING'] ??
+  (process.env['LINGUASTEIN_CONTENT_DIR'] ? 'report' : 'enforce');
+
+console.log('');
+for (const rule of recyclingRows) {
+  if (!Number.isFinite(rule.target) || rule.target < 1) {
+    recyclingProblems.push(
+      `recycling.tsv line ${rule.line}: "${rule.target}" is not a usable target`,
+    );
+    continue;
+  }
+  const atLevel = allLexemes.filter((lexeme) => lexeme.level === rule.level);
+  const short = atLevel.filter((lexeme) => encountersOf(lexeme) < rule.target);
+  console.log(
+    `  recycling ${rule.level}: ${atLevel.length - short.length}/${atLevel.length} lexemes ` +
+      `appear in ${rule.target}+ sentences — ${short.length} short`,
+  );
+
+  if (short.length > rule.short) {
+    // Named, not just counted: the words that regressed are the work, and a
+    // number alone sends a reader back to write this query themselves.
+    const worst = [...short]
+      .sort((a, b) => encountersOf(a) - encountersOf(b))
+      .slice(0, 12)
+      .map((lexeme) => `${lexeme.lemma} (${encountersOf(lexeme)})`);
+    recyclingProblems.push(
+      `recycling regressed for ${rule.level}: ${short.length} lexemes are short of ` +
+        `${rule.target} sentences, up from ${rule.short}. Either give these an extra ` +
+        `context or raise the ceiling on purpose: ${worst.join(', ')}` +
+        (short.length > worst.length ? `, and ${short.length - worst.length} more` : ''),
+    );
+  } else if (short.length < rule.short) {
+    recyclingProblems.push(
+      `recycling improved for ${rule.level}: ${short.length} lexemes are short of ` +
+        `${rule.target} sentences, down from ${rule.short} — record ${short.length} in ` +
+        `recycling.tsv so the gain is kept`,
+    );
+  }
+}
+
+if (recyclingProblems.length > 0) {
+  const enforcing = recyclingMode === 'enforce';
+  const say = enforcing ? console.error : console.log;
+  say(enforcing ? '\nRecycling:' : '\nRecycling (scratch copy — reporting only):');
+  for (const problem of recyclingProblems) say(`  ${problem}`);
+  if (enforcing) process.exit(1);
 }

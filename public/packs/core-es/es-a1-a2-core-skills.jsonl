@@ -7,10 +7,13 @@
 {"id":"core-es:skill:present-perfect","kind":"pattern","label":"haber + participio","level":"a2"}
 {"id":"core-es:skill:gustar-type","kind":"pattern","label":"me gusta / me duele","level":"a1"}
 {"id":"core-es:skill:hay","kind":"pattern","label":"hay","level":"a1"}
+{"id":"core-es:skill:ordinals","kind":"pattern","label":"primero, segundo, tercero","level":"a1"}
 {"id":"core-es:skill:present-indicative","kind":"grammar","label":"presente de indicativo","level":"a1"}
 {"id":"core-es:skill:preterite","kind":"grammar","label":"pretérito indefinido","level":"a2"}
 {"id":"core-es:skill:imperfect","kind":"grammar","label":"pretérito imperfecto","level":"a2"}
 {"id":"core-es:skill:imperative","kind":"grammar","label":"imperativo","level":"a1"}
+{"id":"core-es:skill:yes-no-question","kind":"grammar","label":"¿Tienes tiempo?","level":"a1"}
+{"id":"core-es:skill:question-word","kind":"grammar","label":"¿Dónde…? ¿Cuándo…?","level":"a1"}
 {"id":"core-es:skill:order-food-drink","kind":"function","label":"Pedir comida o bebida","level":"a1"}
 {"id":"core-es:skill:handle-add-on","kind":"function","label":"Responder a «¿Algo más?»","level":"a1","prerequisites":["core-es:skill:order-food-drink"]}
 {"id":"core-es:skill:ask-understand-price","kind":"function","label":"Preguntar y entender el precio","level":"a1","prerequisites":["core-es:skill:order-food-drink"]}
@@ -89,6 +92,9 @@
 {"id":"core-es:skill:say-who-someone-is","kind":"function","label":"Decir quién es alguien","level":"a1","prerequisites":["core-es:skill:ask-who-someone-is"]}
 {"id":"core-es:skill:ask-why","kind":"function","label":"Preguntar por qué","level":"a1"}
 {"id":"core-es:skill:give-a-reason","kind":"function","label":"Dar una razón","level":"a1","prerequisites":["core-es:skill:ask-why"]}
+{"id":"core-es:skill:echo-to-check","kind":"function","label":"Repetir algo como pregunta","level":"a1"}
+{"id":"core-es:skill:confirm-with-a-tag","kind":"function","label":"Confirmar con «¿verdad?»","level":"a1"}
+{"id":"core-es:skill:answer-a-tag","kind":"function","label":"Responder a una confirmación","level":"a1","prerequisites":["core-es:skill:confirm-with-a-tag"]}
 {"id":"core-es:skill:numerals-teens","kind":"pattern","label":"dieciséis, diecisiete…","level":"a1"}
 {"id":"core-es:skill:numerals-twenties","kind":"pattern","label":"veintiuno, veintidós…","level":"a1"}
 {"id":"core-es:skill:numerals-y-joining","kind":"pattern","label":"treinta y uno / ciento uno","level":"a1"}

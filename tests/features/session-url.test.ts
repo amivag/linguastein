@@ -28,6 +28,7 @@ describe('sessionPath', () => {
         levels: ['a1'],
         topics: ['food-drink'],
         registers: ['colloquial'],
+        moods: ['question'],
         usableIn: 'es-MX',
       },
       passage: 'mercado',

@@ -387,6 +387,22 @@ export function spellOrdinal(value: number, agreement: Agreement = {}): string {
   return form;
 }
 
+/**
+ * Reads an ordinal's citation form back to the number it means, or `null`.
+ *
+ * The inverse of {@link spellOrdinal} at its default agreement, and only there:
+ * `primera` and `primer` are answers to "which form", not to "which number", so
+ * they are rejected rather than folded in. That keeps this usable as the
+ * round-trip check the dataset build applies to a `NUM` lemma — reading a lemma
+ * and spelling the result again has to return the very same string, which is
+ * what catches a hand-typed `septimo` for `séptimo`.
+ */
+export function parseOrdinal(text: string): number | null {
+  const word = text.toLowerCase().normalize('NFC').trim();
+  const value = ORDINALS.indexOf(word as (typeof ORDINALS)[number]);
+  return value > 0 ? value : null;
+}
+
 // ── which rules a number exercises ──────────────────────────────────────────
 
 /**

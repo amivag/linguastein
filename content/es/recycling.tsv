@@ -1,0 +1,31 @@
+# How many lexemes are still short of their encounter target — a ratchet, not a report.
+#
+# Columns: level	target	short	note
+#
+# `target` is how many *different* sentences a word of that level must appear in
+# before a learner can be expected to know it. Research on vocabulary acquisition
+# puts durable learning at roughly 8–12 encounters in varied contexts (Nation);
+# 6 for A1 and 4 for A2 are the thresholds §5 of the dataset-expansion brief set,
+# deliberately below the research figure because the scheduler re-shows items too.
+#
+# `short` is how many lexemes are currently below it. It is a **ceiling that only
+# comes down**: the build fails if the real number is higher, which catches the
+# regression this file exists to prevent — adding vocabulary faster than the
+# sentences that exemplify it. Two content passes in this repository have done
+# exactly that, and the coverage report printed a number nobody had to act on.
+#
+# The build also fails when the real number is *lower*, which is the half that
+# makes it a ratchet rather than a limit. Improving recycling and leaving the
+# ceiling where it was would hand the next pass back the room this one earned.
+# So a pass that helps ends with an edit here, and the gain is locked in. This is
+# the same bidirectional check `pack.tsv` applies to the item count, for the same
+# reason: a number that can only be wrong in the safe direction goes stale.
+#
+# Run `npm run build:data` to learn the current figures; it prints them either way.
+#
+# The long-run goal is `0` on both rows. At 5.4 linked words per sentence that is
+# roughly 358 more sentences, and only if every one is built from words that are
+# already short — see §3.1 of the brief for why writing them as passages is the
+# only approach that has ever worked here.
+a1	6	397	Two coverage passes added one-encounter words as fast as they fixed them
+a2	4	160	A2 vocabulary is thinner than A1 and gets a lower target for that reason

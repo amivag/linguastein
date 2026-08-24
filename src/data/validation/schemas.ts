@@ -153,7 +153,7 @@ export const senseSchema = z
   })
   .loose();
 
-export const verbFormSchema = z
+export const inflectedFormSchema = z
   .object({
     id: entityId('form'),
     lexeme: entityId('lexeme'),
@@ -274,7 +274,7 @@ export const RECORD_SCHEMAS = {
   items: learningItemSchema,
   lexemes: lexemeSchema,
   senses: senseSchema,
-  'verb-forms': verbFormSchema,
+  forms: inflectedFormSchema,
   skills: skillSchema,
   translations: translationSchema,
   passages: passageSchema,

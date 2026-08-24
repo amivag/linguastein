@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { id, TEST_PACK, testRepository } from '../fixtures/pack';
-import { ContentRepository } from '../../src/domain/content';
+import { ContentRepository, moodOf, sentenceMood } from '../../src/domain/content';
 import type { ItemId, LexemeId } from '../../src/domain/content';
 
 describe('ContentRepository', () => {
@@ -188,6 +188,44 @@ describe('usage filters', () => {
     expect(marked.regions({}, ['es-419', 'es-MX', 'es-ES'])).toEqual([
       { locale: 'es-419', count: 1 },
       { locale: 'es-MX', count: 1 },
+    ]);
+  });
+});
+
+/**
+ * Asking versus telling, which the pack could not express at all before: the
+ * `questions` topic is a *subject* and covers under half of the actual questions,
+ * because whether a sentence asks is a form.
+ */
+describe('sentence mood', () => {
+  const repository = testRepository();
+
+  it('derives the mood from the punctuation Spanish requires', () => {
+    expect(sentenceMood('¿Tienes tiempo?')).toBe('question');
+    expect(sentenceMood('Tengo que trabajar.')).toBe('statement');
+    expect(sentenceMood('¡Qué bien!')).toBe('exclamation');
+  });
+
+  it('reads the opening mark, so a question keeps its mood however it ends', () => {
+    // `¿Pero qué haces!` is a question written with an exclamation: the mark that
+    // classifies it is the one Spanish puts where English has nothing.
+    expect(sentenceMood('¿Pero qué haces!')).toBe('question');
+    expect(sentenceMood('¡Qué haces aquí?')).toBe('exclamation');
+  });
+
+  it('gives a word card no mood at all', () => {
+    // A card reading `cerveza` is not a statement, and counting it as one would
+    // file every word card under "statements" and make the facet meaningless.
+    const card = repository.getItem(id<ItemId>('test-es:item:004'))!;
+    expect(moodOf(card)).toBeUndefined();
+    expect(repository.query({ moods: ['statement'] }).some((item) => item.type === 'word')).toBe(
+      false,
+    );
+  });
+
+  it('narrows to the questions', () => {
+    expect(repository.query({ moods: ['question'] }).map((item) => item.text)).toEqual([
+      '¿Tienes tiempo?',
     ]);
   });
 });

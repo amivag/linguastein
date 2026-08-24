@@ -106,6 +106,19 @@ describe('inspectItem', () => {
     expect(inspectItem(repository, wordItem('004'), 'de')?.gloss).toBe('Bier');
   });
 
+  it('offers a noun its plural, the way a verb card gets its conjugations', () => {
+    // `pluralOf` has generated this since the pack existed, and the build used
+    // the result only to link `panes` back to `pan`. Nothing shipped, so
+    // `formsOf` had verb forms to read and nothing else — and the one question a
+    // Spanish noun always raises had no answer on the card that raised it.
+    const info = inspectItem(repository, wordItem('006'), 'en');
+
+    expect(info?.forms).toEqual([
+      { form: 'pan', label: 'sg · masculine', current: true },
+      { form: 'panes', label: 'pl · masculine', current: false },
+    ]);
+  });
+
   /**
    * Built rather than taken from the fixture: it needs a word card whose lexeme
    * a sentence also uses, which is how all 451 word cards in the shipped pack

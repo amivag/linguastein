@@ -14,8 +14,8 @@ import type {
   PassageId,
   SkillId,
   Translation,
-  VerbForm,
-  VerbFormId,
+  FormId,
+  InflectedForm,
 } from '../../src/domain/content';
 import { ContentRepository } from '../../src/domain/content';
 
@@ -152,8 +152,8 @@ export const ITEMS: readonly LearningItem[] = [
  * without a test noticing. A finite present answer has to be able to find a
  * gerund in this table for the ranking to be worth asserting.
  */
-const verbForm = (local: string, form: string, morph: Morphology): VerbForm => ({
-  id: id<VerbFormId>(`test-es:form:${local}`),
+const verbForm = (local: string, form: string, morph: Morphology): InflectedForm => ({
+  id: id<FormId>(`test-es:form:${local}`),
   lexeme: id<LexemeId>('test-es:lexeme:tener'),
   form,
   morph,
@@ -164,6 +164,30 @@ const finite = (
   number: 'singular' | 'plural',
   tense: Morphology['tense'] = 'present',
 ): Morphology => ({ person, number, tense, mood: 'indicative', verbForm: 'finite' });
+
+/**
+ * A noun's two forms, so the paradigm a sheet shows is not a verb-only feature
+ * here either. `pan` is the case worth having: the plural is not the lemma plus
+ * an `s`, so a fixture that only ever holds the lemma proves nothing.
+ */
+const nounForms = (local: string, singular: string, plural: string): InflectedForm[] => {
+  const lexeme = id<LexemeId>(`test-es:lexeme:${local}`);
+  const gender = 'masculine' as const;
+  return [
+    {
+      id: id<FormId>(`test-es:form:${local}-n-sg`),
+      lexeme,
+      form: singular,
+      morph: { gender, number: 'singular' },
+    },
+    {
+      id: id<FormId>(`test-es:form:${local}-n-pl`),
+      lexeme,
+      form: plural,
+      morph: { gender, number: 'plural' },
+    },
+  ];
+};
 
 export const TRANSLATIONS: readonly Translation[] = [
   { ref: 'test-es:item:001', lang: 'en', text: 'I have to work.' },
@@ -274,7 +298,7 @@ export const TEST_PACK: ContentPack = {
   // Eight forms across four shapes, so a distractor ranking has something to
   // rank: same tense different person, same person different tense, and two
   // non-finite forms that must never be offered against a finite blank.
-  verbForms: [
+  forms: [
     verbForm('tener-1s', 'tengo', finite(1, 'singular')),
     verbForm('tener-2s', 'tienes', finite(2, 'singular')),
     verbForm('tener-3s', 'tiene', finite(3, 'singular')),
@@ -283,6 +307,7 @@ export const TEST_PACK: ContentPack = {
     verbForm('tener-3s-pret', 'tuvo', finite(3, 'singular', 'preterite')),
     verbForm('tener-ger', 'teniendo', { verbForm: 'gerund' }),
     verbForm('tener-part', 'tenido', { verbForm: 'participle' }),
+    ...nounForms('pan', 'pan', 'panes'),
   ],
   skills: [
     {
@@ -337,7 +362,7 @@ export const TEST_PACK_FR: ContentPack = {
   ],
   lexemes: [],
   senses: [],
-  verbForms: [],
+  forms: [],
   skills: [],
   translations: [
     { ref: 'test-fr:item:001', lang: 'en', text: 'I have to work.' },

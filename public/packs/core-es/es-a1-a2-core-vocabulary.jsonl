@@ -60,9 +60,9 @@
 {"id":"core-es:item:500058","pack":"core-es","type":"word","text":"desayuno","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:desayuno"],"examples":["core-es:item:000097","core-es:item:000159","core-es:item:000279"]}
 {"id":"core-es:item:500059","pack":"core-es","type":"word","text":"almuerzo","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:almuerzo"],"examples":["core-es:item:000156"]}
 {"id":"core-es:item:500060","pack":"core-es","type":"word","text":"cena","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:cena"],"examples":["core-es:item:000156","core-es:item:000512"]}
-{"id":"core-es:item:500061","pack":"core-es","type":"word","text":"pan","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:pan"],"examples":["core-es:item:000126","core-es:item:000163","core-es:item:000287"]}
+{"id":"core-es:item:500061","pack":"core-es","type":"word","text":"pan","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:pan"],"examples":["core-es:item:001398","core-es:item:001399","core-es:item:000126"]}
 {"id":"core-es:item:500062","pack":"core-es","type":"word","text":"agua","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:agua"],"examples":["core-es:item:000257","core-es:item:000267","core-es:item:000281"]}
-{"id":"core-es:item:500063","pack":"core-es","type":"word","text":"leche","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:leche"],"examples":["core-es:item:001398","core-es:item:001399","core-es:item:000266"]}
+{"id":"core-es:item:500063","pack":"core-es","type":"word","text":"leche","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:leche"],"examples":["core-es:item:000266","core-es:item:000464","core-es:item:000557"]}
 {"id":"core-es:item:500064","pack":"core-es","type":"word","text":"café","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:cafe"],"examples":["core-es:item:001404","core-es:item:001405","core-es:item:000056"]}
 {"id":"core-es:item:500065","pack":"core-es","type":"word","text":"té","level":"a1","topics":["food-drink"],"lexemes":["core-es:lexeme:te"],"examples":["core-es:item:000165","core-es:item:000176","core-es:item:000283"]}
 {"id":"core-es:item:500066","pack":"core-es","type":"word","text":"jugo","level":"a1","topics":["food-drink"],"regions":["es-419"],"lexemes":["core-es:lexeme:jugo"],"examples":["core-es:item:000157","core-es:item:000544"]}
@@ -113,7 +113,7 @@
 {"id":"core-es:item:500111","pack":"core-es","type":"word","text":"comedor","level":"a2","topics":["home"],"lexemes":["core-es:lexeme:comedor"],"examples":["core-es:item:000171","core-es:item:000819"]}
 {"id":"core-es:item:500112","pack":"core-es","type":"word","text":"dormitorio","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:dormitorio"],"examples":["core-es:item:000170","core-es:item:000521","core-es:item:000835"]}
 {"id":"core-es:item:500113","pack":"core-es","type":"word","text":"cama","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:cama"],"examples":["core-es:item:000123","core-es:item:000517","core-es:item:000840"]}
-{"id":"core-es:item:500114","pack":"core-es","type":"word","text":"mesa","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:mesa"],"examples":["core-es:item:000051","core-es:item:000061","core-es:item:000168"]}
+{"id":"core-es:item:500114","pack":"core-es","type":"word","text":"mesa","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:mesa"],"examples":["core-es:item:001398","core-es:item:001399","core-es:item:000051"]}
 {"id":"core-es:item:500115","pack":"core-es","type":"word","text":"silla","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:silla"],"examples":["core-es:item:000172","core-es:item:000220","core-es:item:000467"]}
 {"id":"core-es:item:500116","pack":"core-es","type":"word","text":"sofá","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:sofa"],"examples":["core-es:item:000418","core-es:item:000429"]}
 {"id":"core-es:item:500117","pack":"core-es","type":"word","text":"puerta","level":"a1","topics":["home"],"lexemes":["core-es:lexeme:puerta"],"examples":["core-es:item:000119","core-es:item:000504","core-es:item:000937"]}
@@ -329,7 +329,7 @@
 {"id":"core-es:item:500328","pack":"core-es","type":"word","text":"otoño","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:otono"],"examples":["core-es:item:000208"]}
 {"id":"core-es:item:500329","pack":"core-es","type":"word","text":"invierno","level":"a1","topics":["time"],"lexemes":["core-es:lexeme:invierno"],"examples":["core-es:item:000212","core-es:item:000412","core-es:item:001027"]}
 {"id":"core-es:item:500330","pack":"core-es","type":"word","text":"favor","level":"a1","topics":["greetings"],"lexemes":["core-es:lexeme:favor"],"examples":["core-es:item:000014","core-es:item:000015","core-es:item:000056"]}
-{"id":"core-es:item:500331","pack":"core-es","type":"word","text":"nevera","level":"a2","topics":["home"],"regions":["es-ES"],"lexemes":["core-es:lexeme:nevera"],"examples":["core-es:item:001398","core-es:item:001399","core-es:item:000085"]}
+{"id":"core-es:item:500331","pack":"core-es","type":"word","text":"nevera","level":"a2","topics":["home"],"regions":["es-ES"],"lexemes":["core-es:lexeme:nevera"],"examples":["core-es:item:000085"]}
 {"id":"core-es:item:500332","pack":"core-es","type":"word","text":"centro","level":"a1","topics":["city"],"lexemes":["core-es:lexeme:centro"],"examples":["core-es:item:000115","core-es:item:000312","core-es:item:000334"]}
 {"id":"core-es:item:500333","pack":"core-es","type":"word","text":"euro","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:euro"],"examples":["core-es:item:001422","core-es:item:000305","core-es:item:001286"]}
 {"id":"core-es:item:500334","pack":"core-es","type":"word","text":"talla","level":"a2","topics":["shopping"],"lexemes":["core-es:lexeme:talla"],"examples":["core-es:item:000297","core-es:item:001183","core-es:item:001184"]}

@@ -37,11 +37,16 @@
 # `seguro` is the one exception and was not new either — it was already used in
 # `Repito para estar bien seguro.` with no lexeme behind it.
 
+# One vocabulary note, because the choice is not obvious from the rows. The pairs
+# use region-neutral A1 words only. `nevera` was the first draft and is marked
+# `es-ES` and A2 in the pack, so a pair whose entire job is teaching a rule that
+# holds everywhere would have been invisible to a learner aiming at Latin America
+# and would have pulled an A2 word into an A1 row.
 # ── 1. Minimal pairs: the statement, then the question ────────────────────────
 001396	Tu hermano trabaja aquí.	Your brother works here.	a1	work,grammar	The statement. Nothing about the words marks it as one.	neutral	tu
 001397	¿Tu hermano trabaja aquí?	Does your brother work here?	a1	work,questions,grammar	The same five words. English needs «does»; Spanish needs the marks.	neutral	tu
-001398	Hay leche en la nevera.	There's milk in the fridge.	a1	food-drink,home,grammar		neutral
-001399	¿Hay leche en la nevera?	Is there milk in the fridge?	a1	food-drink,home,questions,grammar	`hay` does not change to ask.	neutral
+001398	Hay pan en la mesa.	There's bread on the table.	a1	food-drink,home,grammar		neutral
+001399	¿Hay pan en la mesa?	Is there bread on the table?	a1	food-drink,home,questions,grammar	`hay` does not change to ask.	neutral
 001400	El tren llega a las ocho.	The train arrives at eight.	a1	travel,clock,grammar		neutral
 001401	¿El tren llega a las ocho?	Does the train arrive at eight?	a1	travel,clock,questions,grammar		neutral
 001402	Hablas español muy bien.	You speak Spanish very well.	a1	language,grammar		neutral	tu

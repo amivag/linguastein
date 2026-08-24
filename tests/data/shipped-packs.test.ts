@@ -116,7 +116,7 @@ describe('shipped packs', () => {
     // carry the whole difference.
     for (const [statement, question] of [
       ['Tu hermano trabaja aquí.', '¿Tu hermano trabaja aquí?'],
-      ['Hay leche en la nevera.', '¿Hay leche en la nevera?'],
+      ['Hay pan en la mesa.', '¿Hay pan en la mesa?'],
       ['El tren llega a las ocho.', '¿El tren llega a las ocho?'],
     ] as const) {
       const told = textOf(statement);
@@ -138,7 +138,7 @@ describe('shipped packs', () => {
         ?.skills?.map((skill) => skill.replace(/^.*:skill:/, ''));
 
     // A yes/no question is the statement itself; a question word opens its own.
-    expect(skillOf('¿Hay leche en la nevera?')).toContain('yes-no-question');
+    expect(skillOf('¿Hay pan en la mesa?')).toContain('yes-no-question');
     expect(skillOf('¿Cómo te llamas?')).toContain('question-word');
     // A conjunction in front of it does not stop it opening the question.
     // `¿Y dónde giro?` is how a conversation asks its second question, and

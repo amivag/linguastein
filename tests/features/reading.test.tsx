@@ -104,9 +104,17 @@ describe('a passage', () => {
     expect(within(dialog).getByText('to have')).toBeInTheDocument();
   });
 
-  it('says so when the id is not in the pack', async () => {
+  /**
+   * Names the id and points at the pack list. "Not found" alone cannot tell a
+   * broken link from a pack that is not installed, and those have different
+   * fixes — which matters more the moment add-on packs exist.
+   */
+  it('says which text is missing, and where it might come from', async () => {
     renderPassage('999999');
-    expect(await screen.findByText('That text is not in this pack.')).toBeInTheDocument();
+
+    const status = await screen.findByRole('status');
+    expect(status).toHaveTextContent('999999');
+    expect(status).toHaveTextContent(/not installed/);
   });
 });
 

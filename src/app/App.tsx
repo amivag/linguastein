@@ -16,6 +16,7 @@ import { applyPalette, applyTheme, DEFAULT_PALETTE } from '../styles/themes';
 import { applyContrast, DEFAULT_CONTRAST } from '../styles/contrast';
 import { applyIntensity, DEFAULT_INTENSITY } from '../styles/intensity';
 import { applyReadingSize } from '../styles/reading-size';
+import { NotFoundScreen } from '../features/not-found/NotFoundScreen';
 import { ErrorBoundary } from './ErrorBoundary';
 import { createServices, type AppServices } from './services';
 import { ServicesContext, useServices } from './services-context';
@@ -193,6 +194,11 @@ export function App() {
             <Route path="/:language/:level/session" element={<SessionScreen />} />
             <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
             <Route path="/:language/:level/settings" element={<SettingsScreen />} />
+            {/* An unknown screen *inside* a course, matched before the global
+              catch-all so the 404 keeps the course it was reached from: a
+              learner on A1 who follows a stale link should be offered A1, not
+              whichever scope their preference happens to hold. */}
+            <Route path="/:language/:level/*" element={<NotFoundScreen />} />
 
             {/* Outside the course routes: the design system is a property of the
               app, not of what is being studied. `useCourse` resolves to the
@@ -219,7 +225,11 @@ export function App() {
             ))}
             <Route path="/read/:id" element={<LegacyPassageRedirect />} />
 
-            <Route path="*" element={<CourseRedirect />} />
+            {/* `/` has no screen of its own, so it redirects to the course the
+              learner left. Anything else unrecognised is a 404 and says so —
+              see `NotFoundScreen` for why silently redirecting was worse. */}
+            <Route path="/" element={<CourseRedirect />} />
+            <Route path="*" element={<NotFoundScreen />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>

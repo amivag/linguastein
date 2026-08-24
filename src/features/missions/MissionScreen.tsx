@@ -61,7 +61,7 @@ interface ResolvedResponsePalette {
 export function MissionScreen() {
   const { missionId = '', stage = 'understand' } = useParams();
   const navigate = useNavigate();
-  const { course, filter } = useCourse();
+  const { course, filter, option } = useCourse();
   const { services, preferences } = useServices();
   const mission = missionById(MISSIONS, course, missionId);
   const chosenStage: MissionStage = stage === 'use' ? 'use' : 'understand';
@@ -262,7 +262,10 @@ export function MissionScreen() {
       <AppShell title="Mission" onBack="history" showNav={false}>
         <section className={styles.empty}>
           <Icon name="passage" size="xl" />
-          <p>This mission is not available in the current course.</p>
+          <p role="status">
+            This mission is not available in {option?.englishLabel ?? 'this course'}. It may need a
+            different level, or a pack that is not installed.
+          </p>
           {/* To the ladder the button names. `path()` is the course home — Test —
               so "Back to missions" landed on the one screen that is not the
               missions list, which is the same broken promise as a Back button

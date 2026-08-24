@@ -178,3 +178,12 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+/* Two ways on from an empty read screen: back to the list, or to the pack list
+   that would explain why the text is not here. */
+.emptyActions {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 22rem;
+  margin: 0 auto;
+}

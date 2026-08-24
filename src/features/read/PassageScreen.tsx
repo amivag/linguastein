@@ -37,10 +37,21 @@ export function PassageScreen() {
   if (!passage) {
     return (
       <AppShell title="Read" onBack="history">
-        <p className={styles.empty}>That text is not in this pack.</p>
-        <Button block onClick={() => void navigate(path('read'))}>
-          Back to reading
-        </Button>
+        {/* Says which text and where it would come from, because "not found" on
+            its own leaves a learner unable to tell a broken link from a pack
+            they have not installed — and those have different fixes. */}
+        <p className={styles.empty} role="status">
+          There is no text <strong>{id}</strong> in the packs you have. It may belong to a pack that
+          is not installed.
+        </p>
+        <div className={styles.emptyActions}>
+          <Button variant="primary" block onClick={() => void navigate(path('read'))}>
+            Back to reading
+          </Button>
+          <Button block onClick={() => void navigate(`${path('settings')}?tab=packs`)}>
+            See installed packs
+          </Button>
+        </div>
       </AppShell>
     );
   }

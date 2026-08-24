@@ -1,0 +1,25 @@
+.empty {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
+  padding: var(--space-7) var(--space-4);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* The address that failed, quoted back so a learner can see what was asked for
+   rather than guessing which link was wrong. Long enough to overflow, so it
+   breaks anywhere instead of pushing the page sideways. */
+.address {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.actions {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 22rem;
+}

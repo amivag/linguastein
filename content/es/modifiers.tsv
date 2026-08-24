@@ -95,7 +95,13 @@ demasiado	too much	ADV	a2	core
 mucho	a lot, much	ADV	a1	core	mucha,muchos,muchas
 poco	little, few	ADV	a1	core	poca,pocos,pocas
 bastante	quite, enough	ADV	a2	core
-juntos	together	ADV	a2	social
+# `juntos` used to be declared here as its own ADV lexeme, beside the adjective
+# `junto` below, both glossed "together". That is one word held as two, and it
+# cost more than tidiness: the eleven tokens in the pack split five to `junto`,
+# four to `juntos` and two to neither, so both lexemes looked under-encountered
+# and a learner's progress on the word was halved. Spanish `juntos` agrees with
+# its subject — junto, junta, juntos, juntas — so it is an adjective, and
+# `adjectiveForms` already derives it. Removed rather than kept as a synonym.
 yo	I	PRON	a1	grammar
 tú	you (informal)	PRON	a1	grammar
 él	he	PRON	a1	grammar

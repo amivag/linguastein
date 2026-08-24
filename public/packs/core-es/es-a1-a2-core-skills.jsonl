@@ -8,6 +8,7 @@
 {"id":"core-es:skill:gustar-type","kind":"pattern","label":"me gusta / me duele","level":"a1"}
 {"id":"core-es:skill:hay","kind":"pattern","label":"hay","level":"a1"}
 {"id":"core-es:skill:ordinals","kind":"pattern","label":"primero, segundo, tercero","level":"a1"}
+{"id":"core-es:skill:conditional","kind":"grammar","label":"condicional simple","level":"a2"}
 {"id":"core-es:skill:present-indicative","kind":"grammar","label":"presente de indicativo","level":"a1"}
 {"id":"core-es:skill:preterite","kind":"grammar","label":"pretérito indefinido","level":"a2"}
 {"id":"core-es:skill:imperfect","kind":"grammar","label":"pretérito imperfecto","level":"a2"}

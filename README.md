@@ -166,7 +166,7 @@ from a dataset passes through the validation boundary in
 breaking a session.
 
 The shipped `core-es` pack covers A1–A2: **126 verbs** with generated forms,
-**393 nouns**, **284 modifiers** and **1,730 example sentences** — 2,358 practisable
+**393 nouns**, **283 modifiers** and **1,730 example sentences** — 2,358 practisable
 items in total.
 
 Humans author compact TSV in `content/es/`; `npm run build:data` derives

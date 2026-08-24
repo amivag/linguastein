@@ -911,7 +911,12 @@ function formSuffix(morph: {
         : 'tu';
     return `cmd-${audience}`;
   }
-  const tense = { present: 'pres', preterite: 'pret', imperfect: 'imp' }[morph.tense ?? ''] ?? 'x';
+  // Every tense needs a distinct abbreviation here: two tenses falling through to
+  // `x` would give one verb two forms with the same id, and the second would win.
+  const tense =
+    { present: 'pres', preterite: 'pret', imperfect: 'imp', future: 'fut', conditional: 'cond' }[
+      morph.tense ?? ''
+    ] ?? 'x';
   return `${tense}-${morph.person}${plural ? 'p' : 's'}`;
 }
 
@@ -1248,6 +1253,128 @@ function isNoun(surface: string): boolean {
   return (surfaces.get(surface.toLowerCase()) ?? []).some((entry) => entry.pos === 'NOUN');
 }
 
+/**
+ * Pronouns that attach to the end of a verb, longest first so `nos` is tried
+ * before `os` and `melo` before `lo`.
+ *
+ * Spanish sticks the object onto an infinitive, a gerund or an affirmative
+ * command — `ayudarme`, `ayudándome`, `dígame` — and the whole thing is written
+ * as one word. `tokenise` is per-word, so every one of them arrived with no
+ * lexeme: the largest group of unlinked tokens in the pack, and the one a learner
+ * is most likely to tap, because `ayudarme` is exactly the word they do not know.
+ */
+const ENCLITICS = [
+  'melo',
+  'mela',
+  'selo',
+  'sela',
+  'telo',
+  'tela',
+  'noslo',
+  'nosla',
+  'los',
+  'las',
+  'les',
+  'nos',
+  'me',
+  'te',
+  'se',
+  'lo',
+  'la',
+  'le',
+  'os',
+] as const;
+
+/**
+ * Every verb form a pronoun can actually attach to, by surface.
+ *
+ * Infinitives, gerunds and commands only. A finite tense cannot take an enclitic,
+ * so `cantaba` + `la` is not a reading this can invent — which is most of what
+ * keeps the strip from turning ordinary words into verbs.
+ */
+const attachableForms = new Map<string, SurfaceEntry[]>();
+for (const form of verbForms) {
+  const lemma = verbLemmaOf.get(form.lexeme);
+  if (!lemma) continue;
+  const morph = form.morph;
+  const attachable =
+    morph['verbForm'] === 'infinitive' ||
+    morph['verbForm'] === 'gerund' ||
+    morph['mood'] === 'imperative';
+  if (!attachable) continue;
+  const key = form.form.toLowerCase();
+  const entry: SurfaceEntry = { lexeme: form.lexeme, lemma, pos: 'VERB', morph };
+  const existing = attachableForms.get(key);
+  if (existing) existing.push(entry);
+  else attachableForms.set(key, [entry]);
+}
+for (const verb of verbs) {
+  const key = verb.lemma.toLowerCase();
+  const entry: SurfaceEntry = {
+    lexeme: lexemeId(verb.lemma, 'VERB'),
+    lemma: verb.lemma,
+    pos: 'VERB',
+    morph: { verbForm: 'infinitive' },
+  };
+  const existing = attachableForms.get(key);
+  if (existing) existing.push(entry);
+  else attachableForms.set(key, [entry]);
+}
+
+/** `díga` → `diga`: the accent an enclitic adds, taken back off. */
+function withoutAccent(word: string): string {
+  return word
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .normalize('NFC');
+}
+
+/**
+ * Resolves `ayudarme` to `ayudar`, `dígame` to `diga`, `verte` to `ver`.
+ *
+ * Only ever tried when **nothing** claims the surface as it stands, which is what
+ * keeps it safe: a noun that merely looks like a verb plus a pronoun — `tomate`
+ * ending in `te` over the command `toma` — is claimed by its own lexeme first and
+ * never reaches here. Where the pack does not hold such a noun the strip could
+ * still mislead, so the stem has to be a form a pronoun can actually attach to:
+ * an infinitive, a gerund, or a command. A finite tense cannot take one, so
+ * `cantaba` + `la` is not a reading this will invent.
+ *
+ * The accent is why `AGENTS.md` calls this morphology rather than a suffix trim.
+ * `diga` becomes `dígame` because Spanish moves the stress mark when the word
+ * grows, so stripping the pronoun leaves `díga`, which is not a form of anything.
+ * Taking the accent back off is the second half of the rule.
+ */
+function resolveEnclitic(surface: string): SurfaceEntry | undefined {
+  const lower = surface.toLowerCase();
+
+  for (const enclitic of ENCLITICS) {
+    if (!lower.endsWith(enclitic) || lower.length <= enclitic.length + 1) continue;
+    const stem = lower.slice(0, -enclitic.length);
+
+    for (const candidate of [stem, withoutAccent(stem)]) {
+      /*
+       * Searched against the generated forms rather than the surface index, and
+       * that is the difference between `dime` linking and not.
+       *
+       * Commands are indexed only where no other lexeme already claims the
+       * surface, so `decir`'s `di` lost that race to `dar`'s preterite `di` and is
+       * absent from the index entirely. At the enclitic level there is no contest
+       * to lose: `dame` is dar and `dime` is decir, different words. So the strip
+       * asks the paradigm, where both forms exist, and applies its own ambiguity
+       * rule to what it finds.
+       */
+      const attachable = attachableForms.get(candidate) ?? [];
+      // One lexeme or none: two different verbs claiming the stem is the same
+      // ambiguity `disambiguate` declines to guess at, and for the same reason.
+      const lexemes = new Set(attachable.map((entry) => entry.lexeme));
+      if (lexemes.size === 1) return attachable[0]!;
+    }
+  }
+
+  return undefined;
+}
+
 function tokenise(text: string): Token[] {
   const matches = text.match(TOKEN_PATTERN) ?? [];
   const tokens: Token[] = [];
@@ -1260,7 +1387,12 @@ function tokenise(text: string): Token[] {
     }
 
     const candidates = surfaces.get(surface.toLowerCase()) ?? [];
-    const entry = disambiguate(candidates, tokens.at(-1), matches[position + 1]);
+    // The enclitic reading is a last resort, tried only when nothing claims the
+    // surface as written — see `resolveEnclitic` for why that ordering is what
+    // makes it safe rather than merely convenient.
+    const entry =
+      disambiguate(candidates, tokens.at(-1), matches[position + 1]) ??
+      (candidates.length === 0 ? resolveEnclitic(surface) : undefined);
     if (!entry) {
       tokens.push({ id, text: surface });
       continue;
@@ -1398,6 +1530,18 @@ const PATTERNS: PatternSpec[] = [
 ];
 
 const TENSE_SKILLS: Record<string, { id: string; label: string; gloss: string; level: string }> = {
+  future: {
+    id: `${NS}skill:future`,
+    label: 'futuro simple',
+    gloss: 'the future tense, built on the whole infinitive',
+    level: 'a2',
+  },
+  conditional: {
+    id: `${NS}skill:conditional`,
+    label: 'condicional simple',
+    gloss: 'would — the same stem as the future, with the imperfect endings',
+    level: 'a2',
+  },
   present: {
     id: `${NS}skill:present-indicative`,
     label: 'presente de indicativo',

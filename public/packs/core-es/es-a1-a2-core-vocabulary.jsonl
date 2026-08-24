@@ -401,7 +401,7 @@
 {"id":"core-es:item:800010","pack":"core-es","type":"word","text":"ver","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:ver"],"examples":["core-es:item:001447","core-es:item:001475","core-es:item:001559"]}
 {"id":"core-es:item:800011","pack":"core-es","type":"word","text":"dar","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:dar"],"examples":["core-es:item:001461","core-es:item:001477","core-es:item:001575"]}
 {"id":"core-es:item:800012","pack":"core-es","type":"word","text":"saber","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:saber"],"examples":["core-es:item:000191","core-es:item:000399","core-es:item:001180"]}
-{"id":"core-es:item:800013","pack":"core-es","type":"word","text":"conocer","level":"a1","topics":["core","social"],"lexemes":["core-es:lexeme:conocer"],"examples":["core-es:item:000386","core-es:item:001363","core-es:item:000984"]}
+{"id":"core-es:item:800013","pack":"core-es","type":"word","text":"conocer","level":"a1","topics":["core","social"],"lexemes":["core-es:lexeme:conocer"],"examples":["core-es:item:000386","core-es:item:000943","core-es:item:001363"]}
 {"id":"core-es:item:800014","pack":"core-es","type":"word","text":"llegar","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:llegar"],"examples":["core-es:item:001518","core-es:item:001593","core-es:item:001634"]}
 {"id":"core-es:item:800015","pack":"core-es","type":"word","text":"pasar","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:pasar"],"examples":["core-es:item:001426","core-es:item:001442","core-es:item:001463"]}
 {"id":"core-es:item:800016","pack":"core-es","type":"word","text":"deber","level":"a2","topics":["core"],"lexemes":["core-es:lexeme:deber"],"examples":["core-es:item:001528","core-es:item:001601","core-es:item:001646"]}
@@ -455,7 +455,7 @@
 {"id":"core-es:item:800064","pack":"core-es","type":"word","text":"estudiar","level":"a1","topics":["school"],"lexemes":["core-es:lexeme:estudiar"],"examples":["core-es:item:001478","core-es:item:000070","core-es:item:000106"]}
 {"id":"core-es:item:800065","pack":"core-es","type":"word","text":"correr","level":"a1","topics":["sport"],"lexemes":["core-es:lexeme:correr"],"examples":["core-es:item:000374","core-es:item:001038"]}
 {"id":"core-es:item:800066","pack":"core-es","type":"word","text":"pagar","level":"a1","topics":["shopping"],"lexemes":["core-es:lexeme:pagar"],"examples":["core-es:item:001492","core-es:item:001499","core-es:item:001521"]}
-{"id":"core-es:item:800067","pack":"core-es","type":"word","text":"ayudar","level":"a1","topics":["social"],"lexemes":["core-es:lexeme:ayudar"],"examples":["core-es:item:001431","core-es:item:001619","core-es:item:001182"]}
+{"id":"core-es:item:800067","pack":"core-es","type":"word","text":"ayudar","level":"a1","topics":["social"],"lexemes":["core-es:lexeme:ayudar"],"examples":["core-es:item:001431","core-es:item:001619","core-es:item:000063"]}
 {"id":"core-es:item:800068","pack":"core-es","type":"word","text":"gustar","level":"a1","topics":["core"],"lexemes":["core-es:lexeme:gustar"],"examples":["core-es:item:001432","core-es:item:001530","core-es:item:001676"]}
 {"id":"core-es:item:800069","pack":"core-es","type":"word","text":"jugar","level":"a1","topics":["sport"],"lexemes":["core-es:lexeme:jugar"],"examples":["core-es:item:001467","core-es:item:000375","core-es:item:000436"]}
 {"id":"core-es:item:800070","pack":"core-es","type":"word","text":"escuchar","level":"a1","topics":["music"],"lexemes":["core-es:lexeme:escuchar"],"examples":["core-es:item:001639","core-es:item:001690","core-es:item:000110"]}
@@ -615,7 +615,7 @@
 {"id":"core-es:item:600098","pack":"core-es","type":"word","text":"parecido","level":"a2","topics":["people"],"lexemes":["core-es:lexeme:parecido"],"examples":["core-es:item:001650","core-es:item:001700","core-es:item:001727"]}
 {"id":"core-es:item:600099","pack":"core-es","type":"word","text":"mayor","level":"a1","topics":["family"],"lexemes":["core-es:lexeme:mayor"],"examples":["core-es:item:001701","core-es:item:000946"]}
 {"id":"core-es:item:600100","pack":"core-es","type":"word","text":"ruidoso","level":"a2","topics":["home"],"lexemes":["core-es:lexeme:ruidoso"],"examples":["core-es:item:001502","core-es:item:001590","core-es:item:001595"]}
-{"id":"core-es:item:600101","pack":"core-es","type":"word","text":"junto","level":"a1","topics":["social"],"lexemes":["core-es:lexeme:junto"],"examples":["core-es:item:001514","core-es:item:001706","core-es:item:001715"]}
+{"id":"core-es:item:600101","pack":"core-es","type":"word","text":"junto","level":"a1","topics":["social"],"lexemes":["core-es:lexeme:junto"],"examples":["core-es:item:001514","core-es:item:001522","core-es:item:001587"]}
 {"id":"core-es:item:600102","pack":"core-es","type":"word","text":"individual","level":"a1","topics":["travel"],"lexemes":["core-es:lexeme:individual"],"examples":["core-es:item:000670","core-es:item:000765"]}
 {"id":"core-es:item:600103","pack":"core-es","type":"word","text":"especial","level":"a1","topics":["grammar"],"lexemes":["core-es:lexeme:especial"],"examples":["core-es:item:000661"]}
 {"id":"core-es:item:600104","pack":"core-es","type":"word","text":"estupendo","level":"a2","topics":["feelings"],"lexemes":["core-es:lexeme:estupendo"],"examples":["core-es:item:001522","core-es:item:001589","core-es:item:001682"]}

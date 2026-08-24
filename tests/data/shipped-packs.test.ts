@@ -193,6 +193,84 @@ describe('shipped packs', () => {
     }
   });
 
+  /**
+   * Spanish sticks the object onto an infinitive, a gerund or a command and writes
+   * the result as one word. `tokenise` is per-word, so every one of these arrived
+   * with no lexeme — the largest group of unlinked tokens in the pack, and the one
+   * a learner is most likely to tap, because `ayudarme` is exactly the word they
+   * do not know yet.
+   */
+  it('reads a pronoun stuck onto a verb', async () => {
+    const { repository } = await loadAll();
+    const tokenLike = (pattern: RegExp) =>
+      repository
+        .allItems()
+        .flatMap((item) => item.tokens ?? [])
+        .find((token) => pattern.test(token.text));
+
+    expect(tokenLike(/^ayudarme$/)?.lemma).toBe('ayudar');
+    expect(tokenLike(/^probarlos$/)?.lemma).toBe('probar');
+    expect(tokenLike(/^verte$/)?.lemma).toBe('ver');
+    // The accent is why this is morphology rather than a suffix trim: `diga`
+    // becomes `dígame`, so stripping the pronoun leaves `díga`, which is a form of
+    // nothing until the stress mark comes back off.
+    expect(tokenLike(/^Dígame$/i)?.lemma).toBe('decir');
+    expect(tokenLike(/^Dígame$/i)?.morph?.mood).toBe('imperative');
+    // And `dime`, which the *surface index* cannot reach: commands are indexed
+    // only where nothing else claims the form, and `dar`'s preterite `di` claimed
+    // it first. At the enclitic level there is no contest — `dame` is dar, `dime`
+    // is decir — so the strip asks the paradigm instead.
+    expect(tokenLike(/^dime$/i)?.lemma).toBe('decir');
+  });
+
+  it('does not invent a verb out of a word that merely ends in a pronoun', async () => {
+    const { repository } = await loadAll();
+    const tokens = repository.allItems().flatMap((item) => item.tokens ?? []);
+
+    // A finite tense cannot take an enclitic, and the strip is only tried when
+    // nothing claims the surface as written — so an ordinary noun or adjective
+    // ending in `-la`, `-lo` or `-te` keeps its own reading.
+    for (const [text, lemma] of [
+      ['clase', 'clase'],
+      ['tarde', 'tarde'],
+      ['calle', 'calle'],
+    ] as const) {
+      const found = tokens.find((token) => token.text.toLowerCase() === text);
+      if (found?.lemma) expect(found.lemma, text).toBe(lemma);
+    }
+  });
+
+  it('holds one word as one lexeme, so its encounters do not split', async () => {
+    const { repository } = await loadAll();
+    const juntos = repository
+      .allItems()
+      .flatMap((item) => item.tokens ?? [])
+      .filter((token) => token.text.toLowerCase() === 'juntos');
+
+    // `juntos` was declared as its own adverb beside the adjective `junto`, both
+    // glossed "together". Eleven tokens split five to one, four to the other and
+    // two to neither, so both looked under-encountered and a learner's progress on
+    // the word was halved.
+    expect(juntos.length).toBeGreaterThan(5);
+    expect(new Set(juntos.map((token) => token.lexeme)).size).toBe(1);
+    expect(juntos[0]?.lemma).toBe('junto');
+  });
+
+  it('generates the future and the conditional, which were simply absent', async () => {
+    const { repository } = await loadAll();
+    const gustar = repository
+      .allItems()
+      .flatMap((item) => item.lexemes ?? [])
+      .find((id) => id.endsWith(':lexeme:gustar'));
+    const forms = repository.formsOf(gustar!);
+
+    // `me gustaría` is one of the first polite formulas anybody learns, and it sat
+    // unlinked in the shipped pack because nothing produced the conditional.
+    expect(forms.map((form) => form.form)).toContain('gustaría');
+    expect(forms.some((form) => form.morph.tense === 'future')).toBe(true);
+    expect(forms.some((form) => form.morph.tense === 'conditional')).toBe(true);
+  });
+
   it('link sentence tokens to lexemes so words can be inspected', async () => {
     const { repository } = await loadAll();
     const sentences = repository.query({ types: ['sentence'] });

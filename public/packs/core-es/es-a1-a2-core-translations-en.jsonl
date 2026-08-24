@@ -2963,7 +2963,6 @@
 {"ref":"core-es:lexeme:mucho","lang":"en","text":"a lot, much"}
 {"ref":"core-es:lexeme:poco","lang":"en","text":"little, few"}
 {"ref":"core-es:lexeme:bastante","lang":"en","text":"quite, enough"}
-{"ref":"core-es:lexeme:juntos","lang":"en","text":"together"}
 {"ref":"core-es:lexeme:yo","lang":"en","text":"I"}
 {"ref":"core-es:lexeme:tu","lang":"en","text":"you (informal)"}
 {"ref":"core-es:lexeme:el","lang":"en","text":"he"}
@@ -3169,6 +3168,7 @@
 {"ref":"core-es:skill:gustar-type","lang":"en","text":"verbs where the thing liked is the subject"}
 {"ref":"core-es:skill:hay","lang":"en","text":"there is / there are"}
 {"ref":"core-es:skill:ordinals","lang":"en","text":"ordinals agree like adjectives, and primero and tercero shorten before a masculine noun"}
+{"ref":"core-es:skill:conditional","lang":"en","text":"would — the same stem as the future, with the imperfect endings"}
 {"ref":"core-es:skill:present-indicative","lang":"en","text":"the present tense"}
 {"ref":"core-es:skill:preterite","lang":"en","text":"the simple past: completed actions"}
 {"ref":"core-es:skill:imperfect","lang":"en","text":"how things used to be"}

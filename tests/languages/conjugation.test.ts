@@ -28,6 +28,12 @@ function formsOf(lemma: string) {
   };
 }
 
+/** The six forms of one tense, in person order. */
+const tenseOf = (lemma: string, tense: string) =>
+  conjugate(lemma, IRREGULAR_VERBS[lemma] ?? {})
+    .filter((form) => form.morph.tense === tense)
+    .map((form) => form.form);
+
 describe('regular verbs', () => {
   it('conjugates -ar', () => {
     const hablar = formsOf('hablar');
@@ -233,6 +239,82 @@ describe('irregular verbs', () => {
   });
 });
 
+/**
+ * The two tenses that were missing, and the reason they are the easiest to add:
+ * both attach their endings to the **whole infinitive**, so one ending list
+ * serves all three conjugations, and the twelve irregular verbs share a single
+ * shortened stem between the two tenses. No verb is irregular in one and regular
+ * in the other, which is why `futureStem` is one field rather than two.
+ *
+ * They were absent rather than deferred. Writing ordinary narration reached for
+ * `volveremos` and `olvidaré` in consecutive batches, and `gustaría` sat unlinked
+ * in the shipped pack — `me gustaría` being one of the first polite formulas
+ * anybody learns.
+ */
+describe('future and conditional', () => {
+  it('builds both on the whole infinitive, for all three conjugations', () => {
+    expect(tenseOf('hablar', 'future')).toEqual([
+      'hablaré',
+      'hablarás',
+      'hablará',
+      'hablaremos',
+      'hablaréis',
+      'hablarán',
+    ]);
+    expect(tenseOf('comer', 'future')).toEqual([
+      'comeré',
+      'comerás',
+      'comerá',
+      'comeremos',
+      'comeréis',
+      'comerán',
+    ]);
+    expect(tenseOf('vivir', 'conditional')).toEqual([
+      'viviría',
+      'vivirías',
+      'viviría',
+      'viviríamos',
+      'viviríais',
+      'vivirían',
+    ]);
+  });
+
+  it('shares one irregular stem between the two tenses', () => {
+    for (const [lemma, stem] of [
+      ['tener', 'tendr'],
+      ['hacer', 'har'],
+      ['decir', 'dir'],
+      ['poder', 'podr'],
+      ['querer', 'querr'],
+      ['salir', 'saldr'],
+    ] as const) {
+      expect(tenseOf(lemma, 'future')[0], `${lemma} future`).toBe(`${stem}é`);
+      expect(tenseOf(lemma, 'conditional')[0], `${lemma} conditional`).toBe(`${stem}ía`);
+    }
+  });
+
+  it('leaves a stem-changing verb alone in both, because neither changes its stem', () => {
+    // `poder` is `puedo` in the present and `podré` in the future: the present
+    // stem change must not leak into a tense built on the infinitive.
+    expect(tenseOf('poder', 'future')).toContain('podrá');
+    expect(tenseOf('poder', 'future')).not.toContain('puedrá');
+    expect(tenseOf('pensar', 'future')[0]).toBe('pensaré');
+  });
+
+  it('gives the conditional the imperfect endings, not its own', () => {
+    // Worth pinning: the conditional is the future stem plus `-ía`, which is the
+    // -er/-ir imperfect ending. A learner who knows one gets the other free.
+    expect(tenseOf('hablar', 'conditional')[0]).toBe('hablaría');
+    expect(tenseOf('hablar', 'conditional')[3]).toBe('hablaríamos');
+  });
+
+  it('marks the vosotros form as used in Spain, like every other tense', () => {
+    const future = conjugate('hablar').filter((form) => form.morph.tense === 'future');
+    expect(future[4]?.form).toBe('hablaréis');
+    expect(future[4]?.regions).toEqual(['es-ES']);
+  });
+});
+
 describe('commands', () => {
   it('builds the four affirmative commands of a regular verb', () => {
     // tú is the third person present; usted and ustedes come from the yo form.
@@ -313,13 +395,30 @@ describe('generated metadata', () => {
     expect(preterite?.level).toBe('a2');
   });
 
-  it('produces 24 forms per verb', () => {
+  it('produces 36 forms per verb', () => {
     const forms = conjugate('hablar');
 
-    // 18 finite indicative + 4 commands + gerund + participle.
-    expect(forms).toHaveLength(24);
-    expect(forms.filter((form) => form.morph.mood === 'indicative')).toHaveLength(18);
+    // 30 finite indicative + 4 commands + gerund + participle.
+    expect(forms).toHaveLength(36);
+    expect(forms.filter((form) => form.morph.mood === 'indicative')).toHaveLength(30);
     expect(forms.filter((form) => form.morph.mood === 'imperative')).toHaveLength(4);
+  });
+
+  it('gives every finite form a distinct id-worthy tense', () => {
+    // Two tenses with no abbreviation of their own would collide in the pack:
+    // `hablar-x-1s` twice, and the second wins silently.
+    const tenses = new Set(
+      conjugate('hablar')
+        .filter((form) => form.morph.tense)
+        .map((form) => form.morph.tense),
+    );
+    expect([...tenses].sort()).toEqual([
+      'conditional',
+      'future',
+      'imperfect',
+      'present',
+      'preterite',
+    ]);
   });
 
   it('rejects anything that is not an infinitive', () => {

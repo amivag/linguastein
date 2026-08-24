@@ -46,6 +46,16 @@ export interface Irregularity {
    */
   readonly preteriteStemChange?: 'e-i' | 'o-u';
   /**
+   * Stem for the future **and** the conditional, e.g. `tendr` for tener.
+   *
+   * One field for two tenses because Spanish uses one stem for both: every verb
+   * that says `tendré` says `tendría`, and there is no verb that is irregular in
+   * one and regular in the other. Twelve verbs need it; everything else builds
+   * both tenses on the whole infinitive, which is why these are the two easiest
+   * tenses in the language to generate and the two that were missing.
+   */
+  readonly futureStem?: string;
+  /**
    * Irregular tú command, where it is not simply the third person present:
    * `di`, `haz`, `ve`, `pon`, `sal`, `sé`, `ten`, `ven`.
    */
@@ -77,6 +87,17 @@ const IMPERFECT_ENDINGS: Record<Conjugation, readonly string[]> = {
 
 /** Endings after a strong preterite stem — note the unstressed `e` and `o`. */
 const STRONG_PRETERITE_ENDINGS = ['e', 'iste', 'o', 'imos', 'isteis', 'ieron'] as const;
+
+/**
+ * Future and conditional endings, which do not vary by conjugation.
+ *
+ * Both attach to the **whole infinitive** rather than to a stem — `hablaré`,
+ * `comeré`, `viviré` — which is why one array serves all three conjugations
+ * where the present needs three. The irregular twelve replace the infinitive
+ * with a shortened stem and take the very same endings.
+ */
+const FUTURE_ENDINGS = ['é', 'ás', 'á', 'emos', 'éis', 'án'] as const;
+const CONDITIONAL_ENDINGS = ['ía', 'ías', 'ía', 'íamos', 'íais', 'ían'] as const;
 
 const PERSONS: readonly Morphology[] = [
   { person: 1, number: 'singular' },
@@ -154,6 +175,36 @@ export function conjugate(lemma: string, irregular: Irregularity = {}): readonly
   for (const command of imperatives(lemma, conjugation, irregular, presentForms)) {
     forms.push(command);
   }
+
+  /*
+   * Future and conditional, and the reason they are here at all: writing ordinary
+   * past-tense narration reached for `volveremos` and `olvidaré` twice in two
+   * batches, and `gustaría` sat unlinked in the shipped pack. They are not
+   * advanced grammar — `me gustaría` is one of the first polite formulas anybody
+   * learns — and they were absent only because nothing had generated them.
+   *
+   * Marked A2 rather than split across levels. The simple future is A2 in every
+   * syllabus, and the conditional forms a learner meets first (`gustaría`,
+   * `podría`) are the A2 politeness formulas rather than the B1 hypotheticals
+   * that use the same endings.
+   */
+  futureOrConditional(lemma, irregular, FUTURE_ENDINGS).forEach((form, index) =>
+    push(
+      form,
+      { ...PERSONS[index], tense: 'future', mood: 'indicative', verbForm: 'finite' },
+      'a2',
+      index,
+    ),
+  );
+
+  futureOrConditional(lemma, irregular, CONDITIONAL_ENDINGS).forEach((form, index) =>
+    push(
+      form,
+      { ...PERSONS[index], tense: 'conditional', mood: 'indicative', verbForm: 'finite' },
+      'a2',
+      index,
+    ),
+  );
 
   push(gerund(lemma, conjugation, irregular), { verbForm: 'gerund' }, 'a2');
   push(participle(lemma, conjugation, irregular), { verbForm: 'participle' }, 'a2');
@@ -268,6 +319,23 @@ function imperfect(
 ): readonly string[] {
   if (irregular.imperfect) return irregular.imperfect;
   return IMPERFECT_ENDINGS[conjugation].map((ending) => stemOf(lemma) + ending);
+}
+
+/**
+ * One builder for both tenses, because they differ only in their endings.
+ *
+ * `futureStem` replaces the infinitive when a verb has one; otherwise the whole
+ * infinitive is the stem. Nothing else about either tense is irregular in
+ * Spanish — no verb changes person endings, and none is defective — so this is
+ * the entire rule.
+ */
+function futureOrConditional(
+  lemma: string,
+  irregular: Irregularity,
+  endings: readonly string[],
+): readonly string[] {
+  const stem = irregular.futureStem ?? lemma;
+  return endings.map((ending) => stem + ending);
 }
 
 function gerund(lemma: string, conjugation: Conjugation, irregular: Irregularity): string {

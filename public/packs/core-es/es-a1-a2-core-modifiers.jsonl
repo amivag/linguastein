@@ -86,7 +86,6 @@
 {"id":"core-es:lexeme:mucho","lemma":"mucho","pos":"ADV","level":"a1"}
 {"id":"core-es:lexeme:poco","lemma":"poco","pos":"ADV","level":"a1"}
 {"id":"core-es:lexeme:bastante","lemma":"bastante","pos":"ADV","level":"a2"}
-{"id":"core-es:lexeme:juntos","lemma":"juntos","pos":"ADV","level":"a2"}
 {"id":"core-es:lexeme:yo","lemma":"yo","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:tu","lemma":"tú","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:el","lemma":"él","pos":"PRON","level":"a1"}

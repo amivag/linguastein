@@ -52,18 +52,18 @@ brief was written against are less than half of what now ships.
 | Practisable items                    | 2,358                                  |
 | — sentences and phrases              | 1,730                                  |
 | — word cards                         | 628                                    |
-| Lexemes                              | 803 (127 verbs, 393 nouns, 283 other)  |
-| Generated verb forms                 | 3,024 (24 per verb, commands included) |
+| Lexemes                              | 802 (127 verbs, 393 nouns, 282 other)  |
+| Generated verb forms                 | 4,536 (36 per verb, commands included) |
 | Generated noun and adjective forms   | 1,122                                  |
 | Running words of Spanish             | **10,165 (~85 minutes of reading)**    |
 | Average sentence length              | 5.9 words                              |
 | Longest single item                  | 13 words                               |
 | Multi-sentence texts                 | **107 (57 texts, 50 dialogues)**       |
 | — sentences read in context          | 812, averaging 7.6 per passage         |
-| Tokens linked to a lexeme            | 10,121 of 10,165 (100%)                |
-| Lexemes appearing in ≥1 sentence     | 789 of 803                             |
+| Tokens linked to a lexeme            | 10,139 of 10,165 (100%)                |
+| Lexemes appearing in ≥1 sentence     | 788 of 802                             |
 | Lexemes appearing in exactly one     | **109 (14%)**                          |
-| Lexemes with ≥6 encounters           | **302 (38%)**                          |
+| Lexemes with ≥6 encounters           | **304 (38%)**                          |
 | Questions / statements               | 391 / 1,034, with **5** minimal pairs  |
 | Items marked with register           | 1,060                                  |
 | Items marked with address (tú/usted) | 447                                    |

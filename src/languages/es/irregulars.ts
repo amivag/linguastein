@@ -35,6 +35,7 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     imperativeFormal: ['esté', 'estén'],
   },
   haber: {
+    futureStem: 'habr',
     present: ['he', 'has', 'ha', 'hemos', 'habéis', 'han'],
     preteriteStem: 'hub',
     imperativeFormal: ['haya', 'hayan'],
@@ -52,17 +53,37 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   },
 
   // ── Irregular yo + strong preterite ────────────────────────────────────
-  tener: { stemChange: 'e-ie', yo: 'tengo', preteriteStem: 'tuv', imperativeTu: 'ten' },
+  tener: {
+    futureStem: 'tendr',
+    stemChange: 'e-ie',
+    yo: 'tengo',
+    preteriteStem: 'tuv',
+    imperativeTu: 'ten',
+  },
   venir: {
+    futureStem: 'vendr',
     stemChange: 'e-ie',
     yo: 'vengo',
     preteriteStem: 'vin',
     gerund: 'viniendo',
     imperativeTu: 'ven',
   },
-  poner: { yo: 'pongo', preteriteStem: 'pus', participle: 'puesto', imperativeTu: 'pon' },
-  hacer: { yo: 'hago', preteriteStem: 'hic', participle: 'hecho', imperativeTu: 'haz' },
+  poner: {
+    futureStem: 'pondr',
+    yo: 'pongo',
+    preteriteStem: 'pus',
+    participle: 'puesto',
+    imperativeTu: 'pon',
+  },
+  hacer: {
+    futureStem: 'har',
+    yo: 'hago',
+    preteriteStem: 'hic',
+    participle: 'hecho',
+    imperativeTu: 'haz',
+  },
   decir: {
+    futureStem: 'dir',
     stemChange: 'e-i',
     yo: 'digo',
     preteriteStem: 'dij',
@@ -71,8 +92,13 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     imperativeTu: 'di',
   },
   traer: { yo: 'traigo', preteriteStem: 'traj', gerund: 'trayendo', participle: 'traído' },
-  salir: { yo: 'salgo', imperativeTu: 'sal' },
-  saber: { yo: 'sé', preteriteStem: 'sup', imperativeFormal: ['sepa', 'sepan'] },
+  salir: { futureStem: 'saldr', yo: 'salgo', imperativeTu: 'sal' },
+  saber: {
+    futureStem: 'sabr',
+    yo: 'sé',
+    preteriteStem: 'sup',
+    imperativeFormal: ['sepa', 'sepan'],
+  },
   caer: { yo: 'caigo' },
   oír: { present: ['oigo', 'oyes', 'oye', 'oímos', 'oís', 'oyen'] },
   conocer: { yo: 'conozco' },
@@ -84,8 +110,8 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   conducir: { yo: 'conduzco', preteriteStem: 'conduj' },
   traducir: { yo: 'traduzco', preteriteStem: 'traduj' },
   andar: { preteriteStem: 'anduv' },
-  poder: { stemChange: 'o-ue', preteriteStem: 'pud', gerund: 'pudiendo' },
-  querer: { stemChange: 'e-ie', preteriteStem: 'quis' },
+  poder: { futureStem: 'podr', stemChange: 'o-ue', preteriteStem: 'pud', gerund: 'pudiendo' },
+  querer: { futureStem: 'querr', stemChange: 'e-ie', preteriteStem: 'quis' },
 
   // ── Stem-changing: e → ie ──────────────────────────────────────────────
   pensar: { stemChange: 'e-ie' },

@@ -63,3 +63,17 @@
     background: color-mix(in srgb, var(--tab-bg) 90%, var(--color-text));
   }
 }
+
+/* A scrim of the tab's own text colour, and the numeral left at that colour.
+   Given a role colour of its own it would need checking against two backgrounds
+   — the filled active pill and the plain one — and the filled pill's is the
+   accent. Tinting with `currentcolor` keeps the pairing the one already
+   verified, whichever state the tab is in. */
+.tabCount {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, currentcolor 16%, transparent);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-semibold);
+}

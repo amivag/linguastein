@@ -78,8 +78,8 @@ describe('MissionScreen', () => {
   });
 
   /*
-   * The order of the Understand stage, which is the one thing about it a learner
-   * cannot work around.
+   * What the Understand stage opens on, which is the one thing about it a
+   * learner cannot work around.
    *
    * It shipped the other way up: eleven capability rows, up to nine response
    * palettes and a variation lab all sat above the exchange, so a screen whose
@@ -87,26 +87,72 @@ describe('MissionScreen', () => {
    * of English between a learner and the example. Nothing was broken, every
    * assertion passed, and the screen was unusable on a phone.
    *
-   * Document order is the assertion because document order is the bug — jsdom has
-   * no layout, but "the dialogue comes before the panels about it" is a fact
-   * about the tree rather than about pixels.
+   * Turning the column up the right way fixed its first line and left the rest:
+   * three blocks in one scroll several screens long, with nothing at the top
+   * saying the last two were down there. They are sections now, so the assertion
+   * is what a bare mission link opens — the exchange, and only the exchange —
+   * plus the fact that the other two are still announced rather than hidden.
    */
-  it('puts the exchange above everything written about it', async () => {
+  it('opens on the exchange, and names the sections holding everything else', async () => {
     renderWithServices(missionRoutes(), {
       route: '/es/a1/mission/greet-and-respond/understand',
       services: await shippedServices(),
     });
 
     const exchange = await screen.findByRole('list', { name: /lines$/ });
-    const palettes = screen.getByRole('region', { name: 'Natural response palettes' });
-    const lab = screen.getByRole('region', { name: 'Variation lab' });
-
-    expect(exchange.compareDocumentPosition(palettes)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
-    expect(exchange.compareDocumentPosition(lab)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(screen.queryByRole('region', { name: 'Natural response palettes' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'Variation lab' })).toBeNull();
 
     // The goal is still the first thing said, and it is still said in full.
     const goal = screen.getByRole('heading', { level: 2 });
     expect(goal.compareDocumentPosition(exchange)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+
+    // Counted in the name, so a section a learner cannot see still says how much
+    // it holds — the price of a switcher, paid back at the switcher.
+    const switcher = screen.getByRole('navigation', { name: 'Understand sections' });
+    expect(within(switcher).getByRole('link', { name: 'Dialogue' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    expect(within(switcher).getByRole('link', { name: 'Responses 11' })).toBeInTheDocument();
+    expect(within(switcher).getByRole('link', { name: 'Variations 3' })).toBeInTheDocument();
+  });
+
+  /*
+   * A section is an address, which is what makes it survivable: a reload keeps
+   * you in it, and "the response palettes for this mission" is a link somebody
+   * can send. `dialogue` is the default and so is written by omission.
+   */
+  it('addresses each Understand section, and degrades a stale one to the exchange', async () => {
+    const user = userEvent.setup();
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand',
+      services: await shippedServices(),
+    });
+
+    await screen.findByRole('list', { name: /lines$/ });
+    await user.click(screen.getByRole('link', { name: 'Responses 11' }));
+
+    expect(screen.getByTestId('where')).toHaveTextContent(
+      '/es/a1/mission/greet-and-respond/understand?section=responses',
+    );
+    expect(screen.getByRole('region', { name: 'Natural response palettes' })).toBeInTheDocument();
+    expect(screen.queryByRole('list', { name: /lines$/ })).toBeNull();
+
+    await user.click(screen.getByRole('link', { name: 'Dialogue' }));
+    expect(screen.getByTestId('where')).toHaveTextContent(
+      '/es/a1/mission/greet-and-respond/understand',
+    );
+    expect(screen.getByRole('list', { name: /lines$/ })).toBeInTheDocument();
+  });
+
+  it('opens the exchange when the section in the link no longer exists', async () => {
+    renderWithServices(missionRoutes(), {
+      route: '/es/a1/mission/greet-and-respond/understand?section=nonsense',
+      services: await shippedServices(),
+    });
+
+    expect(await screen.findByRole('list', { name: /lines$/ })).toBeInTheDocument();
   });
 
   it('offers what the mission will teach without spending the screen on it', async () => {
@@ -231,7 +277,7 @@ describe('MissionScreen', () => {
   it('introduces a small response palette before revealing its full range', async () => {
     const user = userEvent.setup();
     renderWithServices(missionRoutes(), {
-      route: '/es/a1/mission/greet-and-respond/understand',
+      route: '/es/a1/mission/greet-and-respond/understand?section=responses',
       services: await shippedServices(),
     });
 
@@ -260,7 +306,7 @@ describe('MissionScreen', () => {
   it('uses the same progressive palette pattern in another mission', async () => {
     const user = userEvent.setup();
     renderWithServices(missionRoutes(), {
-      route: '/es/a1/mission/cafe-order/understand',
+      route: '/es/a1/mission/cafe-order/understand?section=responses',
       services: await shippedServices(),
     });
 
@@ -283,6 +329,8 @@ describe('MissionScreen', () => {
       screen.getByRole('button', { name: 'Listen to response “De momento, solo un café.”' }),
     ).toBeInTheDocument();
 
+    // Across to the lab through the switcher, which is the only way there now.
+    await user.click(screen.getByRole('link', { name: /^Variations/ }));
     expect(screen.getByRole('region', { name: 'Variation lab' })).toBeInTheDocument();
     await user.selectOptions(screen.getByLabelText('How to begin'), 'para-mi');
     await user.selectOptions(screen.getByLabelText('Drink'), 'agua');
@@ -300,18 +348,19 @@ describe('MissionScreen', () => {
   /*
    * The palettes carry most of the language a mission teaches, and for a long
    * while they were the one place on the screen where an unknown word could not
-   * be tapped — the dialogue below them could, which made the gap look like a
-   * bug in the sheet rather than in the panel.
+   * be tapped — the dialogue could, which made the gap look like a bug in the
+   * sheet rather than in the panel.
    */
   it('opens the word sheet from a palette response, not only from the dialogue', async () => {
     const user = userEvent.setup();
     renderWithServices(missionRoutes(), {
-      route: '/es/a1/mission/greet-and-respond/understand',
+      route: '/es/a1/mission/greet-and-respond/understand?section=responses',
       services: await shippedServices(),
     });
 
-    // Named by palette *and* phrase: this very line is also spoken in the
-    // dialogue below, so the phrase alone would name two different controls.
+    // Named by palette *and* phrase. Two palettes in this one section can offer
+    // the same line, and the Dialogue section speaks several of them too — the
+    // word sheet is shared across the stage, so the name has to be as well.
     const word = await screen.findByRole('button', {
       name: 'About “Grecia” in “Where you are from — and where you live · Soy de Grecia.”',
     });

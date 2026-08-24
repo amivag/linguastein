@@ -8,6 +8,12 @@ export interface SectionTab {
   readonly icon?: IconName;
   /** Where the tab goes. The section is an address, so this is a real link. */
   readonly to: string;
+  /**
+   * How much the section holds, shown after the label and read as part of the
+   * link's name — a switcher's cost is that its other sections are invisible,
+   * and "Responses 9" is what buys some of that back.
+   */
+  readonly count?: number;
 }
 
 interface SectionTabsProps {
@@ -46,6 +52,15 @@ export function SectionTabs({ label, tabs, current }: SectionTabsProps) {
               >
                 {tab.icon && <Icon name={tab.icon} size="sm" />}
                 {tab.label}
+                {/* The space is in the DOM rather than only in the gap between
+                    them: it is what separates the two in the link's accessible
+                    name, and without it the tab is called `Responses11`. */}
+                {tab.count !== undefined && (
+                  <>
+                    {' '}
+                    <span className={styles.tabCount}>{tab.count}</span>
+                  </>
+                )}
               </Link>
             </li>
           );

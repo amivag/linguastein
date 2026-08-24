@@ -108,7 +108,17 @@ describe('agent surface', () => {
     await screen.findByRole('button', { name: 'Start practice' });
     await expectEveryControlNamed(container);
     expect(screen.getByRole('list', { name: 'Mission journey' })).toBeInTheDocument();
-    expect(screen.getByText('Understand').closest('li')).toHaveAttribute('aria-current', 'step');
+    // On the rung itself, which is a link now: the journey looked like three
+    // controls and was three list items, so the stage it says you can go back to
+    // was a promise nothing on the screen could keep.
+    expect(screen.getByRole('link', { name: 'Understand' })).toHaveAttribute(
+      'aria-current',
+      'step',
+    );
+    expect(screen.getByRole('link', { name: 'Use' })).toHaveAttribute(
+      'href',
+      '/es/all/mission/morning-routine/use',
+    );
   });
 
   it('names every control in a practice session', async () => {

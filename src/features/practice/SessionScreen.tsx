@@ -19,7 +19,7 @@ import { buildSessionConfig, PRESETS } from './presets';
 import { parseSessionUrl } from './session-url';
 import { useSessionRunner } from './useSessionRunner';
 import { MissionJourney } from '../missions/MissionJourney';
-import { missionPath } from '../missions/mission-url';
+import { missionJourneyHrefs, missionPath } from '../missions/mission-url';
 
 /** A session is fully described by the URL, so it survives a reload or a share. */
 export function SessionScreen() {
@@ -121,7 +121,9 @@ export function SessionScreen() {
 
       {runner.status === 'active' && (
         <>
-          {activeMission && <MissionJourney current="practise" />}
+          {activeMission && (
+            <MissionJourney current="practise" hrefs={missionJourneyHrefs(course, activeMission)} />
+          )}
           <SessionProgress
             index={runner.index}
             total={runner.total}

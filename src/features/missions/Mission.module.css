@@ -8,19 +8,32 @@
 
 .journey li {
   display: grid;
+  min-width: 0;
+}
+
+/* The card is the link now rather than the item around it, so the whole pill is
+   the tap — a rung that looked like a control and was one only across its label
+   would be the same broken promise in a smaller size. */
+.journeyStep {
+  display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
+  min-height: var(--tap-target);
   padding: var(--space-2);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-.journey li > span {
+.journeyStep > span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -31,19 +44,30 @@
   font-weight: var(--weight-black);
 }
 
-.journey li[data-state='current'] {
+.journey li[data-state='current'] > .journeyStep {
   background: var(--color-accent-soft);
   color: var(--color-text);
 }
 
-.journey li[data-state='current'] > span {
+.journey li[data-state='current'] > .journeyStep > span {
   background: var(--color-accent);
   color: var(--color-accent-contrast);
 }
 
-.journey li[data-state='complete'] > span {
+.journey li[data-state='complete'] > .journeyStep > span {
   background: var(--color-success-soft);
   color: var(--color-success);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .journeyStep:hover {
+    background: color-mix(in srgb, var(--color-surface) 90%, var(--color-text));
+    color: var(--color-text);
+  }
+
+  .journey li[data-state='current'] > .journeyStep:hover {
+    background: color-mix(in srgb, var(--color-accent-soft) 90%, var(--color-text));
+  }
 }
 
 .brief,
@@ -395,7 +419,12 @@
     gap: var(--space-1);
   }
 
-  .journey li {
+  /* The rung stacks: three labels do not fit beside their numerals on a narrow
+     phone, and `Understand` is the one that overflows. This selects the link
+     rather than the item around it because the link is what carries the two
+     columns — the rule was written against the `li` and stopped biting the day
+     the card became the tap. */
+  .journeyStep {
     grid-template-columns: 1fr;
     gap: var(--space-1);
   }

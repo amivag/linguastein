@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { MISSIONS } from '../../app/missions';
 import { MISSION_VARIATIONS } from '../../app/mission-variations';
 import { useCourse, usePronunciationLocale, useTargetLanguage } from '../../app/course';
@@ -7,6 +7,7 @@ import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
+import { SectionTabs } from '../../components/SectionTabs';
 import { Sheet } from '../../components/Sheet';
 import { TokenizedText } from '../../components/TokenizedText';
 import { Transcript } from '../../components/Transcript';
@@ -37,7 +38,13 @@ import {
 import { SpeakCheck } from '../practice/SpeakCheck';
 import { studyPath } from '../study/study-url';
 import { MissionJourney } from './MissionJourney';
-import { missionPracticePath } from './mission-url';
+import {
+  missionJourneyHrefs,
+  missionPath,
+  missionPracticePath,
+  parseMissionSection,
+  type MissionSection,
+} from './mission-url';
 import styles from './Mission.module.css';
 
 interface MissionCapability {
@@ -62,6 +69,7 @@ interface ResolvedResponsePalette {
 /** The reusable Understand → Practise → Use journey over one connected passage. */
 export function MissionScreen() {
   const { missionId = '', stage = 'understand' } = useParams();
+  const [params] = useSearchParams();
   const navigate = useNavigate();
   const { course, filter, option } = useCourse();
   const { services, preferences } = useServices();
@@ -288,12 +296,17 @@ export function MissionScreen() {
     );
   }
 
+  const journeyHrefs = missionJourneyHrefs(course, mission);
+
   return (
     <AppShell title={mission.title} onBack="history" showNav={false}>
       {chosenStage === 'understand' ? (
         <UnderstandStage
           key={passage.id}
           words={words}
+          journeyHrefs={journeyHrefs}
+          section={parseMissionSection(params)}
+          sectionPath={(chosen) => missionPath(course, mission.id, 'understand', chosen)}
           language={course.language}
           speak={speak}
           speakText={speakText}
@@ -313,6 +326,7 @@ export function MissionScreen() {
         <UseStage
           key={passage.id}
           words={words}
+          journeyHrefs={journeyHrefs}
           speak={speak}
           translationOf={translationOf}
           intentionCue={intentionCue}
@@ -373,6 +387,9 @@ export function MissionScreen() {
 function UnderstandStage({
   missionId: id,
   words,
+  journeyHrefs,
+  section,
+  sectionPath,
   language,
   speak,
   speakText,
@@ -390,6 +407,10 @@ function UnderstandStage({
   readonly missionId: string;
   readonly missionGoal: string;
   readonly passageTitle: string;
+  readonly journeyHrefs: Readonly<Record<MissionStage, string>>;
+  /** The section the URL asked for, or `undefined` for "wherever this starts". */
+  readonly section: MissionSection | undefined;
+  readonly sectionPath: (section: MissionSection) => string;
   readonly capabilities: readonly MissionCapability[];
   readonly responsePalettes: readonly ResolvedResponsePalette[];
   readonly variationPatterns: readonly VariationPattern[];
@@ -413,33 +434,62 @@ function UnderstandStage({
   const openItem = words.item ? inspectable(stageItems, stagePalettes, words.item) : undefined;
 
   /*
-    The order is the whole point of this stage, and it used to be wrong.
+    What this stage holds, and the order it is reachable in.
 
-    The screen said "First understand the connected example" and then put four
-    things between the learner and the example: eleven capability rows, up to
-    nine response palettes, a variation lab and a pair of buttons. On the shipped
-    A1 greeting mission that is two phone screens of English before the first
-    line of Spanish — a screen whose subject was reachable only by scrolling past
-    everything written about it.
+    It used to be one column of everything, the wrong way up: eleven capability
+    rows, up to nine response palettes and a variation lab all sat above the
+    exchange, so a screen whose own text said "first understand the connected
+    example" put two phone screens of English between a learner and the example.
 
-    So the exchange comes second now, directly under the goal it serves, and the
-    English that used to precede it either moved behind a control or was cut:
+    Turning that column the right way up fixed the first line of it and left the
+    rest — the exchange, then the palettes, then the lab, in one scroll several
+    screens long, with nothing at the top saying the other two were down there.
+    So the three are sections now:
 
-    - The capability preview is a sheet. It is the longest block on the screen
-      and the least urgent — "what you will be able to do" is a promise about
-      afterwards, and a learner reads it once. Behind a control it also states
-      its own count, which is more than eleven rows managed.
-    - The palettes and the lab stay on the page, below the exchange. They are
+    - The exchange is the default, because it is what the mission is about and
+      what "understand" names. Its own controls — listen, meanings, the line
+      about tapping a word — belong to it and travel with it.
+    - The palettes and the lab are sections rather than a sheet. They are
       *material* rather than chrome, and a mission's language is mostly in them:
-      putting them behind a tap would be the opposite mistake. It is also not
-      available — their phrases open the word sheet, and a sheet cannot open a
-      sheet.
-    - The two sentences of instruction went. "Tap any word for help" now sits
-      with the dialogue it describes, as one line, where it is true.
+      a switcher that names them and counts them still says they exist, which is
+      the thing a sheet would not. It is also not available — their phrases open
+      the word sheet, and a sheet cannot open a sheet.
+    - The capability preview stays a sheet. It is a promise about afterwards
+      rather than material, and a learner reads it once.
+
+    The goal, the journey and Start practice sit outside the switcher: they are
+    true of the stage rather than of a section of it.
   */
+  const sections = [
+    { id: 'dialogue' as const, label: 'Dialogue', icon: 'dialogue' as const },
+    ...(stagePalettes.length
+      ? [
+          {
+            id: 'responses' as const,
+            label: 'Responses',
+            icon: 'meaning' as const,
+            count: stagePalettes.length,
+          },
+        ]
+      : []),
+    ...(stageVariations.length
+      ? [
+          {
+            id: 'variations' as const,
+            label: 'Variations',
+            icon: 'shuffle' as const,
+            count: stageVariations.length,
+          },
+        ]
+      : []),
+  ];
+  // The first section it actually has, which is also what an unrecognised name
+  // degrades to — a stale link should still open the mission.
+  const current = sections.find((candidate) => candidate.id === section) ?? sections[0]!;
+
   return (
     <>
-      <MissionJourney current="understand" />
+      <MissionJourney current="understand" hrefs={journeyHrefs} />
       <section className={styles.brief} aria-labelledby={`${id}-goal`}>
         <p className={styles.eyebrow}>Your goal</p>
         <h2 id={`${id}-goal`}>{missionGoal}</h2>
@@ -462,40 +512,60 @@ function UnderstandStage({
         )}
       </section>
 
-      <div className={styles.actions}>
-        <Button onClick={() => speakText(stageItems.map((item) => item.text).join(' '))}>
-          <Icon name="speak" /> Listen to all
-        </Button>
-        <Button onClick={() => setShowMeanings((shown) => !shown)} aria-pressed={showMeanings}>
-          {showMeanings ? 'Hide meaning' : 'Show meaning'}
-        </Button>
-      </div>
-      <p className={styles.hint}>Tap any word for help.</p>
+      {/* One section is not a switcher. A mission with no authored palettes or
+          lab has only its exchange, and a strip of one tab is furniture. */}
+      {sections.length > 1 && (
+        <SectionTabs
+          label="Understand sections"
+          current={current.id}
+          tabs={sections.map((candidate) => ({
+            id: candidate.id,
+            label: candidate.label,
+            icon: candidate.icon,
+            to: sectionPath(candidate.id),
+            ...('count' in candidate ? { count: candidate.count } : {}),
+          }))}
+        />
+      )}
 
-      {/*
-        The exchange, drawn as an exchange. `learnerSpeaker` is passed so the lines
-        a learner will be performing in the Use stage are already on their own side
-        of the conversation here — the stages then agree about whose turn is whose
-        before the learner is asked to take one.
-      */}
-      <Transcript
-        label={`${passageTitle}, ${stageItems.length} lines`}
-        lines={stageItems.map((item, index) => ({
-          item,
-          ...(speakers?.[index] ? { speaker: speakers[index] } : {}),
-          ...(showMeanings && translationOf(item) ? { meaning: translationOf(item) } : {}),
-        }))}
-        {...(learnerSpeaker ? { self: learnerSpeaker } : {})}
-        onSelectWord={words.open}
-        selectedTokens={words.tokensFor}
-        onListen={speak}
-      />
+      {current.id === 'dialogue' && (
+        <>
+          <div className={styles.actions}>
+            <Button onClick={() => speakText(stageItems.map((item) => item.text).join(' '))}>
+              <Icon name="speak" /> Listen to all
+            </Button>
+            <Button onClick={() => setShowMeanings((shown) => !shown)} aria-pressed={showMeanings}>
+              {showMeanings ? 'Hide meaning' : 'Show meaning'}
+            </Button>
+          </div>
+          <p className={styles.hint}>Tap any word for help.</p>
 
-      {stagePalettes.length > 0 && (
+          {/*
+            The exchange, drawn as an exchange. `learnerSpeaker` is passed so the lines
+            a learner will be performing in the Use stage are already on their own side
+            of the conversation here — the stages then agree about whose turn is whose
+            before the learner is asked to take one.
+          */}
+          <Transcript
+            label={`${passageTitle}, ${stageItems.length} lines`}
+            lines={stageItems.map((item, index) => ({
+              item,
+              ...(speakers?.[index] ? { speaker: speakers[index] } : {}),
+              ...(showMeanings && translationOf(item) ? { meaning: translationOf(item) } : {}),
+            }))}
+            {...(learnerSpeaker ? { self: learnerSpeaker } : {})}
+            onSelectWord={words.open}
+            selectedTokens={words.tokensFor}
+            onListen={speak}
+          />
+        </>
+      )}
+
+      {current.id === 'responses' && (
         <ResponsePalettePanel palettes={stagePalettes} onListen={speak} words={words} />
       )}
 
-      {stageVariations.length > 0 && (
+      {current.id === 'variations' && (
         <VariationLabPanel patterns={stageVariations} language={language} onListen={speakText} />
       )}
 
@@ -544,6 +614,7 @@ function responseFitsTurn(response: LearningItem, turn: LearningItem): boolean {
 function UseStage({
   missionId: id,
   words,
+  journeyHrefs,
   speak,
   translationOf,
   intentionCue,
@@ -571,6 +642,7 @@ function UseStage({
   readonly transferPosition: number;
   readonly transferTotal: number;
   readonly words: WordSelection;
+  readonly journeyHrefs: Readonly<Record<MissionStage, string>>;
   readonly speak: (item: LearningItem) => void;
   readonly translationOf: (item: LearningItem) => string | undefined;
   readonly intentionCue: (item: LearningItem) => string;
@@ -661,7 +733,7 @@ function UseStage({
     const summary = transferGradeSummary(grades);
     return (
       <>
-        <MissionJourney current="use" />
+        <MissionJourney current="use" hrefs={journeyHrefs} />
         <section className={styles.complete} aria-labelledby={`${id}-complete`}>
           <Icon name="mastered" size="xl" />
           <p className={styles.eyebrow}>
@@ -683,7 +755,7 @@ function UseStage({
 
   return (
     <>
-      <MissionJourney current="use" />
+      <MissionJourney current="use" hrefs={journeyHrefs} />
       {transfer && (
         <section className={styles.transfer} aria-label="Transfer challenge">
           <p className={styles.eyebrow}>

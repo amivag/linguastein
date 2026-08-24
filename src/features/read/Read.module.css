@@ -51,7 +51,12 @@
  * glyph and in the word beside it, so nothing rests on colour alone.
  */
 .card {
-  composes: kindSurface from '../../styles/surfaces.module.css';
+  /* Two recipes, and the split is the point, exactly as Home's rows put it:
+     `kindSurface` is what the row is made of and `pressable` is what it does.
+     This hand-rolled the second one for one commit — with the old hover timing
+     and no press state at all — which is the drift `pressable` was extracted to
+     stop, arrived at by the same route Home had taken before it. */
+  composes: kindSurface pressable from '../../styles/surfaces.module.css';
 
   display: grid;
   /* Badge, then everything the row says, then the chevron. The middle track has
@@ -68,30 +73,6 @@
      a pair of cards side by side ends at two different heights the moment one
      title wraps or one of them carries a region badge. */
   height: 100%;
-  color: inherit;
-  text-decoration: none;
-  transition:
-    translate var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-/*
- * The lift on hover, and the press that undoes it.
- *
- * Spelled out here rather than composed from `cardInteractive`, because that
- * recipe brings `card`'s own surface with it and this row's surface is the hue.
- * Same numbers, so a passage still behaves like every other pressable card.
- */
-@media (hover: hover) and (pointer: fine) {
-  .card:hover {
-    translate: 0 -2px;
-    box-shadow: var(--shadow-md);
-  }
-}
-
-.card:active {
-  translate: 0 0;
-  box-shadow: var(--shadow-sm);
 }
 
 /* One column of text, in the order it is read: what it is called, what that

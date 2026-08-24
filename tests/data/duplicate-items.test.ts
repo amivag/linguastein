@@ -36,7 +36,7 @@ afterAll(() => {
 describe('a word marked as having no card', () => {
   it('ships one card for a noun/adjective homograph, not two', () => {
     const cards = pack
-      .records<{ id: string; text: string }>('es-a1-a2-core-vocabulary.jsonl')
+      .records<{ id: string; text: string }>('vocabulary')
       .filter((item) => item.text === 'frío');
 
     expect(cards).toHaveLength(1);
@@ -44,10 +44,10 @@ describe('a word marked as having no card', () => {
 
   /** The word is still taught: five sentences use it, and tapping it must work. */
   it('keeps the lexeme and its meaning, so sentences stay inspectable', () => {
-    const lexemes = pack.records<{ id: string }>('es-a1-a2-core-nouns.jsonl');
+    const lexemes = pack.records<{ id: string }>('nouns');
     expect(lexemes.some((lexeme) => lexeme.id === 'core-es:lexeme:frio')).toBe(true);
 
-    const translations = pack.records<{ ref: string }>('es-a1-a2-core-translations-en.jsonl');
+    const translations = pack.records<{ ref: string }>('translations-en');
     expect(translations.some((entry) => entry.ref === 'core-es:lexeme:frio')).toBe(true);
   });
 

@@ -122,8 +122,25 @@ interface Item {
   readonly skills?: readonly string[];
 }
 
+/**
+ * The spoken items, found through the manifest rather than by file name.
+ *
+ * These two paths used to be literals. A pack file's name carries the level
+ * range of its content and the build derives that range from the content, so
+ * the day B1 landed both literals pointed at files that no longer existed —
+ * and `readItems` skips a missing file rather than failing, so this would have
+ * gone on synthesising nothing and reporting success.
+ */
 function readItems(): Item[] {
-  const files = ['es-a1-a2-core-sentences.jsonl', 'es-a1-a2-core-vocabulary.jsonl'];
+  const manifestPath = join(PACK_DIR, 'pack.json');
+  if (!existsSync(manifestPath)) return [];
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
+    files?: readonly { readonly kind: string; readonly path: string }[];
+  };
+  const files = (manifest.files ?? [])
+    .filter((file) => file.kind === 'items')
+    .map((file) => file.path);
+
   const items: Item[] = [];
   for (const file of files) {
     const path = join(PACK_DIR, file);

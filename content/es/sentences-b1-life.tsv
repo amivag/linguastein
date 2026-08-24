@@ -1,0 +1,388 @@
+# B1: the vocabulary in ordinary sentences, mostly indicative.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+#
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place left.
+#
+# The companion to `sentences-b1-subjunctive.tsv`, and deliberately not more of
+# it. A level is not a grammar point: a learner who only ever meets `contrato`
+# inside `es necesario que…` has learned the construction and not the word. So
+# these sentences carry the same B1 vocabulary in the plainest frames available,
+# which is also what gives the recycling target somewhere to be met — a word
+# needs four *different* contexts, and four subjunctive clauses are one context
+# wearing four hats.
+#
+# Grouped by subject rather than by form, for the opposite reason to that file.
+001816	La entrevista es el martes a las diez.	The interview is on Tuesday at ten.	b1	work							
+001817	Después de la entrevista, me llamaron el mismo día.	After the interview, they called me the same day.	b1	work							
+001818	Firmé el contrato la semana pasada.	I signed the contract last week.	b1	work							
+001819	El contrato es temporal, solo por seis meses.	The contract is temporary, only for six months.	b1	work							
+001820	Mi horario es de nueve a cinco.	My hours are nine to five.	b1	work							
+001821	Este mes tengo un horario más cómodo.	This month I have easier hours.	b1	work							
+001822	Es un puesto nuevo en la oficina de Madrid.	It is a new post in the Madrid office.	b1	work							
+001823	El puesto pide tres años de experiencia.	The post asks for three years of experience.	b1	work							
+001824	Tengo experiencia con clientes difíciles.	I have experience with difficult clients.	b1	work							
+001825	La empresa va a contratar a dos personas más.	The company is going to take on two more people.	b1	work							
+001826	Contratan gente joven cada verano.	They hire young people every summer.	b1	work							
+001827	Nos prometieron un sueldo mejor en enero.	They promised us a better salary in January.	b1	work,money							
+001828	Te prometo que mañana lo termino.	I promise you I will finish it tomorrow.	b1	work,communication							
+001829	Prometió ayudarme y no vino.	He promised to help me and did not come.	b1	communication							
+001830	No prometas nada que no puedas hacer.	Do not promise anything you cannot do.	b1	communication							give-advice
+001831	Despidieron a tres empleados en marzo.	They dismissed three employees in March.	b1	work							
+001832	Nadie sabe por qué lo despidieron.	Nobody knows why they let him go.	b1	work							
+001833	Me despedí de mis compañeros el viernes.	I said goodbye to my colleagues on Friday.	b1	work	The same verb both ways: «despedir a alguien» is to dismiss them, «despedirse de alguien» is to say goodbye.						
+001834	Es una empresa privada, no del estado.	It is a private company, not a state one.	b1	work							
+001835	Trabajo en una empresa privada desde hace dos años.	I have worked in the private sector for two years.	b1	work							
+001836	Los datos son privados y no los comparto.	The data is private and I do not share it.	b1	technology,work							
+001837	Una escuela privada cuesta mucho dinero.	A private school costs a lot of money.	b1	school,money							
+001838	Soy responsable de la reunión de los lunes.	I am responsible for the Monday meeting.	b1	work							
+001839	Busco a alguien responsable para el puesto.	I am looking for someone responsible for the post.	b1	work							
+001840	Es un chico muy responsable para su edad.	He is a very responsible boy for his age.	b1	people							
+001841	¿Quién es el responsable de este error?	Who is responsible for this mistake?	b1	work							
+001842	Estoy dispuesto a trabajar los sábados.	I am willing to work Saturdays.	b1	work							
+001843	No estoy dispuesta a pagar más.	I am not willing to pay more.	b1	money							
+001844	Si estás dispuesto a esperar, hay sitio.	If you are willing to wait, there is room.	b1	restaurant							
+001845	Estaban dispuestos a cambiar el horario.	They were willing to change the hours.	b1	work							
+001846	Supongo que la reunión será larga.	I suppose the meeting will be a long one.	b1	work							
+001847	Supuse que ya lo sabías.	I assumed you already knew.	b1	communication							
+001848	¿Supones que van a contratar a alguien?	Do you suppose they are going to hire someone?	b1	work							
+001849	Suponemos que el precio va a subir.	We assume the price is going to go up.	b1	money							
+001850	Logré terminar el proyecto a tiempo.	I managed to finish the project on time.	b1	work							
+001851	No logro entender este artículo.	I cannot manage to understand this article.	b1	news,school							
+001852	Logramos reducir los gastos de la oficina.	We managed to cut the office expenses.	b1	work,money							
+001853	Si estudias, lo vas a lograr.	If you study, you are going to make it.	b1	school							
+001854	Mantengo el mismo horario desde enero.	I have kept the same routine since January.	b1	daily-routine							
+001855	Es difícil mantener un piso tan grande.	It is hard to keep up such a big flat.	b1	home,money							
+001856	Mantuvimos el precio todo el año.	We kept the price the whole year.	b1	money							
+001857	Mantén la calma y llama al médico.	Keep calm and call the doctor.	b1	health			tu				
+001858	Tengo un ahorro pequeño para las vacaciones.	I have a small amount saved for the holidays.	b1	money							
+001859	El ahorro de este mes fue de cien euros.	This month's saving came to a hundred euros.	b1	money							
+001860	Con este plan, el ahorro es evidente.	With this plan the saving is obvious.	b1	money							
+001861	Cada ahorro cuenta cuando el sueldo es bajo.	Every bit saved counts when the salary is low.	b1	money							
+001862	Ahorro un poco todos los meses.	I save a little every month.	b1	money							
+001863	Ahorramos para comprar un coche.	We are saving to buy a car.	b1	money							
+001864	Gasto demasiado en comida fuera de casa.	I spend too much on eating out.	b1	money,restaurant							
+001865	El gasto en energía subió mucho este invierno.	Spending on energy went up a lot this winter.	b1	money,environment							
+001866	Hay que bajar el gasto del mes.	We need to bring the month's spending down.	b1	money							
+001867	La factura de la luz llegó ayer.	The electricity bill arrived yesterday.	b1	money,home							
+001868	Pagué la factura por internet.	I paid the bill online.	b1	money,technology							
+001869	Esta factura no es correcta.	This bill is not right.	b1	money							make-a-complaint
+001870	El presupuesto del proyecto es de mil euros.	The project budget is a thousand euros.	b1	money,work							
+001871	Nos pasamos del presupuesto otra vez.	We went over budget again.	b1	money,work							
+001872	Hice un presupuesto para el mes.	I drew up a budget for the month.	b1	money							
+001873	Me cobraron dos veces el mismo billete.	They charged me twice for the same ticket.	b1	money,travel							make-a-complaint
+001874	¿Cuánto cobras por hora?	How much do you charge an hour?	b1	money,work							
+001875	Cobro el día quince de cada mes.	I get paid on the fifteenth of each month.	b1	money,work							
+001876	No cobran nada por llevarlo a casa.	They do not charge anything for delivery.	b1	money,shopping							
+001877	Es una oferta muy buena para dos noches.	It is a very good deal for two nights.	b1	shopping,travel							
+001878	La oferta termina el domingo.	The offer ends on Sunday.	b1	shopping							
+001879	Compara las dos ofertas antes de decidir.	Compare the two offers before deciding.	b1	shopping			tu				weigh-two-options
+001880	Comparé los precios de tres tiendas.	I compared the prices in three shops.	b1	shopping,money							
+001881	Si comparas, verás la diferencia.	If you compare, you will see the difference.	b1	shopping							weigh-two-options
+001882	El curso es gratuito para estudiantes.	The course is free for students.	b1	school,money							
+001883	La entrada al museo es gratuita el domingo.	Entry to the museum is free on Sunday.	b1	entertainment,money							
+001884	Hay wifi gratuito en toda la estación.	There is free wifi throughout the station.	b1	technology,travel							
+001885	Es un curso económico y muy útil.	It is a cheap and very useful course.	b1	school,money							
+001886	Buscamos un hotel más económico.	We are looking for a cheaper hotel.	b1	travel,money							
+001887	La solución más económica no es la mejor.	The cheapest solution is not the best one.	b1	money,core							
+001888	Los coches contaminan más que el tren.	Cars pollute more than the train.	b1	environment,travel							
+001889	Esta empresa contamina el río.	This factory pollutes the river.	b1	environment							
+001890	Contaminamos menos que hace diez años.	We pollute less than we did ten years ago.	b1	environment							
+001891	No contamines el mar con plástico.	Do not pollute the sea with plastic.	b1	environment			tu				give-advice
+001892	La contaminación del aire es un problema grave.	Air pollution is a serious problem.	b1	environment,health							
+001893	En la ciudad hay más contaminación que en el campo.	There is more pollution in the city than in the country.	b1	environment,city							
+001894	Reciclo el papel y el plástico en casa.	I recycle paper and plastic at home.	b1	environment,home							
+001895	Reciclamos las botellas y el papel.	We recycle glass bottles.	b1	environment							
+001896	El plástico dura muchos años en el mar.	Plastic takes many years to disappear.	b1	environment							
+001897	Compro agua en botella de plástico casi nunca.	I almost never buy water in a plastic bottle.	b1	environment,food-drink							
+001898	Hay que proteger los bosques.	We need to protect the forests.	b1	environment,nature							
+001899	Protejo mis datos con una contraseña larga.	I protect my data with a long password.	b1	technology							
+001900	Este parque protege a los animales.	This park protects the animals.	b1	environment,animals							
+001901	La ley protege a los clientes.	The law protects customers.	b1	core,shopping							
+001902	Quiero reducir el plástico en la cocina.	I want to cut down on plastic in the kitchen.	b1	environment,home							
+001903	Redujimos el gasto de agua este año.	We cut water use by half.	b1	environment,money							
+001904	Si reduces la temperatura, gastas menos.	If you turn the temperature down, you use less.	b1	environment,home							
+001905	La temperatura bajó mucho por la noche.	The temperature dropped five degrees overnight.	b1	weather							
+001906	La temperatura del mar sube cada verano.	The sea temperature rises every summer.	b1	environment,weather							
+001907	Con esta temperatura no quiero salir.	In this temperature I do not want to go out.	b1	weather							
+001908	El clima de la playa es mejor en mayo.	The coastal climate is milder.	b1	environment,weather							
+001909	El clima cambia más rápido de lo que pensábamos.	The climate is changing faster than we thought.	b1	environment							
+001910	Me gusta el clima de esta zona.	I like the dry climate inland.	b1	environment,weather							
+001911	Necesitamos un transporte más sostenible.	We need more sustainable transport.	b1	environment,travel							
+001912	Es una empresa sostenible y responsable.	It is a sustainable and responsible company.	b1	environment,work							
+001913	Buscamos una solución sostenible para todos.	We are looking for a sustainable long-term solution.	b1	environment,core							
+001914	La energía del sol es sostenible.	Solar energy is sustainable.	b1	environment							
+001915	La energía cuesta más este año.	Energy is more expensive this year.	b1	environment,money							
+001916	Esta casa usa poca energía.	This house uses little energy.	b1	environment,home							
+001917	Paso los domingos en la naturaleza.	I spend Sundays out in nature.	b1	nature							
+001918	La naturaleza de esta zona es muy rica.	The natural world in this area is very rich.	b1	nature,environment							
+001919	Cuidar la naturaleza es cuidar la salud.	Looking after nature is looking after our health.	b1	environment,health							
+001920	Los niños aprenden mucho en la naturaleza.	Children learn a lot out in nature.	b1	nature,family							
+001921	El planeta no puede esperar más.	The planet cannot wait any longer.	b1	environment							
+001922	Es el planeta más cerca del sol.	It is the planet closest to the sun.	b1	nature							
+001923	Cuido a mi abuela los fines de semana.	I look after my grandmother at weekends.	b1	family,health							
+001924	Cuida el ordenador, es del trabajo.	Look after the computer, it belongs to work.	b1	technology			tu				
+001925	Hay que cuidar el ambiente de la oficina.	The atmosphere in the office needs looking after.	b1	work							
+001926	El ambiente del bar es muy tranquilo.	The atmosphere in the bar is very relaxed.	b1	entertainment							
+001927	Tiramos muy poca comida en casa.	We throw away very little food at home.	b1	environment,home							
+001928	Tiré los papeles viejos ayer.	I threw the old papers out yesterday.	b1	home							
+001929	Descargué la aplicación en cinco minutos.	I downloaded the app in five minutes.	b1	technology							
+001930	Descarga el archivo antes de salir.	Download the file before you leave.	b1	technology			tu				
+001931	No descargues nada de esa página.	Do not download anything from that site.	b1	technology							give-advice
+001932	La aplicación descarga las fotos sola.	The app downloads the photos by itself.	b1	technology							
+001933	El ordenador no se conecta al wifi.	The computer will not connect to the wifi.	b1	technology							make-a-complaint
+001934	Conecta el teléfono a la pantalla.	Connect the phone to the screen.	b1	technology			tu				
+001935	Me conecto por la mañana para leer el correo.	I go online in the morning to read my email.	b1	technology							
+001936	Conectamos la casa a la red el mes pasado.	We connected the house to the network last month.	b1	technology,home							
+001937	La red del hotel es muy lenta.	The hotel network is very slow.	b1	technology,travel							
+001938	Guardo una copia en la nube y otra en casa.	I keep one copy in the cloud and another at home.	b1	technology							
+001939	Hazme una copia de este documento.	Make me a copy of this document.	b1	technology,work			tu				
+001940	La copia no salió bien.	The copy did not come out well.	b1	objects							
+001941	Cada usuario tiene otra contraseña.	Each user has their own password.	b1	technology							
+001942	El usuario nuevo no puede entrar todavía.	The new user cannot log in yet.	b1	technology							
+001943	Somos tres usuarios en la misma cuenta.	There are three of us using the same account.	b1	technology							
+001944	El usuario tiene razón, la aplicación no funciona.	The user is right, the app is faulty.	b1	technology							
+001945	Comparto el piso con dos amigas.	I share the flat with two friends.	b1	home,social							
+001946	¿Compartimos un postre?	Shall we share a dessert?	b1	restaurant,food-drink							
+001947	Publicaron el artículo esta mañana.	They published the article this morning.	b1	news							
+001948	El periódico publica una entrevista cada domingo.	The paper publishes an interview every Sunday.	b1	news							
+001949	No publiques esa foto sin preguntar.	Do not post that photo without asking.	b1	news,technology							give-advice
+001950	Publiqué mi primer artículo el año pasado.	I published my first article last year.	b1	news							
+001951	Es un artículo largo pero muy claro.	It is a long article but a very clear one.	b1	news							
+001952	Leí un artículo sobre el clima.	I read an article about the climate.	b1	news,environment							
+001953	El programa de las nueve es el más visto.	The nine o'clock programme is the most watched.	b1	news							
+001954	Este programa no me parece imparcial.	This programme does not strike me as impartial.	b1	news							express-doubt
+001955	Busco un periódico imparcial.	I am looking for an unbiased newspaper.	b1	news							
+001956	Un periódico tiene que ser imparcial.	A judge has to be impartial.	b1	news,core							
+001957	Pusieron un anuncio en el periódico.	They ran an advert on the radio.	b1	news							
+001958	Vi el anuncio del puesto en internet.	I saw the advert for the post online.	b1	news,work							
+001959	Los anuncios duran más que el programa.	The adverts last longer than the programme.	b1	news							
+001960	El transporte público es bueno en esta ciudad.	Public transport is good in this city.	b1	city,travel							
+001961	Es un parque público, la entrada es libre.	It is a public park, entry is free.	b1	city							
+001962	La opinión pública cambió muy rápido.	Public opinion changed very quickly.	b1	news							
+001963	Hay una biblioteca pública en el centro.	There is a public library in the centre.	b1	city,school							
+001964	Mi opinión no es la misma.	My opinion is different from yours.	b1	communication							
+001965	¿Cuál es tu opinión sobre el contrato?	What is your opinion on the contract?	b1	work,communication							
+001966	Cambié de opinión después de leerlo.	I changed my mind after reading it.	b1	communication							
+001967	Nadie me convence con ese ejemplo.	Nobody convinces me with that example.	b1	communication							express-doubt
+001968	Me convenció en dos minutos.	She convinced me in two minutes.	b1	communication							
+001969	No me convence el precio.	The price does not convince me.	b1	money,shopping							express-doubt
+001970	Convencimos al jefe de cambiar el horario.	We convinced the boss to change the hours.	b1	work							
+001971	Además de barato, es rápido.	As well as being cheap, it is fast.	b1	core	«Además» adds a second reason to one already given, where «también» only adds another item.						
+001972	El piso es pequeño y además está lejos.	The flat is small and on top of that it is far away.	b1	home							
+001973	Además, no tengo tiempo esta semana.	What is more, I do not have time this week.	b1	time							
+001974	Es útil y además no cuesta nada.	It is useful and on top of that it costs nothing.	b1	core							
+001975	Apenas tengo tiempo para comer.	I hardly have time to eat.	b1	time,daily-routine							
+001976	Apenas conozco a mis vecinos.	I hardly know my neighbours.	b1	social							
+001977	Había apenas diez personas en la sala.	There were barely ten people in the room.	b1	entertainment							
+001978	Apenas se oye la televisión.	You can hardly hear the television.	b1	home							
+001979	Terminé la carrera el año pasado.	I finished my degree last year.	b1	school							
+001980	Estudio una carrera de tres años.	I am doing a three-year degree.	b1	school							
+001981	Mi carrera en la empresa empezó en la oficina de Sevilla.	My career at the company began in the Seville office.	b1	work							
+001982	Tengo el título de inglés desde mayo.	I have had my English qualification since May.	b1	school,language							
+001983	Necesitas un título para este puesto.	You need a qualification for this post.	b1	work,school							
+001984	El título del artículo es muy largo.	The title of the article is very long.	b1	news							
+001985	Guardo el título en un lugar seguro.	I keep the certificate somewhere safe.	b1	school							
+001986	Aprobé el examen con buena nota.	I passed the exam with a good mark.	b1	school							
+001987	Si estudias, apruebas.	If you study, you pass.	b1	school							
+001988	El jefe aprobó el presupuesto ayer.	The boss approved the budget yesterday.	b1	work,money							
+001989	Es una enfermedad normal en invierno.	It is a common illness in winter.	b1	health							
+001990	La enfermedad no es grave, pero necesita descanso.	The illness is not serious, but it needs rest.	b1	health							
+001991	Salió de una enfermedad larga.	He recovered from a long illness.	b1	health							
+001992	Es un dolor fuerte, pero no es grave.	It is a bad pain, but it is not serious.	b1	health							
+001993	El ruido de la calle no me deja dormir.	The noise from the street stops me sleeping.	b1	city,home							make-a-complaint
+001994	Hay mucho ruido en este bar.	There is a lot of noise in this bar.	b1	entertainment							
+001995	El ruido del tren se oye desde el jardín.	You can hear the noise of the train from the garden.	b1	city,home							
+001996	Nada impide que lo intentes.	Nothing stops you trying.	b1	core							
+001997	El ruido impide el sueño.	The noise makes conversation impossible.	b1	city							
+001998	La lluvia impidió el partido.	The rain stopped the match.	b1	sport,weather							
+001999	Nadie me impide cambiar de trabajo.	Nobody stops me changing jobs.	b1	work							
+002000	Es imposible llegar a las ocho.	It is impossible to get there by eight.	b1	time							
+002001	Es imposible que lo sepa.	There is no way he knows.	b1	core							express-doubt
+002002	Parece imposible, pero lo logramos.	It seems impossible, but we did it.	b1	core							
+002003	Con este ruido es imposible estudiar.	With this noise it is impossible to study.	b1	school,city							
+002004	Es probable que llueva por la tarde.	It will probably rain in the afternoon.	b1	weather							express-doubt
+002005	Es poco probable, pero es posible.	It is unlikely, but it is possible.	b1	core							
+002006	Lo más probable es que llegue tarde.	The most likely thing is that he will arrive late.	b1	time							
+002007	Un cambio de horario es probable en enero.	A change of hours is likely in January.	b1	work							
+002008	Es capaz de hacerlo sin ayuda.	He is capable of doing it on his own.	b1	core							
+002009	No soy capaz de decirle que no.	I am not able to say no to her.	b1	communication							
+002010	Es una persona capaz y muy tranquila.	She is a capable and very calm person.	b1	people							
+002011	Somos capaces de terminar hoy.	We are able to finish today.	b1	work							
+002012	Te doy un consejo: no firmes hoy.	Let me give you a piece of advice: do not sign today.	b1	communication							give-advice
+002013	Fue un buen consejo, gracias.	That was good advice, thank you.	b1	communication							
+002014	Pedí consejo a mi hermana.	I asked my sister for advice.	b1	family,communication							
+002015	Su consejo me ayudó mucho.	Her advice helped me a lot.	b1	communication							
+002016	La ventaja de este piso es la luz.	The advantage of this flat is the light.	b1	home							
+002017	Tiene la ventaja de estar cerca del centro.	It has the advantage of being near the centre.	b1	city							
+002018	Su ventaja es el precio.	The only advantage is the price.	b1	money							
+002019	¿Qué ventaja tiene el tren sobre el coche?	What advantage does the train have over the car?	b1	travel							weigh-two-options
+002020	Ocurrió algo raro esta mañana.	Something odd happened this morning.	b1	core							
+002021	No sé qué ocurre con la aplicación.	I do not know what is going on with the app.	b1	technology							
+002022	Ocurre lo mismo cada invierno.	The same thing happens every winter.	b1	weather							
+002023	¿Qué ocurrió en la reunión?	What happened in the meeting?	b1	work							
+002024	Le agradezco su ayuda.	I am grateful for your help.	b1	social		formal	usted				
+002025	Te agradecí el consejo en su momento.	I thanked you for the advice at the time.	b1	social							
+002026	Agradecemos mucho la información.	We are very grateful for the information.	b1	social							
+002027	Disfruté mucho la película.	I really enjoyed the film.	b1	entertainment							
+002028	Disfrutamos del jardín en verano.	We enjoy the garden in summer.	b1	home,nature							
+002029	Disfruta del fin de semana.	Enjoy the weekend.	b1	social			tu				
+002030	Mientras espero, leo el periódico.	While I wait, I read the paper.	b1	daily-routine,news							
+002031	Mientras tú cocinas, yo limpio.	While you cook, I will clean.	b1	home							
+002032	Trabajé en un bar mientras estudiaba.	I worked in a bar while I was studying.	b1	work,school							
+002033	El esfuerzo valió la pena.	The effort was worth it.	b1	core							
+002034	Con un poco de esfuerzo lo consigues.	With a bit of effort you will manage it.	b1	core							
+002035	Fue un gran esfuerzo para toda la familia.	It was a big effort for the whole family.	b1	family							
+002036	Es una pena que llueva hoy.	It is a shame it is raining today.	b1	weather							react-to-news
+002037	Qué pena, me gustaba mucho ese bar.	What a shame, I really liked that bar.	b1	entertainment							
+002038	Vale la pena visitar el museo.	The museum is worth a visit.	b1	entertainment							
+002039	Esa camisa vale treinta euros.	That shirt costs thirty euros.	b1	shopping,clothes							
+002040	No vale la pena discutir.	It is not worth arguing.	b1	communication							
+002041	¿Cuánto vale el billete de ida y vuelta?	How much is a return ticket?	b1	travel,money							
+002042	Vale más de lo que parece.	It is worth more than it looks.	b1	money							
+002043	Es una diferencia pequeña pero importante.	It is a small but important difference.	b1	core							
+002044	No veo la diferencia entre los dos.	I do not see the difference between the two.	b1	core							weigh-two-options
+002045	La diferencia de precio es de diez euros.	The difference in price is ten euros.	b1	money,shopping							
+002046	Hay una diferencia de dos horas.	There is a two-hour difference.	b1	time							
+002047	Es un riesgo, pero vale la pena.	It is a risk, but it is worth it.	b1	core							
+002048	No quiero correr ese riesgo.	I do not want to take that risk.	b1	core							
+002049	El riesgo es perder el dinero.	The risk is losing the money.	b1	money							
+002050	Tomé la decisión yo misma.	I made the decision on my own.	b1	core							
+002051	Fue una decisión difícil pero justa.	It was a hard but fair decision.	b1	core							
+002052	La decisión del jefe sorprendió a todos.	The boss's decision surprised everybody.	b1	work							
+002053	Me sorprendió verte allí.	It surprised me to see you there.	b1	social							
+002054	Su respuesta nos sorprendió mucho.	Their answer surprised us a lot.	b1	communication							
+002055	Me molesta el ruido de los coches.	The noise of the cars bothers me.	b1	city							
+002056	¿Te molesta si abro la ventana?	Do you mind if I open the window?	b1	home,social							
+002057	Nos molestó mucho el precio.	The final price annoyed us a lot.	b1	money							make-a-complaint
+002058	Me quejé del ruido al vecino.	I complained to the neighbour about the noise.	b1	city							make-a-complaint
+002059	Se queja de todo.	He complains about everything.	b1	people							
+002060	Nos quejamos y nos devolvieron el dinero.	We complained and they gave us our money back.	b1	shopping,money							make-a-complaint
+002061	Arreglé la puerta yo mismo.	I fixed the door myself.	b1	home							
+002062	¿Puedes arreglar la pantalla?	Can you fix the screen?	b1	technology							
+002063	Arreglamos el problema en una hora.	We sorted the problem out in an hour.	b1	work							
+002064	Resolvimos la diferencia hablando.	We settled the difference by talking.	b1	communication							
+002065	No sé cómo resolver esto.	I do not know how to sort this out.	b1	core							
+002066	El médico resolvió mis dudas.	The doctor answered my questions.	b1	health							
+002067	Mejoré mucho el año pasado.	I improved a lot last year.	b1	school							
+002068	El tiempo mejora el jueves.	The weather improves on Thursday.	b1	weather							
+002069	Quiero mejorar mi inglés este verano.	I want to improve my English this summer.	b1	language							
+002070	Evito el centro los sábados.	I avoid the centre on Saturdays.	b1	city							
+002071	Para evitar problemas, lee el contrato.	To avoid problems, read the contract.	b1	work							give-advice
+002072	Evitamos el coche en la ciudad.	We avoid the car in the city.	b1	travel,environment							
+002073	El jefe exige mucho a todos.	The boss demands a lot from everybody.	b1	work							
+002074	Exigimos una respuesta clara.	We demand a clear answer.	b1	communication							make-a-complaint
+002075	Este trabajo exige mucho tiempo.	This job demands a lot of patience.	b1	work							
+002076	El museo no permite fotos.	The museum does not allow photos.	b1	entertainment							
+002077	Mis padres no me permitían salir tarde.	My parents did not let me go out late.	b1	family							
+002078	El hotel permite animales.	The hotel allows pets.	b1	travel,animals							
+002079	Te aviso cuando llegue el paquete.	I will let you know when the parcel arrives.	b1	communication							
+002080	Avísame si hay algún problema.	Let me know if there is any problem.	b1	communication			tu				
+002081	Nos avisaron con dos días.	They gave us two days' notice.	b1	communication							
+002082	Sube el precio cada enero.	The price goes up every January.	b1	money							
+002083	Subimos al tercer piso.	We went up to the fifth floor.	b1	home							
+002084	Subí las fotos a la red.	I uploaded the photos online.	b1	technology							
+002085	Baja la temperatura, por favor.	Turn the temperature down, please.	b1	home			tu				
+002086	Bajé del autobús en la última parada.	I got off the bus at the last stop.	b1	travel							
+002087	Los precios bajaron después del verano.	Prices came down after the summer.	b1	money							
+002088	Es una idea sencilla y muy buena.	It is a simple and very good idea.	b1	core							
+002089	La explicación es sencilla.	The explanation is straightforward.	b1	communication							
+002090	Prefiero una comida sencilla.	I prefer a simple meal.	b1	food-drink							
+002091	Es evidente que no le gusta.	It is obvious he does not like it.	b1	core							
+002092	La diferencia es evidente.	The difference is obvious.	b1	core							
+002093	Por razones evidentes, no puedo decirlo.	For obvious reasons, I cannot say.	b1	communication							
+002094	Es un problema complicado.	It is a complicated problem.	b1	core							
+002095	El horario de los trenes es complicado.	The train timetable is complicated.	b1	travel							
+002096	No es complicado, solo es largo.	It is not complicated, it is just long.	b1	core							
+002097	Un precio razonable para esta zona.	A reasonable price for this area.	b1	money,city							
+002098	Es una hora razonable para llamar.	It is a reasonable time to call.	b1	time,communication							
+002099	Me parece razonable.	That seems reasonable to me.	b1	communication							
+002100	Es necesario un título para el puesto.	A qualification is necessary for the post.	b1	work							
+002101	No es necesario pagar hoy.	It is not necessary to pay today.	b1	money							
+002102	Trae lo necesario para dos días.	Bring what is necessary for two days.	b1	travel			tu				
+002103	Es posible pagar con tarjeta.	It is possible to pay by card.	b1	money,shopping							
+002104	¿Es posible cambiar la fecha?	Is it possible to change the date?	b1	travel							
+002105	Todo es posible con tiempo.	Anything is possible given time.	b1	core							
+002106	Es útil saber otro idioma.	It is useful to know another language.	b1	language							
+002107	El mapa fue muy útil.	The map was very useful.	b1	travel							
+002108	Es una aplicación útil para viajar.	It is a useful app for travelling.	b1	technology,travel							
+002109	Es justo que gane más.	It is fair that she earns more.	b1	work,money							
+002110	No es justo pagar el doble.	It is not fair to pay double.	b1	money							make-a-complaint
+002111	Llegamos justo a tiempo.	We arrived just in time.	b1	time							
+002112	El tiempo es estable esta semana.	The weather is settled this week.	b1	weather							
+002113	Busco un trabajo estable.	I am looking for a steady job.	b1	work							
+002114	La conexión no es estable.	The connection is not stable.	b1	technology							make-a-complaint
+002115	Es improbable pero puede ocurrir.	It is unlikely but it can happen.	b1	core							
+002116	Un cambio hoy es improbable.	A change today is unlikely.	b1	core							
+002117	Es lógico que estés preocupado.	It is only natural that you are worried.	b1	feelings							react-to-news
+002118	Su respuesta es lógica.	Their answer is logical.	b1	communication							
+002119	Es lo lógico después de dos años.	It is the logical thing after two years.	b1	core							
+002120	Todo tiene que ser legal.	Everything has to be above board.	b1	work							
+002121	Es la edad legal para conducir.	It is the legal age to drive.	b1	travel							
+002122	El contrato es legal y claro.	The contract is legal and clear.	b1	work							
+002123	Es un puesto temporal, no fijo.	It is a temporary post, not a permanent one.	b1	work							
+002124	Fue una solución temporal.	It was a temporary solution.	b1	core							
+002125	Tengo un problema temporal con la red.	I have a temporary problem with the network.	b1	technology							
+002126	Conseguí una entrada para el sábado.	I got a ticket for Saturday.	b1	entertainment							
+002127	¿Conseguiste hablar con el médico?	Did you manage to speak to the doctor?	b1	health							
+002128	No consigo abrir el archivo.	I cannot manage to open the file.	b1	technology							make-a-complaint
+002129	Es una oportunidad que no vuelve.	It is a chance that will not come again.	b1	core							
+002130	Tuve la oportunidad de trabajar en México.	I had the chance to work in Mexico.	b1	work							
+002131	Aprovecha la oportunidad.	Make the most of the chance.	b1	core			tu				
+002132	El éxito del programa sorprendió a todos.	The success of the show surprised everybody.	b1	news							
+002133	Tuvo mucho éxito en Italia.	It was very successful in Italy.	b1	entertainment							
+002134	El éxito depende del esfuerzo.	Success depends on effort.	b1	core							
+#
+# ── Top-up: the fourth and third encounters ─────────────────────────────────
+# Written against the recycling report rather than from a theme, which is why
+# these read as plainer than the sections above. A word needs four different
+# contexts before a learner can be expected to keep it, and the honest way to
+# supply the fourth is to write it deliberately rather than to hope a later
+# batch happens to.
+002135	El aire de esta zona es muy limpio.	The air in this area is very clean.	b1	environment,city							
+002136	La contaminación del aire bajó este año.	Air pollution went down this year.	b1	environment							
+002137	Necesitamos aire limpio en todo el planeta.	We need clean air across the whole planet.	b1	environment							
+002138	Hay que proteger el planeta entre todos.	We all have to protect the planet together.	b1	environment							
+002139	Pidió calma y una explicación clara.	She asked for calm and a clear explanation.	b1	communication							
+002140	Con calma, discutimos mejor.	We argue better calmly.	b1	communication							
+002141	Necesito calma para estudiar.	I need quiet to study.	b1	school							
+002142	La conexión a internet es muy lenta.	The internet connection is very slow.	b1	technology							make-a-complaint
+002143	Sin conexión, la página no abre.	Without a connection, the page does not open.	b1	technology							
+002144	La conexión del tren de las ocho es buena.	The eight o'clock train connection is a good one.	b1	travel							
+002145	Devolví el paquete la semana pasada.	I returned the parcel last week.	b1	shopping							
+002146	¿Puedo devolver esta camisa?	Can I return this shirt?	b1	shopping,clothes							
+002147	Me devolvieron el dinero sin preguntar nada.	They gave me my money back without asking anything.	b1	shopping,money							
+002148	Discutimos la nueva ley en clase.	We discussed the new law in class.	b1	school,news							
+002149	No quiero discutir contigo.	I do not want to argue with you.	b1	communication							
+002150	Discuten por cosas pequeñas.	They argue over small things.	b1	social							
+002151	Firma el documento, por favor.	Sign the document, please.	b1	work			tu				
+002152	Guarda una copia del documento.	Keep a copy of the document.	b1	work,technology			tu				
+002153	El documento tiene diez páginas.	The document is ten pages long.	b1	work							
+002154	Necesito una explicación más sencilla.	I need a simpler explanation.	b1	communication							
+002155	Pedí una explicación y no me dieron ninguna.	I asked for an explanation and got none.	b1	communication							make-a-complaint
+002156	Busco información en internet.	I look for information online.	b1	technology							
+002157	La página tiene mucha información útil.	The page has a lot of useful information.	b1	technology							
+002158	La información del anuncio no es correcta.	The information in the advert is not right.	b1	news							make-a-complaint
+002159	La ley nueva protege el ambiente.	The new law protects the environment.	b1	environment,news							
+002160	Es improbable que cambien la ley.	It is unlikely they will change the law.	b1	news							express-doubt
+002161	La ley es igual para todos.	The law is the same for everybody.	b1	core							
+002162	El paquete llegó roto.	The parcel arrived broken.	b1	shopping							make-a-complaint
+002163	Mandé el paquete por correo.	I sent the parcel by post.	b1	shopping,communication							
+002164	Esta página tiene un error raro.	This page has an odd error on it.	b1	technology							
+002165	Es raro que ocurra dos veces.	It is odd that it happens twice.	b1	core							react-to-news
+002166	Es un dato raro, pero es verdad.	It is an odd fact, but it is true.	b1	core							
+002167	Te aconsejo este curso de inglés.	I recommend this English course to you.	b1	school,language							give-advice
+002168	Le aconsejo el transporte público.	I would advise you to use public transport.	b1	travel		formal	usted				give-advice
+002169	Hice el curso por internet.	I did the course online.	b1	school,technology							
+002170	El ambiente del curso es muy bueno.	The atmosphere on the course is very good.	b1	school							
+002171	Guardo los datos en el ordenador.	I keep the data on the computer.	b1	technology							
+002172	Los datos del documento son correctos.	The data in the document is correct.	b1	work,technology							
+002173	Busco el horario del transporte en internet.	I look up the transport timetable online.	b1	travel,technology							
+002174	El transporte público reduce la contaminación.	Public transport cuts pollution.	b1	travel,environment							
+002175	Propongo una solución sencilla.	I propose a simple solution.	b1	communication							weigh-two-options
+002176	Propusieron un curso nuevo para septiembre.	They proposed a new course for September.	b1	school							
+002177	Te sugiero esta página para practicar.	I suggest this page for practice.	b1	technology,language							give-advice
+002178	Le sugiero otra zona de la ciudad.	I suggest another part of the city.	b1	city		formal	usted				give-advice
+002179	No es una enfermedad grave.	It is not a serious illness.	b1	health							
+002180	La empresa despidió a diez personas.	The company laid off ten people.	b1	work							
+002181	Es improbable que llegue hoy.	It is unlikely to arrive today.	b1	core							express-doubt

@@ -22,11 +22,11 @@ const DOCS = ['README.md', 'docs/roadmap.md'];
 const count = (file: string) => shippedRecords(file).length;
 
 const actual = {
-  verbs: count('es-a1-a2-core-verbs.jsonl'),
-  nouns: count('es-a1-a2-core-nouns.jsonl'),
-  modifiers: count('es-a1-a2-core-modifiers.jsonl'),
-  sentences: count('es-a1-a2-core-sentences.jsonl'),
-  words: count('es-a1-a2-core-vocabulary.jsonl'),
+  verbs: count('verbs'),
+  nouns: count('nouns'),
+  modifiers: count('modifiers'),
+  sentences: count('sentences'),
+  words: count('vocabulary'),
 };
 
 const totalItems = actual.sentences + actual.words;

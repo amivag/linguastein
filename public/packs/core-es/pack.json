@@ -1,8 +1,8 @@
 {
   "id": "core-es",
-  "name": "Spanish Core A1–A2",
+  "name": "Spanish Core A1–B1",
   "targetLanguage": "es",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "updated": "2026-08-24",
   "authors": [
     {
@@ -20,7 +20,8 @@
   "license": "CC0-1.0",
   "levels": [
     "a1",
-    "a2"
+    "a2",
+    "b1"
   ],
   "referenceLanguages": [
     "en"
@@ -30,6 +31,11 @@
     "es-MX"
   ],
   "topics": [
+    {
+      "id": "alphabet",
+      "label": "The alphabet",
+      "group": "Foundations"
+    },
     {
       "id": "numbers",
       "label": "Numbers",
@@ -146,6 +152,11 @@
       "group": "Everyday life"
     },
     {
+      "id": "money",
+      "label": "Money",
+      "group": "Everyday life"
+    },
+    {
       "id": "city",
       "label": "In town",
       "group": "Out in the world"
@@ -163,6 +174,11 @@
     {
       "id": "nature",
       "label": "Nature",
+      "group": "Out in the world"
+    },
+    {
+      "id": "environment",
+      "label": "The environment",
       "group": "Out in the world"
     },
     {
@@ -201,6 +217,16 @@
       "group": "Doing things"
     },
     {
+      "id": "technology",
+      "label": "Technology and online",
+      "group": "Doing things"
+    },
+    {
+      "id": "news",
+      "label": "News and media",
+      "group": "Doing things"
+    },
+    {
       "id": "language",
       "label": "Language",
       "group": "Doing things"
@@ -220,39 +246,39 @@
   "files": [
     {
       "kind": "skills",
-      "path": "es-a1-a2-core-skills.jsonl"
+      "path": "es-a1-b1-core-skills.jsonl"
     },
     {
       "kind": "lexemes",
-      "path": "es-a1-a2-core-verbs.jsonl"
+      "path": "es-a1-b1-core-verbs.jsonl"
     },
     {
       "kind": "lexemes",
-      "path": "es-a1-a2-core-nouns.jsonl"
+      "path": "es-a1-b1-core-nouns.jsonl"
     },
     {
       "kind": "lexemes",
-      "path": "es-a1-a2-core-modifiers.jsonl"
+      "path": "es-a1-b1-core-modifiers.jsonl"
     },
     {
       "kind": "forms",
-      "path": "es-a1-a2-core-forms.jsonl"
+      "path": "es-a1-b1-core-forms.jsonl"
     },
     {
       "kind": "items",
-      "path": "es-a1-a2-core-vocabulary.jsonl"
+      "path": "es-a1-b1-core-vocabulary.jsonl"
     },
     {
       "kind": "items",
-      "path": "es-a1-a2-core-sentences.jsonl"
+      "path": "es-a1-b1-core-sentences.jsonl"
     },
     {
       "kind": "passages",
-      "path": "es-a1-a2-core-passages.jsonl"
+      "path": "es-a1-b1-core-passages.jsonl"
     },
     {
       "kind": "translations",
-      "path": "es-a1-a2-core-translations-en.jsonl"
+      "path": "es-a1-b1-core-translations-en.jsonl"
     }
   ]
 }

@@ -137,3 +137,52 @@
 800124	desear	to wish, to want	a1	regular	restaurant
 800125	apetecer	to feel like, to fancy	a2	irregular	food-drink
 800126	disculpar	to excuse	a1	regular	greetings
+800127	dudar	to doubt	b1	regular	communication
+800128	aconsejar	to advise	b1	regular	communication
+800129	sugerir	to suggest	b1	irregular	communication
+800130	proponer	to propose, to suggest	b1	irregular	communication
+800131	exigir	to demand	b1	regular	communication
+800132	prometer	to promise	b1	regular	communication
+800133	convencer	to convince	b1	irregular	communication
+800134	quejar	to complain (quejarse)	b1	regular	communication
+800135	permitir	to allow, to let	b1	regular	core
+800136	impedir	to prevent, to stop	b1	irregular	core
+800137	suponer	to suppose, to assume	b1	irregular	core
+800138	preocupar	to worry; (preocuparse) to be worried	b1	regular	feelings
+800139	molestar	to bother, to annoy	b1	regular	feelings
+800140	sorprender	to surprise	b1	regular	feelings
+800141	agradecer	to be grateful for, to thank	b1	irregular	social
+800142	disfrutar	to enjoy	b1	regular	entertainment
+800143	contratar	to hire, to take on	b1	regular	work
+800144	despedir	to dismiss; (despedirse) to say goodbye	b1	irregular	work
+800145	aprobar	to pass (an exam); to approve	b1	irregular	school
+800146	mejorar	to improve	b1	regular	core
+800147	lograr	to manage to, to achieve	b1	regular	core
+800148	evitar	to avoid	b1	regular	core
+800149	resolver	to solve, to sort out	b1	irregular	core
+800150	arreglar	to fix, to sort out	b1	regular	home
+800151	mantener	to keep, to maintain	b1	irregular	core
+800152	ocurrir	to happen	b1	regular	core
+800153	ahorrar	to save (money)	b1	regular	money
+800154	gastar	to spend	b1	regular	money
+800155	cobrar	to charge; to get paid	b1	regular	money
+800156	contaminar	to pollute	b1	regular	environment
+800157	reciclar	to recycle	b1	regular	environment
+800158	proteger	to protect	b1	regular	environment
+800159	reducir	to reduce, to cut down	b1	irregular	environment
+800160	cuidar	to look after	b1	regular	health
+800161	compartir	to share	b1	regular	technology
+800162	descargar	to download	b1	regular	technology
+800163	guardar	to keep, to save	b1	regular	technology
+800164	publicar	to publish, to post	b1	regular	news
+800165	firmar	to sign	b1	regular	work
+800166	subir	to go up, to rise; to upload	b1	regular	core
+800167	bajar	to go down, to lower; to download	b1	regular	core
+800168	tirar	to throw, to throw away	b1	regular	environment
+800169	comparar	to compare	b1	regular	core
+800170	avisar	to let know, to warn	b1	regular	communication
+800171	conectar	to connect	b1	regular	technology
+800172	conseguir	to get, to manage to	b1	irregular	core
+800173	valer	to be worth, to cost	b1	irregular	core
+800174	discutir	to argue, to discuss	b1	regular	communication
+800175	devolver	to give back, to return	b1	irregular	shopping

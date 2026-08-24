@@ -14,6 +14,7 @@
 #
 # A slug is referenced by content and by session links (`/browse?topic=clock`),
 # so renaming one is a breaking change — change the label instead.
+alphabet	The alphabet	Foundations
 numbers	Numbers	Foundations
 clock	Telling the time	Foundations
 days-of-week	Days of the week	Foundations
@@ -37,10 +38,12 @@ objects	Everyday objects	Everyday life
 food-drink	Food and drink	Everyday life
 restaurant	Eating out	Everyday life
 shopping	Shopping	Everyday life
+money	Money	Everyday life
 city	In town	Out in the world
 travel	Travel	Out in the world
 weather	Weather	Out in the world
 nature	Nature	Out in the world
+environment	The environment	Out in the world
 animals	Animals	Out in the world
 work	Work	Doing things
 school	School and study	Doing things
@@ -48,5 +51,7 @@ sport	Sport and exercise	Doing things
 entertainment	Going out	Doing things
 music	Music	Doing things
 communication	Talking and writing	Doing things
+technology	Technology and online	Doing things
+news	News and media	Doing things
 language	Language	Doing things
 core	High-frequency words	Everything else

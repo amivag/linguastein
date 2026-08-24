@@ -75,8 +75,20 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   practised without turning attendance into a resettable streak
 - Affirmative commands (tú, usted, vosotros, ustedes) generated per verb, with
   `imperativo` as a practisable skill and address derived from the command form
-- core-es pack: 126 verbs (3,024 generated forms), 393 nouns, 283 modifiers,
-  1,730 sentences — 2,358 practisable items, 100% of sentence words linked to a lexeme
+- Present subjunctive generated per verb, and the usted/ustedes commands read off
+  it rather than declared beside it — a `presente de subjuntivo` skill, plus
+  `no hables` as a pattern, because the negative command is the one place the
+  mood is not optional-feeling
+- core-es pack: 175 verbs (7,350 generated forms), 467 nouns, 314 modifiers,
+  2,268 sentences — 3,045 practisable items, 100% of sentence words linked to a lexeme
+- B1 as a level inside `core-es` rather than a separate pack: 136 B1 lexemes and
+  501 new sentences at that level, every one of those lexemes in four or more of
+  them, plus six passages. The file names carry the range and the build derives it, so
+  `es-a1-b1-core-*` renamed itself when the first B1 sentence landed
+- The alphabet: `src/languages/es/alphabet.ts` holds the 27 letters and their
+  names (with the regional ones — `ve corta`, `i griega`), `spellWord` reads any
+  word out letter by letter, and 37 alphabet sentences teach the exchange it is
+  for rather than the recital
 - Noun plurals and adjective agreement shipped as `forms` records, so a paradigm
   is inspectable rather than only indexed at build time
 - Editorial review machinery: per-item sign-off pinned to the reviewed wording,

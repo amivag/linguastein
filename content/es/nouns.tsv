@@ -414,3 +414,77 @@
 500388	médica	doctor (female)	f		a1	health
 500389	dirección	address	f		a1	city,communication
 500390	nota	note	f		a1	communication,school
+500392	entrevista	interview	f		b1	work
+500393	contrato	contract	m		b1	work
+500394	puesto	post, position	m		b1	work
+500395	experiencia	experience	f		b1	work
+500396	horario	timetable, hours	m		b1	work
+500397	ahorro	saving	m		b1	money
+500398	gasto	expense, spending	m		b1	money
+500399	factura	bill, invoice	f		b1	money
+500400	presupuesto	budget	m		b1	money
+500401	ambiente	environment, atmosphere	m		b1	environment
+500402	contaminación	pollution	f		b1	environment
+500403	planeta	planet	m		b1	environment
+500404	clima	climate	m		b1	environment
+500405	energía	energy	f		b1	environment
+500406	naturaleza	nature	f		b1	environment
+500407	red	network, the net	f		b1	technology
+500408	archivo	file	m		b1	technology
+500409	contraseña	password	f		b1	technology
+500410	aplicación	app, application	f		b1	technology
+500411	usuario	user	m		b1	technology
+500412	artículo	article	m		b1	news
+500413	programa	programme, show	m		b1	news
+500414	anuncio	advert, announcement	m		b1	news
+500415	carrera	degree course; career	f		b1	school
+500416	título	qualification, degree	m		b1	school
+500417	solución	solution	f		b1	core
+500418	ventaja	advantage	f		b1	core
+500419	opinión	opinion	f		b1	core
+500420	consejo	piece of advice	m		b1	core
+500421	decisión	decision	f		b1	core
+500422	esfuerzo	effort	m		b1	core
+500423	riesgo	risk	m		b1	core
+500424	diferencia	difference	f		b1	core
+500425	enfermedad	illness	f		b1	health
+500426	oportunidad	opportunity, chance	f		b1	core
+500427	oferta	offer, deal	f		b1	shopping
+500428	ruido	noise	m		b1	city
+500429	copia	copy	f		b1	technology
+500430	temperatura	temperature	f		b1	weather
+500431	plástico	plastic	m		b1	environment
+500432	pena	shame, pity	f		b1	feelings
+500433	éxito	success	m		b1	core
+500434	dato	piece of data, fact	m		b1	technology
+500435	internet	the internet	m		b1	technology
+500436	página	page; web page	f		b1	technology
+500437	conexión	connection	f		b1	technology
+500438	documento	document	m		b1	work
+500439	información	information	f		b1	communication
+500440	explicación	explanation	f		b1	communication
+500441	curso	course	m		b1	school
+500442	transporte	transport	m		b1	travel
+500443	zona	area, zone	f		b1	city
+500444	aire	air	m		b1	environment
+500445	ley	law	f		b1	core
+500446	paquete	parcel, packet	m		b1	shopping
+500447	calma	calm	f		b1	feelings
+500448	be	the letter B	f		a1	alphabet
+500449	ce	the letter C	f		a1	alphabet
+500450	efe	the letter F	f		a1	alphabet
+500451	ge	the letter G	f		a1	alphabet
+500452	hache	the letter H	f		a1	alphabet
+500453	jota	the letter J	f		a1	alphabet
+500454	ka	the letter K	f		a1	alphabet
+500455	ele	the letter L	f		a1	alphabet
+500456	eme	the letter M	f		a1	alphabet
+500457	ene	the letter N	f		a1	alphabet
+500458	eñe	the letter Ñ	f		a1	alphabet
+500459	pe	the letter P	f		a1	alphabet
+500460	cu	the letter Q	f		a1	alphabet
+500461	erre	the letter R	f		a1	alphabet
+500462	uve	the letter V	f		a1	alphabet
+500463	equis	the letter X	f	equis	a1	alphabet
+500464	ye	the letter Y	f		a1	alphabet
+500465	zeta	the letter Z	f		a1	alphabet

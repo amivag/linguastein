@@ -29,10 +29,8 @@ interface Item {
   readonly topics?: readonly string[];
 }
 
-const numLexemes = shippedRecords<Lexeme>('es-a1-a2-core-modifiers.jsonl').filter(
-  (lexeme) => lexeme.pos === 'NUM',
-);
-const cards = shippedRecords<Item>('es-a1-a2-core-vocabulary.jsonl');
+const numLexemes = shippedRecords<Lexeme>('modifiers').filter((lexeme) => lexeme.pos === 'NUM');
+const cards = shippedRecords<Item>('vocabulary');
 const numeralIds = new Set(numLexemes.map((lexeme) => lexeme.id));
 const numeralCards = cards.filter((card) => card.lexemes?.some((id) => numeralIds.has(id)));
 
@@ -54,9 +52,7 @@ describe('the shipped number cards', () => {
     // English. "20 → veinte" is the cue they meet on a price tag, and the
     // existing exercise kinds prompt from the gloss.
     const glosses = new Map(
-      shippedRecords<{ ref: string; lang: string; text: string }>(
-        'es-a1-a2-core-translations-en.jsonl',
-      )
+      shippedRecords<{ ref: string; lang: string; text: string }>('translations-en')
         .filter((entry) => entry.lang === 'en')
         .map((entry) => [entry.ref, entry.text]),
     );
@@ -72,10 +68,8 @@ describe('the shipped number cards', () => {
   });
 
   it('leaves a non-numeral gloss alone', () => {
-    const glosses = shippedRecords<{ ref: string; lang: string; text: string }>(
-      'es-a1-a2-core-translations-en.jsonl',
-    );
-    const adjective = shippedRecords<Lexeme>('es-a1-a2-core-modifiers.jsonl').find(
+    const glosses = shippedRecords<{ ref: string; lang: string; text: string }>('translations-en');
+    const adjective = shippedRecords<Lexeme>('modifiers').find(
       (lexeme) => lexeme.lemma === 'bueno',
     );
     expect(glosses.find((entry) => entry.ref === adjective!.id)?.text).toBe('good');
@@ -116,9 +110,7 @@ describe('the shipped number cards', () => {
     const uncarded = numLexemes.filter((lexeme) => !carded.has(lexeme.id));
 
     expect(uncarded.map((lexeme) => lexeme.lemma)).toContain('dieciséis');
-    const glosses = shippedRecords<{ ref: string; lang: string }>(
-      'es-a1-a2-core-translations-en.jsonl',
-    );
+    const glosses = shippedRecords<{ ref: string; lang: string }>('translations-en');
     const missing = uncarded.filter(
       (lexeme) => !glosses.some((entry) => entry.ref === lexeme.id && entry.lang === 'en'),
     );
@@ -207,9 +199,7 @@ describe('the no-card sentinel on a modifier row', () => {
     );
 
     expect(pack.tryBuild().ok).toBe(true);
-    const carded = pack
-      .records<Item>('es-a1-a2-core-vocabulary.jsonl')
-      .find((card) => card.text === 'dieciséis');
+    const carded = pack.records<Item>('vocabulary').find((card) => card.text === 'dieciséis');
     expect(carded).toBeDefined();
     expect(carded!.examples?.length).toBeGreaterThan(0);
   });

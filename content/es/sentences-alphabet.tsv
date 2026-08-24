@@ -1,0 +1,54 @@
+# The alphabet, and the thing it is actually for.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+#
+# Leave the id off a new row — omit the column entirely, do not leave it empty.
+#
+# An alphabet is taught as a recital and used as an exchange. Nobody needs to
+# chant twenty-seven names; they need to give a surname over the phone, read a
+# booking code back, and ask whether a word has a `be` or a `uve` in it. So the
+# recital is two sentences here and the rest is the exchange.
+#
+# Nine letters have no word card, and it is not an omission. `a`, `e`, `i`, `o`
+# and `u` are named after themselves, and `de`, `te`, `ve` and `ese` are spelled
+# exactly like a preposition, a pronoun, an imperative and a demonstrative —
+# each already the most common word of its kind in the pack. A second lexeme for
+# any of them would make the ordinary word ambiguous in every sentence it
+# appears in, which is a high price for a card saying that `te` is also a
+# letter. They are taught below in running text, where the context settles it.
+002232	El alfabeto español tiene veintisiete letras.	The Spanish alphabet has twenty-seven letters.	a1	alphabet	Twenty-nine until 2010, when ch and ll stopped counting as letters of their own. An older textbook will say twenty-nine.						
+002233	Las cinco vocales se llaman como suenan.	The five vowels are called the way they sound.	a1	alphabet	So the names of a, e, i, o and u need no learning — which is why the letters worth drilling are the consonants.						
+002234	La eñe es la letra del español.	The eñe is the Spanish letter.	a1	alphabet,language							
+002235	La eñe está en año, en mañana y en niño.	The eñe is in año, in mañana and in niño.	a1	alphabet							
+002236	La hache no suena nunca.	The letter H is never pronounced.	a1	alphabet	Which is why hola and ola sound identical, and why a Spanish speaker writing English drops the h.						
+002237	Hache es la única letra muda.	H is the only silent letter.	a1	alphabet							
+002238	¿Se escribe con be o con uve?	Is it written with a B or a V?	a1	alphabet,communication	The most useful question in this file: be and uve sound the same in Spanish, so this is asked constantly by native speakers too.						spell-a-word
+002239	Vaca con uve, baca con be.	Vaca with a V, baca with a B.	a1	alphabet							
+002240	Se escribe con be, como en bueno.	It is written with a B, as in bueno.	a1	alphabet							spell-a-word
+002241	La ge y la jota suenan igual delante de e.	G and J sound the same before an e.	a1	alphabet							
+002242	Gente se escribe con ge.	Gente is written with a G.	a1	alphabet							spell-a-word
+002243	México se escribe con equis.	México is written with an X.	a1	alphabet,travel							
+002244	La cu siempre va con u.	Q always goes with a U.	a1	alphabet							
+002245	La zeta y la ce suenan igual delante de e.	Z and C sound the same before an e.	a1	alphabet							
+002246	La ye antes se llamaba i griega.	The letter Y used to be called i griega.	a1	alphabet	Renamed ye in 2010. Most speakers over thirty still say i griega, so both are worth knowing.						
+002247	En México dicen ve corta, no uve.	In Mexico they say ve corta, not uve.	a1	alphabet							
+002248	Mi apellido lleva dos eles.	My surname has two Ls.	a1	alphabet,people							spell-a-word
+002249	Perro lleva dos erres.	Perro has two Rs.	a1	alphabet							
+002250	¿Cómo se escribe tu nombre?	How do you write your name?	a1	alphabet,social							spell-a-word
+002251	¿Me lo deletreas, por favor?	Could you spell it for me, please?	a1	alphabet,communication							spell-a-word
+002252	Te lo deletreo despacio.	I will spell it for you slowly.	a1	alphabet,communication							spell-a-word
+002253	Repite la última letra, por favor.	Say the last letter again, please.	a1	alphabet,communication							spell-a-word
+002254	Es una eme, no una ene.	It is an M, not an N.	a1	alphabet,communication							spell-a-word
+002255	¿Con hache o sin hache?	With an H or without?	a1	alphabet,communication							spell-a-word
+002256	La primera letra es una jota.	The first letter is a J.	a1	alphabet							spell-a-word
+002257	Hay una ka en kilo.	There is a K in kilo.	a1	alphabet							
+002258	La efe de foto.	F for foto.	a1	alphabet							spell-a-word
+002259	La pe de padre y la be de bueno.	P for padre and B for bueno.	a1	alphabet							spell-a-word
+002260	Buenos días, quiero hacer una reserva.	Good morning, I would like to make a booking.	a1	travel					reserva-nombre	Cliente	
+002261	Muy bien. ¿Su nombre, por favor?	Very good. Your name, please?	a1	travel		formal	usted		reserva-nombre	Recepcionista	
+002262	Elena Gómez.	Elena Gómez.	a1	people					reserva-nombre	Cliente	
+002263	¿Me lo deletrea, por favor?	Could you spell it for me, please?	a1	communication		formal	usted		reserva-nombre	Recepcionista	spell-a-word
+002264	Ge, o con acento, eme, e, zeta.	G, O with an accent, M, E, Z.	a1	alphabet,people	The accent is spoken, not skipped: Gomez without it is a different surname.				reserva-nombre	Cliente	spell-a-word
+002265	¿Con ge de gente?	With a G as in gente?	a1	alphabet					reserva-nombre	Recepcionista	spell-a-word
+002266	Sí, con ge. Y Elena con una ele.	Yes, with a G. And Elena with one L.	a1	alphabet,people					reserva-nombre	Cliente	spell-a-word
+002267	Perfecto. ¿Para qué día?	Perfect. For what day?	a1	travel					reserva-nombre	Recepcionista	
+002268	Para el viernes.	For Friday.	a1	travel,days-of-week					reserva-nombre	Cliente	

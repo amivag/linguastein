@@ -18,7 +18,7 @@ let pack: ScratchPack;
 /** Item text → id, for every practisable item in the built pack. */
 function itemsByText(): Map<string, string> {
   const items = new Map<string, string>();
-  for (const file of ['es-a1-a2-core-sentences.jsonl', 'es-a1-a2-core-vocabulary.jsonl']) {
+  for (const file of ['sentences', 'vocabulary']) {
     for (const record of pack.records<{ id: string; text: string }>(file)) {
       items.set(record.text, record.id);
     }

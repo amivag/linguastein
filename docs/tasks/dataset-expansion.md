@@ -43,36 +43,42 @@ because content landed and the paragraph describing it did not:
 npm run build:data
 ```
 
-**Re-measured 2026-08-24**, against pack `0.9.0`. Goals 2 and 3 of §5 have since
+**Re-measured 2026-08-24**, against pack `0.11.0`. Goals 2 and 3 of §5 have since
 been met — read the table before planning volume work, because the figures this
 brief was written against are less than half of what now ships.
 
-| Measure                              | Now                                    |
-| ------------------------------------ | -------------------------------------- |
-| Practisable items                    | 2,358                                  |
-| — sentences and phrases              | 1,730                                  |
-| — word cards                         | 628                                    |
-| Lexemes                              | 802 (127 verbs, 393 nouns, 282 other)  |
-| Generated verb forms                 | 4,536 (36 per verb, commands included) |
-| Generated noun and adjective forms   | 1,122                                  |
-| Running words of Spanish             | **10,165 (~85 minutes of reading)**    |
-| Average sentence length              | 5.9 words                              |
-| Longest single item                  | 13 words                               |
-| Multi-sentence texts                 | **107 (57 texts, 50 dialogues)**       |
-| — sentences read in context          | 812, averaging 7.6 per passage         |
-| Tokens linked to a lexeme            | 10,139 of 10,165 (100%)                |
-| Lexemes appearing in ≥1 sentence     | 788 of 802                             |
-| Lexemes appearing in exactly one     | **109 (14%)**                          |
-| Lexemes with ≥6 encounters           | **304 (38%)**                          |
-| Questions / statements               | 391 / 1,034, with **5** minimal pairs  |
-| Items marked with register           | 1,060                                  |
-| Items marked with address (tú/usted) | 447                                    |
-| Items marked with a region           | 69                                     |
-| Items containing `¡`                 | 14                                     |
-| Items with audio                     | 0                                      |
-| Senses                               | 0                                      |
-| Lexemes with `frequencyRank`         | 0                                      |
-| Skills with `prerequisites`          | 58                                     |
+The B1 pass is the reason for the jump, and it changes what §6.2 is asking for.
+A1 is still the open row: B1 met a four-encounter target on its first pass by
+writing its last batch straight off the recycling report, and pulled 41 A1
+lexemes over the line as a side effect without being aimed at them. That is the
+method §3.1 describes, confirmed on a level where nothing had to be retrofitted.
+
+| Measure                              | Now                                       |
+| ------------------------------------ | ----------------------------------------- |
+| Practisable items                    | 3,045                                     |
+| — sentences and phrases              | 2,268                                     |
+| — word cards                         | 777                                       |
+| Lexemes                              | 956 (175 verbs, 467 nouns, 314 other)     |
+| Generated verb forms                 | 7,350 (42 per verb, subjunctive included) |
+| Generated noun and adjective forms   | 1,344                                     |
+| Running words of Spanish             | **13,582 (~113 minutes of reading)**      |
+| Average sentence length              | 6.0 words                                 |
+| Longest single item                  | 13 words                                  |
+| Multi-sentence texts                 | **114 (59 texts, 55 dialogues)**          |
+| — sentences read in context          | 871, averaging 7.6 per passage            |
+| Tokens linked to a lexeme            | 13,520 of 13,582 (100%)                   |
+| Lexemes appearing in ≥1 sentence     | 942 of 956                                |
+| Lexemes appearing in exactly one     | **102 (11%)**                             |
+| Lexemes with ≥6 encounters           | **416 (44%)**                             |
+| Questions / statements               | 421 / 1,847, with **5** minimal pairs     |
+| Items marked with register           | 1,078                                     |
+| Items marked with address (tú/usted) | 570                                       |
+| Items marked with a region           | 99                                        |
+| Items containing `¡`                 | 15                                        |
+| Items with audio                     | 0                                         |
+| Senses                               | 0                                         |
+| Lexemes with `frequencyRank`         | 0                                         |
+| Skills with `prerequisites`          | 70                                        |
 
 Two rows moved for reasons worth knowing rather than by growth alone. **Token
 linking reached 100%** when `segundo` the ordinal was added — it was the last

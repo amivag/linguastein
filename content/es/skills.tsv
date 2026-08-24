@@ -87,3 +87,27 @@ give-a-reason	function	Dar una razón	Give a simple reason	a1	ask-why
 echo-to-check	function	Repetir algo como pregunta	Echo what you just heard back as a question	a1	
 confirm-with-a-tag	function	Confirmar con «¿verdad?»	Turn a statement into a check with ¿verdad? or ¿no?	a1	
 answer-a-tag	function	Responder a una confirmación	Confirm or correct what someone checked with you	a1	confirm-with-a-tag
+# ── B1: talking about what should happen, not only what does ────────────────
+# The A-level skills above are almost all about the speaker: what I want, what I
+# did, where I live. B1 is where the sentence acquires a second person with a
+# will of their own — I want *you* to do something, I doubt *that*, I advise
+# *against* — and in Spanish that second clause is the subjunctive. So these are
+# the communicative half of `present-subjunctive`: the generated skill says what
+# the form is, and each of these says what it is for.
+ask-someone-to-do	function	Pedir que alguien haga algo	Ask someone else to do something, rather than saying what you do	b1	order-food-drink
+express-a-hope	function	Expresar un deseo	Say what you hope happens, without claiming it will	b1	respond-to-wellbeing
+give-advice	function	Aconsejar y recomendar	Advise or recommend a course of action	b1	follow-health-advice
+express-doubt	function	Expresar duda o desacuerdo	Say you doubt something, or that you do not agree	b1	give-a-reason
+react-to-news	function	Reaccionar a una noticia	React to what someone has just told you	b1	react-with-interest
+state-a-purpose	function	Explicar para qué	Say what something is for	b1	give-a-reason
+talk-about-a-future-moment	function	Hablar de cuando pase algo	Talk about a moment that has not arrived yet	b1	say-when-something-happens
+turn-something-down	function	Decir que no con cortesía	Decline something politely and give a reason	b1	respond-to-suggestion
+make-a-complaint	function	Quejarse y pedir una solución	Complain about a problem and ask for it to be put right	b1	close-service-exchange
+weigh-two-options	function	Ver ventajas e inconvenientes	Weigh up two options out loud	b1	choose-between-options
+concede-a-point	function	Conceder y matizar	Grant part of what someone says, then qualify it	b1	answer-a-tag
+
+# ── Spelling out loud ───────────────────────────────────────────────────────
+# The alphabet is not only a recital. What a learner actually needs it for is
+# this: giving a name over the phone, reading a booking code back, asking how a
+# word is written. So the skill is the exchange, not the list.
+spell-a-word	function	Deletrear una palabra	Spell a word out loud, and ask someone else to	a1	ask-for-a-word

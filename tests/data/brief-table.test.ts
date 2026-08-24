@@ -22,9 +22,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readJsonl, repoRoot } from '../fixtures/dataset';
+import { packFile, readJsonl, repoRoot } from '../fixtures/dataset';
 
-const PACK = join(repoRoot, 'public/packs/core-es');
+const PACKS = join(repoRoot, 'public/packs');
 const BRIEF = 'docs/tasks/dataset-expansion.md';
 
 interface Item {
@@ -33,9 +33,9 @@ interface Item {
   readonly tokens?: readonly { readonly pos?: string; readonly lexeme?: string }[];
 }
 
-const sentences = readJsonl<Item>(join(PACK, 'es-a1-a2-core-sentences.jsonl'));
-const cards = readJsonl<Item>(join(PACK, 'es-a1-a2-core-vocabulary.jsonl'));
-const passages = readJsonl<{ kind: string }>(join(PACK, 'es-a1-a2-core-passages.jsonl'));
+const sentences = readJsonl<Item>(packFile(PACKS, 'sentences'));
+const cards = readJsonl<Item>(packFile(PACKS, 'vocabulary'));
+const passages = readJsonl<{ kind: string }>(packFile(PACKS, 'passages'));
 
 const words = sentences.reduce((total, item) => total + item.text.split(/\s+/).length, 0);
 const tokens = sentences.flatMap((item) => (item.tokens ?? []).filter((t) => t.pos !== 'PUNCT'));

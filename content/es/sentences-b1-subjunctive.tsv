@@ -1,0 +1,103 @@
+# B1: the subjunctive, organised by what triggers it.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+#
+# Leave the id off a new row — omit the column entirely, do not leave it empty:
+# a leading tab shifts every field one place left.
+#
+# Why this file is arranged by trigger rather than by topic. The subjunctive is
+# not a meaning a learner can aim at; `sea` says nothing on its own about time,
+# doubt or politeness. It is there because a word in front of it put it there.
+# So the unit of learning is the pair — `quiero que` + form, `para que` + form —
+# and grouping by pair is what lets a learner meet one trigger eight times in
+# eight different sentences instead of eight triggers once each.
+#
+# The order is roughly the order these are worth teaching in: wanting something
+# of another person first, because it is the one an English speaker already
+# expresses with an infinitive and therefore gets wrong; then hoping, advising,
+# doubting, reacting, purpose, future time; and the negative command last,
+# because it is the one that looks like a tense the learner already has.
+001731	Quiero que me ayudes con este archivo.	I want you to help me with this file.	b1	technology,communication	English uses an infinitive here — «I want you to help». Spanish cannot: a second person needs a second clause.						ask-someone-to-do
+001732	Mi jefe quiere que mejore mi horario.	My boss wants me to improve my schedule.	b1	work							ask-someone-to-do
+001733	Necesito que me mandes la factura hoy.	I need you to send me the invoice today.	b1	money,work							ask-someone-to-do
+001734	Te pido que no compartas mi contraseña.	I am asking you not to share my password.	b1	technology							ask-someone-to-do
+001735	¿Quieres que te guarde el archivo?	Do you want me to save the file for you?	b1	technology							ask-someone-to-do
+001736	Prefiero que lo resolvamos hoy.	I would rather we sorted it out today.	b1	core,communication							ask-someone-to-do
+001737	Mis padres quieren que estudie una carrera.	My parents want me to do a degree.	b1	school,family							ask-someone-to-do
+001738	La empresa exige que firmemos el contrato.	The company requires us to sign the contract.	b1	work							ask-someone-to-do
+001739	No permito que nadie use mi ordenador.	I do not let anyone use my computer.	b1	technology							ask-someone-to-do
+001740	Le pido que me explique la diferencia.	I am asking you to explain the difference to me.	b1	communication,core		formal	usted				ask-someone-to-do
+001741	Quiero que cuides tu salud.	I want you to look after your health.	b1	health							ask-someone-to-do
+001742	Necesitamos que alguien arregle la aplicación.	We need someone to fix the app.	b1	technology							ask-someone-to-do
+001743	¿Prefieres que te llame más tarde?	Would you rather I called you later?	b1	communication							ask-someone-to-do
+001744	El profesor quiere que compartamos las notas.	The teacher wants us to share our notes.	b1	school							ask-someone-to-do
+001745	Te propongo que lo hablemos mañana.	I suggest we talk about it tomorrow.	b1	communication							ask-someone-to-do
+001746	Espero que apruebes el examen.	I hope you pass the exam.	b1	school							express-a-hope
+001747	Ojalá no llueva mañana.	I hope it does not rain tomorrow.	b1	weather	«Ojalá» comes from the Arabic «law šāʾ Allāh», if God wills. It needs no verb of its own, and never takes the indicative.						express-a-hope
+001748	Ojalá que todo salga bien.	I hope everything goes well.	b1	core							express-a-hope
+001749	Espero que la contaminación se reduzca pronto.	I hope the pollution goes down soon.	b1	environment							express-a-hope
+001750	Ojalá consigas el puesto.	I hope you get the job.	b1	work							express-a-hope
+001751	Espero que disfrutes las vacaciones.	I hope you enjoy the holidays.	b1	entertainment							express-a-hope
+001752	Ojalá tengamos un clima más estable.	I hope we get a more settled climate.	b1	environment							express-a-hope
+001753	Espero que no sea nada grave.	I hope it is nothing serious.	b1	health							express-a-hope
+001754	Ojalá que el precio no suba otra vez.	I hope the price does not go up again.	b1	money							express-a-hope
+001755	Espero que la entrevista vaya bien.	I hope the interview goes well.	b1	work							express-a-hope
+001756	Te aconsejo que ahorres un poco cada mes.	I advise you to save a little each month.	b1	money							give-advice
+001757	Te recomiendo que compares las dos ofertas.	I recommend you compare the two offers.	b1	shopping,money							give-advice
+001758	Le sugiero que lea todo el contrato.	I suggest you read the contract carefully.	b1	work		formal	usted				give-advice
+001759	Es mejor que gastes menos este mes.	It is better if you spend less this month.	b1	money							give-advice
+001760	Es importante que recicles el plástico.	It is important that you recycle plastic.	b1	environment							give-advice
+001761	Es necesario que guardes una copia del archivo.	It is necessary for you to keep a copy of the file.	b1	technology							give-advice
+001762	Te aconsejo que evites el centro a esta hora.	I advise you to avoid rush hour.	b1	travel,city							give-advice
+001763	Es útil que aprendas a usar la red.	It is useful for you to learn to use the internet.	b1	technology							give-advice
+001764	Te sugiero que pidas otra opinión.	I suggest you get a second opinion.	b1	health,core							give-advice
+001765	Es razonable que quieras un sueldo mejor.	It is reasonable that you want a better salary.	b1	work,money							give-advice
+001766	Es posible que necesites más experiencia.	You may need more experience.	b1	work							give-advice
+001767	Dudo que sea tan sencillo.	I doubt it is that simple.	b1	core							express-doubt
+001768	No creo que el riesgo sea tan grave.	I do not think the risk is that serious.	b1	core	«Creo que es» takes the indicative; the doubt lives in the «no». Negating the belief is what moves the second verb.						express-doubt
+001769	No pienso que la solución sea económica.	I do not think the solution is cheap.	b1	money,core							express-doubt
+001770	Dudo que la aplicación funcione sin la contraseña.	I doubt the app works without the password.	b1	technology							express-doubt
+001771	Es improbable que nos contraten a los dos.	It is unlikely they will hire us both.	b1	work							express-doubt
+001772	No creo que valga la pena el esfuerzo.	I do not think the effort is worth it.	b1	core							express-doubt
+001773	Dudo que este artículo sea imparcial.	I doubt this article is impartial.	b1	news							express-doubt
+001774	No parece que la red esté bien conectada.	It does not look as if the network is connected properly.	b1	technology							express-doubt
+001775	Quizá el usuario no recuerde su contraseña.	Maybe the user does not remember their password.	b1	technology							express-doubt
+001776	No es evidente que la decisión sea justa.	It is not obvious that the decision is fair.	b1	core							express-doubt
+001777	Me alegro de que encuentres trabajo.	I am glad you are finding work.	b1	work,feelings							react-to-news
+001778	Me sorprende que nadie se queje del ruido.	I am surprised nobody complains about the noise.	b1	city,feelings							react-to-news
+001779	Me molesta que la gente tire basura al suelo.	It annoys me that people throw rubbish on the ground.	b1	environment,feelings							react-to-news
+001780	Es una pena que no puedas venir.	It is a shame you cannot come.	b1	social,feelings							react-to-news
+001781	Me preocupa que el gasto suba cada mes.	It worries me that spending is going up so much.	b1	money,feelings							react-to-news
+001782	Me sorprende que el programa tenga mucho éxito.	I am surprised the show has such a big audience.	b1	news							react-to-news
+001783	Agradezco que me lo digas.	I am grateful you are telling me.	b1	social							react-to-news
+001784	Es lógico que estés cansado.	It is only natural that you are tired.	b1	feelings							react-to-news
+001785	Me alegra que la empresa proteja el ambiente.	I am glad the company protects the environment.	b1	environment,work							react-to-news
+001786	Te lo explico para que entiendas el riesgo.	I am explaining it so that you understand the risk.	b1	communication,core	«Para que» always takes the subjunctive: a purpose is by definition something that has not happened yet.						state-a-purpose
+001787	Reciclamos para que el planeta esté mejor.	We recycle so that the planet is in better shape.	b1	environment							state-a-purpose
+001788	Guardo el archivo para que no se pierda.	I save the file so that it does not get lost.	b1	technology							state-a-purpose
+001789	Ahorro para que mis hijos puedan estudiar.	I am saving so that my children can study.	b1	money,family							state-a-purpose
+001790	Lo escribo para que quede claro.	I am writing it down so that it is clear.	b1	communication							state-a-purpose
+001791	Bajamos la temperatura para que gastemos menos energía.	We turn the temperature down so we use less energy.	b1	environment,home							state-a-purpose
+001792	Te aviso para que no llegues tarde.	I am letting you know so you are not late.	b1	communication,time							state-a-purpose
+001793	Firmamos el contrato para que todo sea legal.	We sign the contract so that everything is above board.	b1	work							state-a-purpose
+001794	Uso una aplicación para que no se me olvide nada.	I use an app so that I do not forget anything.	b1	technology							state-a-purpose
+001795	Cuando llegues, llámame.	When you arrive, call me.	b1	communication,travel	«Cuando llego» is a habit; «cuando llegue» is a single arrival still ahead. English uses one form for both.						talk-about-a-future-moment
+001796	Te lo digo cuando tenga la respuesta.	I will tell you when I have the answer.	b1	communication							talk-about-a-future-moment
+001797	Hablamos cuando termines el proyecto.	We will talk when you finish the project.	b1	work							talk-about-a-future-moment
+001798	Antes de que firmes, lee el horario.	Before you sign, read the hours.	b1	work							talk-about-a-future-moment
+001799	Cuando cobre, pago la factura.	When I get paid, I will pay the bill.	b1	money							talk-about-a-future-moment
+001800	Mientras no haya una solución, no cambia nada.	As long as there is no solution, we carry on as we are.	b1	core							talk-about-a-future-moment
+001801	Aunque sea complicado, vale la pena.	Even if it is complicated, it is worth it.	b1	core	«Aunque» takes the indicative for a fact and the subjunctive for a concession: «aunque es tarde» admits it is; «aunque sea tarde» does not.						concede-a-point
+001802	Aunque no estés de acuerdo, es la decisión de todos.	Even if you do not agree, it is the decision of all of us.	b1	core							concede-a-point
+001803	Aunque el puesto sea temporal, da experiencia.	Even if the post is temporary, it gives you experience.	b1	work							concede-a-point
+001804	Aunque el programa sea gratuito, tiene anuncios.	Even if the app is free, it has adverts.	b1	technology,news							concede-a-point
+001805	Aunque sea difícil, quiero intentarlo.	Even if it is hard, I want to try.	b1	core							concede-a-point
+001806	No te preocupes por la factura.	Do not worry about the bill.	b1	money,feelings	The affirmative is «preocúpate», the negative «no te preocupes». Two different forms, and only the negative is the subjunctive.						make-a-complaint
+001807	No compartas la contraseña con nadie.	Do not share the password with anyone.	b1	technology							give-advice
+001808	No gastes todo el presupuesto en una semana.	Do not spend the whole budget in one week.	b1	money							give-advice
+001809	No te quejes sin proponer una solución.	Do not complain without proposing a solution.	b1	communication,core							give-advice
+001810	No dudes en avisarme.	Do not hesitate to let me know.	b1	communication							give-advice
+001811	No tires el plástico a la basura.	Do not throw plastic in the bin.	b1	environment							give-advice
+001812	No firmes nada que no entiendas.	Do not sign anything you do not understand.	b1	work,money							give-advice
+001813	No se preocupe, lo arreglamos hoy.	Do not worry, we will fix it today.	b1	core		formal	usted				make-a-complaint
+001814	No olvides guardar el archivo.	Do not forget to save the file.	b1	technology							give-advice
+001815	No pierdas la oportunidad.	Do not miss the chance.	b1	core							give-advice

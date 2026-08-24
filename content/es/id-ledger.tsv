@@ -1731,6 +1731,544 @@
 001728	sentence	active	Nadie dijo nada más, ni el jefe ni su hermano.
 001729	sentence	active	Un empleado recién llegado empezó a hablar de otra cosa.
 001730	sentence	active	Después de un segundo, todos volvimos al proyecto.
+001731	sentence	active	Quiero que me ayudes con este archivo.
+001732	sentence	active	Mi jefe quiere que mejore mi horario.
+001733	sentence	active	Necesito que me mandes la factura hoy.
+001734	sentence	active	Te pido que no compartas mi contraseña.
+001735	sentence	active	¿Quieres que te guarde el archivo?
+001736	sentence	active	Prefiero que lo resolvamos hoy.
+001737	sentence	active	Mis padres quieren que estudie una carrera.
+001738	sentence	active	La empresa exige que firmemos el contrato.
+001739	sentence	active	No permito que nadie use mi ordenador.
+001740	sentence	active	Le pido que me explique la diferencia.
+001741	sentence	active	Quiero que cuides tu salud.
+001742	sentence	active	Necesitamos que alguien arregle la aplicación.
+001743	sentence	active	¿Prefieres que te llame más tarde?
+001744	sentence	active	El profesor quiere que compartamos las notas.
+001745	sentence	active	Te propongo que lo hablemos mañana.
+001746	sentence	active	Espero que apruebes el examen.
+001747	sentence	active	Ojalá no llueva mañana.
+001748	sentence	active	Ojalá que todo salga bien.
+001749	sentence	active	Espero que la contaminación se reduzca pronto.
+001750	sentence	active	Ojalá consigas el puesto.
+001751	sentence	active	Espero que disfrutes las vacaciones.
+001752	sentence	active	Ojalá tengamos un clima más estable.
+001753	sentence	active	Espero que no sea nada grave.
+001754	sentence	active	Ojalá que el precio no suba otra vez.
+001755	sentence	active	Espero que la entrevista vaya bien.
+001756	sentence	active	Te aconsejo que ahorres un poco cada mes.
+001757	sentence	active	Te recomiendo que compares las dos ofertas.
+001758	sentence	active	Le sugiero que lea todo el contrato.
+001759	sentence	active	Es mejor que gastes menos este mes.
+001760	sentence	active	Es importante que recicles el plástico.
+001761	sentence	active	Es necesario que guardes una copia del archivo.
+001762	sentence	active	Te aconsejo que evites el centro a esta hora.
+001763	sentence	active	Es útil que aprendas a usar la red.
+001764	sentence	active	Te sugiero que pidas otra opinión.
+001765	sentence	active	Es razonable que quieras un sueldo mejor.
+001766	sentence	active	Es posible que necesites más experiencia.
+001767	sentence	active	Dudo que sea tan sencillo.
+001768	sentence	active	No creo que el riesgo sea tan grave.
+001769	sentence	active	No pienso que la solución sea económica.
+001770	sentence	active	Dudo que la aplicación funcione sin la contraseña.
+001771	sentence	active	Es improbable que nos contraten a los dos.
+001772	sentence	active	No creo que valga la pena el esfuerzo.
+001773	sentence	active	Dudo que este artículo sea imparcial.
+001774	sentence	active	No parece que la red esté bien conectada.
+001775	sentence	active	Quizá el usuario no recuerde su contraseña.
+001776	sentence	active	No es evidente que la decisión sea justa.
+001777	sentence	active	Me alegro de que encuentres trabajo.
+001778	sentence	active	Me sorprende que nadie se queje del ruido.
+001779	sentence	active	Me molesta que la gente tire basura al suelo.
+001780	sentence	active	Es una pena que no puedas venir.
+001781	sentence	active	Me preocupa que el gasto suba cada mes.
+001782	sentence	active	Me sorprende que el programa tenga mucho éxito.
+001783	sentence	active	Agradezco que me lo digas.
+001784	sentence	active	Es lógico que estés cansado.
+001785	sentence	active	Me alegra que la empresa proteja el ambiente.
+001786	sentence	active	Te lo explico para que entiendas el riesgo.
+001787	sentence	active	Reciclamos para que el planeta esté mejor.
+001788	sentence	active	Guardo el archivo para que no se pierda.
+001789	sentence	active	Ahorro para que mis hijos puedan estudiar.
+001790	sentence	active	Lo escribo para que quede claro.
+001791	sentence	active	Bajamos la temperatura para que gastemos menos energía.
+001792	sentence	active	Te aviso para que no llegues tarde.
+001793	sentence	active	Firmamos el contrato para que todo sea legal.
+001794	sentence	active	Uso una aplicación para que no se me olvide nada.
+001795	sentence	active	Cuando llegues, llámame.
+001796	sentence	active	Te lo digo cuando tenga la respuesta.
+001797	sentence	active	Hablamos cuando termines el proyecto.
+001798	sentence	active	Antes de que firmes, lee el horario.
+001799	sentence	active	Cuando cobre, pago la factura.
+001800	sentence	active	Mientras no haya una solución, no cambia nada.
+001801	sentence	active	Aunque sea complicado, vale la pena.
+001802	sentence	active	Aunque no estés de acuerdo, es la decisión de todos.
+001803	sentence	active	Aunque el puesto sea temporal, da experiencia.
+001804	sentence	active	Aunque el programa sea gratuito, tiene anuncios.
+001805	sentence	active	Aunque sea difícil, quiero intentarlo.
+001806	sentence	active	No te preocupes por la factura.
+001807	sentence	active	No compartas la contraseña con nadie.
+001808	sentence	active	No gastes todo el presupuesto en una semana.
+001809	sentence	active	No te quejes sin proponer una solución.
+001810	sentence	active	No dudes en avisarme.
+001811	sentence	active	No tires el plástico a la basura.
+001812	sentence	active	No firmes nada que no entiendas.
+001813	sentence	active	No se preocupe, lo arreglamos hoy.
+001814	sentence	active	No olvides guardar el archivo.
+001815	sentence	active	No pierdas la oportunidad.
+001816	sentence	active	La entrevista es el martes a las diez.
+001817	sentence	active	Después de la entrevista, me llamaron el mismo día.
+001818	sentence	active	Firmé el contrato la semana pasada.
+001819	sentence	active	El contrato es temporal, solo por seis meses.
+001820	sentence	active	Mi horario es de nueve a cinco.
+001821	sentence	active	Este mes tengo un horario más cómodo.
+001822	sentence	active	Es un puesto nuevo en la oficina de Madrid.
+001823	sentence	active	El puesto pide tres años de experiencia.
+001824	sentence	active	Tengo experiencia con clientes difíciles.
+001825	sentence	active	La empresa va a contratar a dos personas más.
+001826	sentence	active	Contratan gente joven cada verano.
+001827	sentence	active	Nos prometieron un sueldo mejor en enero.
+001828	sentence	active	Te prometo que mañana lo termino.
+001829	sentence	active	Prometió ayudarme y no vino.
+001830	sentence	active	No prometas nada que no puedas hacer.
+001831	sentence	active	Despidieron a tres empleados en marzo.
+001832	sentence	active	Nadie sabe por qué lo despidieron.
+001833	sentence	active	Me despedí de mis compañeros el viernes.
+001834	sentence	active	Es una empresa privada, no del estado.
+001835	sentence	active	Trabajo en una empresa privada desde hace dos años.
+001836	sentence	active	Los datos son privados y no los comparto.
+001837	sentence	active	Una escuela privada cuesta mucho dinero.
+001838	sentence	active	Soy responsable de la reunión de los lunes.
+001839	sentence	active	Busco a alguien responsable para el puesto.
+001840	sentence	active	Es un chico muy responsable para su edad.
+001841	sentence	active	¿Quién es el responsable de este error?
+001842	sentence	active	Estoy dispuesto a trabajar los sábados.
+001843	sentence	active	No estoy dispuesta a pagar más.
+001844	sentence	active	Si estás dispuesto a esperar, hay sitio.
+001845	sentence	active	Estaban dispuestos a cambiar el horario.
+001846	sentence	active	Supongo que la reunión será larga.
+001847	sentence	active	Supuse que ya lo sabías.
+001848	sentence	active	¿Supones que van a contratar a alguien?
+001849	sentence	active	Suponemos que el precio va a subir.
+001850	sentence	active	Logré terminar el proyecto a tiempo.
+001851	sentence	active	No logro entender este artículo.
+001852	sentence	active	Logramos reducir los gastos de la oficina.
+001853	sentence	active	Si estudias, lo vas a lograr.
+001854	sentence	active	Mantengo el mismo horario desde enero.
+001855	sentence	active	Es difícil mantener un piso tan grande.
+001856	sentence	active	Mantuvimos el precio todo el año.
+001857	sentence	active	Mantén la calma y llama al médico.
+001858	sentence	active	Tengo un ahorro pequeño para las vacaciones.
+001859	sentence	active	El ahorro de este mes fue de cien euros.
+001860	sentence	active	Con este plan, el ahorro es evidente.
+001861	sentence	active	Cada ahorro cuenta cuando el sueldo es bajo.
+001862	sentence	active	Ahorro un poco todos los meses.
+001863	sentence	active	Ahorramos para comprar un coche.
+001864	sentence	active	Gasto demasiado en comida fuera de casa.
+001865	sentence	active	El gasto en energía subió mucho este invierno.
+001866	sentence	active	Hay que bajar el gasto del mes.
+001867	sentence	active	La factura de la luz llegó ayer.
+001868	sentence	active	Pagué la factura por internet.
+001869	sentence	active	Esta factura no es correcta.
+001870	sentence	active	El presupuesto del proyecto es de mil euros.
+001871	sentence	active	Nos pasamos del presupuesto otra vez.
+001872	sentence	active	Hice un presupuesto para el mes.
+001873	sentence	active	Me cobraron dos veces el mismo billete.
+001874	sentence	active	¿Cuánto cobras por hora?
+001875	sentence	active	Cobro el día quince de cada mes.
+001876	sentence	active	No cobran nada por llevarlo a casa.
+001877	sentence	active	Es una oferta muy buena para dos noches.
+001878	sentence	active	La oferta termina el domingo.
+001879	sentence	active	Compara las dos ofertas antes de decidir.
+001880	sentence	active	Comparé los precios de tres tiendas.
+001881	sentence	active	Si comparas, verás la diferencia.
+001882	sentence	active	El curso es gratuito para estudiantes.
+001883	sentence	active	La entrada al museo es gratuita el domingo.
+001884	sentence	active	Hay wifi gratuito en toda la estación.
+001885	sentence	active	Es un curso económico y muy útil.
+001886	sentence	active	Buscamos un hotel más económico.
+001887	sentence	active	La solución más económica no es la mejor.
+001888	sentence	active	Los coches contaminan más que el tren.
+001889	sentence	active	Esta empresa contamina el río.
+001890	sentence	active	Contaminamos menos que hace diez años.
+001891	sentence	active	No contamines el mar con plástico.
+001892	sentence	active	La contaminación del aire es un problema grave.
+001893	sentence	active	En la ciudad hay más contaminación que en el campo.
+001894	sentence	active	Reciclo el papel y el plástico en casa.
+001895	sentence	active	Reciclamos las botellas y el papel.
+001896	sentence	active	El plástico dura muchos años en el mar.
+001897	sentence	active	Compro agua en botella de plástico casi nunca.
+001898	sentence	active	Hay que proteger los bosques.
+001899	sentence	active	Protejo mis datos con una contraseña larga.
+001900	sentence	active	Este parque protege a los animales.
+001901	sentence	active	La ley protege a los clientes.
+001902	sentence	active	Quiero reducir el plástico en la cocina.
+001903	sentence	active	Redujimos el gasto de agua este año.
+001904	sentence	active	Si reduces la temperatura, gastas menos.
+001905	sentence	active	La temperatura bajó mucho por la noche.
+001906	sentence	active	La temperatura del mar sube cada verano.
+001907	sentence	active	Con esta temperatura no quiero salir.
+001908	sentence	active	El clima de la playa es mejor en mayo.
+001909	sentence	active	El clima cambia más rápido de lo que pensábamos.
+001910	sentence	active	Me gusta el clima de esta zona.
+001911	sentence	active	Necesitamos un transporte más sostenible.
+001912	sentence	active	Es una empresa sostenible y responsable.
+001913	sentence	active	Buscamos una solución sostenible para todos.
+001914	sentence	active	La energía del sol es sostenible.
+001915	sentence	active	La energía cuesta más este año.
+001916	sentence	active	Esta casa usa poca energía.
+001917	sentence	active	Paso los domingos en la naturaleza.
+001918	sentence	active	La naturaleza de esta zona es muy rica.
+001919	sentence	active	Cuidar la naturaleza es cuidar la salud.
+001920	sentence	active	Los niños aprenden mucho en la naturaleza.
+001921	sentence	active	El planeta no puede esperar más.
+001922	sentence	active	Es el planeta más cerca del sol.
+001923	sentence	active	Cuido a mi abuela los fines de semana.
+001924	sentence	active	Cuida el ordenador, es del trabajo.
+001925	sentence	active	Hay que cuidar el ambiente de la oficina.
+001926	sentence	active	El ambiente del bar es muy tranquilo.
+001927	sentence	active	Tiramos muy poca comida en casa.
+001928	sentence	active	Tiré los papeles viejos ayer.
+001929	sentence	active	Descargué la aplicación en cinco minutos.
+001930	sentence	active	Descarga el archivo antes de salir.
+001931	sentence	active	No descargues nada de esa página.
+001932	sentence	active	La aplicación descarga las fotos sola.
+001933	sentence	active	El ordenador no se conecta al wifi.
+001934	sentence	active	Conecta el teléfono a la pantalla.
+001935	sentence	active	Me conecto por la mañana para leer el correo.
+001936	sentence	active	Conectamos la casa a la red el mes pasado.
+001937	sentence	active	La red del hotel es muy lenta.
+001938	sentence	active	Guardo una copia en la nube y otra en casa.
+001939	sentence	active	Hazme una copia de este documento.
+001940	sentence	active	La copia no salió bien.
+001941	sentence	active	Cada usuario tiene otra contraseña.
+001942	sentence	active	El usuario nuevo no puede entrar todavía.
+001943	sentence	active	Somos tres usuarios en la misma cuenta.
+001944	sentence	active	El usuario tiene razón, la aplicación no funciona.
+001945	sentence	active	Comparto el piso con dos amigas.
+001946	sentence	active	¿Compartimos un postre?
+001947	sentence	active	Publicaron el artículo esta mañana.
+001948	sentence	active	El periódico publica una entrevista cada domingo.
+001949	sentence	active	No publiques esa foto sin preguntar.
+001950	sentence	active	Publiqué mi primer artículo el año pasado.
+001951	sentence	active	Es un artículo largo pero muy claro.
+001952	sentence	active	Leí un artículo sobre el clima.
+001953	sentence	active	El programa de las nueve es el más visto.
+001954	sentence	active	Este programa no me parece imparcial.
+001955	sentence	active	Busco un periódico imparcial.
+001956	sentence	active	Un periódico tiene que ser imparcial.
+001957	sentence	active	Pusieron un anuncio en el periódico.
+001958	sentence	active	Vi el anuncio del puesto en internet.
+001959	sentence	active	Los anuncios duran más que el programa.
+001960	sentence	active	El transporte público es bueno en esta ciudad.
+001961	sentence	active	Es un parque público, la entrada es libre.
+001962	sentence	active	La opinión pública cambió muy rápido.
+001963	sentence	active	Hay una biblioteca pública en el centro.
+001964	sentence	active	Mi opinión no es la misma.
+001965	sentence	active	¿Cuál es tu opinión sobre el contrato?
+001966	sentence	active	Cambié de opinión después de leerlo.
+001967	sentence	active	Nadie me convence con ese ejemplo.
+001968	sentence	active	Me convenció en dos minutos.
+001969	sentence	active	No me convence el precio.
+001970	sentence	active	Convencimos al jefe de cambiar el horario.
+001971	sentence	active	Además de barato, es rápido.
+001972	sentence	active	El piso es pequeño y además está lejos.
+001973	sentence	active	Además, no tengo tiempo esta semana.
+001974	sentence	active	Es útil y además no cuesta nada.
+001975	sentence	active	Apenas tengo tiempo para comer.
+001976	sentence	active	Apenas conozco a mis vecinos.
+001977	sentence	active	Había apenas diez personas en la sala.
+001978	sentence	active	Apenas se oye la televisión.
+001979	sentence	active	Terminé la carrera el año pasado.
+001980	sentence	active	Estudio una carrera de tres años.
+001981	sentence	active	Mi carrera en la empresa empezó en la oficina de Sevilla.
+001982	sentence	active	Tengo el título de inglés desde mayo.
+001983	sentence	active	Necesitas un título para este puesto.
+001984	sentence	active	El título del artículo es muy largo.
+001985	sentence	active	Guardo el título en un lugar seguro.
+001986	sentence	active	Aprobé el examen con buena nota.
+001987	sentence	active	Si estudias, apruebas.
+001988	sentence	active	El jefe aprobó el presupuesto ayer.
+001989	sentence	active	Es una enfermedad normal en invierno.
+001990	sentence	active	La enfermedad no es grave, pero necesita descanso.
+001991	sentence	active	Salió de una enfermedad larga.
+001992	sentence	active	Es un dolor fuerte, pero no es grave.
+001993	sentence	active	El ruido de la calle no me deja dormir.
+001994	sentence	active	Hay mucho ruido en este bar.
+001995	sentence	active	El ruido del tren se oye desde el jardín.
+001996	sentence	active	Nada impide que lo intentes.
+001997	sentence	active	El ruido impide el sueño.
+001998	sentence	active	La lluvia impidió el partido.
+001999	sentence	active	Nadie me impide cambiar de trabajo.
+002000	sentence	active	Es imposible llegar a las ocho.
+002001	sentence	active	Es imposible que lo sepa.
+002002	sentence	active	Parece imposible, pero lo logramos.
+002003	sentence	active	Con este ruido es imposible estudiar.
+002004	sentence	active	Es probable que llueva por la tarde.
+002005	sentence	active	Es poco probable, pero es posible.
+002006	sentence	active	Lo más probable es que llegue tarde.
+002007	sentence	active	Un cambio de horario es probable en enero.
+002008	sentence	active	Es capaz de hacerlo sin ayuda.
+002009	sentence	active	No soy capaz de decirle que no.
+002010	sentence	active	Es una persona capaz y muy tranquila.
+002011	sentence	active	Somos capaces de terminar hoy.
+002012	sentence	active	Te doy un consejo: no firmes hoy.
+002013	sentence	active	Fue un buen consejo, gracias.
+002014	sentence	active	Pedí consejo a mi hermana.
+002015	sentence	active	Su consejo me ayudó mucho.
+002016	sentence	active	La ventaja de este piso es la luz.
+002017	sentence	active	Tiene la ventaja de estar cerca del centro.
+002018	sentence	active	Su ventaja es el precio.
+002019	sentence	active	¿Qué ventaja tiene el tren sobre el coche?
+002020	sentence	active	Ocurrió algo raro esta mañana.
+002021	sentence	active	No sé qué ocurre con la aplicación.
+002022	sentence	active	Ocurre lo mismo cada invierno.
+002023	sentence	active	¿Qué ocurrió en la reunión?
+002024	sentence	active	Le agradezco su ayuda.
+002025	sentence	active	Te agradecí el consejo en su momento.
+002026	sentence	active	Agradecemos mucho la información.
+002027	sentence	active	Disfruté mucho la película.
+002028	sentence	active	Disfrutamos del jardín en verano.
+002029	sentence	active	Disfruta del fin de semana.
+002030	sentence	active	Mientras espero, leo el periódico.
+002031	sentence	active	Mientras tú cocinas, yo limpio.
+002032	sentence	active	Trabajé en un bar mientras estudiaba.
+002033	sentence	active	El esfuerzo valió la pena.
+002034	sentence	active	Con un poco de esfuerzo lo consigues.
+002035	sentence	active	Fue un gran esfuerzo para toda la familia.
+002036	sentence	active	Es una pena que llueva hoy.
+002037	sentence	active	Qué pena, me gustaba mucho ese bar.
+002038	sentence	active	Vale la pena visitar el museo.
+002039	sentence	active	Esa camisa vale treinta euros.
+002040	sentence	active	No vale la pena discutir.
+002041	sentence	active	¿Cuánto vale el billete de ida y vuelta?
+002042	sentence	active	Vale más de lo que parece.
+002043	sentence	active	Es una diferencia pequeña pero importante.
+002044	sentence	active	No veo la diferencia entre los dos.
+002045	sentence	active	La diferencia de precio es de diez euros.
+002046	sentence	active	Hay una diferencia de dos horas.
+002047	sentence	active	Es un riesgo, pero vale la pena.
+002048	sentence	active	No quiero correr ese riesgo.
+002049	sentence	active	El riesgo es perder el dinero.
+002050	sentence	active	Tomé la decisión yo misma.
+002051	sentence	active	Fue una decisión difícil pero justa.
+002052	sentence	active	La decisión del jefe sorprendió a todos.
+002053	sentence	active	Me sorprendió verte allí.
+002054	sentence	active	Su respuesta nos sorprendió mucho.
+002055	sentence	active	Me molesta el ruido de los coches.
+002056	sentence	active	¿Te molesta si abro la ventana?
+002057	sentence	active	Nos molestó mucho el precio.
+002058	sentence	active	Me quejé del ruido al vecino.
+002059	sentence	active	Se queja de todo.
+002060	sentence	active	Nos quejamos y nos devolvieron el dinero.
+002061	sentence	active	Arreglé la puerta yo mismo.
+002062	sentence	active	¿Puedes arreglar la pantalla?
+002063	sentence	active	Arreglamos el problema en una hora.
+002064	sentence	active	Resolvimos la diferencia hablando.
+002065	sentence	active	No sé cómo resolver esto.
+002066	sentence	active	El médico resolvió mis dudas.
+002067	sentence	active	Mejoré mucho el año pasado.
+002068	sentence	active	El tiempo mejora el jueves.
+002069	sentence	active	Quiero mejorar mi inglés este verano.
+002070	sentence	active	Evito el centro los sábados.
+002071	sentence	active	Para evitar problemas, lee el contrato.
+002072	sentence	active	Evitamos el coche en la ciudad.
+002073	sentence	active	El jefe exige mucho a todos.
+002074	sentence	active	Exigimos una respuesta clara.
+002075	sentence	active	Este trabajo exige mucho tiempo.
+002076	sentence	active	El museo no permite fotos.
+002077	sentence	active	Mis padres no me permitían salir tarde.
+002078	sentence	active	El hotel permite animales.
+002079	sentence	active	Te aviso cuando llegue el paquete.
+002080	sentence	active	Avísame si hay algún problema.
+002081	sentence	active	Nos avisaron con dos días.
+002082	sentence	active	Sube el precio cada enero.
+002083	sentence	active	Subimos al tercer piso.
+002084	sentence	active	Subí las fotos a la red.
+002085	sentence	active	Baja la temperatura, por favor.
+002086	sentence	active	Bajé del autobús en la última parada.
+002087	sentence	active	Los precios bajaron después del verano.
+002088	sentence	active	Es una idea sencilla y muy buena.
+002089	sentence	active	La explicación es sencilla.
+002090	sentence	active	Prefiero una comida sencilla.
+002091	sentence	active	Es evidente que no le gusta.
+002092	sentence	active	La diferencia es evidente.
+002093	sentence	active	Por razones evidentes, no puedo decirlo.
+002094	sentence	active	Es un problema complicado.
+002095	sentence	active	El horario de los trenes es complicado.
+002096	sentence	active	No es complicado, solo es largo.
+002097	sentence	active	Un precio razonable para esta zona.
+002098	sentence	active	Es una hora razonable para llamar.
+002099	sentence	active	Me parece razonable.
+002100	sentence	active	Es necesario un título para el puesto.
+002101	sentence	active	No es necesario pagar hoy.
+002102	sentence	active	Trae lo necesario para dos días.
+002103	sentence	active	Es posible pagar con tarjeta.
+002104	sentence	active	¿Es posible cambiar la fecha?
+002105	sentence	active	Todo es posible con tiempo.
+002106	sentence	active	Es útil saber otro idioma.
+002107	sentence	active	El mapa fue muy útil.
+002108	sentence	active	Es una aplicación útil para viajar.
+002109	sentence	active	Es justo que gane más.
+002110	sentence	active	No es justo pagar el doble.
+002111	sentence	active	Llegamos justo a tiempo.
+002112	sentence	active	El tiempo es estable esta semana.
+002113	sentence	active	Busco un trabajo estable.
+002114	sentence	active	La conexión no es estable.
+002115	sentence	active	Es improbable pero puede ocurrir.
+002116	sentence	active	Un cambio hoy es improbable.
+002117	sentence	active	Es lógico que estés preocupado.
+002118	sentence	active	Su respuesta es lógica.
+002119	sentence	active	Es lo lógico después de dos años.
+002120	sentence	active	Todo tiene que ser legal.
+002121	sentence	active	Es la edad legal para conducir.
+002122	sentence	active	El contrato es legal y claro.
+002123	sentence	active	Es un puesto temporal, no fijo.
+002124	sentence	active	Fue una solución temporal.
+002125	sentence	active	Tengo un problema temporal con la red.
+002126	sentence	active	Conseguí una entrada para el sábado.
+002127	sentence	active	¿Conseguiste hablar con el médico?
+002128	sentence	active	No consigo abrir el archivo.
+002129	sentence	active	Es una oportunidad que no vuelve.
+002130	sentence	active	Tuve la oportunidad de trabajar en México.
+002131	sentence	active	Aprovecha la oportunidad.
+002132	sentence	active	El éxito del programa sorprendió a todos.
+002133	sentence	active	Tuvo mucho éxito en Italia.
+002134	sentence	active	El éxito depende del esfuerzo.
+002135	sentence	active	El aire de esta zona es muy limpio.
+002136	sentence	active	La contaminación del aire bajó este año.
+002137	sentence	active	Necesitamos aire limpio en todo el planeta.
+002138	sentence	active	Hay que proteger el planeta entre todos.
+002139	sentence	active	Pidió calma y una explicación clara.
+002140	sentence	active	Con calma, discutimos mejor.
+002141	sentence	active	Necesito calma para estudiar.
+002142	sentence	active	La conexión a internet es muy lenta.
+002143	sentence	active	Sin conexión, la página no abre.
+002144	sentence	active	La conexión del tren de las ocho es buena.
+002145	sentence	active	Devolví el paquete la semana pasada.
+002146	sentence	active	¿Puedo devolver esta camisa?
+002147	sentence	active	Me devolvieron el dinero sin preguntar nada.
+002148	sentence	active	Discutimos la nueva ley en clase.
+002149	sentence	active	No quiero discutir contigo.
+002150	sentence	active	Discuten por cosas pequeñas.
+002151	sentence	active	Firma el documento, por favor.
+002152	sentence	active	Guarda una copia del documento.
+002153	sentence	active	El documento tiene diez páginas.
+002154	sentence	active	Necesito una explicación más sencilla.
+002155	sentence	active	Pedí una explicación y no me dieron ninguna.
+002156	sentence	active	Busco información en internet.
+002157	sentence	active	La página tiene mucha información útil.
+002158	sentence	active	La información del anuncio no es correcta.
+002159	sentence	active	La ley nueva protege el ambiente.
+002160	sentence	active	Es improbable que cambien la ley.
+002161	sentence	active	La ley es igual para todos.
+002162	sentence	active	El paquete llegó roto.
+002163	sentence	active	Mandé el paquete por correo.
+002164	sentence	active	Esta página tiene un error raro.
+002165	sentence	active	Es raro que ocurra dos veces.
+002166	sentence	active	Es un dato raro, pero es verdad.
+002167	sentence	active	Te aconsejo este curso de inglés.
+002168	sentence	active	Le aconsejo el transporte público.
+002169	sentence	active	Hice el curso por internet.
+002170	sentence	active	El ambiente del curso es muy bueno.
+002171	sentence	active	Guardo los datos en el ordenador.
+002172	sentence	active	Los datos del documento son correctos.
+002173	sentence	active	Busco el horario del transporte en internet.
+002174	sentence	active	El transporte público reduce la contaminación.
+002175	sentence	active	Propongo una solución sencilla.
+002176	sentence	active	Propusieron un curso nuevo para septiembre.
+002177	sentence	active	Te sugiero esta página para practicar.
+002178	sentence	active	Le sugiero otra zona de la ciudad.
+002179	sentence	active	No es una enfermedad grave.
+002180	sentence	active	La empresa despidió a diez personas.
+002181	sentence	active	Es improbable que llegue hoy.
+002182	sentence	active	Buenos días. ¿Por qué quiere este puesto?
+002183	sentence	active	Porque tengo experiencia y quiero un trabajo estable.
+002184	sentence	active	El contrato es temporal los primeros meses.
+002185	sentence	active	No hay problema. Estoy dispuesto a empezar así.
+002186	sentence	active	Es importante que llegue temprano.
+002187	sentence	active	Claro. ¿Cuál es el horario?
+002188	sentence	active	De nueve a cinco, con una hora para comer.
+002189	sentence	active	Muy bien. ¿Cuándo saben la decisión?
+002190	sentence	active	Le avisamos cuando terminen las entrevistas.
+002191	sentence	active	Gracias. Espero que sea pronto.
+002192	sentence	active	Compré esta camisa el sábado y llegó rota.
+002193	sentence	active	Lo siento mucho. ¿Tiene la factura?
+002194	sentence	active	Sí, aquí está. Quiero que me devuelvan el dinero.
+002195	sentence	active	¿Prefiere otra camisa o el dinero?
+002196	sentence	active	El dinero, gracias. No es la primera vez que pasa.
+002197	sentence	active	Le pido disculpas. Es raro que ocurra dos veces.
+002198	sentence	active	Espero que no vuelva a pasar.
+002199	sentence	active	Le devolvemos el dinero hoy mismo.
+002200	sentence	active	Quiero que hablemos del ruido por la noche.
+002201	sentence	active	Tienes razón. ¿Te molesta la música?
+002202	sentence	active	Sí, y además no puedo dormir.
+002203	sentence	active	Es lógico que estés cansada. Voy a poner la música más baja.
+002204	sentence	active	Te propongo una cosa: nada de música después de las once.
+002205	sentence	active	Vale, me parece justo.
+002206	sentence	active	Y es mejor que compartamos los gastos de la luz.
+002207	sentence	active	De acuerdo. Hago un presupuesto para el mes.
+002208	sentence	active	En mi cocina hay tres bolsas para reciclar.
+002209	sentence	active	En una tiro el papel, en otra el plástico.
+002210	sentence	active	Reciclo desde hace dos años y ya es normal.
+002211	sentence	active	Los primeros meses era complicado, pero ahora es sencillo.
+002212	sentence	active	Es importante que todos reciclemos.
+002213	sentence	active	Si reducimos el plástico, el aire y el mar están más limpios.
+002214	sentence	active	Aunque sea poco, cada esfuerzo cuenta.
+002215	sentence	active	Ojalá que más gente lo haga.
+002216	sentence	active	Me han ofrecido otro puesto.
+002217	sentence	active	¡Qué bien! ¿Y cuál es el problema?
+002218	sentence	active	El sueldo es mejor, pero tengo que trabajar los sábados.
+002219	sentence	active	Te aconsejo que compares las dos ofertas con calma.
+002220	sentence	active	Ya lo hice. Dudo que sea una buena decisión.
+002221	sentence	active	Es normal que dudes. Es un riesgo.
+002222	sentence	active	Yo esperaría a que te den más información.
+002223	sentence	active	Buen consejo. Gracias.
+002224	sentence	active	El periódico publica hoy un artículo sobre el clima.
+002225	sentence	active	La temperatura del mar subió otra vez este verano.
+002226	sentence	active	El artículo dice que la contaminación del aire es el problema.
+002227	sentence	active	Es probable que el próximo verano sea más caliente.
+002228	sentence	active	Para que el clima mejore, hay que reducir el transporte privado.
+002229	sentence	active	No es una solución sencilla ni económica.
+002230	sentence	active	Pero es necesario que empecemos ahora.
+002231	sentence	active	Aunque el cambio sea lento, el planeta lo agradece.
+002232	sentence	active	El alfabeto español tiene veintisiete letras.
+002233	sentence	active	Las cinco vocales se llaman como suenan.
+002234	sentence	active	La eñe es la letra del español.
+002235	sentence	active	La eñe está en año, en mañana y en niño.
+002236	sentence	active	La hache no suena nunca.
+002237	sentence	active	Hache es la única letra muda.
+002238	sentence	active	¿Se escribe con be o con uve?
+002239	sentence	active	Vaca con uve, baca con be.
+002240	sentence	active	Se escribe con be, como en bueno.
+002241	sentence	active	La ge y la jota suenan igual delante de e.
+002242	sentence	active	Gente se escribe con ge.
+002243	sentence	active	México se escribe con equis.
+002244	sentence	active	La cu siempre va con u.
+002245	sentence	active	La zeta y la ce suenan igual delante de e.
+002246	sentence	active	La ye antes se llamaba i griega.
+002247	sentence	active	En México dicen ve corta, no uve.
+002248	sentence	active	Mi apellido lleva dos eles.
+002249	sentence	active	Perro lleva dos erres.
+002250	sentence	active	¿Cómo se escribe tu nombre?
+002251	sentence	active	¿Me lo deletreas, por favor?
+002252	sentence	active	Te lo deletreo despacio.
+002253	sentence	active	Repite la última letra, por favor.
+002254	sentence	active	Es una eme, no una ene.
+002255	sentence	active	¿Con hache o sin hache?
+002256	sentence	active	La primera letra es una jota.
+002257	sentence	active	Hay una ka en kilo.
+002258	sentence	active	La efe de foto.
+002259	sentence	active	La pe de padre y la be de bueno.
+002260	sentence	active	Buenos días, quiero hacer una reserva.
+002261	sentence	active	Muy bien. ¿Su nombre, por favor?
+002262	sentence	active	Elena Gómez.
+002263	sentence	active	¿Me lo deletrea, por favor?
+002264	sentence	active	Ge, o con acento, eme, e, zeta.
+002265	sentence	active	¿Con ge de gente?
+002266	sentence	active	Sí, con ge. Y Elena con una ele.
+002267	sentence	active	Perfecto. ¿Para qué día?
+002268	sentence	active	Para el viernes.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer
@@ -2122,6 +2660,80 @@
 500389	noun-card	active	dirección
 500390	noun-card	active	nota
 500391	noun-card	active	chica
+500392	noun-card	active	entrevista
+500393	noun-card	active	contrato
+500394	noun-card	active	puesto
+500395	noun-card	active	experiencia
+500396	noun-card	active	horario
+500397	noun-card	active	ahorro
+500398	noun-card	active	gasto
+500399	noun-card	active	factura
+500400	noun-card	active	presupuesto
+500401	noun-card	active	ambiente
+500402	noun-card	active	contaminación
+500403	noun-card	active	planeta
+500404	noun-card	active	clima
+500405	noun-card	active	energía
+500406	noun-card	active	naturaleza
+500407	noun-card	active	red
+500408	noun-card	active	archivo
+500409	noun-card	active	contraseña
+500410	noun-card	active	aplicación
+500411	noun-card	active	usuario
+500412	noun-card	active	artículo
+500413	noun-card	active	programa
+500414	noun-card	active	anuncio
+500415	noun-card	active	carrera
+500416	noun-card	active	título
+500417	noun-card	active	solución
+500418	noun-card	active	ventaja
+500419	noun-card	active	opinión
+500420	noun-card	active	consejo
+500421	noun-card	active	decisión
+500422	noun-card	active	esfuerzo
+500423	noun-card	active	riesgo
+500424	noun-card	active	diferencia
+500425	noun-card	active	enfermedad
+500426	noun-card	active	oportunidad
+500427	noun-card	active	oferta
+500428	noun-card	active	ruido
+500429	noun-card	active	copia
+500430	noun-card	active	temperatura
+500431	noun-card	active	plástico
+500432	noun-card	active	pena
+500433	noun-card	active	éxito
+500434	noun-card	active	dato
+500435	noun-card	active	internet
+500436	noun-card	active	página
+500437	noun-card	active	conexión
+500438	noun-card	active	documento
+500439	noun-card	active	información
+500440	noun-card	active	explicación
+500441	noun-card	active	curso
+500442	noun-card	active	transporte
+500443	noun-card	active	zona
+500444	noun-card	active	aire
+500445	noun-card	active	ley
+500446	noun-card	active	paquete
+500447	noun-card	active	calma
+500448	noun-card	active	be
+500449	noun-card	active	ce
+500450	noun-card	active	efe
+500451	noun-card	active	ge
+500452	noun-card	active	hache
+500453	noun-card	active	jota
+500454	noun-card	active	ka
+500455	noun-card	active	ele
+500456	noun-card	active	eme
+500457	noun-card	active	ene
+500458	noun-card	active	eñe
+500459	noun-card	active	pe
+500460	noun-card	active	cu
+500461	noun-card	active	erre
+500462	noun-card	active	uve
+500463	noun-card	active	equis
+500464	noun-card	active	ye
+500465	noun-card	active	zeta
 600001	modifier-card	active	bueno
 600002	modifier-card	active	malo
 600003	modifier-card	active	grande
@@ -2234,6 +2846,32 @@
 600110	modifier-card	active	italiano
 600111	modifier-card	active	correcto
 600112	modifier-card	active	seguro
+600113	modifier-card	active	posible
+600114	modifier-card	active	imposible
+600115	modifier-card	active	necesario
+600116	modifier-card	active	útil
+600117	modifier-card	active	justo
+600118	modifier-card	active	grave
+600119	modifier-card	active	responsable
+600120	modifier-card	active	capaz
+600121	modifier-card	active	dispuesto
+600122	modifier-card	active	económico
+600123	modifier-card	active	público
+600124	modifier-card	active	privado
+600125	modifier-card	active	probable
+600126	modifier-card	active	evidente
+600127	modifier-card	active	complicado
+600128	modifier-card	active	sencillo
+600129	modifier-card	active	razonable
+600130	modifier-card	active	sostenible
+600131	modifier-card	active	legal
+600132	modifier-card	active	temporal
+600133	modifier-card	active	estable
+600134	modifier-card	active	lógico
+600135	modifier-card	active	imparcial
+600136	modifier-card	active	improbable
+600137	modifier-card	active	gratuito
+600138	modifier-card	active	raro
 700001	passage	active	Una mañana normal
 700002	passage	active	Mi piso
 700003	passage	active	Un día en la oficina
@@ -2341,6 +2979,13 @@
 700105	passage	active	Un segundo en el campo
 700106	passage	active	¿Venís vosotros?
 700107	passage	active	Un segundo sin hablar
+700108	passage	active	La entrevista de trabajo
+700109	passage	active	Una queja en la tienda
+700110	passage	active	El piso compartido
+700111	passage	active	Reciclar en casa
+700112	passage	active	Un consejo sobre el trabajo
+700113	passage	active	Una noticia sobre el clima
+700114	passage	active	Una reserva por teléfono
 800001	verb-card	active	ser
 800002	verb-card	active	estar
 800003	verb-card	active	tener
@@ -2467,3 +3112,52 @@
 800124	verb-card	active	desear
 800125	verb-card	active	apetecer
 800126	verb-card	active	disculpar
+800127	verb-card	active	dudar
+800128	verb-card	active	aconsejar
+800129	verb-card	active	sugerir
+800130	verb-card	active	proponer
+800131	verb-card	active	exigir
+800132	verb-card	active	prometer
+800133	verb-card	active	convencer
+800134	verb-card	active	quejar
+800135	verb-card	active	permitir
+800136	verb-card	active	impedir
+800137	verb-card	active	suponer
+800138	verb-card	active	preocupar
+800139	verb-card	active	molestar
+800140	verb-card	active	sorprender
+800141	verb-card	active	agradecer
+800142	verb-card	active	disfrutar
+800143	verb-card	active	contratar
+800144	verb-card	active	despedir
+800145	verb-card	active	aprobar
+800146	verb-card	active	mejorar
+800147	verb-card	active	lograr
+800148	verb-card	active	evitar
+800149	verb-card	active	resolver
+800150	verb-card	active	arreglar
+800151	verb-card	active	mantener
+800152	verb-card	active	ocurrir
+800153	verb-card	active	ahorrar
+800154	verb-card	active	gastar
+800155	verb-card	active	cobrar
+800156	verb-card	active	contaminar
+800157	verb-card	active	reciclar
+800158	verb-card	active	proteger
+800159	verb-card	active	reducir
+800160	verb-card	active	cuidar
+800161	verb-card	active	compartir
+800162	verb-card	active	descargar
+800163	verb-card	active	guardar
+800164	verb-card	active	publicar
+800165	verb-card	active	firmar
+800166	verb-card	active	subir
+800167	verb-card	active	bajar
+800168	verb-card	active	tirar
+800169	verb-card	active	comparar
+800170	verb-card	active	avisar
+800171	verb-card	active	conectar
+800172	verb-card	active	conseguir
+800173	verb-card	active	valer
+800174	verb-card	active	discutir
+800175	verb-card	active	devolver

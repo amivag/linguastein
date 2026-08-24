@@ -31,4 +31,4 @@
 # future.
 #
 # Run `npm run build:data` to learn the current count; it prints it either way.
-0.10.0	2358	2026-08-24	Present subjunctive generated for all 126 verbs: 756 new forms, and the usted commands now read off it
+0.11.0	3045	2026-08-24	B1: 136 lexemes and 501 sentences, every lexeme in four or more. Plus the alphabet

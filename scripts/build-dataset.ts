@@ -14,12 +14,13 @@
  * Usage: tsx scripts/build-dataset.ts
  */
 
-import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { CEFR_LEVELS, PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
 import { sentenceMood } from '../src/domain/content/mood.ts';
 import { conjugate } from '../src/languages/es/conjugation.ts';
 import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
+import { isLetterName } from '../src/languages/es/alphabet.ts';
 import { adjectiveForms, pluralOf } from '../src/languages/es/morphology.ts';
 import {
   NUMERAL_RULES,
@@ -538,6 +539,30 @@ for (const sentence of sentences) {
  * `dieciseis` fails for having no reading, and a variant spelling fails even if
  * it parses, because it is not what the module would have written.
  */
+/*
+ * A row filed under `alphabet` has to be a name `alphabet.ts` would produce.
+ *
+ * The same guard as the numerals one below, for the same failure: `hache` and
+ * `ache` are both plausible to type and only one is the letter. Checked against
+ * the module rather than a list here, so the pack and the `spellWord` a drill
+ * would read from cannot disagree about what a letter is called.
+ *
+ * One direction only. Not every letter has a row — the five vowels are named
+ * after themselves and would collide head-on with `a`, `e`, `o` and `u` as
+ * ordinary words, and `de`, `te`, `ve` and `ese` would each ambush a far more
+ * common word in the surface index. Those are taught in sentences instead, so
+ * "every letter name has a card" is deliberately not the rule.
+ */
+for (const noun of nouns) {
+  if (!noun.topics.includes('alphabet')) continue;
+  if (!isLetterName(noun.lemma)) {
+    problems.push(
+      `${noun.lemma}: filed under the alphabet topic, but alphabet.ts does not name any ` +
+        'letter that — check the spelling, or use another topic',
+    );
+  }
+}
+
 const numeralValues = new Map<string, number>();
 
 for (const modifier of modifiers) {
@@ -2677,6 +2702,24 @@ const manifest = {
 
 writeFileSync(join(OUT_DIR, 'pack.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 
+/*
+ * Delete the `.jsonl` files this build did not write.
+ *
+ * The build appends to a directory rather than replacing it, which was harmless
+ * while every file had a hand-typed name that never changed. Deriving the level
+ * range from the content made the names move — the first B1 sentence renamed all
+ * nine — and the old set stayed on disk beside the new one: nine stale files
+ * that `globPatterns` would precache into every learner's service worker, for a
+ * pack nothing references.
+ *
+ * Scoped to `.jsonl` so `pack.json` and anything a human put here survives, and
+ * driven from `files` rather than from a name pattern, so this also catches a
+ * file that stops being emitted because its content went away.
+ */
+const written = new Set(files.map((file) => file.path));
+const stale = readdirSync(OUT_DIR).filter((name) => name.endsWith('.jsonl') && !written.has(name));
+for (const name of stale) rmSync(join(OUT_DIR, name));
+
 writeFileSync(
   join(PACKS_DIR, 'catalog.json'),
   `${JSON.stringify(
@@ -2693,6 +2736,22 @@ writeFileSync(
 // ── coverage report ─────────────────────────────────────────────────────────
 
 const allLexemes = [...verbLexemes, ...nounLexemes, ...modifierLexemes];
+
+/*
+ * The lexemes that are letter cards, by id rather than by name.
+ *
+ * Matching on the lemma alone looked equivalent and was not: `isLetterName`
+ * answers true for `a`, `o`, `de`, `te` and `ese`, which in this pack are a
+ * preposition, a conjunction, another preposition, a pronoun and a demonstrative
+ * — five of the most common A1 words there are. Exempting *those* from the
+ * recycling target silently dropped the A1 population by five and made the
+ * ratchet report an improvement nobody had earned.
+ */
+const letterCardLexemes = new Set(
+  nouns
+    .filter((noun) => noun.topics.includes('alphabet'))
+    .map((noun) => lexemeId(noun.lemma, 'NOUN')),
+);
 const uncovered = allLexemes.filter((lexeme) => !examplesByLexeme.has(lexeme.id));
 const byPos = (pos: string) => uncovered.filter((lexeme) => lexeme.pos === pos).length;
 
@@ -2864,9 +2923,16 @@ for (const rule of recyclingRows) {
    * how the target stops meaning anything. They still get sentences — they now
    * have one each, in a passage about what a trip cost — they are simply not held
    * to a threshold designed for words you learn by rereading.
+   *
+   * The letter names are exempt on the same argument, and it is the same
+   * argument rather than a second favour: `jota`, `equis` and `eñe` are a closed
+   * generated set that a learner drills as a set and recognises on sight. Six
+   * sentences apiece would be a hundred and eight sentences whose only job is to
+   * contain a letter name, which is the padding the paragraph above refuses.
    */
   const atLevel = allLexemes.filter(
-    (lexeme) => lexeme.level === rule.level && lexeme.pos !== 'NUM',
+    (lexeme) =>
+      lexeme.level === rule.level && lexeme.pos !== 'NUM' && !letterCardLexemes.has(lexeme.id),
   );
   const short = atLevel.filter((lexeme) => encountersOf(lexeme) < rule.target);
   console.log(

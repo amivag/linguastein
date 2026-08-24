@@ -7,12 +7,15 @@
 {"id":"core-es:skill:present-perfect","kind":"pattern","label":"haber + participio","level":"a2"}
 {"id":"core-es:skill:gustar-type","kind":"pattern","label":"me gusta / me duele","level":"a1"}
 {"id":"core-es:skill:hay","kind":"pattern","label":"hay","level":"a1"}
+{"id":"core-es:skill:negative-command","kind":"pattern","label":"no hables","level":"b1"}
 {"id":"core-es:skill:ordinals","kind":"pattern","label":"primero, segundo, tercero","level":"a1"}
+{"id":"core-es:skill:future","kind":"grammar","label":"futuro simple","level":"a2"}
 {"id":"core-es:skill:conditional","kind":"grammar","label":"condicional simple","level":"a2"}
 {"id":"core-es:skill:present-indicative","kind":"grammar","label":"presente de indicativo","level":"a1"}
 {"id":"core-es:skill:preterite","kind":"grammar","label":"pretérito indefinido","level":"a2"}
 {"id":"core-es:skill:imperfect","kind":"grammar","label":"pretérito imperfecto","level":"a2"}
 {"id":"core-es:skill:imperative","kind":"grammar","label":"imperativo","level":"a1"}
+{"id":"core-es:skill:present-subjunctive","kind":"grammar","label":"presente de subjuntivo","level":"b1"}
 {"id":"core-es:skill:yes-no-question","kind":"grammar","label":"¿Tienes tiempo?","level":"a1"}
 {"id":"core-es:skill:question-word","kind":"grammar","label":"¿Dónde…? ¿Cuándo…?","level":"a1"}
 {"id":"core-es:skill:order-food-drink","kind":"function","label":"Pedir comida o bebida","level":"a1"}
@@ -96,6 +99,17 @@
 {"id":"core-es:skill:echo-to-check","kind":"function","label":"Repetir algo como pregunta","level":"a1"}
 {"id":"core-es:skill:confirm-with-a-tag","kind":"function","label":"Confirmar con «¿verdad?»","level":"a1"}
 {"id":"core-es:skill:answer-a-tag","kind":"function","label":"Responder a una confirmación","level":"a1","prerequisites":["core-es:skill:confirm-with-a-tag"]}
+{"id":"core-es:skill:ask-someone-to-do","kind":"function","label":"Pedir que alguien haga algo","level":"b1","prerequisites":["core-es:skill:order-food-drink"]}
+{"id":"core-es:skill:express-a-hope","kind":"function","label":"Expresar un deseo","level":"b1","prerequisites":["core-es:skill:respond-to-wellbeing"]}
+{"id":"core-es:skill:give-advice","kind":"function","label":"Aconsejar y recomendar","level":"b1","prerequisites":["core-es:skill:follow-health-advice"]}
+{"id":"core-es:skill:express-doubt","kind":"function","label":"Expresar duda o desacuerdo","level":"b1","prerequisites":["core-es:skill:give-a-reason"]}
+{"id":"core-es:skill:react-to-news","kind":"function","label":"Reaccionar a una noticia","level":"b1","prerequisites":["core-es:skill:react-with-interest"]}
+{"id":"core-es:skill:state-a-purpose","kind":"function","label":"Explicar para qué","level":"b1","prerequisites":["core-es:skill:give-a-reason"]}
+{"id":"core-es:skill:talk-about-a-future-moment","kind":"function","label":"Hablar de cuando pase algo","level":"b1","prerequisites":["core-es:skill:say-when-something-happens"]}
+{"id":"core-es:skill:make-a-complaint","kind":"function","label":"Quejarse y pedir una solución","level":"b1","prerequisites":["core-es:skill:close-service-exchange"]}
+{"id":"core-es:skill:weigh-two-options","kind":"function","label":"Ver ventajas e inconvenientes","level":"b1","prerequisites":["core-es:skill:choose-between-options"]}
+{"id":"core-es:skill:concede-a-point","kind":"function","label":"Conceder y matizar","level":"b1","prerequisites":["core-es:skill:answer-a-tag"]}
+{"id":"core-es:skill:spell-a-word","kind":"function","label":"Deletrear una palabra","level":"a1","prerequisites":["core-es:skill:ask-for-a-word"]}
 {"id":"core-es:skill:numerals-teens","kind":"pattern","label":"dieciséis, diecisiete…","level":"a1"}
 {"id":"core-es:skill:numerals-twenties","kind":"pattern","label":"veintiuno, veintidós…","level":"a1"}
 {"id":"core-es:skill:numerals-y-joining","kind":"pattern","label":"treinta y uno / ciento uno","level":"a1"}

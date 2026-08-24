@@ -17,6 +17,60 @@ in the pack's own counts.
 
 ### Added
 
+- **The present subjunctive, generated — and B1 behind it.** The conjugator built
+  seven indicative tenses and the affirmative commands, which is most of Spanish
+  and none of B1: the level is more or less defined by the mood, so authoring B1
+  content on top of an indicative-only engine would have shipped sentences
+  labelled B1 that a B1 learner would notice were missing the thing that makes
+  them B1.
+
+  Now `conjugate` emits it from the yo form's stem plus the opposite
+  conjugation's endings, with the boot broken the way each conjugation breaks it —
+  `pensemos` and `podamos` reverting, `pidamos` and `durmamos` taking the
+  preterite vowel. Seven verbs declare a paradigm instead: six that have no usable
+  yo form (`soy` would give `soya`) and `reír`, whose stem loses its accent when
+  the stress moves onto the ending.
+
+  It also collapsed something that had been true all along. A usted command _is_
+  the third person present subjunctive, so `imperativeFormal` was `sepa` declared
+  twice with two places to be wrong; the commands are now read off the paradigm,
+  checked across every verb the pack ships. `presente de subjuntivo` is a
+  practisable skill and `no hables` a pattern, because the negative command is the
+  one place the mood is not optional-feeling: a learner who says `no habla` has
+  said "he does not speak".
+
+  Three near-misses are worth recording, because none announced itself. Keying a
+  form on tense and person alone gave `hablo` and `hable` the same id, the exact
+  collision that key's own comment warns about. The skill loop read tense before
+  mood, which would have filed every subjunctive sentence under `presente de
+indicativo`. And `entre` — the preposition — lost every sentence it had the
+  moment `entrar` gained a subjunctive, caught by the A2 recycling ratchet rather
+  than by anything watching for it; a subjunctive reading now needs a trigger
+  immediately before it, which is the same rule the skill's gloss states.
+
+- **Pack file names state their level range, and the build derives it.**
+  `es-a1-a2-core-*` was typed into ten paths, so the first B1 sentence would have
+  made all ten claim a range the pack no longer had. Derived from the levels
+  present, it renamed itself instead. The build now also deletes any `.jsonl` it
+  did not write — appending to the directory had left the old nine beside the new
+  nine for the service worker to precache — and nothing else spells these names:
+  `generate-audio.ts` and the test fixtures both ask the manifest, which is what
+  the app's loader has always done.
+
+- **The alphabet.** `src/languages/es/alphabet.ts` holds the twenty-seven letters
+  and what they are called, including the regional names a learner actually
+  collides with — `ve corta`, `i griega`, `be larga` — and deliberately not `ch`
+  and `ll`, which stopped being letters in 2010 and will still be in an older
+  textbook. `spellWord` reads any word out letter by letter with the accent
+  spoken, because `Gómez` spelled without one is a different surname.
+
+  Eighteen of the names are word cards, not twenty-seven, and the nine missing are
+  a decision rather than an oversight: the five vowels are named after themselves,
+  and `de`, `te`, `ve` and `ese` are spelled exactly like a preposition, a pronoun,
+  an imperative and a demonstrative. A card for `te` the letter would have made
+  `te` the pronoun ambiguous in every sentence in the pack. They are taught in
+  running text instead, where the context settles it.
+
 - **Asking, as a form rather than as a subject.** The pack held 376 questions and
   1,019 statements and not one place where the _same words_ appeared as both —
   which is the one thing an English speaker most needs, because Spanish adds no

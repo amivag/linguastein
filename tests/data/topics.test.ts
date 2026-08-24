@@ -9,7 +9,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { PackManifest } from '../../src/domain/content';
-import { createScratchPack, readJsonl, repoRoot } from '../fixtures/dataset';
+import { createScratchPack, packFile, readJsonl, repoRoot } from '../fixtures/dataset';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -26,8 +26,8 @@ describe('the shipped topic registry', () => {
   it('declares every topic the content uses', () => {
     const declared = new Set((shipped.topics ?? []).map((topic) => topic.id));
     const used = new Set<string>();
-    for (const file of ['es-a1-a2-core-sentences.jsonl', 'es-a1-a2-core-vocabulary.jsonl']) {
-      for (const item of readJsonl<Item>(join(repoRoot, 'public/packs/core-es', file))) {
+    for (const kind of ['sentences', 'vocabulary']) {
+      for (const item of readJsonl<Item>(packFile(join(repoRoot, 'public/packs'), kind))) {
         for (const topic of item.topics ?? []) used.add(topic);
       }
     }
@@ -48,7 +48,14 @@ describe('the shipped topic registry', () => {
   it('leads with the categories a beginner asks for by name', () => {
     // The order is authored, not derived, so it is worth asserting: the whole
     // point of the picker is that `numbers` is not the 19th tile alphabetically.
-    expect((shipped.topics ?? []).slice(0, 4).map((topic) => topic.id)).toEqual([
+    //
+    // `alphabet` took the first tile when the letters arrived, ahead of
+    // `numbers`, and that is the claim being pinned here rather than an
+    // accident of where the rows were appended: the letters are what a written
+    // language starts with, and a learner who cannot say `jota` cannot take a
+    // surname down the phone however well they count.
+    expect((shipped.topics ?? []).slice(0, 5).map((topic) => topic.id)).toEqual([
+      'alphabet',
       'numbers',
       'clock',
       'days-of-week',

@@ -445,6 +445,57 @@ retired rather than reused; it is generated, like the pack. Verb forms come from
 conjugation by hand, and add an `irregulars.ts` entry when a verb needs one
 (the build refuses to run otherwise).
 
+**The subjunctive is generated, and three A-level features turn out to be it.**
+`conjugate` emits the present subjunctive at B1 from the yo form's stem plus the
+opposite conjugation's endings, and the usted and ustedes commands are read off
+persons 3 and 6 rather than derived a second way — a usted command _is_ the third
+person present subjunctive, so `imperativeFormal` was the same fact declared
+twice and is gone. Seven verbs declare a whole paradigm: six because they have no
+usable yo form (`soy` would give `soya`), and `reír` because its stem loses an
+accent when the stress moves onto the ending (`riamos`, not `ríamos`).
+
+Two things this makes easy to get wrong, both caught once already:
+
+- **`tense: 'present'` no longer identifies a paradigm.** The subjunctive carries
+  it too, so anything selecting on tense alone gets twelve forms where a
+  paradigm has six. `formSuffix` keys on mood as well, or `hablo` and `hable`
+  would both be `hablar-pres-1s` and the second would win silently; the skill
+  loop asks mood first, or every subjunctive sentence is filed under
+  `presente de indicativo`.
+- **A subjunctive reading needs a trigger.** `entre` is the preposition in
+  `entre las dos` and `entrar`'s subjunctive in `que entre`, and generating the
+  mood turned the first into an ambiguity it had never been. `disambiguate`
+  prefers the ordinary word unless a trigger sits immediately before —
+  `SUBJUNCTIVE_TRIGGERS` — which is the same rule the skill's own gloss states.
+  Scanning further left would read `Creo que entre las dos hay tiempo` as a
+  subjunctive.
+
+**Pack file names carry the level range, and the build derives it.** `es-a1-a2-core-*`
+was typed into ten paths; `filePrefix` now comes from the same `presentLevels` the
+manifest uses, so the first B1 sentence renamed all nine files on its own. Two
+consequences. The build deletes any `.jsonl` it did not write, because appending
+to the directory left the old set beside the new one for the service worker to
+precache. And nothing else may spell one of these names: `readItems` in
+`generate-audio.ts` and `packFile` in `tests/fixtures/dataset.ts` both ask the
+manifest, after thirteen suites broke at once on a rename none of them was about.
+
+**The alphabet is a module, not rows.** `src/languages/es/alphabet.ts` holds the
+twenty-seven letters and their names, including the regional ones (`ve corta`,
+`i griega`) — `ch` and `ll` stopped being letters in 2010 and are deliberately
+absent. `spellWord` reads any word out, accent included, because `Gomez` spelled
+without one is a different surname. Only eighteen letter names are word cards: the
+five vowels are named after themselves, and `de`, `te`, `ve` and `ese` are spelled
+exactly like a preposition, a pronoun, an imperative and a demonstrative, so a
+second lexeme for any of them would make the ordinary word ambiguous everywhere it
+appears. Those are taught in sentences instead. A row filed under the `alphabet`
+topic is checked against the module, as a `NUM` row is against `numerals.ts`.
+
+Letter cards are exempt from the recycling target for the reason numerals are —
+a closed generated set drilled as a set — and the exemption keys on the **card's
+lexeme id**, not on the lemma: `isLetterName` answers true for `a`, `o`, `de`,
+`te` and `ese`, and exempting those quietly dropped the A1 population by five and
+reported an improvement nobody had earned.
+
 A tú command is spelled like the third person present, so the build cannot tell
 `Cierra la puerta` from `La tienda cierra` on its own. Declare `address` on a
 sentence that is a command and it is read as one; leave it off and it stays

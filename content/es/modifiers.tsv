@@ -307,3 +307,34 @@ ni	nor, neither	CCONJ	a2	grammar
 -	Berlín	Berlin	PROPN	a1	city	
 -	Atenas	Athens	PROPN	a1	city	
 -	menudo	often (a menudo)	ADV	a2	time	
+600113	posible	possible	ADJ	b1	core
+600114	imposible	impossible	ADJ	b1	core
+600115	necesario	necessary	ADJ	b1	core
+600116	útil	useful	ADJ	b1	core
+600117	justo	fair; exact	ADJ	b1	core
+600118	grave	serious	ADJ	b1	health
+600119	responsable	responsible	ADJ	b1	work
+600120	capaz	capable, able	ADJ	b1	core
+600121	dispuesto	willing, ready	ADJ	b1	work
+600122	económico	cheap; economic	ADJ	b1	money
+600123	público	public	ADJ	b1	city
+600124	privado	private	ADJ	b1	core
+600125	probable	likely	ADJ	b1	core
+600126	evidente	obvious	ADJ	b1	core
+600127	complicado	complicated	ADJ	b1	core
+600128	sencillo	simple, straightforward	ADJ	b1	core
+600129	razonable	reasonable	ADJ	b1	core
+600130	sostenible	sustainable	ADJ	b1	environment
+ojalá	hopefully, I hope	ADV	b1	grammar
+aunque	although, even though	SCONJ	b1	grammar
+mientras	while	SCONJ	b1	grammar
+además	besides, what is more	ADV	b1	grammar
+apenas	hardly, barely	ADV	b1	grammar
+600131	legal	legal, above board	ADJ	b1	core
+600132	temporal	temporary	ADJ	b1	work
+600133	estable	stable, settled	ADJ	b1	core
+600134	lógico	logical, only natural	ADJ	b1	core
+600135	imparcial	impartial, unbiased	ADJ	b1	news
+600136	improbable	unlikely	ADJ	b1	core
+600137	gratuito	free of charge	ADJ	b1	money
+600138	raro	odd, strange	ADJ	b1	core

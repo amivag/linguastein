@@ -28,8 +28,8 @@ interface Translation {
   readonly text: string;
 }
 
-const skills = shippedRecords<Skill>('es-a1-a2-core-skills.jsonl');
-const translations = shippedRecords<Translation>('es-a1-a2-core-translations-en.jsonl');
+const skills = shippedRecords<Skill>('skills');
+const translations = shippedRecords<Translation>('translations-en');
 
 const idOf = (rule: NumeralRule) => `core-es:skill:numerals-${rule}`;
 
@@ -43,9 +43,9 @@ describe('numeral skills in the shipped pack', () => {
     // Every other skill is emitted only when an item uses it. These are declared,
     // because the drill's targets are generated and can never be items — so a
     // filter on usage would silently drop the whole feature.
-    const items = shippedRecords<{ skills?: readonly string[] }>(
-      'es-a1-a2-core-sentences.jsonl',
-    ).flatMap((item) => item.skills ?? []);
+    const items = shippedRecords<{ skills?: readonly string[] }>('sentences').flatMap(
+      (item) => item.skills ?? [],
+    );
     expect(items.filter((id) => id.includes(':numerals-'))).toEqual([]);
     expect(skills.some((skill) => skill.id === idOf('y-joining'))).toBe(true);
   });

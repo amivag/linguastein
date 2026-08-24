@@ -91,6 +91,27 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     preteriteStemChange: 'e-i',
     imperativeTu: 'di',
   },
+  mantener: {
+    futureStem: 'mantendr',
+    stemChange: 'e-ie',
+    yo: 'mantengo',
+    preteriteStem: 'mantuv',
+    imperativeTu: 'mantén',
+  },
+  suponer: {
+    futureStem: 'supondr',
+    yo: 'supongo',
+    preteriteStem: 'supus',
+    participle: 'supuesto',
+    imperativeTu: 'supón',
+  },
+  proponer: {
+    futureStem: 'propondr',
+    yo: 'propongo',
+    preteriteStem: 'propus',
+    participle: 'propuesto',
+    imperativeTu: 'propón',
+  },
   traer: { yo: 'traigo', preteriteStem: 'traj', gerund: 'trayendo', participle: 'traído' },
   salir: { futureStem: 'saldr', yo: 'salgo', imperativeTu: 'sal' },
   saber: {
@@ -100,15 +121,21 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
     presentSubjunctive: ['sepa', 'sepas', 'sepa', 'sepamos', 'sepáis', 'sepan'],
   },
   caer: { yo: 'caigo' },
+  valer: { futureStem: 'valdr', yo: 'valgo' },
   oír: { present: ['oigo', 'oyes', 'oye', 'oímos', 'oís', 'oyen'] },
+  // Not the -zco pattern below, though it looks like it: the c of `vencer`
+  // simply becomes z before a back vowel. `convenzo`, never `convenzco`.
+  convencer: { yo: 'convenzo' },
   conocer: { yo: 'conozco' },
   // Like conocer: the -zco first person is the whole of its irregularity.
   apetecer: { yo: 'apetezco' },
   parecer: { yo: 'parezco' },
   ofrecer: { yo: 'ofrezco' },
   nacer: { yo: 'nazco' },
+  agradecer: { yo: 'agradezco' },
   conducir: { yo: 'conduzco', preteriteStem: 'conduj' },
   traducir: { yo: 'traduzco', preteriteStem: 'traduj' },
+  reducir: { yo: 'reduzco', preteriteStem: 'reduj' },
   andar: { preteriteStem: 'anduv' },
   poder: { futureStem: 'podr', stemChange: 'o-ue', preteriteStem: 'pud', gerund: 'pudiendo' },
   querer: { futureStem: 'querr', stemChange: 'e-ie', preteriteStem: 'quis' },
@@ -126,6 +153,7 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   preferir: { stemChange: 'e-ie', preteriteStemChange: 'e-i' },
   sentir: { stemChange: 'e-ie', preteriteStemChange: 'e-i' },
   divertir: { stemChange: 'e-ie', preteriteStemChange: 'e-i' },
+  sugerir: { stemChange: 'e-ie', preteriteStemChange: 'e-i' },
   nevar: { stemChange: 'e-ie' },
 
   // ── Stem-changing: o → ue ──────────────────────────────────────────────
@@ -143,6 +171,8 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   almorzar: { stemChange: 'o-ue' },
   llover: { stemChange: 'o-ue' },
   soler: { stemChange: 'o-ue' },
+  aprobar: { stemChange: 'o-ue' },
+  resolver: { stemChange: 'o-ue', participle: 'resuelto' },
   jugar: { stemChange: 'u-ue' },
 
   // ── Stem-changing: e → i ───────────────────────────────────────────────
@@ -153,6 +183,8 @@ export const IRREGULAR_VERBS: Readonly<Record<string, Irregularity>> = {
   servir: { stemChange: 'e-i', preteriteStemChange: 'e-i' },
   vestir: { stemChange: 'e-i', preteriteStemChange: 'e-i' },
   elegir: { stemChange: 'e-i', preteriteStemChange: 'e-i' },
+  impedir: { stemChange: 'e-i', preteriteStemChange: 'e-i' },
+  despedir: { stemChange: 'e-i', preteriteStemChange: 'e-i' },
   reír: {
     present: ['río', 'ríes', 'ríe', 'reímos', 'reís', 'ríen'],
     preteriteStemChange: 'e-i',

@@ -34,7 +34,7 @@ function signedOff(output: string): string {
 /** The sentence item with this local id, as the built pack holds it. */
 function item(id: string): { provenance?: { review: string } } | undefined {
   return pack
-    .records<{ id: string; provenance?: { review: string } }>('es-a1-a2-core-sentences.jsonl')
+    .records<{ id: string; provenance?: { review: string } }>('sentences')
     .find((record) => record.id === `core-es:item:${id}`);
 }
 

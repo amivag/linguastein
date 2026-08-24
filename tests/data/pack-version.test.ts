@@ -19,7 +19,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import type { PackManifest } from '../../src/domain/content';
-import { createScratchPack, readJsonl, repoRoot } from '../fixtures/dataset';
+import { createScratchPack, packFile, readJsonl, repoRoot } from '../fixtures/dataset';
 
 const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
@@ -41,8 +41,8 @@ const shipped = JSON.parse(
   readFileSync(join(repoRoot, 'public/packs/core-es/pack.json'), 'utf8'),
 ) as PackManifest;
 
-const shippedItems = ['es-a1-a2-core-sentences.jsonl', 'es-a1-a2-core-vocabulary.jsonl'].reduce(
-  (total, file) => total + readJsonl(join(repoRoot, 'public/packs/core-es', file)).length,
+const shippedItems = ['sentences', 'vocabulary'].reduce(
+  (total, kind) => total + readJsonl(packFile(join(repoRoot, 'public/packs'), kind)).length,
   0,
 );
 
@@ -84,8 +84,8 @@ describe('the authored pack version', () => {
  */
 describe('the levels the manifest advertises', () => {
   const levelsOfShippedItems = () => {
-    const items = ['es-a1-a2-core-sentences.jsonl', 'es-a1-a2-core-vocabulary.jsonl'].flatMap(
-      (file) => readJsonl<{ level?: string }>(join(repoRoot, 'public/packs/core-es', file)),
+    const items = ['sentences', 'vocabulary'].flatMap((kind) =>
+      readJsonl<{ level?: string }>(packFile(join(repoRoot, 'public/packs'), kind)),
     );
     return [...new Set(items.map((item) => item.level).filter(Boolean))].sort();
   };

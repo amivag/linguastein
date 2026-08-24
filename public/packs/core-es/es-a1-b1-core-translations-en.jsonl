@@ -304,6 +304,43 @@
 {"ref":"core-es:item:001728","lang":"en","text":"Nobody said anything else, neither the boss nor his brother.","type":"natural"}
 {"ref":"core-es:item:001729","lang":"en","text":"A newly arrived employee started talking about something else.","type":"natural"}
 {"ref":"core-es:item:001730","lang":"en","text":"After a second, we all went back to the project.","type":"natural"}
+{"ref":"core-es:item:002232","lang":"en","text":"The Spanish alphabet has twenty-seven letters.","type":"natural","note":"Twenty-nine until 2010, when ch and ll stopped counting as letters of their own. An older textbook will say twenty-nine."}
+{"ref":"core-es:item:002233","lang":"en","text":"The five vowels are called the way they sound.","type":"natural","note":"So the names of a, e, i, o and u need no learning — which is why the letters worth drilling are the consonants."}
+{"ref":"core-es:item:002234","lang":"en","text":"The eñe is the Spanish letter.","type":"natural"}
+{"ref":"core-es:item:002235","lang":"en","text":"The eñe is in año, in mañana and in niño.","type":"natural"}
+{"ref":"core-es:item:002236","lang":"en","text":"The letter H is never pronounced.","type":"natural","note":"Which is why hola and ola sound identical, and why a Spanish speaker writing English drops the h."}
+{"ref":"core-es:item:002237","lang":"en","text":"H is the only silent letter.","type":"natural"}
+{"ref":"core-es:item:002238","lang":"en","text":"Is it written with a B or a V?","type":"natural","note":"The most useful question in this file: be and uve sound the same in Spanish, so this is asked constantly by native speakers too."}
+{"ref":"core-es:item:002239","lang":"en","text":"Vaca with a V, baca with a B.","type":"natural"}
+{"ref":"core-es:item:002240","lang":"en","text":"It is written with a B, as in bueno.","type":"natural"}
+{"ref":"core-es:item:002241","lang":"en","text":"G and J sound the same before an e.","type":"natural"}
+{"ref":"core-es:item:002242","lang":"en","text":"Gente is written with a G.","type":"natural"}
+{"ref":"core-es:item:002243","lang":"en","text":"México is written with an X.","type":"natural"}
+{"ref":"core-es:item:002244","lang":"en","text":"Q always goes with a U.","type":"natural"}
+{"ref":"core-es:item:002245","lang":"en","text":"Z and C sound the same before an e.","type":"natural"}
+{"ref":"core-es:item:002246","lang":"en","text":"The letter Y used to be called i griega.","type":"natural","note":"Renamed ye in 2010. Most speakers over thirty still say i griega, so both are worth knowing."}
+{"ref":"core-es:item:002247","lang":"en","text":"In Mexico they say ve corta, not uve.","type":"natural"}
+{"ref":"core-es:item:002248","lang":"en","text":"My surname has two Ls.","type":"natural"}
+{"ref":"core-es:item:002249","lang":"en","text":"Perro has two Rs.","type":"natural"}
+{"ref":"core-es:item:002250","lang":"en","text":"How do you write your name?","type":"natural"}
+{"ref":"core-es:item:002251","lang":"en","text":"Could you spell it for me, please?","type":"natural"}
+{"ref":"core-es:item:002252","lang":"en","text":"I will spell it for you slowly.","type":"natural"}
+{"ref":"core-es:item:002253","lang":"en","text":"Say the last letter again, please.","type":"natural"}
+{"ref":"core-es:item:002254","lang":"en","text":"It is an M, not an N.","type":"natural"}
+{"ref":"core-es:item:002255","lang":"en","text":"With an H or without?","type":"natural"}
+{"ref":"core-es:item:002256","lang":"en","text":"The first letter is a J.","type":"natural"}
+{"ref":"core-es:item:002257","lang":"en","text":"There is a K in kilo.","type":"natural"}
+{"ref":"core-es:item:002258","lang":"en","text":"F for foto.","type":"natural"}
+{"ref":"core-es:item:002259","lang":"en","text":"P for padre and B for bueno.","type":"natural"}
+{"ref":"core-es:item:002260","lang":"en","text":"Good morning, I would like to make a booking.","type":"natural"}
+{"ref":"core-es:item:002261","lang":"en","text":"Very good. Your name, please?","type":"natural"}
+{"ref":"core-es:item:002262","lang":"en","text":"Elena Gómez.","type":"natural"}
+{"ref":"core-es:item:002263","lang":"en","text":"Could you spell it for me, please?","type":"natural"}
+{"ref":"core-es:item:002264","lang":"en","text":"G, O with an accent, M, E, Z.","type":"natural","note":"The accent is spoken, not skipped: Gomez without it is a different surname."}
+{"ref":"core-es:item:002265","lang":"en","text":"With a G as in gente?","type":"natural"}
+{"ref":"core-es:item:002266","lang":"en","text":"Yes, with a G. And Elena with one L.","type":"natural"}
+{"ref":"core-es:item:002267","lang":"en","text":"Perfect. For what day?","type":"natural"}
+{"ref":"core-es:item:002268","lang":"en","text":"For Friday.","type":"natural"}
 {"ref":"core-es:item:001396","lang":"en","text":"Your brother works here.","type":"natural","note":"The statement. Nothing about the words marks it as one."}
 {"ref":"core-es:item:001397","lang":"en","text":"Does your brother work here?","type":"natural","note":"The same five words. English needs «does»; Spanish needs the marks."}
 {"ref":"core-es:item:001398","lang":"en","text":"There's bread on the table.","type":"natural"}
@@ -334,6 +371,507 @@
 {"ref":"core-es:item:001423","lang":"en","text":"Then let's go tomorrow, OK?","type":"natural","note":"`¿vale?` asks for agreement to a plan rather than to a fact."}
 {"ref":"core-es:item:001424","lang":"en","text":"OK. At ten, then?","type":"natural"}
 {"ref":"core-es:item:001425","lang":"en","text":"At ten. Now I'm sure.","type":"natural"}
+{"ref":"core-es:item:001816","lang":"en","text":"The interview is on Tuesday at ten.","type":"natural"}
+{"ref":"core-es:item:001817","lang":"en","text":"After the interview, they called me the same day.","type":"natural"}
+{"ref":"core-es:item:001818","lang":"en","text":"I signed the contract last week.","type":"natural"}
+{"ref":"core-es:item:001819","lang":"en","text":"The contract is temporary, only for six months.","type":"natural"}
+{"ref":"core-es:item:001820","lang":"en","text":"My hours are nine to five.","type":"natural"}
+{"ref":"core-es:item:001821","lang":"en","text":"This month I have easier hours.","type":"natural"}
+{"ref":"core-es:item:001822","lang":"en","text":"It is a new post in the Madrid office.","type":"natural"}
+{"ref":"core-es:item:001823","lang":"en","text":"The post asks for three years of experience.","type":"natural"}
+{"ref":"core-es:item:001824","lang":"en","text":"I have experience with difficult clients.","type":"natural"}
+{"ref":"core-es:item:001825","lang":"en","text":"The company is going to take on two more people.","type":"natural"}
+{"ref":"core-es:item:001826","lang":"en","text":"They hire young people every summer.","type":"natural"}
+{"ref":"core-es:item:001827","lang":"en","text":"They promised us a better salary in January.","type":"natural"}
+{"ref":"core-es:item:001828","lang":"en","text":"I promise you I will finish it tomorrow.","type":"natural"}
+{"ref":"core-es:item:001829","lang":"en","text":"He promised to help me and did not come.","type":"natural"}
+{"ref":"core-es:item:001830","lang":"en","text":"Do not promise anything you cannot do.","type":"natural"}
+{"ref":"core-es:item:001831","lang":"en","text":"They dismissed three employees in March.","type":"natural"}
+{"ref":"core-es:item:001832","lang":"en","text":"Nobody knows why they let him go.","type":"natural"}
+{"ref":"core-es:item:001833","lang":"en","text":"I said goodbye to my colleagues on Friday.","type":"natural","note":"The same verb both ways: «despedir a alguien» is to dismiss them, «despedirse de alguien» is to say goodbye."}
+{"ref":"core-es:item:001834","lang":"en","text":"It is a private company, not a state one.","type":"natural"}
+{"ref":"core-es:item:001835","lang":"en","text":"I have worked in the private sector for two years.","type":"natural"}
+{"ref":"core-es:item:001836","lang":"en","text":"The data is private and I do not share it.","type":"natural"}
+{"ref":"core-es:item:001837","lang":"en","text":"A private school costs a lot of money.","type":"natural"}
+{"ref":"core-es:item:001838","lang":"en","text":"I am responsible for the Monday meeting.","type":"natural"}
+{"ref":"core-es:item:001839","lang":"en","text":"I am looking for someone responsible for the post.","type":"natural"}
+{"ref":"core-es:item:001840","lang":"en","text":"He is a very responsible boy for his age.","type":"natural"}
+{"ref":"core-es:item:001841","lang":"en","text":"Who is responsible for this mistake?","type":"natural"}
+{"ref":"core-es:item:001842","lang":"en","text":"I am willing to work Saturdays.","type":"natural"}
+{"ref":"core-es:item:001843","lang":"en","text":"I am not willing to pay more.","type":"natural"}
+{"ref":"core-es:item:001844","lang":"en","text":"If you are willing to wait, there is room.","type":"natural"}
+{"ref":"core-es:item:001845","lang":"en","text":"They were willing to change the hours.","type":"natural"}
+{"ref":"core-es:item:001846","lang":"en","text":"I suppose the meeting will be a long one.","type":"natural"}
+{"ref":"core-es:item:001847","lang":"en","text":"I assumed you already knew.","type":"natural"}
+{"ref":"core-es:item:001848","lang":"en","text":"Do you suppose they are going to hire someone?","type":"natural"}
+{"ref":"core-es:item:001849","lang":"en","text":"We assume the price is going to go up.","type":"natural"}
+{"ref":"core-es:item:001850","lang":"en","text":"I managed to finish the project on time.","type":"natural"}
+{"ref":"core-es:item:001851","lang":"en","text":"I cannot manage to understand this article.","type":"natural"}
+{"ref":"core-es:item:001852","lang":"en","text":"We managed to cut the office expenses.","type":"natural"}
+{"ref":"core-es:item:001853","lang":"en","text":"If you study, you are going to make it.","type":"natural"}
+{"ref":"core-es:item:001854","lang":"en","text":"I have kept the same routine since January.","type":"natural"}
+{"ref":"core-es:item:001855","lang":"en","text":"It is hard to keep up such a big flat.","type":"natural"}
+{"ref":"core-es:item:001856","lang":"en","text":"We kept the price the whole year.","type":"natural"}
+{"ref":"core-es:item:001857","lang":"en","text":"Keep calm and call the doctor.","type":"natural"}
+{"ref":"core-es:item:001858","lang":"en","text":"I have a small amount saved for the holidays.","type":"natural"}
+{"ref":"core-es:item:001859","lang":"en","text":"This month's saving came to a hundred euros.","type":"natural"}
+{"ref":"core-es:item:001860","lang":"en","text":"With this plan the saving is obvious.","type":"natural"}
+{"ref":"core-es:item:001861","lang":"en","text":"Every bit saved counts when the salary is low.","type":"natural"}
+{"ref":"core-es:item:001862","lang":"en","text":"I save a little every month.","type":"natural"}
+{"ref":"core-es:item:001863","lang":"en","text":"We are saving to buy a car.","type":"natural"}
+{"ref":"core-es:item:001864","lang":"en","text":"I spend too much on eating out.","type":"natural"}
+{"ref":"core-es:item:001865","lang":"en","text":"Spending on energy went up a lot this winter.","type":"natural"}
+{"ref":"core-es:item:001866","lang":"en","text":"We need to bring the month's spending down.","type":"natural"}
+{"ref":"core-es:item:001867","lang":"en","text":"The electricity bill arrived yesterday.","type":"natural"}
+{"ref":"core-es:item:001868","lang":"en","text":"I paid the bill online.","type":"natural"}
+{"ref":"core-es:item:001869","lang":"en","text":"This bill is not right.","type":"natural"}
+{"ref":"core-es:item:001870","lang":"en","text":"The project budget is a thousand euros.","type":"natural"}
+{"ref":"core-es:item:001871","lang":"en","text":"We went over budget again.","type":"natural"}
+{"ref":"core-es:item:001872","lang":"en","text":"I drew up a budget for the month.","type":"natural"}
+{"ref":"core-es:item:001873","lang":"en","text":"They charged me twice for the same ticket.","type":"natural"}
+{"ref":"core-es:item:001874","lang":"en","text":"How much do you charge an hour?","type":"natural"}
+{"ref":"core-es:item:001875","lang":"en","text":"I get paid on the fifteenth of each month.","type":"natural"}
+{"ref":"core-es:item:001876","lang":"en","text":"They do not charge anything for delivery.","type":"natural"}
+{"ref":"core-es:item:001877","lang":"en","text":"It is a very good deal for two nights.","type":"natural"}
+{"ref":"core-es:item:001878","lang":"en","text":"The offer ends on Sunday.","type":"natural"}
+{"ref":"core-es:item:001879","lang":"en","text":"Compare the two offers before deciding.","type":"natural"}
+{"ref":"core-es:item:001880","lang":"en","text":"I compared the prices in three shops.","type":"natural"}
+{"ref":"core-es:item:001881","lang":"en","text":"If you compare, you will see the difference.","type":"natural"}
+{"ref":"core-es:item:001882","lang":"en","text":"The course is free for students.","type":"natural"}
+{"ref":"core-es:item:001883","lang":"en","text":"Entry to the museum is free on Sunday.","type":"natural"}
+{"ref":"core-es:item:001884","lang":"en","text":"There is free wifi throughout the station.","type":"natural"}
+{"ref":"core-es:item:001885","lang":"en","text":"It is a cheap and very useful course.","type":"natural"}
+{"ref":"core-es:item:001886","lang":"en","text":"We are looking for a cheaper hotel.","type":"natural"}
+{"ref":"core-es:item:001887","lang":"en","text":"The cheapest solution is not the best one.","type":"natural"}
+{"ref":"core-es:item:001888","lang":"en","text":"Cars pollute more than the train.","type":"natural"}
+{"ref":"core-es:item:001889","lang":"en","text":"This factory pollutes the river.","type":"natural"}
+{"ref":"core-es:item:001890","lang":"en","text":"We pollute less than we did ten years ago.","type":"natural"}
+{"ref":"core-es:item:001891","lang":"en","text":"Do not pollute the sea with plastic.","type":"natural"}
+{"ref":"core-es:item:001892","lang":"en","text":"Air pollution is a serious problem.","type":"natural"}
+{"ref":"core-es:item:001893","lang":"en","text":"There is more pollution in the city than in the country.","type":"natural"}
+{"ref":"core-es:item:001894","lang":"en","text":"I recycle paper and plastic at home.","type":"natural"}
+{"ref":"core-es:item:001895","lang":"en","text":"We recycle glass bottles.","type":"natural"}
+{"ref":"core-es:item:001896","lang":"en","text":"Plastic takes many years to disappear.","type":"natural"}
+{"ref":"core-es:item:001897","lang":"en","text":"I almost never buy water in a plastic bottle.","type":"natural"}
+{"ref":"core-es:item:001898","lang":"en","text":"We need to protect the forests.","type":"natural"}
+{"ref":"core-es:item:001899","lang":"en","text":"I protect my data with a long password.","type":"natural"}
+{"ref":"core-es:item:001900","lang":"en","text":"This park protects the animals.","type":"natural"}
+{"ref":"core-es:item:001901","lang":"en","text":"The law protects customers.","type":"natural"}
+{"ref":"core-es:item:001902","lang":"en","text":"I want to cut down on plastic in the kitchen.","type":"natural"}
+{"ref":"core-es:item:001903","lang":"en","text":"We cut water use by half.","type":"natural"}
+{"ref":"core-es:item:001904","lang":"en","text":"If you turn the temperature down, you use less.","type":"natural"}
+{"ref":"core-es:item:001905","lang":"en","text":"The temperature dropped five degrees overnight.","type":"natural"}
+{"ref":"core-es:item:001906","lang":"en","text":"The sea temperature rises every summer.","type":"natural"}
+{"ref":"core-es:item:001907","lang":"en","text":"In this temperature I do not want to go out.","type":"natural"}
+{"ref":"core-es:item:001908","lang":"en","text":"The coastal climate is milder.","type":"natural"}
+{"ref":"core-es:item:001909","lang":"en","text":"The climate is changing faster than we thought.","type":"natural"}
+{"ref":"core-es:item:001910","lang":"en","text":"I like the dry climate inland.","type":"natural"}
+{"ref":"core-es:item:001911","lang":"en","text":"We need more sustainable transport.","type":"natural"}
+{"ref":"core-es:item:001912","lang":"en","text":"It is a sustainable and responsible company.","type":"natural"}
+{"ref":"core-es:item:001913","lang":"en","text":"We are looking for a sustainable long-term solution.","type":"natural"}
+{"ref":"core-es:item:001914","lang":"en","text":"Solar energy is sustainable.","type":"natural"}
+{"ref":"core-es:item:001915","lang":"en","text":"Energy is more expensive this year.","type":"natural"}
+{"ref":"core-es:item:001916","lang":"en","text":"This house uses little energy.","type":"natural"}
+{"ref":"core-es:item:001917","lang":"en","text":"I spend Sundays out in nature.","type":"natural"}
+{"ref":"core-es:item:001918","lang":"en","text":"The natural world in this area is very rich.","type":"natural"}
+{"ref":"core-es:item:001919","lang":"en","text":"Looking after nature is looking after our health.","type":"natural"}
+{"ref":"core-es:item:001920","lang":"en","text":"Children learn a lot out in nature.","type":"natural"}
+{"ref":"core-es:item:001921","lang":"en","text":"The planet cannot wait any longer.","type":"natural"}
+{"ref":"core-es:item:001922","lang":"en","text":"It is the planet closest to the sun.","type":"natural"}
+{"ref":"core-es:item:001923","lang":"en","text":"I look after my grandmother at weekends.","type":"natural"}
+{"ref":"core-es:item:001924","lang":"en","text":"Look after the computer, it belongs to work.","type":"natural"}
+{"ref":"core-es:item:001925","lang":"en","text":"The atmosphere in the office needs looking after.","type":"natural"}
+{"ref":"core-es:item:001926","lang":"en","text":"The atmosphere in the bar is very relaxed.","type":"natural"}
+{"ref":"core-es:item:001927","lang":"en","text":"We throw away very little food at home.","type":"natural"}
+{"ref":"core-es:item:001928","lang":"en","text":"I threw the old papers out yesterday.","type":"natural"}
+{"ref":"core-es:item:001929","lang":"en","text":"I downloaded the app in five minutes.","type":"natural"}
+{"ref":"core-es:item:001930","lang":"en","text":"Download the file before you leave.","type":"natural"}
+{"ref":"core-es:item:001931","lang":"en","text":"Do not download anything from that site.","type":"natural"}
+{"ref":"core-es:item:001932","lang":"en","text":"The app downloads the photos by itself.","type":"natural"}
+{"ref":"core-es:item:001933","lang":"en","text":"The computer will not connect to the wifi.","type":"natural"}
+{"ref":"core-es:item:001934","lang":"en","text":"Connect the phone to the screen.","type":"natural"}
+{"ref":"core-es:item:001935","lang":"en","text":"I go online in the morning to read my email.","type":"natural"}
+{"ref":"core-es:item:001936","lang":"en","text":"We connected the house to the network last month.","type":"natural"}
+{"ref":"core-es:item:001937","lang":"en","text":"The hotel network is very slow.","type":"natural"}
+{"ref":"core-es:item:001938","lang":"en","text":"I keep one copy in the cloud and another at home.","type":"natural"}
+{"ref":"core-es:item:001939","lang":"en","text":"Make me a copy of this document.","type":"natural"}
+{"ref":"core-es:item:001940","lang":"en","text":"The copy did not come out well.","type":"natural"}
+{"ref":"core-es:item:001941","lang":"en","text":"Each user has their own password.","type":"natural"}
+{"ref":"core-es:item:001942","lang":"en","text":"The new user cannot log in yet.","type":"natural"}
+{"ref":"core-es:item:001943","lang":"en","text":"There are three of us using the same account.","type":"natural"}
+{"ref":"core-es:item:001944","lang":"en","text":"The user is right, the app is faulty.","type":"natural"}
+{"ref":"core-es:item:001945","lang":"en","text":"I share the flat with two friends.","type":"natural"}
+{"ref":"core-es:item:001946","lang":"en","text":"Shall we share a dessert?","type":"natural"}
+{"ref":"core-es:item:001947","lang":"en","text":"They published the article this morning.","type":"natural"}
+{"ref":"core-es:item:001948","lang":"en","text":"The paper publishes an interview every Sunday.","type":"natural"}
+{"ref":"core-es:item:001949","lang":"en","text":"Do not post that photo without asking.","type":"natural"}
+{"ref":"core-es:item:001950","lang":"en","text":"I published my first article last year.","type":"natural"}
+{"ref":"core-es:item:001951","lang":"en","text":"It is a long article but a very clear one.","type":"natural"}
+{"ref":"core-es:item:001952","lang":"en","text":"I read an article about the climate.","type":"natural"}
+{"ref":"core-es:item:001953","lang":"en","text":"The nine o'clock programme is the most watched.","type":"natural"}
+{"ref":"core-es:item:001954","lang":"en","text":"This programme does not strike me as impartial.","type":"natural"}
+{"ref":"core-es:item:001955","lang":"en","text":"I am looking for an unbiased newspaper.","type":"natural"}
+{"ref":"core-es:item:001956","lang":"en","text":"A judge has to be impartial.","type":"natural"}
+{"ref":"core-es:item:001957","lang":"en","text":"They ran an advert on the radio.","type":"natural"}
+{"ref":"core-es:item:001958","lang":"en","text":"I saw the advert for the post online.","type":"natural"}
+{"ref":"core-es:item:001959","lang":"en","text":"The adverts last longer than the programme.","type":"natural"}
+{"ref":"core-es:item:001960","lang":"en","text":"Public transport is good in this city.","type":"natural"}
+{"ref":"core-es:item:001961","lang":"en","text":"It is a public park, entry is free.","type":"natural"}
+{"ref":"core-es:item:001962","lang":"en","text":"Public opinion changed very quickly.","type":"natural"}
+{"ref":"core-es:item:001963","lang":"en","text":"There is a public library in the centre.","type":"natural"}
+{"ref":"core-es:item:001964","lang":"en","text":"My opinion is different from yours.","type":"natural"}
+{"ref":"core-es:item:001965","lang":"en","text":"What is your opinion on the contract?","type":"natural"}
+{"ref":"core-es:item:001966","lang":"en","text":"I changed my mind after reading it.","type":"natural"}
+{"ref":"core-es:item:001967","lang":"en","text":"Nobody convinces me with that example.","type":"natural"}
+{"ref":"core-es:item:001968","lang":"en","text":"She convinced me in two minutes.","type":"natural"}
+{"ref":"core-es:item:001969","lang":"en","text":"The price does not convince me.","type":"natural"}
+{"ref":"core-es:item:001970","lang":"en","text":"We convinced the boss to change the hours.","type":"natural"}
+{"ref":"core-es:item:001971","lang":"en","text":"As well as being cheap, it is fast.","type":"natural","note":"«Además» adds a second reason to one already given, where «también» only adds another item."}
+{"ref":"core-es:item:001972","lang":"en","text":"The flat is small and on top of that it is far away.","type":"natural"}
+{"ref":"core-es:item:001973","lang":"en","text":"What is more, I do not have time this week.","type":"natural"}
+{"ref":"core-es:item:001974","lang":"en","text":"It is useful and on top of that it costs nothing.","type":"natural"}
+{"ref":"core-es:item:001975","lang":"en","text":"I hardly have time to eat.","type":"natural"}
+{"ref":"core-es:item:001976","lang":"en","text":"I hardly know my neighbours.","type":"natural"}
+{"ref":"core-es:item:001977","lang":"en","text":"There were barely ten people in the room.","type":"natural"}
+{"ref":"core-es:item:001978","lang":"en","text":"You can hardly hear the television.","type":"natural"}
+{"ref":"core-es:item:001979","lang":"en","text":"I finished my degree last year.","type":"natural"}
+{"ref":"core-es:item:001980","lang":"en","text":"I am doing a three-year degree.","type":"natural"}
+{"ref":"core-es:item:001981","lang":"en","text":"My career at the company began in the Seville office.","type":"natural"}
+{"ref":"core-es:item:001982","lang":"en","text":"I have had my English qualification since May.","type":"natural"}
+{"ref":"core-es:item:001983","lang":"en","text":"You need a qualification for this post.","type":"natural"}
+{"ref":"core-es:item:001984","lang":"en","text":"The title of the article is very long.","type":"natural"}
+{"ref":"core-es:item:001985","lang":"en","text":"I keep the certificate somewhere safe.","type":"natural"}
+{"ref":"core-es:item:001986","lang":"en","text":"I passed the exam with a good mark.","type":"natural"}
+{"ref":"core-es:item:001987","lang":"en","text":"If you study, you pass.","type":"natural"}
+{"ref":"core-es:item:001988","lang":"en","text":"The boss approved the budget yesterday.","type":"natural"}
+{"ref":"core-es:item:001989","lang":"en","text":"It is a common illness in winter.","type":"natural"}
+{"ref":"core-es:item:001990","lang":"en","text":"The illness is not serious, but it needs rest.","type":"natural"}
+{"ref":"core-es:item:001991","lang":"en","text":"He recovered from a long illness.","type":"natural"}
+{"ref":"core-es:item:001992","lang":"en","text":"It is a bad pain, but it is not serious.","type":"natural"}
+{"ref":"core-es:item:001993","lang":"en","text":"The noise from the street stops me sleeping.","type":"natural"}
+{"ref":"core-es:item:001994","lang":"en","text":"There is a lot of noise in this bar.","type":"natural"}
+{"ref":"core-es:item:001995","lang":"en","text":"You can hear the noise of the train from the garden.","type":"natural"}
+{"ref":"core-es:item:001996","lang":"en","text":"Nothing stops you trying.","type":"natural"}
+{"ref":"core-es:item:001997","lang":"en","text":"The noise makes conversation impossible.","type":"natural"}
+{"ref":"core-es:item:001998","lang":"en","text":"The rain stopped the match.","type":"natural"}
+{"ref":"core-es:item:001999","lang":"en","text":"Nobody stops me changing jobs.","type":"natural"}
+{"ref":"core-es:item:002000","lang":"en","text":"It is impossible to get there by eight.","type":"natural"}
+{"ref":"core-es:item:002001","lang":"en","text":"There is no way he knows.","type":"natural"}
+{"ref":"core-es:item:002002","lang":"en","text":"It seems impossible, but we did it.","type":"natural"}
+{"ref":"core-es:item:002003","lang":"en","text":"With this noise it is impossible to study.","type":"natural"}
+{"ref":"core-es:item:002004","lang":"en","text":"It will probably rain in the afternoon.","type":"natural"}
+{"ref":"core-es:item:002005","lang":"en","text":"It is unlikely, but it is possible.","type":"natural"}
+{"ref":"core-es:item:002006","lang":"en","text":"The most likely thing is that he will arrive late.","type":"natural"}
+{"ref":"core-es:item:002007","lang":"en","text":"A change of hours is likely in January.","type":"natural"}
+{"ref":"core-es:item:002008","lang":"en","text":"He is capable of doing it on his own.","type":"natural"}
+{"ref":"core-es:item:002009","lang":"en","text":"I am not able to say no to her.","type":"natural"}
+{"ref":"core-es:item:002010","lang":"en","text":"She is a capable and very calm person.","type":"natural"}
+{"ref":"core-es:item:002011","lang":"en","text":"We are able to finish today.","type":"natural"}
+{"ref":"core-es:item:002012","lang":"en","text":"Let me give you a piece of advice: do not sign today.","type":"natural"}
+{"ref":"core-es:item:002013","lang":"en","text":"That was good advice, thank you.","type":"natural"}
+{"ref":"core-es:item:002014","lang":"en","text":"I asked my sister for advice.","type":"natural"}
+{"ref":"core-es:item:002015","lang":"en","text":"Her advice helped me a lot.","type":"natural"}
+{"ref":"core-es:item:002016","lang":"en","text":"The advantage of this flat is the light.","type":"natural"}
+{"ref":"core-es:item:002017","lang":"en","text":"It has the advantage of being near the centre.","type":"natural"}
+{"ref":"core-es:item:002018","lang":"en","text":"The only advantage is the price.","type":"natural"}
+{"ref":"core-es:item:002019","lang":"en","text":"What advantage does the train have over the car?","type":"natural"}
+{"ref":"core-es:item:002020","lang":"en","text":"Something odd happened this morning.","type":"natural"}
+{"ref":"core-es:item:002021","lang":"en","text":"I do not know what is going on with the app.","type":"natural"}
+{"ref":"core-es:item:002022","lang":"en","text":"The same thing happens every winter.","type":"natural"}
+{"ref":"core-es:item:002023","lang":"en","text":"What happened in the meeting?","type":"natural"}
+{"ref":"core-es:item:002024","lang":"en","text":"I am grateful for your help.","type":"natural"}
+{"ref":"core-es:item:002025","lang":"en","text":"I thanked you for the advice at the time.","type":"natural"}
+{"ref":"core-es:item:002026","lang":"en","text":"We are very grateful for the information.","type":"natural"}
+{"ref":"core-es:item:002027","lang":"en","text":"I really enjoyed the film.","type":"natural"}
+{"ref":"core-es:item:002028","lang":"en","text":"We enjoy the garden in summer.","type":"natural"}
+{"ref":"core-es:item:002029","lang":"en","text":"Enjoy the weekend.","type":"natural"}
+{"ref":"core-es:item:002030","lang":"en","text":"While I wait, I read the paper.","type":"natural"}
+{"ref":"core-es:item:002031","lang":"en","text":"While you cook, I will clean.","type":"natural"}
+{"ref":"core-es:item:002032","lang":"en","text":"I worked in a bar while I was studying.","type":"natural"}
+{"ref":"core-es:item:002033","lang":"en","text":"The effort was worth it.","type":"natural"}
+{"ref":"core-es:item:002034","lang":"en","text":"With a bit of effort you will manage it.","type":"natural"}
+{"ref":"core-es:item:002035","lang":"en","text":"It was a big effort for the whole family.","type":"natural"}
+{"ref":"core-es:item:002036","lang":"en","text":"It is a shame it is raining today.","type":"natural"}
+{"ref":"core-es:item:002037","lang":"en","text":"What a shame, I really liked that bar.","type":"natural"}
+{"ref":"core-es:item:002038","lang":"en","text":"The museum is worth a visit.","type":"natural"}
+{"ref":"core-es:item:002039","lang":"en","text":"That shirt costs thirty euros.","type":"natural"}
+{"ref":"core-es:item:002040","lang":"en","text":"It is not worth arguing.","type":"natural"}
+{"ref":"core-es:item:002041","lang":"en","text":"How much is a return ticket?","type":"natural"}
+{"ref":"core-es:item:002042","lang":"en","text":"It is worth more than it looks.","type":"natural"}
+{"ref":"core-es:item:002043","lang":"en","text":"It is a small but important difference.","type":"natural"}
+{"ref":"core-es:item:002044","lang":"en","text":"I do not see the difference between the two.","type":"natural"}
+{"ref":"core-es:item:002045","lang":"en","text":"The difference in price is ten euros.","type":"natural"}
+{"ref":"core-es:item:002046","lang":"en","text":"There is a two-hour difference.","type":"natural"}
+{"ref":"core-es:item:002047","lang":"en","text":"It is a risk, but it is worth it.","type":"natural"}
+{"ref":"core-es:item:002048","lang":"en","text":"I do not want to take that risk.","type":"natural"}
+{"ref":"core-es:item:002049","lang":"en","text":"The risk is losing the money.","type":"natural"}
+{"ref":"core-es:item:002050","lang":"en","text":"I made the decision on my own.","type":"natural"}
+{"ref":"core-es:item:002051","lang":"en","text":"It was a hard but fair decision.","type":"natural"}
+{"ref":"core-es:item:002052","lang":"en","text":"The boss's decision surprised everybody.","type":"natural"}
+{"ref":"core-es:item:002053","lang":"en","text":"It surprised me to see you there.","type":"natural"}
+{"ref":"core-es:item:002054","lang":"en","text":"Their answer surprised us a lot.","type":"natural"}
+{"ref":"core-es:item:002055","lang":"en","text":"The noise of the cars bothers me.","type":"natural"}
+{"ref":"core-es:item:002056","lang":"en","text":"Do you mind if I open the window?","type":"natural"}
+{"ref":"core-es:item:002057","lang":"en","text":"The final price annoyed us a lot.","type":"natural"}
+{"ref":"core-es:item:002058","lang":"en","text":"I complained to the neighbour about the noise.","type":"natural"}
+{"ref":"core-es:item:002059","lang":"en","text":"He complains about everything.","type":"natural"}
+{"ref":"core-es:item:002060","lang":"en","text":"We complained and they gave us our money back.","type":"natural"}
+{"ref":"core-es:item:002061","lang":"en","text":"I fixed the door myself.","type":"natural"}
+{"ref":"core-es:item:002062","lang":"en","text":"Can you fix the screen?","type":"natural"}
+{"ref":"core-es:item:002063","lang":"en","text":"We sorted the problem out in an hour.","type":"natural"}
+{"ref":"core-es:item:002064","lang":"en","text":"We settled the difference by talking.","type":"natural"}
+{"ref":"core-es:item:002065","lang":"en","text":"I do not know how to sort this out.","type":"natural"}
+{"ref":"core-es:item:002066","lang":"en","text":"The doctor answered my questions.","type":"natural"}
+{"ref":"core-es:item:002067","lang":"en","text":"I improved a lot last year.","type":"natural"}
+{"ref":"core-es:item:002068","lang":"en","text":"The weather improves on Thursday.","type":"natural"}
+{"ref":"core-es:item:002069","lang":"en","text":"I want to improve my English this summer.","type":"natural"}
+{"ref":"core-es:item:002070","lang":"en","text":"I avoid the centre on Saturdays.","type":"natural"}
+{"ref":"core-es:item:002071","lang":"en","text":"To avoid problems, read the contract.","type":"natural"}
+{"ref":"core-es:item:002072","lang":"en","text":"We avoid the car in the city.","type":"natural"}
+{"ref":"core-es:item:002073","lang":"en","text":"The boss demands a lot from everybody.","type":"natural"}
+{"ref":"core-es:item:002074","lang":"en","text":"We demand a clear answer.","type":"natural"}
+{"ref":"core-es:item:002075","lang":"en","text":"This job demands a lot of patience.","type":"natural"}
+{"ref":"core-es:item:002076","lang":"en","text":"The museum does not allow photos.","type":"natural"}
+{"ref":"core-es:item:002077","lang":"en","text":"My parents did not let me go out late.","type":"natural"}
+{"ref":"core-es:item:002078","lang":"en","text":"The hotel allows pets.","type":"natural"}
+{"ref":"core-es:item:002079","lang":"en","text":"I will let you know when the parcel arrives.","type":"natural"}
+{"ref":"core-es:item:002080","lang":"en","text":"Let me know if there is any problem.","type":"natural"}
+{"ref":"core-es:item:002081","lang":"en","text":"They gave us two days' notice.","type":"natural"}
+{"ref":"core-es:item:002082","lang":"en","text":"The price goes up every January.","type":"natural"}
+{"ref":"core-es:item:002083","lang":"en","text":"We went up to the fifth floor.","type":"natural"}
+{"ref":"core-es:item:002084","lang":"en","text":"I uploaded the photos online.","type":"natural"}
+{"ref":"core-es:item:002085","lang":"en","text":"Turn the temperature down, please.","type":"natural"}
+{"ref":"core-es:item:002086","lang":"en","text":"I got off the bus at the last stop.","type":"natural"}
+{"ref":"core-es:item:002087","lang":"en","text":"Prices came down after the summer.","type":"natural"}
+{"ref":"core-es:item:002088","lang":"en","text":"It is a simple and very good idea.","type":"natural"}
+{"ref":"core-es:item:002089","lang":"en","text":"The explanation is straightforward.","type":"natural"}
+{"ref":"core-es:item:002090","lang":"en","text":"I prefer a simple meal.","type":"natural"}
+{"ref":"core-es:item:002091","lang":"en","text":"It is obvious he does not like it.","type":"natural"}
+{"ref":"core-es:item:002092","lang":"en","text":"The difference is obvious.","type":"natural"}
+{"ref":"core-es:item:002093","lang":"en","text":"For obvious reasons, I cannot say.","type":"natural"}
+{"ref":"core-es:item:002094","lang":"en","text":"It is a complicated problem.","type":"natural"}
+{"ref":"core-es:item:002095","lang":"en","text":"The train timetable is complicated.","type":"natural"}
+{"ref":"core-es:item:002096","lang":"en","text":"It is not complicated, it is just long.","type":"natural"}
+{"ref":"core-es:item:002097","lang":"en","text":"A reasonable price for this area.","type":"natural"}
+{"ref":"core-es:item:002098","lang":"en","text":"It is a reasonable time to call.","type":"natural"}
+{"ref":"core-es:item:002099","lang":"en","text":"That seems reasonable to me.","type":"natural"}
+{"ref":"core-es:item:002100","lang":"en","text":"A qualification is necessary for the post.","type":"natural"}
+{"ref":"core-es:item:002101","lang":"en","text":"It is not necessary to pay today.","type":"natural"}
+{"ref":"core-es:item:002102","lang":"en","text":"Bring what is necessary for two days.","type":"natural"}
+{"ref":"core-es:item:002103","lang":"en","text":"It is possible to pay by card.","type":"natural"}
+{"ref":"core-es:item:002104","lang":"en","text":"Is it possible to change the date?","type":"natural"}
+{"ref":"core-es:item:002105","lang":"en","text":"Anything is possible given time.","type":"natural"}
+{"ref":"core-es:item:002106","lang":"en","text":"It is useful to know another language.","type":"natural"}
+{"ref":"core-es:item:002107","lang":"en","text":"The map was very useful.","type":"natural"}
+{"ref":"core-es:item:002108","lang":"en","text":"It is a useful app for travelling.","type":"natural"}
+{"ref":"core-es:item:002109","lang":"en","text":"It is fair that she earns more.","type":"natural"}
+{"ref":"core-es:item:002110","lang":"en","text":"It is not fair to pay double.","type":"natural"}
+{"ref":"core-es:item:002111","lang":"en","text":"We arrived just in time.","type":"natural"}
+{"ref":"core-es:item:002112","lang":"en","text":"The weather is settled this week.","type":"natural"}
+{"ref":"core-es:item:002113","lang":"en","text":"I am looking for a steady job.","type":"natural"}
+{"ref":"core-es:item:002114","lang":"en","text":"The connection is not stable.","type":"natural"}
+{"ref":"core-es:item:002115","lang":"en","text":"It is unlikely but it can happen.","type":"natural"}
+{"ref":"core-es:item:002116","lang":"en","text":"A change today is unlikely.","type":"natural"}
+{"ref":"core-es:item:002117","lang":"en","text":"It is only natural that you are worried.","type":"natural"}
+{"ref":"core-es:item:002118","lang":"en","text":"Their answer is logical.","type":"natural"}
+{"ref":"core-es:item:002119","lang":"en","text":"It is the logical thing after two years.","type":"natural"}
+{"ref":"core-es:item:002120","lang":"en","text":"Everything has to be above board.","type":"natural"}
+{"ref":"core-es:item:002121","lang":"en","text":"It is the legal age to drive.","type":"natural"}
+{"ref":"core-es:item:002122","lang":"en","text":"The contract is legal and clear.","type":"natural"}
+{"ref":"core-es:item:002123","lang":"en","text":"It is a temporary post, not a permanent one.","type":"natural"}
+{"ref":"core-es:item:002124","lang":"en","text":"It was a temporary solution.","type":"natural"}
+{"ref":"core-es:item:002125","lang":"en","text":"I have a temporary problem with the network.","type":"natural"}
+{"ref":"core-es:item:002126","lang":"en","text":"I got a ticket for Saturday.","type":"natural"}
+{"ref":"core-es:item:002127","lang":"en","text":"Did you manage to speak to the doctor?","type":"natural"}
+{"ref":"core-es:item:002128","lang":"en","text":"I cannot manage to open the file.","type":"natural"}
+{"ref":"core-es:item:002129","lang":"en","text":"It is a chance that will not come again.","type":"natural"}
+{"ref":"core-es:item:002130","lang":"en","text":"I had the chance to work in Mexico.","type":"natural"}
+{"ref":"core-es:item:002131","lang":"en","text":"Make the most of the chance.","type":"natural"}
+{"ref":"core-es:item:002132","lang":"en","text":"The success of the show surprised everybody.","type":"natural"}
+{"ref":"core-es:item:002133","lang":"en","text":"It was very successful in Italy.","type":"natural"}
+{"ref":"core-es:item:002134","lang":"en","text":"Success depends on effort.","type":"natural"}
+{"ref":"core-es:item:002135","lang":"en","text":"The air in this area is very clean.","type":"natural"}
+{"ref":"core-es:item:002136","lang":"en","text":"Air pollution went down this year.","type":"natural"}
+{"ref":"core-es:item:002137","lang":"en","text":"We need clean air across the whole planet.","type":"natural"}
+{"ref":"core-es:item:002138","lang":"en","text":"We all have to protect the planet together.","type":"natural"}
+{"ref":"core-es:item:002139","lang":"en","text":"She asked for calm and a clear explanation.","type":"natural"}
+{"ref":"core-es:item:002140","lang":"en","text":"We argue better calmly.","type":"natural"}
+{"ref":"core-es:item:002141","lang":"en","text":"I need quiet to study.","type":"natural"}
+{"ref":"core-es:item:002142","lang":"en","text":"The internet connection is very slow.","type":"natural"}
+{"ref":"core-es:item:002143","lang":"en","text":"Without a connection, the page does not open.","type":"natural"}
+{"ref":"core-es:item:002144","lang":"en","text":"The eight o'clock train connection is a good one.","type":"natural"}
+{"ref":"core-es:item:002145","lang":"en","text":"I returned the parcel last week.","type":"natural"}
+{"ref":"core-es:item:002146","lang":"en","text":"Can I return this shirt?","type":"natural"}
+{"ref":"core-es:item:002147","lang":"en","text":"They gave me my money back without asking anything.","type":"natural"}
+{"ref":"core-es:item:002148","lang":"en","text":"We discussed the new law in class.","type":"natural"}
+{"ref":"core-es:item:002149","lang":"en","text":"I do not want to argue with you.","type":"natural"}
+{"ref":"core-es:item:002150","lang":"en","text":"They argue over small things.","type":"natural"}
+{"ref":"core-es:item:002151","lang":"en","text":"Sign the document, please.","type":"natural"}
+{"ref":"core-es:item:002152","lang":"en","text":"Keep a copy of the document.","type":"natural"}
+{"ref":"core-es:item:002153","lang":"en","text":"The document is ten pages long.","type":"natural"}
+{"ref":"core-es:item:002154","lang":"en","text":"I need a simpler explanation.","type":"natural"}
+{"ref":"core-es:item:002155","lang":"en","text":"I asked for an explanation and got none.","type":"natural"}
+{"ref":"core-es:item:002156","lang":"en","text":"I look for information online.","type":"natural"}
+{"ref":"core-es:item:002157","lang":"en","text":"The page has a lot of useful information.","type":"natural"}
+{"ref":"core-es:item:002158","lang":"en","text":"The information in the advert is not right.","type":"natural"}
+{"ref":"core-es:item:002159","lang":"en","text":"The new law protects the environment.","type":"natural"}
+{"ref":"core-es:item:002160","lang":"en","text":"It is unlikely they will change the law.","type":"natural"}
+{"ref":"core-es:item:002161","lang":"en","text":"The law is the same for everybody.","type":"natural"}
+{"ref":"core-es:item:002162","lang":"en","text":"The parcel arrived broken.","type":"natural"}
+{"ref":"core-es:item:002163","lang":"en","text":"I sent the parcel by post.","type":"natural"}
+{"ref":"core-es:item:002164","lang":"en","text":"This page has an odd error on it.","type":"natural"}
+{"ref":"core-es:item:002165","lang":"en","text":"It is odd that it happens twice.","type":"natural"}
+{"ref":"core-es:item:002166","lang":"en","text":"It is an odd fact, but it is true.","type":"natural"}
+{"ref":"core-es:item:002167","lang":"en","text":"I recommend this English course to you.","type":"natural"}
+{"ref":"core-es:item:002168","lang":"en","text":"I would advise you to use public transport.","type":"natural"}
+{"ref":"core-es:item:002169","lang":"en","text":"I did the course online.","type":"natural"}
+{"ref":"core-es:item:002170","lang":"en","text":"The atmosphere on the course is very good.","type":"natural"}
+{"ref":"core-es:item:002171","lang":"en","text":"I keep the data on the computer.","type":"natural"}
+{"ref":"core-es:item:002172","lang":"en","text":"The data in the document is correct.","type":"natural"}
+{"ref":"core-es:item:002173","lang":"en","text":"I look up the transport timetable online.","type":"natural"}
+{"ref":"core-es:item:002174","lang":"en","text":"Public transport cuts pollution.","type":"natural"}
+{"ref":"core-es:item:002175","lang":"en","text":"I propose a simple solution.","type":"natural"}
+{"ref":"core-es:item:002176","lang":"en","text":"They proposed a new course for September.","type":"natural"}
+{"ref":"core-es:item:002177","lang":"en","text":"I suggest this page for practice.","type":"natural"}
+{"ref":"core-es:item:002178","lang":"en","text":"I suggest another part of the city.","type":"natural"}
+{"ref":"core-es:item:002179","lang":"en","text":"It is not a serious illness.","type":"natural"}
+{"ref":"core-es:item:002180","lang":"en","text":"The company laid off ten people.","type":"natural"}
+{"ref":"core-es:item:002181","lang":"en","text":"It is unlikely to arrive today.","type":"natural"}
+{"ref":"core-es:item:002182","lang":"en","text":"Good morning. Why do you want this post?","type":"natural"}
+{"ref":"core-es:item:002183","lang":"en","text":"Because I have experience and I want a steady job.","type":"natural"}
+{"ref":"core-es:item:002184","lang":"en","text":"The contract is temporary for the first few months.","type":"natural"}
+{"ref":"core-es:item:002185","lang":"en","text":"That is no problem. I am willing to start on that basis.","type":"natural"}
+{"ref":"core-es:item:002186","lang":"en","text":"It is important that you arrive early.","type":"natural"}
+{"ref":"core-es:item:002187","lang":"en","text":"Of course. What are the hours?","type":"natural"}
+{"ref":"core-es:item:002188","lang":"en","text":"Nine to five, with an hour for lunch.","type":"natural"}
+{"ref":"core-es:item:002189","lang":"en","text":"Very good. When will you know the decision?","type":"natural"}
+{"ref":"core-es:item:002190","lang":"en","text":"We will let you know when the interviews are over.","type":"natural"}
+{"ref":"core-es:item:002191","lang":"en","text":"Thank you. I hope it is soon.","type":"natural"}
+{"ref":"core-es:item:002192","lang":"en","text":"I bought this shirt on Saturday and it arrived broken.","type":"natural"}
+{"ref":"core-es:item:002193","lang":"en","text":"I am very sorry. Do you have the receipt?","type":"natural"}
+{"ref":"core-es:item:002194","lang":"en","text":"Yes, here it is. I want my money back.","type":"natural"}
+{"ref":"core-es:item:002195","lang":"en","text":"Would you rather have another shirt or the money?","type":"natural"}
+{"ref":"core-es:item:002196","lang":"en","text":"The money, thank you. It is not the first time this has happened.","type":"natural"}
+{"ref":"core-es:item:002197","lang":"en","text":"I apologise. It is odd that it should happen twice.","type":"natural"}
+{"ref":"core-es:item:002198","lang":"en","text":"I hope it does not happen again.","type":"natural"}
+{"ref":"core-es:item:002199","lang":"en","text":"We will give you your money back today.","type":"natural"}
+{"ref":"core-es:item:002200","lang":"en","text":"I want us to talk about the noise at night.","type":"natural"}
+{"ref":"core-es:item:002201","lang":"en","text":"You are right. Does the music bother you?","type":"natural"}
+{"ref":"core-es:item:002202","lang":"en","text":"Yes, and what is more I cannot sleep.","type":"natural"}
+{"ref":"core-es:item:002203","lang":"en","text":"It is only natural that you are tired. I will turn the music down.","type":"natural"}
+{"ref":"core-es:item:002204","lang":"en","text":"Let me suggest something: no music after eleven.","type":"natural"}
+{"ref":"core-es:item:002205","lang":"en","text":"OK, that seems fair to me.","type":"natural"}
+{"ref":"core-es:item:002206","lang":"en","text":"And it is better if we share the electricity costs.","type":"natural"}
+{"ref":"core-es:item:002207","lang":"en","text":"Agreed. I will draw up a budget for the month.","type":"natural"}
+{"ref":"core-es:item:002208","lang":"en","text":"In my kitchen there are three bags for recycling.","type":"natural"}
+{"ref":"core-es:item:002209","lang":"en","text":"In one I throw the paper, in another the plastic.","type":"natural"}
+{"ref":"core-es:item:002210","lang":"en","text":"I have been recycling for two years and by now it is normal.","type":"natural"}
+{"ref":"core-es:item:002211","lang":"en","text":"The first few months it was complicated, but now it is straightforward.","type":"natural"}
+{"ref":"core-es:item:002212","lang":"en","text":"It is important that we all recycle.","type":"natural"}
+{"ref":"core-es:item:002213","lang":"en","text":"If we cut down on plastic, the air and the sea are cleaner.","type":"natural"}
+{"ref":"core-es:item:002214","lang":"en","text":"Even if it is little, every effort counts.","type":"natural"}
+{"ref":"core-es:item:002215","lang":"en","text":"I hope more people do it.","type":"natural"}
+{"ref":"core-es:item:002216","lang":"en","text":"I have been offered another post.","type":"natural"}
+{"ref":"core-es:item:002217","lang":"en","text":"How good! And what is the problem?","type":"natural"}
+{"ref":"core-es:item:002218","lang":"en","text":"The salary is better, but I have to work Saturdays.","type":"natural"}
+{"ref":"core-es:item:002219","lang":"en","text":"I advise you to compare the two offers calmly.","type":"natural"}
+{"ref":"core-es:item:002220","lang":"en","text":"I already have. I doubt it is a good decision.","type":"natural"}
+{"ref":"core-es:item:002221","lang":"en","text":"It is normal that you have doubts. It is a risk.","type":"natural"}
+{"ref":"core-es:item:002222","lang":"en","text":"I would wait until they give you more information.","type":"natural"}
+{"ref":"core-es:item:002223","lang":"en","text":"Good advice. Thank you.","type":"natural"}
+{"ref":"core-es:item:002224","lang":"en","text":"The paper publishes an article about the climate today.","type":"natural"}
+{"ref":"core-es:item:002225","lang":"en","text":"The sea temperature rose again this summer.","type":"natural"}
+{"ref":"core-es:item:002226","lang":"en","text":"The article says air pollution is the problem.","type":"natural"}
+{"ref":"core-es:item:002227","lang":"en","text":"Next summer will probably be hotter.","type":"natural"}
+{"ref":"core-es:item:002228","lang":"en","text":"For the climate to improve, private transport has to be cut.","type":"natural"}
+{"ref":"core-es:item:002229","lang":"en","text":"It is not a simple or a cheap solution.","type":"natural"}
+{"ref":"core-es:item:002230","lang":"en","text":"But it is necessary that we start now.","type":"natural"}
+{"ref":"core-es:item:002231","lang":"en","text":"Even if the change is slow, the planet is grateful for it.","type":"natural"}
+{"ref":"core-es:item:001731","lang":"en","text":"I want you to help me with this file.","type":"natural","note":"English uses an infinitive here — «I want you to help». Spanish cannot: a second person needs a second clause."}
+{"ref":"core-es:item:001732","lang":"en","text":"My boss wants me to improve my schedule.","type":"natural"}
+{"ref":"core-es:item:001733","lang":"en","text":"I need you to send me the invoice today.","type":"natural"}
+{"ref":"core-es:item:001734","lang":"en","text":"I am asking you not to share my password.","type":"natural"}
+{"ref":"core-es:item:001735","lang":"en","text":"Do you want me to save the file for you?","type":"natural"}
+{"ref":"core-es:item:001736","lang":"en","text":"I would rather we sorted it out today.","type":"natural"}
+{"ref":"core-es:item:001737","lang":"en","text":"My parents want me to do a degree.","type":"natural"}
+{"ref":"core-es:item:001738","lang":"en","text":"The company requires us to sign the contract.","type":"natural"}
+{"ref":"core-es:item:001739","lang":"en","text":"I do not let anyone use my computer.","type":"natural"}
+{"ref":"core-es:item:001740","lang":"en","text":"I am asking you to explain the difference to me.","type":"natural"}
+{"ref":"core-es:item:001741","lang":"en","text":"I want you to look after your health.","type":"natural"}
+{"ref":"core-es:item:001742","lang":"en","text":"We need someone to fix the app.","type":"natural"}
+{"ref":"core-es:item:001743","lang":"en","text":"Would you rather I called you later?","type":"natural"}
+{"ref":"core-es:item:001744","lang":"en","text":"The teacher wants us to share our notes.","type":"natural"}
+{"ref":"core-es:item:001745","lang":"en","text":"I suggest we talk about it tomorrow.","type":"natural"}
+{"ref":"core-es:item:001746","lang":"en","text":"I hope you pass the exam.","type":"natural"}
+{"ref":"core-es:item:001747","lang":"en","text":"I hope it does not rain tomorrow.","type":"natural","note":"«Ojalá» comes from the Arabic «law šāʾ Allāh», if God wills. It needs no verb of its own, and never takes the indicative."}
+{"ref":"core-es:item:001748","lang":"en","text":"I hope everything goes well.","type":"natural"}
+{"ref":"core-es:item:001749","lang":"en","text":"I hope the pollution goes down soon.","type":"natural"}
+{"ref":"core-es:item:001750","lang":"en","text":"I hope you get the job.","type":"natural"}
+{"ref":"core-es:item:001751","lang":"en","text":"I hope you enjoy the holidays.","type":"natural"}
+{"ref":"core-es:item:001752","lang":"en","text":"I hope we get a more settled climate.","type":"natural"}
+{"ref":"core-es:item:001753","lang":"en","text":"I hope it is nothing serious.","type":"natural"}
+{"ref":"core-es:item:001754","lang":"en","text":"I hope the price does not go up again.","type":"natural"}
+{"ref":"core-es:item:001755","lang":"en","text":"I hope the interview goes well.","type":"natural"}
+{"ref":"core-es:item:001756","lang":"en","text":"I advise you to save a little each month.","type":"natural"}
+{"ref":"core-es:item:001757","lang":"en","text":"I recommend you compare the two offers.","type":"natural"}
+{"ref":"core-es:item:001758","lang":"en","text":"I suggest you read the contract carefully.","type":"natural"}
+{"ref":"core-es:item:001759","lang":"en","text":"It is better if you spend less this month.","type":"natural"}
+{"ref":"core-es:item:001760","lang":"en","text":"It is important that you recycle plastic.","type":"natural"}
+{"ref":"core-es:item:001761","lang":"en","text":"It is necessary for you to keep a copy of the file.","type":"natural"}
+{"ref":"core-es:item:001762","lang":"en","text":"I advise you to avoid rush hour.","type":"natural"}
+{"ref":"core-es:item:001763","lang":"en","text":"It is useful for you to learn to use the internet.","type":"natural"}
+{"ref":"core-es:item:001764","lang":"en","text":"I suggest you get a second opinion.","type":"natural"}
+{"ref":"core-es:item:001765","lang":"en","text":"It is reasonable that you want a better salary.","type":"natural"}
+{"ref":"core-es:item:001766","lang":"en","text":"You may need more experience.","type":"natural"}
+{"ref":"core-es:item:001767","lang":"en","text":"I doubt it is that simple.","type":"natural"}
+{"ref":"core-es:item:001768","lang":"en","text":"I do not think the risk is that serious.","type":"natural","note":"«Creo que es» takes the indicative; the doubt lives in the «no». Negating the belief is what moves the second verb."}
+{"ref":"core-es:item:001769","lang":"en","text":"I do not think the solution is cheap.","type":"natural"}
+{"ref":"core-es:item:001770","lang":"en","text":"I doubt the app works without the password.","type":"natural"}
+{"ref":"core-es:item:001771","lang":"en","text":"It is unlikely they will hire us both.","type":"natural"}
+{"ref":"core-es:item:001772","lang":"en","text":"I do not think the effort is worth it.","type":"natural"}
+{"ref":"core-es:item:001773","lang":"en","text":"I doubt this article is impartial.","type":"natural"}
+{"ref":"core-es:item:001774","lang":"en","text":"It does not look as if the network is connected properly.","type":"natural"}
+{"ref":"core-es:item:001775","lang":"en","text":"Maybe the user does not remember their password.","type":"natural"}
+{"ref":"core-es:item:001776","lang":"en","text":"It is not obvious that the decision is fair.","type":"natural"}
+{"ref":"core-es:item:001777","lang":"en","text":"I am glad you are finding work.","type":"natural"}
+{"ref":"core-es:item:001778","lang":"en","text":"I am surprised nobody complains about the noise.","type":"natural"}
+{"ref":"core-es:item:001779","lang":"en","text":"It annoys me that people throw rubbish on the ground.","type":"natural"}
+{"ref":"core-es:item:001780","lang":"en","text":"It is a shame you cannot come.","type":"natural"}
+{"ref":"core-es:item:001781","lang":"en","text":"It worries me that spending is going up so much.","type":"natural"}
+{"ref":"core-es:item:001782","lang":"en","text":"I am surprised the show has such a big audience.","type":"natural"}
+{"ref":"core-es:item:001783","lang":"en","text":"I am grateful you are telling me.","type":"natural"}
+{"ref":"core-es:item:001784","lang":"en","text":"It is only natural that you are tired.","type":"natural"}
+{"ref":"core-es:item:001785","lang":"en","text":"I am glad the company protects the environment.","type":"natural"}
+{"ref":"core-es:item:001786","lang":"en","text":"I am explaining it so that you understand the risk.","type":"natural","note":"«Para que» always takes the subjunctive: a purpose is by definition something that has not happened yet."}
+{"ref":"core-es:item:001787","lang":"en","text":"We recycle so that the planet is in better shape.","type":"natural"}
+{"ref":"core-es:item:001788","lang":"en","text":"I save the file so that it does not get lost.","type":"natural"}
+{"ref":"core-es:item:001789","lang":"en","text":"I am saving so that my children can study.","type":"natural"}
+{"ref":"core-es:item:001790","lang":"en","text":"I am writing it down so that it is clear.","type":"natural"}
+{"ref":"core-es:item:001791","lang":"en","text":"We turn the temperature down so we use less energy.","type":"natural"}
+{"ref":"core-es:item:001792","lang":"en","text":"I am letting you know so you are not late.","type":"natural"}
+{"ref":"core-es:item:001793","lang":"en","text":"We sign the contract so that everything is above board.","type":"natural"}
+{"ref":"core-es:item:001794","lang":"en","text":"I use an app so that I do not forget anything.","type":"natural"}
+{"ref":"core-es:item:001795","lang":"en","text":"When you arrive, call me.","type":"natural","note":"«Cuando llego» is a habit; «cuando llegue» is a single arrival still ahead. English uses one form for both."}
+{"ref":"core-es:item:001796","lang":"en","text":"I will tell you when I have the answer.","type":"natural"}
+{"ref":"core-es:item:001797","lang":"en","text":"We will talk when you finish the project.","type":"natural"}
+{"ref":"core-es:item:001798","lang":"en","text":"Before you sign, read the hours.","type":"natural"}
+{"ref":"core-es:item:001799","lang":"en","text":"When I get paid, I will pay the bill.","type":"natural"}
+{"ref":"core-es:item:001800","lang":"en","text":"As long as there is no solution, we carry on as we are.","type":"natural"}
+{"ref":"core-es:item:001801","lang":"en","text":"Even if it is complicated, it is worth it.","type":"natural","note":"«Aunque» takes the indicative for a fact and the subjunctive for a concession: «aunque es tarde» admits it is; «aunque sea tarde» does not."}
+{"ref":"core-es:item:001802","lang":"en","text":"Even if you do not agree, it is the decision of all of us.","type":"natural"}
+{"ref":"core-es:item:001803","lang":"en","text":"Even if the post is temporary, it gives you experience.","type":"natural"}
+{"ref":"core-es:item:001804","lang":"en","text":"Even if the app is free, it has adverts.","type":"natural"}
+{"ref":"core-es:item:001805","lang":"en","text":"Even if it is hard, I want to try.","type":"natural"}
+{"ref":"core-es:item:001806","lang":"en","text":"Do not worry about the bill.","type":"natural","note":"The affirmative is «preocúpate», the negative «no te preocupes». Two different forms, and only the negative is the subjunctive."}
+{"ref":"core-es:item:001807","lang":"en","text":"Do not share the password with anyone.","type":"natural"}
+{"ref":"core-es:item:001808","lang":"en","text":"Do not spend the whole budget in one week.","type":"natural"}
+{"ref":"core-es:item:001809","lang":"en","text":"Do not complain without proposing a solution.","type":"natural"}
+{"ref":"core-es:item:001810","lang":"en","text":"Do not hesitate to let me know.","type":"natural"}
+{"ref":"core-es:item:001811","lang":"en","text":"Do not throw plastic in the bin.","type":"natural"}
+{"ref":"core-es:item:001812","lang":"en","text":"Do not sign anything you do not understand.","type":"natural"}
+{"ref":"core-es:item:001813","lang":"en","text":"Do not worry, we will fix it today.","type":"natural"}
+{"ref":"core-es:item:001814","lang":"en","text":"Do not forget to save the file.","type":"natural"}
+{"ref":"core-es:item:001815","lang":"en","text":"Do not miss the chance.","type":"natural"}
 {"ref":"core-es:item:000001","lang":"en","text":"Hi, how are you?","type":"natural"}
 {"ref":"core-es:item:000002","lang":"en","text":"Good morning.","type":"natural"}
 {"ref":"core-es:item:000003","lang":"en","text":"Good afternoon.","type":"natural"}
@@ -2119,6 +2657,80 @@
 {"ref":"core-es:item:500388","lang":"en","text":"doctor (female)","type":"natural"}
 {"ref":"core-es:item:500389","lang":"en","text":"address","type":"natural"}
 {"ref":"core-es:item:500390","lang":"en","text":"note","type":"natural"}
+{"ref":"core-es:item:500392","lang":"en","text":"interview","type":"natural"}
+{"ref":"core-es:item:500393","lang":"en","text":"contract","type":"natural"}
+{"ref":"core-es:item:500394","lang":"en","text":"post, position","type":"natural"}
+{"ref":"core-es:item:500395","lang":"en","text":"experience","type":"natural"}
+{"ref":"core-es:item:500396","lang":"en","text":"timetable, hours","type":"natural"}
+{"ref":"core-es:item:500397","lang":"en","text":"saving","type":"natural"}
+{"ref":"core-es:item:500398","lang":"en","text":"expense, spending","type":"natural"}
+{"ref":"core-es:item:500399","lang":"en","text":"bill, invoice","type":"natural"}
+{"ref":"core-es:item:500400","lang":"en","text":"budget","type":"natural"}
+{"ref":"core-es:item:500401","lang":"en","text":"environment, atmosphere","type":"natural"}
+{"ref":"core-es:item:500402","lang":"en","text":"pollution","type":"natural"}
+{"ref":"core-es:item:500403","lang":"en","text":"planet","type":"natural"}
+{"ref":"core-es:item:500404","lang":"en","text":"climate","type":"natural"}
+{"ref":"core-es:item:500405","lang":"en","text":"energy","type":"natural"}
+{"ref":"core-es:item:500406","lang":"en","text":"nature","type":"natural"}
+{"ref":"core-es:item:500407","lang":"en","text":"network, the net","type":"natural"}
+{"ref":"core-es:item:500408","lang":"en","text":"file","type":"natural"}
+{"ref":"core-es:item:500409","lang":"en","text":"password","type":"natural"}
+{"ref":"core-es:item:500410","lang":"en","text":"app, application","type":"natural"}
+{"ref":"core-es:item:500411","lang":"en","text":"user","type":"natural"}
+{"ref":"core-es:item:500412","lang":"en","text":"article","type":"natural"}
+{"ref":"core-es:item:500413","lang":"en","text":"programme, show","type":"natural"}
+{"ref":"core-es:item:500414","lang":"en","text":"advert, announcement","type":"natural"}
+{"ref":"core-es:item:500415","lang":"en","text":"degree course; career","type":"natural"}
+{"ref":"core-es:item:500416","lang":"en","text":"qualification, degree","type":"natural"}
+{"ref":"core-es:item:500417","lang":"en","text":"solution","type":"natural"}
+{"ref":"core-es:item:500418","lang":"en","text":"advantage","type":"natural"}
+{"ref":"core-es:item:500419","lang":"en","text":"opinion","type":"natural"}
+{"ref":"core-es:item:500420","lang":"en","text":"piece of advice","type":"natural"}
+{"ref":"core-es:item:500421","lang":"en","text":"decision","type":"natural"}
+{"ref":"core-es:item:500422","lang":"en","text":"effort","type":"natural"}
+{"ref":"core-es:item:500423","lang":"en","text":"risk","type":"natural"}
+{"ref":"core-es:item:500424","lang":"en","text":"difference","type":"natural"}
+{"ref":"core-es:item:500425","lang":"en","text":"illness","type":"natural"}
+{"ref":"core-es:item:500426","lang":"en","text":"opportunity, chance","type":"natural"}
+{"ref":"core-es:item:500427","lang":"en","text":"offer, deal","type":"natural"}
+{"ref":"core-es:item:500428","lang":"en","text":"noise","type":"natural"}
+{"ref":"core-es:item:500429","lang":"en","text":"copy","type":"natural"}
+{"ref":"core-es:item:500430","lang":"en","text":"temperature","type":"natural"}
+{"ref":"core-es:item:500431","lang":"en","text":"plastic","type":"natural"}
+{"ref":"core-es:item:500432","lang":"en","text":"shame, pity","type":"natural"}
+{"ref":"core-es:item:500433","lang":"en","text":"success","type":"natural"}
+{"ref":"core-es:item:500434","lang":"en","text":"piece of data, fact","type":"natural"}
+{"ref":"core-es:item:500435","lang":"en","text":"the internet","type":"natural"}
+{"ref":"core-es:item:500436","lang":"en","text":"page; web page","type":"natural"}
+{"ref":"core-es:item:500437","lang":"en","text":"connection","type":"natural"}
+{"ref":"core-es:item:500438","lang":"en","text":"document","type":"natural"}
+{"ref":"core-es:item:500439","lang":"en","text":"information","type":"natural"}
+{"ref":"core-es:item:500440","lang":"en","text":"explanation","type":"natural"}
+{"ref":"core-es:item:500441","lang":"en","text":"course","type":"natural"}
+{"ref":"core-es:item:500442","lang":"en","text":"transport","type":"natural"}
+{"ref":"core-es:item:500443","lang":"en","text":"area, zone","type":"natural"}
+{"ref":"core-es:item:500444","lang":"en","text":"air","type":"natural"}
+{"ref":"core-es:item:500445","lang":"en","text":"law","type":"natural"}
+{"ref":"core-es:item:500446","lang":"en","text":"parcel, packet","type":"natural"}
+{"ref":"core-es:item:500447","lang":"en","text":"calm","type":"natural"}
+{"ref":"core-es:item:500448","lang":"en","text":"the letter B","type":"natural"}
+{"ref":"core-es:item:500449","lang":"en","text":"the letter C","type":"natural"}
+{"ref":"core-es:item:500450","lang":"en","text":"the letter F","type":"natural"}
+{"ref":"core-es:item:500451","lang":"en","text":"the letter G","type":"natural"}
+{"ref":"core-es:item:500452","lang":"en","text":"the letter H","type":"natural"}
+{"ref":"core-es:item:500453","lang":"en","text":"the letter J","type":"natural"}
+{"ref":"core-es:item:500454","lang":"en","text":"the letter K","type":"natural"}
+{"ref":"core-es:item:500455","lang":"en","text":"the letter L","type":"natural"}
+{"ref":"core-es:item:500456","lang":"en","text":"the letter M","type":"natural"}
+{"ref":"core-es:item:500457","lang":"en","text":"the letter N","type":"natural"}
+{"ref":"core-es:item:500458","lang":"en","text":"the letter Ñ","type":"natural"}
+{"ref":"core-es:item:500459","lang":"en","text":"the letter P","type":"natural"}
+{"ref":"core-es:item:500460","lang":"en","text":"the letter Q","type":"natural"}
+{"ref":"core-es:item:500461","lang":"en","text":"the letter R","type":"natural"}
+{"ref":"core-es:item:500462","lang":"en","text":"the letter V","type":"natural"}
+{"ref":"core-es:item:500463","lang":"en","text":"the letter X","type":"natural"}
+{"ref":"core-es:item:500464","lang":"en","text":"the letter Y","type":"natural"}
+{"ref":"core-es:item:500465","lang":"en","text":"the letter Z","type":"natural"}
 {"ref":"core-es:item:800001","lang":"en","text":"to be (identity, characteristics)","type":"natural"}
 {"ref":"core-es:item:800002","lang":"en","text":"to be (state, location)","type":"natural"}
 {"ref":"core-es:item:800003","lang":"en","text":"to have","type":"natural"}
@@ -2245,6 +2857,55 @@
 {"ref":"core-es:item:800124","lang":"en","text":"to wish, to want","type":"natural"}
 {"ref":"core-es:item:800125","lang":"en","text":"to feel like, to fancy","type":"natural"}
 {"ref":"core-es:item:800126","lang":"en","text":"to excuse","type":"natural"}
+{"ref":"core-es:item:800127","lang":"en","text":"to doubt","type":"natural"}
+{"ref":"core-es:item:800128","lang":"en","text":"to advise","type":"natural"}
+{"ref":"core-es:item:800129","lang":"en","text":"to suggest","type":"natural"}
+{"ref":"core-es:item:800130","lang":"en","text":"to propose, to suggest","type":"natural"}
+{"ref":"core-es:item:800131","lang":"en","text":"to demand","type":"natural"}
+{"ref":"core-es:item:800132","lang":"en","text":"to promise","type":"natural"}
+{"ref":"core-es:item:800133","lang":"en","text":"to convince","type":"natural"}
+{"ref":"core-es:item:800134","lang":"en","text":"to complain (quejarse)","type":"natural"}
+{"ref":"core-es:item:800135","lang":"en","text":"to allow, to let","type":"natural"}
+{"ref":"core-es:item:800136","lang":"en","text":"to prevent, to stop","type":"natural"}
+{"ref":"core-es:item:800137","lang":"en","text":"to suppose, to assume","type":"natural"}
+{"ref":"core-es:item:800138","lang":"en","text":"to worry; (preocuparse) to be worried","type":"natural"}
+{"ref":"core-es:item:800139","lang":"en","text":"to bother, to annoy","type":"natural"}
+{"ref":"core-es:item:800140","lang":"en","text":"to surprise","type":"natural"}
+{"ref":"core-es:item:800141","lang":"en","text":"to be grateful for, to thank","type":"natural"}
+{"ref":"core-es:item:800142","lang":"en","text":"to enjoy","type":"natural"}
+{"ref":"core-es:item:800143","lang":"en","text":"to hire, to take on","type":"natural"}
+{"ref":"core-es:item:800144","lang":"en","text":"to dismiss; (despedirse) to say goodbye","type":"natural"}
+{"ref":"core-es:item:800145","lang":"en","text":"to pass (an exam); to approve","type":"natural"}
+{"ref":"core-es:item:800146","lang":"en","text":"to improve","type":"natural"}
+{"ref":"core-es:item:800147","lang":"en","text":"to manage to, to achieve","type":"natural"}
+{"ref":"core-es:item:800148","lang":"en","text":"to avoid","type":"natural"}
+{"ref":"core-es:item:800149","lang":"en","text":"to solve, to sort out","type":"natural"}
+{"ref":"core-es:item:800150","lang":"en","text":"to fix, to sort out","type":"natural"}
+{"ref":"core-es:item:800151","lang":"en","text":"to keep, to maintain","type":"natural"}
+{"ref":"core-es:item:800152","lang":"en","text":"to happen","type":"natural"}
+{"ref":"core-es:item:800153","lang":"en","text":"to save (money)","type":"natural"}
+{"ref":"core-es:item:800154","lang":"en","text":"to spend","type":"natural"}
+{"ref":"core-es:item:800155","lang":"en","text":"to charge; to get paid","type":"natural"}
+{"ref":"core-es:item:800156","lang":"en","text":"to pollute","type":"natural"}
+{"ref":"core-es:item:800157","lang":"en","text":"to recycle","type":"natural"}
+{"ref":"core-es:item:800158","lang":"en","text":"to protect","type":"natural"}
+{"ref":"core-es:item:800159","lang":"en","text":"to reduce, to cut down","type":"natural"}
+{"ref":"core-es:item:800160","lang":"en","text":"to look after","type":"natural"}
+{"ref":"core-es:item:800161","lang":"en","text":"to share","type":"natural"}
+{"ref":"core-es:item:800162","lang":"en","text":"to download","type":"natural"}
+{"ref":"core-es:item:800163","lang":"en","text":"to keep, to save","type":"natural"}
+{"ref":"core-es:item:800164","lang":"en","text":"to publish, to post","type":"natural"}
+{"ref":"core-es:item:800165","lang":"en","text":"to sign","type":"natural"}
+{"ref":"core-es:item:800166","lang":"en","text":"to go up, to rise; to upload","type":"natural"}
+{"ref":"core-es:item:800167","lang":"en","text":"to go down, to lower; to download","type":"natural"}
+{"ref":"core-es:item:800168","lang":"en","text":"to throw, to throw away","type":"natural"}
+{"ref":"core-es:item:800169","lang":"en","text":"to compare","type":"natural"}
+{"ref":"core-es:item:800170","lang":"en","text":"to let know, to warn","type":"natural"}
+{"ref":"core-es:item:800171","lang":"en","text":"to connect","type":"natural"}
+{"ref":"core-es:item:800172","lang":"en","text":"to get, to manage to","type":"natural"}
+{"ref":"core-es:item:800173","lang":"en","text":"to be worth, to cost","type":"natural"}
+{"ref":"core-es:item:800174","lang":"en","text":"to argue, to discuss","type":"natural"}
+{"ref":"core-es:item:800175","lang":"en","text":"to give back, to return","type":"natural"}
 {"ref":"core-es:item:600001","lang":"en","text":"good","type":"natural"}
 {"ref":"core-es:item:600002","lang":"en","text":"bad","type":"natural"}
 {"ref":"core-es:item:600003","lang":"en","text":"big","type":"natural"}
@@ -2357,6 +3018,32 @@
 {"ref":"core-es:item:600111","lang":"en","text":"correct, right","type":"natural"}
 {"ref":"core-es:item:600109","lang":"en","text":"Greek","type":"natural"}
 {"ref":"core-es:item:600110","lang":"en","text":"Italian","type":"natural"}
+{"ref":"core-es:item:600113","lang":"en","text":"possible","type":"natural"}
+{"ref":"core-es:item:600114","lang":"en","text":"impossible","type":"natural"}
+{"ref":"core-es:item:600115","lang":"en","text":"necessary","type":"natural"}
+{"ref":"core-es:item:600116","lang":"en","text":"useful","type":"natural"}
+{"ref":"core-es:item:600117","lang":"en","text":"fair; exact","type":"natural"}
+{"ref":"core-es:item:600118","lang":"en","text":"serious","type":"natural"}
+{"ref":"core-es:item:600119","lang":"en","text":"responsible","type":"natural"}
+{"ref":"core-es:item:600120","lang":"en","text":"capable, able","type":"natural"}
+{"ref":"core-es:item:600121","lang":"en","text":"willing, ready","type":"natural"}
+{"ref":"core-es:item:600122","lang":"en","text":"cheap; economic","type":"natural"}
+{"ref":"core-es:item:600123","lang":"en","text":"public","type":"natural"}
+{"ref":"core-es:item:600124","lang":"en","text":"private","type":"natural"}
+{"ref":"core-es:item:600125","lang":"en","text":"likely","type":"natural"}
+{"ref":"core-es:item:600126","lang":"en","text":"obvious","type":"natural"}
+{"ref":"core-es:item:600127","lang":"en","text":"complicated","type":"natural"}
+{"ref":"core-es:item:600128","lang":"en","text":"simple, straightforward","type":"natural"}
+{"ref":"core-es:item:600129","lang":"en","text":"reasonable","type":"natural"}
+{"ref":"core-es:item:600130","lang":"en","text":"sustainable","type":"natural"}
+{"ref":"core-es:item:600131","lang":"en","text":"legal, above board","type":"natural"}
+{"ref":"core-es:item:600132","lang":"en","text":"temporary","type":"natural"}
+{"ref":"core-es:item:600133","lang":"en","text":"stable, settled","type":"natural"}
+{"ref":"core-es:item:600134","lang":"en","text":"logical, only natural","type":"natural"}
+{"ref":"core-es:item:600135","lang":"en","text":"impartial, unbiased","type":"natural"}
+{"ref":"core-es:item:600136","lang":"en","text":"unlikely","type":"natural"}
+{"ref":"core-es:item:600137","lang":"en","text":"free of charge","type":"natural"}
+{"ref":"core-es:item:600138","lang":"en","text":"odd, strange","type":"natural"}
 {"ref":"core-es:lexeme:ser","lang":"en","text":"to be (identity, characteristics)"}
 {"ref":"core-es:lexeme:estar","lang":"en","text":"to be (state, location)"}
 {"ref":"core-es:lexeme:tener","lang":"en","text":"to have"}
@@ -2483,6 +3170,55 @@
 {"ref":"core-es:lexeme:desear","lang":"en","text":"to wish, to want"}
 {"ref":"core-es:lexeme:apetecer","lang":"en","text":"to feel like, to fancy"}
 {"ref":"core-es:lexeme:disculpar","lang":"en","text":"to excuse"}
+{"ref":"core-es:lexeme:dudar","lang":"en","text":"to doubt"}
+{"ref":"core-es:lexeme:aconsejar","lang":"en","text":"to advise"}
+{"ref":"core-es:lexeme:sugerir","lang":"en","text":"to suggest"}
+{"ref":"core-es:lexeme:proponer","lang":"en","text":"to propose, to suggest"}
+{"ref":"core-es:lexeme:exigir","lang":"en","text":"to demand"}
+{"ref":"core-es:lexeme:prometer","lang":"en","text":"to promise"}
+{"ref":"core-es:lexeme:convencer","lang":"en","text":"to convince"}
+{"ref":"core-es:lexeme:quejar","lang":"en","text":"to complain (quejarse)"}
+{"ref":"core-es:lexeme:permitir","lang":"en","text":"to allow, to let"}
+{"ref":"core-es:lexeme:impedir","lang":"en","text":"to prevent, to stop"}
+{"ref":"core-es:lexeme:suponer","lang":"en","text":"to suppose, to assume"}
+{"ref":"core-es:lexeme:preocupar","lang":"en","text":"to worry; (preocuparse) to be worried"}
+{"ref":"core-es:lexeme:molestar","lang":"en","text":"to bother, to annoy"}
+{"ref":"core-es:lexeme:sorprender","lang":"en","text":"to surprise"}
+{"ref":"core-es:lexeme:agradecer","lang":"en","text":"to be grateful for, to thank"}
+{"ref":"core-es:lexeme:disfrutar","lang":"en","text":"to enjoy"}
+{"ref":"core-es:lexeme:contratar","lang":"en","text":"to hire, to take on"}
+{"ref":"core-es:lexeme:despedir","lang":"en","text":"to dismiss; (despedirse) to say goodbye"}
+{"ref":"core-es:lexeme:aprobar","lang":"en","text":"to pass (an exam); to approve"}
+{"ref":"core-es:lexeme:mejorar","lang":"en","text":"to improve"}
+{"ref":"core-es:lexeme:lograr","lang":"en","text":"to manage to, to achieve"}
+{"ref":"core-es:lexeme:evitar","lang":"en","text":"to avoid"}
+{"ref":"core-es:lexeme:resolver","lang":"en","text":"to solve, to sort out"}
+{"ref":"core-es:lexeme:arreglar","lang":"en","text":"to fix, to sort out"}
+{"ref":"core-es:lexeme:mantener","lang":"en","text":"to keep, to maintain"}
+{"ref":"core-es:lexeme:ocurrir","lang":"en","text":"to happen"}
+{"ref":"core-es:lexeme:ahorrar","lang":"en","text":"to save (money)"}
+{"ref":"core-es:lexeme:gastar","lang":"en","text":"to spend"}
+{"ref":"core-es:lexeme:cobrar","lang":"en","text":"to charge; to get paid"}
+{"ref":"core-es:lexeme:contaminar","lang":"en","text":"to pollute"}
+{"ref":"core-es:lexeme:reciclar","lang":"en","text":"to recycle"}
+{"ref":"core-es:lexeme:proteger","lang":"en","text":"to protect"}
+{"ref":"core-es:lexeme:reducir","lang":"en","text":"to reduce, to cut down"}
+{"ref":"core-es:lexeme:cuidar","lang":"en","text":"to look after"}
+{"ref":"core-es:lexeme:compartir","lang":"en","text":"to share"}
+{"ref":"core-es:lexeme:descargar","lang":"en","text":"to download"}
+{"ref":"core-es:lexeme:guardar","lang":"en","text":"to keep, to save"}
+{"ref":"core-es:lexeme:publicar","lang":"en","text":"to publish, to post"}
+{"ref":"core-es:lexeme:firmar","lang":"en","text":"to sign"}
+{"ref":"core-es:lexeme:subir","lang":"en","text":"to go up, to rise; to upload"}
+{"ref":"core-es:lexeme:bajar","lang":"en","text":"to go down, to lower; to download"}
+{"ref":"core-es:lexeme:tirar","lang":"en","text":"to throw, to throw away"}
+{"ref":"core-es:lexeme:comparar","lang":"en","text":"to compare"}
+{"ref":"core-es:lexeme:avisar","lang":"en","text":"to let know, to warn"}
+{"ref":"core-es:lexeme:conectar","lang":"en","text":"to connect"}
+{"ref":"core-es:lexeme:conseguir","lang":"en","text":"to get, to manage to"}
+{"ref":"core-es:lexeme:valer","lang":"en","text":"to be worth, to cost"}
+{"ref":"core-es:lexeme:discutir","lang":"en","text":"to argue, to discuss"}
+{"ref":"core-es:lexeme:devolver","lang":"en","text":"to give back, to return"}
 {"ref":"core-es:lexeme:persona","lang":"en","text":"person"}
 {"ref":"core-es:lexeme:hombre","lang":"en","text":"man"}
 {"ref":"core-es:lexeme:mujer","lang":"en","text":"woman"}
@@ -2876,6 +3612,80 @@
 {"ref":"core-es:lexeme:medica","lang":"en","text":"doctor (female)"}
 {"ref":"core-es:lexeme:direccion","lang":"en","text":"address"}
 {"ref":"core-es:lexeme:nota","lang":"en","text":"note"}
+{"ref":"core-es:lexeme:entrevista","lang":"en","text":"interview"}
+{"ref":"core-es:lexeme:contrato","lang":"en","text":"contract"}
+{"ref":"core-es:lexeme:puesto","lang":"en","text":"post, position"}
+{"ref":"core-es:lexeme:experiencia","lang":"en","text":"experience"}
+{"ref":"core-es:lexeme:horario","lang":"en","text":"timetable, hours"}
+{"ref":"core-es:lexeme:ahorro","lang":"en","text":"saving"}
+{"ref":"core-es:lexeme:gasto","lang":"en","text":"expense, spending"}
+{"ref":"core-es:lexeme:factura","lang":"en","text":"bill, invoice"}
+{"ref":"core-es:lexeme:presupuesto","lang":"en","text":"budget"}
+{"ref":"core-es:lexeme:ambiente","lang":"en","text":"environment, atmosphere"}
+{"ref":"core-es:lexeme:contaminacion","lang":"en","text":"pollution"}
+{"ref":"core-es:lexeme:planeta","lang":"en","text":"planet"}
+{"ref":"core-es:lexeme:clima","lang":"en","text":"climate"}
+{"ref":"core-es:lexeme:energia","lang":"en","text":"energy"}
+{"ref":"core-es:lexeme:naturaleza","lang":"en","text":"nature"}
+{"ref":"core-es:lexeme:red","lang":"en","text":"network, the net"}
+{"ref":"core-es:lexeme:archivo","lang":"en","text":"file"}
+{"ref":"core-es:lexeme:contrasena","lang":"en","text":"password"}
+{"ref":"core-es:lexeme:aplicacion","lang":"en","text":"app, application"}
+{"ref":"core-es:lexeme:usuario","lang":"en","text":"user"}
+{"ref":"core-es:lexeme:articulo","lang":"en","text":"article"}
+{"ref":"core-es:lexeme:programa","lang":"en","text":"programme, show"}
+{"ref":"core-es:lexeme:anuncio","lang":"en","text":"advert, announcement"}
+{"ref":"core-es:lexeme:carrera","lang":"en","text":"degree course; career"}
+{"ref":"core-es:lexeme:titulo","lang":"en","text":"qualification, degree"}
+{"ref":"core-es:lexeme:solucion","lang":"en","text":"solution"}
+{"ref":"core-es:lexeme:ventaja","lang":"en","text":"advantage"}
+{"ref":"core-es:lexeme:opinion","lang":"en","text":"opinion"}
+{"ref":"core-es:lexeme:consejo","lang":"en","text":"piece of advice"}
+{"ref":"core-es:lexeme:decision","lang":"en","text":"decision"}
+{"ref":"core-es:lexeme:esfuerzo","lang":"en","text":"effort"}
+{"ref":"core-es:lexeme:riesgo","lang":"en","text":"risk"}
+{"ref":"core-es:lexeme:diferencia","lang":"en","text":"difference"}
+{"ref":"core-es:lexeme:enfermedad","lang":"en","text":"illness"}
+{"ref":"core-es:lexeme:oportunidad","lang":"en","text":"opportunity, chance"}
+{"ref":"core-es:lexeme:oferta","lang":"en","text":"offer, deal"}
+{"ref":"core-es:lexeme:ruido","lang":"en","text":"noise"}
+{"ref":"core-es:lexeme:copia","lang":"en","text":"copy"}
+{"ref":"core-es:lexeme:temperatura","lang":"en","text":"temperature"}
+{"ref":"core-es:lexeme:plastico","lang":"en","text":"plastic"}
+{"ref":"core-es:lexeme:pena","lang":"en","text":"shame, pity"}
+{"ref":"core-es:lexeme:exito","lang":"en","text":"success"}
+{"ref":"core-es:lexeme:dato","lang":"en","text":"piece of data, fact"}
+{"ref":"core-es:lexeme:internet","lang":"en","text":"the internet"}
+{"ref":"core-es:lexeme:pagina","lang":"en","text":"page; web page"}
+{"ref":"core-es:lexeme:conexion","lang":"en","text":"connection"}
+{"ref":"core-es:lexeme:documento","lang":"en","text":"document"}
+{"ref":"core-es:lexeme:informacion","lang":"en","text":"information"}
+{"ref":"core-es:lexeme:explicacion","lang":"en","text":"explanation"}
+{"ref":"core-es:lexeme:curso","lang":"en","text":"course"}
+{"ref":"core-es:lexeme:transporte","lang":"en","text":"transport"}
+{"ref":"core-es:lexeme:zona","lang":"en","text":"area, zone"}
+{"ref":"core-es:lexeme:aire","lang":"en","text":"air"}
+{"ref":"core-es:lexeme:ley","lang":"en","text":"law"}
+{"ref":"core-es:lexeme:paquete","lang":"en","text":"parcel, packet"}
+{"ref":"core-es:lexeme:calma","lang":"en","text":"calm"}
+{"ref":"core-es:lexeme:be","lang":"en","text":"the letter B"}
+{"ref":"core-es:lexeme:ce","lang":"en","text":"the letter C"}
+{"ref":"core-es:lexeme:efe","lang":"en","text":"the letter F"}
+{"ref":"core-es:lexeme:ge","lang":"en","text":"the letter G"}
+{"ref":"core-es:lexeme:hache","lang":"en","text":"the letter H"}
+{"ref":"core-es:lexeme:jota","lang":"en","text":"the letter J"}
+{"ref":"core-es:lexeme:ka","lang":"en","text":"the letter K"}
+{"ref":"core-es:lexeme:ele","lang":"en","text":"the letter L"}
+{"ref":"core-es:lexeme:eme","lang":"en","text":"the letter M"}
+{"ref":"core-es:lexeme:ene","lang":"en","text":"the letter N"}
+{"ref":"core-es:lexeme:ene-noun","lang":"en","text":"the letter Ñ"}
+{"ref":"core-es:lexeme:pe","lang":"en","text":"the letter P"}
+{"ref":"core-es:lexeme:cu","lang":"en","text":"the letter Q"}
+{"ref":"core-es:lexeme:erre","lang":"en","text":"the letter R"}
+{"ref":"core-es:lexeme:uve","lang":"en","text":"the letter V"}
+{"ref":"core-es:lexeme:equis","lang":"en","text":"the letter X"}
+{"ref":"core-es:lexeme:ye","lang":"en","text":"the letter Y"}
+{"ref":"core-es:lexeme:zeta","lang":"en","text":"the letter Z"}
 {"ref":"core-es:lexeme:bueno","lang":"en","text":"good"}
 {"ref":"core-es:lexeme:malo","lang":"en","text":"bad"}
 {"ref":"core-es:lexeme:grande","lang":"en","text":"big"}
@@ -3159,6 +3969,37 @@
 {"ref":"core-es:lexeme:berlin","lang":"en","text":"Berlin"}
 {"ref":"core-es:lexeme:atenas","lang":"en","text":"Athens"}
 {"ref":"core-es:lexeme:menudo","lang":"en","text":"often (a menudo)"}
+{"ref":"core-es:lexeme:posible","lang":"en","text":"possible"}
+{"ref":"core-es:lexeme:imposible","lang":"en","text":"impossible"}
+{"ref":"core-es:lexeme:necesario","lang":"en","text":"necessary"}
+{"ref":"core-es:lexeme:util","lang":"en","text":"useful"}
+{"ref":"core-es:lexeme:justo","lang":"en","text":"fair; exact"}
+{"ref":"core-es:lexeme:grave","lang":"en","text":"serious"}
+{"ref":"core-es:lexeme:responsable","lang":"en","text":"responsible"}
+{"ref":"core-es:lexeme:capaz","lang":"en","text":"capable, able"}
+{"ref":"core-es:lexeme:dispuesto","lang":"en","text":"willing, ready"}
+{"ref":"core-es:lexeme:economico","lang":"en","text":"cheap; economic"}
+{"ref":"core-es:lexeme:publico","lang":"en","text":"public"}
+{"ref":"core-es:lexeme:privado","lang":"en","text":"private"}
+{"ref":"core-es:lexeme:probable","lang":"en","text":"likely"}
+{"ref":"core-es:lexeme:evidente","lang":"en","text":"obvious"}
+{"ref":"core-es:lexeme:complicado","lang":"en","text":"complicated"}
+{"ref":"core-es:lexeme:sencillo","lang":"en","text":"simple, straightforward"}
+{"ref":"core-es:lexeme:razonable","lang":"en","text":"reasonable"}
+{"ref":"core-es:lexeme:sostenible","lang":"en","text":"sustainable"}
+{"ref":"core-es:lexeme:ojala","lang":"en","text":"hopefully, I hope"}
+{"ref":"core-es:lexeme:aunque","lang":"en","text":"although, even though"}
+{"ref":"core-es:lexeme:mientras","lang":"en","text":"while"}
+{"ref":"core-es:lexeme:ademas","lang":"en","text":"besides, what is more"}
+{"ref":"core-es:lexeme:apenas","lang":"en","text":"hardly, barely"}
+{"ref":"core-es:lexeme:legal","lang":"en","text":"legal, above board"}
+{"ref":"core-es:lexeme:temporal","lang":"en","text":"temporary"}
+{"ref":"core-es:lexeme:estable","lang":"en","text":"stable, settled"}
+{"ref":"core-es:lexeme:logico","lang":"en","text":"logical, only natural"}
+{"ref":"core-es:lexeme:imparcial","lang":"en","text":"impartial, unbiased"}
+{"ref":"core-es:lexeme:improbable","lang":"en","text":"unlikely"}
+{"ref":"core-es:lexeme:gratuito","lang":"en","text":"free of charge"}
+{"ref":"core-es:lexeme:raro","lang":"en","text":"odd, strange"}
 {"ref":"core-es:skill:tener-que-infinitive","lang":"en","text":"to have to do something"}
 {"ref":"core-es:skill:ir-a-infinitive","lang":"en","text":"going to do something (near future)"}
 {"ref":"core-es:skill:querer-infinitive","lang":"en","text":"to want to do something"}
@@ -3167,12 +4008,15 @@
 {"ref":"core-es:skill:present-perfect","lang":"en","text":"the present perfect: what has happened"}
 {"ref":"core-es:skill:gustar-type","lang":"en","text":"verbs where the thing liked is the subject"}
 {"ref":"core-es:skill:hay","lang":"en","text":"there is / there are"}
+{"ref":"core-es:skill:negative-command","lang":"en","text":"a negative command uses the subjunctive, not the command form: habla but no hables"}
 {"ref":"core-es:skill:ordinals","lang":"en","text":"ordinals agree like adjectives, and primero and tercero shorten before a masculine noun"}
+{"ref":"core-es:skill:future","lang":"en","text":"the future tense, built on the whole infinitive"}
 {"ref":"core-es:skill:conditional","lang":"en","text":"would — the same stem as the future, with the imperfect endings"}
 {"ref":"core-es:skill:present-indicative","lang":"en","text":"the present tense"}
 {"ref":"core-es:skill:preterite","lang":"en","text":"the simple past: completed actions"}
 {"ref":"core-es:skill:imperfect","lang":"en","text":"how things used to be"}
 {"ref":"core-es:skill:imperative","lang":"en","text":"telling someone to do something"}
+{"ref":"core-es:skill:present-subjunctive","lang":"en","text":"the form a trigger asks for — querer que, es importante que, para que, ojalá — and the same form as a usted command"}
 {"ref":"core-es:skill:yes-no-question","lang":"en","text":"a yes/no question is the statement itself — Spanish adds no word and moves nothing, only ¿ ? and the rising intonation"}
 {"ref":"core-es:skill:question-word","lang":"en","text":"a question word opens the question — after «y» or a preposition if there is one — and the verb follows it directly, with no extra word between"}
 {"ref":"core-es:skill:order-food-drink","lang":"en","text":"Order food or a drink politely"}
@@ -3256,6 +4100,17 @@
 {"ref":"core-es:skill:echo-to-check","lang":"en","text":"Echo what you just heard back as a question"}
 {"ref":"core-es:skill:confirm-with-a-tag","lang":"en","text":"Turn a statement into a check with ¿verdad? or ¿no?"}
 {"ref":"core-es:skill:answer-a-tag","lang":"en","text":"Confirm or correct what someone checked with you"}
+{"ref":"core-es:skill:ask-someone-to-do","lang":"en","text":"Ask someone else to do something, rather than saying what you do"}
+{"ref":"core-es:skill:express-a-hope","lang":"en","text":"Say what you hope happens, without claiming it will"}
+{"ref":"core-es:skill:give-advice","lang":"en","text":"Advise or recommend a course of action"}
+{"ref":"core-es:skill:express-doubt","lang":"en","text":"Say you doubt something, or that you do not agree"}
+{"ref":"core-es:skill:react-to-news","lang":"en","text":"React to what someone has just told you"}
+{"ref":"core-es:skill:state-a-purpose","lang":"en","text":"Say what something is for"}
+{"ref":"core-es:skill:talk-about-a-future-moment","lang":"en","text":"Talk about a moment that has not arrived yet"}
+{"ref":"core-es:skill:make-a-complaint","lang":"en","text":"Complain about a problem and ask for it to be put right"}
+{"ref":"core-es:skill:weigh-two-options","lang":"en","text":"Weigh up two options out loud"}
+{"ref":"core-es:skill:concede-a-point","lang":"en","text":"Grant part of what someone says, then qualify it"}
+{"ref":"core-es:skill:spell-a-word","lang":"en","text":"Spell a word out loud, and ask someone else to"}
 {"ref":"core-es:skill:numerals-teens","lang":"en","text":"the teens, written as one word"}
 {"ref":"core-es:skill:numerals-twenties","lang":"en","text":"the twenties, written as one word"}
 {"ref":"core-es:skill:numerals-y-joining","lang":"en","text":"y joins tens to units, and never hundreds to tens"}
@@ -3336,3 +4191,10 @@
 {"ref":"core-es:passage:700071","lang":"en","text":"The first day at work","type":"natural"}
 {"ref":"core-es:passage:700072","lang":"en","text":"My back hurt","type":"natural"}
 {"ref":"core-es:passage:700073","lang":"en","text":"My grandmother's house","type":"natural"}
+{"ref":"core-es:passage:700108","lang":"en","text":"The job interview","type":"natural"}
+{"ref":"core-es:passage:700109","lang":"en","text":"A complaint in the shop","type":"natural"}
+{"ref":"core-es:passage:700110","lang":"en","text":"The shared flat","type":"natural"}
+{"ref":"core-es:passage:700111","lang":"en","text":"Recycling at home","type":"natural"}
+{"ref":"core-es:passage:700112","lang":"en","text":"A word of advice about work","type":"natural"}
+{"ref":"core-es:passage:700113","lang":"en","text":"A news item about the climate","type":"natural"}
+{"ref":"core-es:passage:700114","lang":"en","text":"A booking over the phone","type":"natural"}

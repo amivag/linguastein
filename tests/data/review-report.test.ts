@@ -17,7 +17,7 @@ const review = () => pack.run('scripts/review-dataset.ts');
 /** Id of the word card with this text, which the build assigns. */
 function cardId(text: string): string {
   const record = pack
-    .records<{ id: string; text: string }>('es-a1-a2-core-vocabulary.jsonl')
+    .records<{ id: string; text: string }>('vocabulary')
     .find((item) => item.text === text);
   return record!.id.replace('core-es:item:', '');
 }

@@ -1,0 +1,64 @@
+# B1 passages: the same language, read as connected text.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+#
+# Leave the id off a new row — omit the column entirely, do not leave it empty.
+#
+# The passage itself is declared in `passages.tsv`; a sentence joins it through
+# the `passage` column and stays independently practisable, so mastery still
+# counts distinct sentences per word.
+#
+# These are where the two B1 files meet. A trigger drill teaches `es mejor que`
+# and a vocabulary sentence teaches `gasto`, but neither shows a learner the
+# thing they actually need: that a real exchange moves between the two, and that
+# the subjunctive turns up three times in a conversation about the electricity
+# bill without anybody announcing it.
+002182	Buenos días. ¿Por qué quiere este puesto?	Good morning. Why do you want this post?	b1	work		formal	usted		entrevista-b1	Jefa	
+002183	Porque tengo experiencia y quiero un trabajo estable.	Because I have experience and I want a steady job.	b1	work					entrevista-b1	Candidato	
+002184	El contrato es temporal los primeros meses.	The contract is temporary for the first few months.	b1	work					entrevista-b1	Jefa	
+002185	No hay problema. Estoy dispuesto a empezar así.	That is no problem. I am willing to start on that basis.	b1	work					entrevista-b1	Candidato	
+002186	Es importante que llegue temprano.	It is important that you arrive early.	b1	work		formal	usted		entrevista-b1	Jefa	give-advice
+002187	Claro. ¿Cuál es el horario?	Of course. What are the hours?	b1	work					entrevista-b1	Candidato	
+002188	De nueve a cinco, con una hora para comer.	Nine to five, with an hour for lunch.	b1	work					entrevista-b1	Jefa	
+002189	Muy bien. ¿Cuándo saben la decisión?	Very good. When will you know the decision?	b1	work					entrevista-b1	Candidato	
+002190	Le avisamos cuando terminen las entrevistas.	We will let you know when the interviews are over.	b1	work		formal	usted		entrevista-b1	Jefa	talk-about-a-future-moment
+002191	Gracias. Espero que sea pronto.	Thank you. I hope it is soon.	b1	work					entrevista-b1	Candidato	express-a-hope
+002192	Compré esta camisa el sábado y llegó rota.	I bought this shirt on Saturday and it arrived broken.	b1	shopping,clothes					queja-b1	Cliente	make-a-complaint
+002193	Lo siento mucho. ¿Tiene la factura?	I am very sorry. Do you have the receipt?	b1	shopping,money		formal	usted		queja-b1	Dependiente	
+002194	Sí, aquí está. Quiero que me devuelvan el dinero.	Yes, here it is. I want my money back.	b1	shopping,money					queja-b1	Cliente	ask-someone-to-do
+002195	¿Prefiere otra camisa o el dinero?	Would you rather have another shirt or the money?	b1	shopping		formal	usted		queja-b1	Dependiente	
+002196	El dinero, gracias. No es la primera vez que pasa.	The money, thank you. It is not the first time this has happened.	b1	shopping					queja-b1	Cliente	
+002197	Le pido disculpas. Es raro que ocurra dos veces.	I apologise. It is odd that it should happen twice.	b1	shopping		formal	usted		queja-b1	Dependiente	react-to-news
+002198	Espero que no vuelva a pasar.	I hope it does not happen again.	b1	shopping					queja-b1	Cliente	express-a-hope
+002199	Le devolvemos el dinero hoy mismo.	We will give you your money back today.	b1	shopping,money		formal	usted		queja-b1	Dependiente	
+002200	Quiero que hablemos del ruido por la noche.	I want us to talk about the noise at night.	b1	home,city					piso-b1	Marta	ask-someone-to-do
+002201	Tienes razón. ¿Te molesta la música?	You are right. Does the music bother you?	b1	home,music					piso-b1	Pablo	
+002202	Sí, y además no puedo dormir.	Yes, and what is more I cannot sleep.	b1	home					piso-b1	Marta	
+002203	Es lógico que estés cansada. Voy a poner la música más baja.	It is only natural that you are tired. I will turn the music down.	b1	home,music					piso-b1	Pablo	react-to-news
+002204	Te propongo una cosa: nada de música después de las once.	Let me suggest something: no music after eleven.	b1	home					piso-b1	Marta	ask-someone-to-do
+002205	Vale, me parece justo.	OK, that seems fair to me.	b1	home					piso-b1	Pablo	
+002206	Y es mejor que compartamos los gastos de la luz.	And it is better if we share the electricity costs.	b1	home,money					piso-b1	Marta	give-advice
+002207	De acuerdo. Hago un presupuesto para el mes.	Agreed. I will draw up a budget for the month.	b1	home,money					piso-b1	Pablo	
+002208	En mi cocina hay tres bolsas para reciclar.	In my kitchen there are three bags for recycling.	b1	environment,home					reciclar-b1		
+002209	En una tiro el papel, en otra el plástico.	In one I throw the paper, in another the plastic.	b1	environment					reciclar-b1		
+002210	Reciclo desde hace dos años y ya es normal.	I have been recycling for two years and by now it is normal.	b1	environment					reciclar-b1		
+002211	Los primeros meses era complicado, pero ahora es sencillo.	The first few months it was complicated, but now it is straightforward.	b1	environment					reciclar-b1		
+002212	Es importante que todos reciclemos.	It is important that we all recycle.	b1	environment					reciclar-b1		give-advice
+002213	Si reducimos el plástico, el aire y el mar están más limpios.	If we cut down on plastic, the air and the sea are cleaner.	b1	environment					reciclar-b1		
+002214	Aunque sea poco, cada esfuerzo cuenta.	Even if it is little, every effort counts.	b1	environment					reciclar-b1		concede-a-point
+002215	Ojalá que más gente lo haga.	I hope more people do it.	b1	environment					reciclar-b1		express-a-hope
+002216	Me han ofrecido otro puesto.	I have been offered another post.	b1	work					consejo-b1	Ana	
+002217	¡Qué bien! ¿Y cuál es el problema?	How good! And what is the problem?	b1	work					consejo-b1	Luis	
+002218	El sueldo es mejor, pero tengo que trabajar los sábados.	The salary is better, but I have to work Saturdays.	b1	work,money					consejo-b1	Ana	
+002219	Te aconsejo que compares las dos ofertas con calma.	I advise you to compare the two offers calmly.	b1	work					consejo-b1	Luis	give-advice
+002220	Ya lo hice. Dudo que sea una buena decisión.	I already have. I doubt it is a good decision.	b1	work					consejo-b1	Ana	express-doubt
+002221	Es normal que dudes. Es un riesgo.	It is normal that you have doubts. It is a risk.	b1	work					consejo-b1	Luis	react-to-news
+002222	Yo esperaría a que te den más información.	I would wait until they give you more information.	b1	work					consejo-b1	Luis	give-advice
+002223	Buen consejo. Gracias.	Good advice. Thank you.	b1	work					consejo-b1	Ana	
+002224	El periódico publica hoy un artículo sobre el clima.	The paper publishes an article about the climate today.	b1	news,environment					clima-b1		
+002225	La temperatura del mar subió otra vez este verano.	The sea temperature rose again this summer.	b1	news,environment					clima-b1		
+002226	El artículo dice que la contaminación del aire es el problema.	The article says air pollution is the problem.	b1	news,environment					clima-b1		
+002227	Es probable que el próximo verano sea más caliente.	Next summer will probably be hotter.	b1	news,environment					clima-b1		express-doubt
+002228	Para que el clima mejore, hay que reducir el transporte privado.	For the climate to improve, private transport has to be cut.	b1	news,environment,travel					clima-b1		state-a-purpose
+002229	No es una solución sencilla ni económica.	It is not a simple or a cheap solution.	b1	news,environment					clima-b1		
+002230	Pero es necesario que empecemos ahora.	But it is necessary that we start now.	b1	news,environment					clima-b1		give-advice
+002231	Aunque el cambio sea lento, el planeta lo agradece.	Even if the change is slow, the planet is grateful for it.	b1	news,environment					clima-b1		concede-a-point

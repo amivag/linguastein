@@ -76,8 +76,8 @@ describe('canonical audio', () => {
     );
     scratch.build();
 
-    const spain = scratch.records<AudioClip>('es-a1-a2-core-audio-es-ES.jsonl');
-    const mexico = scratch.records<AudioClip>('es-a1-a2-core-audio-es-MX.jsonl');
+    const spain = scratch.records<AudioClip>('audio-es-ES');
+    const mexico = scratch.records<AudioClip>('audio-es-MX');
 
     expect(spain).toHaveLength(1);
     expect(mexico).toHaveLength(1);
@@ -90,10 +90,15 @@ describe('canonical audio', () => {
       durationMs: 2180,
     });
 
+    // One audio file per locale, in locale order. Asserted through the shared
+    // prefix rather than as two literals: the prefix carries the pack's level
+    // range and moves when the content does, and what this test is about is the
+    // per-locale split, not the range.
     const manifest = JSON.parse(scratch.read('../packs/core-es/pack.json')) as PackManifest;
-    expect(manifest.files.filter((file) => file.kind === 'audio').map((file) => file.path)).toEqual(
-      ['es-a1-a2-core-audio-es-ES.jsonl', 'es-a1-a2-core-audio-es-MX.jsonl'],
-    );
+    const audio = manifest.files.filter((file) => file.kind === 'audio').map((file) => file.path);
+    const prefix = audio[0]?.replace(/-audio-es-ES\.jsonl$/, '') ?? '';
+    expect(prefix).toMatch(/^es-a1-[a-c][12]-core$/);
+    expect(audio).toEqual([`${prefix}-audio-es-ES.jsonl`, `${prefix}-audio-es-MX.jsonl`]);
   });
 
   it('keys a clip by item, locale and voice — never by the text it speaks', () => {
@@ -106,11 +111,11 @@ describe('canonical audio', () => {
     scratch = createScratchPack('audio-ids');
     scratch.write(LEDGER, [header, clip('000001', 'approved', { hash: 'aaaa1111' })].join('\n'));
     scratch.build();
-    const first = scratch.records<AudioClip>('es-a1-a2-core-audio-es-ES.jsonl')[0];
+    const first = scratch.records<AudioClip>('audio-es-ES')[0];
 
     scratch.write(LEDGER, [header, clip('000001', 'approved', { hash: 'bbbb2222' })].join('\n'));
     scratch.build();
-    const second = scratch.records<AudioClip>('es-a1-a2-core-audio-es-ES.jsonl')[0];
+    const second = scratch.records<AudioClip>('audio-es-ES')[0];
 
     expect(second?.id).toBe(first?.id);
     expect(second?.textHash).not.toBe(first?.textHash);

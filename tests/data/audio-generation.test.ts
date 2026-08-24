@@ -15,7 +15,7 @@ import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync }
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { repoRoot, runScript } from '../fixtures/dataset';
+import { packFile, repoRoot, runScript } from '../fixtures/dataset';
 
 let out: string;
 
@@ -124,7 +124,7 @@ describe('audio generation', { timeout: 120_000 }, () => {
     const packs = mkdtempSync(join(tmpdir(), 'linguastein-audio-pack-'));
     try {
       cpSync(join(repoRoot, 'public/packs'), packs, { recursive: true });
-      const vocabulary = join(packs, 'core-es', 'es-a1-a2-core-vocabulary.jsonl');
+      const vocabulary = packFile(packs, 'vocabulary');
       const lines = readFileSync(vocabulary, 'utf8').trimEnd().split('\n');
       const original = JSON.parse(lines.at(-1)!) as { id: string; text: string };
       const twin = { ...original, id: 'core-es:item:900001' };

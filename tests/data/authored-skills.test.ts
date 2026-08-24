@@ -99,8 +99,8 @@ describe('authored communicative skills', () => {
   afterEach(() => scratch?.dispose());
 
   it('ships target-language labels, reference-language glosses and prerequisites', () => {
-    const skills = shippedRecords<Skill>('es-a1-a2-core-skills.jsonl');
-    const translations = shippedRecords<Translation>('es-a1-a2-core-translations-en.jsonl');
+    const skills = shippedRecords<Skill>('skills');
+    const translations = shippedRecords<Translation>('translations-en');
 
     for (const id of ids) {
       const skill = skills.find((candidate) => candidate.id === id);
@@ -144,7 +144,7 @@ describe('authored communicative skills', () => {
   });
 
   it('attaches the functions to the sentences that provide their evidence', () => {
-    const items = shippedRecords<LearningItem>('es-a1-a2-core-sentences.jsonl');
+    const items = shippedRecords<LearningItem>('sentences');
     const capabilitiesIn = (locals: readonly string[]) => {
       const selected = items.filter((item) =>
         locals.some((local) => item.id.endsWith(`:item:${local}`)),

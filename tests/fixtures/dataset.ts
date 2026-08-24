@@ -64,9 +64,47 @@ export function readJsonl<T>(path: string): T[] {
     .map((line) => JSON.parse(line) as T);
 }
 
-/** A JSONL file of the shipped `public/packs` pack. */
-export function shippedRecords<T>(file: string): T[] {
-  return readJsonl<T>(join(repoRoot, 'public/packs', PACK_DIR, file));
+/**
+ * Where one pack file is, looked up by what it holds rather than by its name.
+ *
+ * A pack file's name carries the level range of its content — the build derives
+ * `es-a1-a2-core-…` from the levels actually present — so the day B1 content
+ * landed, every one of those names changed. Thirteen suites had the old
+ * spelling typed into them and thirteen broke at once, not one of them a test
+ * about file naming.
+ *
+ * So a test asks for `sentences` and the manifest says where that is, which is
+ * what the app's own loader does. `kind` is the part after the prefix:
+ * `verbs`, `vocabulary`, `translations-en`, `audio-es-ES`.
+ */
+export function packFile(packsRoot: string, kind: string): string {
+  const manifestPath = join(packsRoot, PACK_DIR, 'pack.json');
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
+    files?: readonly { readonly path: string }[];
+  };
+  const files = manifest.files ?? [];
+  const match = files.find((file) => file.path.endsWith(`-${kind}.jsonl`));
+  if (!match) {
+    throw new Error(
+      `no pack file holds "${kind}" — ${manifestPath} lists ${files.map((f) => f.path).join(', ')}`,
+    );
+  }
+  return join(packsRoot, PACK_DIR, match.path);
+}
+
+/** Whether the pack emitted a file of this kind at all. */
+export function hasPackFile(packsRoot: string, kind: string): boolean {
+  try {
+    packFile(packsRoot, kind);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** A JSONL file of the shipped `public/packs` pack, by kind — see {@link packFile}. */
+export function shippedRecords<T>(kind: string): T[] {
+  return readJsonl<T>(packFile(join(repoRoot, 'public/packs'), kind));
 }
 
 export interface ScratchPack {
@@ -82,8 +120,8 @@ export interface ScratchPack {
   write(file: string, text: string): void;
   /** Appends one row to a TSV in the scratch content directory. */
   append(file: string, row: string): void;
-  /** Records of a built pack file. */
-  records<T>(file: string): T[];
+  /** Records of a built pack file, by kind — see {@link packFile}. */
+  records<T>(kind: string): T[];
   /** Runs the dataset build; throws if it fails. Returns stdout. */
   build(env?: Record<string, string>): string;
   /**
@@ -123,7 +161,7 @@ export function createScratchPack(prefix: string): ScratchPack {
     read,
     write: (file, text) => writeFileSync(path(file), text, 'utf8'),
     append: (file, row) => writeFileSync(path(file), `${read(file).trimEnd()}\n${row}\n`, 'utf8'),
-    records: <T>(file: string) => readJsonl<T>(join(packs, PACK_DIR, file)),
+    records: <T>(kind: string) => readJsonl<T>(packFile(packs, kind)),
     build: (extra) => runScript('scripts/build-dataset.ts', { env: { ...env, ...extra } }),
     tryBuild: (extra) => tryRunScript('scripts/build-dataset.ts', { env: { ...env, ...extra } }),
     run: (script: string) => runScript(script, { args: [packs], env }),

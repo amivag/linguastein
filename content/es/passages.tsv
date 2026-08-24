@@ -119,3 +119,10 @@
 700105	segundo-campo	text	Un segundo en el campo		a2	nature
 700106	venis-vosotros	text	¿Venís vosotros?		a2	social
 700107	segundo-sin-hablar	text	Un segundo sin hablar		a2	people
+700108	entrevista-b1	dialogue	La entrevista de trabajo	The job interview	b1	work
+700109	queja-b1	dialogue	Una queja en la tienda	A complaint in the shop	b1	shopping
+700110	piso-b1	dialogue	El piso compartido	The shared flat	b1	home
+700111	reciclar-b1	text	Reciclar en casa	Recycling at home	b1	environment
+700112	consejo-b1	dialogue	Un consejo sobre el trabajo	A word of advice about work	b1	work
+700113	clima-b1	text	Una noticia sobre el clima	A news item about the climate	b1	environment
+700114	reserva-nombre	dialogue	Una reserva por teléfono	A booking over the phone	a1	travel

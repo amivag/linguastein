@@ -140,12 +140,28 @@ describe('shipped packs', () => {
     // A yes/no question is the statement itself; a question word opens its own.
     expect(skillOf('¿Hay leche en la nevera?')).toContain('yes-no-question');
     expect(skillOf('¿Cómo te llamas?')).toContain('question-word');
-    // The word has to *open* it: this one holds `qué` and answers sí or no.
-    const embedded = repository.allItems().filter((item) => item.text === '¿Sabes qué hora es?');
-    for (const item of embedded) {
-      expect(item.skills?.map((skill) => skill.replace(/^.*:skill:/, ''))).toContain(
-        'yes-no-question',
-      );
+    // A conjunction in front of it does not stop it opening the question.
+    // `¿Y dónde giro?` is how a conversation asks its second question, and
+    // reading the token straight after `¿` filed thirteen of these as yes/no
+    // questions — the opposite of what they are, in the one skill whose whole
+    // job is telling the two apart.
+    expect(skillOf('¿Y dónde giro?')).toContain('question-word');
+    expect(skillOf('¿Y quién más va a la reunión?')).toContain('question-word');
+    // And a conjunction with nothing interrogative behind it is still yes/no.
+    expect(skillOf('¿Y tienes hermanos?')).toContain('yes-no-question');
+
+    /*
+     * Neither, where the shape is genuinely ambiguous — `disambiguate` returns
+     * null rather than guess a lexeme, and the same rule has to hold here: a
+     * learner practising `yes-no-question` on a `cuánto` question is being taught
+     * the opposite of the thing. `¿Y el medio kilo cuánto es?` topicalises its
+     * subject and answers a price; `¿Sabe dónde está el banco?` is an embedded
+     * question that answers sí. Nothing local separates the two.
+     */
+    for (const ambiguous of ['¿Y el medio kilo cuánto es?', '¿Sabe dónde está el banco?']) {
+      const skills = skillOf(ambiguous) ?? [];
+      expect(skills, ambiguous).not.toContain('yes-no-question');
+      expect(skills, ambiguous).not.toContain('question-word');
     }
   });
 

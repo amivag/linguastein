@@ -1387,25 +1387,57 @@ const INTERROGATIVES = new Set(
 );
 
 /**
- * Which of the two a question is, decided on what follows the opening `¿`.
+ * Which of the two shapes a question has — or neither, when the shape is
+ * genuinely ambiguous.
  *
- * Position matters, and using "contains an interrogative" instead would be
- * wrong: `¿Sabes qué hora es?` holds `qué` and is a yes/no question — the answer
- * is sí or no. So the word has to *open* the question, allowing the preposition
- * Spanish puts in front of it (`¿De dónde eres?`, `¿Con quién trabajas?`) which
- * English would strand at the end.
+ * `disambiguate` returns `null` rather than guessing which lexeme a surface is,
+ * and a test asserts that `Fuimos` stays unlinked: **a missing label beats a
+ * wrong one**. The same rule applies here, and it has to, because the whole
+ * purpose of these two skills is telling asking-shapes apart. A learner
+ * practising `yes-no-question` on a `dónde` question is being taught the
+ * opposite of the thing.
+ *
+ * So three outcomes, not two:
+ *
+ * - **Opens with an interrogative** → `question-word`. Stepping over at most one
+ *   conjunction, then one preposition, then one comma-delimited topic, in the
+ *   order Spanish puts them: `¿Y de dónde eres?`, `¿Y tú, de dónde eres?`.
+ * - **Holds no interrogative at all** → `yes-no-question`. Nothing else it can
+ *   be, and this is the shape worth teaching: the statement, unchanged.
+ * - **Holds one somewhere else** → neither, and deliberately. `¿Sabes qué hora
+ *   es?` answers sí, and `¿Y el medio kilo cuánto es?` answers a price, and
+ *   nothing local separates an embedded question from a topicalised one. Word
+ *   order is what `retagCommand` refuses to guess from for the same reason.
  */
-function questionSkill(tokens: Token[]): string {
+function questionSkill(tokens: Token[]): string | undefined {
   const opening = tokens.findIndex((token) => token.text === '¿');
-  let at = opening + 1;
-  // Step over a leading preposition, and only one: `¿De dónde…?` is a question
-  // word, `¿De la casa de quién…?` is not the shape this names.
-  if (tokens[at]?.pos === 'ADP') at += 1;
-  const head = tokens[at];
-  const lemma = head?.lemma;
-  return lemma !== undefined && INTERROGATIVES.has(lemma)
-    ? QUESTION_SKILLS['question-word'].id
-    : QUESTION_SKILLS['yes-no-question'].id;
+  const asked = tokens.slice(opening + 1).filter((token) => token.text !== '?');
+  const isInterrogative = (token: Token | undefined) =>
+    token?.lemma !== undefined && INTERROGATIVES.has(token.lemma);
+
+  /*
+   * Every position the interrogative is allowed to open from, tested together
+   * rather than walked one step at a time. Advancing greedily skipped past the
+   * answer: `¿Y de dónde eres, Elena?` reaches `dónde` after the conjunction and
+   * the preposition, and the comma rule then stepped over it to the vocative.
+   */
+  const heads = [0];
+  let at = 0;
+  if (asked[at]?.pos === 'CCONJ') heads.push((at += 1));
+  if (asked[at]?.pos === 'ADP') heads.push((at += 1));
+  // A topicalised subject, which Spanish puts before the question word and marks
+  // with a comma: `¿Y usted, en qué trabaja?`. Bounded to a short phrase, so an
+  // ordinary clause cannot be walked past.
+  const comma = asked.findIndex((token) => token.text === ',');
+  if (comma > at && comma <= at + 2) {
+    heads.push(comma + 1);
+    if (asked[comma + 1]?.pos === 'ADP') heads.push(comma + 2);
+  }
+
+  if (heads.some((index) => isInterrogative(asked[index]))) {
+    return QUESTION_SKILLS['question-word'].id;
+  }
+  return asked.some(isInterrogative) ? undefined : QUESTION_SKILLS['yes-no-question'].id;
 }
 
 /**
@@ -1571,8 +1603,11 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
   // requires, so it is the most reliable fact about a sentence in the file.
   if (sentence.text.includes('¿')) {
     const skill = questionSkill(tokens);
-    skills.add(skill);
-    usedSkills.add(skill);
+    // `undefined` where the shape is ambiguous — see `questionSkill`.
+    if (skill) {
+      skills.add(skill);
+      usedSkills.add(skill);
+    }
   }
 
   for (const token of tokens) {

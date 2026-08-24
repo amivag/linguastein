@@ -125,8 +125,9 @@ describe('a screen that throws', () => {
     // this file learning about the network — the one code path that runs when
     // things are already wrong is the worst place to add a fetch.
     expect(onError).toHaveBeenCalledOnce();
-    expect(onError.mock.calls[0]?.[0]).toBeInstanceOf(Error);
-    expect((onError.mock.calls[0]?.[0] as Error).message).toBe('reported');
+    const reported = onError.mock.calls[0]?.[0];
+    expect(reported).toBeInstanceOf(Error);
+    expect((reported as Error).message).toBe('reported');
   });
 
   it('falls back to the console when no reporter is wired', () => {

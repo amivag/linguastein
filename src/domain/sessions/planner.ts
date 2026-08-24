@@ -106,6 +106,19 @@ const BUCKET_ORDER: Record<SessionFocus, readonly Bucket[]> = {
   struggling: ['weak', 'due', 'rest', 'fresh'],
   due: ['due', 'weak', 'rest', 'fresh'],
   fresh: ['fresh', 'due', 'weak', 'rest'],
+  /*
+   * `recent` is the one focus that is not really a permutation, and the entry
+   * here is what it falls back to.
+   *
+   * "The material I was just working on" cuts *across* these groups rather than
+   * selecting one of them: a sentence practised twenty minutes ago is in `rest`
+   * if it went well, in `weak` if it did not, and in `due` if the scheduler has
+   * already brought it round again. Ordering by bucket would scatter exactly the
+   * handful of items the learner is asking for. So `smartOrder` special-cases it
+   * below, and this row is only what remains true either way: new material comes
+   * last, because meeting new words is not what "again" means.
+   */
+  recent: ['due', 'weak', 'rest', 'fresh'],
 };
 
 /**
@@ -137,6 +150,28 @@ function smartOrder(
     buckets.weak.sort(
       (a, b) => (progress.get(b.id)?.difficulty ?? 0) - (progress.get(a.id)?.difficulty ?? 0),
     );
+  }
+
+  /*
+   * Everything already met, most recently practised first — then new material.
+   *
+   * The three seen buckets are merged rather than ordered, for the reason
+   * `BUCKET_ORDER` records: recency is orthogonal to how an item is doing, so
+   * keeping the buckets apart would bury the four sentences from this morning
+   * under everything else that happens to be due. Sorted rather than shuffled,
+   * so "again" means what it says; ties keep their scan order, which makes the
+   * result deterministic without a seed.
+   *
+   * It still cannot hand back an empty session: unseen items are appended under
+   * the same cap every other focus applies, so a learner with no history at all
+   * gets an ordinary first session instead of nothing.
+   */
+  if (focus === 'recent') {
+    const seen = [...buckets.due, ...buckets.weak, ...buckets.rest].sort(
+      (a, b) =>
+        (progress.get(b.id)?.lastReviewedAt ?? 0) - (progress.get(a.id)?.lastReviewedAt ?? 0),
+    );
+    return [...seen, ...shuffle(buckets.fresh, rng).slice(0, maxNewItems)];
   }
 
   // The cap exists so "10 minutes of practice" cannot become ten first

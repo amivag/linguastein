@@ -30,7 +30,19 @@ const ITEM = {
  */
 function learnerState(): Map<ItemId, ItemProgress> {
   return new Map<ItemId, ItemProgress>([
-    [ITEM.due, { ...newItemProgress(ITEM.due), status: 'review', attempts: 3, dueAt: NOW - 1000 }],
+    [
+      ITEM.due,
+      {
+        ...newItemProgress(ITEM.due),
+        status: 'review',
+        attempts: 3,
+        dueAt: NOW - 1000,
+        // Recency is deliberately not aligned with any other axis: the oldest of
+        // the four is the one that is due, so a `recent` ordering that happened
+        // to agree with `due` would prove nothing.
+        lastReviewedAt: NOW - 30 * 86_400_000,
+      },
+    ],
     [
       ITEM.hard,
       {
@@ -39,6 +51,7 @@ function learnerState(): Map<ItemId, ItemProgress> {
         attempts: 4,
         difficulty: 0.6,
         dueAt: NOW + 86_400_000,
+        lastReviewedAt: NOW - 3 * 86_400_000,
       },
     ],
     [
@@ -49,6 +62,7 @@ function learnerState(): Map<ItemId, ItemProgress> {
         attempts: 5,
         difficulty: 0.9,
         dueAt: NOW + 86_400_000,
+        lastReviewedAt: NOW - 10 * 86_400_000,
       },
     ],
     [
@@ -59,6 +73,9 @@ function learnerState(): Map<ItemId, ItemProgress> {
         attempts: 6,
         difficulty: 0.1,
         dueAt: NOW + 86_400_000,
+        // The most recent, and also the easiest and not due — so it can only be
+        // led with by a focus that is genuinely ordering on recency.
+        lastReviewedAt: NOW - 3_600_000,
       },
     ],
   ]);
@@ -118,9 +135,52 @@ describe('a practice focus', () => {
    */
   it('never narrows the session, whichever focus is chosen', () => {
     const all = [...repository.allItems().map((item) => item.id)].sort();
-    for (const focus of ['balanced', 'struggling', 'due', 'fresh'] as const) {
+    for (const focus of ['balanced', 'struggling', 'due', 'fresh', 'recent'] as const) {
       expect([...ordered(focus)].sort(), focus).toEqual(all);
     }
+  });
+
+  /*
+   * "Where I left off" — the focus Home's resume action uses.
+   *
+   * It is the only focus that orders *across* the planner's buckets, so these
+   * two tests are what stop it being quietly rewritten as another permutation:
+   * the item it must lead with is simultaneously the easiest, the least due and
+   * the most recently practised, so no bucket order can produce it by accident.
+   */
+  it('leads with the most recently practised item under "where I left off"', () => {
+    const plan = ordered('recent');
+    expect(plan[0]).toBe(ITEM.easy);
+    expect(plan[1]).toBe(ITEM.hard);
+    expect(plan[2]).toBe(ITEM.harder);
+    expect(plan[3]).toBe(ITEM.due);
+  });
+
+  it('puts new material last under "where I left off"', () => {
+    // "Again" cannot mean "meet something you have never seen".
+    const plan = ordered('recent');
+    const seen = [ITEM.due, ITEM.hard, ITEM.harder, ITEM.easy];
+    const firstNew = plan.findIndex((itemId) => !seen.includes(itemId as never));
+    expect(firstNew).toBe(seen.length);
+  });
+
+  it('still plans a session for a learner with no history', () => {
+    // A fresh install has nothing recent, and must get an ordinary first session
+    // rather than an empty screen — the bias-never-a-filter rule, in the one case
+    // where this focus has nothing at all to lead with.
+    const config: SessionConfig = {
+      mode: 'practice',
+      filter: {},
+      size: { kind: 'all' },
+      ordering: 'smart',
+      exerciseKinds: ['reveal'],
+      referenceLanguage: 'en',
+      pronunciationLocale: 'es-ES',
+      seed: 11,
+      focus: 'recent',
+    };
+    const plan = planSession({ repository, config, progress: new Map(), now: NOW });
+    expect(plan.itemIds).toHaveLength(repository.itemCount);
   });
 
   it('reorders rather than reshuffles: same set, different order', () => {

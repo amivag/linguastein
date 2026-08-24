@@ -313,3 +313,153 @@
 .missionAll:hover {
   text-decoration: underline;
 }
+
+/*
+ * Where you left off.
+ *
+ * A card per sentence rather than a bordered list: rule 1 of the design language
+ * means the separation comes from surface, and these rows carry tappable language
+ * so they need to read as things rather than as lines of a log.
+ */
+.recent {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.recentRow {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.recentMeaning {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.recentAgain {
+  margin-top: var(--space-3);
+}
+
+/* The last few sessions, as a quiet footnote under the material they covered.
+   Not a chart: what a learner wants here is "did I turn up, and how did it go",
+   and Progress owns the longer view. */
+.sessions {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.sessions li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sessionScore {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * In this course: one row per kind of material, each wearing its own hue.
+ *
+ * This is the survey the app had nowhere for. The hue is the same one that kind
+ * of material wears on Study, so a learner who has learnt that texts are the
+ * amber ones finds them by colour in both places — which is the only thing a
+ * categorical hue is for.
+ */
+.contents {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.contentRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap-target);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  color: inherit;
+  text-decoration: none;
+}
+
+.contentRow:hover {
+  background: var(--color-surface-raised);
+}
+
+.contentText {
+  min-width: 0;
+}
+
+.contentText strong {
+  display: block;
+  font-family: var(--font-display);
+}
+
+.contentText small {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.contentCount {
+  color: var(--color-text-muted);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-black);
+  font-variant-numeric: tabular-nums;
+}
+
+/* How far you are: the glance version of Progress. */
+.standing {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.standingLine {
+  color: var(--color-text-muted);
+}
+
+.standingLine strong {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+}
+
+/* Two fills in one groove: mastered, then merely met. Same construction as the
+   bar on Progress, and the same reason it is `aria-hidden` — the line above it
+   already says both numbers. */
+.bar {
+  display: flex;
+  overflow: hidden;
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-track);
+}
+
+.barMastered {
+  background: var(--color-success);
+}
+
+.barSeen {
+  background: var(--color-accent);
+}

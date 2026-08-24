@@ -23,6 +23,7 @@ import {
   Gauge,
   GraduationCap,
   History,
+  House,
   Info,
   Languages,
   Layers,
@@ -87,6 +88,11 @@ import {
 export const ICONS = {
   // Navigation destinations. These are the app's five nouns, so they get the
   // most distinct silhouettes in the set rather than the most literal ones.
+  /* Where a learner lands: the course itself, not an activity. It is the one
+     nav name that is pictorial, because a house is what every app on the phone
+     has trained the thumb to look for in that position — and a more semantic
+     drawing would be worse at the only job it has. */
+  home: House,
   practice: Target,
   read: BookOpen,
   browse: Search,

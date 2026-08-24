@@ -163,7 +163,7 @@ describe('course-scoped navigation', () => {
       'href',
       '/es/a1/study',
     );
-    expect(within(nav).getByRole('link', { name: 'Test' })).toHaveAttribute('href', '/es/a1');
+    expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/es/a1');
   });
 
   it('points a passage link at the course it was found in', async () => {

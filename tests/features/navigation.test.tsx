@@ -17,10 +17,11 @@ describe('navigation', () => {
     renderWithServices(<HomeScreen />);
 
     const nav = await screen.findByRole('navigation', { name: 'Main' });
-    // Two sections, not five verbs: Study is the material and Test is the
-    // grading. Browse and Read are sheets reached from Study rather than
-    // destinations of their own.
-    for (const label of ['Study', 'Test', 'Progress', 'Settings']) {
+    // A place to land, then the two things done with material: Study is the
+    // material and Home is where a session is recommended and started. Browse
+    // and Read are sheets reached from Study rather than destinations of their
+    // own.
+    for (const label of ['Home', 'Study', 'Progress', 'Settings']) {
       expect(within(nav).getByRole('link', { name: label })).toBeInTheDocument();
     }
   });
@@ -39,7 +40,7 @@ describe('navigation', () => {
       'aria-current',
       'page',
     );
-    expect(within(nav).getByRole('link', { name: 'Test' })).not.toHaveAttribute('aria-current');
+    expect(within(nav).getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current');
   });
 
   it('hides the chrome during a practice session', async () => {

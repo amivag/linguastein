@@ -23,6 +23,11 @@ const FOCUS_LABELS: Record<SessionFocus, { label: string; description: string; i
   },
   due: { label: 'Reviews', description: 'Clear what is due before anything else', icon: 'due' },
   fresh: { label: 'New material', description: 'Unseen items first, and uncapped', icon: 'new' },
+  recent: {
+    label: 'Where I left off',
+    description: 'The material you practised most recently, first',
+    icon: 'history',
+  },
 };
 
 /**

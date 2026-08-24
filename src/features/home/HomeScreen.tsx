@@ -6,9 +6,14 @@ import { MISSIONS } from '../../app/missions';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
-import { Icon } from '../../components/Icon';
+import { Icon, type IconName } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
+import { TokenizedText } from '../../components/TokenizedText';
+import { useWordSelection } from '../../components/useWordSelection';
+import { WordInfoSheet } from '../../components/WordInfoSheet';
+import { kindHue } from '../../styles/kinds';
+import surfaces from '../../styles/surfaces.module.css';
 import { levelLabel, type ItemId } from '../../domain/content';
 import {
   summarise,
@@ -22,13 +27,28 @@ import { localDay } from '../../utils/calendar';
 import {
   DEFAULT_SESSION_MINUTES,
   type SessionFocus,
+  type SessionRecord,
   type SessionSize,
 } from '../../domain/sessions';
 import { FocusPicker } from '../practice/FocusPicker';
 import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
 import { sessionPath } from '../practice/session-url';
 import { missionPath } from '../missions/mission-url';
+import { readPath } from '../read/read-url';
+import { studyPath } from '../study/study-url';
+import { formatDuration } from '../practice/duration';
 import styles from './HomeScreen.module.css';
+
+/**
+ * How many recently practised items Home shows.
+ *
+ * Five, because this is a reminder rather than a log: it exists so a learner who
+ * opens the app after two days can see what they were working on and pick it back
+ * up, and the full history already has a screen of its own in Progress. A list
+ * long enough to scroll would make Home a second Progress and push the material
+ * survey below the fold.
+ */
+const RECENT_ITEMS = 5;
 
 /**
  * The course coach: one trustworthy next action, with the laboratory still one
@@ -39,6 +59,11 @@ export function HomeScreen() {
   const { course, option, filter, path } = useCourse();
   const navigate = useNavigate();
   const practiceSheetId = useId();
+  const words = useWordSelection();
+  // Named once, as `StudyScreen` does: every derivation below depends on the
+  // repository rather than on the whole services bag, and saying so keeps the
+  // memo from re-running when an unrelated service is replaced.
+  const repository = services.repository;
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [practiceDays, setPracticeDays] = useState(0);
   const [lastPractice, setLastPractice] = useState('Not yet');
@@ -59,6 +84,16 @@ export function HomeScreen() {
     new Map(),
   );
   const [practiceOpen, setPracticeOpen] = useState(false);
+  /**
+   * The item ids this learner touched most recently, newest first.
+   *
+   * Ids rather than items, because what is stored is history and what is rendered
+   * is content: an id that no longer resolves — a pack removed, a level lowered —
+   * has to drop out at render rather than be missing from state, or the list
+   * silently shortens and nothing says why.
+   */
+  const [recentIds, setRecentIds] = useState<readonly ItemId[]>([]);
+  const [sessions, setSessions] = useState<readonly RecentSession[]>([]);
 
   // Every recommendation and count is scoped to the course in the URL.
   const scope = useMemo(() => {
@@ -69,9 +104,13 @@ export function HomeScreen() {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const [progress, attempts] = await Promise.all([
+      const [progress, attempts, recentSessions] = await Promise.all([
         services.storage.progress.all(),
         services.storage.attempts.recent(10_000),
+        // Narrowed by language rather than by course, the call `SessionStore`
+        // documents: a level is a ceiling, so a session practised at A1 is part
+        // of the history an A2 learner is looking at.
+        services.storage.sessions.recent(3, course.language),
       ]);
       if (cancelled) return;
 
@@ -88,11 +127,32 @@ export function HomeScreen() {
       });
       setPracticeDays(daysPractisedThisWeek(attempts, now));
       setLastPractice(describeLastPractice(attemptsInScope, now));
+      setSessions(recentSessions.map((session) => describeSession(session, now)));
+      setRecentIds(mostRecentItems(attemptsInScope, RECENT_ITEMS));
     })();
     return () => {
       cancelled = true;
     };
-  }, [services, scope]);
+  }, [services, scope, course.language]);
+
+  /**
+   * The material behind {@link recentIds}, as far as it still resolves.
+   *
+   * Resolved here rather than stored, so switching level or unloading a pack
+   * shortens this list instead of showing rows that lead nowhere.
+   */
+  const recent = useMemo(
+    () =>
+      recentIds
+        .map((itemId) => services.repository.getItem(itemId))
+        .filter((item): item is NonNullable<typeof item> => item !== undefined)
+        .map((item) => ({
+          item,
+          translation: services.repository.translationOf(item.id, preferences.referenceLanguage)
+            ?.text,
+        })),
+    [preferences.referenceLanguage, recentIds, services.repository],
+  );
 
   // Where the learner stands in every mission this course offers. Study lists
   // all of them; the home screen only needs the one that leads.
@@ -104,6 +164,78 @@ export function HomeScreen() {
       }),
     [course, missionUseItems, practisedIds, scope.ids, services.repository],
   );
+
+  /**
+   * What this course actually holds, as one row per kind of material.
+   *
+   * The question a learner arriving at a course asks first and the app had no
+   * screen answering: Study lists the material, but a learner has to open each of
+   * its seven sections to find out whether there is anything in them. Counted with
+   * the filter each row links to — the mistake Study's word tiles made once and
+   * `AGENTS.md` now warns about, where a tile advertised 546 verbs and led to a
+   * sheet listing none.
+   *
+   * Rows with nothing in them drop out, exactly as an empty category and an unused
+   * letter already do. A pack with no authored missions simply has no missions
+   * row, rather than a row promising zero.
+   */
+  const contents = useMemo(() => {
+    const count = (extra: Parameters<typeof repository.query>[0]) =>
+      repository.query({ ...filter, ...extra }).length;
+
+    return [
+      {
+        id: 'type:mission',
+        label: 'Missions',
+        note: 'Real situations, start to finish',
+        icon: 'mission' as IconName,
+        count: standings.length,
+        to: studyPath(course, 'missions'),
+      },
+      {
+        id: 'type:word',
+        label: 'Words',
+        note: 'Cards with meaning, gender and forms',
+        icon: 'word' as IconName,
+        count: count({ types: ['word'] }),
+        to: studyPath(course, 'words'),
+      },
+      {
+        id: 'type:sentence',
+        label: 'Phrases & sentences',
+        note: 'Language in use, not in isolation',
+        icon: 'quick' as IconName,
+        count: count({ types: ['phrase'] }) + count({ types: ['sentence'] }),
+        to: studyPath(course, 'phrases'),
+      },
+      {
+        id: 'type:passage',
+        label: 'Texts to read',
+        note: 'Dialogues and short monologues',
+        icon: 'passage' as IconName,
+        count: repository.allPassages().length,
+        to: readPath(course),
+      },
+      {
+        id: 'type:grammar',
+        label: 'Grammar patterns',
+        note: 'How the language is put together',
+        icon: 'grammar' as IconName,
+        count: repository
+          .allSkills()
+          .filter((skill) => skill.kind !== 'function' && count({ skills: [skill.id] }) > 0).length,
+        to: studyPath(course, 'grammar'),
+      },
+      {
+        id: 'type:topic',
+        label: 'Categories',
+        note: 'Everything by what it is about',
+        icon: 'topic' as IconName,
+        count: repository.topics(filter).filter((topic) => topic.count > 0).length,
+        to: studyPath(course, 'categories'),
+      },
+    ].filter((row) => row.count > 0);
+  }, [course, filter, repository, standings.length]);
 
   // The next unfinished authored mission leads. A pack with no mission catalog
   // still gets a useful first passage rather than Spanish sequencing leaking in.
@@ -155,6 +287,29 @@ export function HomeScreen() {
   const start = (preset: PresetId, size: SessionSize) => {
     setPracticeOpen(false);
     void navigate(sessionPath(course, { preset, size, ...focused }));
+  };
+
+  /**
+   * Practise what was practised most recently, first.
+   *
+   * A focus rather than a list of ids, which is what makes it a link: `?ids=` is
+   * deliberately not part of a session URL — see `session-url.ts` — and a session
+   * that cannot be described by its address cannot be reloaded or shared. It is
+   * also the honest shape of the request, because "again" is an ordering rather
+   * than a narrowing: a learner who asks for it on a fresh install gets an
+   * ordinary session instead of an empty screen.
+   *
+   * Sized to what is actually on screen, so the button's promise matches the list
+   * above it rather than dealing an arbitrary ten.
+   */
+  const practiseRecent = () => {
+    void navigate(
+      sessionPath(course, {
+        preset: 'quick',
+        size: { kind: 'items', count: Math.max(recent.length, 5) },
+        focus: 'recent',
+      }),
+    );
   };
 
   const startFocused = (focus: SessionFocus) => {
@@ -386,6 +541,81 @@ export function HomeScreen() {
         </section>
       )}
 
+      {recent.length > 0 && (
+        <section aria-labelledby="recent-title">
+          <h2 id="recent-title" className={styles.sectionTitle}>
+            Where you left off
+          </h2>
+          {/* Tappable, like every other piece of language in the app: "the thing
+              I was just working on" is exactly where a learner wants to ask which
+              word was the problem, and Progress already answers that question the
+              same way on its own list. */}
+          <ul className={styles.recent}>
+            {recent.map(({ item, translation }) => (
+              <li key={item.id} className={styles.recentRow}>
+                <TokenizedText
+                  item={item}
+                  onSelect={(token) => words.open(item.id, token)}
+                  selected={words.tokensFor(item.id)}
+                  contextLabel={item.text}
+                />
+                {translation && <span className={styles.recentMeaning}>{translation}</span>}
+              </li>
+            ))}
+          </ul>
+          <Button block className={styles.recentAgain} onClick={practiseRecent}>
+            <Icon name="again" />
+            Practise this again
+          </Button>
+          {sessions.length > 0 && (
+            <ul className={styles.sessions} aria-label="Recent sessions">
+              {sessions.map((session) => (
+                <li key={session.id}>
+                  <span>{session.when}</span>
+                  <span className={styles.sessionScore}>
+                    {session.score}
+                    {session.duration ? ` · ${session.duration}` : ''}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+
+      {contents.length > 0 && (
+        <section aria-labelledby="contents-title">
+          <h2 id="contents-title" className={styles.sectionTitle}>
+            In this course
+          </h2>
+          <ul className={styles.contents}>
+            {contents.map((row) => (
+              <li key={row.id}>
+                {/* The count is inside the link's text rather than beside it, for
+                    the reason Study's tiles record: six rows whose accessible
+                    names differ only by a number rendered elsewhere give an agent
+                    and a screen reader nothing to choose between. */}
+                <Link className={styles.contentRow} to={row.to}>
+                  <span
+                    className={surfaces.kindBadge}
+                    data-kind={kindHue(row.id)}
+                    aria-hidden="true"
+                  >
+                    <Icon name={row.icon} size="sm" />
+                  </span>
+                  <span className={styles.contentText}>
+                    <strong>{row.label}</strong>
+                    <small>{row.note}</small>
+                  </span>
+                  <span className={styles.contentCount}>{row.count}</span>
+                  <Icon name="next" size="sm" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section className={styles.rhythm} aria-label="Learning rhythm">
         <div className={styles.rhythmStat}>
           <Icon name="due" />
@@ -411,6 +641,37 @@ export function HomeScreen() {
           </span>
         </div>
       </section>
+
+      {summary && summary.seen > 0 && (
+        <section className={styles.standing} aria-labelledby="standing-title">
+          <h2 id="standing-title" className={styles.sectionTitle}>
+            How far you are
+          </h2>
+          {/* Two numbers and the bar they describe, and deliberately not the four
+              on Progress. This is the glance version: enough to know whether the
+              course is moving, with the screen that explains it one tap away.
+              `aria-hidden` on the bar because the sentence under it says the same
+              thing in words. */}
+          <p className={styles.standingLine}>
+            <strong>{summary.seen}</strong> of {summary.total} practised ·{' '}
+            <strong>{summary.mastered}</strong> mastered
+          </p>
+          <div className={styles.bar} aria-hidden="true">
+            <span
+              className={styles.barMastered}
+              style={{ width: `${(summary.mastered / summary.total) * 100}%` }}
+            />
+            <span
+              className={styles.barSeen}
+              style={{ width: `${((summary.seen - summary.mastered) / summary.total) * 100}%` }}
+            />
+          </div>
+          <Link className={styles.missionAll} to={path('progress')}>
+            See what you know
+            <Icon name="next" size="sm" />
+          </Link>
+        </section>
+      )}
 
       <Button
         block
@@ -483,8 +744,72 @@ export function HomeScreen() {
           </div>
         </Sheet>
       )}
+
+      {words.item && services.repository.getItem(words.item) && (
+        <WordInfoSheet
+          item={services.repository.getItem(words.item)!}
+          tokenIds={words.tokens}
+          onChange={words.set}
+          onClose={words.close}
+        />
+      )}
     </AppShell>
   );
+}
+
+/**
+ * The most recently practised distinct items, newest first.
+ *
+ * Distinct is the whole job: a session that drilled one sentence four times would
+ * otherwise fill the list with one sentence. Sorted here rather than trusting the
+ * store's order, because "newest first" is what this list means and a store that
+ * paged differently would break it silently.
+ */
+function mostRecentItems(attempts: readonly Attempt[], limit: number): readonly ItemId[] {
+  const seen = new Set<ItemId>();
+  const result: ItemId[] = [];
+
+  for (const attempt of [...attempts].sort((a, b) => b.at - a.at)) {
+    if (seen.has(attempt.itemId)) continue;
+    seen.add(attempt.itemId);
+    result.push(attempt.itemId);
+    if (result.length === limit) break;
+  }
+
+  return result;
+}
+
+/**
+ * A finished session, as one readable line.
+ *
+ * Built in the loading effect rather than at render, and `now` is passed in for
+ * the same reason every other timestamp on this screen is: reading the clock
+ * during render is an impure call, which the React Compiler rules reject and
+ * which would also make "Today" go stale without anything re-rendering. The same
+ * constraint shaped `SessionOutcome.nextDueInDays`.
+ */
+function describeSession(session: SessionRecord, now: number): RecentSession {
+  const day = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  };
+  const daysAgo = Math.max(0, Math.round((day(now) - day(session.startedAt)) / 86_400_000));
+
+  return {
+    id: session.id,
+    when: daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : `${daysAgo} days ago`,
+    score: `${session.correct}/${session.completed} correct`,
+    ...(session.endedAt === undefined
+      ? {}
+      : { duration: formatDuration(session.endedAt - session.startedAt) }),
+  };
+}
+
+interface RecentSession {
+  readonly id: string;
+  readonly when: string;
+  readonly score: string;
+  readonly duration?: string;
 }
 
 /**

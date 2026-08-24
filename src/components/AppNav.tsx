@@ -18,18 +18,30 @@ interface NavItem {
 }
 
 /**
- * Two sections, because there are two things a learner does: read the material,
- * and find out whether they know it.
+ * Home first, then the two things a learner does with material: read it, and find
+ * out whether they know it.
  *
- * The split is the domain's, not a new invention — `mode: 'study'` records
- * nothing and `mode: 'practice'` feeds the scheduler — but the nav used to hide
- * it behind five verbs (Practice, Read, Browse) that gave no clue which of the
- * two you were about to do. Browse and Read are sheets inside Study rather than
- * destinations of their own; the deep links still work and still resolve.
+ * That split is the domain's rather than a nav invention — `mode: 'study'`
+ * records nothing and `mode: 'practice'` feeds the scheduler — and it used to be
+ * the whole of this list, with the course home labelled **Test**. Which was
+ * accurate about what that screen did and wrong about where it sat: it is the
+ * address a learner lands on, the one `/` redirects to and the one every deep
+ * link resolves into, so calling it Test made the app open on an activity rather
+ * than on a place. A learner returning after three days arrived already inside
+ * one of four things they could be doing, with no screen that simply said what
+ * this course is and where they had got to.
+ *
+ * So the course home is Home, and it now answers that question first and
+ * recommends second — see `features/home/HomeScreen.tsx`. Practice did not move
+ * anywhere: it is still reached from the recommendation at the top of Home and
+ * from Free practice underneath it, which is where it was already reached from.
+ *
+ * Browse and Read remain sheets inside Study rather than destinations of their
+ * own; the deep links still work and still resolve.
  */
 const ITEMS: readonly NavItem[] = [
+  { screen: '', label: 'Home', icon: 'home' },
   { screen: 'study', label: 'Study', icon: 'study', owns: ['browse', 'read'] },
-  { screen: '', label: 'Test', icon: 'practice' },
   { screen: 'progress', label: 'Progress', icon: 'progress' },
   { screen: 'settings', label: 'Settings', icon: 'settings' },
 ];

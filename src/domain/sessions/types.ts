@@ -28,7 +28,7 @@ export type Ordering = (typeof ORDERINGS)[number];
  * - `due`        — clear the review queue before anything else
  * - `fresh`      — new material first, and uncapped: it is what was asked for
  */
-export const SESSION_FOCUSES = ['balanced', 'struggling', 'due', 'fresh'] as const;
+export const SESSION_FOCUSES = ['balanced', 'struggling', 'due', 'fresh', 'recent'] as const;
 export type SessionFocus = (typeof SESSION_FOCUSES)[number];
 
 export const DEFAULT_SESSION_FOCUS: SessionFocus = 'balanced';

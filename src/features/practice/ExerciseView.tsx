@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { Button, type ButtonVariant } from '../../components/Button';
 import type { Exercise, GradeResult } from '../../domain/exercises';
 import { isSelfRated } from '../../domain/exercises';
 
-import type { TokenId } from '../../domain/content';
+import { languageOption, type TokenId } from '../../domain/content';
 import { REVIEW_GRADES, type ReviewGrade } from '../../domain/progress';
 import { AudioControls } from './AudioControls';
 import { Annotation } from '../../components/Annotation';
@@ -23,15 +24,25 @@ interface ExerciseViewProps {
   readonly runner: SessionRunner;
 }
 
-/** Names each card so the practice surface is self-describing. */
-const CARD_HEADINGS: Record<Exercise['kind'], string> = {
-  'listen-repeat': 'Listen and repeat',
-  reveal: 'Reveal the meaning',
-  'think-say': 'Say it in Spanish',
-  'multiple-choice': 'Choose the meaning',
-  'cloze-choice': 'Choose the missing word',
-  'tap-to-build': 'Build the sentence',
-};
+/**
+ * Names each card so the practice surface is self-describing.
+ *
+ * `think-say` is the one that has to name the language, because "say it" alone
+ * does not say which language to say it in — and it was the only heading that
+ * did, spelled `Say it in Spanish`. Taking the name rather than the tag keeps
+ * the heading a sentence: `Say it in German`.
+ */
+function cardHeading(kind: Exercise['kind'], language: string | undefined): string {
+  const headings: Record<Exercise['kind'], string> = {
+    'listen-repeat': 'Listen and repeat',
+    reveal: 'Reveal the meaning',
+    'think-say': language ? `Say it in ${language}` : 'Say it from the meaning',
+    'multiple-choice': 'Choose the meaning',
+    'cloze-choice': 'Choose the missing word',
+    'tap-to-build': 'Build the sentence',
+  };
+  return headings[kind];
+}
 
 const GRADE_LABELS: Record<ReviewGrade, string> = {
   again: 'Again',
@@ -45,6 +56,8 @@ const GRADE_LABELS: Record<ReviewGrade, string> = {
  * content model never changes shape to accommodate an interaction (Rule 2).
  */
 export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
+  const lang = useTargetLanguage();
+  const languageName = lang === undefined ? undefined : languageOption(lang).englishName;
   const { services } = useServices();
   const [revealed, setRevealed] = useState(false);
   // Tiles are held by position, never by text. `Veo la televisión por la noche.`
@@ -113,7 +126,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   return (
     <section ref={cardRef} className={styles.card} tabIndex={-1} aria-labelledby={headingId}>
       <h2 id={headingId} className="visually-hidden">
-        {CARD_HEADINGS[exercise.kind]}
+        {cardHeading(exercise.kind, languageName)}
       </h2>
       {exercise.kind === 'listen-repeat' && (
         <>
@@ -167,7 +180,9 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           <Annotation facet="meaning" lead>
             {exercise.prompt}
           </Annotation>
-          <p className={styles.hint}>Say it in Spanish, then reveal.</p>
+          <p className={styles.hint}>
+            {languageName ? `Say it in ${languageName}, then reveal.` : 'Say it, then reveal.'}
+          </p>
           {revealed ? (
             <>
               <TokenizedText
@@ -214,7 +229,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
                   align="start"
                   disabled={answered}
                   variant={variant}
-                  lang={exercise.kind === 'cloze-choice' ? 'es' : undefined}
+                  lang={exercise.kind === 'cloze-choice' ? lang : undefined}
                   onClick={() => {
                     setChosen(choice.id);
                     runner.submitAnswer({ value: choice.id, latencyMs: elapsed() });
@@ -234,7 +249,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
           <Annotation facet="meaning" lead>
             {exercise.prompt}
           </Annotation>
-          <p className={styles.built} lang="es">
+          <p className={styles.built} lang={lang}>
             {builtWords.join(' ') || ' '}
           </p>
           {/*
@@ -251,7 +266,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             {exercise.parts.map((part, position) => (
               <Button
                 key={position}
-                lang="es"
+                lang={lang}
                 disabled={answered || built.includes(position)}
                 onClick={() => setBuilt((current) => [...current, position])}
               >
@@ -353,9 +368,34 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
  * next card: an icon, the word, and — when it was wrong — the answer itself,
  * announced through `role="status"` for anyone not looking at the screen.
  */
+/**
+ * "Correct!" in the language being learned, where the app knows how to say it.
+ *
+ * The praise is deliberately in the target language — it is the one piece of
+ * chrome a learner reads as the language talking back — but that only works if
+ * it is *the* language. Spelled `¡Correcto!` unconditionally, a German course
+ * congratulated its learner in Spanish, so an unknown language falls back to
+ * the plain English below rather than to somebody else's.
+ *
+ * A table rather than a lookup in `src/languages/`, which is build-time
+ * morphology and deliberately never imported by the app. When there is a
+ * second of these strings, they move somewhere together.
+ */
+const PRAISE: Record<string, string> = {
+  es: '¡Correcto!',
+  fr: 'Correct !',
+  de: 'Richtig!',
+  it: 'Corretto!',
+  pt: 'Correto!',
+  nl: 'Juist!',
+  el: 'Σωστά!',
+};
+
 function Verdict({ result }: { readonly result: GradeResult | null }) {
+  const lang = useTargetLanguage();
   if (result === null) return null;
   const correct = result.correct;
+  const praise = lang === undefined ? undefined : PRAISE[lang];
 
   // No panel of its own any more: the band around it carries the region, so this
   // is a line of coloured type with an icon. A full-width tinted rectangle at the
@@ -370,7 +410,7 @@ function Verdict({ result }: { readonly result: GradeResult | null }) {
         <Icon name={correct ? 'correct' : 'incorrect'} size="lg" />
       </span>
       {correct ? (
-        <span lang="es">¡Correcto!</span>
+        <span {...(praise ? { lang } : {})}>{praise ?? 'Correct!'}</span>
       ) : (
         <span>
           Answer: <span className={styles.verdictAnswer}>{result.expected}</span>

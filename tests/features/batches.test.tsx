@@ -140,7 +140,7 @@ describe('listing sets on Study', () => {
   });
 
   it('reports material the current course cannot reach', async () => {
-    const wider = batch({ itemIds: [item('001'), id<ItemId>('test-fr:item:001')] });
+    const wider = batch({ itemIds: [item('001'), id<ItemId>('test-fr:item:101')] });
     renderWithServices(<StudyScreen />, {
       services: testServices({ batches: [wider] }),
       route: '/es/all/study?tab=batches',

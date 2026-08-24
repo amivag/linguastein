@@ -84,11 +84,29 @@ pointer deciding where `/` lands.
 
 ### 4.2 The stale category is reachable today, and it empties a session
 
+_Fixed 2026-08-24 for topics, ahead of Stage A. The cause below remains: this was
+the symptom, and §4.1 is still the disease._
+
 Verified with a throwaway test against `multilingualRepository()` — written, run
 and deleted, so do not go looking for it. With `focusTopics: ['food-drink']`
 stored and the French course open, pressing **5 min** on Home navigates to
 `/fr/all/session?…&topic=food-drink`, and the French pack has 0 of 2 items
 carrying that topic. The learner gets "Nothing to practise here yet."
+
+Two things this brief had not noticed, both found on 2026-08-24 and both now
+covered by tests:
+
+- **It does not need a second language.** A category whose content is all B1
+  survives a switch down to A1, so the shipped single-pack app reaches it.
+- **The two halves already disagreed.** `FocusPicker` narrowed the stored list
+  for its own summary — its comment says "switching down to A1 must not leave the
+  bar boasting about a B1 category" — while `HomeScreen` wrote the raw list into
+  the link at three sites. So the bar read `Everything · balanced` above a link
+  that said `?topic=hotel`, which is worse than an empty session, because nothing
+  on screen said what had narrowed it.
+
+`reachableTopics` in `domain/content/course.ts` is now the one definition, used by
+the summary and by every writer. Do not re-derive it at a call site.
 
 ### 4.3 The URL parser is not the bug — the writer is
 
@@ -101,6 +119,14 @@ with a comment explaining that a stale link should widen a session rather than
 plan an empty one — and then passes `url.filter.topics` straight through
 untouched. **Fix it at the writer, and beside the skill fix; do not add
 validation to `slugs()`.**
+
+_Done for topics on 2026-08-24, and the advice held: the parser is unchanged, and
+the narrowing sits at the writer in `reachableTopics`. Note that the two cases
+degrade differently on purpose — an unknown `?skill=` **widens** the session,
+because a skill is one narrowing among several, while an unreachable `?topic=` is
+**dropped from the preference before it is written**, because the learner never
+asked for that category in this course. Both avoid an empty session; only one is
+a link a learner could have typed._
 
 ### 4.4 The manifest already declares pronunciation locales, and nothing reads it
 
@@ -142,11 +168,12 @@ log through `append` is one IndexedDB transaction per attempt.
 
 ### 4.7 Two declarations are dead
 
-`SkillProgress` in [`progress/types.ts:58`](../../src/domain/progress/types.ts) is
-referenced nowhere in `src` or `tests` — mastery is derived instead, and
-`mastery.ts` says why. `showRomanisationHints` is in `Preferences`, has a default,
-and is read by nothing. Settle both (§9.5) rather than carrying them into a file
-format.
+_Settled 2026-08-24: both deleted. §9.5 records why._
+
+`SkillProgress` in `progress/types.ts` was referenced nowhere in `src` or
+`tests` — mastery is derived instead, and `mastery.ts` says why.
+`showRomanisationHints` was in `Preferences`, had a default, and was read by
+nothing. Neither is carried into the file format §7 describes.
 
 ### 4.8 Both record ids were deterministic
 
@@ -428,8 +455,24 @@ naming a voice the target device does not have is a silent fallback. Splitting
 the record (§5.1) is what makes either answer expressible; pick one and say so in
 the envelope's doc comment.
 
-**9.5 `SkillProgress` and `showRomanisationHints`.** Both dead (§4.7). Delete
-them, or write down what they are waiting for. `showRomanisationHints` is a
-per-language concept — romaji is not a Spanish problem — so if it survives it
-belongs in `CourseState`, which is one more reason to settle it inside this task
-rather than around it.
+**9.5 `SkillProgress` and `showRomanisationHints`.** **Settled 2026-08-24:
+both deleted**, ahead of the rest of this task rather than inside it, because a
+dead field costs nothing until it reaches a file format and then costs every
+future reader a decision.
+
+`SkillProgress` is gone for the reason `mastery.ts` now records in its module
+comment: a stored aggregate has to be maintained, so every change to what counts
+as an encounter or a strength would become a migration of rows nothing can
+rebuild — and `MasteryRecord`, derived, is already richer than the row was.
+
+`showRomanisationHints` is gone because it was in the wrong record as well as
+unread. Romanisation is a property of a script, so it is per course rather than
+per device — romaji is not a Spanish problem — and the place for it is the
+`CourseState` Stage A introduces (§5.1). A note to that effect sits where the
+field used to be, in `storage/types.ts`, so the next person to want it adds it
+in the right half.
+
+Nothing was migrated. A stored preferences record from an earlier build may
+still carry the key; `read()` merges the stored object over `DEFAULT_PREFERENCES`
+so it survives as an untyped extra property and is read by nothing — which is
+what it already was.

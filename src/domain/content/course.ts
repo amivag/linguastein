@@ -19,7 +19,7 @@
 import type { PackId } from './ids';
 import { languageOption, type LanguageTag } from './language';
 import { CEFR_LEVELS, type CefrLevel } from './model';
-import type { ContentRepository, ItemFilter } from './repository';
+import type { ContentRepository, ItemFilter, TopicFacet } from './repository';
 
 /** Every level, plus the unnarrowed case. `all` is the default, not a fallback. */
 export const LEVEL_SCOPE_ALL = 'all';
@@ -182,4 +182,35 @@ export function resolveCourse(
 
 export function sameCourse(a: Course, b: Course): boolean {
   return a.language === b.language && a.level === b.level;
+}
+
+/**
+ * The learner's chosen categories, minus the ones this course cannot reach.
+ *
+ * `focusTopics` is a standing preference stored once, while a topic slug is pack
+ * vocabulary and a count is course-relative — so the stored list outlives the
+ * scope it was chosen in, in two ways. A category that exists only at B1
+ * survives a switch down to A1, and `food-drink` means nothing to a French pack.
+ *
+ * Narrowing it is therefore not a display concern. A focus is a bias that must
+ * never be able to hand back an empty session, and a session link carrying a
+ * category the course has no items for does exactly that — the planner has
+ * nothing to widen back to, because a topic *is* a filter.
+ *
+ * So the picker's summary and every writer of a session link narrow through
+ * here. Do not re-derive it at a call site: what this replaces was those two
+ * halves disagreeing, with the summary reading "Everything" while the link it
+ * produced said `?topic=hotel`.
+ *
+ * Takes the facets rather than the repository because both callers already have
+ * them — counting the items of every category twice per render is not the price
+ * of a shared rule.
+ */
+export function reachableTopics(
+  topics: readonly TopicFacet[],
+  chosen: readonly string[],
+): readonly string[] {
+  if (chosen.length === 0) return chosen;
+  const reachable = new Set(topics.filter((topic) => topic.count > 0).map((topic) => topic.id));
+  return chosen.filter((topic) => reachable.has(topic));
 }

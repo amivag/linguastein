@@ -14,7 +14,7 @@ import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import { kindHue } from '../../styles/kinds';
 import surfaces from '../../styles/surfaces.module.css';
-import { levelLabel, type ItemId } from '../../domain/content';
+import { levelLabel, reachableTopics, type ItemId } from '../../domain/content';
 import {
   summarise,
   type Attempt,
@@ -277,10 +277,24 @@ export function HomeScreen() {
     };
   }, [preferences.referenceLanguage, scope.ids, services.repository, standings]);
 
+  /**
+   * The chosen categories this course can actually reach.
+   *
+   * The stored list is global and a topic is course-relative, so it has to be
+   * narrowed before it is written anywhere — see `reachableTopics`. `FocusPicker`
+   * narrows the same list for its summary, which is precisely why this cannot
+   * stay inline: the two disagreeing is what put an unreachable `?topic=` into a
+   * link under a bar that read "Everything".
+   */
+  const focusTopics = useMemo(
+    () => reachableTopics(repository.topics(filter), preferences.focusTopics),
+    [filter, preferences.focusTopics, repository],
+  );
+
   // The standing focus is written into every free-practice link so the session
   // remains reloadable and shareable rather than secretly reading preferences.
   const focused = {
-    ...(preferences.focusTopics.length ? { filter: { topics: preferences.focusTopics } } : {}),
+    ...(focusTopics.length ? { filter: { topics: focusTopics } } : {}),
     ...(preferences.focus !== 'balanced' ? { focus: preferences.focus } : {}),
   };
 
@@ -318,7 +332,7 @@ export function HomeScreen() {
         preset: 'quick',
         size: { kind: 'items', count: 5 },
         focus,
-        ...(preferences.focusTopics.length ? { filter: { topics: preferences.focusTopics } } : {}),
+        ...(focusTopics.length ? { filter: { topics: focusTopics } } : {}),
       }),
     );
   };

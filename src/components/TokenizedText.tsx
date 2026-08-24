@@ -1,3 +1,6 @@
+import { use } from 'react';
+import { useTargetLanguage } from '../app/course';
+import { ServicesContext } from '../app/services-context';
 import {
   isInspectable,
   isInspectableItem,
@@ -68,13 +71,14 @@ export function TokenizedText({
   contextLabel,
   as: Text = 'p',
 }: TokenizedTextProps) {
+  const lang = useItemLanguage(item);
   const tokens = item.tokens ?? [];
   const wholeItem = tokens.length === 0 && isInspectableItem(item);
   const open = selected ?? [];
 
   if (!onSelect || (tokens.length === 0 && !wholeItem)) {
     return (
-      <Text className={className} lang="es">
+      <Text className={className} lang={lang}>
         {item.text}
       </Text>
     );
@@ -82,7 +86,7 @@ export function TokenizedText({
 
   if (wholeItem) {
     return (
-      <Text className={className} lang="es">
+      <Text className={className} lang={lang}>
         <WordButton
           text={item.text}
           tokenId={WHOLE_ITEM_TOKEN}
@@ -94,7 +98,7 @@ export function TokenizedText({
   }
 
   return (
-    <Text className={className} lang="es">
+    <Text className={className} lang={lang}>
       {tokens.map((token, index) => {
         const spaced = needsSpaceBefore(tokens[index - 1]?.text, token.text);
         const blanked = token.id === blankTokenId;
@@ -182,4 +186,23 @@ function WordButton({
       {text}
     </button>
   );
+}
+
+/**
+ * The language to tag one item's text with: its pack's, then the course's.
+ *
+ * The pack is the honest answer — a Spanish phrase quoted on a German course's
+ * screen is still Spanish, and a progress list or a search result can show
+ * either. The course is the fallback for an item whose pack is no longer
+ * loaded, and `undefined` the fallback for a component rendered with no
+ * services at all, which is how `Transcript` is tested.
+ *
+ * The context is read directly rather than through `useServices`, which throws:
+ * this component is presentational and several of its callers are deliberately
+ * mounted without providers. See {@link useTargetLanguage}.
+ */
+function useItemLanguage(item: LearningItem): string | undefined {
+  const value = use(ServicesContext);
+  const course = useTargetLanguage();
+  return value?.services.repository.languageOfItem(item) ?? course;
 }

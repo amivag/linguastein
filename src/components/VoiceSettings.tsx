@@ -1,12 +1,20 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
+import { useCourse } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
-import { PRONUNCIATION_LOCALES } from '../domain/content';
+import { languageOption, pronunciationLocales } from '../domain/content';
 import { Button } from './Button';
 import { Icon } from '../components/Icon';
 import styles from './VoiceSettings.module.css';
 
-/** Sample the "Test voice" button speaks — short, and in the target language. */
+/**
+ * Sample the "Test voice" button speaks when the course has nothing to offer.
+ *
+ * A last resort rather than the sample: {@link useVoiceSample} reads a short
+ * phrase out of the course itself, because a button that tests a German voice
+ * by speaking Spanish tests the wrong thing — and a hard-coded sample is a
+ * second place the shipped language is written down.
+ */
 export const VOICE_SAMPLE = 'Tengo que trabajar.';
 
 interface VoiceSettingsProps {
@@ -30,11 +38,19 @@ interface VoiceSettingsProps {
  */
 export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
   const { services, preferences, updatePreferences } = useServices();
+  const { course } = useCourse();
   const ids = useId();
   const [voices, setVoices] = useState<readonly TtsVoice[]>([]);
   const [active, setActive] = useState<TtsVoice | undefined>(undefined);
 
   const locale = preferences.pronunciationLocale;
+  const accents = useMemo(
+    () => pronunciationLocales(services.repository, course.language),
+    [services.repository, course.language],
+  );
+  const sample = useVoiceSample();
+  // The advice is only actionable if it names the voice to go and install.
+  const languageName = languageOption(course.language).englishName;
 
   // The browser loads its voice list asynchronously, so wait for it before
   // deciding what to offer (and before claiming there is nothing).
@@ -52,7 +68,7 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
 
   const testVoice = () =>
     void services.audio.speak({
-      text: VOICE_SAMPLE,
+      text: sample,
       locale,
       voice: preferences.voiceName || undefined,
     });
@@ -90,7 +106,7 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
             updatePreferences({ pronunciationLocale: event.target.value, voiceName: '' })
           }
         >
-          {PRONUNCIATION_LOCALES.map((option) => (
+          {accents.map((option) => (
             <option key={option.locale} value={option.locale}>
               {option.label} ({option.locale})
             </option>
@@ -137,9 +153,9 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
 
       {silent ? (
         <p className={styles.hint}>
-          Nothing is spoken — the app stays quiet rather than reading Spanish with a voice from
-          another language. Add a Spanish voice in your operating system’s speech settings, or use a
-          dataset that ships reviewed audio.
+          Nothing is spoken — the app stays quiet rather than reading {languageName} with a voice
+          from another language. Add a {languageName} voice in your operating system’s speech
+          settings, or use a dataset that ships reviewed audio.
         </p>
       ) : (
         <>
@@ -159,4 +175,27 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
       )}
     </div>
   );
+}
+
+/**
+ * A short phrase from the course to test a voice with.
+ *
+ * The shortest sentence in scope, so the sample is a sentence rather than a
+ * bare word and still finishes quickly. Sorting by length rather than taking
+ * the first is deliberate: pack order opens with whatever the dataset happens
+ * to start on, and a fourteen-word one makes a poor button.
+ */
+function useVoiceSample(): string {
+  const { services } = useServices();
+  const { filter } = useCourse();
+  return useMemo(() => {
+    const spoken = services.repository
+      .query({ ...filter, types: ['sentence'] })
+      .filter((item) => item.text.length > 0);
+    const shortest = spoken.reduce<string | undefined>(
+      (best, item) => (best === undefined || item.text.length < best.length ? item.text : best),
+      undefined,
+    );
+    return shortest ?? VOICE_SAMPLE;
+  }, [services.repository, filter]);
 }

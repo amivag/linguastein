@@ -23,7 +23,6 @@ export const DEFAULT_PREFERENCES: Preferences = {
   autoPlayAudio: true,
   showTimer: true,
   slowAudio: false,
-  showRomanisationHints: false,
   theme: 'system',
   palette: DEFAULT_PALETTE,
   contrast: DEFAULT_CONTRAST,

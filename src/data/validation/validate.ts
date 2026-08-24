@@ -265,7 +265,7 @@ function duplicates(values: readonly string[]): readonly string[] {
  *
  * A URL addresses a passage and a skill by their **local** id — `/es/all/read/700001`,
  * `?skill=preterite` — deliberately, so a shared link does not carry a pack
- * namespace it will outlive. `resolveRef` in the repository accepts both that
+ * namespace it will outlive. A mission addresses an item the same way. `resolveRef` in the repository accepts both that
  * bare form and a qualified `pack:local` one, and declines to guess when a bare
  * reference is contested — so a collision is never *resolved* wrongly.
  *
@@ -287,6 +287,18 @@ export function validateAcrossPacks(packs: readonly ContentPack[]): readonly Val
   const kinds = [
     { kind: 'passage', of: (pack: ContentPack) => pack.passages.map((entry) => entry.id) },
     { kind: 'skill', of: (pack: ContentPack) => pack.skills.map((entry) => entry.id) },
+    /*
+     * Items for the same reason, discovered later and from a different
+     * direction: no *link* addresses an item by local id, but the mission
+     * definitions do — `{ item: '001147' }` in `src/app/missions.ts`, resolved
+     * by `itemByLocalId`, which is first-match exactly as the two above are.
+     *
+     * A second pack of another language makes that live rather than
+     * theoretical: two packs built by the same generator both number their
+     * sentences from `000001`, so every Spanish mission's response palette
+     * would resolve against whichever pack the catalog happened to list first.
+     */
+    { kind: 'item', of: (pack: ContentPack) => pack.items.map((entry) => entry.id) },
   ] as const;
 
   for (const { kind, of } of kinds) {

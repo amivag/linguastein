@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MICROPHONE_BUSY, SPEECH_ABORTED, SPEECH_INSECURE_CONTEXT } from '../../audio';
 import { Button } from '../../components/Button';
@@ -68,6 +69,7 @@ const SILENCE_HINT_MS = 2500;
  * cause the learner can act on rather than "unavailable".
  */
 export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
+  const lang = useTargetLanguage();
   const { services, preferences } = useServices();
   const { speech, audio } = services;
   const [state, setState] = useState<State>({ phase: 'idle' });
@@ -177,7 +179,7 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
                 the thing is working, and it is free — the recogniser was
                 sending these all along. */}
             {partial && (
-              <span className={styles.partial} lang="es">
+              <span className={styles.partial} lang={lang}>
                 {partial}
               </span>
             )}
@@ -188,11 +190,11 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
             <span className={verdictClass(state.comparison.verdict)}>
               {MESSAGES[state.comparison.verdict]}
             </span>
-            <span className={styles.heard} lang="es">
+            <span className={styles.heard} lang={lang}>
               Heard: “{state.text}”
             </span>
             {typeof expected !== 'string' && expected.length > 1 && (
-              <span className={styles.heard} lang="es">
+              <span className={styles.heard} lang={lang}>
                 Matched response: “{state.expected}”
               </span>
             )}

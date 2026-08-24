@@ -332,6 +332,13 @@ export const TEST_PACK_FR_ID = id<PackId>('test-fr');
  * the app may assume one target language or one pack. It carries a level the
  * Spanish pack does not (`b1`), so a course's levels have to come from its own
  * content rather than from whatever the repository has seen.
+ *
+ * Its items are numbered from 101 rather than from 001, and that is the whole
+ * story of `validateAcrossPacks`: two packs from one generator both start at
+ * `000001`, a mission addresses an item by local id, and first-match-wins then
+ * answers a Spanish mission with a French sentence. The fixture keeps the ids
+ * apart so it can stand for a *valid* pair; `tests/data/across-packs.test.ts`
+ * builds the colliding pair on purpose.
  */
 export const TEST_PACK_FR: ContentPack = {
   manifest: {
@@ -344,7 +351,7 @@ export const TEST_PACK_FR: ContentPack = {
   },
   items: [
     {
-      id: id<ItemId>('test-fr:item:001'),
+      id: id<ItemId>('test-fr:item:101'),
       pack: TEST_PACK_FR_ID,
       type: 'sentence',
       text: 'Je dois travailler.',
@@ -352,7 +359,7 @@ export const TEST_PACK_FR: ContentPack = {
       topics: ['greetings'],
     },
     {
-      id: id<ItemId>('test-fr:item:002'),
+      id: id<ItemId>('test-fr:item:102'),
       pack: TEST_PACK_FR_ID,
       type: 'word',
       text: 'bonjour',
@@ -365,8 +372,8 @@ export const TEST_PACK_FR: ContentPack = {
   forms: [],
   skills: [],
   translations: [
-    { ref: 'test-fr:item:001', lang: 'en', text: 'I have to work.' },
-    { ref: 'test-fr:item:002', lang: 'en', text: 'hello' },
+    { ref: 'test-fr:item:101', lang: 'en', text: 'I have to work.' },
+    { ref: 'test-fr:item:102', lang: 'en', text: 'hello' },
   ],
   passages: [],
   audio: [],

@@ -1,7 +1,8 @@
+import { useMemo } from 'react';
 import { useServices } from '../../app/services-context';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon } from '../../components/Icon';
-import { REFERENCE_LANGUAGES } from '../../domain/content';
+import { referenceLanguages } from '../../domain/content';
 import styles from './Settings.module.css';
 
 /**
@@ -13,7 +14,10 @@ import styles from './Settings.module.css';
  * and a Practice group with Appearance in between.
  */
 export function LearningSettings() {
-  const { preferences, updatePreferences } = useServices();
+  const { services, preferences, updatePreferences } = useServices();
+  // What the loaded packs can actually explain in, rather than a list of what
+  // the app hopes to support one day. See `referenceLanguages`.
+  const languages = useMemo(() => referenceLanguages(services.repository), [services.repository]);
 
   return (
     <>
@@ -39,14 +43,16 @@ export function LearningSettings() {
           value={preferences.referenceLanguage}
           onChange={(event) => updatePreferences({ referenceLanguage: event.target.value })}
         >
-          {REFERENCE_LANGUAGES.map((language) => (
+          {languages.map((language) => (
             <option key={language.tag} value={language.tag}>
               {language.nativeName}
             </option>
           ))}
         </select>
         <span className={styles.hint}>
-          The language meanings are shown in. More will follow — English is only the first.
+          {languages.length > 1
+            ? 'The language meanings are shown in.'
+            : 'The language meanings are shown in. A pack that ships another one adds it here.'}
         </span>
       </label>
 

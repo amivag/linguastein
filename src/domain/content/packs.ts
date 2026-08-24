@@ -17,7 +17,14 @@
  */
 
 import { packIdOf, type PackId } from './ids';
-import type { LanguageTag } from './language';
+import {
+  DEFAULT_REFERENCE_LANGUAGE,
+  languageOption,
+  pronunciationLabel,
+  type LanguageOption,
+  type LanguageTag,
+  type PronunciationLocaleOption,
+} from './language';
 import type { CefrLevel, ItemType, PackManifest } from './model';
 import type { ProvenanceSource, ReviewState } from './provenance';
 import type { ContentRepository } from './repository';
@@ -104,4 +111,71 @@ export function installedPacks(repository: ContentRepository): readonly PackCont
  */
 export function issueBelongsTo(manifest: PackManifest, source: string): boolean {
   return manifest.files.some((file) => source === file.path || source.endsWith(`/${file.path}`));
+}
+
+/**
+ * The reference languages a learner can actually be offered, named.
+ *
+ * Derived rather than declared in a constant, which is the same choice
+ * `courseOptions` makes about target languages and for the same reason: a pack
+ * shipping German meanings should appear in the picker without an edit to a
+ * list in `language.ts`, and a list in `language.ts` should not promise a
+ * language no loaded pack can honour.
+ *
+ * English is the floor rather than the first entry. With no translations loaded
+ * at all — a pack that ships target-language-only content — the picker still
+ * has to name something, and the stored preference still has to resolve; the
+ * fallback chain in `referenceLanguageChain` ends at English either way, so
+ * offering it is honest about what the setting will do.
+ */
+export function referenceLanguages(repository: ContentRepository): readonly LanguageOption[] {
+  const present = repository.translationLanguages();
+  const tags = present.length > 0 ? present : [DEFAULT_REFERENCE_LANGUAGE];
+  return tags.map((tag) => languageOption(tag));
+}
+
+/**
+ * The accents one target language can be spoken in, named for a picker.
+ *
+ * Three sources in order of authority, because a pack may answer the question
+ * in any of them: the accents the manifest declares, the accents its recorded
+ * voices are in, and — when it says neither — the bare language tag.
+ *
+ * That last case is the one that matters for a new language. A pack with no
+ * regional accents declared and no recorded voices is not unspeakable: it is
+ * spoken in German, and the device picks the voice. Returning nothing instead
+ * left the preference holding whatever the previous course set, which is how
+ * German came to be read aloud by a Spanish voice.
+ */
+export function pronunciationLocales(
+  repository: ContentRepository,
+  language: LanguageTag,
+): readonly PronunciationLocaleOption[] {
+  const locales = new Set<LanguageTag>();
+  for (const manifest of repository.packs) {
+    if (manifest.targetLanguage !== language) continue;
+    for (const locale of manifest.pronunciationLocales ?? []) locales.add(locale);
+    for (const voice of manifest.voices ?? []) locales.add(voice.locale);
+  }
+  if (locales.size === 0) locales.add(language);
+  return [...locales].map((locale) => ({ locale, label: pronunciationLabel(locale) }));
+}
+
+/**
+ * The stored accent corrected into `language`, or the language's first accent.
+ *
+ * Called when the course changes, because `pronunciationLocale` is one
+ * preference across every course: switching from Spanish to German has to move
+ * it, or the German course inherits `es-ES` and every play button asks the
+ * device for a Spanish voice reading German text. Same language, no change —
+ * so a learner's chosen accent survives a level switch and a reload.
+ */
+export function resolvePronunciationFor(
+  repository: ContentRepository,
+  language: LanguageTag,
+  current: LanguageTag,
+): LanguageTag {
+  const offered = pronunciationLocales(repository, language);
+  const kept = offered.find((option) => option.locale === current);
+  return kept?.locale ?? offered[0]?.locale ?? language;
 }

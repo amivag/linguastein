@@ -48,7 +48,18 @@ export interface Preferences {
    */
   readonly showTimer: boolean;
   readonly slowAudio: boolean;
-  readonly showRomanisationHints: boolean;
+  /*
+   * `showRomanisationHints` was here, defaulted, and read by nothing. It is
+   * gone rather than kept for a language that might want it, because this
+   * record is about to become a file format (see docs/tasks/learner-profile.md
+   * §7) and a dead field in an export is a field every future reader has to
+   * decide what to do with.
+   *
+   * It also belonged somewhere else. Romanisation is a property of a *script*,
+   * so the setting is per course rather than per device — romaji is not a
+   * Spanish problem — and the place for it is the `CourseState` that task's
+   * Stage A introduces. Add it there, when a pack needs it.
+   */
   readonly theme: ThemePreference;
   /**
    * Which set of hues the chosen theme is drawn with.

@@ -150,3 +150,13 @@ them later is additive.
 Backend, accounts, sync, community submissions, AI tutor, pronunciation
 scoring, stories and dialogues — see §29 of the spec. The data model leaves room
 for each; the app does not pretend to have them.
+
+Three of those have since been briefed rather than merely deferred, because they
+are what the seams above were built for and it is worth knowing which seam pays
+out where: [accounts and sync](tasks/accounts-and-sync.md) behind
+`LearnerStorage`, and [a native port](tasks/native-port.md) behind
+`TtsProvider`, `SpeechRecognitionProvider`, `MicrophoneLevels` and
+`DatasetSource`. [Monetisation](tasks/monetisation.md) needs no seam and is
+mostly a set of constraints. The router remains the one vendor with no seam
+([tanstack-router.md](tasks/tanstack-router.md)), which is why it is named in
+both of the first two.

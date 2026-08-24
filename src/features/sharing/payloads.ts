@@ -5,7 +5,12 @@
  */
 
 import { formatLearnerContext, type LearnerContext } from '../../ai';
-import type { ContentRepository, LanguageTag, LearningItem } from '../../domain/content';
+import {
+  languageOption,
+  type ContentRepository,
+  type LanguageTag,
+  type LearningItem,
+} from '../../domain/content';
 
 export interface SharePayload {
   readonly id: string;
@@ -27,7 +32,14 @@ export function buildSharePayloads(
     .map((id) => repository.getSkill(id))
     .filter((skill) => skill !== undefined);
 
-  const payloads: SharePayload[] = [{ id: 'target', label: 'Copy Spanish', text: item.text }];
+  // Named from the pack that published the item rather than from the course,
+  // for the same reason `lang` is: what is being copied is this sentence's
+  // language, and a share sheet that says "Copy Spanish" over German is worse
+  // than one that says nothing.
+  const target = languageName(repository, item);
+  const payloads: SharePayload[] = [
+    { id: 'target', label: target ? `Copy ${target}` : 'Copy', text: item.text },
+  ];
 
   if (translation) {
     payloads.push({
@@ -64,7 +76,7 @@ export function buildSharePayloads(
   payloads.push({
     id: 'ai-prompt',
     label: 'Copy as AI prompt',
-    text: buildAiPrompt(item),
+    text: buildAiPrompt(item, target),
   });
 
   // The same prompt, but telling the AI what this learner already knows
@@ -73,7 +85,7 @@ export function buildSharePayloads(
     payloads.push({
       id: 'ai-prompt-personal',
       label: 'Copy AI prompt with my level',
-      text: `${buildAiPrompt(item)}
+      text: `${buildAiPrompt(item, target)}
 
 About me:
 ${formatLearnerContext(learner)}`,
@@ -83,10 +95,27 @@ ${formatLearnerContext(learner)}`,
   return payloads;
 }
 
-/** A ready-to-paste prompt for an external AI tool. */
-export function buildAiPrompt(item: LearningItem): string {
+/**
+ * The language an item is written in, spelled for a human, or `undefined` when
+ * its pack is not loaded — which is a stale share link rather than a bug.
+ */
+function languageName(repository: ContentRepository, item: LearningItem): string | undefined {
+  const tag = repository.languageOfItem(item);
+  return tag === undefined ? undefined : languageOption(tag).englishName;
+}
+
+/**
+ * A ready-to-paste prompt for an external AI tool.
+ *
+ * The language is named because the prompt is read by something that has only
+ * the sentence: a model asked to explain `Ich muss arbeiten` as Spanish will
+ * make something up rather than object. Omitted when unknown, since "explain
+ * this sentence" is a worse prompt than a named one and a much better one than
+ * a wrong name.
+ */
+export function buildAiPrompt(item: LearningItem, language?: string): string {
   return [
-    'Explain this Spanish sentence for a beginner:',
+    `Explain this ${language ? `${language} ` : ''}sentence for a beginner:`,
     `"${item.text}"`,
     '',
     'Include:',

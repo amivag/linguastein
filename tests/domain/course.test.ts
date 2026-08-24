@@ -13,6 +13,7 @@ import {
   courseOptions,
   coursePath,
   isLevelScope,
+  reachableTopics,
   resolveCourse,
   type Course,
 } from '../../src/domain/content';
@@ -132,5 +133,57 @@ describe('a single-language pack', () => {
     const [only] = courseOptions(testRepository());
     expect(only?.language).toBe('es');
     expect(only?.levels.map((level) => level.level)).toContain('all');
+  });
+});
+
+/**
+ * A standing category choice, narrowed to the course in front of the learner.
+ *
+ * The rule exists because the preference is global and a topic is not: a slug is
+ * pack vocabulary, and a count is relative to the level ceiling. Both writers of
+ * a session link and the picker's own summary go through here, so an unreachable
+ * category cannot reach a `?topic=` that would plan an empty session.
+ */
+describe('reachableTopics', () => {
+  const facets = (repository = testRepository()) => repository.topics();
+
+  it('keeps a category the loaded content actually carries', () => {
+    expect(reachableTopics(facets(), ['work'])).toEqual(['work']);
+  });
+
+  it('drops one that is declared but empty', () => {
+    // `colours` is in the fixture's topic registry and on no item.
+    expect(reachableTopics(facets(), ['colours'])).toEqual([]);
+  });
+
+  it('drops one no loaded pack declares at all', () => {
+    // What a Spanish choice looks like with only the French pack open.
+    expect(reachableTopics(facets(), ['greetings'])).toEqual([]);
+  });
+
+  it('keeps the reachable half of a mixed choice, in the order given', () => {
+    expect(reachableTopics(facets(), ['colours', 'work', 'food-drink'])).toEqual([
+      'work',
+      'food-drink',
+    ]);
+  });
+
+  it('returns an empty choice untouched, which means everything', () => {
+    expect(reachableTopics(facets(), [])).toEqual([]);
+  });
+
+  /**
+   * The narrowing follows the scope, not just the pack: a level is a ceiling, so
+   * a category whose only items sit above it is as unreachable as one nothing
+   * declares — and this is the path a single-pack install can reach today.
+   */
+  it('narrows by the course filter it is given', () => {
+    const repository = multilingualRepository();
+    const french = { language: 'fr', level: 'a1' } as const;
+    const options = courseOptions(repository);
+
+    const atA1 = repository.topics(courseFilter(french, options));
+    expect(reachableTopics(atA1, ['greetings'])).toEqual(['greetings']);
+    expect(reachableTopics(atA1, ['work'])).toEqual([]);
   });
 });

@@ -208,6 +208,22 @@ export interface LearningItem {
   readonly type: ItemType;
   /** Target-language text, e.g. `Tengo que trabajar.` */
   readonly text: string;
+  /**
+   * The same text in a script the learner can already read: `nǐ hǎo` for 你好,
+   * `kaliméra` for καλημέρα.
+   *
+   * Absent for a language written in an alphabet the learner has — which is
+   * every language the app ships today, and why this is easy to forget until it
+   * is expensive. It is not a translation: it carries no meaning and belongs on
+   * the item rather than in a `Translation` record, which resolves through the
+   * reference-language chain and would make a reading disappear when someone
+   * switched their glosses to German.
+   *
+   * A *display* preference for showing it belongs with the learner, not here;
+   * the field is the fact, and the fact has to exist first. See
+   * `docs/tasks/second-language.md` §6.
+   */
+  readonly reading?: string;
   readonly level?: CefrLevel;
   readonly register?: Register;
   /** Set when the phrase is spoken to someone; derived from morphology where possible. */

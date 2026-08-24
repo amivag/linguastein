@@ -12,7 +12,7 @@
  * a screen — it resolves the same way, to the first pack's language, unnarrowed.
  */
 
-import { useMemo } from 'react';
+import { use, useMemo } from 'react';
 import { useParams } from 'react-router';
 import {
   courseFilter,
@@ -22,8 +22,9 @@ import {
   type Course,
   type CourseOption,
   type ItemFilter,
+  type LanguageTag,
 } from '../domain/content';
-import { useServices } from './services-context';
+import { ServicesContext, useServices } from './services-context';
 
 export interface CourseScope {
   readonly course: Course;
@@ -55,4 +56,34 @@ export function useCourse(): CourseScope {
       path: (screen?: string) => coursePath(course, screen),
     };
   }, [options, language, level]);
+}
+
+/**
+ * The language to tag rendered target-language text with, or `undefined` when
+ * there is no way to know.
+ *
+ * Every `lang` on a phrase, a lemma, a conjugation or a heard transcript comes
+ * from here rather than being typed, for the reason the app's own name is not
+ * typed into a component: `lang="es"` was written into twenty elements, and a
+ * German pack would have had a screen reader read all twenty with Spanish
+ * pronunciation — silently, since nothing on screen looks wrong.
+ *
+ * Deliberately the one hook here that does not require the providers. A shared
+ * component reaches for this wherever it renders target-language text, and
+ * several are rendered on their own in tests precisely because they need
+ * neither services nor a router — `tests/components/transcript.test.tsx` says
+ * so. Absent is also the honest answer: no `lang` attribute leaves the document
+ * language in charge, while a guessed one asserts something false.
+ */
+export function useTargetLanguage(): LanguageTag | undefined {
+  const value = use(ServicesContext);
+  const params = useParams();
+  const language = params['language'];
+  const level = params['level'];
+  const repository = value?.services.repository;
+
+  return useMemo(() => {
+    if (!repository) return undefined;
+    return resolveCourse(courseOptions(repository), language, level).language;
+  }, [repository, language, level]);
 }

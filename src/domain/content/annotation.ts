@@ -81,6 +81,24 @@ export type GrammaticalPerson = 1 | 2 | 3;
 export type GrammaticalNumber = 'singular' | 'plural';
 export type Gender = 'masculine' | 'feminine' | 'neuter';
 
+/**
+ * Grammatical case. Empty for Spanish, which is why it is here before there is
+ * a language that fills it.
+ *
+ * The union is the two inventories the planned languages need — German's four
+ * and Greek's four, overlapping in three — rather than a universal set, because
+ * a list nobody can enumerate is a `string`. A language module declares which of
+ * these it uses, exactly as it declares its tenses; a language that inflects for
+ * none simply never sets the field.
+ *
+ * It is here rather than added with the pack that needs it because `Morphology`
+ * is TSV schema: a field added afterwards has to be back-filled across every
+ * authored row, while an optional one added now costs nothing and is ignored by
+ * every language that has no cases. See `docs/tasks/second-language.md` §4.
+ */
+export const CASES = ['nominative', 'accusative', 'dative', 'genitive', 'vocative'] as const;
+export type GrammaticalCase = (typeof CASES)[number];
+
 /** Open-ended morphology bag; all fields optional because data is incremental. */
 export interface Morphology {
   readonly person?: GrammaticalPerson;
@@ -89,6 +107,7 @@ export interface Morphology {
   readonly tense?: Tense;
   readonly mood?: Mood;
   readonly verbForm?: VerbFormType;
+  readonly case?: GrammaticalCase;
   readonly degree?: 'positive' | 'comparative' | 'superlative';
   /** Politeness/address distinction, e.g. `tu` vs `usted`. */
   readonly formality?: 'informal' | 'formal';
@@ -100,6 +119,11 @@ export type TokenId = string;
 export interface Token {
   readonly id: TokenId;
   readonly text: string;
+  /**
+   * How the surface is read in a script the learner can already decode:
+   * romanisation, transliteration, furigana. See {@link LearningItem.reading}.
+   */
+  readonly reading?: string;
   readonly lemma?: string;
   readonly pos?: PartOfSpeech;
   readonly morph?: Morphology;

@@ -15,7 +15,7 @@
 import { describe, expect, it } from 'vitest';
 import { validateAcrossPacks } from '../../src/data/validation';
 import { ContentRepository } from '../../src/domain/content';
-import type { ContentPack, PassageId, SkillId } from '../../src/domain/content';
+import type { ContentPack, ItemId, PassageId, SkillId } from '../../src/domain/content';
 import { id, TEST_PACK, TEST_PACK_FR } from '../fixtures/pack';
 
 const withPassage = (pack: ContentPack, local: string): ContentPack => ({
@@ -44,6 +44,20 @@ const withSkill = (pack: ContentPack, local: string): ContentPack => ({
   ],
 });
 
+const withItem = (pack: ContentPack, local: string): ContentPack => ({
+  ...pack,
+  items: [
+    ...pack.items,
+    {
+      id: id<ItemId>(`${pack.manifest.id}:item:${local}`),
+      pack: pack.manifest.id,
+      type: 'sentence',
+      text: `Item ${local}`,
+      level: 'a1',
+    },
+  ],
+});
+
 describe('validateAcrossPacks', () => {
   it('passes when local ids are unique across the packs', () => {
     expect(validateAcrossPacks([TEST_PACK, TEST_PACK_FR])).toEqual([]);
@@ -66,6 +80,28 @@ describe('validateAcrossPacks', () => {
     expect(issues).toHaveLength(1);
     expect(issues[0]?.severity).toBe('error');
     expect(issues[0]?.message).toContain('passage local id "700001"');
+    expect(issues[0]?.source).toContain('test-es');
+    expect(issues[0]?.source).toContain('test-fr');
+  });
+
+  /**
+   * Items collide the most readily of the three and were checked the last.
+   *
+   * No *link* addresses an item by local id, which is why this was missed: the
+   * caller is `src/app/missions.ts`, where a response palette names its
+   * sentences as `{ item: '001147' }` and `itemByLocalId` takes the first
+   * match. Two packs from one generator both number from `000001`, so a second
+   * language does not merely risk this — it guarantees it on item one.
+   */
+  it('rejects two packs claiming one item local id', () => {
+    const issues = validateAcrossPacks([
+      withItem(TEST_PACK, '001147'),
+      withItem(TEST_PACK_FR, '001147'),
+    ]);
+
+    expect(issues).toHaveLength(1);
+    expect(issues[0]?.severity).toBe('error');
+    expect(issues[0]?.message).toContain('item local id "001147"');
     expect(issues[0]?.source).toContain('test-es');
     expect(issues[0]?.source).toContain('test-fr');
   });

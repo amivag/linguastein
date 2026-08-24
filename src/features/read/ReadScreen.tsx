@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import { useCourse } from '../../app/course';
+import { useCourse, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Icon } from '../../components/Icon';
@@ -23,6 +23,7 @@ const KINDS: readonly { readonly id: PassageKind | 'all'; readonly label: string
  * provide — a paragraph teaches how sentences hang together.
  */
 export function ReadScreen() {
+  const lang = useTargetLanguage();
   const { services, preferences } = useServices();
   const { course, filter, path } = useCourse();
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ export function ReadScreen() {
           return (
             <li key={passage.id}>
               <Link className={styles.card} to={path(`read/${localId(passage.id)}`)}>
-                <span className={styles.cardTitle} lang="es">
+                <span className={styles.cardTitle} lang={lang}>
                   {passage.title}
                 </span>
                 {translation && <span className={styles.cardMeaning}>{translation.text}</span>}

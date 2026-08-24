@@ -1,3 +1,4 @@
+import { useTargetLanguage } from '../app/course';
 import { useServices } from '../app/services-context';
 import {
   expandSpan,
@@ -62,6 +63,7 @@ export function WordInfoSheet({
 }: WordInfoSheetProps) {
   const { services, preferences } = useServices();
   const language = preferences.referenceLanguage;
+  const lang = useTargetLanguage();
 
   const word =
     tokenIds.length === 1 && tokenIds[0] !== undefined
@@ -89,7 +91,7 @@ export function WordInfoSheet({
       onClose={onClose}
       heading={
         <div className={styles.heading}>
-          <h2 className={styles.word} lang="es">
+          <h2 className={styles.word} lang={lang}>
             {text}
           </h2>
           {word && <Lemma info={word} />}
@@ -185,12 +187,13 @@ function SpanControls({
  * still the signal.
  */
 function Lemma({ info }: { readonly info: WordInfo }) {
+  const lang = useTargetLanguage();
   const derived = info.lemma && info.lemma !== info.token.text.toLowerCase();
 
   return (
     <>
       {derived && (
-        <p className={styles.lemma} lang="es">
+        <p className={styles.lemma} lang={lang}>
           from <strong>{info.lemma}</strong>
         </p>
       )}
@@ -205,6 +208,7 @@ function Lemma({ info }: { readonly info: WordInfo }) {
 }
 
 function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanings: boolean }) {
+  const lang = useTargetLanguage();
   return (
     <>
       {info.gloss && (
@@ -226,7 +230,7 @@ function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanin
           <BlockTitle icon="grammar">Pattern</BlockTitle>
           {info.constructions.map((construction) => (
             <p key={construction.label}>
-              <strong lang="es">{construction.label}</strong>
+              <strong lang={lang}>{construction.label}</strong>
               {construction.gloss ? ` — ${construction.gloss}` : ''}
             </p>
           ))}
@@ -239,7 +243,7 @@ function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanin
           <ul className={styles.forms}>
             {info.forms.map((form) => (
               <li key={`${form.form}-${form.label}`} className={form.current ? styles.current : ''}>
-                <span lang="es">{form.form}</span>
+                <span lang={lang}>{form.form}</span>
                 <span className={styles.formLabel}>{form.label}</span>
                 {/* The tint alone would carry this, and colour is never the
                     only signal the app uses to say something. */}
@@ -272,6 +276,7 @@ function WordBody({ info, meanings }: { readonly info: WordInfo; readonly meanin
  * anyone which of these three words is `que`.
  */
 function PhraseBody({ info, meanings }: { readonly info: PhraseInfo; readonly meanings: boolean }) {
+  const lang = useTargetLanguage();
   const known = info.constructions.length > 0;
 
   return (
@@ -281,7 +286,7 @@ function PhraseBody({ info, meanings }: { readonly info: PhraseInfo; readonly me
           <BlockTitle icon="grammar">Pattern</BlockTitle>
           {info.constructions.map((construction) => (
             <p key={construction.label}>
-              <strong lang="es">{construction.label}</strong>
+              <strong lang={lang}>{construction.label}</strong>
               {construction.gloss ? ` — ${construction.gloss}` : ''}
             </p>
           ))}
@@ -293,7 +298,7 @@ function PhraseBody({ info, meanings }: { readonly info: PhraseInfo; readonly me
         <ul className={styles.words}>
           {info.words.map((entry) => (
             <li key={entry.token.id}>
-              <span className={styles.wordItem} lang="es">
+              <span className={styles.wordItem} lang={lang}>
                 {entry.token.text}
               </span>
               <span className={styles.formLabel}>
@@ -353,11 +358,12 @@ function Examples({
 }: {
   readonly examples: readonly { id: string; text: string; translation?: string }[];
 }) {
+  const lang = useTargetLanguage();
   return (
     <ul className={styles.examples}>
       {examples.map((example) => (
         <li key={example.id}>
-          <span lang="es">{example.text}</span>
+          <span lang={lang}>{example.text}</span>
           {example.translation && <span className={styles.formLabel}> {example.translation}</span>}
         </li>
       ))}

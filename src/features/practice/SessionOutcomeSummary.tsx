@@ -1,3 +1,4 @@
+import { useTargetLanguage } from '../../app/course';
 import { Icon } from '../../components/Icon';
 import type { SessionOutcome } from './useSessionRunner';
 import styles from './Practice.module.css';
@@ -22,6 +23,7 @@ const SHOWN = 4;
  * read as a failure.
  */
 export function SessionOutcomeSummary({ outcome }: SessionOutcomeSummaryProps) {
+  const lang = useTargetLanguage();
   const { advanced, lapsed, nextDueInDays } = outcome;
 
   // Pure: the runner already resolved this to whole days when the answer landed,
@@ -37,7 +39,7 @@ export function SessionOutcomeSummary({ outcome }: SessionOutcomeSummaryProps) {
           <span>
             <strong>{advanced.length}</strong>{' '}
             {advanced.length === 1 ? 'word moved up' : 'words moved up'}:{' '}
-            <span lang="es">{list(advanced.map((change) => change.text))}</span>
+            <span lang={lang}>{list(advanced.map((change) => change.text))}</span>
           </span>
         </p>
       )}
@@ -49,7 +51,7 @@ export function SessionOutcomeSummary({ outcome }: SessionOutcomeSummaryProps) {
           <Icon name="slipping" size="sm" className={styles.outcomeIconDown} />
           <span>
             <strong>{lapsed.length}</strong> to see again sooner:{' '}
-            <span lang="es">{list(lapsed.map((change) => change.text))}</span>
+            <span lang={lang}>{list(lapsed.map((change) => change.text))}</span>
           </span>
         </p>
       )}

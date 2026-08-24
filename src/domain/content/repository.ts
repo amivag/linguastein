@@ -234,6 +234,21 @@ export class ContentRepository {
     return this.formsById.get(id);
   }
 
+  /**
+   * The language an item's text is in: the language of the pack that published
+   * it.
+   *
+   * Read off the pack rather than the course, because the two can differ on any
+   * screen that shows content from outside what is currently being studied — a
+   * progress list, a search result, a mission that survived a course switch. It
+   * is what `lang` on rendered text should carry, and `undefined` when the item
+   * came from a pack that is no longer loaded, so a caller falls back rather
+   * than tagging text with a guess.
+   */
+  languageOfItem(item: LearningItem): LanguageTag | undefined {
+    return this.packsById.get(item.pack)?.targetLanguage;
+  }
+
   /** Items in stable pack order — the basis for sequential practice. */
   allItems(): readonly LearningItem[] {
     return this.itemOrder.map((id) => this.itemsById.get(id)).filter(isDefined);
@@ -314,6 +329,22 @@ export class ContentRepository {
   /** All translations of an entity, e.g. to show literal next to natural. */
   translationsOf(ref: string): readonly Translation[] {
     return [...(this.translationsByRef.get(ref)?.values() ?? EMPTY)];
+  }
+
+  /**
+   * Reference languages meanings are actually available in, in load order.
+   *
+   * Counted rather than claimed, for the reason `packs.ts` counts everything
+   * else: a manifest can list a language whose translations file was never
+   * written, and offering that in the picker gives a learner a setting that
+   * silently shows them nothing. What is in the index is what can be read.
+   */
+  translationLanguages(): readonly LanguageTag[] {
+    const languages = new Set<LanguageTag>();
+    for (const byLanguage of this.translationsByRef.values()) {
+      for (const language of byLanguage.keys()) languages.add(language);
+    }
+    return [...languages];
   }
 
   /**
@@ -586,8 +617,17 @@ export function normalise(text: string): string {
  * generation and grading — and each carried its own character class. A `¿`
  * missing from one of them is a learner told they were wrong, so the set is
  * written once.
+ *
+ * The second row is the same fact in scripts the app does not ship yet. It costs
+ * nothing to have and is invisible when it is missing, which is the bad
+ * combination: `。` absent from this class does not fail a build, it makes a full
+ * stop into a tappable word and a correctly spoken sentence into a wrong answer,
+ * because `splitWords` leaves it stuck to the last word for a recogniser that
+ * will never return it. Greek's `·` and `;`-as-question-mark are the same story.
+ * The Latin half of a CJK pack — a stray `,` in a loanword — is covered by the
+ * first row, so the two are additive rather than alternative.
  */
-const PUNCTUATION = /[.,!?;:¡¿"“”«»()…—–]/g;
+const PUNCTUATION = /[.,!?;:¡¿"“”«»()…—–]|[。、，！？：；「」『』（）〈〉《》〔〕【】·]/g;
 
 /** True for a token that is punctuation and nothing else, such as a bare `,`. */
 export function isPunctuation(text: string): boolean {

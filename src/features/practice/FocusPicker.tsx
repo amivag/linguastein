@@ -4,6 +4,7 @@ import { useServices } from '../../app/services-context';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
+import { reachableTopics } from '../../domain/content';
 import { SESSION_FOCUSES, type SessionFocus } from '../../domain/sessions';
 import type { IconName } from '../../components/Icon';
 import { CategoryPicker } from '../browse/CategoryPicker';
@@ -65,8 +66,12 @@ export function FocusPicker() {
    * What the summary and the tiles reflect: the stored choice, minus categories
    * this course has no content for. Switching down to A1 must not leave the bar
    * boasting about a B1 category that is currently unreachable.
+   *
+   * Through `reachableTopics` rather than inline, because the writers of a
+   * session link have to narrow the same way — this used to be the only half
+   * that did, so the summary said "Everything" and the link said `?topic=hotel`.
    */
-  const chosen = preferences.focusTopics.filter((topic) => offered.has(topic));
+  const chosen = reachableTopics(topics, preferences.focusTopics);
 
   const toggle = (topic: string) => {
     // Written against the *stored* list rather than the visible one, so

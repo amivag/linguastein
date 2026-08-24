@@ -78,11 +78,19 @@ describe('the outcome summary', () => {
     expect(screen.getByText(/pan/)).toBeInTheDocument();
   });
 
+  /**
+   * Through the providers rather than bare, because the language is no longer
+   * typed into the markup: it comes from the course, so that a German pack is
+   * marked as German rather than read out with Spanish pronunciation. A summary
+   * rendered with no course to ask carries no `lang` at all, which is the
+   * honest answer and not this assertion.
+   */
   it('marks the Spanish as Spanish, so it is not read out in English', () => {
-    const { container } = render(
+    const { container } = renderWithServices(
       <SessionOutcomeSummary
         outcome={outcome({ advanced: [change('004', 'cerveza', 'new', 'learning')] })}
       />,
+      { route: '/es/a1' },
     );
     expect(container.querySelector('[lang="es"]')?.textContent).toBe('cerveza');
   });

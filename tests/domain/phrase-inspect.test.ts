@@ -11,9 +11,11 @@ import { describe, expect, it } from 'vitest';
 import {
   expandSpan,
   inspectSpan,
+  isPunctuation,
   joinTokens,
   needsSpaceBefore,
   nextInSpan,
+  splitWords,
   type ItemId,
   type LearningItem,
   type PackId,
@@ -174,5 +176,30 @@ describe('needsSpaceBefore', () => {
     expect(needsSpaceBefore('Tengo', 'que')).toBe(true);
     expect(needsSpaceBefore('trabajar', '.')).toBe(false);
     expect(needsSpaceBefore('¿', 'Dónde')).toBe(false);
+  });
+});
+
+/**
+ * The punctuation class is shared by speech comparison, exercise generation and
+ * grading, so a mark missing from it is a learner marked wrong for saying the
+ * sentence correctly. It is asserted for scripts the app does not ship yet
+ * because that failure is silent: nothing about a Greek `·` left in a word looks
+ * broken until a session grades it.
+ */
+describe('punctuation across scripts', () => {
+  it('strips Greek marks, including the question mark that is a semicolon', () => {
+    expect(splitWords('Πού είναι η τράπεζα;')).toEqual(['Πού', 'είναι', 'η', 'τράπεζα']);
+    expect(isPunctuation('·')).toBe(true);
+  });
+
+  it('strips CJK marks, which are not the ASCII ones', () => {
+    expect(splitWords('你好，世界！')).toEqual(['你好', '世界']);
+    expect(isPunctuation('。')).toBe(true);
+    expect(isPunctuation('银行')).toBe(false);
+  });
+
+  it('leaves Spanish exactly as it was', () => {
+    expect(splitWords('¿Dónde está el baño?')).toEqual(['Dónde', 'está', 'el', 'baño']);
+    expect(isPunctuation('¿')).toBe(true);
   });
 });

@@ -12,6 +12,7 @@ import { z } from 'zod';
 import {
   ADDRESS_FORMS,
   ANNOTATION_TYPES,
+  CASES,
   CEFR_LEVELS,
   ENTITY_KINDS,
   ITEM_TYPES,
@@ -68,6 +69,7 @@ export const morphologySchema = z
     tense: z.enum(TENSES).optional(),
     mood: z.enum(MOODS).optional(),
     verbForm: z.enum(VERB_FORMS).optional(),
+    case: z.enum(CASES).optional(),
     degree: z.enum(['positive', 'comparative', 'superlative']).optional(),
     formality: z.enum(['informal', 'formal']).optional(),
   })
@@ -77,6 +79,7 @@ export const tokenSchema = z
   .object({
     id: z.string().min(1),
     text: z.string().min(1),
+    reading: z.string().optional(),
     lemma: z.string().optional(),
     pos: z.enum(POS_TAGS).optional(),
     morph: morphologySchema.optional(),
@@ -109,6 +112,7 @@ export const learningItemSchema = z
     pack: packId,
     type: z.enum(ITEM_TYPES),
     text: z.string().min(1),
+    reading: z.string().optional(),
     level: level.optional(),
     register: z.enum(REGISTERS).optional(),
     address: z.enum(ADDRESS_FORMS).optional(),

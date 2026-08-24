@@ -229,6 +229,44 @@ describe('the session the choice starts', () => {
   });
 
   /**
+   * The bug this pins: the summary narrowed the stored choice to what the course
+   * can reach and the link did not, so a learner saw "Everything · balanced",
+   * pressed 5 min and got "Nothing to practise here yet." A topic is a filter
+   * rather than a bias, so the planner has nothing to widen back to — which is
+   * the one outcome a focus is supposed to be incapable of.
+   *
+   * `colours` is declared by the fixture manifest and carried by no item, which
+   * is the same shape as a category that exists only at B1 in a course narrowed
+   * to A1, or a Spanish category with a French pack open.
+   */
+  it('drops a category the course cannot reach, as the summary already does', async () => {
+    const user = userEvent.setup();
+    homeWith({ focusTopics: ['colours'] });
+    await screen.findByRole('heading', { level: 1 });
+
+    expect(panel()).toHaveAccessibleName(/Everything · balanced/);
+
+    await user.click(screen.getByRole('button', { name: /Free practice/ }));
+    await user.click(screen.getByRole('button', { name: '5 min' }));
+
+    const where = screen.getByTestId('where').textContent ?? '';
+    expect(where).not.toContain('topic=');
+  });
+
+  it('keeps the reachable half of a mixed choice', async () => {
+    const user = userEvent.setup();
+    homeWith({ focusTopics: ['colours', 'work'] });
+    await screen.findByRole('heading', { level: 1 });
+
+    await user.click(screen.getByRole('button', { name: /Free practice/ }));
+    await user.click(screen.getByRole('button', { name: '5 min' }));
+
+    const where = screen.getByTestId('where').textContent ?? '';
+    expect(where).toContain('topic=work');
+    expect(where).not.toContain('colours');
+  });
+
+  /**
    * The due button names a number. Narrowing it by category would review fewer
    * items than the label promised, which is worse than ignoring the preference.
    */

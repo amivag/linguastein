@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useCourse } from '../../app/course';
+import { useCourse, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
@@ -39,6 +39,7 @@ const MASTERY_LABELS: Record<MasteryRecord['status'], string> = {
 
 /** What the learner has actually done — the counterpart to the practice loop. */
 export function ProgressScreen() {
+  const lang = useTargetLanguage();
   const { services, preferences } = useServices();
   const { course, filter, path } = useCourse();
   const navigate = useNavigate();
@@ -200,7 +201,7 @@ export function ProgressScreen() {
                           record.status === 'strong' ? styles.rowIconUp : styles.rowIconDown
                         }
                       />
-                      <span lang="es">{record.label}</span>
+                      <span lang={lang}>{record.label}</span>
                     </span>
                     <span className={styles.muted}>
                       {MASTERY_LABELS[record.status]} · seen in {record.encounters}{' '}

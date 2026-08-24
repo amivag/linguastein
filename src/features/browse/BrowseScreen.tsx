@@ -16,6 +16,7 @@ import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
   FILTERABLE_REGIONS,
   ITEM_SORTS,
+  languageOption,
   POS_LABELS,
   REGISTER_LABELS,
   REGISTERS,
@@ -415,8 +416,13 @@ export function BrowseScreen() {
       <div className={styles.toolbar}>
         <CourseBar compact />
         <div className={styles.search}>
+          {/* Both languages named, because the box searches both and a learner
+              who does not know that types only one of them. Derived rather than
+              spelled: the pair changes with the course *and* with the reference
+              language, so a literal here is wrong twice over. */}
           <label className="visually-hidden" htmlFor="browse-search">
-            Search Spanish or English
+            Search {languageOption(course.language).englishName} or{' '}
+            {languageOption(preferences.referenceLanguage).englishName}
           </label>
           <input
             id="browse-search"

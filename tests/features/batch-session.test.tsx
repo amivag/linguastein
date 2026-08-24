@@ -80,7 +80,7 @@ describe('a session over a batch', () => {
       id: 'batch-fr',
       label: 'French phrases',
       course: { language: 'fr', level: 'all' },
-      itemIds: [id<ItemId>('test-fr:item:001')],
+      itemIds: [id<ItemId>('test-fr:item:101')],
     });
     renderSession('preset=flashcards&batch=batch-fr&size=items:10', [french], {
       repository: multilingualRepository(),

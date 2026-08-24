@@ -11,6 +11,17 @@
  * Nothing here is stored: mastery is derived from item progress and the
  * repository whenever it is needed, so it can never drift out of sync with the
  * attempts it is based on.
+ *
+ * A stored form did once exist as a declaration — `SkillProgress` in
+ * `types.ts`, holding an aggregated count and a 0–1 mastery per skill, never
+ * written and never read. It is gone rather than waiting, and the reason is the
+ * paragraph above: an aggregate that is stored has to be *maintained*, so every
+ * change to what counts as an encounter, a context or a strength becomes a
+ * migration of rows that nothing can rebuild. `MasteryRecord` is the same fact
+ * computed on demand, and it is richer than the row ever was (distinct items,
+ * distinct passages, items due now). Do not reintroduce a stored aggregate to
+ * make a screen faster; measure first, and cache above this module if it is
+ * ever genuinely needed.
  */
 
 import type { ContentRepository, LexemeId, SkillId } from '../content';

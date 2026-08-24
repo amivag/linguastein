@@ -299,7 +299,42 @@ words · **importing and exporting language packs**, including their audio, as
 self-contained units — the audio task (item 3) keeps pack paths relative and
 routes asset resolution through one seam so this stays possible.
 
+## Growth tracks, briefed rather than scheduled
+
+Three things the app will eventually want, each briefed so a fresh session can
+pick one up, and each deliberately outside the numbered list above because none
+of them is a v0.1 requirement. They are written down together because they
+constrain each other: the licence decision gates two of them, and the export
+format gates the third.
+
+The survey that produced all three —
+[the stack survey](tasks/stack-survey.md) — records where the stack stands, which
+seam pays out for which track, the six findings it turned up and what became of
+each, and, in its last section, what it deliberately did **not** check. Read it
+before re-investigating any of this.
+
+- **[Android and iOS](tasks/native-port.md)** — Capacitor rather than React
+  Native, since `src/domain` is already portable and the screens are not the part
+  worth rewriting. One spike has to run first (whether the two speech APIs exist
+  in a WebView), and one non-technical decision blocks iOS entirely: AGPL is
+  understood to conflict with the App Store's terms, and the repository has a
+  single copyright holder who can settle that in a day and no code.
+- **[Accounts and sync](tasks/accounts-and-sync.md)** — the best-prepared of the
+  three, because Stage B of [learner-profile.md](tasks/learner-profile.md) already
+  landed the record clock and the collision-free ids a merge has to trust. Local
+  stays authoritative and no screen ever awaits the network for a learner's own
+  progress; an account is a backup and a second device, never a precondition.
+  Stage C's export/import is worth shipping on its own first — it is the same four
+  things sync needs, and it is the only thing standing between a storage eviction
+  and a lost year of history.
+- **[Paying for it](tasks/monetisation.md)** — donations in Settings → About are
+  nearly free and the only part worth doing now. Ads are recommended against on
+  the web build for reasons that are enforced rather than aesthetic, and the
+  content licence means the curriculum is not the moat: sell convenience, not
+  language. Editorial review (item 0) is a prerequisite rather than a parallel
+  track.
+
 ## Explicitly out of scope for now
 
-Backend, accounts, social features, moderation, native app, app-store pipeline,
-gamification, a complete grammar course, and the production dataset itself.
+Social features, moderation, gamification, a complete grammar course, and the
+production dataset itself.

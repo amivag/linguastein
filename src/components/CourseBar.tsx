@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router';
 import { useCourse } from '../app/course';
 import { useServices } from '../app/services-context';
-import { coursePath, type LevelScope } from '../domain/content';
+import { coursePath, resolvePronunciationFor, type LevelScope } from '../domain/content';
 import { Chip } from './Chip';
 import styles from './CourseBar.module.css';
 
@@ -27,7 +27,7 @@ interface CourseBarProps {
  */
 export function CourseBar({ compact = false }: CourseBarProps) {
   const { course, options, option } = useCourse();
-  const { updatePreferences } = useServices();
+  const { services, preferences, updatePreferences } = useServices();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -37,9 +37,28 @@ export function CourseBar({ compact = false }: CourseBarProps) {
   const screen = location.pathname.split('/').slice(3).join('/');
 
   const go = (language: string, level: LevelScope) => {
+    /*
+     * The accent travels with the language, because it is one preference and
+     * the course is not. Left alone, switching to a German course kept
+     * `es-ES`, and every play button then asked the device for a Spanish voice
+     * to read German with — silence at best, and a Spanish reading of German
+     * at worst. Same language, same accent, so a level switch changes nothing.
+     */
+    const pronunciationLocale = resolvePronunciationFor(
+      services.repository,
+      language,
+      preferences.pronunciationLocale,
+    );
+    const movedAccent = pronunciationLocale !== preferences.pronunciationLocale;
+
     // Remembered so `/` reopens this course next time; the path stays the
     // source of truth for the screen that is open now.
-    updatePreferences({ targetLanguage: language, level });
+    updatePreferences({
+      targetLanguage: language,
+      level,
+      // A voice is chosen within an accent, so it cannot outlive one.
+      ...(movedAccent ? { pronunciationLocale, voiceName: '' } : {}),
+    });
     void navigate(`${coursePath({ language, level }, screen)}${location.search}`);
   };
 

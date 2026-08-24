@@ -4,7 +4,7 @@
  * extended without invalidating what the learner has done.
  */
 
-import { packIdOf, type ItemId, type PackId, type SkillId } from '../content';
+import { packIdOf, type ItemId, type PackId } from '../content';
 import type { ExerciseKind } from '../exercises/types';
 
 export const ITEM_STATUSES = ['new', 'learning', 'review', 'mastered'] as const;
@@ -71,19 +71,6 @@ export interface Attempt {
   readonly hintsUsed?: number;
   readonly at: Timestamp;
   readonly sessionId?: string;
-}
-
-/**
- * Aggregated mastery of a pattern/verb/topic, inferred from item attempts
- * (spec §8.2). Not surfaced in v0.1, but the model must not prevent it.
- */
-export interface SkillProgress {
-  readonly skillId: SkillId;
-  readonly attempts: number;
-  readonly correct: number;
-  /** 0 … 1 */
-  readonly mastery: number;
-  readonly lastReviewedAt?: Timestamp;
 }
 
 /**

@@ -71,7 +71,10 @@ export const PRESETS: Record<PresetId, Preset> = {
   speaking: {
     id: 'speaking',
     label: 'Think & say',
-    description: 'Say the Spanish before you reveal it',
+    // Deliberately does not name the language. A preset is static config with
+    // no course in hand, and the card it describes (`think-say`) already names
+    // the language in its own heading, where the learner is about to act.
+    description: 'Say it from the meaning, then reveal',
     icon: 'record',
     exerciseKinds: ['think-say'],
     mode: 'practice',

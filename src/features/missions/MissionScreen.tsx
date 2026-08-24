@@ -2,7 +2,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
 import { MISSIONS } from '../../app/missions';
 import { MISSION_VARIATIONS } from '../../app/mission-variations';
-import { useCourse } from '../../app/course';
+import { useCourse, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
@@ -21,7 +21,7 @@ import {
   type MissionStage,
   type MissionTransferSupport,
 } from '../../domain/missions';
-import type { ItemId, LearningItem, SkillId } from '../../domain/content';
+import { languageOption, type ItemId, type LearningItem, type SkillId } from '../../domain/content';
 import {
   defaultVariationSelections,
   renderVariation,
@@ -65,6 +65,10 @@ export function MissionScreen() {
   const navigate = useNavigate();
   const { course, filter, option } = useCourse();
   const { services, preferences } = useServices();
+  // Named once for the copy that has to say which language a learner is being
+  // asked to respond in. `Respond naturally … in Spanish` was the fallback cue
+  // on every mission whose turns declare no communicative function.
+  const courseLanguageName = languageOption(course.language).englishName;
   const mission = missionById(MISSIONS, course, missionId);
   const chosenStage: MissionStage = stage === 'use' ? 'use' : 'understand';
   /**
@@ -353,7 +357,7 @@ export function MissionScreen() {
     });
     return intentions.length
       ? intentions.join(' · ')
-      : `Respond naturally to ${mission?.scenarioPartner ?? 'the situation'} in Spanish.`;
+      : `Respond naturally to ${mission?.scenarioPartner ?? 'the situation'} in ${courseLanguageName}.`;
   }
 
   function speakText(text: string) {
@@ -582,6 +586,8 @@ function UseStage({
   ) => Promise<ReadonlyMap<SkillId, MasteryRecord>>;
   readonly onFinish: () => void;
 }) {
+  const language = useTargetLanguage();
+  const languageName = language === undefined ? undefined : languageOption(language).englishName;
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [speechComparison, setSpeechComparison] = useState<SpeechComparison | undefined>();
@@ -708,7 +714,10 @@ function UseStage({
             ) : transferSupport === 'independent' ? (
               intentionCue(current)
             ) : (
-              (translationOf(current) ?? `Respond to ${partner} in Spanish.`)
+              (translationOf(current) ??
+              (languageName
+                ? `Respond to ${partner} in ${languageName}.`
+                : `Respond to ${partner}.`))
             )
           ) : (
             // What the other person just said is exactly where an unknown word
@@ -994,6 +1003,7 @@ function VariationBuilder({
   readonly onListen: (text: string) => void;
 }) {
   const ids = useId();
+  const languageName = languageOption(language).englishName;
   const [selections, setSelections] = useState<Readonly<Record<string, string>>>(() =>
     defaultVariationSelections(pattern),
   );
@@ -1037,7 +1047,7 @@ function VariationBuilder({
       <div className={styles.variationResult}>
         <span>{variation.reference}</span>
         {hidden ? (
-          <strong role="status">Spanish hidden — say it from the meaning.</strong>
+          <strong role="status">{languageName} hidden — say it from the meaning.</strong>
         ) : (
           <strong role="status" lang={language}>
             {variation.target}
@@ -1050,7 +1060,7 @@ function VariationBuilder({
           <Icon name="speak" /> Listen
         </Button>
         <Button aria-pressed={hidden} onClick={() => setHidden((current) => !current)}>
-          {hidden ? 'Show Spanish' : 'Practise from meaning'}
+          {hidden ? `Show ${languageName}` : 'Practise from meaning'}
         </Button>
       </div>
 

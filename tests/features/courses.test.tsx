@@ -118,7 +118,13 @@ describe('the course bar', () => {
 
     // Still Browse, now wider — and the course is stored so `/` reopens it.
     expect(await screen.findByText('2 items')).toBeInTheDocument();
-    expect(written).toEqual([{ targetLanguage: 'fr', level: 'b1' }]);
+    // The accent comes along, because it is one preference across every course
+    // and this one is French: left at the `es-ES` default, every play button on
+    // this screen would ask the device for a Spanish voice to read French with.
+    // A voice is chosen within an accent, so it cannot outlive one.
+    expect(written).toEqual([
+      { targetLanguage: 'fr', level: 'b1', pronunciationLocale: 'fr', voiceName: '' },
+    ]);
   });
 
   it('offers the languages the loaded packs provide', async () => {

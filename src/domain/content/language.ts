@@ -184,17 +184,53 @@ export function resolvePronunciationLocale(
   return available.find((locale) => baseLanguage(locale) === base) ?? available[0];
 }
 
+/**
+ * Regions this app names itself, because no library gets them right.
+ *
+ * `es-419` is a UN macro-region code that `Intl.DisplayNames` renders as
+ * "Latin America" in some ICU builds and as "419" in others, and the two
+ * Spanish locales below are the ones the shipped pack uses, spelled the way the
+ * pack's own docs spell them. Everything else is asked of the platform rather
+ * than typed here — see {@link regionLabel}.
+ */
 const REGION_NAMES: Record<string, string> = {
   'es-ES': 'Spain',
   'es-419': 'Latin America',
-  'es-MX': 'Mexico',
-  'es-AR': 'Argentina',
-  'es-CO': 'Colombia',
-  'es-CL': 'Chile',
-  'es-PE': 'Peru',
 };
 
-/** Human-readable region name, falling back to the tag itself. */
+/**
+ * Human-readable region name: our own spelling first, the platform's second,
+ * the tag itself last.
+ *
+ * The platform step is what stops this table needing an entry per country per
+ * language added — `de-AT` is "Austria" and `el-CY` is "Cyprus" without anyone
+ * editing this file, which is the same property {@link languageOption} has.
+ */
 export function regionLabel(region: LanguageTag): string {
-  return REGION_NAMES[region] ?? region;
+  const named = REGION_NAMES[region];
+  if (named) return named;
+
+  const [, subtag] = region.split('-');
+  if (subtag === undefined) return region;
+  try {
+    const display = new Intl.DisplayNames(['en'], { type: 'region' });
+    return display.of(subtag.toUpperCase()) ?? region;
+  } catch {
+    // An environment without the region data, or a subtag it rejects. The tag
+    // is a worse label than a name and a better one than a thrown error.
+    return region;
+  }
+}
+
+/**
+ * How an accent is offered in a picker: `es-MX` → `Mexico`, `de` → `German`.
+ *
+ * A bare language tag is a real answer here and not a degenerate one — a pack
+ * that declares no regional accents can still be spoken, and "German" is what
+ * that choice is called. Falling through to {@link regionLabel} would have
+ * shown it as `de`.
+ */
+export function pronunciationLabel(locale: LanguageTag): string {
+  if (locale === baseLanguage(locale)) return languageOption(locale).englishName;
+  return regionLabel(locale);
 }

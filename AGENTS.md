@@ -472,13 +472,33 @@ Two things this makes easy to get wrong, both caught once already:
   would both be `hablar-pres-1s` and the second would win silently; the skill
   loop asks mood first, or every subjunctive sentence is filed under
   `presente de indicativo`.
-- **A subjunctive reading needs a trigger.** `entre` is the preposition in
-  `entre las dos` and `entrar`'s subjunctive in `que entre`, and generating the
-  mood turned the first into an ambiguity it had never been. `disambiguate`
-  prefers the ordinary word unless a trigger sits immediately before —
-  `SUBJUNCTIVE_TRIGGERS` — which is the same rule the skill's own gloss states.
-  Scanning further left would read `Creo que entre las dos hay tiempo` as a
-  subjunctive.
+- **A subjunctive reading needs a trigger, and only where a second lexeme is at
+  stake.** `entre` is the preposition in `entre las dos` and `entrar`'s
+  subjunctive in `que entre`, so `disambiguate` prefers the ordinary word unless
+  a trigger sits immediately before — `SUBJUNCTIVE_TRIGGERS`. Scanning further
+  left would read `Creo que entre las dos hay tiempo` as a subjunctive. But the
+  preference must not fire when every candidate is the _same_ verb: a usted
+  command is indexed wherever no other lexeme claims the surface, so the only
+  alternative to `salga` the subjunctive is `salga` the command, and preferring
+  it shipped `Ojalá que todo salga bien` marked `usted` with nobody in it.
+- **`retagCommand` accepts a subjunctive opening, not only an indicative one.**
+  It existed because a tú command is spelled like the third person present; an
+  usted command is spelled like the subjunctive, which is now the reading that
+  arrives. Asking for `indicative` sent `Gire a la derecha.` back to being a
+  statement.
+- **A negative command has to open its clause.** `no` plus a subjunctive is not
+  enough: `Ojalá no llueva mañana` and `Espero que no vengas` are the same two
+  words in the same order and neither orders anybody about.
+
+**A form id must be unique, and the build now checks it.** The ids are built from
+a stem plus `formSuffix`, and both halves can collide. `formSuffix` had a comment
+about its half and nothing watched the other: `slug` folded a combining tilde
+away, so `eñe` and `ene` produced one stem and one letter's plural shipped under
+the other's id, silently. Two changes hold it now — a form id's stem comes from
+the **lexeme id**, which `lexemeId` already keeps unique, rather than from a
+second independent `slug` call; and `slug` maps `ñ` to `nn` before the accents
+come off, so `año` is no longer `ano` and the pairs no content has reached yet
+(`caña`/`cana`, `peña`/`pena`) cannot collide either.
 
 **Pack file names carry the level range, and the build derives it.** `es-a1-a2-core-*`
 was typed into ten paths; `filePrefix` now comes from the same `presentLevels` the

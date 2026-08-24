@@ -3135,7 +3135,7 @@
 {"ref":"core-es:lexeme:caminar","lang":"en","text":"to walk"}
 {"ref":"core-es:lexeme:nadar","lang":"en","text":"to swim"}
 {"ref":"core-es:lexeme:aprender","lang":"en","text":"to learn"}
-{"ref":"core-es:lexeme:ensenar","lang":"en","text":"to teach, to show"}
+{"ref":"core-es:lexeme:ensennar","lang":"en","text":"to teach, to show"}
 {"ref":"core-es:lexeme:cerrar","lang":"en","text":"to close"}
 {"ref":"core-es:lexeme:costar","lang":"en","text":"to cost"}
 {"ref":"core-es:lexeme:probar","lang":"en","text":"to try, to taste"}
@@ -3222,8 +3222,8 @@
 {"ref":"core-es:lexeme:persona","lang":"en","text":"person"}
 {"ref":"core-es:lexeme:hombre","lang":"en","text":"man"}
 {"ref":"core-es:lexeme:mujer","lang":"en","text":"woman"}
-{"ref":"core-es:lexeme:nino","lang":"en","text":"boy, child"}
-{"ref":"core-es:lexeme:nina","lang":"en","text":"girl"}
+{"ref":"core-es:lexeme:ninno","lang":"en","text":"boy, child"}
+{"ref":"core-es:lexeme:ninna","lang":"en","text":"girl"}
 {"ref":"core-es:lexeme:bebe","lang":"en","text":"baby"}
 {"ref":"core-es:lexeme:familia","lang":"en","text":"family"}
 {"ref":"core-es:lexeme:padre","lang":"en","text":"father"}
@@ -3245,8 +3245,8 @@
 {"ref":"core-es:lexeme:amiga","lang":"en","text":"friend (female)"}
 {"ref":"core-es:lexeme:vecino","lang":"en","text":"neighbour"}
 {"ref":"core-es:lexeme:gente","lang":"en","text":"people"}
-{"ref":"core-es:lexeme:senor","lang":"en","text":"sir, mister"}
-{"ref":"core-es:lexeme:senora","lang":"en","text":"madam, missus"}
+{"ref":"core-es:lexeme:sennor","lang":"en","text":"sir, mister"}
+{"ref":"core-es:lexeme:sennora","lang":"en","text":"madam, missus"}
 {"ref":"core-es:lexeme:chico","lang":"en","text":"boy, guy"}
 {"ref":"core-es:lexeme:chica","lang":"en","text":"girl, young woman"}
 {"ref":"core-es:lexeme:nombre","lang":"en","text":"name"}
@@ -3328,7 +3328,7 @@
 {"ref":"core-es:lexeme:apartamento","lang":"en","text":"apartment"}
 {"ref":"core-es:lexeme:habitacion","lang":"en","text":"room"}
 {"ref":"core-es:lexeme:cocina","lang":"en","text":"kitchen"}
-{"ref":"core-es:lexeme:bano","lang":"en","text":"bathroom"}
+{"ref":"core-es:lexeme:banno","lang":"en","text":"bathroom"}
 {"ref":"core-es:lexeme:sala","lang":"en","text":"living room"}
 {"ref":"core-es:lexeme:comedor","lang":"en","text":"dining room"}
 {"ref":"core-es:lexeme:dormitorio","lang":"en","text":"bedroom"}
@@ -3427,14 +3427,14 @@
 {"ref":"core-es:lexeme:minuto","lang":"en","text":"minute"}
 {"ref":"core-es:lexeme:segundo","lang":"en","text":"second"}
 {"ref":"core-es:lexeme:dia","lang":"en","text":"day"}
-{"ref":"core-es:lexeme:manana","lang":"en","text":"morning"}
+{"ref":"core-es:lexeme:mannana","lang":"en","text":"morning"}
 {"ref":"core-es:lexeme:tarde","lang":"en","text":"afternoon"}
 {"ref":"core-es:lexeme:noche","lang":"en","text":"night"}
 {"ref":"core-es:lexeme:semana","lang":"en","text":"week"}
 {"ref":"core-es:lexeme:mes","lang":"en","text":"month"}
-{"ref":"core-es:lexeme:ano","lang":"en","text":"year"}
+{"ref":"core-es:lexeme:anno","lang":"en","text":"year"}
 {"ref":"core-es:lexeme:fecha","lang":"en","text":"date"}
-{"ref":"core-es:lexeme:cumpleanos","lang":"en","text":"birthday"}
+{"ref":"core-es:lexeme:cumpleannos","lang":"en","text":"birthday"}
 {"ref":"core-es:lexeme:fiesta","lang":"en","text":"party"}
 {"ref":"core-es:lexeme:vacaciones","lang":"en","text":"holidays"}
 {"ref":"core-es:lexeme:momento","lang":"en","text":"moment"}
@@ -3453,7 +3453,7 @@
 {"ref":"core-es:lexeme:mar","lang":"en","text":"sea"}
 {"ref":"core-es:lexeme:rio","lang":"en","text":"river"}
 {"ref":"core-es:lexeme:lago","lang":"en","text":"lake"}
-{"ref":"core-es:lexeme:montana","lang":"en","text":"mountain"}
+{"ref":"core-es:lexeme:montanna","lang":"en","text":"mountain"}
 {"ref":"core-es:lexeme:playa","lang":"en","text":"beach"}
 {"ref":"core-es:lexeme:campo","lang":"en","text":"countryside, field"}
 {"ref":"core-es:lexeme:bosque","lang":"en","text":"forest"}
@@ -3547,7 +3547,7 @@
 {"ref":"core-es:lexeme:diciembre","lang":"en","text":"December"}
 {"ref":"core-es:lexeme:primavera","lang":"en","text":"spring"}
 {"ref":"core-es:lexeme:verano","lang":"en","text":"summer"}
-{"ref":"core-es:lexeme:otono","lang":"en","text":"autumn"}
+{"ref":"core-es:lexeme:otonno","lang":"en","text":"autumn"}
 {"ref":"core-es:lexeme:invierno","lang":"en","text":"winter"}
 {"ref":"core-es:lexeme:favor","lang":"en","text":"favour"}
 {"ref":"core-es:lexeme:nevera","lang":"en","text":"fridge"}
@@ -3558,7 +3558,7 @@
 {"ref":"core-es:lexeme:derecha","lang":"en","text":"right (side)"}
 {"ref":"core-es:lexeme:izquierda","lang":"en","text":"left (side)"}
 {"ref":"core-es:lexeme:ingles","lang":"en","text":"English (language)"}
-{"ref":"core-es:lexeme:espanol","lang":"en","text":"Spanish (language)"}
+{"ref":"core-es:lexeme:espannol","lang":"en","text":"Spanish (language)"}
 {"ref":"core-es:lexeme:patata","lang":"en","text":"potato"}
 {"ref":"core-es:lexeme:carro","lang":"en","text":"car"}
 {"ref":"core-es:lexeme:zumo","lang":"en","text":"juice"}
@@ -3569,7 +3569,7 @@
 {"ref":"core-es:lexeme:plata","lang":"en","text":"money"}
 {"ref":"core-es:lexeme:pasta","lang":"en","text":"cash"}
 {"ref":"core-es:lexeme:camarero","lang":"en","text":"waiter"}
-{"ref":"core-es:lexeme:sueno","lang":"en","text":"sleepiness, dream"}
+{"ref":"core-es:lexeme:suenno","lang":"en","text":"sleepiness, dream"}
 {"ref":"core-es:lexeme:prisa","lang":"en","text":"hurry"}
 {"ref":"core-es:lexeme:fin","lang":"en","text":"end"}
 {"ref":"core-es:lexeme:lado","lang":"en","text":"side"}
@@ -3594,8 +3594,8 @@
 {"ref":"core-es:lexeme:efectivo","lang":"en","text":"cash"}
 {"ref":"core-es:lexeme:ida","lang":"en","text":"outward journey"}
 {"ref":"core-es:lexeme:vuelta","lang":"en","text":"return journey"}
-{"ref":"core-es:lexeme:companero","lang":"en","text":"colleague, companion"}
-{"ref":"core-es:lexeme:companera","lang":"en","text":"colleague (female)"}
+{"ref":"core-es:lexeme:compannero","lang":"en","text":"colleague, companion"}
+{"ref":"core-es:lexeme:compannera","lang":"en","text":"colleague (female)"}
 {"ref":"core-es:lexeme:profesora","lang":"en","text":"teacher (female)"}
 {"ref":"core-es:lexeme:doctora","lang":"en","text":"doctor (female)"}
 {"ref":"core-es:lexeme:camarera","lang":"en","text":"waitress"}
@@ -3629,7 +3629,7 @@
 {"ref":"core-es:lexeme:naturaleza","lang":"en","text":"nature"}
 {"ref":"core-es:lexeme:red","lang":"en","text":"network, the net"}
 {"ref":"core-es:lexeme:archivo","lang":"en","text":"file"}
-{"ref":"core-es:lexeme:contrasena","lang":"en","text":"password"}
+{"ref":"core-es:lexeme:contrasenna","lang":"en","text":"password"}
 {"ref":"core-es:lexeme:aplicacion","lang":"en","text":"app, application"}
 {"ref":"core-es:lexeme:usuario","lang":"en","text":"user"}
 {"ref":"core-es:lexeme:articulo","lang":"en","text":"article"}
@@ -3678,7 +3678,7 @@
 {"ref":"core-es:lexeme:ele","lang":"en","text":"the letter L"}
 {"ref":"core-es:lexeme:eme","lang":"en","text":"the letter M"}
 {"ref":"core-es:lexeme:ene","lang":"en","text":"the letter N"}
-{"ref":"core-es:lexeme:ene-noun","lang":"en","text":"the letter Ñ"}
+{"ref":"core-es:lexeme:enne","lang":"en","text":"the letter Ñ"}
 {"ref":"core-es:lexeme:pe","lang":"en","text":"the letter P"}
 {"ref":"core-es:lexeme:cu","lang":"en","text":"the letter Q"}
 {"ref":"core-es:lexeme:erre","lang":"en","text":"the letter R"}
@@ -3689,7 +3689,7 @@
 {"ref":"core-es:lexeme:bueno","lang":"en","text":"good"}
 {"ref":"core-es:lexeme:malo","lang":"en","text":"bad"}
 {"ref":"core-es:lexeme:grande","lang":"en","text":"big"}
-{"ref":"core-es:lexeme:pequeno","lang":"en","text":"small"}
+{"ref":"core-es:lexeme:pequenno","lang":"en","text":"small"}
 {"ref":"core-es:lexeme:nuevo","lang":"en","text":"new"}
 {"ref":"core-es:lexeme:viejo","lang":"en","text":"old"}
 {"ref":"core-es:lexeme:joven","lang":"en","text":"young"}
@@ -3960,7 +3960,7 @@
 {"ref":"core-es:lexeme:garcia","lang":"en","text":"García (a surname)"}
 {"ref":"core-es:lexeme:madrid","lang":"en","text":"Madrid"}
 {"ref":"core-es:lexeme:barcelona","lang":"en","text":"Barcelona"}
-{"ref":"core-es:lexeme:espana","lang":"en","text":"Spain"}
+{"ref":"core-es:lexeme:espanna","lang":"en","text":"Spain"}
 {"ref":"core-es:lexeme:mexico","lang":"en","text":"Mexico"}
 {"ref":"core-es:lexeme:argentina","lang":"en","text":"Argentina"}
 {"ref":"core-es:lexeme:grecia","lang":"en","text":"Greece"}

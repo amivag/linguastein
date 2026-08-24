@@ -2,7 +2,7 @@
 {"id":"core-es:lexeme:bueno","lemma":"bueno","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:malo","lemma":"malo","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:grande","lemma":"grande","pos":"ADJ","level":"a1"}
-{"id":"core-es:lexeme:pequeno","lemma":"pequeño","pos":"ADJ","level":"a1"}
+{"id":"core-es:lexeme:pequenno","lemma":"pequeño","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:nuevo","lemma":"nuevo","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:viejo","lemma":"viejo","pos":"ADJ","level":"a1"}
 {"id":"core-es:lexeme:joven","lemma":"joven","pos":"ADJ","level":"a1"}
@@ -273,7 +273,7 @@
 {"id":"core-es:lexeme:garcia","lemma":"García","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:madrid","lemma":"Madrid","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:barcelona","lemma":"Barcelona","pos":"PROPN","level":"a1"}
-{"id":"core-es:lexeme:espana","lemma":"España","pos":"PROPN","level":"a1"}
+{"id":"core-es:lexeme:espanna","lemma":"España","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:mexico","lemma":"México","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:argentina","lemma":"Argentina","pos":"PROPN","level":"a1"}
 {"id":"core-es:lexeme:grecia","lemma":"Grecia","pos":"PROPN","level":"a1"}

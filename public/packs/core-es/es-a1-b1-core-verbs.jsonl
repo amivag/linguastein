@@ -90,7 +90,7 @@
 {"id":"core-es:lexeme:caminar","lemma":"caminar","pos":"VERB","level":"a1"}
 {"id":"core-es:lexeme:nadar","lemma":"nadar","pos":"VERB","level":"a1"}
 {"id":"core-es:lexeme:aprender","lemma":"aprender","pos":"VERB","level":"a1"}
-{"id":"core-es:lexeme:ensenar","lemma":"enseñar","pos":"VERB","level":"a2"}
+{"id":"core-es:lexeme:ensennar","lemma":"enseñar","pos":"VERB","level":"a2"}
 {"id":"core-es:lexeme:cerrar","lemma":"cerrar","pos":"VERB","level":"a1","tags":["irregular"]}
 {"id":"core-es:lexeme:costar","lemma":"costar","pos":"VERB","level":"a1","tags":["irregular"]}
 {"id":"core-es:lexeme:probar","lemma":"probar","pos":"VERB","level":"a2","tags":["irregular"]}

@@ -2,8 +2,8 @@
 {"id":"core-es:lexeme:persona","lemma":"persona","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:hombre","lemma":"hombre","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:mujer","lemma":"mujer","pos":"NOUN","level":"a1","gender":"feminine"}
-{"id":"core-es:lexeme:nino","lemma":"niño","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:nina","lemma":"niña","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:ninno","lemma":"niño","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:ninna","lemma":"niña","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:bebe","lemma":"bebé","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:familia","lemma":"familia","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:padre","lemma":"padre","pos":"NOUN","level":"a1","gender":"masculine"}
@@ -25,8 +25,8 @@
 {"id":"core-es:lexeme:amiga","lemma":"amiga","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:vecino","lemma":"vecino","pos":"NOUN","level":"a2","gender":"masculine"}
 {"id":"core-es:lexeme:gente","lemma":"gente","pos":"NOUN","level":"a1","gender":"feminine"}
-{"id":"core-es:lexeme:senor","lemma":"señor","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:senora","lemma":"señora","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:sennor","lemma":"señor","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:sennora","lemma":"señora","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:chico","lemma":"chico","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:chica","lemma":"chica","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:nombre","lemma":"nombre","pos":"NOUN","level":"a1","gender":"masculine"}
@@ -108,7 +108,7 @@
 {"id":"core-es:lexeme:apartamento","lemma":"apartamento","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:habitacion","lemma":"habitación","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:cocina","lemma":"cocina","pos":"NOUN","level":"a1","gender":"feminine"}
-{"id":"core-es:lexeme:bano","lemma":"baño","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:banno","lemma":"baño","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:sala","lemma":"sala","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:comedor","lemma":"comedor","pos":"NOUN","level":"a2","gender":"masculine"}
 {"id":"core-es:lexeme:dormitorio","lemma":"dormitorio","pos":"NOUN","level":"a1","gender":"masculine"}
@@ -207,14 +207,14 @@
 {"id":"core-es:lexeme:minuto","lemma":"minuto","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:segundo","lemma":"segundo","pos":"NOUN","level":"a2","gender":"masculine"}
 {"id":"core-es:lexeme:dia","lemma":"día","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:manana","lemma":"mañana","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:mannana","lemma":"mañana","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:tarde","lemma":"tarde","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:noche","lemma":"noche","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:semana","lemma":"semana","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:mes","lemma":"mes","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:ano","lemma":"año","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:anno","lemma":"año","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:fecha","lemma":"fecha","pos":"NOUN","level":"a1","gender":"feminine"}
-{"id":"core-es:lexeme:cumpleanos","lemma":"cumpleaños","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:cumpleannos","lemma":"cumpleaños","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:fiesta","lemma":"fiesta","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:vacaciones","lemma":"vacaciones","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:momento","lemma":"momento","pos":"NOUN","level":"a1","gender":"masculine"}
@@ -233,7 +233,7 @@
 {"id":"core-es:lexeme:mar","lemma":"mar","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:rio","lemma":"río","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:lago","lemma":"lago","pos":"NOUN","level":"a2","gender":"masculine"}
-{"id":"core-es:lexeme:montana","lemma":"montaña","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:montanna","lemma":"montaña","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:playa","lemma":"playa","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:campo","lemma":"campo","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:bosque","lemma":"bosque","pos":"NOUN","level":"a2","gender":"masculine"}
@@ -327,7 +327,7 @@
 {"id":"core-es:lexeme:diciembre","lemma":"diciembre","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:primavera","lemma":"primavera","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:verano","lemma":"verano","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:otono","lemma":"otoño","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:otonno","lemma":"otoño","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:invierno","lemma":"invierno","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:favor","lemma":"favor","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:nevera","lemma":"nevera","pos":"NOUN","level":"a2","gender":"feminine","regions":["es-ES","es-CO","es-VE","es-CU","es-DO","es-PR"]}
@@ -338,7 +338,7 @@
 {"id":"core-es:lexeme:derecha","lemma":"derecha","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:izquierda","lemma":"izquierda","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:ingles","lemma":"inglés","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:espanol","lemma":"español","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:espannol","lemma":"español","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:patata","lemma":"patata","pos":"NOUN","level":"a1","gender":"feminine","regions":["es-ES"]}
 {"id":"core-es:lexeme:carro","lemma":"carro","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-419"]}
 {"id":"core-es:lexeme:zumo","lemma":"zumo","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-ES"]}
@@ -349,7 +349,7 @@
 {"id":"core-es:lexeme:plata","lemma":"plata","pos":"NOUN","level":"a2","gender":"feminine","register":"colloquial","regions":["es-419"]}
 {"id":"core-es:lexeme:pasta","lemma":"pasta","pos":"NOUN","level":"a2","gender":"feminine","register":"colloquial","regions":["es-ES"]}
 {"id":"core-es:lexeme:camarero","lemma":"camarero","pos":"NOUN","level":"a2","gender":"masculine"}
-{"id":"core-es:lexeme:sueno","lemma":"sueño","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:suenno","lemma":"sueño","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:prisa","lemma":"prisa","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:fin","lemma":"fin","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:lado","lemma":"lado","pos":"NOUN","level":"a2","gender":"masculine"}
@@ -374,8 +374,8 @@
 {"id":"core-es:lexeme:efectivo","lemma":"efectivo","pos":"NOUN","level":"a2","gender":"masculine"}
 {"id":"core-es:lexeme:ida","lemma":"ida","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:vuelta","lemma":"vuelta","pos":"NOUN","level":"a1","gender":"feminine"}
-{"id":"core-es:lexeme:companero","lemma":"compañero","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:companera","lemma":"compañera","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:compannero","lemma":"compañero","pos":"NOUN","level":"a1","gender":"masculine"}
+{"id":"core-es:lexeme:compannera","lemma":"compañera","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:profesora","lemma":"profesora","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:doctora","lemma":"doctora","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:camarera","lemma":"camarera","pos":"NOUN","level":"a2","gender":"feminine"}
@@ -409,7 +409,7 @@
 {"id":"core-es:lexeme:naturaleza","lemma":"naturaleza","pos":"NOUN","level":"b1","gender":"feminine"}
 {"id":"core-es:lexeme:red","lemma":"red","pos":"NOUN","level":"b1","gender":"feminine"}
 {"id":"core-es:lexeme:archivo","lemma":"archivo","pos":"NOUN","level":"b1","gender":"masculine"}
-{"id":"core-es:lexeme:contrasena","lemma":"contraseña","pos":"NOUN","level":"b1","gender":"feminine"}
+{"id":"core-es:lexeme:contrasenna","lemma":"contraseña","pos":"NOUN","level":"b1","gender":"feminine"}
 {"id":"core-es:lexeme:aplicacion","lemma":"aplicación","pos":"NOUN","level":"b1","gender":"feminine"}
 {"id":"core-es:lexeme:usuario","lemma":"usuario","pos":"NOUN","level":"b1","gender":"masculine"}
 {"id":"core-es:lexeme:articulo","lemma":"artículo","pos":"NOUN","level":"b1","gender":"masculine"}
@@ -458,7 +458,7 @@
 {"id":"core-es:lexeme:ele","lemma":"ele","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:eme","lemma":"eme","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:ene","lemma":"ene","pos":"NOUN","level":"a1","gender":"feminine"}
-{"id":"core-es:lexeme:ene-noun","lemma":"eñe","pos":"NOUN","level":"a1","gender":"feminine"}
+{"id":"core-es:lexeme:enne","lemma":"eñe","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:pe","lemma":"pe","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:cu","lemma":"cu","pos":"NOUN","level":"a1","gender":"feminine"}
 {"id":"core-es:lexeme:erre","lemma":"erre","pos":"NOUN","level":"a1","gender":"feminine"}

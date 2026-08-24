@@ -857,8 +857,40 @@ function lexemeId(lemma: string, pos: string): string {
   return id;
 }
 
+/**
+ * The stem a form id is built on: the lexeme's own id, minus its namespace.
+ *
+ * Not `slug(lemma)` a second time, which is what this replaced. `slug` folds a
+ * combining tilde away, so `eñe` and `ene` produce one stem — and where
+ * `lexemeId` notices a collision and disambiguates, the form ids had no such
+ * guard and simply issued `core-es:form:ene-n-sg` twice. The second silently
+ * won, which for a letter card meant the pack shipped the plural of `ene`
+ * standing in for the plural of `eñe`.
+ *
+ * Deriving from the lexeme id means uniqueness is established once, where it is
+ * already handled, instead of twice with one of the two unwatched. For every
+ * lemma that does not collide the stem is character-for-character what `slug`
+ * gave, so existing form ids are unchanged.
+ */
+function formStem(lexeme: string): string {
+  return lexeme.slice(lexeme.lastIndexOf(':') + 1);
+}
+
+/**
+ * A lemma as an id fragment: lowercase, ASCII, hyphen-separated.
+ *
+ * `ñ` is handled before the accents come off, and becomes `nn` rather than
+ * `n`. The strip below cannot tell a tilde from an acute, so folding it away
+ * made `año` into `ano` — a different word entirely — and collided the letter
+ * name `eñe` with `ene`, which is how one letter's plural shipped under the
+ * other's form id. Nineteen lemmas carry an `ñ`; all of them are now distinct
+ * from their tilde-less near-twins, including the pairs no content has reached
+ * yet (`caña`/`cana`, `peña`/`pena`).
+ */
 function slug(text: string): string {
   return text
+    .normalize('NFC')
+    .replace(/[ñÑ]/g, 'nn')
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
@@ -905,7 +937,7 @@ interface FormRecord {
 const verbForms: FormRecord[] = verbs.flatMap((verb) => {
   const lexeme = lexemeId(verb.lemma, 'VERB');
   return conjugate(verb.lemma, IRREGULAR_VERBS[verb.lemma] ?? {}).map((generated) => ({
-    id: `${NS}form:${slug(verb.lemma)}-${formSuffix(generated.morph)}`,
+    id: `${NS}form:${formStem(lexeme)}-${formSuffix(generated.morph)}`,
     lexeme,
     form: generated.form,
     morph: generated.morph as Record<string, unknown>,
@@ -1006,7 +1038,7 @@ const nominalForms: NominalForm[] = [
   ...nouns.flatMap((noun): NominalForm[] => {
     const lexeme = lexemeId(noun.lemma, 'NOUN');
     const gender = noun.gender === 'f' ? 'feminine' : 'masculine';
-    const key = slug(noun.lemma);
+    const key = formStem(lexeme);
     // A form of `papa` is as regional as the lexeme: the plural of a word a
     // learner should not be taught is not a word either.
     const regions = noun.regions.length > 0 ? { regions: noun.regions } : {};
@@ -1039,7 +1071,7 @@ const nominalForms: NominalForm[] = [
     .filter((modifier) => modifier.pos === 'ADJ')
     .flatMap((modifier): NominalForm[] => {
       const lexeme = lexemeId(modifier.lemma, 'ADJ');
-      const key = slug(modifier.lemma);
+      const key = formStem(lexeme);
       return adjectiveForms(modifier.lemma).map((entry) => ({
         // Keyed by the agreement it *is*, not by its position in the list, so a
         // record keeps its id whether or not the adjective has a feminine.
@@ -1071,6 +1103,27 @@ for (const form of nominalForms) {
 const packedNominalForms: FormRecord[] = nominalForms.map(
   ({ lemma: _lemma, pos: _pos, ...record }) => record,
 );
+
+/*
+ * No two forms may share an id, and this is checked rather than trusted.
+ *
+ * `formSuffix` already carries a comment about the collision it exists to
+ * prevent, which is exactly the sort of care that stops one class of duplicate
+ * and leaves the rest unwatched: the ids also depend on the *stem*, and a stem
+ * built by folding accents away collided `eñe` with `ene` and shipped one
+ * letter's plural under the other's id. Nothing failed, because nothing looked.
+ */
+const formIds = new Map<string, string>();
+for (const form of [...verbForms, ...packedNominalForms]) {
+  const seen = formIds.get(form.id);
+  if (seen !== undefined && seen !== form.form) {
+    problems.push(
+      `form id "${form.id}" is claimed by both "${seen}" and "${form.form}" — one would ` +
+        'silently overwrite the other in the pack',
+    );
+  }
+  formIds.set(form.id, form.form);
+}
 
 /*
  * The declared extra surfaces, for every modifier including the adjectives.
@@ -1250,7 +1303,14 @@ function disambiguate(
    * subjunctive because a `que` appears somewhere earlier in it.
    */
   const subjunctive = candidates.filter((entry) => entry.morph?.['mood'] === 'subjunctive');
-  if (subjunctive.length > 0 && subjunctive.length < candidates.length) {
+  // Only where a *second lexeme* is in play. Where every candidate is the same
+  // verb, there is no ordinary word to protect and the alternative reading is
+  // that verb's own usted command — which is indexed whenever nothing else
+  // claims the surface. Dropping the subjunctive there picked `salga` out of
+  // `Ojalá que todo salga bien` as a command addressed to somebody, and the
+  // sentence went out labelled usted with nobody in it.
+  const contested = new Set(candidates.map((entry) => entry.lexeme)).size > 1;
+  if (contested && subjunctive.length > 0 && subjunctive.length < candidates.length) {
     const triggered =
       previous !== undefined && SUBJUNCTIVE_TRIGGERS.has(previous.text.toLowerCase());
     candidates = triggered
@@ -1615,6 +1675,21 @@ const PATTERNS: PatternSpec[] = [
     level: 'b1',
     match: (tokens, i) => {
       if (!isWord(tokens[i], 'no')) return null;
+      /*
+       * A command is a main clause, and `no` + subjunctive is not enough to be
+       * one. `Ojalá no llueva mañana` and `Espero que no vengas` have the same
+       * two words in the same order and neither orders anybody about — the first
+       * shipped tagged as a command before this check existed.
+       *
+       * So the `no` has to open the utterance, or a clause of it: nothing but
+       * punctuation before it, or a comma immediately before, which keeps
+       * `Por favor, no hables tan rápido` while rejecting both of those.
+       */
+      const before = tokens.slice(0, i);
+      const priorWord = before.filter((token) => token.pos !== 'PUNCT').at(-1);
+      const opensClause = priorWord === undefined || tokens[i - 1]?.text === ',';
+      if (!opensClause) return null;
+
       // `No te preocupes`, `No se lo digas`: the pronouns sit in between, and
       // before a finite verb they are written as separate words.
       let end = i + 1;
@@ -1930,8 +2005,20 @@ function retagCommand(tokens: Token[], sentence: SentenceRow): void {
   const text = sentence.text.trim();
   if (text.startsWith('¿') || text.endsWith('?')) return;
 
+  /*
+   * Any finite non-command reading is a candidate, not the indicative alone.
+   *
+   * This asked for `indicative` while the third person present was the only
+   * thing an usted command could be mistaken for. The subjunctive changed that:
+   * `gire` is `girar`'s usted command *and* its subjunctive, and the subjunctive
+   * is now indexed while the command is not, so the opening token arrived
+   * subjunctive and this returned early — `Gire a la derecha.` went back to
+   * being read as a statement, which is the exact bug the function exists for.
+   */
   const opening = tokens.find((token) => token.pos !== 'PUNCT');
-  if (!opening?.lexeme || opening.morph?.['mood'] !== 'indicative') return;
+  const mood = opening?.morph?.['mood'];
+  if (!opening?.lexeme || opening.morph?.['verbForm'] !== 'finite') return;
+  if (mood !== 'indicative' && mood !== 'subjunctive') return;
 
   // The command must be the one the declared address asks for. Without this,
   // "Está muy cerca. Siga por esta calle." — declared usted — would match

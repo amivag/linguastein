@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router';
 import { useCourse } from '../../app/course';
 import { MISSIONS } from '../../app/missions';
 import { useServices } from '../../app/services-context';

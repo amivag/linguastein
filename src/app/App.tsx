@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { BrowseScreen } from '../features/browse/BrowseScreen';
 import { StudyScreen } from '../features/study/StudyScreen';
 import { HomeScreen } from '../features/home/HomeScreen';

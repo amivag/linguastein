@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { MISSIONS } from '../../app/missions';
 import { MISSION_VARIATIONS } from '../../app/mission-variations';
 import { useCourse } from '../../app/course';

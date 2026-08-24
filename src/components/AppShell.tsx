@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { documentTitle } from '../app/identity';
 import { AppNav } from './AppNav';
 import { Icon } from './Icon';

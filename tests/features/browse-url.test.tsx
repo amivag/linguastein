@@ -14,7 +14,7 @@
 
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { renderWithServices } from '../fixtures/services';

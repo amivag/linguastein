@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { useCourse } from '../app/course';
 import { useServices } from '../app/services-context';
 import { coursePath, type LevelScope } from '../domain/content';

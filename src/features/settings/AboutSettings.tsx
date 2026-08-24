@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { APP } from '../../app/identity';
 import { useServices } from '../../app/services-context';
 import { buildDate, buildLabel } from '../../app/version';

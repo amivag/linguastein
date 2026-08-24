@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { useCourse } from '../app/course';
 import { Icon, type IconName } from './Icon';
 import styles from './AppNav.module.css';

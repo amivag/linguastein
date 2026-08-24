@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
@@ -26,7 +26,10 @@ import {
   type ItemType,
   type LearningItem,
   type PartOfSpeech,
+  MOOD_LABELS,
+  SENTENCE_MOODS,
   type Register,
+  type SentenceMood,
 } from '../../domain/content';
 import type { SessionSize } from '../../domain/sessions';
 import { newBatchId } from '../../domain/batches';
@@ -101,6 +104,7 @@ interface Facets {
   readonly pos: PartOfSpeech | 'all';
   readonly topic: string;
   readonly registers: readonly Register[];
+  readonly moods: readonly SentenceMood[];
   readonly region: string;
   readonly initial: string;
   readonly sort: ItemSort;
@@ -127,6 +131,7 @@ function filterOf(facets: Facets): ItemFilter {
     ...(facets.pos === 'all' ? {} : { pos: [facets.pos] }),
     ...(facets.topic === 'all' ? {} : { topics: [facets.topic] }),
     ...(facets.registers.length ? { registers: facets.registers } : {}),
+    ...(facets.moods.length ? { moods: facets.moods } : {}),
     ...(facets.region === 'all' ? {} : { usableIn: facets.region }),
     ...(facets.initial ? { initial: facets.initial } : {}),
   };
@@ -165,6 +170,7 @@ export function BrowseScreen() {
   const pos = filter.pos?.[0] ?? 'all';
   const topic = filter.topics?.[0] ?? 'all';
   const registers = filter.registers ?? [];
+  const moods = filter.moods ?? [];
   const region = filter.usableIn ?? 'all';
   const initial = filter.initial ?? '';
 
@@ -177,7 +183,7 @@ export function BrowseScreen() {
   const [saveOpen, setSaveOpen] = useState(false);
   const saveSheetId = useId();
 
-  const facets: Facets = { search, type, pos, topic, registers, region, initial, sort };
+  const facets: Facets = { search, type, pos, topic, registers, moods, region, initial, sort };
 
   /**
    * Rewrites the query and starts the list from the top again.
@@ -265,6 +271,19 @@ export function BrowseScreen() {
       })),
     [services.repository, courseScope],
   );
+  /**
+   * Counted like the styles, and for the same reason: a word card has no mood, so
+   * "statement" must not silently mean "everything that is not a question".
+   */
+  const moodFacets = useMemo(
+    () =>
+      SENTENCE_MOODS.map((value) => ({
+        value,
+        label: MOOD_LABELS[value],
+        count: services.repository.query({ ...courseScope, moods: [value] }).length,
+      })),
+    [services.repository, courseScope],
+  );
   const regions = useMemo(
     () =>
       services.repository
@@ -289,6 +308,7 @@ export function BrowseScreen() {
     Number(initial !== '') +
     Number(topic !== 'all') +
     registers.length +
+    moods.length +
     Number(region !== 'all');
   const filterSummary = [
     type === 'all' ? undefined : TYPES.find((option) => option.id === type)?.label,
@@ -296,6 +316,7 @@ export function BrowseScreen() {
     initial === '' ? undefined : initial === '#' ? 'Other initials' : `Starts with ${initial}`,
     topic === 'all' ? undefined : labelFor(topic),
     ...registers.map((value) => REGISTER_LABELS[value]),
+    ...moods.map((value) => MOOD_LABELS[value]),
     region === 'all'
       ? undefined
       : (regions.find((option) => option.locale === region)?.label ?? regionLabel(region)),
@@ -304,7 +325,15 @@ export function BrowseScreen() {
     .join(' · ');
 
   const clearFilters = () => {
-    update({ type: 'all', pos: 'all', initial: '', topic: 'all', registers: [], region: 'all' });
+    update({
+      type: 'all',
+      pos: 'all',
+      initial: '',
+      topic: 'all',
+      registers: [],
+      moods: [],
+      region: 'all',
+    });
   };
 
   // Sorting is the list's business and not the session's: which items "Practise
@@ -513,6 +542,24 @@ export function BrowseScreen() {
                 update({ topic: next === topic ? 'all' : next });
               }}
             />
+
+            <fieldset className={styles.filterGroup}>
+              <legend>Asking or telling</legend>
+              <div className={styles.registers}>
+                {moodFacets
+                  .filter(({ value, count }) => count > 0 || moods.includes(value))
+                  .map(({ value, label, count }) => (
+                    <Chip
+                      key={value}
+                      pressed={moods.includes(value)}
+                      count={count}
+                      onClick={() => update({ moods: toggle(moods, value) })}
+                    >
+                      {label}
+                    </Chip>
+                  ))}
+              </div>
+            </fieldset>
 
             <fieldset className={styles.filterGroup}>
               <legend>Style</legend>

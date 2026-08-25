@@ -103,6 +103,8 @@
  * columns and make it a table, which is what rule 1 is about.
  */
 .forms {
+  composes: listReset from '../../styles/surfaces.module.css';
+
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -132,6 +134,8 @@
 
 .examples,
 .phrases {
+  composes: listReset from '../../styles/surfaces.module.css';
+
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -162,6 +166,8 @@
 }
 
 .destinations {
+  composes: listReset from '../../styles/surfaces.module.css';
+
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);

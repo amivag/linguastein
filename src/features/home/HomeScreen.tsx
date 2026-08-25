@@ -1,6 +1,6 @@
-import { useEffect, useId, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { useCourse } from '../../app/course';
+import { useDeferredValue, useEffect, useId, useMemo, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router';
+import { useCourse, usePronunciationLocale } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MISSIONS } from '../../app/missions';
 import { AppShell } from '../../components/AppShell';
@@ -14,7 +14,7 @@ import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import { kindHue } from '../../styles/kinds';
 import surfaces from '../../styles/surfaces.module.css';
-import { levelLabel, reachableTopics, type ItemId } from '../../domain/content';
+import { levelLabel, reachableTopics, searchContent, type ItemId } from '../../domain/content';
 import {
   summarise,
   type Attempt,
@@ -36,6 +36,9 @@ import { sessionPath } from '../practice/session-url';
 import { missionPath } from '../missions/mission-url';
 import { readPath } from '../read/read-url';
 import { studyPath } from '../study/study-url';
+import { SearchBox } from '../search/SearchBox';
+import { SearchResults } from '../search/SearchResults';
+import { parseSearchQuery, writeSearchQuery } from '../search/search-url';
 import { formatDuration } from '../practice/duration';
 import styles from './HomeScreen.module.css';
 
@@ -60,10 +63,53 @@ export function HomeScreen() {
   const navigate = useNavigate();
   const practiceSheetId = useId();
   const words = useWordSelection();
+  const locale = usePronunciationLocale();
   // Named once, as `StudyScreen` does: every derivation below depends on the
   // repository rather than on the whole services bag, and saying so keeps the
   // memo from re-running when an unrelated service is replaced.
   const repository = services.repository;
+
+  /**
+   * The lookup lives in the address, exactly as a session and a sheet do, so a
+   * word a learner found can be reloaded, shared and driven by an agent.
+   * `search-url.ts` owns the spelling in both directions.
+   */
+  const [params, setParams] = useSearchParams();
+  // As typed, so a space survives a keystroke — see `writeSearchQuery`. Trimmed
+  // only to decide whether anything was actually asked.
+  const query = parseSearchQuery(params);
+  const searching = query.trim() !== '';
+  /**
+   * Deferred, because the results are recomputed from scratch per keystroke and
+   * the passes are linear over the pack — around 15ms on the shipped course,
+   * which is most of a frame. React keeps the previous results on screen while
+   * the next ones are worked out, so typing stays at the speed of the keyboard
+   * rather than the speed of the search.
+   */
+  const deferredQuery = useDeferredValue(query);
+  const results = useMemo(
+    () =>
+      searchContent(repository, deferredQuery, {
+        referenceLanguage: preferences.referenceLanguage,
+        // The course, and the whole reason `scope` is an `ItemFilter`: putting
+        // this box on a Study section later means passing that section's filter
+        // here instead, with no second code path.
+        scope: filter,
+        // Generous, because the screen shows five and expands in place. The
+        // domain's own default is the five; a cap the UI cannot see past is how a
+        // truncated list comes to read as the whole of what exists.
+        maxExamples: 24,
+      }),
+    [repository, deferredQuery, preferences.referenceLanguage, filter],
+  );
+
+  const search = (value: string) => {
+    const next = new URLSearchParams(params);
+    writeSearchQuery(next, value);
+    // `replace`, as Browse does: typing four letters into the box must not put
+    // four entries in the history for Back to walk out through.
+    setParams(next, { replace: true });
+  };
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [practiceDays, setPracticeDays] = useState(0);
   const [lastPractice, setLastPractice] = useState('Not yet');
@@ -436,293 +482,320 @@ export function HomeScreen() {
           note said. */}
       <CourseBar compact />
 
-      <section className={styles.mission} aria-labelledby="mission-title">
-        <p className={styles.eyebrow}>
-          {reviewDue
-            ? 'Ready for review'
-            : mission
-              ? mission.stage === 'use'
-                ? `Mission ${mission.position} · Transfer ${mission.transferPosition} of ${mission.transferTotal}`
-                : `Mission ${mission.position} of ${mission.total}`
-              : "Today's mission"}
-        </p>
-        <div className={styles.missionHeading}>
-          <div>
-            <h2 id="mission-title" className={styles.missionTitle}>
-              {reviewDue ? 'Keep it fresh' : (mission?.title ?? 'Build your foundation')}
-            </h2>
-            <p className={styles.missionPhrase} lang={course.language}>
+      {/* Above everything, and pinned rather than tucked behind an icon: "what
+          does this mean" is a question a learner has while doing something else,
+          which is the same argument `VoicePresence` makes for sitting in every
+          header. Home is where they land, so this is where it belongs. */}
+      <div className={styles.searchBar}>
+        <SearchBox
+          value={query}
+          onChange={search}
+          targetLanguage={course.language}
+          referenceLanguage={preferences.referenceLanguage}
+          locale={locale}
+        />
+      </div>
+
+      {/* A search replaces the course survey rather than pushing it down. Every
+          number below is about the whole course and none of it is about the word
+          being looked up, so leaving it in place would put the answer under four
+          screens of something else — and clearing the box brings it all back. */}
+      {searching ? (
+        <SearchResults results={results} words={words} />
+      ) : (
+        <>
+          <section className={styles.mission} aria-labelledby="mission-title">
+            <p className={styles.eyebrow}>
               {reviewDue
-                ? 'Repasa lo que ya sabes.'
-                : (mission?.phrase ?? 'Empieza con frases útiles.')}
+                ? 'Ready for review'
+                : mission
+                  ? mission.stage === 'use'
+                    ? `Mission ${mission.position} · Transfer ${mission.transferPosition} of ${mission.transferTotal}`
+                    : `Mission ${mission.position} of ${mission.total}`
+                  : "Today's mission"}
             </p>
-            {!reviewDue && mission?.phraseMeaning && (
-              <p className={styles.missionMeaning}>{mission.phraseMeaning}</p>
-            )}
-          </div>
-          <span className={styles.missionIcon} aria-hidden="true">
-            <Icon name={reviewDue ? 'memory' : 'speak'} size="xl" />
-          </span>
-        </div>
+            <div className={styles.missionHeading}>
+              <div>
+                <h2 id="mission-title" className={styles.missionTitle}>
+                  {reviewDue ? 'Keep it fresh' : (mission?.title ?? 'Build your foundation')}
+                </h2>
+                <p className={styles.missionPhrase} lang={course.language}>
+                  {reviewDue
+                    ? 'Repasa lo que ya sabes.'
+                    : (mission?.phrase ?? 'Empieza con frases útiles.')}
+                </p>
+                {!reviewDue && mission?.phraseMeaning && (
+                  <p className={styles.missionMeaning}>{mission.phraseMeaning}</p>
+                )}
+              </div>
+              <span className={styles.missionIcon} aria-hidden="true">
+                <Icon name={reviewDue ? 'memory' : 'speak'} size="xl" />
+              </span>
+            </div>
 
-        <div className={styles.missionFacts}>
-          <span>
-            <Icon name="passage" />
-            {reviewDue
-              ? `${due} ${due === 1 ? 'item' : 'items'} ready`
-              : `${mission?.lineCount ?? 8} useful lines`}
-          </span>
-          <span>
-            <Icon name="waveform" />
-            {reviewDue ? 'Adaptive recall' : 'Short exchange'}
-          </span>
-        </div>
+            <div className={styles.missionFacts}>
+              <span>
+                <Icon name="passage" />
+                {reviewDue
+                  ? `${due} ${due === 1 ? 'item' : 'items'} ready`
+                  : `${mission?.lineCount ?? 8} useful lines`}
+              </span>
+              <span>
+                <Icon name="waveform" />
+                {reviewDue ? 'Adaptive recall' : 'Short exchange'}
+              </span>
+            </div>
 
-        <Button variant="primary" block large onClick={startRecommended}>
-          <Icon name="play" />
-          {reviewDue
-            ? `Review ${due} due`
-            : mission?.stage === 'use'
-              ? `Continue transfer · ${mission.estimatedMinutes} min`
-              : `Begin mission · ${mission?.estimatedMinutes ?? 5} min`}
-        </Button>
+            <Button variant="primary" block large onClick={startRecommended}>
+              <Icon name="play" />
+              {reviewDue
+                ? `Review ${due} due`
+                : mission?.stage === 'use'
+                  ? `Continue transfer · ${mission.estimatedMinutes} min`
+                  : `Begin mission · ${mission?.estimatedMinutes ?? 5} min`}
+            </Button>
 
-        {/* The whole ladder lives in Study, which is where a mission belongs:
+            {/* The whole ladder lives in Study, which is where a mission belongs:
             this card only ever shows the next rung, and a learner who wants to
             see the route — or go back to an earlier one — needs somewhere to
             look that is not this button. */}
-        {standings.length > 1 && (
-          <Link className={styles.missionAll} to={path('study')}>
-            All {standings.length} missions
-            <Icon name="next" size="sm" />
-          </Link>
-        )}
-      </section>
+            {standings.length > 1 && (
+              <Link className={styles.missionAll} to={path('study')}>
+                All {standings.length} missions
+                <Icon name="next" size="sm" />
+              </Link>
+            )}
+          </section>
 
-      {followUps.length > 0 && (
-        <section aria-labelledby="path-title">
-          <h2 id="path-title" className={styles.sectionTitle}>
-            Next steps
-          </h2>
-          <ol className={styles.nextSteps}>
-            {followUps.map((action, index) => (
-              <li key={action}>
-                <span className={styles.stepNumber} aria-hidden="true">
-                  {index + 2}
-                </span>
-                {action === 'mission' ? (
-                  <Button className={styles.nextAction} onClick={continueMission}>
-                    <span className={styles.nextActionIcon} aria-hidden="true">
-                      <Icon name="speak" />
+          {followUps.length > 0 && (
+            <section aria-labelledby="path-title">
+              <h2 id="path-title" className={styles.sectionTitle}>
+                Next steps
+              </h2>
+              <ol className={styles.nextSteps}>
+                {followUps.map((action, index) => (
+                  <li key={action}>
+                    <span className={styles.stepNumber} aria-hidden="true">
+                      {index + 2}
                     </span>
-                    <span>
-                      <strong>Continue {mission?.title}</strong>
-                      <small>
-                        {mission?.stage === 'use'
-                          ? 'Use it in a new situation'
-                          : 'Build flexible, useful language'}
-                      </small>
-                    </span>
-                    <Icon name="next" />
-                  </Button>
-                ) : action === 'set' ? (
-                  <Button className={styles.nextAction} onClick={continueSet}>
-                    <span className={styles.nextActionIcon} aria-hidden="true">
-                      <Icon name="batch" />
-                    </span>
-                    <span>
-                      <strong>Continue {set?.batch.label}</strong>
-                      {/* The standing is inside the label, not beside it: a card
+                    {action === 'mission' ? (
+                      <Button className={styles.nextAction} onClick={continueMission}>
+                        <span className={styles.nextActionIcon} aria-hidden="true">
+                          <Icon name="speak" />
+                        </span>
+                        <span>
+                          <strong>Continue {mission?.title}</strong>
+                          <small>
+                            {mission?.stage === 'use'
+                              ? 'Use it in a new situation'
+                              : 'Build flexible, useful language'}
+                          </small>
+                        </span>
+                        <Icon name="next" />
+                      </Button>
+                    ) : action === 'set' ? (
+                      <Button className={styles.nextAction} onClick={continueSet}>
+                        <span className={styles.nextActionIcon} aria-hidden="true">
+                          <Icon name="batch" />
+                        </span>
+                        <span>
+                          <strong>Continue {set?.batch.label}</strong>
+                          {/* The standing is inside the label, not beside it: a card
                           saying only "Continue" tells a screen reader and an
                           agent nothing about which of a learner's sets this is
                           or how far through it they are. */}
-                      <small>{set ? describeSetProgress(set) : ''}</small>
-                    </span>
-                    <Icon name="next" />
-                  </Button>
-                ) : action === 'reinforce' ? (
-                  <Button className={styles.nextAction} onClick={() => startFocused('struggling')}>
-                    <span className={styles.nextActionIcon} aria-hidden="true">
-                      <Icon name="memory" />
-                    </span>
-                    <span>
-                      <strong>Strengthen recall</strong>
-                      <small>5 adaptive questions · your weakest material first</small>
-                    </span>
-                    <Icon name="next" />
-                  </Button>
-                ) : (
-                  <Button className={styles.nextAction} onClick={() => startFocused('fresh')}>
-                    <span className={styles.nextActionIcon} aria-hidden="true">
-                      <Icon name="new" />
-                    </span>
-                    <span>
-                      <strong>Meet something new</strong>
-                      <small>5 adaptive questions · new material first</small>
-                    </span>
-                    <Icon name="next" />
-                  </Button>
-                )}
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+                          <small>{set ? describeSetProgress(set) : ''}</small>
+                        </span>
+                        <Icon name="next" />
+                      </Button>
+                    ) : action === 'reinforce' ? (
+                      <Button
+                        className={styles.nextAction}
+                        onClick={() => startFocused('struggling')}
+                      >
+                        <span className={styles.nextActionIcon} aria-hidden="true">
+                          <Icon name="memory" />
+                        </span>
+                        <span>
+                          <strong>Strengthen recall</strong>
+                          <small>5 adaptive questions · your weakest material first</small>
+                        </span>
+                        <Icon name="next" />
+                      </Button>
+                    ) : (
+                      <Button className={styles.nextAction} onClick={() => startFocused('fresh')}>
+                        <span className={styles.nextActionIcon} aria-hidden="true">
+                          <Icon name="new" />
+                        </span>
+                        <span>
+                          <strong>Meet something new</strong>
+                          <small>5 adaptive questions · new material first</small>
+                        </span>
+                        <Icon name="next" />
+                      </Button>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
 
-      <div className={styles.columns}>
-        {recent.length > 0 && (
-          <section aria-labelledby="recent-title">
-            <h2 id="recent-title" className={styles.sectionTitle}>
-              Where you left off
-            </h2>
-            {/* Tappable, like every other piece of language in the app: "the thing
+          <div className={styles.columns}>
+            {recent.length > 0 && (
+              <section aria-labelledby="recent-title">
+                <h2 id="recent-title" className={styles.sectionTitle}>
+                  Where you left off
+                </h2>
+                {/* Tappable, like every other piece of language in the app: "the thing
               I was just working on" is exactly where a learner wants to ask which
               word was the problem, and Progress already answers that question the
               same way on its own list. */}
-            <ul className={styles.recent}>
-              {recent.map(({ item, translation }) => (
-                <li key={item.id} className={styles.recentRow}>
-                  <TokenizedText
-                    item={item}
-                    onSelect={(token) => words.open(item.id, token)}
-                    selected={words.tokensFor(item.id)}
-                    contextLabel={item.text}
-                  />
-                  {translation && <span className={styles.recentMeaning}>{translation}</span>}
-                </li>
-              ))}
-            </ul>
-            <Button block className={styles.recentAgain} onClick={practiseRecent}>
-              <Icon name="again" />
-              Practise this again
-            </Button>
-            {sessions.length > 0 && (
-              <ul className={styles.sessions} aria-label="Recent sessions">
-                {sessions.map((session) => (
-                  <li key={session.id}>
-                    <span>{session.when}</span>
-                    <span className={styles.sessionScore}>
-                      {session.score}
-                      {session.duration ? ` · ${session.duration}` : ''}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                <ul className={styles.recent}>
+                  {recent.map(({ item, translation }) => (
+                    <li key={item.id} className={styles.recentRow}>
+                      <TokenizedText
+                        item={item}
+                        onSelect={(token) => words.open(item.id, token)}
+                        selected={words.tokensFor(item.id)}
+                        contextLabel={item.text}
+                      />
+                      {translation && <span className={styles.recentMeaning}>{translation}</span>}
+                    </li>
+                  ))}
+                </ul>
+                <Button block className={styles.recentAgain} onClick={practiseRecent}>
+                  <Icon name="again" />
+                  Practise this again
+                </Button>
+                {sessions.length > 0 && (
+                  <ul className={styles.sessions} aria-label="Recent sessions">
+                    {sessions.map((session) => (
+                      <li key={session.id}>
+                        <span>{session.when}</span>
+                        <span className={styles.sessionScore}>
+                          {session.score}
+                          {session.duration ? ` · ${session.duration}` : ''}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
             )}
-          </section>
-        )}
 
-        {contents.length > 0 && (
-          <section aria-labelledby="contents-title">
-            <h2 id="contents-title" className={styles.sectionTitle}>
-              In this course
-            </h2>
-            <ul className={styles.contents}>
-              {contents.map((row) => (
-                <li key={row.id}>
-                  {/* The count is inside the link's text rather than beside it, for
+            {contents.length > 0 && (
+              <section aria-labelledby="contents-title">
+                <h2 id="contents-title" className={styles.sectionTitle}>
+                  In this course
+                </h2>
+                <ul className={styles.contents}>
+                  {contents.map((row) => (
+                    <li key={row.id}>
+                      {/* The count is inside the link's text rather than beside it, for
                     the reason Study's tiles record: six rows whose accessible
                     names differ only by a number rendered elsewhere give an agent
                     and a screen reader nothing to choose between. */}
-                  {/* The hue is declared on the row, not on the badge inside it:
+                      {/* The hue is declared on the row, not on the badge inside it:
                     custom properties inherit, so the ground, the spine, the disc
                     and the count all resolve from one `data-kind` and cannot
                     disagree about which colour this kind of material is. */}
-                  <Link className={styles.contentRow} data-kind={kindHue(row.id)} to={row.to}>
-                    <span className={surfaces.kindBadge} aria-hidden="true">
-                      <Icon name={row.icon} size="sm" />
-                    </span>
-                    <span className={styles.contentText}>
-                      <strong>{row.label}</strong>
-                      <small>{row.note}</small>
-                    </span>
-                    <span className={styles.contentCount}>{row.count}</span>
-                    <Icon name="next" size="sm" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                      <Link className={styles.contentRow} data-kind={kindHue(row.id)} to={row.to}>
+                        <span className={surfaces.kindBadge} aria-hidden="true">
+                          <Icon name={row.icon} size="sm" />
+                        </span>
+                        <span className={styles.contentText}>
+                          <strong>{row.label}</strong>
+                          <small>{row.note}</small>
+                        </span>
+                        <span className={styles.contentCount}>{row.count}</span>
+                        <Icon name="next" size="sm" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
+
+          <section className={styles.rhythm} aria-label="Learning rhythm">
+            <div className={styles.rhythmStat}>
+              <Icon name="due" />
+              <span>
+                <strong>{due}</strong>
+                <small>due today</small>
+              </span>
+            </div>
+            <div className={styles.rhythmWeek}>
+              <strong>{practiceDays} of 7 days</strong>
+              <span className={styles.rhythmDots} aria-hidden="true">
+                {Array.from({ length: 7 }, (_, index) => (
+                  <span key={index} data-active={index < practiceDays || undefined} />
+                ))}
+              </span>
+              <small>this week</small>
+            </div>
+            <div className={styles.lastPractice}>
+              <Icon name="history" />
+              <span>
+                <strong>{lastPractice}</strong>
+                <small>last practised</small>
+              </span>
+            </div>
           </section>
-        )}
-      </div>
 
-      <section className={styles.rhythm} aria-label="Learning rhythm">
-        <div className={styles.rhythmStat}>
-          <Icon name="due" />
-          <span>
-            <strong>{due}</strong>
-            <small>due today</small>
-          </span>
-        </div>
-        <div className={styles.rhythmWeek}>
-          <strong>{practiceDays} of 7 days</strong>
-          <span className={styles.rhythmDots} aria-hidden="true">
-            {Array.from({ length: 7 }, (_, index) => (
-              <span key={index} data-active={index < practiceDays || undefined} />
-            ))}
-          </span>
-          <small>this week</small>
-        </div>
-        <div className={styles.lastPractice}>
-          <Icon name="history" />
-          <span>
-            <strong>{lastPractice}</strong>
-            <small>last practised</small>
-          </span>
-        </div>
-      </section>
-
-      {summary && summary.seen > 0 && (
-        <section className={styles.standing} aria-labelledby="standing-title">
-          <h2 id="standing-title" className={styles.sectionTitle}>
-            How far you are
-          </h2>
-          {/* Two numbers and the bar they describe, and deliberately not the four
+          {summary && summary.seen > 0 && (
+            <section className={styles.standing} aria-labelledby="standing-title">
+              <h2 id="standing-title" className={styles.sectionTitle}>
+                How far you are
+              </h2>
+              {/* Two numbers and the bar they describe, and deliberately not the four
               on Progress. This is the glance version: enough to know whether the
               course is moving, with the screen that explains it one tap away.
               `aria-hidden` on the bar because the sentence under it says the same
               thing in words. */}
-          <p className={styles.standingLine}>
-            <strong>{summary.seen}</strong> of {summary.total} practised ·{' '}
-            <strong>{summary.mastered}</strong> mastered
-          </p>
-          <div className={styles.bar} aria-hidden="true">
-            <span
-              className={styles.barMastered}
-              style={{ width: `${(summary.mastered / summary.total) * 100}%` }}
-            />
-            <span
-              className={styles.barSeen}
-              style={{ width: `${((summary.seen - summary.mastered) / summary.total) * 100}%` }}
-            />
+              <p className={styles.standingLine}>
+                <strong>{summary.seen}</strong> of {summary.total} practised ·{' '}
+                <strong>{summary.mastered}</strong> mastered
+              </p>
+              <div className={styles.bar} aria-hidden="true">
+                <span
+                  className={styles.barMastered}
+                  style={{ width: `${(summary.mastered / summary.total) * 100}%` }}
+                />
+                <span
+                  className={styles.barSeen}
+                  style={{ width: `${((summary.seen - summary.mastered) / summary.total) * 100}%` }}
+                />
+              </div>
+              <Link className={styles.missionAll} to={path('progress')}>
+                See what you know
+                <Icon name="next" size="sm" />
+              </Link>
+            </section>
+          )}
+
+          <Button
+            block
+            className={styles.freePractice}
+            onClick={() => setPracticeOpen(true)}
+            aria-expanded={practiceOpen}
+            aria-controls={practiceSheetId}
+          >
+            <span className={styles.freePracticeIcon}>
+              <Icon name="listen" size="lg" />
+            </span>
+            <span className={styles.freePracticeText}>
+              <strong>Free practice</strong>
+              <small>Choose the time and training mode</small>
+            </span>
+            <Icon name="next" />
+          </Button>
+
+          <div className={styles.advancedPractice}>
+            <FocusPicker />
           </div>
-          <Link className={styles.missionAll} to={path('progress')}>
-            See what you know
-            <Icon name="next" size="sm" />
-          </Link>
-        </section>
+        </>
       )}
-
-      <Button
-        block
-        className={styles.freePractice}
-        onClick={() => setPracticeOpen(true)}
-        aria-expanded={practiceOpen}
-        aria-controls={practiceSheetId}
-      >
-        <span className={styles.freePracticeIcon}>
-          <Icon name="listen" size="lg" />
-        </span>
-        <span className={styles.freePracticeText}>
-          <strong>Free practice</strong>
-          <small>Choose the time and training mode</small>
-        </span>
-        <Icon name="next" />
-      </Button>
-
-      <div className={styles.advancedPractice}>
-        <FocusPicker />
-      </div>
 
       {practiceOpen && (
         <Sheet id={practiceSheetId} title="Free practice" onClose={() => setPracticeOpen(false)}>

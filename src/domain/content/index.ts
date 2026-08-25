@@ -9,3 +9,4 @@ export * from './mood';
 export * from './packs';
 export * from './provenance';
 export * from './repository';
+export * from './search';

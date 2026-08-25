@@ -69,6 +69,36 @@ export interface InspectOptions {
   readonly maxExamples?: number;
   readonly maxForms?: number;
   /**
+   * The item ids in the learner's course, so its own sentences illustrate a word
+   * first.
+   *
+   * A set of ids rather than an {@link ItemFilter}, because the caller usually
+   * has one already — a screen scoped to a course has run that query to count
+   * something — and re-running it per inspected word would scan the whole pack
+   * once per result. Absent means no preference, which is what every existing
+   * caller gets.
+   */
+  readonly scope?: ReadonlySet<ItemId>;
+  /**
+   * Items already shown, and so not worth offering again as examples.
+   *
+   * The phrase being inspected is always excluded — "other phrases that use this
+   * word" would be a strange list to open with the sentence in front of you — and
+   * this is the same rule for a caller that is showing more than one thing. A
+   * search for `Tengo que trabajar.` puts that sentence at the top as the answer,
+   * and listing it again under `tener` reads as a second result rather than as the
+   * same one.
+   */
+  readonly exclude?: ReadonlySet<ItemId>;
+  /**
+   * A written form whose sentences should illustrate the word first.
+   *
+   * Set by {@link inspectLexeme} from what the learner typed. A bias like
+   * {@link scope} and ranked below it: the course is the standing context, so a
+   * form match never promotes something out of a learner's level.
+   */
+  readonly prefer?: string;
+  /**
    * Whether to include reference-language meanings. Defaults to true.
    *
    * A card that grades what a phrase *means* cannot hand that over while the
@@ -165,9 +195,57 @@ export function inspectItem(
   return describeWord(repository, item, token, language, options);
 }
 
+/**
+ * Everything known about one headword, reached by identity rather than through a
+ * phrase containing it.
+ *
+ * The entry point a search needs and `inspectToken` cannot be: that one starts
+ * from an item and a token id, and a learner who typed `tengo` has neither.
+ * `surface` is what they wrote, so the paradigm can still mark which form they
+ * met — the only thing the host phrase was carrying that a lexeme does not.
+ *
+ * Deliberately the same {@link WordInfo} the sheet already renders, rather than
+ * a shape of its own. A word's meaning, kind, gender, register and paradigm are
+ * the same facts whether it was tapped in a sentence or typed into a box, and
+ * two shapes for them would be two places to add the next field to.
+ */
+export function inspectLexeme(
+  repository: ContentRepository,
+  lexemeId: LexemeId,
+  language: LanguageTag,
+  options: InspectOptions & { readonly surface?: string } = {},
+): WordInfo | null {
+  const lexeme = repository.getLexeme(lexemeId);
+  if (!lexeme) return null;
+
+  const token: Token = {
+    id: WHOLE_ITEM_TOKEN,
+    text: options.surface ?? lexeme.lemma,
+    lexeme: lexemeId,
+    lemma: lexeme.lemma,
+    pos: lexeme.pos,
+    ...(lexeme.gender ? { morph: { gender: lexeme.gender } } : {}),
+  };
+
+  // No item, so no constructions and nothing to exclude from the examples: an
+  // annotation is a fact about one phrase, and there is no phrase here. The
+  // patterns this word takes part in are still reachable — through the skills
+  // its examples carry, which is a different question and a different list.
+  //
+  // `prefer` is passed only from here, and that is deliberate: this is the one
+  // entry point that knows what a learner *wrote*. A lookup for `tengo` that
+  // opened with `El alfabeto español tiene veintisiete letras.` answered the
+  // right word with the wrong form, in a sentence about something else. The
+  // sheet's own callers pass no surface and keep pack order exactly as before.
+  return describeWord(repository, undefined, token, language, {
+    ...options,
+    ...(options.surface ? { prefer: options.surface } : {}),
+  });
+}
+
 function describeWord(
   repository: ContentRepository,
-  item: LearningItem,
+  item: LearningItem | undefined,
   token: Token,
   language: LanguageTag,
   options: InspectOptions,
@@ -181,10 +259,14 @@ function describeWord(
 
   return {
     token,
-    constructions: constructionsOf(repository, item, tokenId, language, meanings),
+    constructions: item ? constructionsOf(repository, item, tokenId, language, meanings) : [],
     forms: lexemeId ? paradigmOf(repository, lexemeId, token, options.maxForms ?? 8) : [],
     examples: lexemeId
-      ? examplesOf(repository, lexemeId, item.id, language, options.maxExamples ?? 3, meanings)
+      ? examplesOf(repository, lexemeId, language, options.maxExamples ?? 3, meanings, {
+          exclude: excluded(item?.id, options.exclude),
+          ...(options.scope ? { scope: options.scope } : {}),
+          ...(options.prefer ? { prefer: options.prefer } : {}),
+        })
       : [],
     ...(lexemeId ? { lexeme: lexemeId } : {}),
     ...optional('register', lexeme?.register),
@@ -310,25 +392,75 @@ function paradigmOf(
     }));
 }
 
+/**
+ * Other phrases using this word, the learner's own course first.
+ *
+ * The scope is a **bias, never a filter** — the rule a focus and the speaker's
+ * gender already follow, and here for a concrete reason. A learner on A1 who
+ * searches a B1 word has no in-course examples at all, so filtering would answer
+ * a real question with an empty list. Ordering answers it with B1 sentences,
+ * which is the honest reply: this is the word, and here is where it is used.
+ *
+ * There is deliberately no ranking beyond that. Pack order is arbitrary but
+ * stable, and a frequency- or length-based sort is a judgement worth making
+ * against real content rather than guessed at now.
+ */
 function examplesOf(
   repository: ContentRepository,
   lexemeId: LexemeId,
-  exclude: ItemId,
   language: LanguageTag,
   limit: number,
   meanings: boolean,
+  options: {
+    readonly scope?: ReadonlySet<ItemId>;
+    readonly exclude?: ReadonlySet<ItemId>;
+    readonly prefer?: string;
+  } = {},
 ): readonly WordExample[] {
-  return repository
+  const exclude = options.exclude;
+  const candidates = repository
     .itemsOfLexeme(lexemeId)
-    .filter((candidate) => candidate.id !== exclude && candidate.type !== 'word')
-    .slice(0, limit)
-    .map((candidate) => ({
-      id: candidate.id,
-      text: candidate.text,
-      ...(meanings
-        ? optional('translation', repository.translationOf(candidate.id, language)?.text)
-        : {}),
-    }));
+    .filter((candidate) => !exclude?.has(candidate.id) && candidate.type !== 'word');
+  const scope = options.scope;
+  const prefer = options.prefer ? normalise(options.prefer) : undefined;
+
+  // Two keys, and the order between them is the decision: the course first,
+  // because a level is the standing context and a learner on A1 should not be
+  // shown B1 to make a form match; the form second, so within the course the
+  // sentences using the word as it was written come first. `sort` is stable, so
+  // pack order survives underneath both.
+  const ordered = candidates.slice().sort((a, b) => {
+    const inScope = scope ? Number(!scope.has(a.id)) - Number(!scope.has(b.id)) : 0;
+    if (inScope !== 0) return inScope;
+    if (!prefer) return 0;
+    const has = (item: LearningItem) => Number(!normalise(item.text).includes(prefer));
+    return has(a) - has(b);
+  });
+
+  return ordered.slice(0, limit).map((candidate) => ({
+    id: candidate.id,
+    text: candidate.text,
+    ...(meanings
+      ? optional('translation', repository.translationOf(candidate.id, language)?.text)
+      : {}),
+  }));
+}
+
+/**
+ * The host phrase plus whatever the caller has already shown.
+ *
+ * One set rather than two arguments, so `examplesOf` has a single question to
+ * ask. An empty set is returned rather than `undefined` because both callers
+ * always have at least the possibility of one.
+ */
+function excluded(
+  host: ItemId | undefined,
+  extra: ReadonlySet<ItemId> | undefined,
+): ReadonlySet<ItemId> {
+  if (!host) return extra ?? new Set();
+  const all = new Set(extra ?? []);
+  all.add(host);
+  return all;
 }
 
 /** Omits the key entirely when the value is absent (exactOptionalPropertyTypes). */
@@ -489,7 +621,9 @@ export function inspectSpan(
     constructions,
     words: words.map((token) => describePhraseWord(repository, token, language, meanings)),
     examples: skill
-      ? examplesOfSkill(repository, skill, item.id, language, options.maxExamples ?? 3, meanings)
+      ? examplesOfSkill(repository, skill, item.id, language, options.maxExamples ?? 3, meanings, {
+          ...(options.scope ? { scope: options.scope } : {}),
+        })
       : [],
     ...(meanings ? optional('context', repository.translationOf(item.id, language)?.text) : {}),
   };
@@ -562,6 +696,7 @@ function describePhraseWord(
   };
 }
 
+/** Other phrases built the same way, biased to the course exactly as {@link examplesOf} is. */
 function examplesOfSkill(
   repository: ContentRepository,
   skill: SkillId,
@@ -569,18 +704,24 @@ function examplesOfSkill(
   language: LanguageTag,
   limit: number,
   meanings: boolean,
+  options: { readonly scope?: ReadonlySet<ItemId> } = {},
 ): readonly WordExample[] {
-  return repository
-    .itemsOfSkill(skill)
-    .filter((candidate) => candidate.id !== exclude)
-    .slice(0, limit)
-    .map((candidate) => ({
-      id: candidate.id,
-      text: candidate.text,
-      ...(meanings
-        ? optional('translation', repository.translationOf(candidate.id, language)?.text)
-        : {}),
-    }));
+  const candidates = repository.itemsOfSkill(skill).filter((candidate) => candidate.id !== exclude);
+  const scope = options.scope;
+  const ordered = scope
+    ? [
+        ...candidates.filter((candidate) => scope.has(candidate.id)),
+        ...candidates.filter((candidate) => !scope.has(candidate.id)),
+      ]
+    : candidates;
+
+  return ordered.slice(0, limit).map((candidate) => ({
+    id: candidate.id,
+    text: candidate.text,
+    ...(meanings
+      ? optional('translation', repository.translationOf(candidate.id, language)?.text)
+      : {}),
+  }));
 }
 
 const NO_SPACE_BEFORE = new Set(['.', ',', '!', '?', ';', ':', '»', ')']);

@@ -106,7 +106,9 @@ src/storage/     IndexedDB and in-memory LearnerStorage
 src/audio/       audio service + TTS seam
 src/ai/          AI seam and learner-context builder (no vendor, no network)
 src/features/    screens: home, study, browse, read, progress, practice, missions,
-                 settings (one file per section), sharing
+                 settings (one file per section), sharing. `search/` is the one
+                 that is not a screen: the box, the results and the `?q=` codec,
+                 rendered by Home and movable to any section
 src/components/  shared UI: AppShell, AppNav, Button, Chip, Sheet, Icon, CourseBar,
                  ThemeToggle, PaletteControl, ContrastControl, ReadingSizeControl,
                  VoiceInput, TokenizedText, WordInfoSheet and
@@ -139,6 +141,12 @@ doing, with nothing that said what this course is or where you had got to.
 
 So Home answers that first and recommends second, in this order:
 
+0. **A lookup box**, above all of it. "What does this word mean" is a question a
+   learner has while doing something else, which is the argument `VoicePresence`
+   makes for sitting in every header; Home is where they land, so it sits here.
+   A live query _replaces_ the four sections below rather than pushing them down —
+   none of them is about the word being looked up — and clearing the box brings
+   them back. See "Lookup is not a filter" for the derivation behind it.
 1. **The recommendation**, unchanged: due reviews if there are any, otherwise the
    next unfinished mission, then at most two follow-ups.
 2. **Where you left off** — the last five _distinct_ items practised, tappable
@@ -256,6 +264,70 @@ also never land somewhere they have not been — the reason `MissionScreen`'s
 "Back to missions" and its finish button go to the missions ladder on Study
 rather than to `path()`, which is the course home and the one screen a mission
 was not reached from.
+
+## Lookup is not a filter
+
+Two things in this app take a typed word, and confusing them is the mistake to
+avoid. `ItemFilter.search` **narrows a sheet** of practisable cards and answers
+"which of these match". `searchContent` in `domain/content/search.ts` **answers a
+question about the language** — what this word means, which form it is, what it
+turns up in, and where the app teaches it. Home carries the second; Browse's box
+is still the first.
+
+The piece that had to be built was the one primitive neither had: a **surface
+index at runtime**. Every other index in the repository starts from an id the app
+already holds, because `build-dataset.ts` resolved surfaces at build time and put
+them on tokens — so `inspectToken` needs no lookup at all, and a learner who
+typed `tengo` had nothing to look it up with. `repository.lexemesOfSurface` is
+built in `add()` from the lemma and `forms` records already in memory: no pack
+format change, no build step, and 9,000 surfaces for the shipped course.
+
+Five rules hold the derivation together, and each one was a wrong answer first:
+
+- **Both languages, no toggle.** `agua` and `water` are one lookup from opposite
+  ends, and asking a learner to say which they typed is asking them to know the
+  answer before they search. The reverse direction needed
+  `repository.translationsIn`, since `translationsByRef` only ever answered
+  forwards — which is why Browse's box has claimed to search English since it
+  shipped while `query` only ever matched `item.text`.
+- **Ambiguity is a result, not a problem.** `entre` is a preposition and
+  `entrar`'s subjunctive; `fui` is `ser` and `ir`. The build picks a reading from
+  the words either side (`disambiguate`); a query has no context, so every
+  reading is shown. But an accent is not ambiguity: `de` folds onto `dé`, so a
+  spelling that matches exactly beats one reachable only by folding, or `un vaso
+de agua` answers with `dar`.
+- **Several words is three cases, not one.** The whole string may be a single
+  headword (`por qué`, and every English phrasal verb), or several words, or a
+  phrase. Splitting first breaks the first case irreparably — nothing downstream
+  can put `por` and `qué` back together.
+- **Scope is a bias, never a filter**, the rule a focus and the speaker's gender
+  already follow. A learner on A1 searching a B1 word gets it, marked: "no
+  results" cannot tell them whether a word is absent from the packs or above
+  their level, and those have different fixes. `beyondScope` therefore requires
+  the word to _have_ phrases none of which are in scope — nothing to be beyond is
+  not the same as beyond, and the shipped `por qué` proved it.
+- **Nothing is answered twice.** An exact phrase is the answer, so it is excluded
+  from its own words' examples; and a loose phrase match is dropped once a word
+  entry already shows it, or every sentence containing `tengo` appears under two
+  headings.
+
+`searchContent` takes an `ItemFilter` rather than a `Course`, and that is the
+whole extensibility of it: **searching inside a Study section, a category or a
+part of speech is this same call with a narrower filter.** Do not add a second
+code path for it. `features/search/` holds the box, the results and the `?q=`
+codec so all three can move to another screen unchanged; `q` is deliberately the
+same key `writeItemFilter` uses, because one name for "the text a learner typed"
+means a query survives being carried between screens.
+
+One trap, and it bites any box whose value is the URL: **do not trim the query on
+the way in.** A trailing space thrown away between keystrokes makes the next
+letter land against the previous word, so `cerveza agua` arrives as
+`cervezaagua` and no phrase can be typed at all. `writeSearchQuery` stores what
+was typed and whoever _searches_ trims. Browse still has this bug.
+
+Missions are absent from the domain's results on purpose. A mission points at a
+_passage_, so `missionsUsingPassage` in `domain/missions` derives them from the
+passages the search returned, and content never learns what a mission is.
 
 ## Settings, in sections
 

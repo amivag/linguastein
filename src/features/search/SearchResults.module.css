@@ -1,0 +1,229 @@
+/*
+ * Lookup results.
+ *
+ * Nothing here draws a boundary. Each entry is a `card` from `surfaces` — a
+ * lighter surface with a shadow under it — because rule 1 is that a page of
+ * outlined rows reads as a table, and a dictionary entry is one object rather
+ * than a row in a grid.
+ */
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/*
+ * The furniture voice: small, quiet, spaced. Rule 4 — the learner's eye should
+ * land on the language below this, not on the word "Words".
+ */
+.sectionTitle {
+  margin-block-end: var(--space-2);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* One entry per headword, stacked. */
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.entry + .entry {
+  margin-block-start: var(--space-3);
+}
+
+.entryHead {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.headword {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  min-width: 0;
+}
+
+/* The subject of the entry, in the display voice and set large. */
+.lemma {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-display);
+  overflow-wrap: anywhere;
+}
+
+.tags {
+  flex: none;
+}
+
+/* Why this entry answers what was typed — a footnote, not a finding. */
+.via,
+.beyond,
+.unresolved,
+.footnote {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.beyond {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: start;
+}
+
+.blockTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/*
+ * The paradigm as a wrapping list of pairs. A grid would align the labels into
+ * columns and make it a table, which is what rule 1 is about.
+ */
+.forms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.forms li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunken);
+}
+
+/* The form the learner actually typed. Tinted, and also said in words. */
+.current {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+}
+
+.formLabel {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.examples,
+.phrases {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.examples > li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.phrase {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+}
+
+/* The reference language, quieter than the language being learned above it. */
+.exampleGloss {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.group + .group {
+  margin-block-start: var(--space-4);
+}
+
+.destinations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/*
+ * A pill you go to, rather than one you press to narrow — which is why it is a
+ * link and not a `Chip`. Filled softly so a row of eight does not read as eight
+ * competing boundaries.
+ */
+.destination {
+  composes: pressable from '../../styles/surfaces.module.css';
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--text-sm);
+}
+
+/* Decoration over a link that its own text already names. */
+.destinationDot {
+  composes: kindTone from '../../styles/surfaces.module.css';
+
+  flex: none;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: var(--radius-pill);
+  background: var(--kind);
+}
+
+.destinationCount {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The way on from an entry, in the accent because it is the app offering. */
+.practise {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  align-self: start;
+  min-height: var(--tap-target);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-5);
+}
+
+.emptyLead {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+}

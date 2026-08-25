@@ -1,4 +1,16 @@
 /*
+ * The lookup box, above the screen's subject.
+ *
+ * Its own rule only to hold the width in the `wide` layout Home uses: at 1440px
+ * the survey below spreads across the full window, and a search field stretched
+ * to match reads as a filter bar over a dashboard rather than as a question box.
+ * Capped to the reading column, which is where the results underneath it sit.
+ */
+.searchBar {
+  max-width: var(--content-width);
+}
+
+/*
  * The screen's subject, and the largest single object on it — so it is the one
  * place a flat grey costs the most. It carries the accent as a wash rather than
  * only on its button: the card *is* the recommendation, and a slab with one

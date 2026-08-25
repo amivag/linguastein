@@ -1,0 +1,46 @@
+.box {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/*
+ * The field and its clear button share one rounded shape.
+ *
+ * A wrapper rather than an absolutely positioned button over the input, because
+ * the button has to be reachable by tab order and by a pointer without covering
+ * the last characters typed — so the input is given room for it instead.
+ */
+.field {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+}
+
+/*
+ * A pill, as on Browse and for the same reason: a search box is the one field
+ * that reads as a thing you type into rather than a thing you fill in. Its one
+ * border is the design language's own enumerated exception — an input has no
+ * fill and no label inside it, so the boundary genuinely is the affordance.
+ */
+.input {
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--radius-pill);
+}
+
+.input:not(:placeholder-shown) {
+  padding-inline-end: var(--space-7);
+}
+
+/* Inside the field's own rounding, so the two do not read as two controls. */
+.clear {
+  position: absolute;
+  inset-inline-end: var(--space-1);
+}
+
+/* The engines that draw their own ✕ would otherwise draw a second one. */
+.input::-webkit-search-cancel-button {
+  appearance: none;
+}

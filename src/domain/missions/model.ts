@@ -137,6 +137,37 @@ export function missionsForCourse(
     .sort((a, b) => a.order - b.order);
 }
 
+/**
+ * Every passage a mission reads from, in the order it meets them.
+ *
+ * One list rather than three reads of `passage`, `challengePassage` and the
+ * transfer ladder. The ladder already has two spellings — `transfers` with the
+ * single `challengePassage` kept as a fallback — so a caller asking "does this
+ * mission use that text" had three fields to remember and one to forget.
+ */
+export function missionPassages(mission: MissionDefinition): readonly string[] {
+  const passages = [mission.passage, ...missionTransfers(mission).map((entry) => entry.passage)];
+  return [...new Set(passages)];
+}
+
+/**
+ * The missions that teach one passage — how a word reaches a mission.
+ *
+ * Through a passage, because that is the only link there is: a mission names
+ * local passage ids and nothing else, so the chain from a searched word runs
+ * word → items → passages → here. Local ids for the reason a link carries one:
+ * a mission id is curriculum and deliberately independent of any pack.
+ */
+export function missionsUsingPassage(
+  catalog: readonly MissionDefinition[],
+  course: Course,
+  localPassageId: string,
+): readonly MissionDefinition[] {
+  return missionsForCourse(catalog, course).filter((mission) =>
+    missionPassages(mission).includes(localPassageId),
+  );
+}
+
 export function missionById(
   catalog: readonly MissionDefinition[],
   course: Course,

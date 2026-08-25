@@ -129,6 +129,35 @@ export class ContentRepository {
   private readonly itemsByLexeme = new Map<LexemeId, ItemId[]>();
   private readonly itemsBySkill = new Map<SkillId, ItemId[]>();
   private readonly formsByLexeme = new Map<LexemeId, FormId[]>();
+  /**
+   * Normalised surface → every lexeme it can be, so a word a learner *typed*
+   * can be resolved.
+   *
+   * The only index here that answers a question from outside the dataset. Every
+   * other one starts from an id the app already holds — a token carries its
+   * `lexeme` because `build-dataset.ts` resolved the surface at build time, and
+   * `inspectToken` needs no lookup at all. A search box has neither an item nor
+   * a token id, only a string, and nothing in the app could turn one into the
+   * other.
+   *
+   * A list rather than one lexeme, because a surface is genuinely ambiguous:
+   * `entre` is a preposition and `entrar`'s subjunctive, and `frío` is a noun
+   * beside an adjective. The build picks a reading from the words either side of
+   * it (`disambiguate`); a query has no context to pick from, so every reading
+   * is returned and the caller shows them all. Guessing here would be the one
+   * failure mode worse than an error, which is being confidently wrong.
+   */
+  private readonly lexemesBySurface = new Map<string, LexemeId[]>();
+  /**
+   * Language → its translations, so a meaning can be searched *backwards*.
+   *
+   * `translationsByRef` answers "what does this mean", which is the direction
+   * every screen has needed until now. A learner who knows the English and wants
+   * the Spanish is asking the opposite, and no index answered it: Browse's
+   * search box has claimed to search both languages since it shipped while
+   * `ItemFilter.search` only ever matched `item.text`.
+   */
+  private readonly translationsByLanguage = new Map<LanguageTag, Translation[]>();
   private readonly itemOrder: ItemId[] = [];
   private readonly passagesById = new Map<PassageId, Passage>();
   private readonly passageOrder: PassageId[] = [];
@@ -146,19 +175,41 @@ export class ContentRepository {
   add(pack: ContentPack): void {
     this.packsById.set(pack.manifest.id, pack.manifest);
 
-    for (const lexeme of pack.lexemes) this.lexemesById.set(lexeme.id, lexeme);
+    for (const lexeme of pack.lexemes) {
+      this.lexemesById.set(lexeme.id, lexeme);
+      this.indexSurface(lexeme.lemma, lexeme.id);
+    }
     for (const sense of pack.senses) this.sensesById.set(sense.id, sense);
     for (const skill of pack.skills) this.skillsById.set(skill.id, skill);
 
     for (const form of pack.forms) {
       this.formsById.set(form.id, form);
       push(this.formsByLexeme, form.lexeme, form.id);
+      // Both halves of the paradigm are searchable, because a learner types the
+      // word they met: `tengo` far more often than `tener`. The surfaces were
+      // always derivable from these records — the build already drives its own
+      // index from them, which is what keeps "what a learner can be shown" and
+      // "what a sentence can link to" from drifting apart.
+      this.indexSurface(form.form, form.lexeme);
     }
 
     for (const item of pack.items) {
       if (!this.itemsById.has(item.id)) this.itemOrder.push(item.id);
       this.itemsById.set(item.id, item);
-      for (const lexeme of item.lexemes ?? EMPTY) push(this.itemsByLexeme, lexeme, item.id);
+      // Both places a lexeme can be named, de-duplicated across them.
+      //
+      // A multi-word headword is named by an *annotation* rather than by
+      // `lexemes` — `por qué` spans two tokens, and `Annotation.lexeme` is where
+      // that is recorded. Without the second source, "which phrases use this
+      // word" answered nothing for every such entry: `por qué` had a gloss, no
+      // examples, and looked to any scope check like a word no pack uses. A set
+      // because a phrase may name the same lexeme both ways, and a duplicate
+      // here becomes one example listed twice.
+      const named = new Set<LexemeId>(item.lexemes ?? EMPTY);
+      for (const annotation of item.annotations ?? EMPTY) {
+        if (annotation.lexeme) named.add(annotation.lexeme);
+      }
+      for (const lexeme of named) push(this.itemsByLexeme, lexeme, item.id);
       for (const skill of item.skills ?? EMPTY) push(this.itemsBySkill, skill, item.id);
     }
 
@@ -179,7 +230,26 @@ export class ContentRepository {
       // First translation of a language wins; alternatives are additive data
       // that the UI can request explicitly later.
       if (!byLanguage.has(translation.lang)) byLanguage.set(translation.lang, translation);
+      // The reverse list keeps *every* translation, including the alternatives
+      // the forward map drops. A learner searching their own language should
+      // find a word through any of its meanings, and the second gloss of a word
+      // is exactly the one they are least likely to guess the first spelling of.
+      push(this.translationsByLanguage, translation.lang, translation);
     }
+  }
+
+  /** Records a surface a lexeme can appear as, folded the way a query will be. */
+  private indexSurface(surface: string, lexeme: LexemeId): void {
+    const key = normalise(surface);
+    if (!key) return;
+    const existing = this.lexemesBySurface.get(key);
+    if (!existing) {
+      this.lexemesBySurface.set(key, [lexeme]);
+      return;
+    }
+    // A lemma that is also one of its own forms — every infinitive, every
+    // singular noun — would otherwise list the same word twice.
+    if (!existing.includes(lexeme)) existing.push(lexeme);
   }
 
   get packs(): readonly PackManifest[] {
@@ -200,6 +270,34 @@ export class ContentRepository {
 
   getLexeme(id: LexemeId): Lexeme | undefined {
     return this.lexemesById.get(id);
+  }
+
+  /**
+   * Every headword the loaded packs declare, in pack order.
+   *
+   * For the searches an index cannot serve: a prefix or a partial, where the key
+   * is not known in advance. Small enough to scan — the shipped pack has 663 —
+   * and a scan that is honest about being one beats a second index to keep in
+   * step with this one.
+   */
+  allLexemes(): readonly Lexeme[] {
+    return [...this.lexemesById.values()];
+  }
+
+  /**
+   * The lexemes a written surface can be: `tengo` → `tener`, `entre` →
+   * `entre` the preposition *and* `entrar`.
+   *
+   * Case- and accent-insensitive, so `esta` finds `está`. See
+   * {@link lexemesBySurface} for why this returns a list.
+   */
+  lexemesOfSurface(surface: string): readonly LexemeId[] {
+    return this.lexemesBySurface.get(normalise(surface)) ?? EMPTY;
+  }
+
+  /** Every translation into a language, for a search that starts from a meaning. */
+  translationsIn(language: LanguageTag): readonly Translation[] {
+    return this.translationsByLanguage.get(language) ?? EMPTY;
   }
 
   getSense(id: SenseId): Sense | undefined {

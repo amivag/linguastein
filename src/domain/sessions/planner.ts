@@ -202,7 +202,10 @@ function smartOrder(
       (a, b) =>
         (progress.get(b.id)?.lastReviewedAt ?? 0) - (progress.get(a.id)?.lastReviewedAt ?? 0),
     );
-    return [...seen, ...ownFormFirst(shuffle(buckets.fresh, rng), speakerGender).slice(0, maxNewItems)];
+    return [
+      ...seen,
+      ...ownFormFirst(shuffle(buckets.fresh, rng), speakerGender).slice(0, maxNewItems),
+    ];
   }
 
   // The cap exists so "10 minutes of practice" cannot become ten first

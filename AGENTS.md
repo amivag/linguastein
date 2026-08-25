@@ -312,7 +312,7 @@ a learner led with `Estoy cansado` when `cansada` is theirs is being led with a
 sentence that is not true of them. But the other half is Spanish they have to
 understand: other people describe themselves all day. So both halves stay in the
 course and in every session's candidates, and the setting decides only which is
-met *first*, where nothing else already decides the order (`ownFormFirst` in
+met _first_, where nothing else already decides the order (`ownFormFirst` in
 `domain/sessions/planner.ts`).
 
 Three rules hold it together:

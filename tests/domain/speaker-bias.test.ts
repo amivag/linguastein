@@ -76,7 +76,8 @@ function plan(speakerGender: SpeakerGender | undefined, size: number): readonly 
   return planSession({ repository, config, progress: new Map(), now: 1 }).itemIds;
 }
 
-const at = (ids: readonly ItemId[], local: string) => ids.indexOf(`bias-es:item:${local}` as ItemId);
+const at = (ids: readonly ItemId[], local: string) =>
+  ids.indexOf(`bias-es:item:${local}` as ItemId);
 
 describe('the learner’s own form', () => {
   it('is met before the other one', () => {

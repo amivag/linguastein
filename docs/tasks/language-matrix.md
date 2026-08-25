@@ -177,15 +177,34 @@ is B1-ish English sitting under A2 Spanish. English needs its own `skills.tsv` �
 articles, phrasal verbs, present perfect, question inversion — none of which
 appear in `content/es/skills.tsv`.
 
-**One model gap English introduces that Spanish never did.** `Token.lexeme`
-([`annotation.ts:131`](../../src/domain/content/annotation.ts)) is one lexeme per
-token, and English has discontinuous multi-token lexemes: `look up` is one
-dictionary entry, and `look it up` splits it. Today the options are two tokens
-both pointing at the phrasal lexeme — which breaks "tap this word → this lemma" —
-or an `Annotation` spanning them, which loses the dictionary entry. Spanish's
-enclitics are the near-miss that already has bespoke handling
-(`resolveEnclitic`), but those are _one_ surface, so the model never had to face
-it. Settle it before English content, not after.
+**One model gap English introduces that Spanish never did — settled 2026-08-25.**
+`Token.lexeme` was one lexeme per token, and English has discontinuous
+multi-token lexemes: `look up` is one dictionary entry, and `look it up` splits
+it. Spanish never forced the question — the shipped pack has exactly **one**
+multi-word lexeme, `por qué`, and it is contiguous. Spanish's enclitics are the
+near-miss that already has bespoke handling (`resolveEnclitic`), but those are
+_one_ surface.
+
+`Annotation` now carries an optional `lexeme`, so the **span** is the headword
+and the tokens keep their own words. Three reasons that is the right home:
+
+- **Not `Token.lexeme`.** Pointing both `look` and `up` at `lexeme:look-up` makes
+  a token answer "what unit am I part of" rather than "what word am I", so
+  tapping `look` would stop reaching `look`. A span keeps both answers.
+- **Not a `Skill`.** `tener que + infinitivo` is a pattern — how the language
+  works — and the pack rightly models twelve of those as skills. `look up` is a
+  _meaning_, and only a lexeme can carry one: `Sense` hangs off a `LexemeId`, so
+  a phrasal verb filed as a skill could never be glossed, which is the one thing
+  a learner tapping it wants.
+- **The mechanism already existed.** 398 annotations already span tokens and name
+  a skill; `tokens` is a list of ids rather than a range, so discontinuity is
+  free. And `collocation` has sat in `ANNOTATION_TYPES` unused since the type
+  existed — every shipped annotation is a `construction`. This is what it was for.
+
+Nothing reads the field yet, deliberately, exactly as `case` and `reading`
+landed: invisible while missing, a back-fill across every authored row once late.
+What remains is a consumer — `inspectToken` answering "part of `look up`, which
+means to search for" — and that wants English content to answer it about.
 
 ---
 
@@ -324,6 +343,9 @@ Steps 1–4 are the whole "decide it in alpha" window.
 - `schön` and `schon` are distinct lexemes with ids naming the right word, and
   `content/de` needs no `stem-collisions.tsv` at all
 - `slug` is reached through the language module, and no caller assumes ASCII
+- **done** — a headword spanning tokens that do not touch is expressible, and a
+  span naming a missing lexeme is reported (`tests/data/multi-word-lexeme.test.ts`)
+- tapping `up` in `look it up` names the phrasal verb and glosses it
 - a pack declares a level ladder that is not CEFR, and the URL carries it
 - an A1 learner's first session downloads A1 shards, and no B1 file is fetched
 - `translations-zh` can be added to a shipped `core-de` without re-versioning it

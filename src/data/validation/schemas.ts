@@ -92,6 +92,9 @@ export const annotationSchema = z
     tokens: z.array(z.string().min(1)).min(1),
     type: z.enum(ANNOTATION_TYPES),
     skill: entityId('skill').optional(),
+    // A span that *is* a headword: a phrasal verb over tokens that need not
+    // touch. See `Annotation.lexeme`.
+    lexeme: entityId('lexeme').optional(),
     label: z.string().optional(),
   })
   .loose();

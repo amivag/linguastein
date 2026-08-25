@@ -114,6 +114,13 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
       if (annotation.skill && !skillIds.has(annotation.skill)) {
         report(`annotation references unknown skill ${annotation.skill}`, 'warning', item.id);
       }
+      // A multi-word lexeme whose headword is missing is a span naming nothing —
+      // the same dangling reference `token.lexeme` is checked for below, and a
+      // warning for the same reason: a pack may carry annotation this version of
+      // the app does not resolve.
+      if (annotation.lexeme && !lexemeIds.has(annotation.lexeme)) {
+        report(`annotation references unknown lexeme ${annotation.lexeme}`, 'warning', item.id);
+      }
     }
     for (const token of item.tokens ?? []) {
       if (token.lexeme && !lexemeIds.has(token.lexeme)) {

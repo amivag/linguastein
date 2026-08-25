@@ -134,11 +134,42 @@ export interface Token {
 export const ANNOTATION_TYPES = ['construction', 'grammar', 'collocation', 'note'] as const;
 export type AnnotationType = (typeof ANNOTATION_TYPES)[number];
 
-/** Spans one or more tokens and optionally links to a trainable skill. */
+/**
+ * Spans one or more tokens and optionally links to a trainable skill or a
+ * dictionary entry.
+ *
+ * {@link lexeme} is how a **multi-word lexeme** is expressed, and the reason it
+ * is here rather than on {@link Token}. A phrasal verb is one headword spread
+ * over tokens that need not touch: `look up` is a dictionary entry meaning
+ * "search for", and `look it up` puts a pronoun in the middle of it. Spanish
+ * never forced the question — the shipped pack has exactly one multi-word lexeme
+ * (`por qué`) and it is contiguous — so the model has assumed one lexeme per
+ * token, and English breaks that on a word a learner meets in week one.
+ *
+ * `Token.lexeme` is the wrong home for it. Pointing both `look` and `up` at
+ * `lexeme:look-up` makes a token answer "what unit am I part of" instead of
+ * "what word am I", so tapping `look` would stop reaching `look`. A span that
+ * names a lexeme keeps both answers: the tokens say what the words are, the
+ * annotation says what they are together.
+ *
+ * This is also not a {@link Skill}. `tener que + infinitivo` is a pattern —
+ * how the language works — and the pack correctly models the twelve of those as
+ * skills. `look up` is not a pattern but a meaning, and only a lexeme can carry
+ * one: `Sense` hangs off a `LexemeId`, so a phrasal verb filed as a skill could
+ * never be glossed, which is the whole thing a learner tapping it wants.
+ *
+ * `collocation` is the {@link AnnotationType} for this and has been declared and
+ * unused since the type existed; all 398 annotations the pack ships are
+ * `construction`. Nothing reads the field yet, deliberately — see
+ * `docs/tasks/language-matrix.md` §4. It is invisible while missing and a
+ * back-fill across every authored row once it is late.
+ */
 export interface Annotation {
   readonly tokens: readonly TokenId[];
   readonly type: AnnotationType;
   readonly skill?: SkillId;
+  /** The headword this span *is*, when the span is a multi-word lexeme. */
+  readonly lexeme?: LexemeId;
   readonly label?: string;
 }
 

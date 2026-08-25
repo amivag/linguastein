@@ -99,8 +99,9 @@ These are load-bearing. Breaking one is a design change, not a refactor. Rules
 ```text
 src/app/         composition root, routing, the current course (`course.ts`)
 src/domain/      the engine (content, exercises, sessions, progress, missions)
-src/languages/   language-specific morphology, behind `LanguageModule` —
-                 build-time, not engine (`index.ts` loads one by tag)
+src/languages/   language-specific morphology and the alphabet, behind two
+                 interfaces: `types.ts` is the build's half (`index.ts` loads one
+                 by tag) and `runtime.ts` is the screens' half. Not engine
 src/data/        dataset loading + the zod validation boundary
 src/storage/     IndexedDB and in-memory LearnerStorage
 src/audio/       audio service + TTS seam
@@ -171,6 +172,16 @@ Nothing on Study is a hard-coded list. Word kinds, categories and grammar
 patterns are counted from the packs over the current course, so a second
 language grows tiles with no edit — and a tile whose count is zero is not
 offered, the same rule the categories and the letters already follow.
+
+**Alphabet is the one section that is not counted from the packs**, and it is not
+an exception to that rule so much as the other half of it. Whether a course has an
+alphabet chart is a property of the _language_, not of how many rows are filed
+under a topic, so the tab is decided by `alphabetGuide(tag)` in
+`src/languages/runtime.ts` — which returns a **loader** rather than a promise
+precisely so the answer is synchronous. A section that appears a frame after every
+other section is a tab that moves under a thumb; the chart itself still arrives in
+its own chunk, only for the learner who opens it. See "The alphabet is a module,
+not rows" below for what is in it.
 
 **Study is one section at a time, and a section is an address.** All of it on one
 page came to about seventy rows in the shipped course, where thirty-five

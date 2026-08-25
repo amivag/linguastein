@@ -19,6 +19,7 @@ import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import { UserScreen } from '../../src/features/user/UserScreen';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
+import { StudyScreen } from '../../src/features/study/StudyScreen';
 import { renderWithServices } from '../fixtures/services';
 
 /** Accessible name as an agent would resolve it. */
@@ -93,6 +94,24 @@ describe('agent surface', () => {
     await user.click(screen.getByRole('button', { name: /^Filters:/ }));
     expect(screen.getByRole('button', { name: 'Starting with C, 2 items' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Listen to “cerveza”' })).toBeInTheDocument();
+  });
+
+  it('names every control in the alphabet chart, and says which letter each belongs to', async () => {
+    const { container } = renderWithServices(<StudyScreen />, {
+      route: '/es/all/study?tab=alphabet',
+    });
+    // The chart arrives in its own chunk and the play buttons arrive with voice
+    // discovery, so the tree is only complete once one of them is there.
+    await screen.findAllByRole('button', { name: /^Pronounce / }, { timeout: 5_000 });
+    await expectEveryControlNamed(container);
+
+    // Thirty-five cards of the same shape, and `casa` is an example under three
+    // of them: a control called "Pronounce casa" three times is unpickable, by a
+    // screen reader and by an agent alike.
+    const names = screen
+      .getAllByRole('button', { name: /^Pronounce / })
+      .map((control) => control.getAttribute('aria-label'));
+    expect(new Set(names).size).toBe(names.length);
   });
 
   it('names every control in a passage, including each line’s play button', async () => {

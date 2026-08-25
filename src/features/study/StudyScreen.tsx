@@ -7,6 +7,8 @@ import { AppShell } from '../../components/AppShell';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon, type IconName } from '../../components/Icon';
 import { SectionTabs } from '../../components/SectionTabs';
+import { alphabetGuide } from '../../languages/runtime';
+import { AlphabetSection } from './AlphabetSection';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import {
@@ -216,6 +218,15 @@ export function StudyScreen() {
     };
   }, [repository, courseScope]);
 
+  /*
+    Whether this language has an alphabet chart at all, answered synchronously so
+    the tab can be decided with every other tab. `alphabetGuide` hands back a
+    *loader* rather than a promise precisely for this: the chart itself arrives in
+    its own chunk when the section is opened, and no second list of languages has
+    to agree with the registry about which of them have one.
+  */
+  const hasAlphabet = alphabetGuide(course.language) !== undefined;
+
   /**
    * The sections this course actually has, in order.
    *
@@ -233,6 +244,11 @@ export function StudyScreen() {
           // rule still applies: no sets, no tab, and creation lives on Browse
           // where the sheet being saved is already on screen.
           { id: 'batches', label: 'Sets', icon: 'batch', size: sets.length },
+          // Before the words, because it is what the words are made of — and
+          // sized by whether the *language* has a chart rather than by how much
+          // content is filed under it: the alphabet is a property of Spanish,
+          // not a count of rows in a pack.
+          { id: 'alphabet', label: 'Alphabet', icon: 'alphabet', size: hasAlphabet ? 1 : 0 },
           { id: 'words', label: 'Words', icon: 'word', size: counts.words.length },
           {
             id: 'phrases',
@@ -250,7 +266,7 @@ export function StudyScreen() {
           size: number;
         }[]
       ).filter((section) => section.size > 0),
-    [counts, missions.length, sets.length],
+    [counts, hasAlphabet, missions.length, sets.length],
   );
 
   // An unrecognised or absent section opens the first one this course has, the
@@ -347,6 +363,17 @@ export function StudyScreen() {
           {sets.map((standing) => (
             <BatchRow key={standing.batch.id} standing={standing} course={course} />
           ))}
+        </Section>
+      )}
+
+      {current?.id === 'alphabet' && (
+        <Section
+          label="Alphabet"
+          icon="alphabet"
+          layout="flow"
+          note="Every letter with its name, what it sounds like inside a word, and words to hear it in. Nothing here is practised or recorded."
+        >
+          <AlphabetSection />
         </Section>
       )}
 
@@ -492,9 +519,12 @@ interface SectionProps {
   readonly note?: string;
   /**
    * `tiles` is the narrow grid for one-word titles, `wide` for a title that
-   * carries its own translation, `rows` for full-width rows.
+   * carries its own translation, `rows` for full-width rows, and `flow` for a
+   * section whose body is not a list of links at all — the alphabet chart brings
+   * its own headings and its own lists, and nesting those inside this one's `ul`
+   * would be invalid markup as well as a second opinion about the layout.
    */
-  readonly layout?: 'tiles' | 'wide' | 'rows';
+  readonly layout?: 'tiles' | 'wide' | 'rows' | 'flow';
   readonly children: React.ReactNode;
 }
 
@@ -506,7 +536,7 @@ function Section({ label, icon, note, layout = 'tiles', children }: SectionProps
         {label}
       </h2>
       {note && <p className={styles.sectionNote}>{note}</p>}
-      <ul className={styles[layout]}>{children}</ul>
+      {layout === 'flow' ? children : <ul className={styles[layout]}>{children}</ul>}
     </section>
   );
 }

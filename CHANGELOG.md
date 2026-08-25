@@ -46,6 +46,32 @@ in the pack's own counts.
   playing state lives on the audio service rather than in a screen, so a row in Browse
   can no longer sit lit while a different row is the one speaking.
 
+- **The alphabet, shown rather than only filtered by.** Browse had a row of letter
+  chips, Study had a category called "The alphabet" holding thirty-seven sentences
+  about spelling, and `src/languages/es/alphabet.ts` had known every letter's name
+  since it was written. Between them they answered every question except the two a
+  learner actually arrives with: what are the letters, and how do I say them. A
+  category of `¿Se escribe con be o con uve?` is the right material and is useless
+  to somebody who does not yet know that `uve` is a v.
+
+  Study has an **Alphabet** section now: all twenty-seven letters in both cases,
+  what each is called, that name respelled for reading, what the letter sounds like
+  _inside_ a word, two or three words to hear it in, and the cases where it does
+  something else — `h` silent, `b` and `v` identical, `c` and `z` splitting between
+  Spain and Latin America, `g` turning into a `jota` before `e`, `x` in `México`.
+  Every letter and every example plays. Beside the twenty-seven, and deliberately
+  not among them: `ch`, `ll`, `rr`, `qu` and `gu` as pairs that spell one sound, and
+  the accent and the diaeresis as marks that are not letters. So the chart teaches
+  `calle` while still counting twenty-seven.
+
+  The letters are language knowledge rather than pack content, so they arrive
+  through a new **runtime half** of the language module
+  (`src/languages/runtime.ts`), the one `docs/tasks/language-matrix.md` §6 has
+  briefed since before there was anything in it. It hands back a loader rather than
+  a promise: whether a course has a chart is answered synchronously, so the tab is
+  decided with every other tab, while the chart itself loads in its own chunk for
+  the learner who opens it. A language with no chart shows no section.
+
 - **The present subjunctive, generated — and B1 behind it.** The conjugator built
   seven indicative tenses and the affirmative commands, which is most of Spanish
   and none of B1: the level is more or less defined by the mood, so authoring B1

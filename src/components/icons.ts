@@ -3,6 +3,7 @@ import {
   ArrowRight,
   BookOpen,
   Brain,
+  CaseSensitive,
   ChartColumn,
   Check,
   ChevronDown,
@@ -161,6 +162,10 @@ export const ICONS = {
   level: Layers,
   language: Languages,
   word: Type,
+  /* The alphabet: the letters themselves, before any word is made of them. `Aa`
+     rather than a single glyph, because the pair is what a chart of letters
+     shows and a lone `A` is already `word`'s neighbour. */
+  alphabet: CaseSensitive,
   grammar: Ruler,
   passage: NotebookPen,
   /* A dialogue: a passage that is two people talking rather than one voice

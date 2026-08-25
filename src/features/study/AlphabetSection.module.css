@@ -1,0 +1,168 @@
+/*
+ * The alphabet chart.
+ *
+ * The hue is the card's ground rather than a badge on grey — `kindSurface`, the
+ * same call Home's material rows make, and here it does a second job: twenty-seven
+ * cards of identical shape are a wall, and a letter keeping its own colour is
+ * what makes `Ñ` findable on the second visit.
+ */
+
+.pending {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+.guide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.groupHeading {
+  composes: sectionLabel from '../../styles/surfaces.module.css';
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-1);
+}
+
+/* The size of the group, which is the fact the 2010 reform makes worth stating:
+   twenty-seven letters, and the pairs counted separately. */
+.count {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.groupNote {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0 0 var(--space-3);
+  max-width: 60ch;
+}
+
+.cards {
+  composes: listReset from '../../styles/surfaces.module.css';
+  display: grid;
+  /* One up on a phone, more as there is room. The floor is measured off the
+     longest thing a card holds — a note running two lines — rather than off the
+     letter, which would fit six to a row and wrap every sentence under them. */
+  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+  gap: var(--space-3);
+}
+
+.card {
+  composes: kindSurface from '../../styles/surfaces.module.css';
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-5);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+/*
+ * Both cases of the letter, in the display face and at the size of the screen's
+ * subject — design rule 4, and here the rule is the whole point: the letter is
+ * the language and everything else on the card is furniture about it.
+ */
+.glyph {
+  color: var(--kind);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
+  line-height: 1;
+  margin: 0;
+}
+
+.naming {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* What it is called, which is the answer to "how do I say this letter". */
+.name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+/* The same name respelled, for the learner reading in silence or on a device
+   with no voice for this language. */
+.say {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.play {
+  flex: none;
+  align-self: center;
+}
+
+/* What the letter does inside a word, as opposed to what it is called. */
+.sound {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.examples {
+  composes: listReset from '../../styles/surfaces.module.css';
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/*
+ * A word to hear the letter in. A filled pill on the tinted ground rather than
+ * an outlined one: rule 1, and the fill is also what tells it apart from the
+ * prose above it without adding a fourth horizontal line to the card.
+ *
+ * The shape belongs to the word rather than to the control, because on a device
+ * with no voice for this language the word is still the teaching and stays as
+ * text — `.exampleButton` is the same pill with a press on it.
+ */
+.example {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: inherit;
+  font: inherit;
+}
+
+.exampleButton {
+  composes: example;
+  cursor: pointer;
+  transition: scale var(--transition-spring);
+}
+
+/* The dip is timed inside the pressed rule, not on the rest state: the finger is
+   down before anything is drawn, so the two halves are deliberately asymmetric —
+   see `--transition-press` in `primitives.css`. */
+.exampleButton:active {
+  scale: 0.97;
+  transition: scale var(--transition-press);
+}
+
+.word {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+}
+
+.gloss {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}

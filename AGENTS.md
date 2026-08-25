@@ -344,9 +344,16 @@ passages the search returned, and content never learns what a mission is.
 
 ## Settings, in sections
 
-Five sections rather than one column, grouped by _whose_ setting it is: Learning,
-Appearance and Audio are the learner's; Packs and About are the app's. One file
-per section under `features/settings/`, and the shell only picks between them.
+Six sections rather than one column, grouped by _whose_ setting it is: You,
+Learning, Appearance and Audio are the learner's; Packs and About are the app's.
+One file per section under `features/settings/`, and the shell only picks between
+them.
+
+**First and default are two different questions.** `user` leads the strip
+because it is the person rather than the app; `learning` is what a bare
+`/settings` opens, because a name and a gender are set once and then read, while
+the course, the reference language and the session behaviour are what somebody
+comes here to change.
 
 The open section is in the query string — `/es/a1/settings?tab=packs` — and
 `settings-url.ts` owns both directions, exactly as Browse and a session do. The
@@ -384,13 +391,25 @@ screen names nothing to fix.
 
 ## The learner, and the one setting that changes content
 
-`/user` is the learner rather than the app: a name, the gender they speak about
-themselves in, and an account of what this device is holding. Outside the course
-routes, like `/design` — a name is not a property of what is being studied, and
-it must not look as though it changed when the language did. There is no account
-behind any of it yet ([accounts-and-sync.md](docs/tasks/accounts-and-sync.md)),
-which is why the screen says where the data lives before it says how much of it
-there is.
+Settings' **You** section (`/es/a1/settings?tab=user`) is the learner rather than
+the app: a name, the gender they speak about themselves in, and an account of
+what this device is holding. There is no account behind any of it yet
+([accounts-and-sync.md](docs/tasks/accounts-and-sync.md)), which is why the
+section says where the data lives before it says how much of it there is — and
+names the store rather than gesturing at it: the IndexedDB database (from
+`identity.ts`, never typed out), the `localStorage` mirrors, the packs as the
+app's material rather than the learner's, whether the browser has promised to
+keep any of it, and _no servers_, said as its own row because "where is it" has
+an answer about the network too.
+
+It was `/user`, a screen of its own outside the course routes, on the argument
+that a name is not a property of what is being studied. True, and not the
+deciding fact — a theme is not a property of Spanish either, and Appearance has
+always lived in Settings. What the separate address actually bought was one link
+above the tab strip pointing at a screen nothing else reached, so the two things
+a learner would look for under "me" were the one thing Settings did not contain.
+`/user` still resolves: `App.tsx` redirects it into the tab, spelling the
+destination through `settingsPath` rather than as a second path literal.
 
 **Gender here is grammar, not a demographic**, and it is **a bias, never a
 filter** — the rule `focus` already follows, and here for a sharper reason.
@@ -405,7 +424,8 @@ met _first_, where nothing else already decides the order (`ownFormFirst` in
 Three rules hold it together:
 
 - **Unsaid is a real answer and the default.** No gender means no reordering, and
-  a learner who never opens `/user` sees exactly what they saw before it existed.
+  a learner who never opens the You section sees exactly what they saw before it
+  existed.
 - **Nothing is ever removed.** A session with room for both contains both;
   `tests/domain/speaker-bias.test.ts` asserts it, because "prefer" quietly
   becoming "only" is the regression nobody would see.
@@ -744,6 +764,24 @@ exactly like a preposition, a pronoun, an imperative and a demonstrative, so a
 second lexeme for any of them would make the ordinary word ambiguous everywhere it
 appears. Those are taught in sentences instead. A row filed under the `alphabet`
 topic is checked against the module, as a `NUM` row is against `numerals.ts`.
+
+**A letter's name and a letter's sound are two different facts, and the module
+holds both.** For a long time it held only the first: it could say that `h` is
+called `hache` and not that it is silent, which is the most useful thing about it.
+Every entry now carries `say` (the name respelled, for a device with no Spanish
+voice), `sound` (what it does inside a word), `examples` and `notes` — plus two
+lists beside the twenty-seven: `DIGRAPHS` for the pairs that spell one sound and
+`MARKS` for the accent and the diaeresis. Keeping those apart is what lets the
+chart teach `ll` while the alphabet still honestly counts twenty-seven, and
+`tests/languages/alphabet.test.ts` holds the invariant that catches the mistake
+this shape invites: an example has to contain the letter it is filed under.
+
+That half is prose in the reference language and is deliberately **not** content.
+It is what a chart on a wall says; the moment a letter is something a learner is
+_tested_ on it needs an id in `content/es` that progress can reference, which the
+eighteen letter-name cards and the thirty-seven alphabet sentences already have.
+`features/study/AlphabetSection.tsx` renders it, and nothing there records
+anything.
 
 Letter cards are exempt from the recycling target for the reason numerals are —
 a closed generated set drilled as a set — and the exemption keys on the **card's

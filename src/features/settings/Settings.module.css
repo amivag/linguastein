@@ -13,7 +13,8 @@
   padding: var(--space-4);
 }
 
-.field select {
+.field select,
+.field input[type='text'] {
   width: 100%;
 }
 
@@ -55,6 +56,59 @@
 .group {
   display: grid;
   gap: var(--space-2);
+}
+
+/* A short set of alternatives as one row of equal targets: the options are
+   alternatives of the same kind, and a stack would have implied an order. */
+.optionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.option {
+  composes: pressable from '../../styles/surfaces.module.css';
+
+  flex: 1;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.optionActive {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+}
+
+/* A setting showing its own effect. Sunken rather than outlined, and holding
+   target-language text, so it reads as a quotation from the pack rather than as
+   another hint. */
+.example {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+  font-size: var(--text-sm);
+}
+
+.example span[lang] {
+  font-weight: var(--weight-semibold);
+}
+
+/* The app speaking about itself, said once and prominently — where the learner's
+   data lives, above the numbers describing it. The accent-soft ground is what
+   separates it from the readout underneath. */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
 }
 
 /* Cancel and confirm side by side, so the way out is as reachable as the way on. */
@@ -193,6 +247,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   gap: var(--space-2);
+}
+
+/* The same readout, for counts whose labels are sentences rather than nouns
+   ("Answers recorded") and so need the wider column. */
+.stats {
+  composes: packStats;
+
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
 }
 
 .stat {

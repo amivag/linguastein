@@ -17,7 +17,6 @@ import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { PassageScreen } from '../../src/features/read/PassageScreen';
 import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
-import { UserScreen } from '../../src/features/user/UserScreen';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { StudyScreen } from '../../src/features/study/StudyScreen';
 import { renderWithServices } from '../fixtures/services';
@@ -60,8 +59,10 @@ describe('agent surface', () => {
     await expectEveryControlNamed(container);
   });
 
-  it('names every control on the user screen', async () => {
-    const { container } = renderWithServices(<UserScreen />, { route: '/user' });
+  it('names every control in the settings section about the learner', async () => {
+    const { container } = renderWithServices(<SettingsScreen />, {
+      route: '/es/all/settings?tab=user',
+    });
     await screen.findByRole('heading', { level: 1 });
     await expectEveryControlNamed(container);
 

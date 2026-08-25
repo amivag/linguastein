@@ -1,13 +1,13 @@
 import { useEffect, useId, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { useCourse } from '../../app/course';
+import { APP, storageKey } from '../../app/identity';
 import { useServices } from '../../app/services-context';
 import type { AppServices } from '../../app/services';
-import { AppShell } from '../../components/AppShell';
-import { Icon } from '../../components/Icon';
+import { Icon, type IconName } from '../../components/Icon';
 import { SPEAKER_GENDERS, type SpeakerGender } from '../../domain/content';
-import { settingsPath } from '../settings/settings-url';
-import styles from './User.module.css';
+import { settingsPath } from './settings-url';
+import styles from './Settings.module.css';
 
 /** What the gender control offers, unsaid first because it is the default. */
 const GENDER_OPTIONS: readonly { readonly id: SpeakerGender | ''; readonly label: string }[] = [
@@ -24,21 +24,31 @@ interface DataCounts {
   readonly batches: number;
   /** Bytes the browser says this origin is using, where it will say. */
   readonly bytes: number | undefined;
+  /**
+   * Whether the browser has promised to keep this data until it is deleted on
+   * purpose. Undefined where it will not say, which is not the same as no.
+   */
+  readonly persisted: boolean | undefined;
 }
 
 /**
  * You: who the app thinks you are, and what it is holding about you.
  *
- * Its own address rather than a sixth Settings section, because none of this is
- * a setting about the app. Two of the three things here are about the person —
- * what to call them, and which grammatical gender they speak about themselves in
- * — and the third is an account of what is stored on this device, which is the
- * question a profile page exists to answer honestly before there is an account
- * to attach it to (`docs/tasks/accounts-and-sync.md`).
+ * The first Settings section rather than its own address. It was `/user`, kept
+ * outside the course routes on the argument that a name is not a property of
+ * what is being studied — true, and not the deciding fact: a theme is not a
+ * property of Spanish either, and Appearance has always lived here. What the
+ * separate address actually bought was one link on Settings pointing at a screen
+ * nothing else reached, so the two things a learner would look for under "me"
+ * were the one thing Settings did not contain. `/user` still resolves, into this
+ * tab.
  *
- * Outside the course routes for the same reason `/design` is: a name is not a
- * property of what you are studying, and it must not appear to change when the
- * language does.
+ * Three things, in the order somebody asks them: what to call you, which
+ * grammatical gender you speak about yourself in, and an honest account of what
+ * is stored, where it is stored and who else can see it. That last one leads
+ * with the location rather than the numbers, because "on this device, no
+ * account" is the part that decides whether the numbers matter
+ * (`docs/tasks/accounts-and-sync.md` is where an account would change it).
  *
  * The gender control is the one that touches content, and it says so with the
  * pair it reorders rather than with a paragraph about agreement. It is a bias
@@ -46,7 +56,7 @@ interface DataCounts {
  * because other people describe themselves too and a learner who has only ever
  * been shown their own half cannot understand the half said to them.
  */
-export function UserScreen() {
+export function UserSettings() {
   const { services, preferences, updatePreferences } = useServices();
   const { course, filter } = useCourse();
   const ids = useId();
@@ -78,11 +88,11 @@ export function UserScreen() {
   const chosen = preferences.speakerGender;
 
   return (
-    <AppShell title="You">
+    <div className={styles.group}>
       <section className={styles.group} aria-labelledby={`${ids}-about`}>
-        <h2 className={styles.sectionTitle} id={`${ids}-about`}>
+        <h3 className={styles.groupTitle} id={`${ids}-about`}>
           About you
-        </h2>
+        </h3>
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor={`${ids}-name`}>
@@ -111,14 +121,18 @@ export function UserScreen() {
             <Icon name="grammar" size="sm" className={styles.labelIcon} />
             How you speak about yourself
           </span>
-          <div className={styles.group} role="radiogroup" aria-label="How you speak about yourself">
+          <div
+            className={styles.optionRow}
+            role="radiogroup"
+            aria-label="How you speak about yourself"
+          >
             {GENDER_OPTIONS.map((option) => (
               <button
                 key={option.id || 'unset'}
                 type="button"
                 role="radio"
                 aria-checked={chosen === option.id}
-                className={`${styles.option} ${chosen === option.id ? styles.active : ''}`}
+                className={`${styles.option} ${chosen === option.id ? styles.optionActive : ''}`}
                 onClick={() => updatePreferences({ speakerGender: option.id })}
               >
                 {option.label}
@@ -126,9 +140,10 @@ export function UserScreen() {
             ))}
           </div>
           <span className={styles.hint}>
-            Grammar, not a profile. Spanish makes you choose before you can say anything about
-            yourself, so sessions lead with the form that is true of you. Both forms are still
-            taught — other people describe themselves too, and you have to understand them.
+            Optional, and grammar rather than a profile. Spanish makes you choose before you can say
+            anything about yourself, so sessions lead with the form that is true of you. Both forms
+            are still taught — other people describe themselves too, and you have to understand
+            them.
           </span>
           {example && (
             <p className={styles.example}>
@@ -155,9 +170,9 @@ export function UserScreen() {
       </section>
 
       <section className={styles.group} aria-labelledby={`${ids}-data`}>
-        <h2 className={styles.sectionTitle} id={`${ids}-data`}>
+        <h3 className={styles.groupTitle} id={`${ids}-data`}>
           Your data
-        </h2>
+        </h3>
 
         {/* The honest statement of where this lives, before the numbers rather
             than under them: "on this device" is the part that decides whether
@@ -168,6 +183,46 @@ export function UserScreen() {
           and no other device can see it. Clearing this browser’s data for the site deletes it.
         </p>
 
+        {/* Where it is, named rather than gestured at. "On this device" is the
+            answer somebody needs first; which store, and whether the browser has
+            promised to keep it, are what they need to act on it. */}
+        <ul className={styles.checks} aria-label="Where your data is stored">
+          <Where
+            icon="history"
+            label="What you have practised"
+            detail={`Progress, answers, sessions and saved batches, in this browser’s IndexedDB database “${APP.id}”. Nowhere else.`}
+          />
+          <Where
+            icon="user"
+            label="Your name, gender and settings"
+            detail={`The same database. Theme, palette, contrast and text size are mirrored into this browser’s local storage under “${storageKey('…')}” as well, so the first paint is not the wrong colour.`}
+          />
+          <Where
+            icon="pack"
+            label="Content packs"
+            detail="Downloaded with the app and cached for offline use. The app’s material rather than yours — resetting your data leaves it alone."
+          />
+          <Where
+            icon="link"
+            label="Servers"
+            detail="None. There is no account to sign in to, no sync and no analytics, so nothing here leaves the device."
+          />
+          <Where
+            icon={counts?.persisted ? 'check' : 'unknown'}
+            state={counts?.persisted ? 'ok' : 'unknown'}
+            label="How long the browser keeps it"
+            detail={
+              counts === undefined
+                ? 'Reading…'
+                : counts.persisted === true
+                  ? 'This browser has marked the app’s storage as persistent: it will not be cleared to free up space.'
+                  : counts.persisted === false
+                    ? 'This browser may clear the app’s storage if the device runs short of space. Installing the app usually makes it persistent.'
+                    : 'This browser does not say whether it would clear the app’s storage to free up space.'
+            }
+          />
+        </ul>
+
         <ul className={styles.stats}>
           <Stat label="Items practised" value={counts?.items} />
           <Stat label="Answers recorded" value={counts?.attempts} />
@@ -176,13 +231,48 @@ export function UserScreen() {
           <Stat label="Storage used" value={counts?.bytes} format={bytes} />
           <Stat label="Items in this course" value={services.repository.query(filter).length} />
         </ul>
+        <span className={styles.hint}>
+          Storage used is what the browser reports for the whole site, packs included, and not every
+          browser will say.
+        </span>
 
         <Link className={styles.link} to={settingsPath(course, 'about')}>
           <Icon name="settings" size="sm" />
-          Reset or delete it in Settings → About
+          Reset or delete it in About
+          <Icon name="next" size="sm" />
         </Link>
       </section>
-    </AppShell>
+    </div>
+  );
+}
+
+/**
+ * One place data lives, as a row.
+ *
+ * The same shape the speech-input check uses, and for the same reason: several
+ * separate facts reach a learner as one vague impression unless each is given
+ * its own line.
+ */
+function Where({
+  icon,
+  label,
+  detail,
+  state,
+}: {
+  readonly icon: IconName;
+  readonly label: string;
+  readonly detail: string;
+  /** Colours the glyph where the row reports a state; never the only carrier. */
+  readonly state?: 'ok' | 'unknown';
+}) {
+  return (
+    <li className={styles.check}>
+      <Icon name={icon} size="sm" className={state ? styles[state] : styles.labelIcon} />
+      <span className={styles.checkText}>
+        <strong className={styles.checkLabel}>{label}</strong>
+        <span className={styles.hint}>{detail}</span>
+      </span>
+    </li>
   );
 }
 
@@ -213,7 +303,7 @@ function bytes(value: number): string {
 
 async function readCounts(services: AppServices): Promise<DataCounts> {
   const { storage } = services;
-  const [items, attempts, sessions, batches, estimate] = await Promise.all([
+  const [items, attempts, sessions, batches, estimate, persisted] = await Promise.all([
     storage.progress.count(),
     storage.attempts.count(),
     storage.sessions.count(),
@@ -221,6 +311,7 @@ async function readCounts(services: AppServices): Promise<DataCounts> {
     // Not every browser implements it, and the ones that do report the whole
     // origin rather than this app's share. Absent is better than invented.
     navigator.storage?.estimate?.().catch(() => undefined) ?? Promise.resolve(undefined),
+    navigator.storage?.persisted?.().catch(() => undefined) ?? Promise.resolve(undefined),
   ]);
 
   return {
@@ -229,6 +320,7 @@ async function readCounts(services: AppServices): Promise<DataCounts> {
     sessions,
     batches: batches.length,
     bytes: estimate?.usage,
+    persisted,
   };
 }
 

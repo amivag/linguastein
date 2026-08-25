@@ -15,10 +15,17 @@
 import { coursePath, type Course } from '../../domain/content';
 import type { IconName } from '../../components/Icon';
 
-export const SETTINGS_TABS = ['learning', 'appearance', 'audio', 'packs', 'about'] as const;
+export const SETTINGS_TABS = ['user', 'learning', 'appearance', 'audio', 'packs', 'about'] as const;
 export type SettingsTab = (typeof SETTINGS_TABS)[number];
 
-/** The section a bare `/settings` opens: what a learner changes most. */
+/**
+ * The section a bare `/settings` opens: what a learner changes most.
+ *
+ * Deliberately not the first tab. `user` leads the list because it is the person
+ * rather than the app, but a name and a gender are set once and then read; the
+ * course, the reference language and the session behaviour are what somebody
+ * opens Settings to change. First and default answer two different questions.
+ */
 export const DEFAULT_SETTINGS_TAB: SettingsTab = 'learning';
 
 export interface SettingsTabOption {
@@ -36,6 +43,12 @@ export interface SettingsTabOption {
  * taught are yours, while the packs and the build are the app's.
  */
 export const SETTINGS_TAB_OPTIONS: readonly SettingsTabOption[] = [
+  {
+    id: 'user',
+    label: 'You',
+    icon: 'user',
+    summary: 'Your name, how you speak about yourself, and what this device is holding.',
+  },
   {
     id: 'learning',
     label: 'Learning',

@@ -2,7 +2,10 @@
 
 **Status:** briefed, not started. The two stages that must come first are already
 briefed elsewhere — see §2 — and one decision (§6.1) has to be made before any
-wire format is fixed.
+wire format is fixed. Both of those are now closed: the backend vendor is
+**settled 2026-08-25 (§4.1)** and so is the merge policy (**§6.1**, reasoned in
+[learner-profile.md](learner-profile.md) §9.1). What remains before this task can
+start is work rather than decisions — §2's two stages, in that order.
 **Written:** 2026-08-24
 **For:** a fresh agent session, no prior context assumed
 **Scope:** a `SyncProvider` behind `LearnerStorage`, an auth boundary, and the
@@ -40,7 +43,8 @@ The hard part is done and was done for other reasons.
 
 What is missing is a serialisation format, a bulk write path, a record clock to
 merge on, and a decision about what merging means. The first three are Stage C of
-that task. The fourth is §6.1 here.
+that task. The fourth was §6.1 here, and it is settled — which is what makes the
+first three buildable.
 
 ## 2. Do these two things first, and ship them before any backend exists
 
@@ -101,18 +105,24 @@ Consequences worth stating because they are easy to lose:
   adds a reconciler, because two implementations of the same interface cannot
   both be authoritative.
 - Sync is per record and idempotent, which is what Stage B's ids are for.
+- The provider's SDK is **dynamically imported**, so a signed-out install
+  downloads none of it. The app ships no third-party network code today, and
+  "works offline, no account, in two minutes on a phone" is a claim about the
+  bundle as much as about the UX. An optional module that is optional only at
+  runtime has already given half of it away.
 
 ## 4. The backend
 
 There has never been one. `services.ts` fetches static JSONL from the app's own
 origin and nothing else _(verified)_.
 
-**Recommendation: Supabase or Cloudflare (Workers + D1).** Both give hosted auth
-plus a database on a free tier, and both keep the zero-ops posture that made
-GitHub Pages the right host. Do not build a bespoke Node service for this; the
-data is a handful of rows per learner and an append-only attempt log.
+### 4.1 The decision
 
-What the choice has to satisfy, in priority order:
+**Settled 2026-08-25: Supabase.** Postgres, hosted auth, row-level security,
+generated TypeScript types.
+
+What the choice had to satisfy, in priority order — the list is kept because it
+is what decided it:
 
 1. **Row-level isolation by default.** A learner's progress must be unreadable
    by another account without a policy anyone has to remember to write.
@@ -124,10 +134,187 @@ What the choice has to satisfy, in priority order:
    sign-in on iOS makes Apple sign-in mandatory _(unverified — check the current
    App Store guideline before building the second provider, not after)_.
 
-Two things GitHub Pages cannot do, so plan for them: the API lives on a second
-origin (CORS, and probably a real domain), and this is the first content-security
-surface the app has ever had. The app makes no third-party request today. That is
-worth keeping true except for exactly one host.
+Item 1 settled it, and it is worth being exact about why. Postgres row-level
+security is declarative and enforced by the database, so a forgotten
+`where user_id = …` in an endpoint written a year from now cannot leak a row.
+Every alternative in §4.2 turns that guarantee into a habit, and a habit is
+precisely what item 1 says it must not be.
+
+Then, in descending order of weight: hosted auth covers all three sign-in
+methods with none of it as code here; the schema generates TypeScript, so the
+records in `storage/types.ts` are not re-expressed by hand in a second language
+and cannot drift from it; deletion is a real `delete`; and the whole thing is
+open source and self-hostable, which keeps the "run your own" story an AGPL
+repository ought to have.
+
+**This does not settle §6.1 and must not be read as settling it.** An
+append-only Postgres table serves last-write-wins and attempt-log replay equally
+well, so the merge policy stays open — and stays the decision that blocks Stage
+C's envelope.
+
+### 4.2 What lost, so that it is not re-derived
+
+**Cloudflare Workers + D1** — the runner-up, and close. Better on latency and on
+cost. It loses on item 1 alone: D1 is SQLite, SQLite has no row-level security,
+and isolation becomes query discipline inside a Worker. Auth is also
+bring-your-own, so a solved problem would be traded for an integration.
+Defensible for someone already fluent in Cloudflare. Not chosen here.
+
+**PHP** — cheap ubiquitous hosting and a deployment model that is hard to break,
+and the objection is not about the language. Two things: magic links, OAuth,
+sessions and every `where user_id` would be hand-written here, in the
+highest-consequence area of the system; and it is a second language in a
+single-language repository, so Stage C's zod schemas and the storage contract
+acquire a hand-maintained twin that drifts. A PHP host is also a server somebody
+patches, which spends the zero-ops posture that made GitHub Pages right.
+
+**A bespoke Node service** — the same objection minus the language mismatch. It
+owns auth, the database, the patching, and a process that can be down. The data
+is a handful of rows per learner and an append-only log. Do not.
+
+### 4.3 The tables, and the policies that isolate them
+
+A sketch rather than a migration. The shapes are the records as they stand on
+2026-08-25 _(verified against `domain/progress/types.ts`,
+`domain/sessions/types.ts` and `domain/batches/model.ts`)_ — and Stage A moves
+four fields out of `Preferences` before any of this is written, so `courses`
+below is that stage's shape rather than today's.
+
+```sql
+-- One row per account. `preferences` and `courses` are jsonb rather than
+-- columns: §9.1 takes preferences wholesale, never field-merged, so a column
+-- per setting buys nothing and costs a migration each time one is added.
+create table profiles (
+  user_id     uuid primary key references auth.users on delete cascade,
+  preferences jsonb  not null default '{}',
+  courses     jsonb  not null default '{}',   -- keyed by target language
+  updated_at  bigint not null
+);
+
+create table progress (
+  user_id            uuid    not null references auth.users on delete cascade,
+  item_id            text    not null,          -- 'core-es:item:000123'
+  pack_id            text,                      -- absent where the id will not parse
+  status             text    not null,
+  attempts           integer not null,
+  correct            integer not null,
+  incorrect          integer not null,
+  difficulty         real    not null,
+  stability          real,
+  last_reviewed_at   bigint,
+  due_at             bigint,
+  average_latency_ms integer,
+  hints_used         integer not null,
+  streak             integer not null,
+  updated_at         bigint  not null,
+  primary key (user_id, item_id)
+);
+create index on progress (user_id, pack_id);   -- the `by-pack` index, again
+
+create table attempts (
+  user_id       uuid    not null references auth.users on delete cascade,
+  id            text    not null,  -- client-generated, collision-free (Stage B)
+  item_id       text    not null,
+  exercise_kind text    not null,
+  grade         text    not null,
+  correct       boolean,
+  latency_ms    integer,
+  hints_used    integer,
+  at            bigint  not null,
+  session_id    text,
+  primary key (user_id, id)
+);
+create index on attempts (user_id, at);
+
+create table sessions (
+  user_id         uuid    not null references auth.users on delete cascade,
+  id              text    not null,
+  course_language text    not null,
+  course_level    text    not null,
+  started_at      bigint  not null,
+  ended_at        bigint,
+  planned         integer not null,
+  completed       integer not null,
+  correct         integer not null,
+  primary key (user_id, id)
+);
+
+create table batches (
+  user_id         uuid    not null references auth.users on delete cascade,
+  id              text    not null,
+  label           text    not null,
+  course_language text    not null,
+  course_level    text    not null,
+  item_ids        text[]  not null,  -- frozen at creation, so an array is honest
+  created_at      bigint  not null,
+  per_session     integer,
+  primary key (user_id, id)
+);
+```
+
+Three things about that schema are decisions rather than transcription.
+
+**Timestamps are `bigint`, not `timestamptz`.** `Timestamp` is epoch
+milliseconds, and `domain/progress/types.ts` says why: numbers survive a JSON
+round trip. Converting to `timestamptz` on the way out and back on the way in is
+a lossy trip through a format no client ever reads, and it would put the wire
+format and Stage C's export envelope into disagreement over the same field.
+
+**Every primary key is composite on `user_id`.** Stage B made the attempt,
+session and batch ids collision-free _per device_ — `batch-lq2p8v-k3f9a1`, a
+clock plus a token — which is not the same claim as globally unique.
+`(user_id, id)` is the key those ids can actually support.
+
+**`on delete cascade` from `auth.users` is the erasure path.** §5 asks for
+deletion that is not an email address; this is it, expressed in the schema
+rather than as a job somebody runs.
+
+```sql
+alter table profiles enable row level security;
+alter table progress enable row level security;
+alter table attempts enable row level security;
+alter table sessions enable row level security;
+alter table batches  enable row level security;
+
+-- profiles, progress, sessions and batches all take this one.
+create policy own_rows on progress
+  for all to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- Attempts are the exception: the log is append-only, so no update and no
+-- delete policy exists. Erasure runs through the cascade above rather than
+-- through a policy that would let a client rewrite its own history.
+create policy insert_own on attempts
+  for insert to authenticated with check (auth.uid() = user_id);
+create policy read_own on attempts
+  for select to authenticated using (auth.uid() = user_id);
+```
+
+One honest qualification to §4.1's headline. Row-level security is enforced by
+the database once it is **on**, and it is off by default for a table created by
+SQL — the dashboard enables it for tables made through the UI, a migration does
+not. So the guarantee is real, and the `enable row level security` line is the
+one thing that can still be forgotten. Assert it: a test that queries each table
+as a second account and expects nothing back is a few lines and it never rots.
+
+### 4.4 Check these before signing up for anything
+
+- **Free-tier limits move**, and in particular whether inactive free projects
+  are still paused _(unverified)_. §3's rule is what makes this survivable: a
+  failed sync is a status line in Settings, so a paused project degrades to
+  exactly the app that exists today.
+- **A custom domain is a paid add-on** at the time of writing _(unverified)_. It
+  matters more than it looks: CSP wants exactly one allowed host, and it had
+  better not be a name that changes.
+- **The DPA and the region choice**, for §5's processor agreement.
+
+### 4.5 Two things GitHub Pages cannot do
+
+Plan for them: the API lives on a second origin (CORS, and probably a real
+domain), and this is the first content-security surface the app has ever had.
+The app makes no third-party request today. That is worth keeping true except
+for exactly one host.
 
 ## 5. The privacy cost, paid deliberately
 
@@ -152,14 +339,29 @@ acquires some in a commit about backups.
 
 ## 6. Judgement calls left open
 
-**6.1 The merge policy.** This is the decision, and
-[learner-profile.md](learner-profile.md) §9.1 already frames it: per-record
-last-write-wins on `updatedAt` is defensible and loses FSRS review history
-invisibly; replaying the merged attempt log through `recordAttempt` is more
-correct, much slower, and possible only because attempts are the source of truth
-today. **Settle it before Stage C's envelope is fixed**, because a replay-based
-merge needs the attempt log complete and §9.3 is about pruning it. A format that
-has shipped is a format that costs a migration to change.
+**6.1 The merge policy. Settled 2026-08-25** — in
+[learner-profile.md](learner-profile.md) §9.1, which carries the reasoning and the
+per-record table. In one line: the attempt log is what syncs, and progress is a
+projection folded back out of it. `ItemProgress` is a total, deterministic fold
+over an item's attempts, so replay is exact, and last-write-wins on it is a
+lost-update bug against five accumulating fields rather than merely a lossy
+choice.
+
+Three things follow for this brief in particular.
+
+- **§3's diagram gets more specific.** The provider pushes and pulls the attempt
+  log — plus sessions, batches and the two preference documents — and rebuilds
+  progress locally. Progress is never _sent_ as an authority, only ever as a
+  cache the receiving device is free to recompute.
+- **§6.3 stops being a question.** Appending to a log does not conflict, so there
+  is no conflict to show anyone. That section wanted the merge silent and
+  defensible; this is the version that is silent because there is nothing to
+  adjudicate.
+- **`updatedAt`'s role narrows, and Stage B is not wasted by it.** It is the sync
+  high-water mark — what to push, what to pull — and the last-write-wins field
+  for the records that genuinely are documents. It is no longer the merge input
+  for progress, because progress no longer has a merge. A format that
+  has shipped is a format that costs a migration to change.
 
 **6.2 Whether an account is ever required for anything.** The answer that keeps
 this app what it is: no. The pressure will come from
@@ -176,7 +378,11 @@ replay.
 **6.4 Whether progress stays per item.** [learner-profile.md](learner-profile.md)
 §9.2 — one `stability` and one `difficulty` per item fold a four-way multiple
 choice together with a production answer. It is the biggest open question in the
-learning model and it changes the stored shape. Doing it after this task means a
-schema bump for a format that has just shipped to real accounts, which is
-strictly worse than doing it before. It is listed here so it is decided rather
-than discovered.
+learning model and it changes the stored shape.
+
+This one got cheaper on 2026-08-25, and the entry is kept because the reason
+matters. §6.1 makes progress a projection, so changing its shape is a rebuild
+from attempts that are already stored rather than a schema bump against live
+accounts. It is therefore safe to defer past this task — which is the opposite of
+what this section said while the merge policy was open, and the only one of these
+four calls that the decision moved.

@@ -1,12 +1,14 @@
 /**
- * The User screen, and the one setting on it that changes what is taught.
+ * Settings' You section, and the one setting on it that changes what is taught.
  *
- * Three things have to keep holding. The gender choice must reach *content*
- * rather than sitting in storage looking like it does something. The screen must
- * say where the data lives, because "on this device" is the whole answer to the
+ * Four things have to keep holding. It has to be reachable *as a settings
+ * section* — it was a screen of its own at `/user` that only one link pointed
+ * at, which is how Settings came to be the place a learner's own name was not.
+ * The gender choice must reach *content* rather than sitting in storage looking
+ * like it does something. The section must say where the data lives and name the
+ * store, because "on this device, no account" is the whole answer to the
  * question a profile page is asked. And unsaid must stay a real answer: a
- * learner who never opens this screen should see exactly what they saw before it
- * existed.
+ * learner who never opens this tab sees exactly what they saw before it existed.
  */
 
 import { screen, within } from '@testing-library/react';
@@ -20,7 +22,8 @@ import {
   type PackId,
   type SpeakerGender,
 } from '../../src/domain/content';
-import { UserScreen } from '../../src/features/user/UserScreen';
+import { APP } from '../../src/app/identity';
+import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import { DEFAULT_PREFERENCES } from '../../src/storage';
 import { id } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
@@ -67,9 +70,26 @@ function packWithPair(): ContentRepository {
   return ContentRepository.from([pack]);
 }
 
-describe('the User screen', () => {
+/** The section, at its address. */
+const route = '/es/all/settings?tab=user';
+
+describe('the You section of Settings', () => {
+  it('is a settings section rather than a screen of its own', async () => {
+    renderWithServices(<SettingsScreen />, { route });
+
+    // Named in the switcher like every other section, and marked as the open
+    // one: the link on Settings that used to leave for `/user` is what this
+    // replaces.
+    const switcher = await screen.findByRole('navigation', { name: 'Settings sections' });
+    expect(within(switcher).getByRole('link', { name: 'You' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    expect(await screen.findByRole('heading', { name: 'You', level: 2 })).toBeInTheDocument();
+  });
+
   it('says where the data lives before it says how much of it there is', async () => {
-    renderWithServices(<UserScreen />, { route: '/user' });
+    renderWithServices(<SettingsScreen />, { route });
 
     const notice = await screen.findByText(/stored on this device only/);
     expect(notice).toHaveTextContent('There is no account');
@@ -77,6 +97,22 @@ describe('the User screen', () => {
     // The honest caveat: this is the one thing that deletes it, and a learner
     // who does not know that can lose everything by tidying their browser.
     expect(notice).toHaveTextContent(/Clearing this browser’s data/);
+  });
+
+  it('names where it is rather than gesturing at it, servers included', async () => {
+    renderWithServices(<SettingsScreen />, { route });
+
+    const where = await screen.findByRole('list', { name: 'Where your data is stored' });
+    // The database, from the one place the app's identity is spelled — a
+    // literal here would be the 37th copy of a name `identity.ts` owns.
+    expect(
+      within(where).getByText(new RegExp(`IndexedDB database “${APP.id}”`)),
+    ).toBeInTheDocument();
+    // "Where is it" has an answer about the network too, and "no server" is a
+    // fact a learner is entitled to before they type their name into anything.
+    const servers = within(where).getByText('Servers').closest('li');
+    expect(servers).toHaveTextContent('There is no account');
+    expect(servers).toHaveTextContent('nothing here leaves the device');
   });
 
   it('reports what is stored, counted rather than estimated', async () => {
@@ -90,7 +126,7 @@ describe('the User screen', () => {
       correct: true,
     });
 
-    renderWithServices(<UserScreen />, { services, route: '/user' });
+    renderWithServices(<SettingsScreen />, { services, route });
 
     const answers = (await screen.findByText('Answers recorded')).closest('li');
     expect(within(answers as HTMLElement).getByText('1')).toBeInTheDocument();
@@ -99,7 +135,7 @@ describe('the User screen', () => {
   it('stores a name once, on the way out of the field rather than per keystroke', async () => {
     const user = userEvent.setup();
     const updatePreferences = vi.fn();
-    renderWithServices(<UserScreen />, { route: '/user', updatePreferences });
+    renderWithServices(<SettingsScreen />, { route, updatePreferences });
 
     const field = await screen.findByLabelText('Name');
     await user.type(field, 'Elena');
@@ -112,7 +148,7 @@ describe('the User screen', () => {
   });
 
   it('offers unsaid as a real answer, and starts there', async () => {
-    renderWithServices(<UserScreen />, { route: '/user' });
+    renderWithServices(<SettingsScreen />, { route });
 
     expect(DEFAULT_PREFERENCES.speakerGender).toBe('');
     const unset = await screen.findByRole('radio', { name: 'Not specified' });
@@ -122,12 +158,12 @@ describe('the User screen', () => {
   it('shows the sentence the choice changes, from the pack rather than from prose', async () => {
     const user = userEvent.setup();
     const updatePreferences = vi.fn();
-    renderWithServices(<UserScreen />, {
+    renderWithServices(<SettingsScreen />, {
       services: testServices({
         repository: packWithPair(),
         preferences: { ...DEFAULT_PREFERENCES, speakerGender: 'feminine' },
       }),
-      route: '/user',
+      route,
       updatePreferences,
     });
 

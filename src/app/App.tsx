@@ -9,9 +9,9 @@ import { ReadScreen } from '../features/read/ReadScreen';
 import { SessionScreen } from '../features/practice/SessionScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { MissionScreen } from '../features/missions/MissionScreen';
-import { UserScreen } from '../features/user/UserScreen';
 import type { BatchDefinition } from '../domain/batches';
-import { courseOptions, coursePath, resolveCourse } from '../domain/content';
+import { courseOptions, coursePath, resolveCourse, type Course } from '../domain/content';
+import { settingsPath } from '../features/settings/settings-url';
 import { mergePreferences, type Preferences } from '../storage';
 import { applyPalette, applyTheme, DEFAULT_PALETTE } from '../styles/themes';
 import { applyContrast, DEFAULT_CONTRAST } from '../styles/contrast';
@@ -201,16 +201,20 @@ export function App() {
               whichever scope their preference happens to hold. */}
             <Route path="/:language/:level/*" element={<NotFoundScreen />} />
 
+            {/* Who the learner is, and what this device is holding about them:
+              the first Settings section now, not a screen of its own. The
+              address stays because it was one — a learner's bookmark, and the
+              shortest thing to type — and a redirect is how it keeps meaning
+              what it meant. */}
+            <Route
+              path="/user"
+              element={<CourseRedirect to={(course) => settingsPath(course, 'user')} />}
+            />
+
             {/* Outside the course routes: the design system is a property of the
               app, not of what is being studied. `useCourse` resolves to the
               widest real course when the path carries none, so the navigation
               still points somewhere sensible. */}
-            {/* Who the learner is, and what this device is holding about
-              them. Outside the course for the same reason the style guide is:
-              a name is not a property of what is being studied, and it must not
-              look as though it changed when the language did. */}
-            <Route path="/user" element={<UserScreen />} />
-
             <Route
               path="/design"
               element={
@@ -258,9 +262,16 @@ const LEGACY_SCREENS = ['browse', 'read', 'progress', 'session', 'settings'] as 
 function CourseRedirect({
   screen,
   keepSearch = false,
+  to,
 }: {
   readonly screen?: string;
   readonly keepSearch?: boolean;
+  /**
+   * Where to land, for a destination whose spelling belongs to a module rather
+   * than to a path literal here: `/user` is Settings' You section, and
+   * `settings-url.ts` owns `?tab=user` in both directions.
+   */
+  readonly to?: (course: Course) => string;
 }) {
   const { services, preferences } = useServices();
   const location = useLocation();
@@ -268,7 +279,7 @@ function CourseRedirect({
   const course = resolveCourse(options, preferences.targetLanguage, preferences.level);
   const search = keepSearch ? location.search : '';
 
-  return <Navigate replace to={`${coursePath(course, screen)}${search}`} />;
+  return <Navigate replace to={`${to ? to(course) : coursePath(course, screen)}${search}`} />;
 }
 
 /** `/read/700001` → `/es/all/read/700001`, keeping the passage. */

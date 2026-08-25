@@ -278,6 +278,28 @@ segundo piso`: a **wrong** link, which the coverage report counts as a success,
 
 ### Changed
 
+- **You is a Settings section now, not a screen only Settings linked to.** The
+  learner's own page lived at `/user`, outside the course routes, on the argument
+  that a name is not a property of what is being studied. True, and not the
+  deciding fact — a theme is not a property of Spanish either, and Appearance has
+  always been in Settings. What the separate address bought was one link above
+  the tab strip pointing at a screen nothing else reached, so a learner opening
+  Settings to set their name, or to find out what this device was holding, was
+  looking at the one screen that did not contain it.
+
+  It is the first of six sections now (`?tab=user`), and `/user` redirects into
+  it through `settingsPath` rather than a second spelling of the tab. First and
+  default stayed separate on purpose: `learning` is still what a bare
+  `/settings` opens, because a name and a gender are set once and then read.
+
+  The data half also stopped gesturing. "Stored on this device" was the whole
+  answer to _where_, so the section now names it — the IndexedDB database (read
+  from `identity.ts`, never typed out), the `localStorage` mirrors that keep the
+  first paint from being the wrong colour, the packs as the app's material rather
+  than the learner's, whether the browser has promised not to evict any of it,
+  and **no servers**, as its own row: "where is my data" has an answer about the
+  network too, and a learner is entitled to it before they type their name in.
+
 - **Colours that mean different things now have to stay apart, and it is
   tested.** A WCAG ratio is a _lightness_ comparison, so a crimson accent and a
   crimson `danger` pass every floor in the suite and are still the same colour to

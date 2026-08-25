@@ -3,8 +3,9 @@
 **Status:** **Stage B has landed** — stored state is at database version 2, and
 §6 now reads as a record of why those fields exist rather than as work to do.
 Stage A is briefed and unstarted: every blocking unknown below is resolved, and
-nothing has been written. Stage C is briefed in shape, but §9.1 is a decision to
-make before its file format is fixed rather than after.
+nothing has been written. Stage C is briefed in shape, and §9.1 — the decision
+its file format was waiting on — is **settled as of 2026-08-25**: the attempt log
+is authoritative and progress is a projection folded out of it.
 **Written:** 2026-08-21
 **Stage B landed:** 2026-08-21 — `packId` and `updatedAt` on a progress row,
 `course` on a session row, collision-free attempt and session ids, the version-2
@@ -371,6 +372,12 @@ version tracks a local migration, the file version tracks a format other builds
 have to read. `packs` records what the records referenced at export time, so an
 import can _report_ what it cannot resolve.
 
+`progress` is in the envelope as a **cache**, not as an authority — §9.1 makes
+`attempts` the only thing in the file that cannot be recomputed. Say so in the
+format's doc comment, because it decides what an importer does with a file whose
+two halves disagree: rebuild from the log and keep going, rather than trust the
+rows or reject the file.
+
 ### 7.2 Validate on the way in
 
 A zod module beside the storage layer, in the same spirit as
@@ -420,16 +427,86 @@ neither negotiable:
 
 ## 9. Judgement calls left open
 
-**9.1 The merge policy, which is the real decision.** Not the file format. The
-defensible default is per-record last-write-wins on `updatedAt` for progress,
-union-by-id for attempts and sessions, and preferences taken wholesale — theirs
-or mine, never field-merged, because a half-merged course state is one neither
-device chose. But last-write-wins on an FSRS record loses review history in a way
-that is invisible afterwards, and the alternative — replaying the merged attempt
-log through `recordAttempt` to rebuild progress from scratch — is both more
-correct and much slower, and possible only because attempts are the source of
-truth today. Decide before §7.1 is fixed, because a replay-based merge needs the
-attempt log to be complete and §9.3 is about pruning it.
+**9.1 The merge policy. Settled 2026-08-25: the attempt log is what syncs, and
+progress is rebuilt from it.**
+
+Not last-write-wins — and the reason is stronger than the one this section gave
+while it was still a question.
+
+`ItemProgress` is not a document. It is a **fold**: `attempts + 1`,
+`correct + (failed ? 0 : 1)`, `streak + 1`, an exponential mean over latency, and
+stability and difficulty computed from the previous pair
+([`fsrs.ts:68`](../../src/domain/progress/fsrs.ts), [`tracker.ts:45`](../../src/domain/progress/tracker.ts))
+_(verified 2026-08-25)_. Every field is a function of the row before it and the
+attempt applied to it. Nothing in the chain reads a clock or a random source —
+`recordAttempt` takes an `Rng` and its doc comment says what for: the attempt's
+id, and nothing else.
+
+Two consequences, and they decide this.
+
+**Last-write-wins on an accumulator is a lost-update bug.** Two devices practise
+the same item offline; A takes its count from 10 to 15, B from 10 to 13.
+Last-write-wins keeps one row, so between three and five counted attempts vanish
+from `attempts`, `correct`, `incorrect`, `hintsUsed` and `streak` — while the
+attempt rows themselves survive, because §9.1.1 unions those by id. The stored
+progress then disagrees with the log it was derived from. That state is
+unreachable today by construction, nothing would detect it, and `mastery.ts`
+derives what a learner is _shown_ from exactly the record that is now wrong.
+"Loses review history invisibly" undersells it: it desynchronises two stores that
+are meant to be one fact.
+
+**Replay is exact, not merely more correct.** Because the fold is total and
+deterministic, folding an item's attempts in `at` order reproduces its progress
+row exactly. There is no approximation to defend and no history to lose.
+
+### 9.1.1 The policy, per record
+
+| Record                   | Merge                                                                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `attempts`               | Union by id. Immutable, append-only, idempotent — the only record whose merge is a merge, and what Stage B's collision-free ids exist for   |
+| `progress`               | **Not merged.** Recomputed by folding the item's attempts. A projection, not a record that syncs                                            |
+| `sessions`               | Union by id. Immutable                                                                                                                      |
+| `batches`                | Per record, last-write-wins wholesale on its own clock — authored material, so a document rather than an accumulator. See the gap in §9.1.2 |
+| `preferences`, `courses` | Wholesale, theirs or mine, never field-merged. A half-merged course state is one neither device chose                                       |
+
+### 9.1.2 What it costs, and what it needs
+
+**A pure fold, split out of `recordAttempt`.** Extract
+`applyAttempt(current, attempt, scheduler)` — the transition alone — and let
+`recordAttempt` mint the id and delegate to it. Replay then needs no `Rng` and
+duplicates no logic. A stored `Attempt` already carries every field
+`AttemptInput` has, so the mapping back is lossless.
+
+**Bounded, not O(all history).** A sync changes the attempt set of _some_ items,
+not all of them. Replay only those, through the `attempts.forItem(itemId)` that
+`AttemptStore` already declares. A learner who practised twenty items on a phone
+replays twenty items' worth of attempts. The "much slower" this section used to
+warn about was measuring a full-log rebuild — which is the migration case, not
+the sync case.
+
+**An invariant that becomes assertable, and must be asserted.** For every item,
+`fold(attempts) === stored progress`. Today that holds because there is one
+writer; after sync it holds only because the merge maintains it. That is a
+property test over a generated attempt log, and it is the test that catches a
+broken reconciler before a learner does.
+
+**The scheduler's id belongs beside the projection.** `fsrsScheduler.id` is
+`'fsrs-v1'`, and the seam exists so the algorithm can be swapped. A replay under
+different weights yields different stability than the incremental path produced —
+correct, and also a change to every due date. Store the id that built a
+projection, and treat a scheduler change as a deliberate full rebuild rather than
+something a sync does quietly. This is what that field was for.
+
+**One gap this exposes: a deleted batch resurrects.** `BatchStore.remove(id)`
+exists, and union-by-id cannot express a deletion — the other device still holds
+the row and hands it back. Batches need a tombstone (`deletedAt`), or the app
+needs to accept resurrection and say so. Nothing else here deletes, which is why
+it has not come up before.
+
+Finally, the reason to settle this now rather than with the backend: **Stage C's
+importer needs the same operation.** Merging a file's attempt log into a local one
+is the same problem as merging a device's, so the fold above is not work spent
+only on sync.
 
 **9.2 Whether scheduling stays per item.** The biggest open question in the
 learning model, and deliberately outside the stages above. One `stability` and
@@ -438,15 +515,31 @@ production answer, and the composer then reads that same status to decide which
 retrieval mode to offer — so recognition inflates the ladder that is meant to
 gate it. `Attempt.exerciseKind` is recorded and nothing aggregates it, so the
 evidence is already there. It is also what "the ones I keep failing" means to a
-learner: usually a _kind_, not an item. Doing this after Stage C means a schema
-bump for a format that has just shipped; doing it before means a bigger first
-change. Neither is wrong — but it is not a detail to discover later.
+learner: usually a _kind_, not an item.
+
+**Cheaper than this section assumed, as of 2026-08-25.** §9.1 settles progress as
+a projection, and that changes the cost of this question in the direction that
+makes deferring it safe. Splitting one `stability`/`difficulty` per item into one
+per retrieval mode becomes a **rebuild from data already stored** —
+`Attempt.exerciseKind` is on every attempt — rather than a migration of rows
+nothing can reconstruct. So it no longer has to precede the file format: the
+format that ships is the attempt log, and the projection over it is free to
+change. It is still the biggest open question in the learning model. It is no
+longer a schema trap.
 
 **9.3 Attempt retention.** The log is unbounded and unpruned, and `AGENTS.md`
 says the FSRS weights are "awaiting a per-user fit against the attempt log we
 already store", which is an argument for keeping all of it. A retention window,
 if there is ever one, belongs next to that sentence as a decision — not as a side
 effect of making an export smaller.
+
+**Coupled to §9.1 as of 2026-08-25.** Replay needs the log complete, so pruning
+is no longer only a question of size: it deletes the evidence every progress row
+is rebuilt from. If there is ever a window, prune to a **checkpoint** — store the
+projection as of the boundary and replay forward from there — which keeps replay
+exact and keeps §9.1.2's invariant assertable. A window without a checkpoint
+quietly makes every progress row older than it unverifiable, which is the same
+class of failure as the unbackfilled index in §6.1: nothing looks wrong.
 
 **9.4 Whether device settings belong in the export at all.** A theme and a voice
 name are properties of the device that was in front of the learner. Exporting

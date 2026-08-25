@@ -1,13 +1,13 @@
-import { Link, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
-import { Icon } from '../../components/Icon';
 import { SectionTabs } from '../../components/SectionTabs';
 import { AboutSettings } from './AboutSettings';
 import { AudioSettings } from './AudioSettings';
 import { AppearanceSettings } from './AppearanceSettings';
 import { LearningSettings } from './LearningSettings';
 import { PackSettings } from './PackSettings';
+import { UserSettings } from './UserSettings';
 import {
   parseSettingsTab,
   SETTINGS_TAB_OPTIONS,
@@ -17,13 +17,18 @@ import {
 import styles from './Settings.module.css';
 
 /**
- * Settings, in five sections rather than one column.
+ * Settings, in six sections rather than one column.
  *
  * The list it replaced was eleven cards deep, and the two things a learner
  * actually comes here to change — the course and the voice — were the first and
  * the fifth, with the app's own facts about itself interleaved. So the sections
- * are grouped by *whose* setting it is: Learning, Appearance and Audio are the
- * learner's, Packs and About are the app's.
+ * are grouped by *whose* setting it is: You, Learning, Appearance and Audio are
+ * the learner's, Packs and About are the app's.
+ *
+ * You is the section that was a separate screen at `/user`, reachable only from
+ * a link above these tabs — so a learner looking under Settings for their name,
+ * or for what this device is holding, found the one thing Settings did not
+ * contain. `/user` still resolves, into that tab.
  *
  * The open section is in the query string rather than in state, so `?tab=packs`
  * is an address like every other view in this app — see `settings-url.ts`. One
@@ -48,15 +53,6 @@ export function SettingsScreen() {
         }))}
       />
 
-      {/* The one thing on this screen that is not a setting: who the learner
-          is, and what is stored about them. Above the sections rather than
-          inside one, because it belongs to none of them — and it is the only
-          pointer to `/user`, which sits outside the course routes. */}
-      <Link className={styles.link} to="/user">
-        <Icon name="user" size="sm" />
-        You — your name, how you speak about yourself, and what is on this device
-      </Link>
-
       <section className={styles.group} aria-labelledby="settings-section">
         <h2 className={styles.groupTitle} id="settings-section">
           {active?.label ?? 'Settings'}
@@ -70,6 +66,10 @@ export function SettingsScreen() {
 
 function Section({ tab }: { readonly tab: SettingsTab }) {
   switch (tab) {
+    case 'user':
+      // The learner rather than the app: what to call them, the gender they
+      // speak about themselves in, and an account of what is on this device.
+      return <UserSettings />;
     case 'learning':
       return <LearningSettings />;
     case 'appearance':

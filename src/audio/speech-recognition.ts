@@ -30,6 +30,7 @@ import { baseLanguage, type LanguageTag } from '../domain/content';
 import {
   SPEECH_ABORTED,
   SPEECH_INSECURE_CONTEXT,
+  SPEECH_UNAVAILABLE,
   type ListenOptions,
   type MicrophoneHandle,
   type MicrophoneLevels,
@@ -176,7 +177,7 @@ export function createWebSpeechRecognitionProvider(
     const Recognition = constructor();
     if (!Recognition) {
       close(listening);
-      listening.settle(new Error('speech recognition unavailable'));
+      listening.settle(new Error(SPEECH_UNAVAILABLE));
       return;
     }
 
@@ -278,7 +279,7 @@ export function createWebSpeechRecognitionProvider(
 
     listen(locale: LanguageTag, listenOptions: ListenOptions = {}): Promise<SpeechResult> {
       if (!constructor()) {
-        return Promise.reject(new Error('speech recognition unavailable'));
+        return Promise.reject(new Error(SPEECH_UNAVAILABLE));
       }
       // Checked before anything is opened, because over plain HTTP there is
       // nothing to open and the browser reports that only to its console.

@@ -1,8 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePronunciationLocale, useTargetLanguage } from '../../app/course';
+import { Link } from 'react-router';
+import { useCourse, usePronunciationLocale, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
-import { MICROPHONE_BUSY, SPEECH_ABORTED, SPEECH_INSECURE_CONTEXT } from '../../audio';
+import {
+  describeSpeechFailure,
+  readSpeechEnvironment,
+  SPEECH_ABORTED,
+  type SpeechFailure,
+} from '../../audio';
 import { Button } from '../../components/Button';
+import { settingsPath } from '../settings/settings-url';
 import {
   bestExpectedAlternative,
   type ExpectedSpeechMatch,
@@ -28,12 +35,7 @@ type State =
       readonly expected: string;
       readonly comparison: SpeechComparison;
     }
-  | {
-      readonly phase: 'failed';
-      readonly reason: string;
-      /** Whether the meter saw a voice before it failed — see `failureMessage`. */
-      readonly audible: boolean;
-    };
+  | { readonly phase: 'failed'; readonly failure: SpeechFailure };
 
 const MESSAGES: Record<SpeechComparison['verdict'], string> = {
   match: '¡Muy bien! That matched.',
@@ -70,6 +72,7 @@ const SILENCE_HINT_MS = 2500;
  */
 export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
   const lang = useTargetLanguage();
+  const { course } = useCourse();
   const { services } = useServices();
   const locale = usePronunciationLocale();
   const { speech, audio } = services;
@@ -143,7 +146,17 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
       setState(
         reason === SPEECH_ABORTED
           ? { phase: 'idle' }
-          : { phase: 'failed', reason, audible: peak.current >= AUDIBLE },
+          : {
+              phase: 'failed',
+              // Read here rather than in render: the platform decides which
+              // settings screen the advice names, and the environment is the
+              // browser's state rather than this component's.
+              failure: describeSpeechFailure(reason, {
+                audible: peak.current >= AUDIBLE,
+                locale,
+                platform: readSpeechEnvironment().platform,
+              }),
+            },
       );
     } finally {
       if (mounted.current) setLevel(0);
@@ -202,7 +215,18 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
           </>
         )}
         {state.phase === 'failed' && (
-          <span className={styles.hint}>{failureMessage(state.reason, state.audible)}</span>
+          <>
+            <span className={styles.hint}>{state.failure.summary}</span>
+            {/* The exercise says what happened; the Audio settings say what to
+                change. A flashcard is the wrong place to teach somebody their
+                phone's speech settings, and the wrong place to find them again
+                afterwards. */}
+            {state.failure.steps.length > 0 && (
+              <Link className={styles.fix} to={settingsPath(course, 'audio')}>
+                How to fix speech input
+              </Link>
+            )}
+          </>
         )}
       </p>
     </div>
@@ -211,39 +235,5 @@ export function SpeakCheck({ expected, onComparison }: SpeakCheckProps) {
   function verdictClass(verdict: SpeechComparison['verdict']) {
     if (verdict === 'match') return styles.match;
     return verdict === 'close' ? styles.close : styles.different;
-  }
-}
-
-/**
- * Why a listen failed, in terms of something the learner can do about it.
- *
- * `audible` is what the meter saw, and it is the difference between two
- * failures that report the same reason. A recogniser that returns nothing while
- * the microphone is plainly working is not a learner who mumbled: on Android it
- * is usually a recogniser that needed the network, or one that lost the
- * microphone to another app mid-listen. Telling someone to speak up in that
- * case sends them to fix the one thing that is not broken.
- */
-function failureMessage(reason: string, audible: boolean): string {
-  switch (reason) {
-    case 'no-speech':
-      return audible
-        ? 'Your microphone is working, but the recogniser returned nothing. It may need a connection, or another app may have taken the microphone.'
-        : 'I did not hear anything — try again a little louder.';
-    case 'not-allowed':
-    case 'service-not-allowed':
-      return 'Microphone access was blocked. Allow it for this site in your browser settings, then try again.';
-    case MICROPHONE_BUSY:
-      return 'Something else is using the microphone. Close it — a call, another tab — and try again.';
-    case 'audio-capture':
-      return 'No microphone was available to listen with.';
-    case SPEECH_INSECURE_CONTEXT:
-      return 'Speech input needs a secure page. Open the installed app or the https address rather than a plain http one.';
-    case 'network':
-      return 'Speech recognition needs a connection on this browser.';
-    case 'language-not-supported':
-      return 'This browser cannot recognise this language. Rate yourself instead.';
-    default:
-      return 'Speech check is unavailable right now. Rate yourself instead.';
   }
 }

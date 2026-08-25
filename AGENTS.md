@@ -268,6 +268,23 @@ rather than erroring. The switcher is a `nav` of links with `aria-current`, not 
 `role="tablist"`: a section here _is_ an address, and half an ARIA tab widget
 promises arrow-key semantics that a set of links does not have.
 
+**Audio is two directions, and the failing one is input.** The Audio section
+holds playback (the voice picker, shared with the header's voice menu) _and_ a
+speech-input check: what this device supports, a listen the learner can run on
+purpose, and the steps for whatever it reports. It exists because speech input
+fails for reasons that are not in the app — an insecure page, a permission, a
+browser with no recogniser, or an Android device whose _separate_ speech service
+has no language downloaded — and an exercise has room for one sentence.
+
+Two rules hold here. The microphone and the recogniser are different things and
+must be reported separately: on a phone the browser opens the microphone and a
+system app transcribes, so `service-not-allowed` is the recogniser refusing and
+sending that learner to a microphone permission fixes nothing. And every surface
+reads one vocabulary — `describeSpeechFailure` in `audio/failure.ts`, with the
+platform from `audio/support.ts` deciding which settings screen the advice names.
+Add a cause there, never in a component; the terse copy an exercise shows and the
+steps Settings shows are the same object.
+
 **A content pack is an add-on, and Settings treats it as one.** It ships,
 versions and is licensed separately, so the Packs section lists each one with its
 version, levels, accents, licence and provenance, and counts what it holds through

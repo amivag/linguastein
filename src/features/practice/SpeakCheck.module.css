@@ -41,3 +41,15 @@
   color: var(--color-text-muted);
   font-style: italic;
 }
+
+/* The way out of a failure the exercise cannot fix. A link rather than a button
+   because it is an address — the Audio settings, where the steps live. */
+.fix {
+  align-self: flex-start;
+  min-height: var(--tap-target);
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}

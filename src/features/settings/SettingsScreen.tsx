@@ -2,8 +2,8 @@ import { useSearchParams } from 'react-router';
 import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
 import { SectionTabs } from '../../components/SectionTabs';
-import { VoiceSettings } from '../../components/VoiceSettings';
 import { AboutSettings } from './AboutSettings';
+import { AudioSettings } from './AudioSettings';
 import { AppearanceSettings } from './AppearanceSettings';
 import { LearningSettings } from './LearningSettings';
 import { PackSettings } from './PackSettings';
@@ -65,10 +65,9 @@ function Section({ tab }: { readonly tab: SettingsTab }) {
     case 'appearance':
       return <AppearanceSettings />;
     case 'audio':
-      // The same control the header's voice menu opens, so a change made in
-      // either place is the same change — there is nothing here the menu cannot
-      // reach, and nothing in the menu that stops here.
-      return <VoiceSettings />;
+      // Playback and speech input together: the voice menu's controls, and the
+      // check that says whether this device can hear at all.
+      return <AudioSettings />;
     case 'packs':
       return <PackSettings />;
     case 'about':

@@ -81,12 +81,12 @@ dist/             build output (git-ignored)
 
 Four destinations behind a tab bar (a rail on wider screens):
 
-| Section  | What it is                                                                                   |
-| -------- | -------------------------------------------------------------------------------------------- |
-| Study    | the material, in linkable sections: missions, words, phrases, grammar, abilities, categories |
-| Test     | where a session starts: the recommended next action, then quick sessions and the six presets |
-| Progress | what has been practised, accuracy, weak items, recent sessions                               |
-| Settings | five linkable sections: learning, appearance, audio, content packs, about                    |
+| Section  | What it is                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------- |
+| Study    | the material, in linkable sections: missions, words, phrases, grammar, abilities, categories                  |
+| Test     | where a session starts: the recommended next action, then quick sessions and the six presets                  |
+| Progress | what has been practised, accuracy, weak items, recent sessions                                                |
+| Settings | five linkable sections: learning, appearance, audio (playback and a speech-input check), content packs, about |
 
 Browse and Read are sheets _inside_ Study rather than destinations of their own —
 search and filter all 3,787 items by category or facet (and dictate the search

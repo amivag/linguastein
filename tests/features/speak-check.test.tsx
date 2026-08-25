@@ -122,6 +122,31 @@ describe('SpeakCheck', () => {
     expect(await screen.findByRole('status')).toHaveTextContent('Microphone access was blocked');
   });
 
+  it('does not send a refused speech service to the microphone permission', async () => {
+    const user = userEvent.setup();
+    render(new Error('service-not-allowed'));
+
+    await press(user);
+
+    // These two shared a branch, and an Android learner was told to unblock a
+    // permission that was never blocked. The recogniser is what refused.
+    const status = await screen.findByRole('status');
+    expect(status).toHaveTextContent('The microphone is not the problem');
+    expect(status).not.toHaveTextContent('Microphone access was blocked');
+  });
+
+  it('offers the way out of a failure a card has no room to explain', async () => {
+    const user = userEvent.setup();
+    render(new Error('service-not-allowed'));
+
+    await press(user);
+
+    // The steps live in Settings, on a screen that can afford them. A flashcard
+    // is the wrong place to teach somebody their phone's speech settings.
+    const fix = await screen.findByRole('link', { name: 'How to fix speech input' });
+    expect(fix).toHaveAttribute('href', expect.stringContaining('tab=audio'));
+  });
+
   it('can be stopped by pressing again, since a recogniser may not end itself', async () => {
     const user = userEvent.setup();
     renderWithServices(<SpeakCheck expected="Tengo que trabajar." />, {

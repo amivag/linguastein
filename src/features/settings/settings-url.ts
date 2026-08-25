@@ -52,7 +52,7 @@ export const SETTINGS_TAB_OPTIONS: readonly SettingsTabOption[] = [
     id: 'audio',
     label: 'Audio',
     icon: 'speak',
-    summary: 'Which voice speaks, in which accent, and how fast.',
+    summary: 'Which voice speaks, and whether this device can hear you.',
   },
   {
     id: 'packs',

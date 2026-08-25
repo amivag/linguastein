@@ -99,6 +99,13 @@ export const SPEECH_ABORTED = 'aborted';
 export const SPEECH_INSECURE_CONTEXT = 'insecure-context';
 
 /**
+ * The browser has no recogniser to start — Firefox today, and any engine that
+ * ships without the Web Speech API. Named rather than spelled out at each throw
+ * site, so the copy that explains it cannot drift from the string that causes it.
+ */
+export const SPEECH_UNAVAILABLE = 'speech recognition unavailable';
+
+/**
  * The microphone is held by something else — another tab, another app, a call.
  * Common enough on a phone to be worth saying out loud, and not one of the Web
  * Speech reasons, which fold it into `audio-capture`.

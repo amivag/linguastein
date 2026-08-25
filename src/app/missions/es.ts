@@ -1,62 +1,34 @@
-import type { MissionDefinition } from '../domain/missions';
+import type { MissionRealisation } from '../../domain/missions';
 
 /**
- * The first authored communicative journey.
+ * How Spanish realises each spine in `./spines.ts`.
  *
- * These are sequencing records over passages the pack already owns. Adding a
- * mission never creates a second copy of a sentence and never stores an
- * exercise. A future pack-supplied curriculum can implement the same shape.
+ * Everything here is a fact about Spanish rather than about the curriculum: which
+ * passage carries the exchange, which line previews it, which speaker the learner
+ * performs, and the palettes of natural alternatives for each move. The palettes
+ * are the bulk of it and the least shareable part — a nuance like "the same
+ * request in tú" describes one Spanish sentence and transfers nowhere.
+ *
+ * `rungs` is index-aligned with its spine's `ladder`. A rung may override the
+ * neutral brief where Spanish is the point of the situation.
  */
-export const MISSIONS: readonly MissionDefinition[] = [
-  /**
-   * The first mission is the one an adult actually needs first, and "hello,
-   * how are you, goodbye" is not it: that exchange is over in four turns and
-   * leaves you standing there. So the four greeting dialogues carry on past
-   * the wellbeing answer into the conversation that really happens — where you
-   * are from, where you live now, whether you like it, what you do, what you
-   * do with your time — and every one of those moves has a palette of natural
-   * alternatives behind it rather than one prescribed sentence.
-   *
-   * The asking palettes are the half that makes it a conversation. A learner
-   * who can only answer is still being interviewed.
-   */
+export const SPANISH_MISSIONS: readonly MissionRealisation[] = [
   {
-    id: 'greet-and-respond',
+    mission: 'greet-and-respond',
     language: 'es',
     level: 'a1',
-    order: 0,
-    title: 'Meet someone and keep talking',
-    goal: 'Greet someone, say where you are from and what you do, ask them back, and keep the conversation going.',
     passage: '700033',
-    transfers: [
-      {
-        passage: '700034',
-        support: 'guided',
-        brief: 'A friend you do not know well yet — work, the weekend, and where you are from.',
-      },
+    spotlight: 6,
+    learnerSpeaker: 'Luis',
+    rungs: [
+      { passage: '700034' },
       {
         passage: '700035',
-        support: 'guided',
+        // The formal/informal axis *is* the situation here, and naming the pronoun
+        // is what makes the rung legible. Neutral prose cannot do it.
         brief: 'The same conversation at work, in usted throughout.',
       },
-      {
-        passage: '700036',
-        support: 'independent',
-        brief: 'Meet a new neighbour and do the asking yourself, from intention cues.',
-      },
-    ],
-    capabilities: [
-      'greet-someone',
-      'respond-to-wellbeing',
-      'ask-about-origin',
-      'say-where-youre-from',
-      'say-where-you-are-based',
-      'say-if-you-like-a-place',
-      'ask-what-someone-does',
-      'say-what-you-do',
-      'ask-about-free-time',
-      'talk-about-free-time',
-      'close-friendly-exchange',
+      { passage: '700036' },
     ],
     responsePalettes: [
       {
@@ -250,55 +222,21 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 6,
-    estimatedMinutes: 18,
-    learnerSpeaker: 'Luis',
-    scenarioPartner: 'the other person',
   },
-  /**
-   * The mission that rescues all the others.
-   *
-   * Every other journey here assumes the exchange goes to plan. In a real one it
-   * does not: the answer comes back at full speed, with a word you have never
-   * met, and the learner's own three months of vocabulary are no help at all.
-   * These are the moves that buy another attempt — and they are the same four
-   * whether the room is a shop, a street, a classroom or a meeting, which is why
-   * this sits second rather than in whichever domain it was written for.
-   *
-   * Five of its palette entries are phrases the pack already shipped and nothing
-   * pointed at: `¿Puedes repetir, por favor?` has been in `sentences-core` since
-   * the beginning. A mission is sequencing, so gathering them costs no content.
-   */
   {
-    id: 'make-yourself-understood',
+    mission: 'make-yourself-understood',
     language: 'es',
     level: 'a1',
-    order: 1,
-    title: 'Make yourself understood',
-    goal: 'Say you have not understood, ask for it again or slower, find the word you need, and check you got it right.',
     passage: '700058',
-    transfers: [
-      {
-        passage: '700059',
-        support: 'guided',
-        brief: 'Directions you cannot follow. Slow the other person down instead of guessing.',
-      },
+    spotlight: 1,
+    learnerSpeaker: 'Luis',
+    rungs: [
+      { passage: '700059' },
       {
         passage: '700060',
-        support: 'guided',
         brief: 'In class, in tú, where the word itself is the problem.',
       },
-      {
-        passage: '700061',
-        support: 'independent',
-        brief: 'An address you cannot afford to get wrong. Get it in writing.',
-      },
-    ],
-    capabilities: [
-      'say-you-did-not-understand',
-      'ask-to-repeat',
-      'ask-to-slow-down',
-      'check-you-were-understood',
+      { passage: '700061' },
     ],
     responsePalettes: [
       {
@@ -421,42 +359,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 1,
-    estimatedMinutes: 14,
-    learnerSpeaker: 'Luis',
-    scenarioPartner: 'the other person',
   },
   {
-    id: 'cafe-order',
+    mission: 'cafe-order',
     language: 'es',
     level: 'a1',
-    order: 2,
-    title: 'Order at a café',
-    goal: 'Order a drink, add something else and understand the price.',
     passage: '700009',
-    transfers: [
-      {
-        passage: '700015',
-        support: 'guided',
-        brief: 'Order a different drink and respond when the waiter suggests an extra.',
-      },
-      {
-        passage: '700021',
-        support: 'guided',
-        brief: 'Change the order, decline one option and ask for the new total.',
-      },
-      {
-        passage: '700022',
-        support: 'independent',
-        brief: 'Handle a breakfast order from intention cues, without a line-by-line script.',
-      },
-    ],
-    capabilities: [
-      'order-food-drink',
-      'handle-add-on',
-      'ask-understand-price',
-      'close-service-exchange',
-    ],
+    spotlight: 1,
+    learnerSpeaker: 'Cliente',
+    rungs: [{ passage: '700015' }, { passage: '700021' }, { passage: '700022' }],
     responsePalettes: [
       {
         id: 'cafe-order-choice',
@@ -527,42 +438,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 1,
-    estimatedMinutes: 10,
-    learnerSpeaker: 'Cliente',
-    scenarioPartner: 'the waiter',
   },
   {
-    id: 'ask-directions',
+    mission: 'ask-directions',
     language: 'es',
     level: 'a1',
-    order: 3,
-    title: 'Ask for directions',
-    goal: 'Ask where a place is and follow a short answer.',
     passage: '700011',
-    transfers: [
-      {
-        passage: '700016',
-        support: 'guided',
-        brief: 'Find a different place and check how far away it is.',
-      },
-      {
-        passage: '700023',
-        support: 'guided',
-        brief: 'Ask for the museum and follow a route with two landmarks.',
-      },
-      {
-        passage: '700024',
-        support: 'independent',
-        brief: 'Find a bus stop from intention cues and confirm the distance.',
-      },
-    ],
-    capabilities: [
-      'ask-for-directions',
-      'follow-simple-directions',
-      'check-distance',
-      'thank-for-help',
-    ],
+    spotlight: 0,
+    learnerSpeaker: 'Turista',
+    rungs: [{ passage: '700016' }, { passage: '700023' }, { passage: '700024' }],
     responsePalettes: [
       {
         id: 'directions-destination',
@@ -633,43 +517,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 0,
-    estimatedMinutes: 9,
-    learnerSpeaker: 'Turista',
-    scenarioPartner: 'a local person',
   },
   {
-    id: 'shop-clothes',
+    mission: 'shop-clothes',
     language: 'es',
     level: 'a1',
-    order: 4,
-    title: 'Shop for clothes',
-    goal: 'Ask for help, choose an item and handle the fitting-room exchange.',
     passage: '700010',
-    transfers: [
-      {
-        passage: '700017',
-        support: 'guided',
-        brief: 'Choose a different item, size and colour.',
-      },
-      {
-        passage: '700025',
-        support: 'guided',
-        brief: 'Ask for trousers, try them on and decide whether to buy them.',
-      },
-      {
-        passage: '700026',
-        support: 'independent',
-        brief: 'Handle a shoe purchase from intention cues, including size and price.',
-      },
-    ],
-    capabilities: [
-      'seek-clothing-item',
-      'handle-clothing-size',
-      'ask-to-try-on',
-      'choose-clothing-purchase',
-      'ask-understand-item-price',
-    ],
+    spotlight: 1,
+    learnerSpeaker: 'Cliente',
+    rungs: [{ passage: '700017' }, { passage: '700025' }, { passage: '700026' }],
     responsePalettes: [
       {
         id: 'clothing-request',
@@ -757,43 +613,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 1,
-    estimatedMinutes: 11,
-    learnerSpeaker: 'Cliente',
-    scenarioPartner: 'the shop assistant',
   },
   {
-    id: 'hotel-check-in',
+    mission: 'hotel-check-in',
     language: 'es',
     level: 'a1',
-    order: 5,
-    title: 'Check into a hotel',
-    goal: 'Confirm a reservation and understand the essential check-in details.',
     passage: '700012',
-    transfers: [
-      {
-        passage: '700018',
-        support: 'guided',
-        brief: 'Check in for a different stay and locate another hotel facility.',
-      },
-      {
-        passage: '700027',
-        support: 'guided',
-        brief: 'Confirm a single room, breakfast times and where to find reception services.',
-      },
-      {
-        passage: '700028',
-        support: 'independent',
-        brief: 'Complete a late check-in from intention cues and ask for essential details.',
-      },
-    ],
-    capabilities: [
-      'confirm-hotel-reservation',
-      'give-stay-details',
-      'ask-whats-included',
-      'understand-hotel-schedule',
-      'locate-hotel-facility',
-    ],
+    spotlight: 1,
+    learnerSpeaker: 'Cliente',
+    rungs: [{ passage: '700018' }, { passage: '700027' }, { passage: '700028' }],
     responsePalettes: [
       {
         id: 'hotel-stay-details',
@@ -881,43 +709,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 1,
-    estimatedMinutes: 10,
-    learnerSpeaker: 'Cliente',
-    scenarioPartner: 'the receptionist',
   },
   {
-    id: 'make-plans',
+    mission: 'make-plans',
     language: 'es',
     level: 'a1',
-    order: 6,
-    title: 'Make evening plans',
-    goal: 'Suggest an activity, respond and agree on what to do.',
     passage: '700014',
-    transfers: [
-      {
-        passage: '700019',
-        support: 'guided',
-        brief: 'Make a different plan for the afternoon.',
-      },
-      {
-        passage: '700029',
-        support: 'guided',
-        brief: 'Suggest dinner, respond to an alternative and agree on a time.',
-      },
-      {
-        passage: '700030',
-        support: 'independent',
-        brief: 'Arrange a weekend activity from intention cues and settle the details.',
-      },
-    ],
-    capabilities: [
-      'open-social-planning',
-      'suggest-social-activity',
-      'respond-to-suggestion',
-      'coordinate-plan-time',
-      'confirm-social-plan',
-    ],
+    spotlight: 0,
+    learnerSpeaker: 'Luis',
+    rungs: [{ passage: '700019' }, { passage: '700029' }, { passage: '700030' }],
     responsePalettes: [
       {
         id: 'plan-reaction',
@@ -1007,43 +807,14 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 0,
-    estimatedMinutes: 10,
-    learnerSpeaker: 'Luis',
-    scenarioPartner: 'a friend',
   },
   {
-    id: 'morning-routine',
+    mission: 'morning-routine',
     language: 'es',
     level: 'a1',
-    order: 7,
-    title: 'Describe your morning',
-    goal: 'Tell someone the main events in your morning in a connected sequence.',
     passage: '700001',
-    transfers: [
-      {
-        passage: '700020',
-        support: 'guided',
-        brief: 'Describe a slower Saturday morning with a different destination.',
-      },
-      {
-        passage: '700031',
-        support: 'guided',
-        brief: 'Describe a busy weekday morning with clear sequence and times.',
-      },
-      {
-        passage: '700032',
-        support: 'independent',
-        brief: 'Build a connected Sunday routine from intention cues.',
-      },
-    ],
-    capabilities: [
-      'anchor-routine-in-time',
-      'describe-routine-actions',
-      'add-context-to-routine',
-      'sequence-routine-events',
-      'connect-routine-to-destination',
-    ],
+    spotlight: 0,
+    rungs: [{ passage: '700020' }, { passage: '700031' }, { passage: '700032' }],
     responsePalettes: [
       {
         id: 'real-morning-action',
@@ -1133,66 +904,17 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 0,
-    estimatedMinutes: 9,
-    scenarioPartner: 'a new friend',
   },
-  /**
-   * The first A2 mission, and the first built on material that was already in
-   * the pack: `En el médico` was the one dialogue no mission claimed.
-   *
-   * Health is the survival scenario the seven A1 missions leave out — a learner
-   * can order a coffee and check into a hotel but cannot say what hurts. It sits
-   * at A2 because its taught exchange does: `¿Desde cuándo?` wants a past
-   * reference, which is exactly why it earns a level of its own rather than
-   * being forced into A1.
-   *
-   * The transfer ladder deliberately leaves the surgery. Naming the symptom to a
-   * pharmacist and to a receptionist on the phone is the same ability under
-   * different pressure, which is what transfer is for — a second appointment
-   * with a different doctor would mostly re-run the script.
-   */
   {
-    id: 'doctor-visit',
+    mission: 'doctor-visit',
     language: 'es',
     level: 'a2',
-    order: 8,
-    title: 'Say what hurts',
-    goal: 'Describe a symptom, say how long you have had it, and follow the advice you are given.',
     passage: '700013',
-    transfers: [
-      {
-        passage: '700037',
-        support: 'guided',
-        brief: 'Ask a pharmacist for something for a headache, and take the dosage in.',
-      },
-      {
-        passage: '700038',
-        support: 'guided',
-        brief: 'A different symptom and a different doctor: your back, and how many days.',
-      },
-      {
-        passage: '700039',
-        support: 'independent',
-        brief: 'Phone a health centre for an appointment from intention cues alone.',
-      },
-    ],
-    capabilities: [
-      'describe-a-symptom',
-      'say-since-when',
-      'answer-health-questions',
-      'follow-health-advice',
-    ],
+    spotlight: 1,
+    learnerSpeaker: 'Paciente',
+    rungs: [{ passage: '700037' }, { passage: '700038' }, { passage: '700039' }],
     responsePalettes: [
       {
-        /*
-         * Every option here is a sentence the pack already had — the symptoms
-         * were authored long before this mission existed, scattered across the
-         * body and health sheets. Pointing at them rather than writing ten near
-         * copies is the same rule content follows everywhere else: describe what
-         * exists, do not duplicate it. The build would have rejected the copies
-         * anyway, since no two items may carry the same text.
-         */
         id: 'symptom-report',
         capability: 'describe-a-symptom',
         title: 'Say what is actually wrong',
@@ -1263,51 +985,14 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 1,
-    estimatedMinutes: 8,
-    learnerSpeaker: 'Paciente',
-    scenarioPartner: 'the doctor',
   },
-  /**
-   * Built on `Un día en la oficina`, which had sat in the pack unclaimed.
-   *
-   * A monologue mission rather than a dialogue, like `morning-routine`: "what do
-   * you do?" is answered in a paragraph, not an exchange, and the transfer is a
-   * different *job* rather than a different interlocutor. The last rung moves
-   * into the past tense on purpose — recounting a specific bad day is the point
-   * at which describing work stops being a script.
-   */
   {
-    id: 'your-work',
+    mission: 'your-work',
     language: 'es',
     level: 'a1',
-    order: 9,
-    title: 'Talk about your work',
-    goal: 'Say what you do, take someone through a working day, and say how it left you.',
     passage: '700003',
-    transfers: [
-      {
-        passage: '700040',
-        support: 'guided',
-        brief: 'The same day from home: a different place, the same shape.',
-      },
-      {
-        passage: '700041',
-        support: 'guided',
-        brief: 'A different job entirely — a shop, with opening and closing times.',
-      },
-      {
-        passage: '700042',
-        support: 'independent',
-        brief: 'Recount one particular busy day, in the past, from intention cues.',
-      },
-    ],
-    capabilities: [
-      'say-what-you-do',
-      'walk-through-a-workday',
-      'talk-about-work-meetings',
-      'say-how-the-day-went',
-    ],
+    spotlight: 0,
+    rungs: [{ passage: '700040' }, { passage: '700041' }, { passage: '700042' }],
     responsePalettes: [
       {
         id: 'what-you-do',
@@ -1378,49 +1063,14 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 0,
-    estimatedMinutes: 9,
-    scenarioPartner: 'someone you have just met',
   },
-  /**
-   * Built on `Mi piso`, the other text nothing pointed at.
-   *
-   * The transfers deliberately change *who is speaking about what home* rather
-   * than only the rooms: your parents' house, a student room, a flat two people
-   * are still looking for. The last one is in the future rather than the present,
-   * which is where "describe your home" stops being a list of furniture.
-   */
   {
-    id: 'your-home',
+    mission: 'your-home',
     language: 'es',
     level: 'a1',
-    order: 10,
-    title: 'Describe where you live',
-    goal: 'Say where you live, what the rooms are like, what is nearby, and how you feel about it.',
     passage: '700002',
-    transfers: [
-      {
-        passage: '700043',
-        support: 'guided',
-        brief: "Someone else's home: a village house, with a garden and a river.",
-      },
-      {
-        passage: '700044',
-        support: 'guided',
-        brief: 'A much smaller home, and what it is missing.',
-      },
-      {
-        passage: '700045',
-        support: 'independent',
-        brief: 'A home you do not have yet — say what you are looking for.',
-      },
-    ],
-    capabilities: [
-      'say-where-you-live',
-      'describe-the-rooms',
-      'say-what-is-nearby',
-      'say-how-you-feel-about-home',
-    ],
+    spotlight: 0,
+    rungs: [{ passage: '700043' }, { passage: '700044' }, { passage: '700045' }],
     responsePalettes: [
       {
         id: 'where-you-live',
@@ -1491,46 +1141,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 0,
-    estimatedMinutes: 8,
-    scenarioPartner: 'a new neighbour',
   },
-  /**
-   * The largest gap in the seven A1 missions relative to what the pack already
-   * knew: travel was its biggest topic and its only travel dialogues were asking
-   * directions and checking into a hotel. A learner could find the station and
-   * sleep near it without ever buying a ticket.
-   *
-   * The ladder changes the *mode* rather than the destination — bus, return fare,
-   * metro — because the pressure in this exchange comes from the fare and the
-   * platform, not from where you are going.
-   */
   {
-    id: 'buy-a-ticket',
+    mission: 'buy-a-ticket',
     language: 'es',
     level: 'a1',
-    order: 11,
-    title: 'Buy a ticket',
-    goal: 'Ask for a ticket, choose the fare, and find out when and where it leaves.',
     passage: '700046',
-    transfers: [
-      {
-        passage: '700047',
-        support: 'guided',
-        brief: 'A bus rather than a train, and a stop rather than a platform.',
-      },
-      {
-        passage: '700048',
-        support: 'guided',
-        brief: 'A return for two people, with a choice between two departures.',
-      },
-      {
-        passage: '700049',
-        support: 'independent',
-        brief: 'A metro machine: single or ten journeys, from intention cues.',
-      },
-    ],
-    capabilities: ['ask-for-a-ticket', 'ask-about-departure', 'choose-a-fare', 'find-the-platform'],
+    spotlight: 1,
+    learnerSpeaker: 'Viajero',
+    rungs: [{ passage: '700047' }, { passage: '700048' }, { passage: '700049' }],
     responsePalettes: [
       {
         id: 'ticket-request',
@@ -1601,52 +1220,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 1,
-    estimatedMinutes: 9,
-    learnerSpeaker: 'Viajero',
-    scenarioPartner: 'the person at the counter',
   },
-  /**
-   * `En el mercado` existed as a monologue and nothing let a learner *buy*
-   * anything in it. Shopping already had four clothes dialogues, and a market is
-   * usefully different: quantities and weights rather than sizes, and a price per
-   * kilo rather than per item.
-   *
-   * The independent rung is the one that matters here — the stall is out of what
-   * you asked for, so the script cannot be followed and something has to be
-   * changed on the spot.
-   */
   {
-    id: 'market-shopping',
+    mission: 'market-shopping',
     language: 'es',
     level: 'a1',
-    order: 12,
-    title: 'Shop at the market',
-    goal: 'Ask for an amount, find out what it costs by weight, change your order and pay.',
     passage: '700050',
-    transfers: [
-      {
-        passage: '700051',
-        support: 'guided',
-        brief: 'A bakery: counted loaves rather than a weight, and a change of mind.',
-      },
-      {
-        passage: '700052',
-        support: 'guided',
-        brief: 'A fishmonger, a higher price per kilo, and card or cash.',
-      },
-      {
-        passage: '700053',
-        support: 'independent',
-        brief: 'They are out of what you wanted. Take the substitute and re-price it.',
-      },
-    ],
-    capabilities: [
-      'ask-for-a-quantity',
-      'ask-price-by-weight',
-      'change-what-you-asked-for',
-      'pay-and-leave',
-    ],
+    spotlight: 1,
+    learnerSpeaker: 'Cliente',
+    rungs: [{ passage: '700051' }, { passage: '700052' }, { passage: '700053' }],
     responsePalettes: [
       {
         id: 'quantity-request',
@@ -1717,51 +1299,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 1,
-    estimatedMinutes: 9,
-    learnerSpeaker: 'Cliente',
-    scenarioPartner: 'the stallholder',
   },
-  /**
-   * `greet-and-respond` gets a learner as far as hello and how are you. This is
-   * the next thing anyone is asked, and the pack had thirty-seven family items
-   * with no exchange to use them in.
-   *
-   * It reuses the characters of the greetings mission on purpose — Luis, Marta,
-   * Ana, Daniel, Elena — so the two missions read as the same person's life
-   * rather than as two unrelated scripts. The learner is Luis in both.
-   */
   {
-    id: 'introduce-your-family',
+    mission: 'introduce-your-family',
     language: 'es',
     level: 'a1',
-    order: 13,
-    title: 'Introduce your family',
-    goal: 'Say who someone is, what they do, and give a detail — then react to what you hear.',
     passage: '700054',
-    transfers: [
-      {
-        passage: '700055',
-        support: 'guided',
-        brief: 'A cousin at a party, and how often he visits.',
-      },
-      {
-        passage: '700056',
-        support: 'guided',
-        brief: 'A sister with a different job, and her children.',
-      },
-      {
-        passage: '700057',
-        support: 'independent',
-        brief: 'Your own household now: who you live with, and a baby’s age.',
-      },
-    ],
-    capabilities: [
-      'introduce-a-person',
-      'say-what-they-do',
-      'give-family-details',
-      'react-with-interest',
-    ],
+    spotlight: 1,
+    learnerSpeaker: 'Luis',
+    rungs: [{ passage: '700055' }, { passage: '700056' }, { passage: '700057' }],
     responsePalettes: [
       {
         id: 'who-they-are',
@@ -1832,62 +1378,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 1,
-    estimatedMinutes: 9,
-    learnerSpeaker: 'Luis',
-    scenarioPartner: 'a friend looking at your photos',
   },
-  /*
-   * ── B1 ────────────────────────────────────────────────────────────────
-   *
-   * The first missions above A2, and the reason the ladder stopped there was
-   * never the engine: `missionsForCourse` has always taken a level ceiling, so
-   * a B1 mission needed B1 *content* and there was none. `more-missions.md` §2.1
-   * named this as the gap and said it was "not solved by writing more a1
-   * missions" — thirteen of fourteen were a1, and a learner who finished them
-   * had one a2 mission and then nothing.
-   *
-   * All three turn on the same grammar and are deliberately not *about* it. A B1
-   * learner does not need a mission called "the subjunctive"; they need to
-   * complain about a bill, settle something with a flatmate and take advice
-   * without taking orders — and find, three passages in, that all of those need
-   * `quiero que`, `es mejor que` and `dudo que` whether anybody named the mood
-   * or not.
-   *
-   * The transfer ladder is steeper here than at A1. The last rung of each drops
-   * more than the script: in `handle-a-complaint` it drops the counter, so there
-   * is nobody paid to be patient with you; in `share-a-flat` the learner becomes
-   * the one asking rather than the one asked.
-   */
   {
-    id: 'handle-a-complaint',
+    mission: 'handle-a-complaint',
     language: 'es',
     level: 'b1',
-    order: 14,
-    title: 'Say something is wrong, and get it put right',
-    goal: 'Explain what has gone wrong, say what you want done about it, and stay polite while holding the line.',
     passage: '700109',
-    transfers: [
-      {
-        passage: '700115',
-        support: 'guided',
-        brief:
-          'The same complaint down a phone line, about a bill that is twice what it should be.',
-      },
-      {
-        passage: '700116',
-        support: 'guided',
-        brief:
-          'A parcel that never came — and they offer a replacement when what you want is the money.',
-      },
-      {
-        passage: '700117',
-        support: 'independent',
-        brief:
-          'A neighbour rather than a shop: no counter to stand at, and nobody paid to be patient with you.',
-      },
-    ],
-    capabilities: ['make-a-complaint', 'ask-someone-to-do', 'express-a-hope'],
+    spotlight: 0,
+    learnerSpeaker: 'Cliente',
+    rungs: [{ passage: '700115' }, { passage: '700116' }, { passage: '700117' }],
     responsePalettes: [
       {
         id: 'complaint-opening',
@@ -1924,38 +1423,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 0,
-    estimatedMinutes: 12,
-    learnerSpeaker: 'Cliente',
-    scenarioPartner: 'someone on the other side of a counter',
   },
   {
-    id: 'share-a-flat',
+    mission: 'share-a-flat',
     language: 'es',
     level: 'b1',
-    order: 15,
-    title: 'Sort something out with the person you live with',
-    goal: 'Raise something that is bothering you at home, propose a change, and reach an agreement neither of you resents.',
     passage: '700110',
-    transfers: [
-      {
-        passage: '700118',
-        support: 'guided',
-        brief:
-          'The same conversation about money, where the bills went up and neither of you caused it.',
-      },
-      {
-        passage: '700119',
-        support: 'guided',
-        brief: 'Who cleans what — and the fix is a rota rather than a favour.',
-      },
-      {
-        passage: '700120',
-        support: 'independent',
-        brief: 'You are the one asking this time, and the answer is not a foregone conclusion.',
-      },
-    ],
-    capabilities: ['ask-someone-to-do', 'react-to-news', 'concede-a-point'],
+    spotlight: 0,
+    learnerSpeaker: 'Marta',
+    rungs: [{ passage: '700118' }, { passage: '700119' }, { passage: '700120' }],
     responsePalettes: [
       {
         id: 'flat-reaction',
@@ -1992,42 +1468,15 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 0,
-    estimatedMinutes: 11,
-    learnerSpeaker: 'Marta',
-    scenarioPartner: 'the person you share a flat with',
   },
   {
-    id: 'ask-for-advice',
+    mission: 'ask-for-advice',
     language: 'es',
     level: 'b1',
-    order: 16,
-    title: 'Ask for advice, weigh it, and decide',
-    goal: 'Lay out a choice you cannot settle alone, take advice without taking orders, and say what you have decided.',
     passage: '700112',
-    transfers: [
-      {
-        passage: '700121',
-        support: 'guided',
-        brief:
-          'The same weighing-up about a course, where the cheaper option is not obviously the worse one.',
-      },
-      {
-        passage: '700122',
-        support: 'guided',
-        brief: 'Money — and the first rung where you push back on the advice instead of taking it.',
-      },
-      {
-        passage: '700123',
-        support: 'independent',
-        brief: 'A worry rather than a decision, and advice you would rather not have been given.',
-      },
-    ],
-    // `weigh-two-options` is deliberately not here. It is what happens in the
-    // model and the first two transfers, and it is not what happens in the
-    // third — a worry about sleeping badly has no two options to weigh — so
-    // declaring it would claim a transfer the last rung does not make.
-    capabilities: ['give-advice', 'express-doubt'],
+    spotlight: 0,
+    learnerSpeaker: 'Ana',
+    rungs: [{ passage: '700121' }, { passage: '700122' }, { passage: '700123' }],
     responsePalettes: [
       {
         id: 'advice-giving',
@@ -2064,9 +1513,5 @@ export const MISSIONS: readonly MissionDefinition[] = [
         ],
       },
     ],
-    spotlight: 0,
-    estimatedMinutes: 12,
-    learnerSpeaker: 'Ana',
-    scenarioPartner: 'a friend who has been through it',
   },
-] as const;
+];

@@ -215,7 +215,7 @@ must be computed from the attempt log every time it is asked, exactly as
 **A stored list of item ids is not a rule-4 violation, and say so in the doc
 comment.** Rule 4 requires progress to reference stable ids, which this does; the
 new thing here is that a learner can now author a _curriculum object_, where
-previously only `src/app/missions.ts` could. That is the actual conceptual
+previously only `src/app/missions/` could. That is the actual conceptual
 addition and deserves a sentence in the module header.
 
 ### 5.2 The URL

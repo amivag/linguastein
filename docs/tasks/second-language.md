@@ -326,7 +326,7 @@ reads wrong on a German course:
 the item's own pack where the screen has one in hand — `ExerciseView`'s card
 heading and hint, `payloads.ts`'s copy label and AI prompt, `BrowseScreen`'s
 search label, three in `MissionScreen`, and `VoiceSettings`' "add a voice"
-advice. The strings in `src/app/missions.ts` are the _content_ of Spanish
+advice. The strings in `src/app/missions/es.ts` are the _content_ of Spanish
 missions and correctly still say Spanish. `presets.ts` was reworded instead of
 derived: a preset is static config with no course in hand, and the card it
 launches already names the language where the learner is about to act.

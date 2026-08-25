@@ -563,6 +563,29 @@ without a file being deleted.
 `content/es` and wrote into `core-es` from literals, so generating audio after
 building German would have spoken the wrong pack and said nothing about it.
 
+**A mission is a curriculum spine plus a per-language realisation.**
+[src/app/missions/spines.ts](src/app/missions/spines.ts) holds what is not about a
+language — the order, the goal, the capabilities, the estimated minutes and the
+transfer ladder's guided→independent arc — and
+[src/app/missions/es.ts](src/app/missions/es.ts) holds the passages, the spotlight
+line, the learner's speaker part and the response palettes. `resolveMissions`
+joins them into the `MissionDefinition` every screen already reads, which is why
+the split touched no consumer. A second language realises the existing spines
+rather than authoring new ones; its spine file should be empty.
+
+`rungs` is index-aligned with its spine's `ladder`, as `Passage.speakers` is with
+its `items` — the ladder is ordered and the order is the meaning. A length
+disagreement is a bug, not a shorter ladder, and
+`tests/domain/mission-spines.test.ts` says so. `level` sits on the realisation
+rather than the spine because grading does not transfer between languages.
+
+**A neutral default with a per-language override is the house pattern.** It has
+now come up twice — a capability's description and a transfer rung's brief — and
+both times the honest count was "almost all of it is neutral, and the exception
+names a pronoun". So: put the neutral text in the shared half, let a language
+override it, and **gate against an override that merely restates the default**,
+or the shared half quietly becomes decoration one row at a time.
+
 ## Datasets
 
 A briefed, ready-to-start task for growing the pack lives in

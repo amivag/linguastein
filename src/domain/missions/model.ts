@@ -76,6 +76,148 @@ export interface MissionDefinition {
   readonly scenarioPartner: string;
 }
 
+/**
+ * One rung of the transfer ladder, as the curriculum declares it.
+ *
+ * `support` and `brief` are the pedagogy — how much scaffolding this rung gives
+ * and what changed about the situation — and neither is a fact about a language.
+ * Which passage realises the rung is (see {@link MissionRungRealisation}).
+ */
+export interface MissionRung {
+  readonly support: MissionTransferSupport;
+  /**
+   * Neutral description of what changed. A language may override it where it
+   * cannot stay neutral: two of the shipped fifty-one name `tú` or `usted`,
+   * which is the whole point of the rung and meaningless in English.
+   */
+  readonly brief: string;
+}
+
+/**
+ * A mission with the language taken out of it: what it is for, in what order,
+ * aiming at which capabilities, with what transfer arc.
+ *
+ * This half is the reusable one. `MissionDefinition.id` was already documented
+ * as independent of a pack, and `passage` was already a *local* id resolved
+ * against whichever compatible pack is loaded — so a mission was always a spine
+ * plus per-language references, with `language` the field that forced a
+ * duplicate. Authoring a second language's missions is now choosing passages,
+ * not re-deriving the sequencing.
+ *
+ * The prose here — `title`, `goal`, `scenarioPartner`, a rung's `brief` — is
+ * neutral about the *target* language and still written in English. A learner
+ * who does not read English needs it translated, which puts it with the UI
+ * chrome rather than with the content. See `docs/tasks/language-matrix.md` §4.
+ */
+export interface MissionSpine {
+  /** Stable, shareable curriculum id — deliberately independent of a pack id. */
+  readonly id: string;
+  readonly order: number;
+  readonly title: string;
+  /** The real-world thing the learner should be able to do afterwards. */
+  readonly goal: string;
+  /** What to call the other side when the source is a monologue or narrative. */
+  readonly scenarioPartner: string;
+  /** Communicative-function capabilities this mission gathers evidence for. */
+  readonly capabilities?: readonly string[];
+  readonly estimatedMinutes: number;
+  /**
+   * The transfer arc: earlier rungs change details, later rungs reduce scripting.
+   * A language supplies one passage per rung, in this order.
+   */
+  readonly ladder?: readonly MissionRung[];
+}
+
+/** Which passage realises one rung, and a brief where the neutral one will not do. */
+export interface MissionRungRealisation {
+  /** Local passage id for this distinct real-world context. */
+  readonly passage: string;
+  readonly brief?: string;
+}
+
+/**
+ * How one language realises one spine.
+ *
+ * `rungs` is index-aligned with the spine's `ladder`, the way `Passage.speakers`
+ * is index-aligned with its `items`: the ladder is ordered and that order is its
+ * meaning, so a key per rung would name what the position already says. A
+ * realisation whose length disagrees with its spine is a bug rather than a
+ * shorter ladder, and `tests/domain/mission-spines.test.ts` is what says so.
+ *
+ * `level` is here rather than on the spine deliberately. Grading does not
+ * transfer — the same capability is not the same difficulty in two languages —
+ * which is the finding `docs/tasks/language-matrix.md` §4 records.
+ */
+export interface MissionRealisation {
+  /** The spine this realises, by {@link MissionSpine.id}. */
+  readonly mission: string;
+  readonly language: string;
+  readonly level: CefrLevel;
+  /** Local passage id, resolved against whichever compatible pack is loaded. */
+  readonly passage: string;
+  /** Which line gives Home a useful preview. */
+  readonly spotlight: number;
+  /** In a dialogue, the part the learner performs during the Use stage. */
+  readonly learnerSpeaker?: string;
+  readonly rungs?: readonly MissionRungRealisation[];
+  /** Natural alternatives for one communicative move, never exercise records. */
+  readonly responsePalettes?: readonly MissionResponsePalette[];
+}
+
+/**
+ * Joins spines to realisations, producing the shape every screen already reads.
+ *
+ * Deliberately returns {@link MissionDefinition} rather than a new type: the
+ * split is about where the data is *authored*, and nothing downstream — the
+ * planner, Home, `MissionScreen`, the search chain — has an opinion about that.
+ * A realisation naming a spine that does not exist is dropped rather than
+ * throwing, because a missing curriculum entry must not take the app down; the
+ * test suite is where that becomes an error.
+ */
+export function resolveMissions(
+  spines: readonly MissionSpine[],
+  realisations: readonly MissionRealisation[],
+): readonly MissionDefinition[] {
+  const bySpine = new Map(spines.map((spine) => [spine.id, spine]));
+
+  return realisations.flatMap((realisation) => {
+    const spine = bySpine.get(realisation.mission);
+    if (!spine) return [];
+
+    const ladder = spine.ladder ?? [];
+    const transfers = ladder.flatMap((rung, index) => {
+      const realised = realisation.rungs?.[index];
+      if (!realised) return [];
+      return [
+        {
+          passage: realised.passage,
+          support: rung.support,
+          brief: realised.brief ?? rung.brief,
+        },
+      ];
+    });
+
+    return [
+      {
+        id: spine.id,
+        language: realisation.language,
+        level: realisation.level,
+        order: spine.order,
+        title: spine.title,
+        goal: spine.goal,
+        passage: realisation.passage,
+        ...(transfers.length ? { transfers } : {}),
+        ...(spine.capabilities ? { capabilities: spine.capabilities } : {}),
+        ...(realisation.responsePalettes ? { responsePalettes: realisation.responsePalettes } : {}),
+        spotlight: realisation.spotlight,
+        estimatedMinutes: spine.estimatedMinutes,
+        ...(realisation.learnerSpeaker ? { learnerSpeaker: realisation.learnerSpeaker } : {}),
+        scenarioPartner: spine.scenarioPartner,
+      },
+    ];
+  });
+}
+
 export function missionPassageForStage(mission: MissionDefinition, stage: MissionStage): string {
   return stage === 'use'
     ? (missionTransfers(mission)[0]?.passage ?? mission.passage)

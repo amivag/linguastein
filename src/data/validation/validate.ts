@@ -297,7 +297,7 @@ export function validateAcrossPacks(packs: readonly ContentPack[]): readonly Val
     /*
      * Items for the same reason, discovered later and from a different
      * direction: no *link* addresses an item by local id, but the mission
-     * definitions do — `{ item: '001147' }` in `src/app/missions.ts`, resolved
+     * definitions do — `{ item: '001147' }` in `src/app/missions/es.ts`, resolved
      * by `itemByLocalId`, which is first-match exactly as the two above are.
      *
      * A second pack of another language makes that live rather than

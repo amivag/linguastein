@@ -230,17 +230,44 @@ the default — otherwise the shared description becomes decoration one row at a
 time. Expect the same split wherever else a "neutral" string turns out to name a
 particle: `ADDRESS_FORMS`' labels in §7 are the next candidate.
 
-`MissionDefinition` is the same shape of problem and is not done. Its `id` is
-already documented as independent of a pack, and `passage` is already a _local_
-id resolved against whichever compatible pack is loaded — so a mission is already
-a spine plus per-language references, with `language: 'es'` the field that forces
-a duplicate. Splitting it into a neutral spine (capabilities, transfer ladder,
-support arc) and a per-language realisation keyed `(missionId, language)` would
-make authoring English missions a matter of choosing passages rather than
-re-deriving twenty missions of pedagogy. One caveat: `goal`, `title`, `brief`,
-`nuance` and `cue` are learner-facing English prose. Neutral in content, but a
-Spanish-speaking learner needs them translated — so they belong with the UI
-chrome, not in this bucket.
+**Missions are split the same way — landed 2026-08-25.** `MissionDefinition.id`
+was already documented as independent of a pack and `passage` was already a
+_local_ id resolved against whichever compatible pack is loaded, so a mission was
+always a spine plus per-language references with `language: 'es'` the field that
+forced a duplicate. `MISSION_SPINES` now holds the curriculum — order, title,
+goal, capabilities, estimated minutes, and the transfer ladder's support arc —
+and `SPANISH_MISSIONS` holds the passages, the spotlight line, the learner's
+speaker part and the response palettes. `resolveMissions` joins them and returns
+the same `MissionDefinition` every screen already read, which is why the split
+touched none of the nine importers.
+
+**Be honest about what it saves.** Not lines: the response palettes are 1,569 of
+the 1,932 and are irreducibly Spanish, because a nuance like "the same request in
+tú" describes one sentence and transfers nowhere. What it saves is the
+_sequencing_ — which mission comes first, what each aims at, and the
+guided→guided→independent arc — which is the part that took judgement and would
+otherwise be re-derived per language. Expect a second language's mission file to
+be roughly as large as Spanish's, and its spine file to be empty.
+
+Two design notes worth keeping. `rungs` is **index-aligned** with the spine's
+`ladder`, the way `Passage.speakers` aligns with its `items`; the ladder is
+ordered and that order is its meaning, so a key per rung would only restate the
+position. A length disagreement is a bug rather than a shorter ladder, and
+`tests/domain/mission-spines.test.ts` is the gate. And `level` sits on the
+realisation, not the spine, because §4's grading finding applies: the same
+capability is not the same difficulty in two languages.
+
+The override pattern recurred exactly as the capability registry predicted. 49 of
+51 transfer briefs are neutral; two name `usted` and `tú`, where the
+formal/informal choice _is_ the situation and neutral prose cannot carry it. Same
+mechanism, same gate — an override restating its neutral default is rejected.
+That is now twice, so treat "a neutral default plus a per-language override, with
+a gate against redundant overrides" as the house pattern for this whole class.
+
+One caveat unchanged: `goal`, `title`, `scenarioPartner`, `brief`, `nuance` and
+`cue` are learner-facing English prose. Neutral about the _target_ language and
+still English, so a Spanish-speaking learner needs them translated — they belong
+with the UI chrome, not here.
 
 ---
 
@@ -390,8 +417,13 @@ Steps 1–4 are the whole "decide it in alpha" window.
   language has not authored, so does an override that restates the shared
   description, and `core-es` rebuilds byte-identically
   (`tests/data/capability-registry.test.ts`)
+- **done** — a mission's curriculum half is authored once and its Spanish half
+  separately; the spine names nothing about Spanish, a realisation supplies one
+  passage per rung, and the join reproduces what every screen already read
+  (`tests/domain/mission-spines.test.ts`)
 - a second language declares its own labels against the shared registry and adds
-  no capability rows of its own
+  no capability rows of its own, and realises the existing spines rather than
+  authoring new ones
 - tapping `up` in `look it up` names the phrasal verb and glosses it
 - a pack declares a level ladder that is not CEFR, and the URL carries it
 - an A1 learner's first session downloads A1 shards, and no B1 file is fetched

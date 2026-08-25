@@ -88,7 +88,7 @@ describe('validateAcrossPacks', () => {
    * Items collide the most readily of the three and were checked the last.
    *
    * No *link* addresses an item by local id, which is why this was missed: the
-   * caller is `src/app/missions.ts`, where a response palette names its
+   * caller is `src/app/missions/es.ts`, where a response palette names its
    * sentences as `{ item: '001147' }` and `itemByLocalId` takes the first
    * match. Two packs from one generator both number from `000001`, so a second
    * language does not merely risk this — it guarantees it on item one.

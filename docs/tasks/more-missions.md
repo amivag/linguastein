@@ -14,7 +14,7 @@ missions landed at once because their vocabulary was already there — travel ha
 
 ## 1. The audit, so it is not repeated
 
-Measured against `src/app/missions.ts` as it ships:
+Measured against `src/app/missions/` as it ships:
 
 | Measure                                       | Now                     |
 | --------------------------------------------- | ----------------------- |

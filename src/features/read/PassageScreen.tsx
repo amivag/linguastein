@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { useCourse, usePronunciationLocale } from '../../app/course';
+import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
-import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
+import { PlaybackTransport } from '../../components/PlaybackTransport';
 import { Transcript } from '../../components/Transcript';
 import { UsageBadges } from '../../components/UsageBadges';
+import { useSequence } from '../../components/usePlayback';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import type { LearningItem } from '../../domain/content';
@@ -28,7 +29,6 @@ export function PassageScreen() {
   const navigate = useNavigate();
   const { course, path } = useCourse();
   const { services, preferences } = useServices();
-  const locale = usePronunciationLocale();
 
   const [showTranslations, setShowTranslations] = useState(false);
   const words = useWordSelection();
@@ -46,6 +46,10 @@ export function PassageScreen() {
     };
   }, [services.repository, id]);
   const passage = resolved.kind === 'found' ? resolved.value : undefined;
+  // Above the early return below, because a hook cannot be behind one. An
+  // unresolved passage has no sentences, and a sequence over none of them is
+  // simply idle and unavailable.
+  const reading = useSequence(sentences);
 
   if (!passage) {
     return (
@@ -85,13 +89,6 @@ export function PassageScreen() {
     preferences.referenceLanguage,
   );
 
-  const speak = (text: string) =>
-    void services.audio.speak({
-      text,
-      locale,
-      ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
-    });
-
   const openItem = words.item ? sentences.find((item) => item.id === words.item) : undefined;
 
   return (
@@ -106,9 +103,11 @@ export function PassageScreen() {
       </header>
 
       <div className={styles.passageActions}>
-        <Button onClick={() => speak(sentences.map((item) => item.text).join(' '))}>
-          <Icon name="speak" /> Listen
-        </Button>
+        {/* One sentence at a time, with the transport that makes reading along
+            possible: hold it where a word needs looking up, drop it, or tap a
+            line to carry on from there. It was one utterance of the whole text
+            joined by spaces, which could only start and be interrupted. */}
+        <PlaybackTransport sequence={reading} unit="Sentence" />
         <Button
           onClick={() => setShowTranslations((shown) => !shown)}
           aria-pressed={showTranslations}
@@ -138,7 +137,7 @@ export function PassageScreen() {
         })}
         onSelectWord={words.open}
         selectedTokens={words.tokensFor}
-        onListen={(item) => speak(item.text)}
+        onListen={reading.listen}
       />
 
       <Button

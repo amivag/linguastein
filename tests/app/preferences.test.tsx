@@ -19,19 +19,8 @@ import { App } from '../../src/app/App';
 import * as services from '../../src/app/services';
 import { createMemoryStorage, DEFAULT_PREFERENCES } from '../../src/storage';
 import { ExerciseEngine } from '../../src/domain/exercises';
-import { NOOP_PLAYBACK, type AudioService } from '../../src/audio';
 import { testRepository } from '../fixtures/pack';
-
-const silentAudio: AudioService = {
-  play: () => Promise.resolve(NOOP_PLAYBACK),
-  speak: () => Promise.resolve(NOOP_PLAYBACK),
-  stop: () => {},
-  canPlay: () => true,
-  canSpeak: () => true,
-  voicesFor: () => [],
-  voiceFor: () => undefined,
-  ready: () => Promise.resolve(),
-};
+import { silentAudio } from '../fixtures/services';
 
 /**
  * Storage that takes its time, and takes less of it each call — so a second

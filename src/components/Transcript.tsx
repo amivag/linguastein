@@ -1,7 +1,10 @@
+import { isSpeaking } from '../audio';
 import type { ItemId, LearningItem, TokenId } from '../domain/content';
 import { kindHue } from '../styles/kinds';
 import { Icon } from './Icon';
+import { SpeakingBars } from './SpeakingBars';
 import { TokenizedText } from './TokenizedText';
+import { usePlayback } from './usePlayback';
 import styles from './Transcript.module.css';
 
 export interface TranscriptLine {
@@ -76,13 +79,25 @@ export function Transcript({
   selectedTokens,
   onListen,
 }: TranscriptProps) {
-  const speaking = lines.some((line) => line.speaker !== undefined);
+  const dialogue = lines.some((line) => line.speaker !== undefined);
+  const playback = usePlayback();
+  // A queue is running, so a line's play button means "carry on from here"
+  // rather than "read this one". `Sequence.listen` decides it the same way; this
+  // is the half of the decision that has to be said out loud, in the name.
+  const queued = playback !== null && playback.total > 1;
 
-  if (!speaking) {
+  if (!dialogue) {
     return (
       <ol className={styles.prose} aria-label={label}>
         {lines.map((line) => (
-          <li key={line.item.id} className={styles.paragraph}>
+          <li
+            key={line.item.id}
+            className={styles.paragraph}
+            // The line being read, as a fact about the list rather than as a
+            // tint. It changes once a sentence, which is a rate a screen reader
+            // can follow — unlike the word inside it, which is decoration only.
+            {...(isSpeaking(playback, line.item) ? { 'aria-current': true } : {})}
+          >
             <TokenizedText
               item={line.item}
               className={styles.lineText}
@@ -90,7 +105,12 @@ export function Transcript({
               selected={selectedTokens(line.item.id)}
               contextLabel={line.item.text}
             />
-            <PlayLine item={line.item} onListen={onListen} />
+            <PlayLine
+              item={line.item}
+              onListen={onListen}
+              speaking={isSpeaking(playback, line.item)}
+              queued={queued}
+            />
             {line.meaning !== undefined && <p className={styles.meaning}>{line.meaning}</p>}
           </li>
         ))}
@@ -112,6 +132,7 @@ export function Transcript({
           <li
             key={line.item.id}
             className={styles.turn}
+            {...(isSpeaking(playback, line.item) ? { 'aria-current': true } : {})}
             /*
               Who is speaking, as data on the turn rather than only as text
               inside it. The name is drawn once per run and the line's own text is
@@ -146,7 +167,12 @@ export function Transcript({
                 />
                 {line.meaning !== undefined && <p className={styles.meaning}>{line.meaning}</p>}
               </div>
-              <PlayLine item={line.item} onListen={onListen} />
+              <PlayLine
+                item={line.item}
+                onListen={onListen}
+                speaking={isSpeaking(playback, line.item)}
+                queued={queued}
+              />
             </div>
           </li>
         );
@@ -191,22 +217,35 @@ function speakerSides(
  * A passage shows up to twenty of these, and `Listen` said twenty times is a
  * control neither a screen reader nor an agent can pick — the same rule
  * `TokenizedText`'s `contextLabel` follows for the words inside the line.
+ *
+ * It has two jobs, because a line in a passage being read is two different
+ * offers: hear this sentence, when nothing is playing, and pick up the reading
+ * here, when something is. One control rather than two on every line, and the
+ * name is what carries the difference — a screen reader user gets told which
+ * offer is live rather than being left to infer it from the state of the page.
  */
 function PlayLine({
   item,
   onListen,
+  speaking,
+  queued,
 }: {
   readonly item: LearningItem;
   readonly onListen: (item: LearningItem) => void;
+  /** This line is the one being read. */
+  readonly speaking: boolean;
+  /** A whole passage is being read, so this button restarts it here. */
+  readonly queued: boolean;
 }) {
   return (
     <button
       type="button"
       className={styles.play}
       onClick={() => onListen(item)}
-      aria-label={`Listen to “${item.text}”`}
+      aria-label={queued ? `Play from “${item.text}”` : `Listen to “${item.text}”`}
+      {...(speaking ? { 'data-speaking': 'true' } : {})}
     >
-      <Icon name="speak" size="lg" />
+      {speaking ? <SpeakingBars /> : <Icon name="speak" size="lg" />}
     </button>
   );
 }

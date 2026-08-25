@@ -7,7 +7,7 @@
  * above this layer.
  */
 
-import type { LanguageTag, LearningItem } from '../domain/content';
+import type { ItemId, LanguageTag, LearningItem } from '../domain/content';
 
 export interface SpeechRequest {
   readonly text: string;
@@ -24,9 +24,36 @@ export interface TtsVoice {
   readonly isDefault: boolean;
 }
 
+/**
+ * A character range within the text being spoken.
+ *
+ * Character offsets rather than a token id, because a provider knows the string
+ * it was handed and nothing else — mapping them onto tokens is `deriveTokenSpans`'
+ * job at render time (Rule 3), and keeping the seam in characters is what stops a
+ * vendor's event shape from reaching the UI (Rule 5).
+ */
+export interface SpeechSpan {
+  readonly start: number;
+  readonly end: number;
+}
+
 export interface PlaybackHandle {
   stop(): void;
+  /**
+   * Holds the audio where it is, and picks it up again. Optional because a
+   * source may not be able to: a caller asks {@link AudioService.canPause}
+   * rather than offering a control that does nothing.
+   */
+  pause?(): void;
+  resume?(): void;
   readonly done: Promise<void>;
+  /**
+   * Where in the text the voice has reached, word by word, for sources that can
+   * say. Returns an unsubscribe. Absent — or simply silent — means the engine
+   * does not report boundaries, which several do not: a caller must degrade to
+   * "this phrase is playing" rather than assume the highlight will arrive.
+   */
+  onProgress?(listener: (span: SpeechSpan) => void): () => void;
 }
 
 /** Produces speech for arbitrary text. Optional: canonical audio comes first. */
@@ -55,11 +82,66 @@ export interface PlayOptions {
   readonly voice?: string | undefined;
 }
 
+export interface SequenceOptions extends PlayOptions {
+  /**
+   * Where to begin, as the item to begin at rather than as an index: a passage
+   * hands over the sentences it is showing, and "start here" is a thing a
+   * learner points at, not a number. An id that is not in the list — or none at
+   * all — starts from the beginning.
+   */
+  readonly startAt?: ItemId | undefined;
+}
+
+/**
+ * What is being spoken right now, or `null` between plays.
+ *
+ * One object for the whole app rather than a boolean per button: the service
+ * plays one thing at a time and stops whatever was playing before, so playback
+ * state kept per screen would leave a row in Browse lit while a different row is
+ * actually speaking. Identity is deliberately loose — an id when an item started
+ * it, otherwise the text — because half the callers speak a string that belongs
+ * to no item (a response palette, a variation, a voice sample).
+ */
+export interface PlaybackState {
+  /** The item speaking, when an item started this. */
+  readonly itemId?: ItemId;
+  /** The text being spoken, so {@link span} maps onto what is on screen. */
+  readonly text: string;
+  /** The word being spoken, where the engine reports word boundaries. */
+  readonly span?: SpeechSpan;
+  /** Position within the queue and its length: sentence 3 of 12 in a passage. */
+  readonly index: number;
+  readonly total: number;
+  readonly paused: boolean;
+}
+
 /** What feature code uses. Resolves canonical audio, then falls back to TTS. */
 export interface AudioService {
   play(item: LearningItem, options: PlayOptions): Promise<PlaybackHandle>;
+  /**
+   * Plays several items in order — a passage read end to end, a conversation
+   * heard through (spec §6.1).
+   *
+   * One item at a time rather than one utterance of joined text, which is what
+   * this replaced. Joining loses every position: nothing can say which sentence
+   * is speaking, nothing can start from the third one, and a long enough string
+   * runs into the engine's own limits.
+   */
+  playAll(items: readonly LearningItem[], options: SequenceOptions): Promise<PlaybackHandle>;
   speak(request: SpeechRequest): Promise<PlaybackHandle>;
   stop(): void;
+  /** Holds playback where it is; `resume` picks it up. Both are no-ops if idle. */
+  pause(): void;
+  resume(): void;
+  /** Whether the source now playing can be held at all. False when nothing is. */
+  canPause(): boolean;
+  /**
+   * What is speaking now. The same object identity until it changes, so it can
+   * be read through `useSyncExternalStore` without re-rendering every frame.
+   */
+  playing(): PlaybackState | null;
+  /** Notifies on every change to {@link playing}. Returns an unsubscribe. */
+  subscribe(listener: (state: PlaybackState | null) => void): () => void;
   /**
    * Whether this item can be heard: either the dataset ships audio for it, or
    * the device can speak the language.

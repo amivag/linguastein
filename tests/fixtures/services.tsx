@@ -9,17 +9,40 @@ import { ExerciseEngine } from '../../src/domain/exercises';
 import { createMemoryStorage, DEFAULT_PREFERENCES, type Preferences } from '../../src/storage';
 import { testRepository } from './pack';
 
-/** No device speech in tests, but the dataset-audio path stays reachable. */
-const silentAudio: AudioService = {
+/**
+ * No device speech in tests, but the dataset-audio path stays reachable.
+ *
+ * Nothing ever plays, so `playing` is permanently `null` and the transport
+ * controls stay in their idle shape — which is what most tests want to assert
+ * against. A test about playback itself builds a real service over a fake voice
+ * instead; see `tests/features/passage-playback.test.tsx`.
+ */
+export const silentAudio: AudioService = {
   play: () => Promise.resolve(NOOP_PLAYBACK),
+  playAll: () => Promise.resolve(NOOP_PLAYBACK),
   speak: () => Promise.resolve(NOOP_PLAYBACK),
   stop: () => {},
+  pause: () => {},
+  resume: () => {},
+  canPause: () => false,
+  playing: () => null,
+  subscribe: () => () => {},
   canPlay: () => true,
   canSpeak: () => true,
   voicesFor: () => [],
   voiceFor: () => undefined,
   ready: () => Promise.resolve(),
 };
+
+/**
+ * The silent service with a few answers replaced — a device that has voices, a
+ * `speak` that records what it was asked for. One place that knows the full
+ * shape of `AudioService`, so a method added to the seam is added once here
+ * rather than in every test that stubs it.
+ */
+export function stubAudio(overrides: Partial<AudioService> = {}): AudioService {
+  return { ...silentAudio, ...overrides };
+}
 
 /** No microphone in tests unless a case supplies one. */
 const noSpeech: SpeechRecognitionProvider = {

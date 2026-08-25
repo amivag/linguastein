@@ -223,3 +223,36 @@
 .paragraph .meaning {
   grid-column: 1;
 }
+
+/*
+ * The line being read.
+ *
+ * `aria-current` is the selector because it is already the fact — the state is
+ * in the accessibility tree first and the styling hangs off it, rather than the
+ * two being set separately and drifting.
+ *
+ * A tint and a soft ring in the second accent, the same hue the spoken word
+ * uses, so a passage mid-playback reads as one thing at two scales: this line,
+ * that word. Nothing is drawn in the accent, which throughout the app means
+ * "you opened this".
+ */
+.paragraph[aria-current] {
+  background: var(--color-highlight-soft);
+  border-radius: var(--radius-md);
+  /* The tint bleeds outwards rather than being padded inwards: padding that
+     appears with the state would shuffle every line below it once a second. */
+  box-shadow: 0 0 0 var(--space-2) var(--color-highlight-soft);
+}
+
+.turn[aria-current] .bubble {
+  box-shadow:
+    var(--shadow-sm),
+    0 0 0 2px color-mix(in srgb, var(--color-highlight) 45%, transparent);
+}
+
+/* The line's own button, while it is the one speaking: the bars sit where the
+   glyph was, so the row does not reflow as the reading moves down it. */
+.play[data-speaking='true'] {
+  color: var(--color-highlight);
+  background: var(--color-highlight-soft);
+}

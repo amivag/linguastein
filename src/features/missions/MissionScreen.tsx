@@ -10,7 +10,9 @@ import { Icon } from '../../components/Icon';
 import { SectionTabs } from '../../components/SectionTabs';
 import { Sheet } from '../../components/Sheet';
 import { TokenizedText } from '../../components/TokenizedText';
+import { PlaybackTransport } from '../../components/PlaybackTransport';
 import { Transcript } from '../../components/Transcript';
+import { useSequence } from '../../components/usePlayback';
 import { useWordSelection, type WordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
@@ -439,6 +441,9 @@ function UnderstandStage({
 }) {
   const [showMeanings, setShowMeanings] = useState(false);
   const [showCapabilities, setShowCapabilities] = useState(false);
+  // The exchange, playable as an exchange: one line at a time, holdable, and
+  // resumable from whichever turn a learner tapped.
+  const conversation = useSequence(stageItems);
   const capabilitySheetId = `${id}-capabilities`;
   // The palette is most of the language on this screen, and its phrases are
   // exactly the ones a learner has not read before — so the sheet has to be
@@ -543,9 +548,7 @@ function UnderstandStage({
       {current.id === 'dialogue' && (
         <>
           <div className={styles.actions}>
-            <Button onClick={() => speakText(stageItems.map((item) => item.text).join(' '))}>
-              <Icon name="speak" /> Listen to all
-            </Button>
+            <PlaybackTransport sequence={conversation} unit="Line" playLabel="Listen to all" />
             <Button onClick={() => setShowMeanings((shown) => !shown)} aria-pressed={showMeanings}>
               {showMeanings ? 'Hide meaning' : 'Show meaning'}
             </Button>
@@ -568,7 +571,7 @@ function UnderstandStage({
             {...(learnerSpeaker ? { self: learnerSpeaker } : {})}
             onSelectWord={words.open}
             selectedTokens={words.tokensFor}
-            onListen={speak}
+            onListen={conversation.listen}
           />
         </>
       )}

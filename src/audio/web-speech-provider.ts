@@ -18,6 +18,7 @@ import {
   NOOP_PLAYBACK,
   type PlaybackHandle,
   type SpeechRequest,
+  type SpeechSpan,
   type TtsProvider,
   type TtsVoice,
 } from './types';
@@ -102,12 +103,59 @@ export function createWebSpeechTtsProvider(): TtsProvider {
         utterance.onerror = () => resolve();
       });
 
+      // Word boundaries, where the engine reports them — which is not
+      // everywhere. Chrome, Edge and Firefox do for local voices; Safari does
+      // but leaves `charLength` at zero; a network voice on Android often
+      // reports nothing at all. So this is an enhancement on top of "something
+      // is playing", never the thing that says playback started.
+      const spans = new Set<(span: SpeechSpan) => void>();
+      utterance.onboundary = (event) => {
+        // Engines emit sentence boundaries through the same event; only words
+        // move a highlight.
+        if (event.name !== '' && event.name !== 'word') return;
+        for (const listener of [...spans]) {
+          listener(wordAt(request.text, event.charIndex, event.charLength));
+        }
+      };
+
       speech.cancel();
       speech.speak(utterance);
 
-      return { stop: () => speech.cancel(), done };
+      return {
+        stop: () => {
+          spans.clear();
+          speech.cancel();
+        },
+        // `pause` is the platform's, and the platform is uneven: it holds the
+        // voice on desktop and on iOS, and is ignored by some Android engines,
+        // which resume from the start of the utterance instead. Speaking one
+        // sentence at a time is what keeps that failure small.
+        pause: () => speech.pause(),
+        resume: () => speech.resume(),
+        onProgress: (listener) => {
+          spans.add(listener);
+          return () => {
+            spans.delete(listener);
+          };
+        },
+        done,
+      };
     },
   };
+}
+
+/**
+ * The word starting at `start`, as a character range.
+ *
+ * `charLength` is authoritative where an engine sets it and zero where one does
+ * not — Safari has never set it — so the word is measured from the text itself
+ * in that case. Exported for testing: the length an engine omits is the
+ * difference between a highlight on `trabajar` and a highlight on `t`.
+ */
+export function wordAt(text: string, start: number, length: number): SpeechSpan {
+  if (length > 0) return { start, end: start + length };
+  const word = /^\S+/.exec(text.slice(start));
+  return { start, end: start + (word ? word[0].length : 1) };
 }
 
 /**

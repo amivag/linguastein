@@ -63,3 +63,27 @@
   border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
   box-shadow: -4px 0 0 var(--color-accent-soft);
 }
+
+/*
+ * The word the voice is on.
+ *
+ * `--color-highlight` rather than the accent, and the distinction is the point:
+ * a selected word is a word you opened, and a spoken word is a word being read
+ * to you. Sharing the accent made a passage mid-playback look like a passage
+ * with a sheet open on every word in turn.
+ *
+ * It reuses the same bleed as a selected run so the lit word sits on the line
+ * rather than boxing it, and it comes after `.selected` in the file on purpose:
+ * a word can be both, and where it is, what is happening now wins.
+ *
+ * Decoration only. `global.css` collapses the transition under
+ * prefers-reduced-motion, and nothing here is the only way to know audio is
+ * playing — the transport says it in words and the line carries `aria-current`.
+ */
+.speaking {
+  background: var(--color-highlight-soft);
+  text-decoration-color: var(--color-highlight);
+  box-shadow:
+    -2px 0 0 var(--color-highlight-soft),
+    2px 0 0 var(--color-highlight-soft);
+}

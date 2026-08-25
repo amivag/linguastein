@@ -17,6 +17,35 @@ in the pack's own counts.
 
 ### Added
 
+- **Playback you can follow.** Audio used to be a button that made a sound: nothing
+  said it had started, nothing said where it had got to, and a text or a dialogue was
+  spoken as one enormous utterance built by joining every sentence with a space. That
+  shape rules out everything else by construction — there is no position to report, no
+  line to start from, and nothing to hold, because the engine was handed a paragraph
+  and asked to deal with it.
+
+  A passage and a mission's exchange now play **one line at a time**, with a transport
+  that fits reading along: **Pause** where a word needs looking up, **Resume**,
+  **Stop**, `Sentence 3 of 12`, and a line's own play button that means "read this one"
+  when nothing is playing and **"carry on from here"** when something is — the name
+  changes with it, so the offer is stated rather than inferred. A practice card's Play
+  becomes Stop while it speaks.
+
+  Inside the line, the **word being spoken is lit**, from the boundary events the
+  speech engine reports as it goes. Character offsets stop at the provider seam and
+  `deriveTokenSpans` maps them onto tokens at render time, which is what §15 has always
+  said those offsets are for. It degrades honestly: Safari reports no `charLength` and
+  measures the word instead, a network voice on Android reports nothing at all and the
+  line-level state carries it alone, and recorded canonical audio has no word marks in
+  the dataset yet, so it plays with the line marked and no word lit.
+
+  Which line is speaking is `aria-current` on the line — a fact about the list, at a
+  rate a screen reader can follow. The word inside it deliberately carries no ARIA and
+  no name change: it moves three or four times a second, and a control whose state
+  changed that fast would wreck the tree for the reader being read to already. The
+  playing state lives on the audio service rather than in a screen, so a row in Browse
+  can no longer sit lit while a different row is the one speaking.
+
 - **The present subjunctive, generated — and B1 behind it.** The conjugator built
   seven indicative tenses and the affirmative commands, which is most of Spanish
   and none of B1: the level is more or less defined by the mood, so authoring B1

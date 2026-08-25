@@ -5,6 +5,7 @@ import { SLOW_RATE } from '../../audio';
 import { Button } from '../../components/Button';
 import type { LearningItem } from '../../domain/content';
 import { Icon } from '../../components/Icon';
+import { useIsSpeaking } from '../../components/usePlayback';
 import styles from './Practice.module.css';
 
 interface AudioControlsProps {
@@ -19,6 +20,7 @@ export function AudioControls({ item, autoPlay = false }: AudioControlsProps) {
   const { audio } = services;
   const locale = usePronunciationLocale();
   const [playable, setPlayable] = useState(true);
+  const speaking = useIsSpeaking(item);
 
   const play = useCallback(
     (rate: number, repeat = 1) => {
@@ -55,9 +57,18 @@ export function AudioControls({ item, autoPlay = false }: AudioControlsProps) {
 
   return (
     <div className={styles.audio}>
-      <Button variant="primary" onClick={() => play(1)} aria-label="Play audio">
-        <Icon name="speak" /> Play
-      </Button>
+      {/* One button that plays and stops, rather than a Play that does nothing
+          the second time it is pressed. A card is one short phrase, so there is
+          nothing here worth holding: stop is the whole of the other half. */}
+      {speaking ? (
+        <Button variant="primary" onClick={() => audio.stop()} aria-label="Stop audio">
+          <Icon name="stop" /> Stop
+        </Button>
+      ) : (
+        <Button variant="primary" onClick={() => play(1)} aria-label="Play audio">
+          <Icon name="speak" /> Play
+        </Button>
+      )}
       <Button onClick={() => play(SLOW_RATE)} aria-label="Play slowly">
         <Icon name="slow" /> Slow
       </Button>

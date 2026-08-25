@@ -1,0 +1,58 @@
+/*
+ * Three bars scaled from the centre, on offset delays so the row reads as
+ * speech rather than as a progress bar cut into pieces — the same reasoning
+ * `MicLevel` records for its centre-heavy weighting, applied to a loop instead
+ * of a measurement.
+ *
+ * `transform` only: it is the one property that animates without laying the row
+ * out again, which matters here because this runs for as long as a passage
+ * takes to read.
+ */
+
+.bars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 0.9em;
+  flex-shrink: 0;
+}
+
+.bar {
+  width: 3px;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  transform-origin: center;
+  /* The resting shape, and the one prefers-reduced-motion leaves on screen:
+     short enough to read as a level, tall enough not to look broken. */
+  transform: scaleY(0.45);
+  animation: speaking var(--transition-slow) infinite alternate;
+}
+
+/* Offset so the three read as speech rather than as one bar drawn three times.
+   The delays come off the same duration token the animation does, so the row
+   stays in step if the scale changes. */
+.bar:nth-child(2) {
+  animation-delay: calc(var(--duration-slow) / 3);
+}
+
+.bar:nth-child(3) {
+  animation-delay: calc(var(--duration-slow) / 3 * 2);
+}
+
+/* Held, not stopped. The bars stay where they are, which is the visual half of
+   what the Resume button says in words. */
+.bars[data-paused='true'] .bar {
+  animation-play-state: paused;
+  opacity: 0.6;
+}
+
+@keyframes speaking {
+  from {
+    transform: scaleY(0.3);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}

@@ -12,23 +12,21 @@ import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import type { Preferences } from '../../src/storage';
 import { expectNoViolations } from '../a11y/axe';
-import { renderWithServices, testServices } from '../fixtures/services';
+import { renderWithServices, stubAudio, testServices } from '../fixtures/services';
 
 const MONICA: TtsVoice = { name: 'Mónica', locale: 'es-ES', isDefault: true };
 const PAULINA: TtsVoice = { name: 'Paulina', locale: 'es-MX', isDefault: false };
 
 /** A device with Spanish voices installed, unlike the silent default. */
 function speakingAudio(voices: readonly TtsVoice[] = [MONICA, PAULINA]): AudioService {
-  return {
-    play: () => Promise.resolve(NOOP_PLAYBACK),
+  return stubAudio({
     speak: vi.fn(() => Promise.resolve(NOOP_PLAYBACK)),
     stop: vi.fn(),
     canPlay: () => voices.length > 0,
     canSpeak: () => voices.length > 0,
     voicesFor: () => voices,
     voiceFor: (_locale, preferred) => voices.find((v) => v.name === preferred) ?? voices[0],
-    ready: () => Promise.resolve(),
-  };
+  });
 }
 
 const openMenu = async () => {

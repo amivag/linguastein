@@ -9,6 +9,7 @@ import {
   type LearningItem,
   type TokenId,
 } from '../domain/content';
+import { useSpeakingToken } from './usePlayback';
 import styles from './TokenizedText.module.css';
 
 interface TokenizedTextProps {
@@ -72,6 +73,7 @@ export function TokenizedText({
   as: Text = 'p',
 }: TokenizedTextProps) {
   const lang = useItemLanguage(item);
+  const speaking = useSpeakingToken(item);
   const tokens = item.tokens ?? [];
   const wholeItem = tokens.length === 0 && isInspectableItem(item);
   const open = selected ?? [];
@@ -92,6 +94,7 @@ export function TokenizedText({
           tokenId={WHOLE_ITEM_TOKEN}
           onSelect={onSelect}
           selected={open.includes(WHOLE_ITEM_TOKEN)}
+          speaking={speaking === WHOLE_ITEM_TOKEN}
         />
       </Text>
     );
@@ -119,6 +122,7 @@ export function TokenizedText({
               tokenId={token.id}
               onSelect={onSelect}
               selected={open.includes(token.id)}
+              speaking={token.id === speaking}
               context={contextLabel}
               // Only the ends of a run are rounded, so a two-word selection
               // does not look like two separate one-word selections.
@@ -157,6 +161,8 @@ interface WordButtonProps {
   readonly tokenId: TokenId;
   readonly onSelect: (tokenId: TokenId) => void;
   readonly selected: boolean;
+  /** The word the voice is on right now. Decoration; see {@link TokenizedText}. */
+  readonly speaking?: boolean;
   readonly edge?: Edge;
   readonly context?: string | undefined;
 }
@@ -164,19 +170,27 @@ interface WordButtonProps {
 /**
  * One word you can open. Its accessible name is the contract screen readers and
  * agents pick a word by, so both shapes of text name a word the same way.
+ *
+ * `speaking` deliberately adds nothing to that name and no ARIA state. It moves
+ * three or four times a second while a sentence is read, and a control whose
+ * name or state changed that fast would make the accessibility tree unusable
+ * for the reader who has the least use for a highlight in the first place —
+ * they are already being read to. Which *line* is speaking is exposed, once,
+ * where a screen reader can act on it: `aria-current` in `Transcript`.
  */
 function WordButton({
   text,
   tokenId,
   onSelect,
   selected,
+  speaking = false,
   edge = 'single',
   context,
 }: WordButtonProps) {
   return (
     <button
       type="button"
-      className={`${styles.token} ${selected ? styles.selected : ''}`}
+      className={`${styles.token} ${selected ? styles.selected : ''} ${speaking ? styles.speaking : ''}`}
       data-edge={selected ? edge : undefined}
       onClick={() => onSelect(tokenId)}
       aria-label={context ? `About “${text}” in “${context}”` : `About “${text}”`}

@@ -342,6 +342,10 @@ Steps 1–4 are the whole "decide it in alpha" window.
   learned, and the AI summary names the course's language rather than `es`
 - `schön` and `schon` are distinct lexemes with ids naming the right word, and
   `content/de` needs no `stem-collisions.tsv` at all
+- **done** — `build:data <tag>` builds `content/<tag>` into `core-<tag>` with
+  only that language's module loaded, `core-es` rebuilds byte-identically, and
+  the catalog lists the packs on disk rather than a literal
+  (`tests/data/second-language-build.test.ts`)
 - `slug` is reached through the language module, and no caller assumes ASCII
 - **done** — a headword spanning tokens that do not touch is expressible, and a
   span naming a missing lexeme is reported (`tests/data/multi-word-lexeme.test.ts`)
@@ -350,5 +354,5 @@ Steps 1–4 are the whole "decide it in alpha" window.
 - an A1 learner's first session downloads A1 shards, and no B1 file is fetched
 - `translations-zh` can be added to a shipped `core-de` without re-versioning it
 - a learner can install and remove one pack from Settings → Packs, offline after
-- `npm run build:data -- de` builds `core-de` with no Spanish module loaded
+- a German pack exists to build, and `build:data de` derives its morphology
 - `tests/features/courses.test.tsx` passes with a third fixture language

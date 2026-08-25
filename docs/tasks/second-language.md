@@ -65,7 +65,7 @@ shaped by the wrong answer.
 
 ---
 
-## 2. The build is one language's build
+## 2. The build is one language's build — **landed 2026-08-25**
 
 `scripts/build-dataset.ts` is 3,000 lines and is `core-es`'s build, not a build:
 
@@ -88,6 +88,17 @@ correct for Spanish and meaningless for a language whose module does not exist.
 **Do not fork this file.** Two copies drift on the id ledger, the review gate,
 the duplicate-text check and the topic registry, which is nine gates that then
 have to be fixed twice.
+
+**What shipped** is the shape below, with three departures worth knowing:
+the interface is in `src/languages/types.ts` and `index.ts` is the loader; the
+module is loaded with a dynamic `import()` rather than a static map, because
+only that makes "no Spanish module loaded" true and testable; and instead of
+"a declaration of which gates apply", **every capability is optional and the
+gates key on its presence** — a language with no `numerals` skips the numeral
+checks because there is nothing to check against, which needs no second list to
+keep in step. The manifest's prose moved to `content/<tag>/manifest.tsv` as
+recommended, `referenceLanguages` is derived from the translations actually
+emitted, and the catalog is derived from the packs on disk.
 
 **Recommended shape.** A `LanguageModule` interface in `src/languages/index.ts`
 that a per-language directory implements — `conjugate`, `nominalForms`,
@@ -371,8 +382,11 @@ at any point.
 
 ## 10. Definition of done
 
-- `npm run build:data -- de` builds `core-de` from `content/de` with no Spanish
-  module loaded, and `core-es` still rebuilds byte-identically
+- **done (2026-08-25)** — `npm run build:data -- de` builds `core-de` from
+  `content/de` with no Spanish module loaded, and `core-es` still rebuilds
+  byte-identically. §2 is landed; see
+  [`language-matrix.md`](language-matrix.md) and
+  `tests/data/second-language-build.test.ts`
 - `core-es` and `core-de` load together with no validation errors
 - a mission's `{ item: '001147' }` resolves within its own language, proven by a
   test with both packs loaded

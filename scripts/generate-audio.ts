@@ -47,9 +47,23 @@ import {
 } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 
+/**
+ * Which language's pack to speak, as `--language de`.
+ *
+ * `core-es` and `content/es` were literals here, which was a quiet trap once the
+ * dataset build took a language: generating audio after building German would
+ * have read the Spanish ledger and written clips into the Spanish pack, and
+ * nothing in the output would have said so. Read before the options are parsed
+ * because the default output path is built from it.
+ */
+const LANGUAGE = (() => {
+  const at = process.argv.indexOf('--language');
+  return at >= 0 ? (process.argv[at + 1] ?? 'es') : 'es';
+})();
+
 const PACKS_DIR = resolve(process.env['LINGUASTEIN_PACKS_DIR'] ?? 'public/packs');
-const PACK_DIR = join(PACKS_DIR, 'core-es');
-const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? 'content/es');
+const PACK_DIR = join(PACKS_DIR, `core-${LANGUAGE}`);
+const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? `content/${LANGUAGE}`);
 
 /** Overridable so a test can pin the date the ledger records. */
 const TODAY = process.env['LINGUASTEIN_NOW'] ?? new Date().toISOString().slice(0, 10);

@@ -1,0 +1,36 @@
+# What this pack calls itself — the prose half of pack.json, beside the content
+# it describes.
+#
+# Columns: key	value
+#
+# These were literals inside `scripts/build-dataset.ts`: "Spanish Core", the
+# description naming Spanish, the licence, the reference languages and the two
+# accents. Every one of them is a sentence *about this pack*, so a second
+# language could not be built without editing the build script to describe it —
+# which is the same mistake as typing the app's name into a component.
+#
+# The build supplies the rest of pack.json and none of it belongs here: the id,
+# the levels and the file list are derived from what was actually built, and the
+# version, item count and date are authored in `pack.tsv`, because they change
+# with the content rather than with what the pack is called.
+#
+# `name` is the base name; the build appends the level range it built, so this
+# says "Spanish Core" and the manifest says "Spanish Core A1–B1". A missing file
+# or a missing key falls back to something derived from the language tag, so a
+# new language builds before anyone has written its blurb.
+#
+# `pronunciationLocales` is comma-separated: the accents this pack's content
+# distinguishes, which is what the Settings picker offers. Declared rather than
+# inferred, because a pack that means to offer an accent should say so before a
+# voice for it exists.
+#
+# `glossLanguage` is the language the sources' gloss column is written in, so it
+# is the language of the translation records and of the file that holds them.
+# `referenceLanguages` is *not* here: the build derives it from the translations
+# it actually emitted, which cannot lie about what the pack can explain itself in.
+#
+name	Spanish Core
+description	High-frequency Spanish verbs, nouns, modifiers and everyday sentences. Generated from content/es and not yet reviewed by a human editor.
+license	CC0-1.0
+glossLanguage	en
+pronunciationLocales	es-ES,es-MX

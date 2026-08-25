@@ -1,43 +1,58 @@
 #!/usr/bin/env tsx
 /**
- * Builds the `core-es` pack from the authoring sources in `content/es/`.
+ * Builds a content pack from the authoring sources in `content/<language>/`.
  *
- * Authors write compact TSV; this script derives everything mechanical:
- * verb forms (via the conjugator), noun plurals and adjective forms, stable
- * ids, sentence tokenisation, lexeme links, grammar-pattern annotations and
- * the translation records.
+ * Authors write compact TSV; this script derives everything mechanical: stable
+ * ids, sentence tokenisation, lexeme links, grammar-pattern annotations, the
+ * translation records, and — where the language has a module for it — verb
+ * paradigms, noun plurals, adjective agreement and numeral spellings.
  *
  * Deriving rather than hand-writing is the point: a human should never type
  * `hablábamos`, and a dataset should never disagree with itself about whether
  * `tengo` belongs to `tener`.
  *
- * Usage: tsx scripts/build-dataset.ts
+ * Everything language-specific arrives through one seam. `LanguageModule`
+ * (`src/languages/types.ts`) is loaded by tag, so the grammar of the language
+ * being built is the only grammar in memory, and every capability on it is
+ * optional: a language with no module yet builds its sentences and derives
+ * nothing, rather than failing inside a conjugator. What is left here is the
+ * part that never had an opinion about Spanish — ids, the ledger, topics,
+ * skills, passages, review, duplicate text, file naming and manifest assembly.
+ *
+ * Usage: tsx scripts/build-dataset.ts [language]   (default `es`)
  */
 
 import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { CEFR_LEVELS, PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
 import { sentenceMood } from '../src/domain/content/mood.ts';
-import { conjugate } from '../src/languages/es/conjugation.ts';
-import { IRREGULAR_VERBS } from '../src/languages/es/irregulars.ts';
-import { isLetterName } from '../src/languages/es/alphabet.ts';
-import { adjectiveForms, pluralOf } from '../src/languages/es/morphology.ts';
-import {
-  NUMERAL_RULES,
-  parseCardinal,
-  parseOrdinal,
-  spellCardinal,
-  spellOrdinal,
-  type NumeralRule,
-} from '../src/languages/es/numerals.ts';
+import { languageModule } from '../src/languages/index.ts';
+
+/**
+ * Which language to build. The tag decides the sources, the pack id, the file
+ * names and the module — nothing else selects a language, so there is no way to
+ * build `de` from `content/es` or to label a Spanish pack German.
+ */
+const LANGUAGE = (process.argv[2] ?? 'es').trim().toLowerCase();
 
 // Overridable so a test can build a scratch copy of the sources without
 // touching the checked-in pack.
-const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? 'content/es');
+const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? `content/${LANGUAGE}`);
 const PACKS_DIR = resolve(process.env['LINGUASTEIN_PACKS_DIR'] ?? 'public/packs');
-const OUT_DIR = join(PACKS_DIR, 'core-es');
-const PACK_ID = 'core-es';
+const PACK_ID = `core-${LANGUAGE}`;
+const OUT_DIR = join(PACKS_DIR, PACK_ID);
 const NS = `${PACK_ID}:`;
+/** Where the sources are, as the generated files should name them. */
+const SOURCE_LABEL = `content/${LANGUAGE}`;
+
+/**
+ * The grammar of the language being built, and only that language's.
+ *
+ * Loaded rather than imported: a static import of `es/conjugation.ts` would put
+ * Spanish in memory for a German build, which is the thing the seam exists to
+ * prevent and the thing a test can check.
+ */
+const language = await languageModule(LANGUAGE);
 
 // ── source rows ─────────────────────────────────────────────────────────────
 
@@ -385,6 +400,33 @@ interface AuthorRow {
   url: string;
 }
 
+/**
+ * What the pack calls itself, authored beside the content in `manifest.tsv`.
+ *
+ * Key–value rather than columns, because these are unrelated single facts that
+ * grow one at a time — a fifth column of prose on `pack.tsv`'s version row would
+ * put the pack's blurb next to its item count.
+ *
+ * Every key is optional and falls back to something derived from the tag, so a
+ * language builds before anyone has written its description. The fallbacks are
+ * deliberately plain: `core-de` rather than an invented "German Core", because a
+ * generated name that reads like an authored one is how a placeholder ships.
+ */
+const MANIFEST_FILE = 'manifest.tsv';
+
+const manifestRows: Map<string, string> = existsSync(join(CONTENT_DIR, MANIFEST_FILE))
+  ? new Map(
+      readSource(MANIFEST_FILE).rows.flatMap((row) => {
+        const [key, value] = row.fields;
+        return key ? [[key.trim(), (value ?? '').trim()] as [string, string]] : [];
+      }),
+    )
+  : new Map();
+
+const authored = (key: string): string | undefined => manifestRows.get(key) || undefined;
+/** The language the sources' gloss column is written in. */
+const GLOSS_LANGUAGE = authored('glossLanguage') ?? 'en';
+
 const authorRows: AuthorRow[] = existsSync(join(CONTENT_DIR, AUTHORS_FILE))
   ? readSource(AUTHORS_FILE).rows.map((row) => {
       const [name, role, url] = row.fields;
@@ -588,9 +630,9 @@ for (const sentence of sentences.filter((entry) => entry.speakerGender)) {
 const CLAIMS_LETTER = /^the letter /i;
 for (const noun of nouns) {
   if (!CLAIMS_LETTER.test(noun.gloss)) continue;
-  if (!isLetterName(noun.lemma)) {
+  if (language.alphabet && !language.alphabet.isLetterName(noun.lemma)) {
     problems.push(
-      `${noun.lemma}: glossed as a letter, but alphabet.ts names no letter that — ` +
+      `${noun.lemma}: glossed as a letter, but the language module names no letter that — ` +
         'check the spelling against the module',
     );
   }
@@ -598,20 +640,27 @@ for (const noun of nouns) {
 
 const numeralValues = new Map<string, number>();
 
-for (const modifier of modifiers) {
+/*
+ * Only a language whose module spells numbers can be told it has spelled one
+ * wrong. Without this guard the gate reads every `NUM` row of a module-less
+ * language as unreadable and fails the build on content that is fine.
+ */
+const numerals = language.numerals;
+
+for (const modifier of numerals ? modifiers : []) {
   if (modifier.pos !== 'NUM') continue;
 
-  const value = parseCardinal(modifier.lemma);
+  const value = numerals!.parseCardinal(modifier.lemma);
   if (value === null) {
     problems.push(
-      `${modifier.lemma}: tagged NUM but numerals.ts cannot read it — check the accent`,
+      `${modifier.lemma}: tagged NUM but the language module cannot read it — check the accent`,
     );
     continue;
   }
-  const canonical = spellCardinal(value);
+  const canonical = numerals!.spellCardinal(value);
   if (canonical !== modifier.lemma) {
     problems.push(
-      `${modifier.lemma}: numerals.ts spells ${value} as "${canonical}" — use that spelling`,
+      `${modifier.lemma}: the language module spells ${value} as "${canonical}" — use that spelling`,
     );
     continue;
   }
@@ -634,16 +683,16 @@ for (const modifier of modifiers) {
  */
 const ordinalValues = new Map<string, number>();
 
-for (const modifier of modifiers) {
+for (const modifier of numerals ? modifiers : []) {
   if (modifier.pos !== 'ADJ') continue;
 
-  const value = parseOrdinal(modifier.lemma);
+  const value = numerals!.parseOrdinal(modifier.lemma);
   if (value === null) continue;
 
-  const canonical = spellOrdinal(value);
+  const canonical = numerals!.spellOrdinal(value);
   if (canonical !== modifier.lemma) {
     problems.push(
-      `${modifier.lemma}: numerals.ts spells the ${value}th as "${canonical}" — use that spelling`,
+      `${modifier.lemma}: the language module spells the ${value}th as "${canonical}" — use that spelling`,
     );
     continue;
   }
@@ -656,14 +705,24 @@ for (const modifier of modifiers) {
   ordinalValues.set(modifier.lemma, value);
 }
 
-for (const verb of verbs) {
-  const declared = verb.regularity === 'irregular';
-  const known = Object.hasOwn(IRREGULAR_VERBS, verb.lemma);
-  if (declared && !known) {
-    problems.push(`${verb.lemma}: declared irregular but missing from irregulars.ts`);
-  }
-  if (!declared && known) {
-    problems.push(`${verb.lemma}: declared regular but listed in irregulars.ts`);
+/*
+ * The `regularity` column and the module's own table have to agree, and only a
+ * module that has a table can be asked. A verb declared irregular with no entry
+ * ships `teno` for `tengo`; one declared regular *with* an entry means the column
+ * is lying about something the module already knows.
+ */
+if (language.verbs) {
+  for (const verb of verbs) {
+    const declared = verb.regularity === 'irregular';
+    const known = language.verbs.isDeclaredIrregular(verb.lemma);
+    if (declared && !known) {
+      problems.push(`${verb.lemma}: declared irregular but the language module does not list it`);
+    }
+    if (!declared && known) {
+      problems.push(
+        `${verb.lemma}: declared regular but the language module lists it as irregular`,
+      );
+    }
   }
 }
 
@@ -1079,22 +1138,35 @@ interface FormRecord {
   id: string;
   lexeme: string;
   form: string;
+  /*
+   * Open rather than `Morphology`, and deliberately. These records are also the
+   * surface index's entries, and that index carries morphs read off source rows
+   * as plain strings — a gender column, a number — which the model's unions
+   * cannot describe without validating every row first. The typed inventory is
+   * enforced one level up, on `GeneratedForm`, which is where a generator could
+   * actually invent a key; here it is widened once, at the seam, rather than
+   * cast at five call sites.
+   */
   morph: Record<string, unknown>;
   level: string;
   regions?: readonly string[];
 }
 
-const verbForms: FormRecord[] = verbs.flatMap((verb) => {
-  const lexeme = lexemeId(verb.lemma, 'VERB');
-  return conjugate(verb.lemma, IRREGULAR_VERBS[verb.lemma] ?? {}).map((generated) => ({
-    id: `${NS}form:${formStem(lexeme)}-${formSuffix(generated.morph)}`,
-    lexeme,
-    form: generated.form,
-    morph: generated.morph as Record<string, unknown>,
-    level: generated.level,
-    ...(generated.regions ? { regions: generated.regions } : {}),
-  }));
-});
+// A language with no conjugator emits no verb forms, rather than being handed a
+// stub whose empty result looks like a verb with no paradigm.
+const verbForms: FormRecord[] = language.verbs
+  ? verbs.flatMap((verb) => {
+      const lexeme = lexemeId(verb.lemma, 'VERB');
+      return language.verbs!.conjugate(verb.lemma).map((generated) => ({
+        id: `${NS}form:${formStem(lexeme)}-${formSuffix(generated.morph)}`,
+        lexeme,
+        form: generated.form,
+        morph: { ...generated.morph },
+        level: generated.level ?? verb.level,
+        ...(generated.regions ? { regions: generated.regions } : {}),
+      }));
+    })
+  : [];
 
 function formSuffix(morph: {
   tense?: string;
@@ -1168,7 +1240,7 @@ for (const form of verbForms.filter((entry) => !isCommand(entry))) {
  * A noun's plural and an adjective's agreement forms, as records rather than as
  * index entries that evaporate.
  *
- * `pluralOf` and `adjectiveForms` have generated these since the pack existed,
+ * The language module has generated these since the pack existed,
  * and the build used the result only to link `verduras` in a sentence back to
  * `verdura`. Nothing shipped, so nothing could show it: `formsOf` had verb forms
  * to read and nothing else, which is why tapping a noun answered "what does it
@@ -1184,6 +1256,15 @@ interface NominalForm extends FormRecord {
   pos: 'NOUN' | 'ADJ';
 }
 
+/*
+ * A declared plural needs no module; a derived one does. So a language whose
+ * module has no `pluralOf` still ships the singular and the irregulars its
+ * sources declare, and simply has no derived plurals — which is the honest
+ * state of a language nobody has written morphology for, and reads as one.
+ */
+const pluralOf = language.nominals?.pluralOf;
+const adjectiveForms = language.nominals?.adjectiveForms;
+
 const nominalForms: NominalForm[] = [
   ...nouns.flatMap((noun): NominalForm[] => {
     const lexeme = lexemeId(noun.lemma, 'NOUN');
@@ -1192,6 +1273,9 @@ const nominalForms: NominalForm[] = [
     // A form of `papa` is as regional as the lexeme: the plural of a word a
     // learner should not be taught is not a word either.
     const regions = noun.regions.length > 0 ? { regions: noun.regions } : {};
+    // An irregular plural is declared (examen → exámenes, and the invariable
+    // lunes); everything else is derived.
+    const plural = noun.plural || pluralOf?.(noun.lemma);
     return [
       {
         id: `${NS}form:${key}-n-sg`,
@@ -1203,26 +1287,27 @@ const nominalForms: NominalForm[] = [
         level: noun.level,
         ...regions,
       },
-      {
-        id: `${NS}form:${key}-n-pl`,
-        lexeme,
-        lemma: noun.lemma,
-        pos: 'NOUN',
-        // An irregular plural is declared (examen → exámenes, and the invariable
-        // lunes); everything else is derived.
-        form: noun.plural || pluralOf(noun.lemma),
-        morph: { gender, number: 'plural' },
-        level: noun.level,
-        ...regions,
-      },
+      ...(plural
+        ? [
+            {
+              id: `${NS}form:${key}-n-pl`,
+              lexeme,
+              lemma: noun.lemma,
+              pos: 'NOUN' as const,
+              form: plural,
+              morph: { gender, number: 'plural' },
+              level: noun.level,
+              ...regions,
+            },
+          ]
+        : []),
     ];
   }),
-  ...modifiers
-    .filter((modifier) => modifier.pos === 'ADJ')
-    .flatMap((modifier): NominalForm[] => {
+  ...(adjectiveForms ? modifiers.filter((modifier) => modifier.pos === 'ADJ') : []).flatMap(
+    (modifier): NominalForm[] => {
       const lexeme = lexemeId(modifier.lemma, 'ADJ');
       const key = formStem(lexeme);
-      return adjectiveForms(modifier.lemma).map((entry) => ({
+      return adjectiveForms!(modifier.lemma).map((entry) => ({
         // Keyed by the agreement it *is*, not by its position in the list, so a
         // record keeps its id whether or not the adjective has a feminine.
         id: `${NS}form:${key}-a-${entry.morph.gender?.[0] ?? 'x'}${entry.morph.number === 'plural' ? 'pl' : 'sg'}`,
@@ -1233,7 +1318,8 @@ const nominalForms: NominalForm[] = [
         morph: { ...entry.morph },
         level: modifier.level,
       }));
-    }),
+    },
+  ),
 ];
 
 for (const form of nominalForms) {
@@ -1308,7 +1394,7 @@ for (const modifier of modifiers) {
  * indexed and the pattern below is what teaches it.
  */
 for (const [lemma, value] of ordinalValues) {
-  const shortened = spellOrdinal(value, { beforeNoun: true });
+  const shortened = numerals!.spellOrdinal(value, { beforeNoun: true });
   if (shortened === lemma) continue;
   index(shortened, {
     lexeme: lexemeId(lemma, 'ADJ'),
@@ -2062,52 +2148,17 @@ const GRAMMAR_SKILLS = [
 ];
 
 /**
- * The numeral rules as practisable skills, one per rule in `numerals.ts`.
+ * The numeral rules as practisable skills, read off the language module.
  *
- * Typed as a `Record<NumeralRule, …>`, so adding a rule to the module without
- * giving it a label fails the typecheck. That is a stronger guarantee than a
- * runtime check in this script and it fires earlier — `npm run check` catches it
- * before the build ever runs.
+ * The table of labels used to sit here, typed `Record<NumeralRule, …>` so a rule
+ * added to `numerals.ts` without a label failed the typecheck. It moved beside
+ * the rules it names (`src/languages/es/index.ts`), which keeps that guarantee —
+ * the record is still exhaustive over the module's own rule union — and stops
+ * this file holding one language's grammar prose.
  */
-const NUMERAL_SKILLS: Record<NumeralRule, { label: string; gloss: string; level: string }> = {
-  teens: {
-    label: 'dieciséis, diecisiete…',
-    gloss: 'the teens, written as one word',
-    level: 'a1',
-  },
-  twenties: {
-    label: 'veintiuno, veintidós…',
-    gloss: 'the twenties, written as one word',
-    level: 'a1',
-  },
-  'y-joining': {
-    label: 'treinta y uno / ciento uno',
-    gloss: 'y joins tens to units, and never hundreds to tens',
-    level: 'a1',
-  },
-  apocopation: {
-    label: 'veintiún libros',
-    gloss: 'uno shortens to un before a masculine noun',
-    level: 'a2',
-  },
-  'hundreds-agreement': {
-    label: 'doscientas casas',
-    gloss: 'the hundreds agree in gender',
-    level: 'a2',
-  },
-  'cien-ciento': {
-    label: 'cien mil / ciento treinta',
-    gloss: 'cien alone, ciento in a compound',
-    level: 'a2',
-  },
-  'mil-millon': {
-    label: 'mil / un millón de',
-    gloss: 'a thousand is never un mil; a million is a noun',
-    level: 'a2',
-  },
-};
+const numeralSkills = numerals?.skills ?? [];
 
-const numeralSkillId = (rule: NumeralRule): string => `${NS}skill:numerals-${rule}`;
+const numeralSkillId = (rule: string): string => `${NS}skill:numerals-${rule}`;
 
 const usedSkills = new Set<string>();
 
@@ -2337,7 +2388,7 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
     ...new Set([
       ...sentence.regions,
       ...lexemes.flatMap((id) => nounRegions.get(id) ?? []),
-      ...(address === 'vosotros' ? ['es-ES'] : []),
+      ...(language.regionsForAddress?.(address ?? '') ?? []),
     ]),
   ];
 
@@ -2647,11 +2698,11 @@ const authoredSkillRecords: SkillRecord[] = authoredSkillRows
 // is emitted only if an item uses it, but the numeral drill's targets are
 // generated on demand — 1042 exists in no pack — so nothing would ever mark
 // these used, and the attempts the drill records need them to exist.
-const numeralSkillRecords: SkillRecord[] = NUMERAL_RULES.map((rule) => ({
-  id: numeralSkillId(rule),
+const numeralSkillRecords: SkillRecord[] = numeralSkills.map((skill) => ({
+  id: numeralSkillId(skill.rule),
   kind: 'pattern',
-  label: NUMERAL_SKILLS[rule].label,
-  level: NUMERAL_SKILLS[rule].level,
+  label: skill.label,
+  level: skill.level,
 }));
 
 const skillRecords: SkillRecord[] = [
@@ -2664,7 +2715,7 @@ const skillGlosses = new Map<string, string>([
   ...PATTERNS.map((pattern) => [pattern.skill, pattern.gloss] as const),
   ...GRAMMAR_SKILLS.map((skill) => [skill.id, skill.gloss] as const),
   ...authoredSkillRows.map((skill) => [authoredSkillId(skill.slug), skill.gloss] as const),
-  ...NUMERAL_RULES.map((rule) => [numeralSkillId(rule), NUMERAL_SKILLS[rule].gloss] as const),
+  ...numeralSkills.map((skill) => [numeralSkillId(skill.rule), skill.gloss] as const),
 ]);
 
 interface TranslationRecord {
@@ -2678,30 +2729,38 @@ interface TranslationRecord {
 const translations: TranslationRecord[] = [
   ...sentences.map((sentence, position) => ({
     ref: sentenceItems[position]!.id,
-    lang: 'en',
+    lang: GLOSS_LANGUAGE,
     text: sentence.translation,
     type: 'natural',
     ...(sentence.note ? { note: sentence.note } : {}),
   })),
   ...vocabularySources.map((entry, position) => ({
     ref: vocabularyItems[position]!.id,
-    lang: 'en',
+    lang: GLOSS_LANGUAGE,
     text: glossOf(entry.lemma, entry.pos),
     type: 'natural',
   })),
   // Word-level meanings: what a learner sees when tapping a word in a phrase.
-  ...verbs.map((verb) => ({ ref: lexemeId(verb.lemma, 'VERB'), lang: 'en', text: verb.gloss })),
-  ...nouns.map((noun) => ({ ref: lexemeId(noun.lemma, 'NOUN'), lang: 'en', text: noun.gloss })),
+  ...verbs.map((verb) => ({
+    ref: lexemeId(verb.lemma, 'VERB'),
+    lang: GLOSS_LANGUAGE,
+    text: verb.gloss,
+  })),
+  ...nouns.map((noun) => ({
+    ref: lexemeId(noun.lemma, 'NOUN'),
+    lang: GLOSS_LANGUAGE,
+    text: noun.gloss,
+  })),
   ...modifiers.map((modifier) => ({
     ref: lexemeId(modifier.lemma, modifier.pos),
-    lang: 'en',
+    lang: GLOSS_LANGUAGE,
     // Same decoration as the card: tapping `treinta` in a sentence should show
     // "(30)" too, and this is the only gloss the 22 uncarded numerals ever get.
     text: glossOf(modifier.lemma, modifier.pos),
   })),
   ...skillRecords.map((skill) => ({
     ref: skill.id,
-    lang: 'en',
+    lang: GLOSS_LANGUAGE,
     text: skillGlosses.get(skill.id) ?? skill.label,
   })),
   // A passage title is target-language text like any other, so its reference
@@ -2710,7 +2769,7 @@ const translations: TranslationRecord[] = [
     .filter((passage) => passage.titleTranslation)
     .map((passage) => ({
       ref: passageEntityId(passage.row),
-      lang: 'en',
+      lang: GLOSS_LANGUAGE,
       text: passage.titleTranslation,
       type: 'natural',
     })),
@@ -2910,10 +2969,13 @@ const levelSpan = (levels: readonly string[]): string => {
 const filePrefix = ((levels: readonly string[]) => {
   const first = levels[0] ?? 'a1';
   const last = levels[levels.length - 1] ?? first;
-  return first === last ? `es-${first}-core` : `es-${first}-${last}-core`;
+  return first === last ? `${LANGUAGE}-${first}-core` : `${LANGUAGE}-${first}-${last}-core`;
 })(presentLevels);
 
 // ── write ───────────────────────────────────────────────────────────────────
+
+/** The languages the translation records are actually in, in first-seen order. */
+const translationLanguages = [...new Set(translations.map((record) => record.lang))];
 
 const files = [
   { kind: 'skills', path: `${filePrefix}-skills.jsonl`, records: skillRecords },
@@ -2928,7 +2990,14 @@ const files = [
   { kind: 'items', path: `${filePrefix}-vocabulary.jsonl`, records: vocabularyItems },
   { kind: 'items', path: `${filePrefix}-sentences.jsonl`, records: sentenceItems },
   { kind: 'passages', path: `${filePrefix}-passages.jsonl`, records: passageRecords },
-  { kind: 'translations', path: `${filePrefix}-translations-en.jsonl`, records: translations },
+  // One file per language the records are in, so a second reference language
+  // is a file beside this one rather than a change to it. See
+  // `docs/tasks/language-matrix.md` §3.
+  ...translationLanguages.map((lang) => ({
+    kind: 'translations',
+    path: `${filePrefix}-translations-${lang}.jsonl`,
+    records: translations.filter((record) => record.lang === lang),
+  })),
   ...audioLocales.map((locale) => ({
     kind: 'audio',
     path: `${filePrefix}-audio-${locale}.jsonl`,
@@ -2954,16 +3023,16 @@ writeLedger();
 mkdirSync(OUT_DIR, { recursive: true });
 
 for (const file of files) {
-  const header = `# Generated by scripts/build-dataset.ts from content/es — do not edit by hand.\n`;
+  const header = `# Generated by scripts/build-dataset.ts from ${SOURCE_LABEL} — do not edit by hand.\n`;
   const body = file.records.map((record) => JSON.stringify(record)).join('\n');
   writeFileSync(join(OUT_DIR, file.path), `${header}${body}\n`, 'utf8');
 }
 
 const manifest = {
   id: PACK_ID,
-  name: `Spanish Core ${levelSpan(presentLevels)}`.trim(),
-  targetLanguage: 'es',
-  // Authored in `content/es/pack.tsv`, beside the content it describes.
+  name: `${authored('name') ?? PACK_ID} ${levelSpan(presentLevels)}`.trim(),
+  targetLanguage: LANGUAGE,
+  // Authored in `pack.tsv`, beside the content it describes.
   version: packRow?.version ?? '0.0.0',
   ...(packRow?.updated ? { updated: packRow.updated } : {}),
   ...(authorRows.length > 0
@@ -2976,11 +3045,17 @@ const manifest = {
       }
     : {}),
   description:
-    'High-frequency Spanish verbs, nouns, modifiers and everyday sentences. Generated from content/es and not yet reviewed by a human editor.',
-  license: 'CC0-1.0',
+    authored('description') ??
+    `Generated from ${SOURCE_LABEL} and not yet reviewed by a human editor.`,
+  license: authored('license') ?? 'CC0-1.0',
   levels: presentLevels,
-  referenceLanguages: ['en'],
-  pronunciationLocales: ['es-ES', 'es-MX'],
+  // Derived rather than authored: this says what the pack can explain itself
+  // in, and the translation files it ships are the only honest answer.
+  referenceLanguages: translationLanguages,
+  pronunciationLocales: (authored('pronunciationLocales') ?? LANGUAGE)
+    .split(',')
+    .map((locale) => locale.trim())
+    .filter(Boolean),
   // Declared rather than inferred from the items: a category the pack means to
   // offer should still be nameable when it is briefly empty, and the app needs
   // a label and an order that no amount of scanning items could supply.
@@ -3010,7 +3085,12 @@ const manifest = {
         })),
       }
     : {}),
-  provenance: { source: 'generated', origin: 'content/es', review: 'unreviewed', revision: 1 },
+  provenance: {
+    source: 'generated',
+    origin: SOURCE_LABEL,
+    review: 'unreviewed',
+    revision: 1,
+  },
   files: files.map((file) => ({ kind: file.kind, path: file.path })),
 };
 
@@ -3034,12 +3114,31 @@ const written = new Set(files.map((file) => file.path));
 const stale = readdirSync(OUT_DIR).filter((name) => name.endsWith('.jsonl') && !written.has(name));
 for (const name of stale) rmSync(join(OUT_DIR, name));
 
+/*
+ * The catalog lists every pack in the output directory, not the one just built.
+ *
+ * It was a literal naming `core-es`, which was correct while there was one
+ * pack and silently wrong the moment there were two: `build:data de` would
+ * have written a catalog listing only German, and every Spanish course would
+ * have vanished from the app on the next deploy without a single file being
+ * deleted. Reading the directory means each language is built independently
+ * and the catalog is whatever is actually there.
+ *
+ * Sorted so the file does not churn on directory order, and filtered to
+ * directories that really hold a manifest, so a half-deleted pack or a stray
+ * folder cannot make the app fetch a 404 on startup.
+ */
+const catalogued = readdirSync(PACKS_DIR, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() && existsSync(join(PACKS_DIR, entry.name, 'pack.json')))
+  .map((entry) => entry.name)
+  .sort();
+
 writeFileSync(
   join(PACKS_DIR, 'catalog.json'),
   `${JSON.stringify(
     {
       $comment: 'Packs shipped with this build. Generated by scripts/build-dataset.ts.',
-      packs: [{ id: PACK_ID, manifest: 'core-es/pack.json' }],
+      packs: catalogued.map((id) => ({ id, manifest: `${id}/pack.json` })),
     },
     null,
     2,
@@ -3079,7 +3178,7 @@ console.log(
 console.log(`  ${sentenceItems.length} sentences · ${vocabularyItems.length} word cards`);
 console.log(
   `  ${skillRecords.length} skills · ${translations.length} translations` +
-    ` (${NUMERAL_RULES.length} numeral rules, declared rather than discovered)`,
+    ` (${numeralSkills.length} numeral rules, declared rather than discovered)`,
 );
 
 const totalItems = sentenceItems.length + vocabularyItems.length;
@@ -3181,7 +3280,17 @@ if (topicRows.length > 0) {
  * unrecorded either — which is what keeps the ceiling from going stale in the
  * direction that costs nothing to ignore.
  */
-const recyclingRows = readRows('recycling.tsv').map((row) => {
+const RECYCLING_FILE = 'recycling.tsv';
+
+/*
+ * No file means no ratchet, the same way no audio ledger means no audio. A
+ * language nobody has set encounter targets for should build; inventing a
+ * default target would fail every new pack on its first sentence, and a required
+ * file whose only sane initial content is "no rows" is a step, not a gate.
+ */
+const recyclingRows = (
+  existsSync(join(CONTENT_DIR, RECYCLING_FILE)) ? readRows(RECYCLING_FILE) : []
+).map((row) => {
   const [level, target, short, note] = row.fields;
   return {
     level: level ?? '',

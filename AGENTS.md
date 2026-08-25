@@ -11,6 +11,7 @@ npm run format         # write Prettier's formatting, rather than only checking 
 npm test               # vitest
 npx vitest run tests/a11y   # accessibility suite alone
 npm run build:data     # regenerate public/packs from content/es
+npm run build:data -- de   # …or from content/de, with only German's module loaded
 npm run review:data    # editorial review aid: content questions, by exception
 npm run build          # production PWA build
 ```
@@ -98,7 +99,8 @@ These are load-bearing. Breaking one is a design change, not a refactor. Rules
 ```text
 src/app/         composition root, routing, the current course (`course.ts`)
 src/domain/      the engine (content, exercises, sessions, progress, missions)
-src/languages/   language-specific morphology — build-time, not engine
+src/languages/   language-specific morphology, behind `LanguageModule` —
+                 build-time, not engine (`index.ts` loads one by tag)
 src/data/        dataset loading + the zod validation boundary
 src/storage/     IndexedDB and in-memory LearnerStorage
 src/audio/       audio service + TTS seam
@@ -437,6 +439,55 @@ no loaded pack declares widens the session rather than emptying it.
 pack order and must be _asked for_, since a preset that defaults to it deals the
 same first N items on every press for the life of the install. Study sessions
 record nothing, so nothing else varies what they show.
+
+## One build, many languages
+
+`npm run build:data [language]` builds `content/<tag>` into `public/packs/core-<tag>`.
+The tag decides the sources, the pack id, the file names and the language module;
+nothing else selects a language, so there is no way to build `de` from
+`content/es` or to label a Spanish pack German.
+
+Everything language-specific arrives through **one seam**:
+`LanguageModule` in [src/languages/types.ts](src/languages/types.ts), loaded by
+tag from [src/languages/index.ts](src/languages/index.ts) with a dynamic
+`import()`. The `import()` is the point rather than a style choice — a static map
+would put Spanish's conjugator in memory for a German build, and
+`tests/data/second-language-build.test.ts` proves it does not by declaring
+`tener` regular in a German fixture, which the Spanish table would reject.
+
+**Every capability on the module is optional, and absence is the answer.** A
+language with no `verbs` emits no verb forms; one with no `numerals` skips the
+numeral gates entirely rather than reading every `NUM` row as unspellable. So a
+tag with no module at all builds a pack of its sentences and derives nothing,
+which is the honest first state of a new language — and a noun still ships its
+singular, because a singular _is_ the lemma and needs no morphology. What you
+must not do is add a stub that returns nothing: an empty paradigm is
+indistinguishable from a word that has none.
+
+Two things about a pack are authored beside its content rather than in the build:
+
+- `content/<tag>/pack.tsv` — the version, item count and date, which change with
+  the content
+- `content/<tag>/manifest.tsv` — the name, description, licence, gloss language
+  and accents, which are what the pack _is_. Key–value, every key optional, each
+  falling back to something plainly derived from the tag so a language builds
+  before anyone has written its blurb
+
+`referenceLanguages` is deliberately **not** authored: the build derives it from
+the translation records it actually emitted, so a manifest cannot claim a
+language the pack has no translations for. One translations file per language,
+named for it, so a second reference language is a file beside the first rather
+than a change to it.
+
+The catalog is derived too — every directory under `public/packs` that holds a
+`pack.json`, sorted. It was a literal naming `core-es`, which was right for one
+pack and silently wrong for two: building German would have written a catalog
+listing only German, and every Spanish course would have vanished from the app
+without a file being deleted.
+
+`scripts/generate-audio.ts` takes `--language` for the same reason. It read
+`content/es` and wrote into `core-es` from literals, so generating audio after
+building German would have spoken the wrong pack and said nothing about it.
 
 ## Datasets
 

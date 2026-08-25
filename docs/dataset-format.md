@@ -114,6 +114,39 @@ on the first resolves it: a non-question that opens with a verb having that
 address's command form is read as a command, and everything else stays indicative.
 Guessing from word order instead would turn `Hace frío` into an order to be cold.
 
+### Who is speaking
+
+A fourth field says who the sentence is _about_, and only self-description sets
+it:
+
+| Field           | Values                   | Meaning                                      |
+| --------------- | ------------------------ | -------------------------------------------- |
+| `speakerGender` | `masculine` · `feminine` | the gender the speaker commits themselves to |
+
+`Estoy cansado` and `Estoy cansada` are the same sentence and exactly one of them
+is a given learner's, so the pack ships both and a learner's own setting decides
+which they meet first — a bias, never a filter, since the other half is said to
+them by other people. Unmarked is the common case and means the sentence says
+nothing about who is speaking, which is nearly all of it.
+
+Derived, like `address`, and on the same principle: only where the morphology is
+unambiguous. A first-person copula whose _adjective_ agrees with the speaker
+(`Estoy cansada`, `Soy alta`) is read; everything else is left alone. Three cases
+are deliberately not derived, and each of them is a false positive somebody would
+have had to find by noticing content missing:
+
+- **The imperfect.** `estaba` and `era` are spelled the same in the first and
+  third person, so `El comedor estaba vacío` says nothing about a speaker.
+- **A predicate noun.** `Soy una persona tranquila` agrees with `persona`, which
+  is feminine whoever says it. The scan stops at a noun, which costs the
+  professions — `Soy profesora` is declared in the column instead.
+- **A line in a passage.** Its speaker is a character, not the learner, so
+  narrowing it would delete a line from the middle of a text.
+
+**Ship both halves of a pair**, the same rule regional variants follow: a marked
+sentence with no counterpart leaves one learner practising a form they will never
+be asked to vary. `tests/data/speaker-gender.test.ts` fails on an unpaired one.
+
 Regions propagate. A word marked `es-419` marks every sentence that uses it,
 and its word card, so a learner aiming at Spain is not taught `papa`. Content
 with no region passes everywhere, which is the common case; `es-419` covers any

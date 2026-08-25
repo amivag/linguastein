@@ -11,6 +11,10 @@ import { DEFAULT_PALETTE } from '../styles/themes';
 import type { Preferences } from './types';
 
 export const DEFAULT_PREFERENCES: Preferences = {
+  // Both empty, and both meaning "not said" rather than "not set yet". A
+  // learner is never asked for either, and everything works without them.
+  displayName: '',
+  speakerGender: '',
   targetLanguage: DEFAULT_TARGET_LANGUAGE,
   // A new learner needs a coherent starting point, not every loaded item at
   // once. `resolveCourse` widens safely when a future language has no A1 pack.

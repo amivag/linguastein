@@ -57,6 +57,26 @@ export const ADDRESS_FORMS = ['tu', 'usted', 'vosotros', 'ustedes'] as const;
 export type AddressForm = (typeof ADDRESS_FORMS)[number];
 
 /**
+ * The gender a sentence commits its *speaker* to.
+ *
+ * Spanish makes a learner say something about themselves in order to say
+ * anything else: `Estoy cansado` and `Estoy cansada` are the same sentence, and
+ * exactly one of them is the learner's. The pack ships both — it already did,
+ * as independent rows — and this field is what lets a learner be taught the one
+ * that is true of them rather than the one that happened to be written first.
+ *
+ * Absent is the common case and means the sentence says nothing about who is
+ * speaking, so it is usable by anyone. Only first-person self-description sets
+ * it; `El comedor estaba vacío` describes a room.
+ *
+ * Deliberately not {@link Gender}, which is a property of a *word* — `mesa` is
+ * feminine regardless of who says it. Sharing the type would have invited a
+ * filter that narrowed the dictionary by the learner's own gender.
+ */
+export const SPEAKER_GENDERS = ['masculine', 'feminine'] as const;
+export type SpeakerGender = (typeof SPEAKER_GENDERS)[number];
+
+/**
  * What playback needs to speak one item: where the sound is and how long it
  * lasts. Items may embed these directly, which suits a small hand-authored
  * pack; a generated pack ships `AudioClip` records instead (see below).
@@ -228,6 +248,11 @@ export interface LearningItem {
   readonly register?: Register;
   /** Set when the phrase is spoken to someone; derived from morphology where possible. */
   readonly address?: AddressForm;
+  /**
+   * Set when the phrase describes the speaker in a way that carries gender.
+   * Derived from morphology where it is unambiguous, declared otherwise.
+   */
+  readonly speakerGender?: SpeakerGender;
   /** Where this is said. Absent means it works anywhere Spanish is spoken. */
   readonly regions?: readonly LanguageTag[];
   readonly topics?: readonly string[];

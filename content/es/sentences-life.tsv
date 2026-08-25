@@ -4,6 +4,7 @@
 000342	Tengo una reunión a las diez.	I have a meeting at ten.	a1	work,clock
 000343	Mi jefe es muy amable.	My boss is very kind.	a1	work
 000344	Estoy muy ocupado esta semana.	I'm very busy this week.	a1	work
+002992	Estoy muy ocupada esta semana.	I'm very busy this week.	a1	work
 000345	El proyecto es difícil.	The project is difficult.	a1	work
 000346	Necesito terminar este trabajo hoy.	I need to finish this work today.	a1	work
 000347	¿Puedes enviarme el correo?	Can you send me the email?	a2	work
@@ -28,6 +29,7 @@
 000366	Me duele el estómago.	I have a stomach ache.	a1	health							describe-a-symptom
 000367	Tengo fiebre.	I have a fever.	a1	health							describe-a-symptom
 000368	Estoy enfermo desde ayer.	I've been ill since yesterday.	a2	health							describe-a-symptom,say-since-when
+002993	Estoy enferma desde ayer.	I've been ill since yesterday.	a2	health							describe-a-symptom,say-since-when
 000369	Necesito ir al médico.	I need to go to the doctor.	a1	health
 000370	El hospital está cerca del parque.	The hospital is near the park.	a1	health
 000371	Tomo una medicina cada día.	I take medicine every day.	a2	health
@@ -55,6 +57,7 @@
 000393	Estoy muy feliz hoy.	I'm very happy today.	a1	feelings
 000394	Ella está triste.	She is sad.	a1	feelings
 000395	No estoy nervioso.	I'm not nervous.	a2	feelings
+002994	No estoy nerviosa.	I'm not nervous.	a2	feelings
 000396	Me encanta esta canción.	I love this song.	a1	music
 000397	Creo que tienes razón.	I think you're right.	a1	core
 000398	Pienso que es una buena idea.	I think it's a good idea.	a1	core

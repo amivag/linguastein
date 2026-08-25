@@ -192,6 +192,12 @@ export function buildSessionConfig(preset: Preset, options: BuildConfigOptions):
     exerciseKinds: preset.exerciseKinds,
     referenceLanguage: options.preferences.referenceLanguage,
     pronunciationLocale: options.pronunciationLocale,
+    // A learner preference like the two above it, and like them not in the URL:
+    // it changes the order two sentences are met in, never which items a link
+    // deals, so a shared session is still the same session for both people.
+    ...(options.preferences.speakerGender
+      ? { speakerGender: options.preferences.speakerGender }
+      : {}),
     ...(scoped ? {} : { maxNewItems: NEW_ITEM_CAP }),
     ...(options.dueOnly ? { dueOnly: true } : {}),
     ...(options.focus ? { focus: options.focus } : {}),

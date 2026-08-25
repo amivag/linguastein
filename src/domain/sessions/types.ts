@@ -4,7 +4,7 @@
  * engine then derives each interaction as the learner reaches it.
  */
 
-import type { Course, ItemFilter, ItemId, LanguageTag } from '../content';
+import type { Course, ItemFilter, ItemId, LanguageTag, SpeakerGender } from '../content';
 import type { ExerciseKind } from '../exercises/types';
 import type { Timestamp } from '../progress/types';
 
@@ -51,6 +51,17 @@ export interface SessionConfig {
   readonly dueOnly?: boolean;
   /** Which items to lead with. Only meaningful under `smart` ordering. */
   readonly focus?: SessionFocus;
+  /**
+   * The gender the learner speaks about themselves in, where they have said.
+   *
+   * A **bias, never a filter** — the same rule `focus` follows, and here for a
+   * reason worth writing down: both halves of `Estoy cansado` / `Estoy cansada`
+   * are Spanish a learner has to understand, and hiding the one that is not
+   * theirs would teach them half of a distinction the language makes constantly.
+   * So both stay in the course and in every session's candidates; this only
+   * decides which of the two is met first, where nothing else decides the order.
+   */
+  readonly speakerGender?: SpeakerGender;
   /** Cap on unseen items mixed into a smart session. */
   readonly maxNewItems?: number;
   /** Set for reproducible sessions (tests, shared links). */

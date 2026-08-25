@@ -32,6 +32,7 @@ export function createMemoryStorage(
           ),
         ),
       all: () => Promise.resolve([...progress.values()]),
+      count: () => Promise.resolve(progress.size),
       put: (record) => {
         progress.set(record.itemId, record);
         return Promise.resolve();
@@ -46,6 +47,7 @@ export function createMemoryStorage(
         attempts.push(attempt);
         return Promise.resolve();
       },
+      count: () => Promise.resolve(attempts.length),
       recent: (limit) => Promise.resolve([...attempts].sort(byNewest).slice(0, limit)),
       forItem: (itemId, limit = 20) =>
         Promise.resolve(
@@ -64,6 +66,7 @@ export function createMemoryStorage(
         sessions = [record, ...sessions.filter((existing) => existing.id !== record.id)];
         return Promise.resolve();
       },
+      count: () => Promise.resolve(sessions.length),
       recent: (limit, language) =>
         Promise.resolve(
           [...sessions]

@@ -9,6 +9,7 @@ import { ReadScreen } from '../features/read/ReadScreen';
 import { SessionScreen } from '../features/practice/SessionScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { MissionScreen } from '../features/missions/MissionScreen';
+import { UserScreen } from '../features/user/UserScreen';
 import type { BatchDefinition } from '../domain/batches';
 import { courseOptions, coursePath, resolveCourse } from '../domain/content';
 import { mergePreferences, type Preferences } from '../storage';
@@ -204,6 +205,12 @@ export function App() {
               app, not of what is being studied. `useCourse` resolves to the
               widest real course when the path carries none, so the navigation
               still points somewhere sensible. */}
+            {/* Who the learner is, and what this device is holding about
+              them. Outside the course for the same reason the style guide is:
+              a name is not a property of what is being studied, and it must not
+              look as though it changed when the language did. */}
+            <Route path="/user" element={<UserScreen />} />
+
             <Route
               path="/design"
               element={

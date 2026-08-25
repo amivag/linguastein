@@ -1,6 +1,7 @@
-import { useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
+import { Icon } from '../../components/Icon';
 import { SectionTabs } from '../../components/SectionTabs';
 import { AboutSettings } from './AboutSettings';
 import { AudioSettings } from './AudioSettings';
@@ -46,6 +47,15 @@ export function SettingsScreen() {
           to: settingsPath(course, option.id),
         }))}
       />
+
+      {/* The one thing on this screen that is not a setting: who the learner
+          is, and what is stored about them. Above the sections rather than
+          inside one, because it belongs to none of them — and it is the only
+          pointer to `/user`, which sits outside the course routes. */}
+      <Link className={styles.link} to="/user">
+        <Icon name="user" size="sm" />
+        You — your name, how you speak about yourself, and what is on this device
+      </Link>
 
       <section className={styles.group} aria-labelledby="settings-section">
         <h2 className={styles.groupTitle} id="settings-section">

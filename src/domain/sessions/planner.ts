@@ -5,7 +5,7 @@
  * session can be reproduced exactly.
  */
 
-import type { ContentRepository, ItemId, LearningItem } from '../content';
+import type { ContentRepository, ItemId, LearningItem, SpeakerGender } from '../content';
 import { isDue, type ItemProgress, type Timestamp } from '../progress/types';
 import { seededRng, shuffle, systemRng, token, type Rng } from '../../utils/random';
 import {
@@ -75,7 +75,9 @@ function order(
     case 'sequential':
       return items;
     case 'random':
-      return shuffle(items, rng);
+      // Biased here too: `random` means the learner did not ask for an order,
+      // not that the app has no opinion about which half of a pair to lead with.
+      return ownFormFirst(shuffle(items, rng), config.speakerGender);
     case 'smart':
       return smartOrder(
         items,
@@ -84,6 +86,7 @@ function order(
         rng,
         config.focus ?? DEFAULT_SESSION_FOCUS,
         config.maxNewItems,
+        config.speakerGender,
       );
   }
 }
@@ -122,6 +125,33 @@ const BUCKET_ORDER: Record<SessionFocus, readonly Bucket[]> = {
 };
 
 /**
+ * The learner's own half of a self-description first, where nothing else has
+ * already decided the order.
+ *
+ * A bias, and the distinction matters: `Estoy cansado` and `Estoy cansada` are
+ * both Spanish, both worth understanding, and a learner meets other people all
+ * day. Filtering one out would teach half of a distinction the language makes in
+ * almost every sentence about a person — so both stay in every session's
+ * candidates and this only decides which is met first.
+ *
+ * Unmarked items rank with the learner's own, because nearly all content is
+ * unmarked and demoting the *other* gender is the whole of the intent. A stable
+ * sort, so the shuffle it is applied to still decides everything else.
+ */
+function ownFormFirst(
+  items: readonly LearningItem[],
+  speakerGender: SpeakerGender | undefined,
+): readonly LearningItem[] {
+  if (!speakerGender) return items;
+  return [...items].sort(
+    (a, b) => Number(isOtherGender(a, speakerGender)) - Number(isOtherGender(b, speakerGender)),
+  );
+}
+
+const isOtherGender = (item: LearningItem, speakerGender: SpeakerGender): boolean =>
+  item.speakerGender !== undefined && item.speakerGender !== speakerGender;
+
+/**
  * Weak and due items first, a controlled number of new items mixed in, then
  * everything else — the shape spec §5.2 describes, reordered by the focus the
  * learner picked.
@@ -133,6 +163,7 @@ function smartOrder(
   rng: Rng,
   focus: SessionFocus,
   maxNewItems = Number.POSITIVE_INFINITY,
+  speakerGender?: SpeakerGender,
 ): readonly LearningItem[] {
   const buckets: Record<Bucket, LearningItem[]> = { due: [], weak: [], fresh: [], rest: [] };
 
@@ -171,7 +202,7 @@ function smartOrder(
       (a, b) =>
         (progress.get(b.id)?.lastReviewedAt ?? 0) - (progress.get(a.id)?.lastReviewedAt ?? 0),
     );
-    return [...seen, ...shuffle(buckets.fresh, rng).slice(0, maxNewItems)];
+    return [...seen, ...ownFormFirst(shuffle(buckets.fresh, rng), speakerGender).slice(0, maxNewItems)];
   }
 
   // The cap exists so "10 minutes of practice" cannot become ten first
@@ -179,8 +210,12 @@ function smartOrder(
   const newCap = focus === 'fresh' ? Number.POSITIVE_INFINITY : maxNewItems;
 
   return BUCKET_ORDER[focus].flatMap((bucket) => {
-    if (bucket === 'fresh') return shuffle(buckets.fresh, rng).slice(0, newCap);
+    if (bucket === 'fresh') {
+      return ownFormFirst(shuffle(buckets.fresh, rng), speakerGender).slice(0, newCap);
+    }
+    // `struggling` sorts this bucket by difficulty on purpose, and that is a
+    // stronger claim about what to practise than whose sentence it is.
     if (bucket === 'weak' && focus === 'struggling') return buckets.weak;
-    return shuffle(buckets[bucket], rng);
+    return ownFormFirst(shuffle(buckets[bucket], rng), speakerGender);
   });
 }

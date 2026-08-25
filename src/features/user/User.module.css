@@ -1,0 +1,140 @@
+/*
+ * The profile, before there is an account behind it.
+ *
+ * Shares Settings' vocabulary deliberately — the same card, the same label and
+ * hint sizes — because it is the same kind of screen to a learner, and two
+ * near-identical pages that drew their fields differently would read as two
+ * apps. What is different here is the tone of the data section: a statement
+ * about where things live, not a control.
+ */
+.group {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.sectionTitle {
+  composes: sectionLabel from '../../styles/surfaces.module.css';
+
+  margin-top: var(--space-2);
+}
+
+.field {
+  composes: card from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.field input[type='text'] {
+  width: 100%;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-semibold);
+}
+
+.labelIcon {
+  color: var(--color-accent);
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* The three-way choice, as one row of equal targets: the options are
+   alternatives of the same kind, and a stack would have implied an order. */
+.option {
+  composes: pressable from '../../styles/surfaces.module.css';
+
+  flex: 1;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.option.active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+}
+
+.field .group[role='radiogroup'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* The setting showing its own effect. Sunken rather than outlined, and holding
+   target-language text, so it reads as a quotation from the pack rather than as
+   another hint. */
+.example {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+  font-size: var(--text-sm);
+}
+
+.example span[lang] {
+  font-weight: var(--weight-semibold);
+}
+
+/* Where the data lives, said once and prominently. The accent-soft ground marks
+   it as the app speaking about itself, which is what separates it from the
+   numbers underneath. */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+}
+
+.stats {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-2);
+}
+
+.stat {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+}
+
+.statValue {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.statLabel {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

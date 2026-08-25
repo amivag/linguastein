@@ -17,6 +17,7 @@ import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { PassageScreen } from '../../src/features/read/PassageScreen';
 import { ReadScreen } from '../../src/features/read/ReadScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
+import { UserScreen } from '../../src/features/user/UserScreen';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { renderWithServices } from '../fixtures/services';
 
@@ -56,6 +57,19 @@ describe('agent surface', () => {
     const { container } = renderWithServices(<SettingsScreen />, { route: '/settings' });
     await screen.findByRole('heading', { level: 1 });
     await expectEveryControlNamed(container);
+  });
+
+  it('names every control on the user screen', async () => {
+    const { container } = renderWithServices(<UserScreen />, { route: '/user' });
+    await screen.findByRole('heading', { level: 1 });
+    await expectEveryControlNamed(container);
+
+    // The gender choice is a radio group, so the *group* has to say what it is
+    // choosing between: three buttons called Masculine, Feminine and Not
+    // specified name themselves and say nothing about what they change.
+    expect(
+      screen.getByRole('radiogroup', { name: 'How you speak about yourself' }),
+    ).toBeInTheDocument();
   });
 
   it('names every control on the reading list', async () => {

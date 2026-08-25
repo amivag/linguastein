@@ -645,7 +645,9 @@
 {"ref":"core-es:item:001840","lang":"en","text":"He is a very responsible boy for his age.","type":"natural"}
 {"ref":"core-es:item:001841","lang":"en","text":"Who is responsible for this mistake?","type":"natural"}
 {"ref":"core-es:item:001842","lang":"en","text":"I am willing to work Saturdays.","type":"natural"}
+{"ref":"core-es:item:002988","lang":"en","text":"I am willing to work Saturdays.","type":"natural"}
 {"ref":"core-es:item:001843","lang":"en","text":"I am not willing to pay more.","type":"natural"}
+{"ref":"core-es:item:002989","lang":"en","text":"I am not willing to pay more.","type":"natural"}
 {"ref":"core-es:item:001844","lang":"en","text":"If you are willing to wait, there is room.","type":"natural"}
 {"ref":"core-es:item:001845","lang":"en","text":"They were willing to change the hours.","type":"natural"}
 {"ref":"core-es:item:001846","lang":"en","text":"I suppose the meeting will be a long one.","type":"natural"}
@@ -1285,7 +1287,9 @@
 {"ref":"core-es:item:000045","lang":"en","text":"The film was very good.","type":"natural"}
 {"ref":"core-es:item:000046","lang":"en","text":"I'm tired.","type":"natural","note":"estar for states, ser for lasting characteristics"}
 {"ref":"core-es:item:000047","lang":"en","text":"I'm very tired today.","type":"natural"}
+{"ref":"core-es:item:002990","lang":"en","text":"I'm very tired today.","type":"natural"}
 {"ref":"core-es:item:000048","lang":"en","text":"I'm happy.","type":"natural"}
+{"ref":"core-es:item:002991","lang":"en","text":"I'm happy.","type":"natural"}
 {"ref":"core-es:item:000049","lang":"en","text":"We're at home.","type":"natural"}
 {"ref":"core-es:item:000050","lang":"en","text":"Where are you?","type":"natural"}
 {"ref":"core-es:item:000051","lang":"en","text":"The book is on the table.","type":"natural"}
@@ -1582,6 +1586,7 @@
 {"ref":"core-es:item:000342","lang":"en","text":"I have a meeting at ten.","type":"natural"}
 {"ref":"core-es:item:000343","lang":"en","text":"My boss is very kind.","type":"natural"}
 {"ref":"core-es:item:000344","lang":"en","text":"I'm very busy this week.","type":"natural"}
+{"ref":"core-es:item:002992","lang":"en","text":"I'm very busy this week.","type":"natural"}
 {"ref":"core-es:item:000345","lang":"en","text":"The project is difficult.","type":"natural"}
 {"ref":"core-es:item:000346","lang":"en","text":"I need to finish this work today.","type":"natural"}
 {"ref":"core-es:item:000347","lang":"en","text":"Can you send me the email?","type":"natural"}
@@ -1606,6 +1611,7 @@
 {"ref":"core-es:item:000366","lang":"en","text":"I have a stomach ache.","type":"natural"}
 {"ref":"core-es:item:000367","lang":"en","text":"I have a fever.","type":"natural"}
 {"ref":"core-es:item:000368","lang":"en","text":"I've been ill since yesterday.","type":"natural"}
+{"ref":"core-es:item:002993","lang":"en","text":"I've been ill since yesterday.","type":"natural"}
 {"ref":"core-es:item:000369","lang":"en","text":"I need to go to the doctor.","type":"natural"}
 {"ref":"core-es:item:000370","lang":"en","text":"The hospital is near the park.","type":"natural"}
 {"ref":"core-es:item:000371","lang":"en","text":"I take medicine every day.","type":"natural"}
@@ -1633,6 +1639,7 @@
 {"ref":"core-es:item:000393","lang":"en","text":"I'm very happy today.","type":"natural"}
 {"ref":"core-es:item:000394","lang":"en","text":"She is sad.","type":"natural"}
 {"ref":"core-es:item:000395","lang":"en","text":"I'm not nervous.","type":"natural"}
+{"ref":"core-es:item:002994","lang":"en","text":"I'm not nervous.","type":"natural"}
 {"ref":"core-es:item:000396","lang":"en","text":"I love this song.","type":"natural"}
 {"ref":"core-es:item:000397","lang":"en","text":"I think you're right.","type":"natural"}
 {"ref":"core-es:item:000398","lang":"en","text":"I think it's a good idea.","type":"natural"}
@@ -1770,6 +1777,7 @@
 {"ref":"core-es:item:001244","lang":"en","text":"No, I'm not taking any medication.","type":"natural","note":"The question they always ask."}
 {"ref":"core-es:item:001245","lang":"en","text":"I've been sleeping badly since Monday.","type":"natural","note":"Answers about sleep with a start date."}
 {"ref":"core-es:item:001246","lang":"en","text":"I'm eating well, but I'm very tired.","type":"natural","note":"Rules one thing out and offers another."}
+{"ref":"core-es:item:002995","lang":"en","text":"I'm eating well, but I'm very tired.","type":"natural","note":"Rules one thing out and offers another."}
 {"ref":"core-es:item:001247","lang":"en","text":"All right, I'll rest for two days.","type":"natural","note":"Accepts, and says how much."}
 {"ref":"core-es:item:001248","lang":"en","text":"All right, I'll take a tablet at night.","type":"natural","note":"Repeats the instruction back."}
 {"ref":"core-es:item:001249","lang":"en","text":"Understood. And if I am not better?","type":"natural","note":"Accepts, then asks the obvious next question."}
@@ -1779,6 +1787,7 @@
 {"ref":"core-es:item:001253","lang":"en","text":"On Mondays we have a team meeting.","type":"natural","note":"A regular one, anchored to a day."}
 {"ref":"core-es:item:001254","lang":"en","text":"It was a hard day, but a good one.","type":"natural","note":"Two verdicts at once, which is usually the truth."}
 {"ref":"core-es:item:001255","lang":"en","text":"I finish early today and I'm happy about it.","type":"natural","note":"The reason and the feeling together."}
+{"ref":"core-es:item:002996","lang":"en","text":"I finish early today and I'm happy about it.","type":"natural","note":"The reason and the feeling together."}
 {"ref":"core-es:item:001256","lang":"en","text":"I get home tired, but calm.","type":"natural","note":"Tired is not the same as unhappy."}
 {"ref":"core-es:item:001257","lang":"en","text":"There is a shop very close by.","type":"natural","note":"The thing people ask about first."}
 {"ref":"core-es:item:001258","lang":"en","text":"The bus stop is right in front of the house.","type":"natural","note":"Names how close, not just that it exists."}
@@ -2671,6 +2680,7 @@
 {"ref":"core-es:item:001378","lang":"en","text":"Why is it closed today?","type":"natural","note":"About a situation rather than a person."}
 {"ref":"core-es:item:001379","lang":"en","text":"Why is it so expensive?","type":"natural","note":"Asks for a reason and shows surprise at once."}
 {"ref":"core-es:item:001380","lang":"en","text":"Because I'm very tired.","type":"natural","note":"`porque` is one word; `por qué` is two."}
+{"ref":"core-es:item:002997","lang":"en","text":"Because I'm very tired.","type":"natural","note":"`porque` is one word; `por qué` is two."}
 {"ref":"core-es:item:001381","lang":"en","text":"Because I have to work.","type":"natural","note":"The most useful reason there is."}
 {"ref":"core-es:item:001382","lang":"en","text":"It's just that I don't have time.","type":"natural","note":"Softens a reason, and never starts with `porque`."}
 {"ref":"core-es:item:001383","lang":"en","text":"Because of work.","type":"natural","note":"A reason with no verb in it at all."}
@@ -2851,6 +2861,7 @@
 {"ref":"core-es:item:000984","lang":"en","text":"You don't know her: she is my aunt from Mexico.","type":"natural","note":"Anticipates that the other person will not know them."}
 {"ref":"core-es:item:001015","lang":"en","text":"I'm from Greece.","type":"natural","note":"The shortest complete answer."}
 {"ref":"core-es:item:001016","lang":"en","text":"I'm Greek, from Athens.","type":"natural","note":"Nationality first, then the city."}
+{"ref":"core-es:item:002998","lang":"en","text":"I'm Greek, from Athens.","type":"natural","note":"Nationality first, then the city."}
 {"ref":"core-es:item:001017","lang":"en","text":"I'm from a small city, near Berlin.","type":"natural","note":"Places a town nobody knows next to one they do."}
 {"ref":"core-es:item:001018","lang":"en","text":"My family is Italian, but I'm from here.","type":"natural","note":"Separates your family's origin from your own."}
 {"ref":"core-es:item:001019","lang":"en","text":"I was born in Italy and have lived here since I was a child.","type":"natural","note":"Uses nací for where you were born."}

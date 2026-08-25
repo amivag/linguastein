@@ -51,7 +51,9 @@
 000045	La película fue muy buena.	The film was very good.	a2	entertainment
 000046	Estoy cansado.	I'm tired.	a1	health	estar for states, ser for lasting characteristics						describe-a-symptom
 000047	Hoy estoy muy cansado.	I'm very tired today.	a1	health							describe-a-symptom
+002990	Hoy estoy muy cansada.	I'm very tired today.	a1	health							describe-a-symptom
 000048	Estoy contento.	I'm happy.	a1	feelings
+002991	Estoy contenta.	I'm happy.	a1	feelings
 000049	Estamos en casa.	We're at home.	a1	home
 000050	¿Dónde estás?	Where are you?	a1	core
 000051	El libro está en la mesa.	The book is on the table.	a1	home

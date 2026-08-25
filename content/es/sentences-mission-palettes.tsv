@@ -146,6 +146,7 @@
 001244	No, no tomo ninguna medicina.	No, I'm not taking any medication.	a2	health	The question they always ask.	neutral					answer-health-questions
 001245	Duermo mal desde el lunes.	I've been sleeping badly since Monday.	a2	health,time	Answers about sleep with a start date.	neutral					answer-health-questions
 001246	Como bien, pero estoy muy cansado.	I'm eating well, but I'm very tired.	a2	health,feelings	Rules one thing out and offers another.	neutral					answer-health-questions
+002995	Como bien, pero estoy muy cansada.	I'm eating well, but I'm very tired.	a2	health,feelings	Rules one thing out and offers another.	neutral					answer-health-questions
 
 # ── Health: taking the advice ─────────────────────────────────────────────────
 001247	De acuerdo, voy a descansar dos días.	All right, I'll rest for two days.	a2	health,time	Accepts, and says how much.	neutral					follow-health-advice
@@ -161,6 +162,7 @@
 # ── Work: how the day left you ────────────────────────────────────────────────
 001254	Fue un día difícil, pero bueno.	It was a hard day, but a good one.	a1	work,feelings,time	Two verdicts at once, which is usually the truth.	neutral					say-how-the-day-went
 001255	Hoy termino pronto y estoy contento.	I finish early today and I'm happy about it.	a1	work,feelings,clock	The reason and the feeling together.	neutral					say-how-the-day-went
+002996	Hoy termino pronto y estoy contenta.	I finish early today and I'm happy about it.	a1	work,feelings,clock	The reason and the feeling together.	neutral					say-how-the-day-went
 001256	Llego a casa cansado, pero tranquilo.	I get home tired, but calm.	a1	work,feelings,home	Tired is not the same as unhappy.	neutral					say-how-the-day-went
 
 # ── Home: what is nearby ──────────────────────────────────────────────────────

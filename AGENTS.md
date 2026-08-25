@@ -295,6 +295,38 @@ material must stay distinguishable from checked material; and a skipped record i
 attributed to the pack whose file it came from, since a number floating on the
 screen names nothing to fix.
 
+## The learner, and the one setting that changes content
+
+`/user` is the learner rather than the app: a name, the gender they speak about
+themselves in, and an account of what this device is holding. Outside the course
+routes, like `/design` — a name is not a property of what is being studied, and
+it must not look as though it changed when the language did. There is no account
+behind any of it yet ([accounts-and-sync.md](docs/tasks/accounts-and-sync.md)),
+which is why the screen says where the data lives before it says how much of it
+there is.
+
+**Gender here is grammar, not a demographic**, and it is **a bias, never a
+filter** — the rule `focus` already follows, and here for a sharper reason.
+Spanish makes a learner commit before they can say anything about themselves, so
+a learner led with `Estoy cansado` when `cansada` is theirs is being led with a
+sentence that is not true of them. But the other half is Spanish they have to
+understand: other people describe themselves all day. So both halves stay in the
+course and in every session's candidates, and the setting decides only which is
+met *first*, where nothing else already decides the order (`ownFormFirst` in
+`domain/sessions/planner.ts`).
+
+Three rules hold it together:
+
+- **Unsaid is a real answer and the default.** No gender means no reordering, and
+  a learner who never opens `/user` sees exactly what they saw before it existed.
+- **Nothing is ever removed.** A session with room for both contains both;
+  `tests/domain/speaker-bias.test.ts` asserts it, because "prefer" quietly
+  becoming "only" is the regression nobody would see.
+- **A wrong marking is worse than a missing one.** The derivation gives up on
+  every ambiguous case rather than guessing — see
+  [dataset-format.md](docs/dataset-format.md) for which, and
+  `tests/data/speaker-gender.test.ts` for the traps that produce false positives.
+
 ## Courses and the URL
 
 Every screen lives under `/<language>/<level>` — `/es/a1/browse`,

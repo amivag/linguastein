@@ -204,6 +204,7 @@
 # ── Response palette: saying where you are from ──────────────────────────────
 001015	Soy de Grecia.	I'm from Greece.	a1	social,city	The shortest complete answer.	neutral					say-where-youre-from
 001016	Soy griego, de Atenas.	I'm Greek, from Athens.	a1	social,city	Nationality first, then the city.	neutral					say-where-youre-from
+002998	Soy griega, de Atenas.	I'm Greek, from Athens.	a1	social,city	Nationality first, then the city.	neutral					say-where-youre-from
 001017	Soy de una ciudad pequeña, cerca de Berlín.	I'm from a small city, near Berlin.	a1	social,city	Places a town nobody knows next to one they do.	neutral					say-where-youre-from
 001018	Mi familia es italiana, pero yo soy de aquí.	My family is Italian, but I'm from here.	a1	social,family	Separates your family's origin from your own.	neutral					say-where-youre-from
 001019	Nací en Italia y vivo aquí desde niño.	I was born in Italy and have lived here since I was a child.	a1	social,city	Uses nací for where you were born.	neutral					say-where-youre-from

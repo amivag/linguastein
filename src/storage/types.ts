@@ -5,7 +5,7 @@
  */
 
 import type { BatchDefinition } from '../domain/batches';
-import type { ItemId, LanguageTag, LevelScope } from '../domain/content';
+import type { ItemId, LanguageTag, LevelScope, SpeakerGender } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionFocus, SessionRecord } from '../domain/sessions';
 import type { PaletteId, ThemePreference } from '../styles/themes';
@@ -14,6 +14,29 @@ import type { Intensity } from '../styles/intensity';
 import type { ReadingSize } from '../styles/reading-size';
 
 export interface Preferences {
+  /**
+   * What the learner would like to be called. Empty means they have not said,
+   * and nothing addresses them by name until they do.
+   *
+   * Stored beside the settings rather than in a record of its own because that
+   * is what it is today: one string on one device, with no account behind it.
+   * When there is an account (`docs/tasks/accounts-and-sync.md`) this is the
+   * field that stops being local, which is why the User screen says so plainly
+   * rather than implying a profile that does not exist.
+   */
+  readonly displayName: string;
+  /**
+   * The gender the learner speaks about themselves in, or empty for unsaid.
+   *
+   * Not a demographic: it is grammar. Spanish makes you commit to it in order to
+   * say `Estoy cansado`, and a learner taught the other form is being taught to
+   * say something untrue about themselves. Empty is a real answer and the
+   * default — both forms are then offered, exactly as before this existed.
+   *
+   * It reaches content through `courseFilter`, never through a component: see
+   * `SpeakerGender` in `domain/content/model.ts`.
+   */
+  readonly speakerGender: SpeakerGender | '';
   /** What is being learned. With the level below it, this is the current course. */
   readonly targetLanguage: LanguageTag;
   /**
@@ -83,6 +106,16 @@ export interface Preferences {
 
 export interface ProgressStore {
   get(itemId: ItemId): Promise<ItemProgress | undefined>;
+  /**
+   * How many rows this store holds.
+   *
+   * Its own method rather than `(await all()).length`, because the User screen
+   * reports the size of what is on the device and the attempt log is unbounded
+   * and unpruned (`docs/tasks/learner-profile.md` §9.3). Reading every row to
+   * count it would make the honest answer the expensive one, and IndexedDB
+   * counts without materialising anything.
+   */
+  count(): Promise<number>;
   getMany(itemIds: readonly ItemId[]): Promise<ReadonlyMap<ItemId, ItemProgress>>;
   all(): Promise<readonly ItemProgress[]>;
   put(progress: ItemProgress): Promise<void>;
@@ -91,6 +124,7 @@ export interface ProgressStore {
 
 export interface AttemptStore {
   append(attempt: Attempt): Promise<void>;
+  count(): Promise<number>;
   recent(limit: number): Promise<readonly Attempt[]>;
   forItem(itemId: ItemId, limit?: number): Promise<readonly Attempt[]>;
   clear(): Promise<void>;
@@ -98,6 +132,7 @@ export interface AttemptStore {
 
 export interface SessionStore {
   put(record: SessionRecord): Promise<void>;
+  count(): Promise<number>;
   /**
    * The newest sessions, optionally only those of one target language.
    *

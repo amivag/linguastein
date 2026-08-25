@@ -90,6 +90,12 @@ interface SentenceRow {
   speaker: string;
   /** Authored skill slugs, resolved through skills.tsv. */
   skills: string[];
+  /**
+   * `masculine` | `feminine`, for a self-description whose gender the build
+   * cannot see. Blank is the normal case: derived where the morphology is
+   * unambiguous, and absent everywhere else.
+   */
+  speakerGender: string;
   source: string;
   row: SourceRow;
 }
@@ -260,6 +266,7 @@ const sentences: SentenceRow[] = readdirSync(CONTENT_DIR)
         passage,
         speaker,
         skills,
+        speakerGender,
       ] = row.fields;
       return {
         text: text!,
@@ -273,6 +280,7 @@ const sentences: SentenceRow[] = readdirSync(CONTENT_DIR)
         passage: passage ?? '',
         speaker: speaker ?? '',
         skills: list(skills),
+        speakerGender: speakerGender ?? '',
         source: file,
         row,
       };
@@ -522,6 +530,24 @@ for (const sentence of sentences) {
         `unknown authored skill "${skill}" in ${sentence.source} (${sentence.text}) — add it to ${SKILLS_FILE} or fix the typo`,
       );
     }
+  }
+}
+
+/*
+ * A declared speaker gender is checked rather than trusted: it is the escape
+ * hatch for the cases the morphology cannot show, so a typo in it would fail
+ * silently — the column would simply do nothing, and the sentence would go on
+ * being offered to everyone.
+ */
+for (const sentence of sentences.filter((entry) => entry.speakerGender)) {
+  if (!['masculine', 'feminine'].includes(sentence.speakerGender)) {
+    problems.push(
+      `${sentence.source} (${sentence.text}): speaker gender "${sentence.speakerGender}" is not masculine or feminine`,
+    );
+  } else if (sentence.passage) {
+    problems.push(
+      `${sentence.source} (${sentence.text}): a passage line is spoken by a character, so it cannot declare the learner's gender`,
+    );
   }
 }
 
@@ -2114,6 +2140,73 @@ function deriveAddress(tokens: readonly Token[]): string {
 }
 
 /**
+ * Verbs that put the speaker's own gender into the sentence.
+ *
+ * A copula, and only a copula: `Soy alta` describes the speaker, while `Tengo
+ * una hermana` describes somebody else with a feminine noun. Reflexive
+ * `sentirse` earns its place because `Me siento cansada` is the same shape.
+ */
+const SELF_DESCRIBING_VERBS = new Set(['ser', 'estar', 'sentir']);
+
+/** Words that may sit between the copula and its predicate. */
+const PREDICATE_SKIP = new Set(['ADV', 'DET']);
+
+/**
+ * Whether this surface form can *only* be first-person singular.
+ *
+ * The reason this check exists at all: the linker resolves an ambiguous form to
+ * the first entry it indexed, so `estaba` in `El comedor estaba vacío` carries
+ * `person: 1` — it is the imperfect, where first and third person are spelled
+ * the same. Trusting that would file a sentence about a dining room as a
+ * masculine learner's self-description, and then hide it from everybody else.
+ *
+ * So the form is asked of the index rather than of the token: if any other
+ * person produces this same spelling in the same tense and mood, the sentence
+ * says nothing reliable about who is speaking.
+ */
+function onlyFirstPersonSingular(token: Token): boolean {
+  const morph = token.morph as Record<string, unknown> | undefined;
+  if (!morph || morph['person'] !== 1 || morph['number'] !== 'singular') return false;
+
+  return !(surfaces.get(token.text.toLowerCase()) ?? []).some((entry) => {
+    if (entry.pos !== 'VERB' || entry.lemma !== token.lemma) return false;
+    const other = entry.morph as Record<string, unknown> | undefined;
+    if (!other || other['person'] === 1) return false;
+    return other['tense'] === morph['tense'] && other['mood'] === morph['mood'];
+  });
+}
+
+/**
+ * The gender a sentence commits its speaker to, or `''` for the usual case
+ * where it commits them to nothing.
+ *
+ * Adjectives only, and that restriction is doing real work. `Soy una persona
+ * tranquila` agrees with `persona`, which is feminine whoever says it, so a rule
+ * that accepted the first gendered *noun* after the copula would hide that
+ * sentence from every man learning Spanish. Stopping at a noun costs the
+ * professions — `Soy profesora` is a genuine self-description the build cannot
+ * see — and those are declared in the column instead. A missed one is content
+ * shown to everybody, which is what it does today; a wrong one is content
+ * silently taken away.
+ */
+function deriveSpeakerGender(tokens: readonly Token[]): string {
+  for (const [position, token] of tokens.entries()) {
+    if (token.pos !== 'VERB' || !token.lemma) continue;
+    if (!SELF_DESCRIBING_VERBS.has(token.lemma)) continue;
+    if (!onlyFirstPersonSingular(token)) continue;
+
+    for (const next of tokens.slice(position + 1)) {
+      if (PREDICATE_SKIP.has(next.pos ?? '')) continue;
+      if (next.pos !== 'ADJ') break;
+      const gender = (next.morph as Record<string, unknown> | undefined)?.['gender'];
+      if (gender === 'masculine' || gender === 'feminine') return gender;
+      break;
+    }
+  }
+  return '';
+}
+
+/**
  * A tú command is spelled exactly like the third person present — `cierra la
  * puerta` and `la tienda cierra a las dos` differ only in what they mean, and
  * the linker cannot see the difference.
@@ -2229,6 +2322,15 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
   const lexemes = [...new Set(tokens.map((token) => token.lexeme).filter(Boolean))] as string[];
   const hasFiniteVerb = tokens.some((token) => token.morph?.['verbForm'] === 'finite');
   const address = sentence.address || deriveAddress(tokens);
+  /*
+   * A line inside a passage is spoken by a *character*, so its gender is the
+   * character's and narrowing it by the learner's would delete a line from the
+   * middle of a text somebody is reading. Only sentences that stand alone are
+   * ever the learner's own words.
+   */
+  const speakerGender = sentence.passage
+    ? ''
+    : sentence.speakerGender || deriveSpeakerGender(tokens);
   // A sentence inherits the regional limits of the words it uses: a phrase
   // built on `papa` is not one a learner in Spain should be taught unmarked.
   const regions = [
@@ -2247,6 +2349,7 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
     level: sentence.level,
     ...(sentence.register ? { register: sentence.register } : {}),
     ...(address ? { address } : {}),
+    ...(speakerGender ? { speakerGender } : {}),
     ...(regions.length > 0 ? { regions } : {}),
     ...(sentence.topics.length > 0 ? { topics: sentence.topics } : {}),
     tokens,

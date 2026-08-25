@@ -67,6 +67,7 @@ import {
   TrendingUp,
   Trophy,
   Type,
+  User,
   Users,
   Volume2,
   VolumeX,
@@ -187,6 +188,9 @@ export const ICONS = {
   note: StickyNote,
   /* Who you may say this to — the `tu`/`usted` choice, and its consequences. */
   audience: Users,
+  /* The learner themselves. Singular against `audience`'s plural, which is the
+     distinction: one is who you are, the other is who you are talking to. */
+  user: User,
   /* How it sounds: casual, formal, slang, vulgar. */
   tone: MessageCircle,
   /* Where it is said. A pin rather than a globe: the fact is regional. */

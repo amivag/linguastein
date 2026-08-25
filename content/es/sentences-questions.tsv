@@ -128,6 +128,7 @@
 
 # ── Giving a reason ───────────────────────────────────────────────────────────
 001380	Porque estoy muy cansado.	Because I'm very tired.	a1	feelings	`porque` is one word; `por qué` is two.	neutral					give-a-reason
+002997	Porque estoy muy cansada.	Because I'm very tired.	a1	feelings	`porque` is one word; `por qué` is two.	neutral					give-a-reason
 001381	Porque tengo que trabajar.	Because I have to work.	a1	work	The most useful reason there is.	neutral					give-a-reason
 001382	Es que no tengo tiempo.	It's just that I don't have time.	a1	core	Softens a reason, and never starts with `porque`.	neutral					give-a-reason
 001383	Por el trabajo.	Because of work.	a1	work	A reason with no verb in it at all.	neutral					give-a-reason

@@ -169,6 +169,9 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
       async all() {
         return db.getAll('progress');
       },
+      async count() {
+        return db.count('progress');
+      },
       async put(progress) {
         await db.put('progress', progress);
       },
@@ -179,6 +182,9 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
     attempts: {
       async append(attempt) {
         await db.put('attempts', attempt);
+      },
+      async count() {
+        return db.count('attempts');
       },
       async recent(limit) {
         const all = await db.getAllFromIndex('attempts', 'by-time');
@@ -195,6 +201,9 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
     sessions: {
       async put(record) {
         await db.put('sessions', record);
+      },
+      async count() {
+        return db.count('sessions');
       },
       async recent(limit, language) {
         // A cursor walked back from the newest, rather than every row read and

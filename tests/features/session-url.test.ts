@@ -79,7 +79,7 @@ describe('parseSessionUrl', () => {
    * unknown facet must not be mistaken for "match nothing".
    */
   it('drops values the domain does not recognise rather than emptying the session', () => {
-    const url = parse('/session?preset=nonsense&type=bogus&level=z9&order=sideways&region=fr-FR');
+    const url = parse('/session?preset=nonsense&type=bogus&level=z9&order=sideways');
 
     expect(url.preset).toBe('quick');
     expect(url.filter).toEqual({});
@@ -88,6 +88,32 @@ describe('parseSessionUrl', () => {
 
   it('keeps the region macro-filter, not only the pronunciation locales', () => {
     expect(parse('/session?preset=quick&region=es-419').filter.usableIn).toBe('es-419');
+  });
+
+  /**
+   * A region is pack vocabulary, like a topic and unlike a level, so it is
+   * carried rather than checked off a list here. `region=fr-FR` used to be
+   * dropped — which was the right instinct enforced by the wrong list, five
+   * Spanish locales that no English or German pack appears in.
+   *
+   * Carrying it cannot empty a session, which is what the closed list was
+   * protecting: region-neutral content passes `isUsableIn` whatever the locale,
+   * so an unserviceable region narrows to that material instead of to nothing.
+   * A topic no pack declares is already less forgiving than this.
+   */
+  it('carries a region no loaded pack has heard of, rather than dropping it', () => {
+    expect(parse('/session?preset=quick&region=en-GB').filter.usableIn).toBe('en-GB');
+  });
+
+  it('canonicalises the casing, because the content declares one spelling', () => {
+    expect(parse('/session?preset=quick&region=es-es').filter.usableIn).toBe('es-ES');
+    expect(parse('/session?preset=quick&region=ZH-hant').filter.usableIn).toBe('zh-Hant');
+    expect(parse('/session?preset=quick&region=es-419').filter.usableIn).toBe('es-419');
+  });
+
+  it('still refuses what is not a language tag at all', () => {
+    expect(parse('/session?preset=quick&region=sideways!').filter.usableIn).toBeUndefined();
+    expect(parse('/session?preset=quick&region=x').filter.usableIn).toBeUndefined();
   });
 
   it('reads due in the forms a human would type, and only those', () => {

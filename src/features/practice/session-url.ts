@@ -15,7 +15,6 @@
 import {
   CEFR_LEVELS,
   coursePath,
-  FILTERABLE_REGIONS,
   initialLetter,
   ITEM_TYPES,
   posFromSlug,
@@ -179,7 +178,7 @@ export function parseItemFilter(params: URLSearchParams): ItemFilter {
   // though asking *and* telling is the same as neither.
   const moods = list(params.get('mood'), SENTENCE_MOODS as readonly SentenceMood[]);
   const topics = slugs(params.get('topic'));
-  const region = params.get('region');
+  const usableIn = region(params.get('region'));
   // Normalised rather than validated: `initial=c` is a letter, and so is
   // `initial=café` in the only sense this filter has, so both plan the C's
   // instead of one of them planning nothing.
@@ -194,7 +193,7 @@ export function parseItemFilter(params: URLSearchParams): ItemFilter {
     ...(registers.length ? { registers } : {}),
     ...(moods.length ? { moods } : {}),
     ...(topics.length ? { topics } : {}),
-    ...(isRegion(region) ? { usableIn: region } : {}),
+    ...(usableIn ? { usableIn } : {}),
   };
 }
 
@@ -248,8 +247,44 @@ function isOrdering(value: string | null): value is Ordering {
   return value !== null && (ORDERINGS as readonly string[]).includes(value);
 }
 
-function isRegion(value: string | null): value is LanguageTag {
-  return value !== null && FILTERABLE_REGIONS.some((option) => option.locale === value);
+/**
+ * A region a learner is aiming at, canonicalised rather than checked off a list.
+ *
+ * It was checked against `FILTERABLE_REGIONS` until 2026-08-25 — five Spanish
+ * locales — which left a *pack* vocabulary policed by a *Spanish* constant, so
+ * `?region=en-GB` was dropped from an English course's link without a word. That
+ * is what `slugs` above exists to avoid for topics and skills, and the opposite
+ * of what `initial` documents doing three fields up. `region` belongs with them:
+ * which accents exist is the pack's business, not this file's.
+ *
+ * A value no pack declares cannot empty a session. Content with no regions is
+ * usable everywhere and always passes `isUsableIn`, so a stale or invented tag
+ * narrows to the region-neutral material rather than to nothing.
+ *
+ * The fuller answer, if that ever stops being good enough, is the one skills
+ * already use: parse the tag here and let the screen drop what no loaded pack
+ * declares, since it is the screen that holds the repository. That is a bigger
+ * change than the bug warranted.
+ *
+ * The casing is BCP 47's rather than the learner's, because `regionCovers`
+ * compares tags exactly: a hand-typed `es-es` has to reach the `es-ES` the
+ * content declares, and `zh-hant` the `zh-Hant` a future pack will.
+ */
+const REGION_TAG = /^[a-z]{2,3}(-[a-z0-9]{2,8})*$/i;
+
+function region(value: string | null): LanguageTag | undefined {
+  const tag = value?.trim();
+  if (!tag || !REGION_TAG.test(tag)) return undefined;
+  const [language, ...subtags] = tag.split('-');
+  return [language!.toLowerCase(), ...subtags.map(subtag)].join('-');
+}
+
+/** Region subtags are upper case, scripts are title case, everything else lower. */
+function subtag(value: string): string {
+  const lower = value.toLowerCase();
+  if (/^[a-z]{2}$/.test(lower)) return lower.toUpperCase();
+  if (/^[a-z]{4}$/.test(lower)) return lower[0]!.toUpperCase() + lower.slice(1);
+  return lower;
 }
 
 /** `due=1`, `due=true` and a bare `due` all mean the same thing to a human. */

@@ -78,6 +78,20 @@ _swap_ two lexeme ids, and mastery is keyed on them. Item ids have
    Spanish keeps today's behaviour exactly, because its ids are permanent — which
    is what makes its eight rows a record rather than a backlog.
 
+**One region facet is still Spanish, and it is a product call rather than a fix.**
+`isRegion` in `session-url.ts` policed `?region=` against `FILTERABLE_REGIONS` —
+five Spanish locales — so `?region=en-GB` was dropped from an English course's
+link without a word. That is fixed: a region is pack vocabulary, so it is
+canonicalised and carried like a topic. `BrowseScreen` still builds its region
+chips from the same constant, and that half is deliberately left: on an English
+course every count is zero so the filter simply does not appear, which is benign,
+but deriving the candidates changes the _shipped Spanish_ chips. The content
+declares `es-ES`, `es-419`, `es-MX`, `es-CO`, `es-VE`, `es-CU`, `es-DO`, `es-PR`
+while the constant offers `es-419`, `es-ES`, `es-MX`, `es-AR`, `es-CO` — so
+deriving them gains four Caribbean locales and **loses Argentina**, which a
+learner can select today. Decide which list a chip should come from; do not
+migrate it as a refactor.
+
 **Do not** widen `slug` to accept non-ASCII instead. Ids are permanent, appear in
 `id-ledger.tsv` and are referenced by learner progress; a scheme that admits any
 codepoint makes the collision _harder_ to see rather than impossible.

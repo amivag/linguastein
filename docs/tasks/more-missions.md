@@ -45,7 +45,7 @@ is already done. The gaps are elsewhere.
 
 ### 2.1 Level, not variation
 
-Thirteen of fourteen missions are a1. A learner who finishes the ladder has one
+Thirteen of seventeen missions are a1. A learner who finishes the ladder has one
 a2 mission and then nothing — and the pack behind it is thin in the same shape:
 1,185 of 1,425 sentences are a1, and 81% of all sentences are present-tense.
 

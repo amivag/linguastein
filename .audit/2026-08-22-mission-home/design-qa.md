@@ -1,10 +1,15 @@
 # Design QA — Mission Home
 
+> **Point-in-time record, 2026-08-22.** Kept beside the captures it describes.
+> The screen it checked was called **Test** then and is **Home** now, and the
+> mission ladder has grown from thirteen missions to seventeen — so read this as
+> evidence that the check was done, not as a description of the current screen.
+
 ## Capture metadata
 
 - selected visual target: `C:\Users\amiev\.codex\generated_images\01a02853-07b2-7670-ab89-66edc7fffe76\exec-d406194f-b482-4e53-91c1-bf0ab6d97fa5.png`
 - source pixels: 853 × 1844
-- implementation capture: `C:\evan\dev\my-projects\linguastein\.audit\2026-08-22-mission-home\implementation-final.png`
+- implementation capture: `.audit/2026-08-22-mission-home/implementation-final.png`
 - captured pixels: 380 × 822
 - CSS viewport: 390 × 844
 - device pixel ratio: 1.75

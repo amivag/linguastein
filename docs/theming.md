@@ -72,7 +72,7 @@ Two constraints on that registry, both structural:
 
 ## How it works
 
-`<html>` always carries all four attributes. A tiny script in `index.html` sets
+`<html>` always carries all five attributes. A tiny script in `index.html` sets
 them before first paint — reading the saved preferences from `localStorage` — so
 nothing flashes, and each palette is declared exactly once per mode in CSS
 instead of being duplicated into a media query.

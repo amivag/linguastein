@@ -49,8 +49,11 @@ Dependencies point inwards. `domain` imports nothing from `data`, `storage`,
 
 `src/languages/<tag>/` holds language-specific morphology (Spanish conjugation,
 plurals, adjective agreement). The engine never imports it; the dataset build
-does. That is what keeps the engine language-agnostic while still letting the
-Spanish pack ship 2,000 generated verb forms.
+does, through one seam (`LanguageModule`) loaded by tag with a dynamic
+`import()`, so a German build never has Spanish's conjugator in memory. That is
+what keeps the engine language-agnostic while still letting the Spanish pack ship
+9,142 generated `forms` records — 7,770 verb forms plus 1,372 noun plurals and
+adjective agreements.
 
 ## Composition root
 
@@ -122,10 +125,26 @@ a reload and the person practising picks the moment. The new build is already
 cached either way, so nothing is lost by waiting.
 
 Deferring that reload means the page runs the old JS under the new worker until it
-is taken. That is safe **because the app builds to a single bundle**: there is no
-lazily-imported chunk whose old URL could 404 once the new precache drops it. If
-route-level `import()` is ever introduced, revisit this — either take the reload
-immediately or keep the previous revision cached.
+is taken, and **the app no longer builds to a single bundle**, so the old
+argument for why that is safe has expired. Three lazy chunks exist today: the
+style guide (`import()` in `App.tsx`), the alphabet chart, and the per-language
+module `src/languages/index.ts` loads by tag. Each is a chunk whose hashed URL
+the new precache can drop while a page still holding the old `index.js` has yet
+to request it.
+
+What keeps that from being a live bug is Workbox's behaviour rather than the
+bundle's shape: the previous precache is not deleted until the new worker
+**activates**, and the runtime `CacheFirst` handlers keep serving what they
+already hold. The exposure is the window after activation, and only for a learner
+who then opens `/design`, the alphabet chart, or a course in a language whose
+module was not already loaded — none of which is mid-answer, which is the case
+the deferral exists to protect.
+
+So the deferral stays, and the rule that replaces the single-bundle one is:
+**a lazily-imported chunk must not be on a path a learner reaches mid-session.**
+Route-level `import()` for a practice screen would break that and is the change
+to revisit this for — either take the reload immediately or keep the previous
+revision cached.
 
 ## Extension points already in place
 

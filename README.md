@@ -29,19 +29,23 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 
 ## Scripts
 
-| Script                  | What it does                              |
-| ----------------------- | ----------------------------------------- |
-| `npm run dev`           | Vite dev server                           |
-| `npm run build`         | Type-check and build the PWA into `dist/` |
-| `npm run preview`       | Serve the production build locally        |
-| `npm test`              | Vitest (unit + component)                 |
-| `npm run test:coverage` | Vitest with the enforced coverage floors  |
-| `npm run typecheck`     | TypeScript, no emit                       |
-| `npm run lint`          | ESLint (flat config)                      |
-| `npm run format`        | Prettier                                  |
-| `npm run build:data`    | Rebuild `public/packs` from `content/es`  |
-| `npm run validate:data` | Validate every shipped dataset            |
-| `npm run check`         | Everything above, in the order CI runs it |
+| Script                   | What it does                                                     |
+| ------------------------ | ---------------------------------------------------------------- |
+| `npm run dev`            | Vite dev server                                                  |
+| `npm run build`          | Type-check and build the PWA into `dist/`                        |
+| `npm run preview`        | Serve the production build locally                               |
+| `npm test`               | Vitest (unit + component)                                        |
+| `npm run test:coverage`  | Vitest with the enforced coverage floors                         |
+| `npm run typecheck`      | TypeScript, no emit                                              |
+| `npm run lint`           | oxlint, then ESLint for the React rules oxlint has no plugin for |
+| `npm run format`         | Prettier, writing rather than only checking                      |
+| `npm run format:check`   | Prettier, checking rather than writing — what CI runs            |
+| `npm run build:data`     | Rebuild `public/packs` from `content/es`                         |
+| `npm run validate:data`  | Validate every shipped dataset                                   |
+| `npm run review:data`    | Editorial review aid: content questions, by exception            |
+| `npm run build:palette`  | Solve a palette's colours from a handful of hue angles           |
+| `npm run generate:audio` | Synthesise canonical audio into the ledger, in batches           |
+| `npm run check`          | Everything above, in the order CI runs it                        |
 
 ## Layout
 
@@ -52,28 +56,35 @@ src/
 │   ├── content/  language model: items, lexemes, forms, skills, translations
 │   ├── exercises/exercise generation and grading
 │   ├── sessions/ session planning: filters, ordering, sizing
-│   └── progress/ learner state and review scheduling
-├── languages/    Spanish morphology used to generate the dataset
+│   ├── progress/ learner state and review scheduling
+│   ├── missions/ where a learner stands in a mission, derived from attempts
+│   └── batches/  a set the learner picks once and returns to
+├── languages/    per-language morphology behind one seam, loaded by tag
 ├── data/         dataset loading (JSONL) and the validation boundary
 ├── storage/      IndexedDB and in-memory implementations of learner storage
 ├── audio/        audio service, TTS and speech-recognition seams
 ├── ai/           AI provider seam and learner-context builder
 ├── features/     screens: home, study, browse, read, progress, practice, missions,
-│                 settings, sharing
-├── components/   shared UI: AppShell, AppNav, Button, CourseBar, ThemeToggle,
-│                 PaletteControl, ContrastControl, VoiceInput, TokenizedText,
-│                 WordInfoSheet
-├── styles/       primitives, one CSS file per palette per mode, one per
-│                 contrast level
+│                 settings (one file per section), sharing, not-found, design;
+│                 plus search/ — the lookup box, its results and the ?q= codec,
+│                 which is not a screen and is rendered by Home
+├── components/   shared UI: AppShell, AppNav, Button, Chip, Sheet, Icon, CourseBar,
+│                 ThemeToggle, PaletteControl, ContrastControl, IntensityControl,
+│                 ReadingSizeControl, VoiceInput, TokenizedText, WordInfoSheet;
+│                 icons.ts is the icon-set seam
+├── styles/       primitives, surface recipes, the token reader, one CSS file per
+│                 palette per mode and one per contrast level
 └── utils/        small helpers (RNG, clipboard)
 
-content/es/      dataset authoring sources (TSV) — the human-edited input
-public/packs/    generated, shipped content packs (JSONL + manifest)
+content/          capabilities.tsv — the language-neutral capability registry
+content/es/       dataset authoring sources (TSV) — the human-edited input
+public/packs/     generated, shipped content packs (JSONL + manifest)
 public/robots.txt crawl and training opt-outs for the deployed site
 docs/             architecture notes, the design language, dataset format,
-                  deployment, product spec
+                  deployment, product spec, and briefed tasks under docs/tasks/
 tests/            unit and component tests, mirroring src/
-scripts/          dataset validation CLI
+scripts/          dataset build, validation and review; the palette solver;
+                  the audio generator
 dist/             build output (git-ignored)
 ```
 
@@ -81,13 +92,19 @@ dist/             build output (git-ignored)
 
 Four destinations behind a tab bar (a rail on wider screens):
 
-| Section  | What it is                                                                                                    |
-| -------- | ------------------------------------------------------------------------------------------------------------- |
-| Study    | the material, in linkable sections: missions, words, phrases, grammar, abilities, categories                  |
-| Test     | where a session starts: the recommended next action, then quick sessions and the six presets                  |
-| Progress | what has been practised, accuracy, weak items, recent sessions                                                |
-| Settings | five linkable sections: learning, appearance, audio (playback and a speech-input check), content packs, about |
-| You      | name, the gender you speak about yourself in, and what is stored on this device                               |
+| Section  | What it is                                                                                                                    |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Home     | where a learner lands: a lookup box, the recommended next action, where you left off, what this course holds, how far you are |
+| Study    | the material, in linkable sections: missions, words, phrases, grammar, abilities, categories, the alphabet                    |
+| Progress | what has been practised, accuracy, weak items, recent sessions                                                                |
+| Settings | six linkable sections: you, learning, appearance, audio (playback and a speech-input check), content packs, about             |
+
+Home used to be called **Test**, which was accurate about what it did and wrong
+about where it sat — it is the address `/` redirects to and the screen a learner
+sees after three days away, so it answers "what is this course and where had I
+got to" before it recommends anything. **You** — a name, the gender you speak
+about yourself in, and what is stored on this device — used to be a screen of its
+own; it is a Settings section now, and `/user` redirects into it.
 
 Browse and Read are sheets _inside_ Study rather than destinations of their own —
 search and filter all 3,798 items by category or facet (and dictate the search
@@ -97,8 +114,8 @@ as deep links.
 A running session hides the chrome and fills the screen, so practice stays the
 focus rather than the navigation.
 
-The journey is thirteen real-world missions, listed in order on Study: twelve at
-A1 and one at A2. Each teaches one connected example, practises its sentences,
+The journey is seventeen real-world missions, listed in order on Study: thirteen
+at A1, one at A2 and three at B1. Each teaches one connected example, practises its sentences,
 then changes the situation for Use. Transfer attempts
 feed the same local FSRS schedule as ordinary practice; speech can grade them
 automatically, and every device has an explicit self-rating fallback after
@@ -112,11 +129,12 @@ destinations, clothing needs, hotel details, reactions to plans, morning actions
 and answers about how they feel. Speech practice accepts any context-appropriate
 response rather than demanding one theatre-script line.
 
-**Variation Labs** go one step further in every mission: learners swap meaningful
-slots, listen to the newly composed sentence, then hide the Spanish and produce
-it from meaning. The 314 combinations cover wellbeing, café orders, directions,
-clothes, hotel stays, making plans and morning routines. They remain transient
-study material rather than fake progress-bearing content records.
+**Variation Labs** go one step further in fourteen of the seventeen missions:
+learners swap meaningful slots, listen to the newly composed sentence, then hide
+the Spanish and produce it from meaning. The 658 combinations cover wellbeing,
+café orders, directions, clothes, hotel stays, making plans, morning routines,
+symptoms, work, homes, tickets, market quantities and introductions. They remain
+transient study material rather than fake progress-bearing content records.
 
 ### Courses are in the URL
 
@@ -132,7 +150,7 @@ level:
 
 A level is a ceiling, not a chapter: A2 keeps A1 material in rotation, because
 practising it is review rather than regression. `/` redirects to the course you
-left. Only Spanish A1–A2 ships, but the courses on offer are derived from the
+left. Only Spanish A1–B1 ships, but the courses on offer are derived from the
 packs actually loaded, so a second language pack appears in the picker — and in
 the URL — with no code change.
 
@@ -158,6 +176,8 @@ Three systems, deliberately kept apart:
    change without invalidating progress.
 
 Details and the rules that keep it that way: [`docs/architecture.md`](docs/architecture.md).
+[`docs/README.md`](docs/README.md) is the map of everything else — which document
+answers which question, and the state of every briefed task.
 
 ## Data
 
@@ -243,19 +263,22 @@ Icons are [Lucide](https://lucide.dev) (ISC), behind a seam in
 `src/components/icons.ts` — one 24px grid, one stroke weight, tree-shaken per
 glyph, and `currentColor` throughout, so no icon can be off-palette.
 
-Appearance is four independent axes rather than one list of themes: light or
-dark (defaulting to the OS setting and following it live), which of four
-palettes — Indigo, Teal, Plum or Sand — how far apart that palette's neutrals
-sit, and the type scale. Keeping them separate is what lets Large text, warm
-colours and high contrast be chosen independently instead of as a combined
-`dark-teal-large-more` theme.
+Appearance is five independent axes rather than one list of themes: light or
+dark (defaulting to the OS setting and following it live), which of seven
+palettes — Indigo, Teal, Plum, Sand, Slate, Rose or Olive — how far apart that
+palette's neutrals sit, how loud its hues are, and the type scale. Keeping them
+separate is what lets Large text, warm colours, calm hues and high contrast be
+chosen independently instead of as a combined `dark-teal-large-more-vivid`
+theme.
 
-A palette is two CSS files plus a registry entry; a contrast level restates the
-neutral roles as mixes along the palette's own ink-to-paper axis and touches no
-hue, so one level serves every palette including ones written later. See
+A palette is two CSS files plus a registry entry, generated by
+`npm run build:palette` rather than hand-mixed. A contrast level restates the
+neutral roles as mixes along the palette's own ink-to-paper axis and declares no
+hue; an intensity declares no neutral. Those two invariants are what let the axes
+compose instead of multiplying, and both are asserted. See
 [`docs/theming.md`](docs/theming.md). Colour contrast is asserted for every
-palette at every contrast level, so nothing a learner can select ships below
-WCAG AA.
+palette at every contrast level × every intensity, so nothing a learner can
+select ships below WCAG AA.
 
 The layout is one readable column that widens with the viewport (phone →
 tablet → desktop), with hover styles applied only where a pointer can hover and
@@ -295,7 +318,7 @@ cached on first play, and all learner state lives in IndexedDB on the device.
 
 ## Versions and updates
 
-The app reports its own version in Settings → Data as `Linguastein <version> (<commit>)`,
+The app reports its own version in Settings → About as `Linguastein <version> (<commit>)`,
 alongside the version of each loaded content pack — content ships independently of
 the app. `package.json` is the source of truth; the build injects it. Changes are
 recorded in [CHANGELOG.md](CHANGELOG.md).

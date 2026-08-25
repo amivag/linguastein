@@ -20,6 +20,13 @@ respect: the engine in `src/domain` stays pure and framework-free, content is
 described rather than hard-coded, and the accessibility contract is enforced by
 tests rather than by review.
 
+It is deliberately short enough to read in one sitting; the detail lives beside
+it, and [docs/README.md](docs/README.md) says which file answers which question.
+Two are worth knowing by name — [screens-and-urls.md](docs/screens-and-urls.md)
+before touching a route or a query parameter, and
+[content-authoring.md](docs/content-authoring.md) before editing a row of
+`content/es`.
+
 ## Licensing your contribution
 
 The code is AGPL-3.0-only and the datasets are CC BY-SA 4.0, but the copyright is

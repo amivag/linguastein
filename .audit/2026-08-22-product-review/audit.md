@@ -1,5 +1,19 @@
 # Linguastein product audit — 2026-08-22
 
+> **Historical record. Much of this has since been acted on — read it for the
+> reasoning, not for the current state.** Its central finding was "no guided
+> learning arc, and a first screen that communicates backlog rather than
+> possibility". Since then: the missions ladder landed (seventeen missions, each
+> Understand → Practise → Use with a three-context transfer ladder), Test was
+> renamed **Home** and rebuilt to answer "what is this course and where had I got
+> to" before recommending anything, and the pack grew from 1,043 items and 14
+> texts to 3,798 items and 123 passages. Its numbers are all from that day.
+>
+> What it raised that is **still open**: editorial review of the pack (nothing is
+> signed off), canonical audio (both code halves exist, no clip has been
+> generated), and Progress as a capability map rather than a measurement readout.
+> Those are items 0, 3 and 8 of [docs/roadmap.md](../../docs/roadmap.md).
+
 ## Audit scope
 
 Fresh mobile run at 390 × 844 through the current Spanish course: course home, Study, Browse, word details, Quick practice, answer feedback, Progress, Settings, reading library, and a short text. The review combines visible UX/accessibility evidence with a read-only inspection of the scheduling, exercise composition, mastery, speech, and content provenance code.

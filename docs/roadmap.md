@@ -45,29 +45,33 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   conjugator, coverage reporting and a CI drift check
 - Stable item ids: a row owns its id, keeps it through edits, reordering and file
   moves, and a deleted row's id is retired rather than reused
-- Appearance as four independent axes: light or dark, one of four palettes, one of
-  four contrast levels and one of three type scales. Every palette is checked
-  against every contrast level at WCAG AA, and a contrast level declares no hue —
-  it restates the neutrals along the palette's own ink-to-paper line, so one level
-  serves a palette written after it
+- Appearance as five independent axes: light or dark, one of seven palettes, one
+  of four contrast levels, one of three colour intensities and one of three type
+  scales. Every palette is checked against every contrast level × every intensity
+  at WCAG AA, and the two invariants that let them compose are asserted rather
+  than documented — a contrast level declares no hue (it restates the neutrals
+  along the palette's own ink-to-paper line, so one level serves a palette written
+  after it) and an intensity declares no neutral
 - Passages: connected texts and dialogues as containers over sentences that stay
   individually practisable, with a reading view and passage-scoped sessions
-- A thirteen-mission communicative journey (Understand → Practise → Use), with a
+- A seventeen-mission communicative journey (Understand → Practise → Use), with a
   three-context transfer ladder for every mission. The first variations retain
-  meaning cues; the final rung uses communicative intentions, and three narration
-  models sit alongside the ten dialogues. Twelve are A1; saying what hurts is the
-  first A2 mission, because the exchange that teaches it is
+  meaning cues; the final rung uses communicative intentions, and narration models
+  sit alongside the dialogues. Thirteen are A1; saying what hurts is the first A2
+  mission, because the exchange that teaches it is; three are B1 (see below)
 - Response palettes now run through every mission: wellbeing, café orders,
   destinations, clothing needs, hotel details, reactions to suggestions and real
   morning actions. Each reveals alternatives progressively with meaning and
   pragmatic nuance, and accepts any context-appropriate answer through the
   existing speech seam instead of grading against one scripted line
-- Variation Labs across all thirteen missions: pure generators recombine ordered
-  slots into 574 valid study phrases covering wellbeing, café orders, directions,
-  clothes, hotel stays, plans, routines, symptoms, work, homes, tickets, market
-  quantities and introductions. Learners can hear and
+- Variation Labs across fourteen of the seventeen missions: pure generators
+  recombine ordered slots into 658 valid study phrases covering wellbeing, café
+  orders, directions, clothes, hotel stays, plans, routines, symptoms, work,
+  homes, tickets, market quantities and introductions. Learners can hear and
   produce them from meaning without generating fake stable ids or progress;
-  the evidence-bearing palette sentences remain ordinary content items
+  the evidence-bearing palette sentences remain ordinary content items. The three
+  B1 missions have none yet — `tests/domain/variations.test.ts` enumerates the
+  fourteen that do, so adding one is a visible change rather than a silent gap
 - An adaptive daily path on Home: one primary action followed by at most two
   useful next steps. Due reviews lead without hiding the current mission;
   returning learners can strengthen their weakest recall, new learners can request a
@@ -80,7 +84,9 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   `no hables` as a pattern, because the negative command is the one place the
   mood is not optional-feeling
 - core-es pack: 185 verbs (7,770 generated forms), 476 nouns, 324 modifiers,
-  2,998 sentences — 3,798 practisable items, 100% of sentence words linked to a lexeme
+  2,998 sentences — 3,798 practisable items in 800 word cards and the sentences,
+  plus 1,372 nominal forms and 123 passages. Token linking is 99% (see item 0 for
+  the three principled classes that make up the rest)
 - Three B1 missions — a complaint, a flatshare negotiation and asking for advice
   — each a model passage plus three transfers, and the mission list now says
   which level a mission is: `MissionDefinition.level` had always existed and
@@ -128,7 +134,7 @@ Two more are briefed as decisions rather than as content:
 [pack addressing](tasks/pack-addressing.md) — a link identifies a passage and a
 skill by local id, which two packs can both claim — and
 [more missions](tasks/more-missions.md), which records the audit showing the
-existing fourteen are already dense (every capability has a palette, none under
+existing missions are already dense (every capability has a palette, none under
 eight alternatives) and that the real gap is level rather than variation.
 
 0. **Editorial review of core-es** — the pack is machine-generated and marked
@@ -137,7 +143,7 @@ eight alternatives) and that the real gap is level rather than variation.
 
    The machinery for that pass is now in place, and it is only machinery: review
    is per item via `content/es/reviewed.tsv`, so a slice can be signed off without
-   reading all 1,922 at once, and `npm run review:data` reports the rows worth
+   reading all 3,798 at once, and `npm run review:data` reports the rows worth
    attention rather than asking anyone to scan the lot. Sign-off is pinned to the
    wording that was read, so an edit afterwards fails the build instead of
    inheriting the approval. **Nothing is signed off yet** — the pack is still
@@ -174,13 +180,13 @@ eight alternatives) and that the real gap is level rather than variation.
      the conjugator does not generate; they are in _Later_ with the subjunctive
      proper.
 
-1. **More passages** — 57 exist (17 texts, 40 dialogues), of which 52 belong to a
-   mission. The route from 36 was the intended one: every passage added since
-   arrived as part of a mission rather than as disconnected text raising a count.
-   The five nothing points at are all monologue texts — a Saturday, feeling
-   unwell, last summer, the market and a rainy day. `El verano pasado` is the seed
+1. **More passages** — 123 exist (59 texts, 64 dialogues). The route from 36 to
+   57 to here was the intended one: every passage added since arrived as part of
+   a mission rather than as disconnected text raising a count. The ones nothing
+   points at are all monologue texts — a Saturday, feeling unwell, last summer,
+   the market and a rainy day among them. `El verano pasado` is the seed
    of the past-tense mission briefed in
-   [docs/tasks/past-tense-mission.md](tasks/past-tense-mission.md); the other four
+   [docs/tasks/past-tense-mission.md](tasks/past-tense-mission.md); the others
    read as supporting material for missions that already exist.
 2. **Study mode for flashcards** — previous/next and no scoring are in place: a
    study session records nothing and reports a count rather than a score. What
@@ -233,12 +239,12 @@ eight alternatives) and that the real gap is level rather than variation.
    [docs/tasks/game-feel.md](tasks/game-feel.md)) — and the constraints
    still bind: no resettable streak, no reward that overstates the evidence, and
    nothing where motion or colour is the only signal.
-6. **Situations as communicative functions** — landed across all thirteen missions.
+6. **Situations as communicative functions** — landed across all seventeen missions.
    `content/es/skills.tsv` now authors functions as a second axis to topics:
    `restaurant` is what a sentence is _about_, while ordering politely or
    understanding a price is what the learner is _trying to do_. Sentence rows
    attach those functions, session URLs preserve them, mastery derives evidence,
-   and the mission reports the capabilities it trains. Ten missions use a dialogue
+   and the mission reports the capabilities it trains. Fourteen missions use a dialogue
    model; describing a morning, a working day and a home add a connected-narration
    model for time, detail, sequence and destination. Every mission now has three ordered
    transfer contexts. Use records `think-say` attempts into the same FSRS schedule
@@ -279,10 +285,13 @@ eight alternatives) and that the real gap is level rather than variation.
     half — resolving `system` through `prefers-contrast`, which needs a fifth
     value on that axis (`system`) rather than a fifth level. See
     [the theming note](theming.md#appearance-is-five-independent-axes).
-12. **Practice batches** — a set the learner picks once and returns to across
+12. **Practice batches** — **Stages A and B have landed**: `src/domain/batches/`
+    holds the model and the derived standing, and a sheet on Browse can be saved
+    as a set. A batch is a set the learner picks once and returns to across
     short sessions until it is absorbed, with where they stand derived from the
-    attempt log the way a mission's standing already is. Briefed in full in
-    [docs/tasks/practice-batches.md](tasks/practice-batches.md), including why
+    attempt log the way a mission's standing already is. Read
+    [docs/tasks/practice-batches.md](tasks/practice-batches.md) for what remains,
+    and for why
     this is not a mission and why its graduation bar cannot be lexeme mastery:
     most of the pack's words appear in too few sentences to reach that floor.
     It is also the first feature with a reason to read `Attempt.exerciseKind`,

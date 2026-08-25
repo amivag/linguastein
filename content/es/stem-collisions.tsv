@@ -1,0 +1,33 @@
+# Lemmas that share one lexeme-id stem — a ratchet, not a report.
+#
+# Columns: stem	lemmas (in claim order)	note
+#
+# `slug` folds accents away, so two words that differ only by one get a single
+# stem. `lexemeId` then hands the bare id to whichever lemma the build reaches
+# first and suffixes the other with its part of speech, which is why every row
+# here names a real, shipped mislabelling: `lexeme:te` is tea, not the pronoun.
+#
+# Those ids are permanent — mastery is keyed on them — so the eight below are
+# recorded rather than fixed. Every one is a `tilde diacrítica` pair, where the
+# accent is the entire difference between two words; Spanish has no other kind.
+#
+# Two rules, both enforced by `checkStemCollisions` in scripts/build-dataset.ts:
+#
+#   A collision that is not listed here fails the build. For a new language that
+#   is the right answer and the fix is a transliteration in its language module,
+#   never a row here — German's schon/schön and fordern/fördern are this same
+#   accident with none of the history. See docs/tasks/language-matrix.md §1.
+#
+#   The claim order is checked, not just the pair. It is decided by which source
+#   file is read first, so moving `té` out of nouns.tsv would silently swap two
+#   lexeme ids and move a learner's mastery with them. Item ids have
+#   id-ledger.tsv to stop exactly that; this is the same guard for lexemes.
+#
+te	té,te	the noun (tea) is read before the pronoun, so it holds the bare id
+tu	tú,tu	the stressed pronoun before the possessive
+el	él,el	the pronoun before the determiner — the commonest word in the pack is the suffixed one
+que	qué,que	the interrogative before the conjunction
+cuando	cuándo,cuando	the interrogative before the conjunction
+como	cómo,como	the interrogative before the conjunction and the verb form
+si	si,sí	the conjunction before the affirmation
+mi	mi,mí	the possessive before the stressed pronoun

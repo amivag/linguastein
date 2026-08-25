@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { buildLearnerContext, type LearnerContext } from '../../ai';
 import { useServices } from '../../app/services-context';
+import { useTargetLanguage } from '../../app/course';
 import { APP } from '../../app/identity';
 import { Button } from '../../components/Button';
 import type { LearningItem } from '../../domain/content';
@@ -15,12 +16,17 @@ interface ShareActionsProps {
 
 export function ShareActions({ item }: ShareActionsProps) {
   const { services, preferences } = useServices();
+  const targetLanguage = useTargetLanguage();
   const [copied, setCopied] = useState<string | null>(null);
   const [learner, setLearner] = useState<LearnerContext | null>(null);
 
   // Loaded lazily: the learner summary is only needed if someone opens this.
   useEffect(() => {
     let cancelled = false;
+    // No summary at all rather than one naming the wrong language: the payload
+    // already treats the learner context as optional, so this degrades where a
+    // guess would have travelled into someone's AI prompt.
+    if (targetLanguage === undefined) return;
     void services.storage.progress.all().then((progress) => {
       if (cancelled) return;
       setLearner(
@@ -28,13 +34,14 @@ export function ShareActions({ item }: ShareActionsProps) {
           repository: services.repository,
           progress,
           referenceLanguage: preferences.referenceLanguage,
+          targetLanguage,
         }),
       );
     });
     return () => {
       cancelled = true;
     };
-  }, [services, preferences.referenceLanguage]);
+  }, [services, preferences.referenceLanguage, targetLanguage]);
 
   const payloads = buildSharePayloads(
     services.repository,

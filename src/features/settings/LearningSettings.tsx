@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useServices } from '../../app/services-context';
+import { useTargetLanguage } from '../../app/course';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon } from '../../components/Icon';
 import { referenceLanguages } from '../../domain/content';
@@ -15,9 +16,14 @@ import styles from './Settings.module.css';
  */
 export function LearningSettings() {
   const { services, preferences, updatePreferences } = useServices();
+  const targetLanguage = useTargetLanguage();
   // What the loaded packs can actually explain in, rather than a list of what
-  // the app hopes to support one day. See `referenceLanguages`.
-  const languages = useMemo(() => referenceLanguages(services.repository), [services.repository]);
+  // the app hopes to support one day, and never the language being learned.
+  // See `referenceLanguages`.
+  const languages = useMemo(
+    () => referenceLanguages(services.repository, targetLanguage),
+    [services.repository, targetLanguage],
+  );
 
   return (
     <>

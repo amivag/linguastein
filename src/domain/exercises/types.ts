@@ -54,7 +54,16 @@ export interface Choice {
 export interface MultipleChoiceExercise extends ExerciseBase {
   readonly kind: 'multiple-choice';
   readonly prompt: string;
-  readonly promptLanguage: LanguageTag;
+  /**
+   * The language the prompt is in, for the `lang` a renderer tags it with.
+   *
+   * Absent when the item's pack is not loaded, which is the same honest answer
+   * `useTargetLanguage` gives: no attribute leaves the document language in
+   * charge, while a guessed one asserts something false. It was the literal
+   * `'es'` until 2026-08-25 — the one place the pass that removed `lang="es"`
+   * from twenty elements did not reach, because nothing reads it yet.
+   */
+  readonly promptLanguage?: LanguageTag;
   readonly choices: readonly Choice[];
 }
 

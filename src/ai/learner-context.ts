@@ -19,7 +19,13 @@ export interface BuildContextOptions {
   readonly repository: ContentRepository;
   readonly progress: readonly ItemProgress[];
   readonly referenceLanguage: string;
-  readonly targetLanguage?: string;
+  /**
+   * Required, and deliberately not defaulted. It was `= 'es'` until 2026-08-25,
+   * and the single caller never passed it — so a German course handed an AI a
+   * summary saying the learner was studying Spanish, in the one artefact whose
+   * whole purpose is to replace "teach me Spanish" with something true.
+   */
+  readonly targetLanguage: string;
   readonly now?: number;
   readonly maxKnown?: number;
   readonly maxWeak?: number;
@@ -33,7 +39,7 @@ export function buildLearnerContext(options: BuildContextOptions): LearnerContex
     repository,
     progress,
     referenceLanguage,
-    targetLanguage = 'es',
+    targetLanguage,
     now = Date.now(),
     maxKnown = 20,
     maxWeak = 8,

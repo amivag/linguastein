@@ -14,7 +14,13 @@ const record = (local: string, overrides: Partial<ItemProgress>): ItemProgress =
 });
 
 const build = (progress: readonly ItemProgress[]) =>
-  buildLearnerContext({ repository, progress, referenceLanguage: 'en', now: NOW });
+  buildLearnerContext({
+    repository,
+    progress,
+    referenceLanguage: 'en',
+    targetLanguage: 'es',
+    now: NOW,
+  });
 
 describe('buildLearnerContext', () => {
   it('summarises an empty history without pretending to know anything', () => {
@@ -53,6 +59,7 @@ describe('buildLearnerContext', () => {
       repository,
       progress: many,
       referenceLanguage: 'en',
+      targetLanguage: 'es',
       now: NOW,
       maxWeak: 3,
     });
@@ -66,6 +73,7 @@ describe('buildLearnerContext', () => {
       repository,
       progress: [record('001', { difficulty: 0.8 }), record('004', { difficulty: 0.8 })],
       referenceLanguage: 'en',
+      targetLanguage: 'es',
       now: NOW,
       topic: 'food-drink',
     });

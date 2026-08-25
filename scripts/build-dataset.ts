@@ -849,16 +849,63 @@ interface LexemeRecord {
 
 const lexemeIds = new Map<string, string>();
 const takenIds = new Set<string>();
+/**
+ * Which lemmas claimed each stem, in claim order. The order is the load-bearing
+ * part: it decides which lemma gets the bare id and which gets the suffixed one.
+ */
+const stemClaims = new Map<string, string[]>();
+const lexemeProblems: string[] = [];
 
+/**
+ * The id for a lemma in a part of speech, and the gate that stops two different
+ * words sharing one.
+ *
+ * The disambiguation below is right for Spanish and hides a bug in every
+ * language whose alphabet `slug` cannot spell. `slug` ends by replacing
+ * everything outside `[a-z0-9]`, so it answers `""` for every Greek and Chinese
+ * lemma, and folds German umlauts into their bare vowels — `schön` to `schon`,
+ * `fördern` to `fordern`, `Bär` to `bar`. Appending the part of speech absorbs
+ * exactly those collisions without a word of complaint: `schön` is an adjective
+ * and `schon` an adverb, so the second ships as `lexeme:schon-adj`, a distinct
+ * id named after a different word. That is the `eñe`/`ene` bug this file already
+ * fixed once, waiting in A1 German vocabulary.
+ *
+ * The two cases are only distinguishable by the lemma, which is why the claims
+ * are recorded here rather than beside the form ids: `mañana` the noun and
+ * `mañana` the adverb are the *same* word twice and the suffix is the right
+ * answer; two different lemmas wanting one stem is a missing transliteration
+ * (`docs/tasks/language-matrix.md` §1). `stem-collisions.tsv` is where that
+ * difference is declared — see {@link checkStemCollisions}.
+ */
 function lexemeId(lemma: string, pos: string): string {
   const key = `${lemma}|${pos}`;
   const existing = lexemeIds.get(key);
   if (existing) return existing;
 
-  const base = `${NS}lexeme:${slug(lemma)}`;
+  const stem = slug(lemma);
+  // Never recordable: with an empty stem *every* lexeme in the language collides,
+  // so there is no pair to declare and nothing the suffix can rescue.
+  if (stem.length === 0) {
+    lexemeProblems.push(
+      `"${lemma}": slug is empty, so every lexeme in this alphabet would share one id — ` +
+        `the language module owes a transliteration`,
+    );
+  } else {
+    const claims = stemClaims.get(stem);
+    if (claims === undefined) stemClaims.set(stem, [lemma]);
+    else if (!claims.includes(lemma)) claims.push(lemma);
+  }
+
+  const base = `${NS}lexeme:${stem}`;
   // Two lexemes may share a lemma (`mañana` the noun and the adverb); the part
   // of speech disambiguates the id rather than an arbitrary number.
   const id = takenIds.has(base) ? `${base}-${pos.toLowerCase()}` : base;
+  // One suffix, so the third claimant on a stem gets an id the second already
+  // holds. Spanish never reaches three; an alphabet `slug` cannot spell reaches
+  // it on the third word, and would have shipped two lexemes as one.
+  if (takenIds.has(id)) {
+    lexemeProblems.push(`"${lemma}" (${pos}) wants ${id}, which another lexeme already holds`);
+  }
   takenIds.add(id);
   lexemeIds.set(key, id);
   return id;
@@ -929,6 +976,76 @@ const modifierLexemes: LexemeRecord[] = modifiers.map((modifier) => ({
   pos: modifier.pos,
   level: modifier.level,
 }));
+
+/**
+ * Stem collisions the pack has accepted, and the gate that stops a new one.
+ *
+ * A ratchet rather than an error, for the reason the recycling ratchet is one:
+ * `content/es` already has eight, all `tilde diacrítica` pairs where the accent
+ * *is* the difference between two words — `el`/`él`, `si`/`sí`, `que`/`qué` —
+ * and their ids are permanent. Failing on those would block every other kind of
+ * work behind a rename nobody can safely do. So the file records where we are,
+ * and the build refuses to let it get worse.
+ *
+ * Two things it protects that nothing did before.
+ *
+ * A **new** language's collisions fail on the first build rather than shipping:
+ * German's `schon`/`schön` and `fordern`/`fördern` are the same accident with no
+ * history behind them, and the fix is the transliteration, not an entry here.
+ *
+ * And the **order** is pinned. Which lemma gets the bare `lexeme:te` and which
+ * gets `lexeme:te-pron` depends only on which source file is read first — so
+ * moving `té` from `nouns.tsv` today silently swaps two lexeme ids, and mastery
+ * is keyed on those. Item ids have `id-ledger.tsv` to stop exactly this; lexeme
+ * ids had nothing. Recording the claim order is that guard.
+ */
+function checkStemCollisions(): void {
+  const file = 'stem-collisions.tsv';
+  const recorded = new Map<string, string>();
+  if (existsSync(join(CONTENT_DIR, file))) {
+    for (const row of readRows(file)) {
+      const [stem, lemmas] = row.fields;
+      if (stem) recorded.set(stem, lemmas ?? '');
+    }
+  }
+
+  const found = new Map([...stemClaims].filter(([, lemmas]) => lemmas.length > 1));
+
+  for (const [stem, lemmas] of found) {
+    const claim = lemmas.join(',');
+    const known = recorded.get(stem);
+    if (known === undefined) {
+      lexemeProblems.push(
+        `${lemmas.map((lemma) => `"${lemma}"`).join(' and ')} all slug to "${stem}", ` +
+          `so one takes an id naming the other — give the language a transliteration, ` +
+          `or record the pair in ${file} if the accent is the whole difference`,
+      );
+    } else if (known !== claim) {
+      lexemeProblems.push(
+        `${file}: "${stem}" is recorded as ${known} but is now claimed by ${claim} — ` +
+          `the ids these lemmas get have swapped`,
+      );
+    }
+  }
+
+  // The other half of a ratchet: an improvement that goes unrecorded is how the
+  // ceiling goes stale in the direction that costs nothing to ignore.
+  for (const stem of recorded.keys()) {
+    if (!found.has(stem)) {
+      lexemeProblems.push(`${file}: "${stem}" no longer collides — drop the row`);
+    }
+  }
+}
+
+// Every lexeme the pack declares has now been minted; the `lexemeId` calls below
+// are lookups of these same keys. So this is the first point where the whole set
+// is known, and reporting together is what lets an author fix a language's
+// transliteration in one pass rather than one build per word.
+checkStemCollisions();
+if (lexemeProblems.length > 0) {
+  console.error('Lexeme id problems:\n  ' + lexemeProblems.join('\n  '));
+  process.exit(1);
+}
 
 // ── verb forms ──────────────────────────────────────────────────────────────
 

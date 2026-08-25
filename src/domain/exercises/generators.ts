@@ -116,6 +116,10 @@ export const multipleChoiceGenerator: ExerciseGenerator<'multiple-choice'> = {
     const others = distractors(item, context, wanted);
     if (others.length === 0) return null;
 
+    // The item's own pack, not the course: a progress list or a search result can
+    // show an item from a language other than the one being studied.
+    const promptLanguage = context.repository.languageOfItem(item);
+
     const choices: Choice[] = shuffle(
       [
         { id: item.id, text: translation.text, correct: true },
@@ -135,7 +139,7 @@ export const multipleChoiceGenerator: ExerciseGenerator<'multiple-choice'> = {
       item,
       translation,
       prompt: item.text,
-      promptLanguage: 'es',
+      ...(promptLanguage ? { promptLanguage } : {}),
       choices,
     };
   },

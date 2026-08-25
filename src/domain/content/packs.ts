@@ -127,11 +127,28 @@ export function issueBelongsTo(manifest: PackManifest, source: string): boolean 
  * has to name something, and the stored preference still has to resolve; the
  * fallback chain in `referenceLanguageChain` ends at English either way, so
  * offering it is honest about what the setting will do.
+ *
+ * `exclude` is how a caller keeps the language being learned out of the list.
+ * Nothing prevented Spanish glossed in Spanish before, and with one target
+ * language that was a curiosity; once a pack is a target language for one
+ * learner and a reference language for another it is a setting people will reach
+ * by accident. A same-language gloss is a legitimate advanced mode, but it
+ * should be asked for — and what it actually wants is the chain's own last step,
+ * target-language-only, rather than a reference language that resolves to
+ * nothing. See `docs/tasks/language-matrix.md` §7.
+ *
+ * Excluding everything degrades to the unfiltered list rather than an empty
+ * picker: a `select` with no options is a worse answer than one offering a
+ * language the course cannot use, and the chain still resolves either way.
  */
-export function referenceLanguages(repository: ContentRepository): readonly LanguageOption[] {
+export function referenceLanguages(
+  repository: ContentRepository,
+  exclude?: LanguageTag,
+): readonly LanguageOption[] {
   const present = repository.translationLanguages();
   const tags = present.length > 0 ? present : [DEFAULT_REFERENCE_LANGUAGE];
-  return tags.map((tag) => languageOption(tag));
+  const offered = exclude ? tags.filter((tag) => tag !== exclude) : tags;
+  return (offered.length > 0 ? offered : tags).map((tag) => languageOption(tag));
 }
 
 /**

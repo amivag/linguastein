@@ -1,113 +1,105 @@
 # Authored curriculum skills. Grammar and morphology skills remain generated.
-# Columns: slug	kind	label (es)	gloss (en)	level	prerequisites
-order-food-drink	function	Pedir comida o bebida	Order food or a drink politely	a1	
-handle-add-on	function	Responder a «¿Algo más?»	Accept or decline an additional item	a1	order-food-drink
-ask-understand-price	function	Preguntar y entender el precio	Ask for and understand a simple price	a1	order-food-drink
-close-service-exchange	function	Cerrar una interacción con cortesía	Close a service exchange politely	a1	order-food-drink
-ask-for-directions	function	Preguntar cómo llegar	Ask where a place is politely	a1	
-follow-simple-directions	function	Seguir indicaciones sencillas	Understand and follow simple directions	a1	ask-for-directions
-check-distance	function	Comprobar la distancia	Ask about and understand a short distance	a1	ask-for-directions
-thank-for-help	function	Dar las gracias por la ayuda	Thank someone for their help	a1	
-seek-clothing-item	function	Buscar una prenda concreta	Ask for a particular item of clothing	a1	
-handle-clothing-size	function	Hablar de la talla	Understand and respond to a size question	a1	seek-clothing-item
-ask-to-try-on	function	Pedir probarse una prenda	Ask to try on an item of clothing	a1	seek-clothing-item
-choose-clothing-purchase	function	Elegir una prenda	Choose an item and say you will take it	a1	ask-to-try-on
-ask-understand-item-price	function	Preguntar y entender el precio de una prenda	Ask for and understand an item's price	a1	choose-clothing-purchase
-confirm-hotel-reservation	function	Confirmar una reserva de hotel	Confirm that you have a hotel reservation	a1
-give-stay-details	function	Dar los detalles de la estancia	Give simple room and stay details	a1	confirm-hotel-reservation
-ask-whats-included	function	Preguntar qué está incluido	Ask what is included with the stay	a1	confirm-hotel-reservation
-understand-hotel-schedule	function	Entender un horario del hotel	Understand a simple hotel schedule	a1	ask-whats-included
-locate-hotel-facility	function	Localizar un servicio del hotel	Ask about and understand a hotel facility's location	a1	confirm-hotel-reservation
-open-social-planning	function	Abrir una conversación sobre planes	Open a conversation about what to do	a1
-suggest-social-activity	function	Proponer una actividad	Suggest a social activity	a1	open-social-planning
-respond-to-suggestion	function	Responder a una propuesta	Accept, decline or react to a suggestion	a1	suggest-social-activity
-coordinate-plan-time	function	Acordar la hora de un plan	Ask about and agree on a time	a1	suggest-social-activity
-confirm-social-plan	function	Confirmar un plan social	Confirm the agreed activity, time or place	a1	coordinate-plan-time
-anchor-routine-in-time	function	Situar una rutina en el tiempo	Anchor a personal routine with a day or time	a1
-describe-routine-actions	function	Describir acciones cotidianas	Describe the actions in a daily routine	a1	anchor-routine-in-time
-add-context-to-routine	function	Añadir contexto a una rutina	Add a simple circumstance, reason or detail	a1	describe-routine-actions
-sequence-routine-events	function	Ordenar los eventos de una rutina	Put routine events in a clear chronological sequence	a1	describe-routine-actions
-connect-routine-to-destination	function	Conectar la rutina con un destino	Say where the routine leads and what happens there	a1	sequence-routine-events
-greet-someone	function	Saludar a alguien	Greet someone naturally for the situation	a1
-ask-about-wellbeing	function	Preguntar cómo está alguien	Ask naturally how someone is doing	a1	greet-someone
-respond-to-wellbeing	function	Responder a «¿Cómo estás?»	Give a natural, honest answer about how you are doing	a1	ask-about-wellbeing
-close-friendly-exchange	function	Cerrar un saludo amistoso	Close a short friendly exchange naturally	a1	greet-someone
-ask-about-origin	function	Preguntar de dónde es alguien	Ask where someone is from	a1	greet-someone
-say-where-youre-from	function	Decir de dónde eres	Say which country or city you are from	a1	ask-about-origin
-say-where-you-are-based	function	Decir dónde vives ahora	Say which country or city you live in now	a1	say-where-youre-from
-say-if-you-like-a-place	function	Decir si te gusta el sitio	Say whether you like living there, and why	a1	say-where-you-are-based
-ask-what-someone-does	function	Preguntar a qué se dedica alguien	Ask what someone does for a living	a1	greet-someone
-ask-about-free-time	function	Preguntar por el tiempo libre	Ask what someone does in their free time	a1	greet-someone
-talk-about-free-time	function	Hablar del tiempo libre	Say what you do in your free time	a1	ask-about-free-time
-say-you-did-not-understand	function	Decir que no entiendes	Say you have not understood	a1	
-ask-to-repeat	function	Pedir que lo repitan	Ask for something again	a1	say-you-did-not-understand
-ask-to-slow-down	function	Pedir que hablen más despacio	Ask someone to slow down	a1	say-you-did-not-understand
-ask-for-a-word	function	Preguntar cómo se dice algo	Ask how to say something	a1	
-ask-what-something-means	function	Preguntar qué significa	Ask what a word means	a1	ask-for-a-word
-ask-it-in-writing	function	Pedir que lo escriban	Ask for it in writing	a1	ask-to-repeat
-check-you-were-understood	function	Comprobar que lo has entendido	Check you got it right	a1	ask-to-repeat
-describe-a-symptom	function	Decir qué te duele	Say what hurts, or how you feel	a2	
-say-since-when	function	Decir desde cuándo	Say how long you have felt it	a2	describe-a-symptom
-answer-health-questions	function	Responder a las preguntas del médico	Answer a health professional's follow-up questions	a2	describe-a-symptom
-follow-health-advice	function	Entender un consejo médico	Understand and accept simple health advice	a2	answer-health-questions
-say-what-you-do	function	Decir en qué trabajas	Say what you do and where you work	a1	
-walk-through-a-workday	function	Contar un día de trabajo	Take someone through a working day in order	a1	say-what-you-do
-talk-about-work-meetings	function	Hablar de reuniones y citas	Say who you meet at work and when	a1	walk-through-a-workday
-say-how-the-day-went	function	Decir cómo terminó el día	Say how a working day left you	a1	walk-through-a-workday
-say-where-you-live	function	Decir dónde vives	Say where you live and what kind of home it is	a1	
-describe-the-rooms	function	Describir las habitaciones	Describe the rooms and what is in them	a1	say-where-you-live
-say-what-is-nearby	function	Decir qué hay cerca	Say what there is nearby, and what there is not	a1	say-where-you-live
-say-how-you-feel-about-home	function	Decir si te gusta vivir allí	Say how you feel about living there	a1	describe-the-rooms
-ask-for-a-ticket	function	Pedir un billete	Ask for a ticket to where you are going	a1	
-ask-about-departure	function	Preguntar a qué hora sale	Ask when the next one leaves	a1	ask-for-a-ticket
-choose-a-fare	function	Elegir el tipo de billete	Choose between fares and say how many	a1	ask-for-a-ticket
-find-the-platform	function	Preguntar de dónde sale	Ask where it leaves from	a1	ask-about-departure
-ask-for-a-quantity	function	Pedir una cantidad	Ask for an amount of something	a1	
-ask-price-by-weight	function	Preguntar el precio por kilo	Ask what something costs by weight	a1	ask-for-a-quantity
-change-what-you-asked-for	function	Cambiar el pedido	Add something, or change your mind	a1	ask-for-a-quantity
-pay-and-leave	function	Pagar y despedirse	Pay and close the exchange	a1	ask-price-by-weight
-introduce-a-person	function	Presentar a alguien	Introduce someone and say who they are	a1	
-say-what-they-do	function	Decir a qué se dedica	Say what someone does or studies	a1	introduce-a-person
-give-family-details	function	Dar detalles de la familia	Give ages, numbers and relationships	a1	introduce-a-person
-react-with-interest	function	Reaccionar con interés	React with interest to what you hear	a1	say-what-they-do
-
-# Asking the four questions the pack could not ask, and answering them.
-ask-when-something-happens	function	Preguntar cuándo es algo	Ask when something happens	a1	
-say-when-something-happens	function	Decir cuándo es algo	Say when something happens	a1	ask-when-something-happens
-ask-which-one	function	Preguntar cuál de varios	Ask which one, out of several	a1	
-choose-between-options	function	Elegir una opción	Choose one and say which	a1	ask-which-one
-ask-who-someone-is	function	Preguntar quién es alguien	Ask who someone is	a1	
-say-who-someone-is	function	Decir quién es alguien	Say who someone is	a1	ask-who-someone-is
-ask-why	function	Preguntar por qué	Ask why something is so	a1	
-give-a-reason	function	Dar una razón	Give a simple reason	a1	ask-why
-# Asking as a move, not as a topic. `yes-no-question` and `question-word` are the
-# generated grammar skills that say how a question is *built*; these two are what
-# a learner does with the difference — turn what they just heard into a question,
-# and hang a tag on a statement to check it.
-echo-to-check	function	Repetir algo como pregunta	Echo what you just heard back as a question	a1	
-confirm-with-a-tag	function	Confirmar con «¿verdad?»	Turn a statement into a check with ¿verdad? or ¿no?	a1	
-answer-a-tag	function	Responder a una confirmación	Confirm or correct what someone checked with you	a1	confirm-with-a-tag
-# ── B1: talking about what should happen, not only what does ────────────────
-# The A-level skills above are almost all about the speaker: what I want, what I
-# did, where I live. B1 is where the sentence acquires a second person with a
-# will of their own — I want *you* to do something, I doubt *that*, I advise
-# *against* — and in Spanish that second clause is the subjunctive. So these are
-# the communicative half of `present-subjunctive`: the generated skill says what
-# the form is, and each of these says what it is for.
-ask-someone-to-do	function	Pedir que alguien haga algo	Ask someone else to do something, rather than saying what you do	b1	order-food-drink
-express-a-hope	function	Expresar un deseo	Say what you hope happens, without claiming it will	b1	respond-to-wellbeing
-give-advice	function	Aconsejar y recomendar	Advise or recommend a course of action	b1	follow-health-advice
-express-doubt	function	Expresar duda o desacuerdo	Say you doubt something, or that you do not agree	b1	give-a-reason
-react-to-news	function	Reaccionar a una noticia	React to what someone has just told you	b1	react-with-interest
-state-a-purpose	function	Explicar para qué	Say what something is for	b1	give-a-reason
-talk-about-a-future-moment	function	Hablar de cuando pase algo	Talk about a moment that has not arrived yet	b1	say-when-something-happens
-turn-something-down	function	Decir que no con cortesía	Decline something politely and give a reason	b1	respond-to-suggestion
-make-a-complaint	function	Quejarse y pedir una solución	Complain about a problem and ask for it to be put right	b1	close-service-exchange
-weigh-two-options	function	Ver ventajas e inconvenientes	Weigh up two options out loud	b1	choose-between-options
-concede-a-point	function	Conceder y matizar	Grant part of what someone says, then qualify it	b1	answer-a-tag
-
-# ── Spelling out loud ───────────────────────────────────────────────────────
-# The alphabet is not only a recital. What a learner actually needs it for is
-# this: giving a name over the phone, reading a booking code back, asking how a
-# word is written. So the skill is the exchange, not the list.
-spell-a-word	function	Deletrear una palabra	Spell a word out loud, and ask someone else to	a1	ask-for-a-word
+# Columns: slug	kind	label (es)	level	gloss (en, optional)
+#
+# `function` rows carry only what is Spanish about them. Their description and
+# prerequisites come from ../capabilities.tsv, which is shared with every other
+# language so the graph cannot fork. Any other kind is language-specific and
+# keeps its full row: a pattern is how *this* language works.
+#
+# The last column is an override, used where Spanish can be more concrete than a
+# neutral description can: naming ¿verdad? is worth more to a learner here than
+# "a tag question", and worthless to a learner of English. Leave it blank and the
+# registry's description is the gloss. Restating that description is rejected.
+order-food-drink	function	Pedir comida o bebida	a1
+handle-add-on	function	Responder a «¿Algo más?»	a1
+ask-understand-price	function	Preguntar y entender el precio	a1
+close-service-exchange	function	Cerrar una interacción con cortesía	a1
+ask-for-directions	function	Preguntar cómo llegar	a1
+follow-simple-directions	function	Seguir indicaciones sencillas	a1
+check-distance	function	Comprobar la distancia	a1
+thank-for-help	function	Dar las gracias por la ayuda	a1
+seek-clothing-item	function	Buscar una prenda concreta	a1
+handle-clothing-size	function	Hablar de la talla	a1
+ask-to-try-on	function	Pedir probarse una prenda	a1
+choose-clothing-purchase	function	Elegir una prenda	a1
+ask-understand-item-price	function	Preguntar y entender el precio de una prenda	a1
+confirm-hotel-reservation	function	Confirmar una reserva de hotel	a1
+give-stay-details	function	Dar los detalles de la estancia	a1
+ask-whats-included	function	Preguntar qué está incluido	a1
+understand-hotel-schedule	function	Entender un horario del hotel	a1
+locate-hotel-facility	function	Localizar un servicio del hotel	a1
+open-social-planning	function	Abrir una conversación sobre planes	a1
+suggest-social-activity	function	Proponer una actividad	a1
+respond-to-suggestion	function	Responder a una propuesta	a1
+coordinate-plan-time	function	Acordar la hora de un plan	a1
+confirm-social-plan	function	Confirmar un plan social	a1
+anchor-routine-in-time	function	Situar una rutina en el tiempo	a1
+describe-routine-actions	function	Describir acciones cotidianas	a1
+add-context-to-routine	function	Añadir contexto a una rutina	a1
+sequence-routine-events	function	Ordenar los eventos de una rutina	a1
+connect-routine-to-destination	function	Conectar la rutina con un destino	a1
+greet-someone	function	Saludar a alguien	a1
+ask-about-wellbeing	function	Preguntar cómo está alguien	a1
+respond-to-wellbeing	function	Responder a «¿Cómo estás?»	a1
+close-friendly-exchange	function	Cerrar un saludo amistoso	a1
+ask-about-origin	function	Preguntar de dónde es alguien	a1
+say-where-youre-from	function	Decir de dónde eres	a1
+say-where-you-are-based	function	Decir dónde vives ahora	a1
+say-if-you-like-a-place	function	Decir si te gusta el sitio	a1
+ask-what-someone-does	function	Preguntar a qué se dedica alguien	a1
+ask-about-free-time	function	Preguntar por el tiempo libre	a1
+talk-about-free-time	function	Hablar del tiempo libre	a1
+say-you-did-not-understand	function	Decir que no entiendes	a1
+ask-to-repeat	function	Pedir que lo repitan	a1
+ask-to-slow-down	function	Pedir que hablen más despacio	a1
+ask-for-a-word	function	Preguntar cómo se dice algo	a1
+ask-what-something-means	function	Preguntar qué significa	a1
+ask-it-in-writing	function	Pedir que lo escriban	a1
+check-you-were-understood	function	Comprobar que lo has entendido	a1
+describe-a-symptom	function	Decir qué te duele	a2
+say-since-when	function	Decir desde cuándo	a2
+answer-health-questions	function	Responder a las preguntas del médico	a2
+follow-health-advice	function	Entender un consejo médico	a2
+say-what-you-do	function	Decir en qué trabajas	a1
+walk-through-a-workday	function	Contar un día de trabajo	a1
+talk-about-work-meetings	function	Hablar de reuniones y citas	a1
+say-how-the-day-went	function	Decir cómo terminó el día	a1
+say-where-you-live	function	Decir dónde vives	a1
+describe-the-rooms	function	Describir las habitaciones	a1
+say-what-is-nearby	function	Decir qué hay cerca	a1
+say-how-you-feel-about-home	function	Decir si te gusta vivir allí	a1
+ask-for-a-ticket	function	Pedir un billete	a1
+ask-about-departure	function	Preguntar a qué hora sale	a1
+choose-a-fare	function	Elegir el tipo de billete	a1
+find-the-platform	function	Preguntar de dónde sale	a1
+ask-for-a-quantity	function	Pedir una cantidad	a1
+ask-price-by-weight	function	Preguntar el precio por kilo	a1
+change-what-you-asked-for	function	Cambiar el pedido	a1
+pay-and-leave	function	Pagar y despedirse	a1
+introduce-a-person	function	Presentar a alguien	a1
+say-what-they-do	function	Decir a qué se dedica	a1
+give-family-details	function	Dar detalles de la familia	a1
+react-with-interest	function	Reaccionar con interés	a1
+ask-when-something-happens	function	Preguntar cuándo es algo	a1
+say-when-something-happens	function	Decir cuándo es algo	a1
+ask-which-one	function	Preguntar cuál de varios	a1
+choose-between-options	function	Elegir una opción	a1
+ask-who-someone-is	function	Preguntar quién es alguien	a1
+say-who-someone-is	function	Decir quién es alguien	a1
+ask-why	function	Preguntar por qué	a1
+give-a-reason	function	Dar una razón	a1
+echo-to-check	function	Repetir algo como pregunta	a1
+confirm-with-a-tag	function	Confirmar con «¿verdad?»	a1	Turn a statement into a check with ¿verdad? or ¿no?
+answer-a-tag	function	Responder a una confirmación	a1
+ask-someone-to-do	function	Pedir que alguien haga algo	b1
+express-a-hope	function	Expresar un deseo	b1
+give-advice	function	Aconsejar y recomendar	b1
+express-doubt	function	Expresar duda o desacuerdo	b1
+react-to-news	function	Reaccionar a una noticia	b1
+state-a-purpose	function	Explicar para qué	b1
+talk-about-a-future-moment	function	Hablar de cuando pase algo	b1
+turn-something-down	function	Decir que no con cortesía	b1
+make-a-complaint	function	Quejarse y pedir una solución	b1
+weigh-two-options	function	Ver ventajas e inconvenientes	b1
+concede-a-point	function	Conceder y matizar	b1
+spell-a-word	function	Deletrear una palabra	a1

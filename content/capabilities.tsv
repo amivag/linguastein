@@ -1,0 +1,125 @@
+# The capability registry: what a learner can accomplish, independent of language.
+#
+# Columns: slug	description	prerequisites
+#
+# `function` skills are the one part of the curriculum that is not about a
+# particular language. "Order food or a drink politely" is the same real-world
+# capability in Spanish, English or Greek, and the slug naming it is already
+# language-neutral — only the label a learner reads is not. So the slug, the
+# description and the prerequisite graph live here, once, and each
+# content/<tag>/skills.tsv contributes the label and the level for its own
+# language.
+#
+# This is what stops a second direction forking the curriculum. core-en does
+# not restate that handle-add-on follows order-food-drink; it says how English
+# spells them. A function row whose slug is missing here fails the build.
+#
+# Not every language covers every capability, and that is legitimate: a
+# language may be authored up to A1 while this file reaches B1. Coverage is a
+# per-language question, so absence is never an error here.
+#
+# A description here has to be neutral, which is a real constraint and not a
+# style note. `confirm-with-a-tag` was authored as "with ¿verdad? or ¿no?" —
+# true, useful, and no help at all to a learner of English, who needs "right?"
+# or "isn't it?". So the neutral description is the default and a language may
+# override it in its own skills.tsv when it can say something more concrete.
+# An override that merely restates this column is rejected, or the default
+# quietly stops being the default.
+#
+# Ids stay pack-namespaced (core-es:skill:order-food-drink), deliberately.
+# Ordering food in Spanish and ordering food in English are two things to be
+# good at, and mastery of one is not evidence of the other. What is shared is
+# the capability, not the skill.
+order-food-drink	Order food or a drink politely
+handle-add-on	Accept or decline an additional item	order-food-drink
+ask-understand-price	Ask for and understand a simple price	order-food-drink
+close-service-exchange	Close a service exchange politely	order-food-drink
+ask-for-directions	Ask where a place is politely
+follow-simple-directions	Understand and follow simple directions	ask-for-directions
+check-distance	Ask about and understand a short distance	ask-for-directions
+thank-for-help	Thank someone for their help
+seek-clothing-item	Ask for a particular item of clothing
+handle-clothing-size	Understand and respond to a size question	seek-clothing-item
+ask-to-try-on	Ask to try on an item of clothing	seek-clothing-item
+choose-clothing-purchase	Choose an item and say you will take it	ask-to-try-on
+ask-understand-item-price	Ask for and understand an item's price	choose-clothing-purchase
+confirm-hotel-reservation	Confirm that you have a hotel reservation
+give-stay-details	Give simple room and stay details	confirm-hotel-reservation
+ask-whats-included	Ask what is included with the stay	confirm-hotel-reservation
+understand-hotel-schedule	Understand a simple hotel schedule	ask-whats-included
+locate-hotel-facility	Ask about and understand a hotel facility's location	confirm-hotel-reservation
+open-social-planning	Open a conversation about what to do
+suggest-social-activity	Suggest a social activity	open-social-planning
+respond-to-suggestion	Accept, decline or react to a suggestion	suggest-social-activity
+coordinate-plan-time	Ask about and agree on a time	suggest-social-activity
+confirm-social-plan	Confirm the agreed activity, time or place	coordinate-plan-time
+anchor-routine-in-time	Anchor a personal routine with a day or time
+describe-routine-actions	Describe the actions in a daily routine	anchor-routine-in-time
+add-context-to-routine	Add a simple circumstance, reason or detail	describe-routine-actions
+sequence-routine-events	Put routine events in a clear chronological sequence	describe-routine-actions
+connect-routine-to-destination	Say where the routine leads and what happens there	sequence-routine-events
+greet-someone	Greet someone naturally for the situation
+ask-about-wellbeing	Ask naturally how someone is doing	greet-someone
+respond-to-wellbeing	Give a natural, honest answer about how you are doing	ask-about-wellbeing
+close-friendly-exchange	Close a short friendly exchange naturally	greet-someone
+ask-about-origin	Ask where someone is from	greet-someone
+say-where-youre-from	Say which country or city you are from	ask-about-origin
+say-where-you-are-based	Say which country or city you live in now	say-where-youre-from
+say-if-you-like-a-place	Say whether you like living there, and why	say-where-you-are-based
+ask-what-someone-does	Ask what someone does for a living	greet-someone
+ask-about-free-time	Ask what someone does in their free time	greet-someone
+talk-about-free-time	Say what you do in your free time	ask-about-free-time
+say-you-did-not-understand	Say you have not understood
+ask-to-repeat	Ask for something again	say-you-did-not-understand
+ask-to-slow-down	Ask someone to slow down	say-you-did-not-understand
+ask-for-a-word	Ask how to say something
+ask-what-something-means	Ask what a word means	ask-for-a-word
+ask-it-in-writing	Ask for it in writing	ask-to-repeat
+check-you-were-understood	Check you got it right	ask-to-repeat
+describe-a-symptom	Say what hurts, or how you feel
+say-since-when	Say how long you have felt it	describe-a-symptom
+answer-health-questions	Answer a health professional's follow-up questions	describe-a-symptom
+follow-health-advice	Understand and accept simple health advice	answer-health-questions
+say-what-you-do	Say what you do and where you work
+walk-through-a-workday	Take someone through a working day in order	say-what-you-do
+talk-about-work-meetings	Say who you meet at work and when	walk-through-a-workday
+say-how-the-day-went	Say how a working day left you	walk-through-a-workday
+say-where-you-live	Say where you live and what kind of home it is
+describe-the-rooms	Describe the rooms and what is in them	say-where-you-live
+say-what-is-nearby	Say what there is nearby, and what there is not	say-where-you-live
+say-how-you-feel-about-home	Say how you feel about living there	describe-the-rooms
+ask-for-a-ticket	Ask for a ticket to where you are going
+ask-about-departure	Ask when the next one leaves	ask-for-a-ticket
+choose-a-fare	Choose between fares and say how many	ask-for-a-ticket
+find-the-platform	Ask where it leaves from	ask-about-departure
+ask-for-a-quantity	Ask for an amount of something
+ask-price-by-weight	Ask what something costs by weight	ask-for-a-quantity
+change-what-you-asked-for	Add something, or change your mind	ask-for-a-quantity
+pay-and-leave	Pay and close the exchange	ask-price-by-weight
+introduce-a-person	Introduce someone and say who they are
+say-what-they-do	Say what someone does or studies	introduce-a-person
+give-family-details	Give ages, numbers and relationships	introduce-a-person
+react-with-interest	React with interest to what you hear	say-what-they-do
+ask-when-something-happens	Ask when something happens
+say-when-something-happens	Say when something happens	ask-when-something-happens
+ask-which-one	Ask which one, out of several
+choose-between-options	Choose one and say which	ask-which-one
+ask-who-someone-is	Ask who someone is
+say-who-someone-is	Say who someone is	ask-who-someone-is
+ask-why	Ask why something is so
+give-a-reason	Give a simple reason	ask-why
+echo-to-check	Echo what you just heard back as a question
+confirm-with-a-tag	Turn a statement into a check with a tag question
+answer-a-tag	Confirm or correct what someone checked with you	confirm-with-a-tag
+ask-someone-to-do	Ask someone else to do something, rather than saying what you do	order-food-drink
+express-a-hope	Say what you hope happens, without claiming it will	respond-to-wellbeing
+give-advice	Advise or recommend a course of action	follow-health-advice
+express-doubt	Say you doubt something, or that you do not agree	give-a-reason
+react-to-news	React to what someone has just told you	react-with-interest
+state-a-purpose	Say what something is for	give-a-reason
+talk-about-a-future-moment	Talk about a moment that has not arrived yet	say-when-something-happens
+turn-something-down	Decline something politely and give a reason	respond-to-suggestion
+make-a-complaint	Complain about a problem and ask for it to be put right	close-service-exchange
+weigh-two-options	Weigh up two options out loud	choose-between-options
+concede-a-point	Grant part of what someone says, then qualify it	answer-a-tag
+spell-a-word	Spell a word out loud, and ask someone else to	ask-for-a-word

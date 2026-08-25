@@ -16,6 +16,10 @@ Lines beginning with `#` are treated as comments, and blank lines are ignored.
 Two directories, one direction of flow:
 
 ```text
+content/capabilities.tsv   SHARED by every language — slug, neutral description,
+                           prerequisites. Belongs to no one language, so it sits
+                           beside the language directories rather than in one.
+
 content/es/            ← humans edit this (TSV, one row per lemma or sentence)
 ├── verbs.tsv              lemma, gloss, level, regular|irregular, topics
 ├── nouns.tsv              id, lemma, gloss, gender, plural, level, topics, regions, register
@@ -24,7 +28,8 @@ content/es/            ← humans edit this (TSV, one row per lemma or sentence)
 │                          regions, passage, speaker, skills
 ├── passages.tsv           id, key, kind, title (es), title (en), level, topics
 ├── topics.tsv             slug, label (en), group (en) — the topic vocabulary
-├── skills.tsv             authored skill slug, kind, labels, level, prerequisites
+├── skills.tsv             authored skill slug, kind, label (es), level,
+│                          gloss override (optional) — see below
 └── id-ledger.tsv          GENERATED — every item id ever issued, active or retired
 
         │  npm run build:data
@@ -67,11 +72,32 @@ function says what the learner is trying to accomplish. For example,
 `restaurant` is a topic while `order-food-drink` is a function. Sentence rows
 attach one or more registered skill slugs in their `skills` column.
 
-The registry carries a stable kebab-case slug, a `SKILL_KINDS` kind, a
-target-language label, an English gloss, a CEFR level and optional prerequisite
-slugs. The build resolves slugs to namespaced ids, emits translations, and fails
-on unknown skills or prerequisites. Grammar and morphology skills remain derived;
-do not duplicate them in this file.
+A function row is split across two files, because only half of it is about
+Spanish. `content/capabilities.tsv` — a sibling of the language directories, not
+inside one — owns the slug, the neutral description and the prerequisite graph;
+`content/es/skills.tsv` owns the target-language label and the CEFR level. The
+build resolves slugs to namespaced ids, emits the description as a translation,
+and fails on a function the registry does not name, on a prerequisite the
+registry requires but this language has not authored, and on a registry row that
+is duplicated, undescribed or depends on a capability that does not exist.
+
+That split is what stops a second direction forking the curriculum. `core-en`
+does not restate that `handle-add-on` follows `order-food-drink`; it says how
+English spells them. Ids stay pack-namespaced —
+`core-es:skill:order-food-drink` and `core-en:skill:order-food-drink` are two
+things to be good at, and mastery of one is not evidence of the other. What is
+shared is the capability, not the skill.
+
+A language may append a fifth column to its own row to override the neutral
+description where it can be more concrete: Spanish glosses
+`confirm-with-a-tag` as "with ¿verdad? or ¿no?", which is worth more to a learner
+here than "a tag question" and worthless to a learner of English. An override
+that merely restates the shared description is rejected, or the default quietly
+stops being the default.
+
+Grammar and morphology skills remain derived; do not duplicate them in either
+file. A non-`function` authored row is language-specific by definition and needs
+no registry entry.
 
 ## File naming
 

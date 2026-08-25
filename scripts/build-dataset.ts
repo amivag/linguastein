@@ -127,9 +127,26 @@ interface AuthoredSkillRow {
   slug: string;
   kind: string;
   label: string;
-  gloss: string;
   level: string;
+  /**
+   * This language's own wording for the capability, where the neutral one is
+   * weaker. Empty means the registry's description is the gloss.
+   */
+  gloss: string;
+}
+
+/**
+ * One language-neutral capability, from the shared registry.
+ *
+ * The description and the prerequisite graph live here rather than on the
+ * per-language row because they are not facts about a language. See
+ * `content/capabilities.tsv` for the derivation.
+ */
+interface CapabilityRow {
+  slug: string;
+  description: string;
   prerequisites: string[];
+  line: number;
 }
 
 /**
@@ -162,6 +179,17 @@ const NO_CARD = '-';
 
 const TOPICS_FILE = 'topics.tsv';
 const SKILLS_FILE = 'skills.tsv';
+
+/**
+ * The capability registry, shared by every language rather than owned by one.
+ *
+ * A sibling of the language directories — `content/capabilities.tsv` beside
+ * `content/es/` — because it belongs to no language, and putting it inside one
+ * would make every other language's build read Spanish's content directory.
+ * Resolved from `CONTENT_DIR`'s parent so `LINGUASTEIN_CONTENT_DIR` moves both
+ * halves together and a fixture can supply its own.
+ */
+const CAPABILITIES_PATH = join(CONTENT_DIR, '..', 'capabilities.tsv');
 const PACK_FILE = 'pack.tsv';
 
 /**
@@ -335,17 +363,49 @@ const topicRows: TopicRow[] = existsSync(join(CONTENT_DIR, TOPICS_FILE))
 /** Authored skills are semantic curriculum data, so they own stable slugs, not item ids. */
 const authoredSkillRows: AuthoredSkillRow[] = existsSync(join(CONTENT_DIR, SKILLS_FILE))
   ? readSource(SKILLS_FILE).rows.map((row) => {
-      const [slug, kind, label, gloss, level, prerequisites] = row.fields;
+      const [slug, kind, label, level, gloss] = row.fields;
       return {
         slug: slug!,
         kind: kind!,
         label: label!,
-        gloss: gloss!,
         level: level!,
-        prerequisites: list(prerequisites),
+        gloss: gloss ?? '',
       };
     })
   : [];
+
+/**
+ * The shared capability registry, keyed by slug.
+ *
+ * Read with its own parser rather than through `readSource`, which resolves
+ * against `CONTENT_DIR` and strips a leading id column. This file sits outside
+ * any language directory and its first column is a slug, so neither behaviour
+ * is wanted.
+ *
+ * Absent is a legitimate state — a language with no authored `function` rows
+ * needs no registry — and the gate below is what makes it an error only when
+ * something actually referenced it.
+ */
+const capabilityRows: CapabilityRow[] = existsSync(CAPABILITIES_PATH)
+  ? readFileSync(CAPABILITIES_PATH, 'utf8')
+      .split(/\r?\n/)
+      .flatMap((text, line) => {
+        if (text.trim().length === 0 || text.startsWith('#')) return [];
+        const [slug, description, prerequisites] = text.split('\t').map((cell) => cell.trim());
+        return [
+          {
+            slug: slug ?? '',
+            description: description ?? '',
+            prerequisites: list(prerequisites),
+            line,
+          },
+        ];
+      })
+  : [];
+
+const capabilities = new Map<string, CapabilityRow>(
+  capabilityRows.map((capability) => [capability.slug, capability]),
+);
 
 /**
  * The pack's own version, and the item count it was cut at.
@@ -542,18 +602,76 @@ if (topicRows.length > 0) {
   }
 }
 
+const KEBAB_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/**
+ * The registry's own integrity, checked before anything is asked of it.
+ *
+ * These are language-independent failures, so they are worth catching once here
+ * rather than once per language that happens to reference the broken row.
+ */
+for (const capability of capabilityRows) {
+  const where = `capabilities.tsv line ${capability.line + 1}`;
+  if (!KEBAB_SLUG.test(capability.slug)) {
+    problems.push(`${where}: "${capability.slug}" is not a stable kebab-case slug`);
+  }
+  if (capability.description.length === 0) {
+    problems.push(`${where}: "${capability.slug}" has no description`);
+  }
+  for (const prerequisite of capability.prerequisites) {
+    if (!capabilities.has(prerequisite)) {
+      problems.push(`${where}: "${capability.slug}" requires unknown capability "${prerequisite}"`);
+    }
+  }
+}
+
+for (const duplicate of capabilityRows
+  .map((capability) => capability.slug)
+  .filter((slug, index, all) => all.indexOf(slug) !== index)) {
+  problems.push(`capabilities.tsv: "${duplicate}" is registered more than once`);
+}
+
 const authoredSkillSlugs = new Set(authoredSkillRows.map((skill) => skill.slug));
 for (const skill of authoredSkillRows) {
   if (!(SKILL_KINDS as readonly string[]).includes(skill.kind)) {
     problems.push(`${SKILLS_FILE}: "${skill.slug}" has unknown kind "${skill.kind}"`);
   }
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(skill.slug)) {
+  if (!KEBAB_SLUG.test(skill.slug)) {
     problems.push(`${SKILLS_FILE}: "${skill.slug}" is not a stable kebab-case slug`);
   }
-  for (const prerequisite of skill.prerequisites) {
+  if (skill.kind !== 'function') continue;
+
+  // A function is a capability this language spells, so the capability has to
+  // exist first. This is the gate that stops a second direction inventing its
+  // own curriculum vocabulary and then diverging from it silently.
+  const capability = capabilities.get(skill.slug);
+  if (!capability) {
+    problems.push(
+      `${SKILLS_FILE}: "${skill.slug}" is a function with no entry in capabilities.tsv — ` +
+        `add it there (it is shared with every language) or fix the typo`,
+    );
+    continue;
+  }
+
+  // An override that restates the shared description is how the per-language
+  // file quietly becomes the source again: the next author copies the pattern,
+  // and within a few rows the registry is decoration. So it has to differ.
+  if (skill.gloss.length > 0 && skill.gloss === capability.description) {
+    problems.push(
+      `${SKILLS_FILE}: "${skill.slug}" overrides its description with the same text ` +
+        `capabilities.tsv already gives — drop the column and share the default`,
+    );
+  }
+
+  // A prerequisite comes from the registry, so it can name a capability this
+  // language has not authored yet. That is a curriculum hole rather than a typo,
+  // and it has to be loud: the emitted record would otherwise carry a
+  // prerequisite pointing at a skill id this pack does not contain.
+  for (const prerequisite of capability.prerequisites) {
     if (!authoredSkillSlugs.has(prerequisite)) {
       problems.push(
-        `${SKILLS_FILE}: "${skill.slug}" requires unknown authored skill "${prerequisite}"`,
+        `${SKILLS_FILE}: "${skill.slug}" needs "${prerequisite}", which capabilities.tsv ` +
+          `requires but this language does not cover — author it or drop the dependency`,
       );
     }
   }
@@ -2682,16 +2800,30 @@ const derivedSkillRecords: SkillRecord[] = [
   })),
 ].filter((skill) => usedSkills.has(skill.id));
 
+/**
+ * The prerequisite graph, read from the shared registry and namespaced into this
+ * pack.
+ *
+ * The graph is a fact about the capability rather than about the language, so it
+ * is not restated per language — but the *ids* are this pack's, because
+ * `core-es:skill:order-food-drink` and `core-en:skill:order-food-drink` are two
+ * things to be good at. The gate above has already established that every
+ * prerequisite names a capability this language covers.
+ */
+const capabilityPrerequisites = (slug: string): string[] =>
+  (capabilities.get(slug)?.prerequisites ?? []).map(authoredSkillId);
+
 const authoredSkillRecords: SkillRecord[] = authoredSkillRows
-  .map((skill) => ({
-    id: authoredSkillId(skill.slug),
-    kind: skill.kind,
-    label: skill.label,
-    level: skill.level,
-    ...(skill.prerequisites.length
-      ? { prerequisites: skill.prerequisites.map(authoredSkillId) }
-      : {}),
-  }))
+  .map((skill) => {
+    const prerequisites = skill.kind === 'function' ? capabilityPrerequisites(skill.slug) : [];
+    return {
+      id: authoredSkillId(skill.slug),
+      kind: skill.kind,
+      label: skill.label,
+      level: skill.level,
+      ...(prerequisites.length ? { prerequisites } : {}),
+    };
+  })
   .filter((skill) => usedSkills.has(skill.id));
 
 // Numeral skills are declared rather than discovered. Every other skill here
@@ -2714,7 +2846,17 @@ const skillRecords: SkillRecord[] = [
 const skillGlosses = new Map<string, string>([
   ...PATTERNS.map((pattern) => [pattern.skill, pattern.gloss] as const),
   ...GRAMMAR_SKILLS.map((skill) => [skill.id, skill.gloss] as const),
-  ...authoredSkillRows.map((skill) => [authoredSkillId(skill.slug), skill.gloss] as const),
+  // A function's description is the registry's, so it is written once and every
+  // language glosses the same sentence. Any other authored kind has no
+  // description to gloss — patterns and grammar skills are generated, and their
+  // glosses come from the two tables above.
+  ...capabilityRows.map(
+    (capability) => [authoredSkillId(capability.slug), capability.description] as const,
+  ),
+  // …and this language's override last, so it wins the `Map` constructor.
+  ...authoredSkillRows
+    .filter((skill) => skill.gloss.length > 0)
+    .map((skill) => [authoredSkillId(skill.slug), skill.gloss] as const),
   ...numeralSkills.map((skill) => [numeralSkillId(skill.rule), skill.gloss] as const),
 ]);
 

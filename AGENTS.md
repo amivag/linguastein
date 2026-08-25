@@ -118,6 +118,8 @@ src/features/design/  the live style guide at /design
 src/styles/      primitives, shared surface recipes, the token reader, the
                  categorical hue assignment (kinds.ts), one file per palette per
                  mode (themes/) and one per contrast level (contrast/)
+content/         capabilities.tsv — the language-neutral capability registry,
+                 shared by every language rather than owned by one
 content/es/      hand-authored dataset sources (TSV)
 public/packs/    GENERATED datasets — never edit by hand
 ```
@@ -582,6 +584,23 @@ items before `buy-a-ticket` existed. The past-tense mission
 rather than built for the opposite reason: writing the sequence and the language
 it drills in one pass is how a mission ends up teaching whatever its author
 happened to write that afternoon.
+
+**A capability is shared; a skill is not.** `function` skills are the one part of
+the curriculum that is not about a language — "order food or a drink politely" is
+the same real-world thing in Spanish, English or Greek, and the slug naming it
+was already neutral. So `content/capabilities.tsv` sits _beside_ the language
+directories and owns the slug, the neutral description and the prerequisite
+graph, while `content/es/skills.tsv` owns only the label and the level. A
+function the registry does not name fails the build, and so does a prerequisite
+the registry requires but the language has not authored.
+
+Ids stay pack-namespaced deliberately: `core-es:skill:order-food-drink` and
+`core-en:skill:order-food-drink` are two things to be good at, and mastery of one
+is not evidence of the other. What is shared is the capability, not the skill —
+which is why this cost no id migration. See
+[docs/dataset-format.md](docs/dataset-format.md) for the columns and the gloss
+override, and [docs/tasks/language-matrix.md](docs/tasks/language-matrix.md) §4
+for why the reverse direction is what forced the split.
 
 **Every kind of word has cards, and each kind has its own id range.** Sentences
 take `1–499_999`, noun cards `500_001–599_999`, modifier cards

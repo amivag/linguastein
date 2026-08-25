@@ -134,6 +134,15 @@ export interface ScratchPack {
   tryBuild(env?: Record<string, string>): RunResult;
   /** Runs another dataset script against the same scratch directories. */
   run(script: string): string;
+  /**
+   * Absolute path to the scratch copy of the shared capability registry.
+   *
+   * It sits *beside* the content directory rather than inside it, because that
+   * is where the build looks: the registry belongs to no single language.
+   */
+  readonly capabilities: string;
+  readCapabilities(): string;
+  writeCapabilities(text: string): void;
   dispose(): void;
 }
 
@@ -149,6 +158,12 @@ export function createScratchPack(prefix: string): ScratchPack {
   const content = join(workspace, 'content');
   const packs = join(workspace, 'packs');
   cpSync(join(repoRoot, 'content/es'), content, { recursive: true });
+  // The shared registry is not part of `content/es` and the build resolves it
+  // from the content directory's parent, so a scratch copy needs it in the same
+  // relative place. Without it every authored `function` row fails its gate,
+  // which would break every suite here rather than the one testing the gate.
+  const capabilities = join(workspace, 'capabilities.tsv');
+  cpSync(join(repoRoot, 'content/capabilities.tsv'), capabilities);
 
   const env = { LINGUASTEIN_CONTENT_DIR: content, LINGUASTEIN_PACKS_DIR: packs };
   const path = (file: string) => join(content, file);
@@ -165,6 +180,9 @@ export function createScratchPack(prefix: string): ScratchPack {
     build: (extra) => runScript('scripts/build-dataset.ts', { env: { ...env, ...extra } }),
     tryBuild: (extra) => tryRunScript('scripts/build-dataset.ts', { env: { ...env, ...extra } }),
     run: (script: string) => runScript(script, { args: [packs], env }),
+    capabilities,
+    readCapabilities: () => readFileSync(capabilities, 'utf8'),
+    writeCapabilities: (text: string) => writeFileSync(capabilities, text, 'utf8'),
     dispose: () => rmSync(workspace, { recursive: true, force: true }),
   };
 }

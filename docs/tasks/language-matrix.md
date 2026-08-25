@@ -206,6 +206,42 @@ landed: invisible while missing, a back-fill across every authored row once late
 What remains is a consumer — `inspectToken` answering "part of `look up`, which
 means to search for" — and that wants English content to answer it about.
 
+**The curriculum half is now shared — landed 2026-08-25.** §4's warning is about
+_grading_: levels, skills and frequency do not transfer, and `core-en` must not be
+derived from the Spanish gloss column. That is still true, and it left a separate
+question unanswered — how much of the curriculum is not about a language at all.
+
+The answer was 92 rows of 93. `content/es/skills.tsv` held the slug, the neutral
+description and the prerequisite graph for every `function` skill, so
+`content/en/skills.tsv` would have restated all three and nothing would have
+noticed when they drifted. `content/capabilities.tsv` now owns that half, beside
+the language directories rather than inside one; a language contributes the label
+and the level. Ids stay pack-namespaced, so this cost no id migration and no
+progress migration: ordering food in Spanish and in English remain separately
+masterable, which is correct.
+
+The one row that resisted is the useful finding. `confirm-with-a-tag` was
+described as "with ¿verdad? or ¿no?" — true, and no help to a learner of English,
+who needs "right?" or "isn't it?". A neutral description and a learner-facing
+gloss are **not the same string**, which the old file could not express because it
+had only one column for both. So the registry holds the neutral default and a
+language may override it, with a gate rejecting an override that merely restates
+the default — otherwise the shared description becomes decoration one row at a
+time. Expect the same split wherever else a "neutral" string turns out to name a
+particle: `ADDRESS_FORMS`' labels in §7 are the next candidate.
+
+`MissionDefinition` is the same shape of problem and is not done. Its `id` is
+already documented as independent of a pack, and `passage` is already a _local_
+id resolved against whichever compatible pack is loaded — so a mission is already
+a spine plus per-language references, with `language: 'es'` the field that forces
+a duplicate. Splitting it into a neutral spine (capabilities, transfer ladder,
+support arc) and a per-language realisation keyed `(missionId, language)` would
+make authoring English missions a matter of choosing passages rather than
+re-deriving twenty missions of pedagogy. One caveat: `goal`, `title`, `brief`,
+`nuance` and `cue` are learner-facing English prose. Neutral in content, but a
+Spanish-speaking learner needs them translated — so they belong with the UI
+chrome, not in this bucket.
+
 ---
 
 ## 5. Transport: precache the shell, install the packs
@@ -349,6 +385,13 @@ Steps 1–4 are the whole "decide it in alpha" window.
 - `slug` is reached through the language module, and no caller assumes ASCII
 - **done** — a headword spanning tokens that do not touch is expressible, and a
   span naming a missing lexeme is reported (`tests/data/multi-word-lexeme.test.ts`)
+- **done** — the capability vocabulary is shared rather than per-language: a
+  function the registry does not name fails the build, so does a prerequisite the
+  language has not authored, so does an override that restates the shared
+  description, and `core-es` rebuilds byte-identically
+  (`tests/data/capability-registry.test.ts`)
+- a second language declares its own labels against the shared registry and adds
+  no capability rows of its own
 - tapping `up` in `look it up` names the phrasal verb and glosses it
 - a pack declares a level ladder that is not CEFR, and the URL carries it
 - an A1 learner's first session downloads A1 shards, and no B1 file is fetched

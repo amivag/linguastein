@@ -824,6 +824,29 @@ for (const modifier of numerals ? modifiers : []) {
 }
 
 /*
+ * A closed class's agreement is the module's, so the sources may not restate it.
+ *
+ * The same rule the ordinals get above, and for the same reason: `estas` and
+ * `las` were typed into the extra-surfaces column, and a hand-typed agreement is
+ * a spelling that can disagree with the one the app derives. What stays declared
+ * is what no rule produces — `algún` and `ningún`, which are apocopations rather
+ * than agreements, exactly as `buen` stays declared beside derived `buena`.
+ */
+for (const modifier of language.nominals?.closedClassForms ? modifiers : []) {
+  const derived = new Set(
+    language.nominals!.closedClassForms!(modifier.lemma).map((entry) => entry.form.toLowerCase()),
+  );
+  if (derived.size === 0) continue;
+  const restated = modifier.forms.filter((form) => derived.has(form.toLowerCase()));
+  if (restated.length > 0) {
+    problems.push(
+      `${modifier.lemma}: the language module already derives ${restated.join(', ')} — ` +
+        'drop them from the extra surfaces column',
+    );
+  }
+}
+
+/*
  * The `regularity` column and the module's own table have to agree, and only a
  * module that has a table can be asked. A verb declared irregular with no entry
  * ships `teno` for `tengo`; one declared regular *with* an entry means the column
@@ -1371,7 +1394,13 @@ for (const form of verbForms.filter((entry) => !isCommand(entry))) {
 interface NominalForm extends FormRecord {
   /** Carried so the surface index and the record are built from one pass. */
   lemma: string;
-  pos: 'NOUN' | 'ADJ';
+  /**
+   * Any part of speech a nominal paradigm can belong to. It was `'NOUN' | 'ADJ'`
+   * while those were the only two generators; the closed classes brought `DET`,
+   * `PRON` and the quantifying `ADV`, and narrowing it to a union of five would
+   * only have to be widened again by the next language.
+   */
+  pos: string;
 }
 
 /*
@@ -1382,6 +1411,37 @@ interface NominalForm extends FormRecord {
  */
 const pluralOf = language.nominals?.pluralOf;
 const adjectiveForms = language.nominals?.adjectiveForms;
+const closedClassForms = language.nominals?.closedClassForms;
+
+/**
+ * The paradigm of a closed-class row, as records rather than as index entries.
+ *
+ * `este`, `el`, `su` and `cuánto` had their surfaces typed into the
+ * extra-surfaces column and indexed, so a sentence linked them and nothing else
+ * could see them: `formsOf` returned an empty list, which is what word
+ * inspection reads to show a paradigm and what the cloze reads for its
+ * alternatives. Emitting them keeps both honest, and costs no content — every
+ * one of these was already in the file.
+ *
+ * `-c-` in the id rather than `-a-`: an article is not an adjective, and the two
+ * generators must not be able to mint the same id for different words. The form
+ * id gate below is what would catch it if they did — and it can now.
+ */
+function closedClassRecords(modifier: ModifierRow): NominalForm[] {
+  const forms = closedClassForms?.(modifier.lemma) ?? [];
+  if (forms.length === 0) return [];
+  const lexeme = lexemeId(modifier.lemma, modifier.pos);
+  const key = formStem(lexeme);
+  return forms.map((entry) => ({
+    id: `${NS}form:${key}-c-${entry.morph.gender?.[0] ?? 'x'}${entry.morph.number === 'plural' ? 'pl' : 'sg'}`,
+    lexeme,
+    lemma: modifier.lemma,
+    pos: modifier.pos,
+    form: entry.form,
+    morph: { ...entry.morph },
+    level: modifier.level,
+  }));
+}
 
 const nominalForms: NominalForm[] = [
   ...nouns.flatMap((noun): NominalForm[] => {
@@ -1421,6 +1481,7 @@ const nominalForms: NominalForm[] = [
         : []),
     ];
   }),
+  ...modifiers.flatMap(closedClassRecords),
   ...(adjectiveForms ? modifiers.filter((modifier) => modifier.pos === 'ADJ') : []).flatMap(
     (modifier): NominalForm[] => {
       const lexeme = lexemeId(modifier.lemma, 'ADJ');
@@ -1509,7 +1570,12 @@ if (formProblems.length > 0) {
  */
 for (const modifier of modifiers) {
   const lexeme = lexemeId(modifier.lemma, modifier.pos);
-  const citation = modifier.pos === 'ADJ' ? [] : [{ form: modifier.lemma, morph: {} }];
+  // Skipped where a paradigm already indexed it — an adjective's, and now a
+  // closed class's. A second entry for one surface is not harmless: `disambiguate`
+  // compares `subjunctive.length` against `candidates.length`, so a duplicate
+  // could tip a decision that was never about it.
+  const inflects = modifier.pos === 'ADJ' || (closedClassForms?.(modifier.lemma).length ?? 0) > 0;
+  const citation = inflects ? [] : [{ form: modifier.lemma, morph: {} }];
   const declared = modifier.forms.map((form) => ({ form, morph: {} }));
   for (const { form, morph } of [...citation, ...declared]) {
     index(form, { lexeme, lemma: modifier.lemma, pos: modifier.pos, morph });

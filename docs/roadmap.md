@@ -130,9 +130,11 @@ and ten lexemes for the question the greeting mission opens with — the
 [the function words](tasks/function-words.md), **decided 2026-08-26**: no function
 word becomes a card, `ADV` came off `STUDYABLE_POS` rather than being filled, the
 demonstrative contrast is a named skill, and the pronoun paradigms got their
-missing members. What is left there is a follow-up rather than a decision — the
-closed-class paradigms are indexed but not recorded, so nothing can drill their
-agreement yet.
+missing members. The follow-up it created has landed too: the closed-class
+paradigms are records rather than index entries, so word inspection shows them and
+the cloze drills **agreement** — the commonest beginner error in Spanish, and the
+one thing the exercise could not ask while it blanked only verbs. What is left is
+object `la`/`los`/`las`, which is a senses problem rather than authoring.
 
 Two more are briefed as decisions rather than as content:
 [pack addressing](tasks/pack-addressing.md) — a link identifies a passage and a

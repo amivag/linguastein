@@ -392,10 +392,171 @@ function formComparability(answer: Morphology, candidate: Morphology): number {
 }
 
 /**
+ * What this sentence can be asked about, as a blank.
+ *
+ * Two kinds, and the cloze had only the first for as long as it existed: a verb
+ * form, answered from the same verb's other conjugations, and an **agreement** —
+ * a determiner or quantifier answered from its own paradigm. Agreement is the
+ * commonest beginner error in Spanish and was the one thing the pack could not
+ * ask, because the closed-class paradigms were indexed and never recorded.
+ *
+ * One candidate per *kind*, then a coin toss between the kinds — not a shuffle
+ * over every candidate token. That distinction is the whole balance of the
+ * exercise: an ordinary sentence holds one clozeable verb and three or four
+ * determiners, so shuffling tokens would have made two clozes in three an
+ * article. Preferring verbs outright is the other failure, and it makes agreement
+ * almost invisible, because nearly every sentence has a verb to ask about.
+ */
+function blankCandidate(item: LearningItem, context: GenerationContext): BlankCandidate | null {
+  const byKind = [
+    verbFormCandidates(item, context),
+    shuffle(agreementCandidates(item, context), context.rng),
+  ];
+  const offered = shuffle(
+    byKind.flatMap((candidates) => (candidates[0] ? [candidates[0]] : [])),
+    context.rng,
+  );
+  return offered[0] ?? null;
+}
+
+/**
+ * The blanks whose answer is settled by a noun in the same sentence.
+ *
+ * The line this draws is the whole of its correctness, and it is narrow on
+ * purpose: a cloze may drill **agreement**, where the rest of the sentence
+ * decides, and must never drill **lexical choice**, where it does not. `___
+ * casas` has one right article because `casas` is feminine plural. `¿Quieres
+ * ___?` takes `algo`, `nada` or `todo` equally well, and a cloze offering all
+ * three is a question with three right answers — the same hazard `distractors()`
+ * guards from the other side.
+ *
+ * So three things must hold, and each rules out a case that looked fine:
+ *
+ * - **A target noun, close by.** The next word must be a noun carrying both
+ *   gender and number, with at most an adjective or two in between (`las buenas
+ *   noticias`). A pronoun standing alone agrees with nothing available — which is
+ *   also what keeps `ellos`/`ellas` out, since a subject pronoun sits before a
+ *   verb.
+ * - **A noun that is not itself ambiguous in number.** `lunes` is singular and
+ *   plural in one spelling, so both `el lunes` and `los lunes` are right and
+ *   there is no answer to grade. This is the dangerous case, because the noun
+ *   does carry a number and every other check passes it.
+ * - **Alternatives that are actually wrong.** Every choice offered disagrees with
+ *   the target on gender or number, so exactly one form fits — and the blank's
+ *   own form has to agree too, which is what skips `el agua`, Spanish's own
+ *   exception, rather than grading it either way. Drawing the choices from the
+ *   token's own lexeme makes the rest safe for free: `este` can never be offered
+ *   against `ese`, because they are different lexemes.
+ */
+function agreementCandidates(
+  item: LearningItem,
+  context: GenerationContext,
+): readonly BlankCandidate[] {
+  const tokens = item.tokens ?? [];
+  const found: BlankCandidate[] = [];
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (!token?.lexeme || !INFLECTING_CLOSED_POS.has(token.pos ?? '')) continue;
+
+    const target = agreementTarget(tokens, index, context);
+    if (!target) continue;
+    // The blank's own form has to agree, or the data disagrees with itself and
+    // there is no rule here to teach.
+    if (!agreesWith(token.morph ?? {}, target)) continue;
+
+    const wrong = context.repository
+      .formsOf(token.lexeme)
+      .filter((form) => normalise(form.form) !== normalise(token.text))
+      .filter((form) => !agreesWith(form.morph, target))
+      .map((form) => form.form);
+
+    const unique: string[] = [];
+    const seen = new Set([normalise(token.text)]);
+    for (const form of wrong) {
+      const key = normalise(form);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(form);
+      if (unique.length === 3) break;
+    }
+    if (unique.length >= 2) found.push({ token, alternatives: unique });
+  }
+
+  return found;
+}
+
+/**
+ * Parts of speech whose members can inflect and stand before their noun. `ADV`
+ * belongs because `mucho` and `poco` are filed as adverbs and agree like
+ * quantifiers — the part of speech is the dataset's, and the behaviour is not.
+ */
+const INFLECTING_CLOSED_POS = new Set(['DET', 'PRON', 'ADV']);
+
+/** How many adjectives may stand between a determiner and its noun. */
+const MAX_INTERVENING = 2;
+
+/**
+ * The noun a blank at `index` has to agree with, or `undefined` where none is
+ * near enough — or near enough and unable to settle anything.
+ */
+function agreementTarget(
+  tokens: NonNullable<LearningItem['tokens']>,
+  index: number,
+  context: GenerationContext,
+): Morphology | undefined {
+  for (let ahead = index + 1; ahead <= index + 1 + MAX_INTERVENING; ahead += 1) {
+    const next = tokens[ahead];
+    if (!next || next.pos === 'PUNCT') return undefined;
+    if (next.pos === 'ADJ') continue;
+    if (next.pos !== 'NOUN' || !next.lexeme) return undefined;
+    const morph = next.morph ?? {};
+    if (morph.gender === undefined || morph.number === undefined) return undefined;
+    return numberIsAmbiguous(next, context) ? undefined : morph;
+  }
+  return undefined;
+}
+
+/**
+ * Whether this noun's spelling is both singular and plural — `el lunes` and
+ * `los lunes` are both right, so it can settle nothing.
+ */
+function numberIsAmbiguous(
+  noun: NonNullable<LearningItem['tokens']>[number],
+  context: GenerationContext,
+): boolean {
+  if (!noun.lexeme) return true;
+  const spelling = normalise(noun.text);
+  const numbers = new Set(
+    context.repository
+      .formsOf(noun.lexeme)
+      .filter((form) => normalise(form.form) === spelling)
+      .map((form) => form.morph.number),
+  );
+  return numbers.size > 1;
+}
+
+/**
+ * Whether a form's agreement is compatible with its target's.
+ *
+ * Only the features the form itself declares are checked. `sus` marks number and
+ * no gender, so it agrees with a masculine noun as readily as a feminine one —
+ * treating an absent feature as a mismatch would offer `sus` as a wrong answer to
+ * every question, which is both false and a giveaway.
+ */
+function agreesWith(form: Morphology, target: Morphology): boolean {
+  if (form.gender !== undefined && form.gender !== target.gender) return false;
+  return form.number === undefined || form.number === target.number;
+}
+
+/**
  * Picks a verb token whose lexeme has other known forms to use as choices, and
  * ranks those forms so the card grades grammar rather than shape.
  */
-function blankCandidate(item: LearningItem, context: GenerationContext): BlankCandidate | null {
+function verbFormCandidates(
+  item: LearningItem,
+  context: GenerationContext,
+): readonly BlankCandidate[] {
   const tokens = item.tokens ?? [];
   for (const token of tokens) {
     if (token.pos !== 'VERB' && token.pos !== 'AUX') continue;
@@ -422,9 +583,9 @@ function blankCandidate(item: LearningItem, context: GenerationContext): BlankCa
       if (unique.length === 3) break;
     }
 
-    if (unique.length >= 2) return { token, alternatives: unique };
+    if (unique.length >= 2) return [{ token, alternatives: unique }];
   }
-  return null;
+  return [];
 }
 
 /**

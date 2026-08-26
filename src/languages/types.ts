@@ -72,6 +72,17 @@ export interface NominalSupport {
   pluralOf?(lemma: string): string;
   /** Agreement forms of an adjective — gender and number, where a language has them. */
   adjectiveForms?(lemma: string): readonly GeneratedForm[];
+  /**
+   * Agreement forms of a closed-class word: an article, a demonstrative, a
+   * possessive, a quantifier, a pronoun with more than one shape.
+   *
+   * Separate from `adjectiveForms` because the membership is a list rather than a
+   * rule — a language knows which of its function words inflect, and no ending
+   * predicts it (`este`/`estos`, `el`/`los`). Empty for a lemma that does not
+   * inflect, which is most of the class, and absent entirely in a language whose
+   * function words are invariable.
+   */
+  closedClassForms?(lemma: string): readonly GeneratedForm[];
 }
 
 /** A numeral rule as something a learner can practise. */

@@ -1,7 +1,8 @@
 # Task: make the function words studiable
 
-**Status:** decided 2026-08-26, §3 answered below — the decision, the phantom
-tile and the paradigm repairs have landed; two follow-ups recorded in §3.1
+**Status:** done 2026-08-26 — the decision, the phantom tile, the paradigm
+repairs and §3.1's cloze follow-up have all landed. One item stays open by
+design: object `la`/`los`/`las`, which is a senses problem rather than authoring
 **Written:** 2026-08-24
 **For:** a fresh agent session, no prior context assumed
 **Scope:** one product decision, then a small amount of code and a content pass.
@@ -169,26 +170,53 @@ group 3 stays lexemes, met in sentences and answerable when tapped.
 Neither is authoring; both are recorded so the next session does not rediscover
 them.
 
-**The cloze cannot drill any of it yet, and the reason is not the generator.**
-`blankCandidate` ([`generators.ts`](../../src/domain/exercises/generators.ts))
-blanks only a `VERB` or an `AUX` and draws its alternatives from
-`formsOf(lexeme)` — but relaxing that would find nothing, because **the
-non-adjective paradigms are indexed and never recorded.** The loop over
-`modifier.forms` in the build indexes `cuáles`, `estas`, `todas` and `vosotras`
-so a sentence links them, and only `adjectiveForms` produces `FormRecord`s. So
-`formsOf('core-es:lexeme:este')` is empty while four surfaces of it ship. Emitting
-those as records — derived from the language module, never hand-typed, with the
-irregular members declared the way a noun declares an irregular plural, since
-`adjectiveForms('este')` gives `estes` — would let the cloze drill demonstrative
-and quantifier **agreement** with no new content at all.
+**~~The cloze cannot drill any of it yet~~ — landed 2026-08-26.** The diagnosis
+held: `blankCandidate` blanked only a `VERB` or an `AUX`, and relaxing that alone
+would have found nothing, because the non-adjective paradigms were _indexed and
+never recorded_ — `formsOf('core-es:lexeme:este')` came back empty while four
+surfaces of it shipped.
 
-**And that is the line worth drawing when it is done:** a cloze may drill
-_agreement and inflection_, where the rest of the sentence settles the answer,
-and must not drill _lexical choice_, where it usually does not. `___ casas` has
-one right demonstrative because `casas` is feminine plural; `¿Quieres ___?` takes
-`algo`, `nada` or `todo` equally well, and a cloze offering all three is a
-question with three right answers. This is the same hazard `distractors()` guards
-from the other side.
+Both halves are now in place. `src/languages/es/closed-class.ts` owns the
+paradigms — articles, demonstratives, possessives, quantifiers, the pronouns with
+a feminine — deriving what the regular `-o` rule already gets right and declaring
+only what no rule produces (`estos`, not `estes`). The build emits them as
+`FormRecord`s and **refuses a declared surface the module derives**, which is the
+rule the ordinals already had; twenty rows of `modifiers.tsv` lost their extra
+surfaces column to it. Two things read paradigms and both work now: word
+inspection shows `este / estos / esta / estas` when you tap `estas`, and the cloze
+has alternatives to offer.
+
+**The line held as stated:** a cloze may drill _agreement and inflection_, where
+the rest of the sentence settles the answer, and must not drill _lexical choice_,
+where it usually does not. `___ casas` has one right article because `casas` is
+feminine plural; `¿Quieres ___?` takes `algo`, `nada` or `todo` equally well, and
+a cloze offering all three is a question with three right answers — the same
+hazard `distractors()` guards from the other side.
+
+Three guards enforce it, and each rules out a case that looked fine
+(`tests/domain/agreement-cloze.test.ts`):
+
+- **A target noun within two words**, adjectives allowed in between. A pronoun
+  standing before a verb has nothing to agree with, which is what keeps
+  `ellos`/`ellas` out of the exercise while leaving them in the paradigm.
+- **A noun that is not itself ambiguous in number.** `el lunes` and `los lunes`
+  are both right. This is the dangerous case: the noun _does_ carry a number, so
+  every other check passes it.
+- **The blank's own form must agree too.** That is what skips `el agua` —
+  Spanish's own exception, where the rule this exercise teaches is false — rather
+  than grading it either way.
+
+Against the shipped pack it produces roughly 2,400 agreement blanks beside 5,600
+verb ones, over `el` (1,549), `un` (572), `este` (167), `ese` (63), `mucho`,
+`aquel`, `poco`, `cuánto`, `alguno`, `ninguno` and `nuestro`. The balance is by
+_kind_ rather than by token: an ordinary sentence holds one clozeable verb and
+three or four determiners, so shuffling every candidate would have made two clozes
+in three an article.
+
+**Two-form paradigms cannot be asked**, and that is correct rather than a gap.
+`mi`/`mis`, `su`/`sus`, `cuál`/`cuáles` offer one wrong answer, so the card would
+be a coin flip; the generator's existing floor of two alternatives excludes them.
+They are recorded all the same, because inspection should show them.
 
 **Object `la`, `los` and `las` are blocked, and it is a senses problem.** §4.2
 lists them as a paradigm hole to repair. They are not repairable as rows:
@@ -255,9 +283,11 @@ In the order that keeps the build green:
 - [x] `npm run check` passes; `npm run validate:data` reports 0 / 0
 - [x] `npm run build:data` produces no diff on a second run
 
-Left open, and briefed in §3.1 rather than here: the paradigms are still index
-entries rather than `FormRecord`s, so nothing can drill demonstrative or
-quantifier agreement yet.
+- [x] The closed-class paradigms are `FormRecord`s, so inspection can show them
+      and the cloze can drill agreement (`tests/domain/agreement-cloze.test.ts`)
+
+Left open, and recorded in §3.1 rather than here: object `la`/`los`/`las`, which
+no amount of authoring reaches.
 
 ## 6. Verification
 

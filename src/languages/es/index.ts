@@ -14,6 +14,7 @@ import type { GeneratedForm, LanguageModule } from '../types';
 import { conjugate as conjugateEs } from './conjugation';
 import { IRREGULAR_VERBS, isDeclaredIrregular } from './irregulars';
 import { isLetterName } from './alphabet';
+import { closedClassForms as closedClassFormsEs } from './closed-class';
 import { adjectiveForms as adjectiveFormsEs, pluralOf } from './morphology';
 import {
   parseCardinal,
@@ -91,6 +92,11 @@ export const spanish: LanguageModule = {
     pluralOf,
     adjectiveForms: (lemma) =>
       adjectiveFormsEs(lemma).map((entry): GeneratedForm => ({
+        form: entry.form,
+        morph: entry.morph,
+      })),
+    closedClassForms: (lemma) =>
+      closedClassFormsEs(lemma).map((entry): GeneratedForm => ({
         form: entry.form,
         morph: entry.morph,
       })),

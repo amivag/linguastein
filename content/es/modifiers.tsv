@@ -92,8 +92,8 @@ temprano	early	ADV	a1	time
 pronto	soon	ADV	a1	time
 despacio	slowly	ADV	a2	core
 demasiado	too much	ADV	a2	core
-mucho	a lot, much	ADV	a1	core	mucha,muchos,muchas
-poco	little, few	ADV	a1	core	poca,pocos,pocas
+mucho	a lot, much	ADV	a1	core
+poco	little, few	ADV	a1	core
 bastante	quite, enough	ADV	a2	core
 # `juntos` used to be declared here as its own ADV lexeme, beside the adjective
 # `junto` below, both glossed "together". That is one word held as two, and it
@@ -107,8 +107,8 @@ tú	you (informal)	PRON	a1	grammar
 él	he	PRON	a1	grammar
 ella	she	PRON	a1	grammar
 usted	you (formal)	PRON	a1	grammar
-nosotros	we	PRON	a1	grammar	nosotras
-ellos	they	PRON	a1	grammar	ellas
+nosotros	we	PRON	a1	grammar
+ellos	they	PRON	a1	grammar
 ustedes	you (plural)	PRON	a1	grammar
 me	me, myself	PRON	a1	grammar
 te	you, yourself	PRON	a1	grammar
@@ -119,9 +119,9 @@ lo	it, him	PRON	a1	grammar
 le	to him, to her	PRON	a1	grammar
 les	to them, to you (plural)	PRON	a1	grammar
 qué	what	PRON	a1	questions
-quién	who	PRON	a1	questions	quiénes
-cuál	which	PRON	a1	questions	cuáles
-cuánto	how much	PRON	a1	questions	cuánta,cuántos,cuántas
+quién	who	PRON	a1	questions
+cuál	which	PRON	a1	questions
+cuánto	how much	PRON	a1	questions
 dónde	where	ADV	a1	questions
 cuándo	when	ADV	a1	questions
 cómo	how	ADV	a1	questions
@@ -155,19 +155,19 @@ hola	hello	INTJ	a1	greetings
 adiós	goodbye	INTJ	a1	greetings
 gracias	thank you	INTJ	a1	greetings
 perdón	sorry, excuse me	INTJ	a1	greetings
-el	the	DET	a1	grammar	la,los,las
-un	a, an	DET	a1	grammar	una,unos,unas
-mi	my	DET	a1	grammar	mis
-tu	your	DET	a1	grammar	tus
-su	his, her, their	DET	a1	grammar	sus
-nuestro	our	DET	a1	grammar	nuestra,nuestros,nuestras
-este	this	DET	a1	grammar	esta,estos,estas
-ese	that	DET	a1	grammar	esa,esos,esas
-aquel	that (over there)	DET	a1	grammar	aquella,aquellos,aquellas
+el	the	DET	a1	grammar
+un	a, an	DET	a1	grammar
+mi	my	DET	a1	grammar
+tu	your	DET	a1	grammar
+su	his, her, their	DET	a1	grammar
+nuestro	our	DET	a1	grammar
+este	this	DET	a1	grammar
+ese	that	DET	a1	grammar
+aquel	that (over there)	DET	a1	grammar
 al	to the	ADP	a1	grammar	
 del	of the, from the	ADP	a1	grammar	
 hay	there is, there are	VERB	a1	grammar	
-todo	all, everything	PRON	a1	core	toda,todos,todas
+todo	all, everything	PRON	a1	core
 algo	something	PRON	a1	core	
 nada	nothing	PRON	a1	core	
 alguien	someone	PRON	a2	core	
@@ -253,9 +253,9 @@ ni	nor, neither	CCONJ	a2	grammar
 -	encima	above, on top	ADV	a1	place	
 -	eso	that	PRON	a1	grammar	
 -	esto	this	PRON	a1	grammar	
--	vosotros	you (plural, informal)	PRON	a2	grammar	vosotras
--	alguno	some, any	DET	a1	grammar	alguna,algunos,algunas,algún
--	ninguno	none, not any	DET	a1	grammar	ninguna,ningunos,ningunas,ningún
+-	vosotros	you (plural, informal)	PRON	a2	grammar	
+-	alguno	some, any	DET	a1	grammar	algún
+-	ninguno	none, not any	DET	a1	grammar	ningún
 -	Sevilla	Seville	PROPN	a1	city	
 -	Valencia	Valencia	PROPN	a1	city	
 -	Granada	Granada	PROPN	a1	city	

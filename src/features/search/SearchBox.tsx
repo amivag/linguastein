@@ -1,8 +1,10 @@
 import { useId } from 'react';
+import { useCourse } from '../../app/course';
 import { languageOption, type LanguageTag } from '../../domain/content';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { VoiceInput } from '../../components/VoiceInput';
+import { settingsPath } from '../settings/settings-url';
 import styles from './SearchBox.module.css';
 
 interface SearchBoxProps {
@@ -41,6 +43,7 @@ export function SearchBox({
   placeholder = 'Search a word or phrase…',
 }: SearchBoxProps) {
   const inputId = useId();
+  const { course } = useCourse();
   const target = languageOption(targetLanguage).englishName;
   const reference = languageOption(referenceLanguage).englishName;
 
@@ -76,7 +79,12 @@ export function SearchBox({
           </Button>
         )}
       </div>
-      <VoiceInput label="Search by voice" locale={locale} onResult={onChange} />
+      <VoiceInput
+        label="Search by voice"
+        locale={locale}
+        onResult={onChange}
+        helpPath={settingsPath(course, 'audio')}
+      />
     </div>
   );
 }

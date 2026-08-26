@@ -36,6 +36,7 @@ import type { SessionSize } from '../../domain/sessions';
 import { newBatchId } from '../../domain/batches';
 import { systemRng } from '../../utils/random';
 import { sessionPath } from '../practice/session-url';
+import { settingsPath } from '../settings/settings-url';
 import { studyPath } from '../study/study-url';
 import { browsePath, parseBrowseUrl } from './browse-url';
 import styles from './BrowseScreen.module.css';
@@ -440,6 +441,7 @@ export function BrowseScreen() {
             onResult={(text) => {
               update({ search: text });
             }}
+            helpPath={settingsPath(course, 'audio')}
           />
         </div>
 

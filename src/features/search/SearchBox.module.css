@@ -1,5 +1,12 @@
+/*
+ * `wrap` so the voice control's status can take a line of its own beneath the
+ * field rather than a slice of it. See `VoiceInput.module.css`: a listen has a
+ * level, a provisional transcript and — when it fails — a reason to name, and
+ * none of that fits in a row whose field is `flex: 1`.
+ */
 .box {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
 }
 

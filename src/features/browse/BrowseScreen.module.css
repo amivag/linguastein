@@ -6,8 +6,10 @@
   gap: var(--space-3);
 }
 
+/* `wrap` for the voice control's status line — see `SearchBox.module.css`. */
 .search {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
 }
 

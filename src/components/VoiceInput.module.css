@@ -42,9 +42,45 @@
   }
 }
 
+/*
+ * The whole width of the row it sits in, below the field rather than beside it.
+ *
+ * Both containers that render a `VoiceInput` are a `display: flex` row whose
+ * field is `flex: 1`, so a status in the row shortens the box you are dictating
+ * into — which is why this used to be allowed to say only "listening", in a
+ * language nobody could see. `flex-basis: 100%` drops it to a second line
+ * instead, and `:empty` keeps that line from existing when there is nothing to
+ * say. Both of those are the parent's rules, so the parent has to be allowed to
+ * wrap: `flex-wrap: wrap` on the two `.search`/`.box` rows.
+ */
 .status {
+  display: flex;
+  flex-basis: 100%;
+  /* Wraps for the same reason the row above it does: a failure summary is a
+     sentence, and the link to the steps has to be able to sit under it rather
+     than be squeezed into whatever the sentence left of the line. */
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+}
+
+/* No content, no line — the row keeps its gap for a status that is not there. */
+.status:empty {
+  display: none;
+}
+
+/* What the recogniser has so far. In the target language, and marked as such:
+   it is read aloud by a screen reader and hyphenated by the browser. */
+.partial {
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+}
+
+.fix {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 @media (hover: hover) and (pointer: fine) {

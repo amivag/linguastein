@@ -107,14 +107,17 @@ tú	you (informal)	PRON	a1	grammar
 él	he	PRON	a1	grammar
 ella	she	PRON	a1	grammar
 usted	you (formal)	PRON	a1	grammar
-nosotros	we	PRON	a1	grammar
-ellos	they	PRON	a1	grammar
+nosotros	we	PRON	a1	grammar	nosotras
+ellos	they	PRON	a1	grammar	ellas
+ustedes	you (plural)	PRON	a1	grammar
 me	me, myself	PRON	a1	grammar
 te	you, yourself	PRON	a1	grammar
 se	himself, herself, oneself	PRON	a1	grammar
 nos	us, ourselves	PRON	a1	grammar
+os	you (plural), yourselves	PRON	a2	grammar
 lo	it, him	PRON	a1	grammar
 le	to him, to her	PRON	a1	grammar
+les	to them, to you (plural)	PRON	a1	grammar
 qué	what	PRON	a1	questions
 quién	who	PRON	a1	questions	quiénes
 cuál	which	PRON	a1	questions	cuáles

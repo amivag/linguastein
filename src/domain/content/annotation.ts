@@ -39,8 +39,19 @@ export type PartOfSpeech = (typeof POS_TAGS)[number];
  * at the head of a list of thousands. Which of these a picker actually shows is
  * still derived from the packs: an empty one is dropped, exactly as an empty
  * topic is.
+ *
+ * **`ADV` was in this list and had no cards behind it** — the build's `CARD_POS`
+ * is `{ADJ, NUM}`, so no adverb row ever got an id. The dropping rule worked
+ * exactly as designed and the result was that the list named a category the app
+ * could never show, for fifty-six adverbs it called studiable. Removed rather
+ * than filled: `docs/tasks/function-words.md` decided that no function word
+ * becomes a card, and most adverbs are function words. `dónde` and `cuándo` are
+ * reached through the `question-word` skill instead, as the questions they ask.
+ *
+ * `tests/data/studyable-pos.test.ts` is what keeps this honest now, because a
+ * category that silently disappears is not something review notices.
  */
-export const STUDYABLE_POS = ['VERB', 'NOUN', 'ADJ', 'ADV', 'NUM'] as const;
+export const STUDYABLE_POS = ['VERB', 'NOUN', 'ADJ', 'NUM'] as const;
 export type StudyablePos = (typeof STUDYABLE_POS)[number];
 
 /**

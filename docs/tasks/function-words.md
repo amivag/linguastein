@@ -1,6 +1,7 @@
 # Task: make the function words studiable
 
-**Status:** briefed, not started — needs a decision before authoring
+**Status:** decided 2026-08-26, §3 answered below — the decision, the phantom
+tile and the paradigm repairs have landed; two follow-ups recorded in §3.1
 **Written:** 2026-08-24
 **For:** a fresh agent session, no prior context assumed
 **Scope:** one product decision, then a small amount of code and a content pass.
@@ -26,17 +27,22 @@ That half is done and is not what this task is about.
 
 ## 2. The gap
 
-**A function word cannot be studied, only met.** Measured against the shipped
-pack, 123 lexemes have no word card and no way to be reached as a set:
+**A function word cannot be studied, only met.** Re-measured against pack
+`0.16.0`, 136 lexemes have no word card — and after the decision below, none of
+them is meant to:
 
 | Kind                 | Lexemes | Cards |
 | -------------------- | ------: | ----: |
-| Adverbs (`ADV`)      |      56 |     0 |
-| Pronouns (`PRON`)    |      27 |     0 |
-| Prepositions (`ADP`) |      13 |     0 |
+| Adverbs (`ADV`)      |      61 |     0 |
+| Pronouns (`PRON`)    |      31 |     0 |
+| Prepositions (`ADP`) |      14 |     0 |
 | Determiners (`DET`)  |      12 |     0 |
-| Conjunctions         |       9 |     0 |
+| Conjunctions         |      12 |     0 |
 | Interjections        |       6 |     0 |
+
+The figures were 56 / 27 / 13 / 12 / 9 / 6 when this was written, against pack
+`0.13.0`. They grew with the content and with §4.2's repairs; the shape of the gap
+did not.
 
 Two constants decide it, and they disagree with each other:
 
@@ -124,6 +130,75 @@ group 1, and nothing for group 3** — but that is a recommendation, not the
 finding. Whoever picks this up should either confirm it or say why not, in the
 file, before authoring.
 
+### Decided, 2026-08-26
+
+**The recommendation is confirmed for groups 2 and 3, and group 1 gets no cards.**
+Three findings changed the shape of it, one of which was not visible when this was
+written.
+
+**1. Question formation landed in between, and it already delivers group 1 as a
+group.** `QUESTION_SKILLS` in the build now derives `yes-no-question` and
+`question-word`, and `INTERROGATIVES` reads the closed set off the `questions`
+topic exactly as §3's third bullet suggested it could. So a learner reaches the
+interrogatives from Study → Grammar today, as the sentences that ask with them.
+That is the better group: the set a learner revises is _the questions_, not nine
+glosses. §5's "reach the interrogatives as a group" is met, by content rather than
+by cards.
+
+**2. A card is the wrong shape for the thing that is actually hard.** A card
+whose front is `qué` and whose back is "what" is `STUDYABLE_POS`'s own argument
+turned on the one group that looked exempt — and it does not drill `qué` against
+`cuál` either, because a word card yields recognition (word → gloss) and nothing
+else. The error this task names is a _choice inside a sentence_, and the exercise
+shaped like that is `cloze-choice`. Cards would have added nine ids, two constant
+changes and a Study tile, and drilled the wrong thing in the weakest retrieval
+mode. Rejected.
+
+**3. `ADV` comes out of `STUDYABLE_POS`.** With no adverb becoming a card, the
+list must not say otherwise. It is removed rather than filled, and
+`tests/data/studyable-pos.test.ts` now fails if any member of the list has no card
+behind it in the shipped pack — the phantom Adverbs tile was invisible precisely
+because nothing asserted this.
+
+So: **no function word becomes a card.** Groups 1 and 2 are taught as named
+grammar — `question-word` and, added here, the demonstrative contrast — and
+group 3 stays lexemes, met in sentences and answerable when tapped.
+
+### 3.1 Two follow-ups this decision creates rather than closes
+
+Neither is authoring; both are recorded so the next session does not rediscover
+them.
+
+**The cloze cannot drill any of it yet, and the reason is not the generator.**
+`blankCandidate` ([`generators.ts`](../../src/domain/exercises/generators.ts))
+blanks only a `VERB` or an `AUX` and draws its alternatives from
+`formsOf(lexeme)` — but relaxing that would find nothing, because **the
+non-adjective paradigms are indexed and never recorded.** The loop over
+`modifier.forms` in the build indexes `cuáles`, `estas`, `todas` and `vosotras`
+so a sentence links them, and only `adjectiveForms` produces `FormRecord`s. So
+`formsOf('core-es:lexeme:este')` is empty while four surfaces of it ship. Emitting
+those as records — derived from the language module, never hand-typed, with the
+irregular members declared the way a noun declares an irregular plural, since
+`adjectiveForms('este')` gives `estes` — would let the cloze drill demonstrative
+and quantifier **agreement** with no new content at all.
+
+**And that is the line worth drawing when it is done:** a cloze may drill
+_agreement and inflection_, where the rest of the sentence settles the answer,
+and must not drill _lexical choice_, where it usually does not. `___ casas` has
+one right demonstrative because `casas` is feminine plural; `¿Quieres ___?` takes
+`algo`, `nada` or `todo` equally well, and a cloze offering all three is a
+question with three right answers. This is the same hazard `distractors()` guards
+from the other side.
+
+**Object `la`, `los` and `las` are blocked, and it is a senses problem.** §4.2
+lists them as a paradigm hole to repair. They are not repairable as rows:
+`el` claims `la`, `los` and `las` as its declared surfaces, and those surfaces
+carry 749, 149 and 174 sentence occurrences. A second `PRON` claimant would
+contest every one of them, and `disambiguate` prefers `NOUN | ADJ | PRON` in
+nominal position — so `veo la casa` would resolve `la` to the object pronoun. That
+is the `como`/`segundo` class named in §2 and §4.5: one spelling, two readings,
+and the fix is senses rather than another row. Left alone deliberately.
+
 Three things worth weighing while deciding:
 
 - **The filter machinery already supports it.** `posFromSlug` accepts every UD
@@ -165,16 +240,24 @@ In the order that keeps the build green:
 
 ## 5. Definition of done
 
-- [ ] The decision is written down, with its reasoning, and `STUDYABLE_POS`'s
+- [x] The decision is written down, with its reasoning, and `STUDYABLE_POS`'s
       comment agrees with the code
-- [ ] `ustedes` exists as a lexeme and appears in sentences; the subject and
-      object pronoun paradigms have no missing members
-- [ ] No part of speech is in `STUDYABLE_POS` with zero cards behind it — either
-      it has cards or it is not listed
-- [ ] A learner can reach the interrogatives as a group from Study
-- [ ] Question formation and the demonstrative contrast are each a named skill
-- [ ] `npm run check` passes; `npm run validate:data` reports 0 / 0
-- [ ] `npm run build:data` produces no diff on a second run
+- [x] `ustedes` exists as a lexeme and appears in sentences; the subject and
+      object pronoun paradigms have no missing members — **except** object `la`,
+      `los` and `las`, which §3.1 records as unreachable by authoring
+- [x] No part of speech is in `STUDYABLE_POS` with zero cards behind it — either
+      it has cards or it is not listed (`tests/data/studyable-pos.test.ts`)
+- [x] A learner can reach the interrogatives as a group from Study — through the
+      `question-word` skill, 198 A1 items, rather than through nine cards
+- [x] Question formation and the demonstrative contrast are each a named skill —
+      `yes-no-question` and `question-word` landed before this pass, and
+      `demonstratives` carries 105 A1 items
+- [x] `npm run check` passes; `npm run validate:data` reports 0 / 0
+- [x] `npm run build:data` produces no diff on a second run
+
+Left open, and briefed in §3.1 rather than here: the paradigms are still index
+entries rather than `FormRecord`s, so nothing can drill demonstrative or
+quantifier agreement yet.
 
 ## 6. Verification
 

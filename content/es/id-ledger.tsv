@@ -1680,7 +1680,7 @@
 001677	sentence	active	El sábado vendí verduras en el mercado con mi tío.
 001678	sentence	active	Llevamos uvas, ajos y dos cajas de fresas.
 001679	sentence	active	Una camarera del bar compró casi todo.
-001680	sentence	active	Nos pagó con plata y algunos billetes.
+001680	sentence	active	Nos pagó con plata, no con tarjeta.
 001681	sentence	active	A las dos la mesa estaba vacía.
 001682	sentence	active	Mi tío dijo que fue un día estupendo.
 001683	sentence	active	Compré una revista y un café antes de volver.
@@ -2999,6 +2999,24 @@
 002996	sentence	active	Hoy termino pronto y estoy contenta.
 002997	sentence	active	Porque estoy muy cansada.
 002998	sentence	active	Soy griega, de Atenas.
+002999	sentence	active	¿De dónde son ustedes?
+003000	sentence	active	¿Ustedes hablan español?
+003001	sentence	active	Ustedes pueden esperar aquí.
+003002	sentence	active	Ustedes son muy amables.
+003003	sentence	active	¿Les traigo la cuenta?
+003004	sentence	active	Ellas trabajan en el hospital.
+003005	sentence	active	Nosotras somos hermanas.
+003006	sentence	active	Os espero en la puerta.
+003007	sentence	active	¿Ustedes tienen mesa para cuatro?
+003008	sentence	active	¿Ustedes viven aquí cerca?
+003009	sentence	active	¿Les gusta el pescado?
+003010	sentence	active	Les escribo un correo esta tarde.
+003011	sentence	active	Les enseño español a los niños.
+003012	sentence	active	No les digo nada todavía.
+003013	sentence	active	Les preparo la comida a las siete.
+003014	sentence	active	Os llamo esta tarde.
+003015	sentence	active	¿Os gusta la película?
+003016	sentence	active	Os dejo la comida en la cocina.
 500001	noun-card	active	persona
 500002	noun-card	active	hombre
 500003	noun-card	active	mujer

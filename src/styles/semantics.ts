@@ -101,7 +101,7 @@ const GENDER_HUES: Record<Gender, KindHue> = {
 };
 
 /**
- * Part of speech, for the five open classes a learner studies as a set.
+ * Part of speech, for the classes a learner studies as a set.
  *
  * `undefined` for everything else, and that is the same judgement
  * {@link STUDYABLE_POS} already makes: `de`, `el` and `que` are met inside
@@ -118,11 +118,16 @@ export function posHue(pos: PartOfSpeech): KindHue | undefined {
   return POS_HUES[pos];
 }
 
+/*
+ * Keyed to {@link STUDYABLE_POS} and asserted against it in both directions, so
+ * a hue here for a class nobody can pick fails a test. `ADV: 10` was exactly
+ * that once `docs/tasks/function-words.md` took adverbs off the list: a hue
+ * reserved for a category the app never shows.
+ */
 const POS_HUES: Partial<Record<PartOfSpeech, KindHue>> = {
   NOUN: 1,
   VERB: 7,
   ADJ: 4,
-  ADV: 10,
   NUM: 6,
 };
 

@@ -464,7 +464,7 @@
 {"ref":"core-es:item:001677","lang":"en","text":"On Saturday I sold vegetables at the market with my uncle.","type":"natural"}
 {"ref":"core-es:item:001678","lang":"en","text":"We took grapes, garlic and two boxes of strawberries.","type":"natural"}
 {"ref":"core-es:item:001679","lang":"en","text":"A waitress from the bar bought almost everything.","type":"natural"}
-{"ref":"core-es:item:001680","lang":"en","text":"She paid us with cash and a few notes.","type":"natural"}
+{"ref":"core-es:item:001680","lang":"en","text":"She paid us in cash, not by card.","type":"natural"}
 {"ref":"core-es:item:001681","lang":"en","text":"By two the table was empty.","type":"natural"}
 {"ref":"core-es:item:001682","lang":"en","text":"My uncle said it was a great day.","type":"natural"}
 {"ref":"core-es:item:002601","lang":"en","text":"We arrived at seven to get a good spot.","type":"natural"}
@@ -1943,6 +1943,24 @@
 {"ref":"core-es:item:002688","lang":"en","text":"The two brothers talk the same way.","type":"natural"}
 {"ref":"core-es:item:002689","lang":"en","text":"We laughed a lot at the film.","type":"natural"}
 {"ref":"core-es:item:002690","lang":"en","text":"She asked for quiet in the room.","type":"natural"}
+{"ref":"core-es:item:002999","lang":"en","text":"Where are you all from?","type":"natural"}
+{"ref":"core-es:item:003000","lang":"en","text":"Do you all speak Spanish?","type":"natural"}
+{"ref":"core-es:item:003001","lang":"en","text":"You can wait here.","type":"natural"}
+{"ref":"core-es:item:003002","lang":"en","text":"You are very kind.","type":"natural"}
+{"ref":"core-es:item:003003","lang":"en","text":"Shall I bring you the bill?","type":"natural","note":"To a table, so «les» rather than «le»."}
+{"ref":"core-es:item:003004","lang":"en","text":"They work at the hospital.","type":"natural"}
+{"ref":"core-es:item:003005","lang":"en","text":"We are sisters.","type":"natural","note":"Two women speaking, so «nosotras»."}
+{"ref":"core-es:item:003006","lang":"en","text":"I'll wait for you at the door.","type":"natural"}
+{"ref":"core-es:item:003007","lang":"en","text":"Do you have a table for four?","type":"natural"}
+{"ref":"core-es:item:003008","lang":"en","text":"Do you live near here?","type":"natural"}
+{"ref":"core-es:item:003009","lang":"en","text":"Do you like fish?","type":"natural","note":"The same question as «No me gusta el pescado», asked of a group."}
+{"ref":"core-es:item:003010","lang":"en","text":"I'll write them an email this afternoon.","type":"natural"}
+{"ref":"core-es:item:003011","lang":"en","text":"I teach the children Spanish.","type":"natural"}
+{"ref":"core-es:item:003012","lang":"en","text":"I'm not telling them anything yet.","type":"natural"}
+{"ref":"core-es:item:003013","lang":"en","text":"I make their dinner at seven.","type":"natural"}
+{"ref":"core-es:item:003014","lang":"en","text":"I'll call you this afternoon.","type":"natural"}
+{"ref":"core-es:item:003015","lang":"en","text":"Are you enjoying the film?","type":"natural"}
+{"ref":"core-es:item:003016","lang":"en","text":"I'm leaving your dinner in the kitchen.","type":"natural"}
 {"ref":"core-es:item:000516","lang":"en","text":"I wake up early, at seven.","type":"natural"}
 {"ref":"core-es:item:000517","lang":"en","text":"It's cold and I don't want to get out of bed.","type":"natural"}
 {"ref":"core-es:item:000518","lang":"en","text":"I eat bread and butter and drink a coffee.","type":"natural"}
@@ -4552,12 +4570,15 @@
 {"ref":"core-es:lexeme:usted","lang":"en","text":"you (formal)"}
 {"ref":"core-es:lexeme:nosotros","lang":"en","text":"we"}
 {"ref":"core-es:lexeme:ellos","lang":"en","text":"they"}
+{"ref":"core-es:lexeme:ustedes","lang":"en","text":"you (plural)"}
 {"ref":"core-es:lexeme:me","lang":"en","text":"me, myself"}
 {"ref":"core-es:lexeme:te-pron","lang":"en","text":"you, yourself"}
 {"ref":"core-es:lexeme:se","lang":"en","text":"himself, herself, oneself"}
 {"ref":"core-es:lexeme:nos","lang":"en","text":"us, ourselves"}
+{"ref":"core-es:lexeme:os","lang":"en","text":"you (plural), yourselves"}
 {"ref":"core-es:lexeme:lo","lang":"en","text":"it, him"}
 {"ref":"core-es:lexeme:le","lang":"en","text":"to him, to her"}
+{"ref":"core-es:lexeme:les","lang":"en","text":"to them, to you (plural)"}
 {"ref":"core-es:lexeme:que","lang":"en","text":"what"}
 {"ref":"core-es:lexeme:quien","lang":"en","text":"who"}
 {"ref":"core-es:lexeme:cual","lang":"en","text":"which"}
@@ -4791,6 +4812,7 @@
 {"ref":"core-es:skill:gustar-type","lang":"en","text":"verbs where the thing liked is the subject"}
 {"ref":"core-es:skill:hay","lang":"en","text":"there is / there are"}
 {"ref":"core-es:skill:negative-command","lang":"en","text":"a negative command uses the subjunctive, not the command form: habla but no hables"}
+{"ref":"core-es:skill:demonstratives","lang":"en","text":"Spanish points three distances where English points two: este here, ese there, aquel over there — and each agrees with its noun (esta casa, estos días), or takes the neuter esto/eso when there is no noun to agree with"}
 {"ref":"core-es:skill:ordinals","lang":"en","text":"ordinals agree like adjectives, and primero and tercero shorten before a masculine noun"}
 {"ref":"core-es:skill:future","lang":"en","text":"the future tense, built on the whole infinitive"}
 {"ref":"core-es:skill:conditional","lang":"en","text":"would — the same stem as the future, with the imperfect endings"}

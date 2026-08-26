@@ -2,7 +2,7 @@
 
 **Status:** ready to start — the id prerequisite is cleared, so content is safe to edit
 **Written:** 2026-08-17
-**Revised:** 2026-08-25 — re-measured against pack `0.15.0`. Goals 2, 3 and half
+**Revised:** 2026-08-26 — re-measured against pack `0.16.0`. Goals 2, 3 and half
 of 5 are now met, so the numbers throughout were restated; the recycling gate
 (goal 1, §6.2) is still the open work and is now the only thing standing between
 this brief and done.
@@ -43,7 +43,7 @@ because content landed and the paragraph describing it did not:
 npm run build:data
 ```
 
-**Re-measured 2026-08-25**, against pack `0.15.0`. Goals 2 and 3 of §5 have since
+**Re-measured 2026-08-26**, against pack `0.16.0`. Goals 2 and 3 of §5 have since
 been met — read the table before planning volume work, because the figures this
 brief was written against are less than half of what now ships.
 
@@ -55,25 +55,25 @@ method §3.1 describes, confirmed on a level where nothing had to be retrofitted
 
 | Measure                              | Now                                       |
 | ------------------------------------ | ----------------------------------------- |
-| Practisable items                    | 3,798                                     |
-| — sentences and phrases              | 2,998                                     |
+| Practisable items                    | 3,816                                     |
+| — sentences and phrases              | 3,016                                     |
 | — word cards                         | 800                                       |
-| Lexemes                              | 985 (185 verbs, 476 nouns, 324 other)     |
+| Lexemes                              | 988 (185 verbs, 476 nouns, 327 other)     |
 | Generated verb forms                 | 7,770 (42 per verb, subjunctive included) |
 | Generated noun and adjective forms   | 1,372                                     |
-| Running words of Spanish             | **18,459 (~153 minutes of reading)**      |
-| Average sentence length              | 6.2 words                                 |
+| Running words of Spanish             | **18,543 (~154 minutes of reading)**      |
+| Average sentence length              | 6.1 words                                 |
 | Longest single item                  | 13 words                                  |
 | Multi-sentence texts                 | **123 (59 texts, 64 dialogues)**          |
 | — sentences read in context          | 1548, averaging 12.6 per passage          |
-| Tokens linked to a lexeme            | 18,411 of 18,459 (100%)                   |
-| Lexemes appearing in ≥1 sentence     | 971 of 985                                |
-| Lexemes appearing in exactly one     | **63 (6%)**                               |
-| Lexemes with ≥6 encounters           | **540 (55%)**                             |
-| Questions / statements               | 527 / 2,460, with **5** minimal pairs     |
-| Items marked with register           | 1,084                                     |
-| Items marked with address (tú/usted) | 578                                       |
-| Items marked with a region           | 127                                       |
+| Tokens linked to a lexeme            | 18,495 of 18,543 (100%)                   |
+| Lexemes appearing in ≥1 sentence     | 974 of 988                                |
+| Lexemes appearing in exactly one     | **62 (6%)**                               |
+| Lexemes with ≥6 encounters           | **545 (55%)**                             |
+| Questions / statements               | 534 / 2,467, with **5** minimal pairs     |
+| Items marked with register           | 1,085                                     |
+| Items marked with address (tú/usted) | 590                                       |
+| Items marked with a region           | 131                                       |
 | Items containing `¡`                 | 15                                        |
 | Items with audio                     | 0                                         |
 | Senses                               | 0                                         |
@@ -89,6 +89,21 @@ is half done and only `frequencyRank` remains.
 The numbers this table replaced are kept nowhere, deliberately. They said 1,028
 items and 2,969 running words, and a fresh session that trusted them would have
 written the 449 sentences §3.1 asks for on top of 800 that already exist.
+
+**Three rows were stale by one before this re-measure**, and none of them by
+growth: register said 1,084 against 1,085, lexemes-appearing-once said 63 against
+62, and lexemes-with-six-encounters said 540 against 541. `brief-table.test.ts`
+checked only the rows it already knew how to recompute and these three were not
+among them, which is the whole of the explanation — an unwatched figure drifts.
+Recorded here rather than corrected silently, because a table that quietly
+changes is a table nobody can date.
+
+**The test now covers eight more rows**, including all three of those, plus the
+lexeme total, the question count and the two usage counts. Two of them turned out
+to count different populations — register and address are sentences, regions is
+every item — which nothing had written down and which is its own small reason the
+figures could not be checked by eye. Only `frequencyRank`, `Senses`, the two
+generated-form rows and the prose rows are left unwatched now.
 
 ---
 

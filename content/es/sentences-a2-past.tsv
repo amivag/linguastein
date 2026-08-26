@@ -513,7 +513,7 @@
 001677	El sábado vendí verduras en el mercado con mi tío.	On Saturday I sold vegetables at the market with my uncle.	a2	shopping,food-drink		neutral			mercado-sabado
 001678	Llevamos uvas, ajos y dos cajas de fresas.	We took grapes, garlic and two boxes of strawberries.	a2	shopping,food-drink		neutral			mercado-sabado
 001679	Una camarera del bar compró casi todo.	A waitress from the bar bought almost everything.	a2	shopping,restaurant		neutral			mercado-sabado
-001680	Nos pagó con plata y algunos billetes.	She paid us with cash and a few notes.	a2	shopping,numbers		neutral		es-419	mercado-sabado
+001680	Nos pagó con plata, no con tarjeta.	She paid us in cash, not by card.	a2	shopping,numbers		neutral		es-419	mercado-sabado
 001681	A las dos la mesa estaba vacía.	By two the table was empty.	a2	shopping,clock		neutral			mercado-sabado
 001682	Mi tío dijo que fue un día estupendo.	My uncle said it was a great day.	a2	shopping,feelings		neutral			mercado-sabado
 002601	Llegamos a las siete para tener buen sitio.	We arrived at seven to get a good spot.	a2	shopping,clock					mercado-sabado		

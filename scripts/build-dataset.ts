@@ -1467,16 +1467,32 @@ const packedNominalForms: FormRecord[] = nominalForms.map(
  * built by folding accents away collided `eñe` with `ene` and shipped one
  * letter's plural under the other's id. Nothing failed, because nothing looked.
  */
+const formProblems: string[] = [];
 const formIds = new Map<string, string>();
 for (const form of [...verbForms, ...packedNominalForms]) {
   const seen = formIds.get(form.id);
   if (seen !== undefined && seen !== form.form) {
-    problems.push(
+    formProblems.push(
       `form id "${form.id}" is claimed by both "${seen}" and "${form.form}" — one would ` +
         'silently overwrite the other in the pack',
     );
   }
   formIds.set(form.id, form.form);
+}
+
+/*
+ * Its own list and its own gate, as the id, lexeme and passage checks each have.
+ *
+ * This pushed onto `problems`, which is reported and exited on hundreds of lines
+ * *above* here — so a form-id collision was collected into a list nobody read
+ * again and the build went on to ship the pack. The check whose comment says it
+ * exists because "nothing failed, because nothing looked" was itself not looked
+ * at. Every other check after that gate already owns a list for exactly this
+ * reason; this one was the exception.
+ */
+if (formProblems.length > 0) {
+  console.error('Form id problems:\n  ' + formProblems.join('\n  '));
+  process.exit(1);
 }
 
 /*
@@ -1920,6 +1936,19 @@ const looksInfinitive = (token: Token | undefined) =>
  */
 const PROCLITICS = new Set(['me', 'te', 'se', 'nos', 'os', 'lo', 'la', 'le', 'los', 'las', 'les']);
 
+/**
+ * The demonstratives, determiners and neuter pronouns alike.
+ *
+ * Lemmas rather than surfaces: the build indexes `esta`, `estos` and `estas`
+ * against `este`, so one entry covers the paradigm and a new surface needs no
+ * change here. Named in the build the way `tener`, `ir` and the proclitics are —
+ * this is the language's closed class, not something content declares. Contrast
+ * `INTERROGATIVES`, which *is* read off a topic, because which words ask a
+ * question is a set a human curates and this one has three members and a
+ * grammar.
+ */
+const DEMONSTRATIVES = new Set(['este', 'ese', 'aquel', 'esto', 'eso']);
+
 const PATTERNS: PatternSpec[] = [
   {
     skill: `${NS}skill:tener-que-infinitive`,
@@ -1995,7 +2024,9 @@ const PATTERNS: PatternSpec[] = [
       const pronoun = tokens[i];
       const verb = tokens[i + 1];
       if (!pronoun || !verb) return null;
-      if (!['me', 'te', 'le', 'nos', 'les'].includes(pronoun.text.toLowerCase())) return null;
+      // `os` was the one member of the paradigm missing here, and it went unnoticed
+      // because no sentence used it — see `docs/tasks/function-words.md` §4.2.
+      if (!['me', 'te', 'le', 'nos', 'os', 'les'].includes(pronoun.text.toLowerCase())) return null;
       if (!['gustar', 'encantar', 'doler'].includes(verb.lemma ?? '')) return null;
       return [pronoun.id, verb.id];
     },
@@ -2052,6 +2083,39 @@ const PATTERNS: PatternSpec[] = [
       if (!verb || verb.pos === 'PUNCT') return null;
       if (verb.morph?.['mood'] !== 'subjunctive') return null;
       return tokens.slice(i, end + 1).map((token) => token.id);
+    },
+  },
+  {
+    /*
+     * The three-way distance contrast, and the agreement that carries it.
+     *
+     * `docs/tasks/function-words.md` asks for this and the reason is in its §2:
+     * the header of `sentences-questions.tsv` says the choosing dialogue exists
+     * to teach `este`/`ese`/`aquel`, and nothing in the pack named what it was
+     * teaching. A hundred-odd sentences carry a demonstrative and a learner met
+     * every one of them unlabelled.
+     *
+     * Matched on every demonstrative rather than only where two of them appear
+     * together, which is the `ordinals` precedent and right for the same reason:
+     * the contrast is what the *gloss* teaches, and a skill that fired only on
+     * sentences comparing two would attach to almost nothing while the ordinary
+     * use went on being unnamed.
+     *
+     * The neuter pair is in the set. `esto` and `eso` are the forms with no noun
+     * to agree with — `¿Qué es esto?` — and they are separate lexemes in the
+     * content rather than surfaces of the determiners, so nothing else would
+     * reach them.
+     */
+    skill: `${NS}skill:demonstratives`,
+    label: 'este, ese, aquel',
+    gloss:
+      'Spanish points three distances where English points two: este here, ese there, aquel over there — and each agrees with its noun (esta casa, estos días), or takes the neuter esto/eso when there is no noun to agree with',
+    level: 'a1',
+    match: (tokens, i) => {
+      const token = tokens[i];
+      if (!token || token.lemma === undefined) return null;
+      if (token.pos !== 'DET' && token.pos !== 'PRON') return null;
+      return DEMONSTRATIVES.has(token.lemma) ? [token.id] : null;
     },
   },
   {
@@ -2288,6 +2352,40 @@ const nounRegions = new Map<string, string[]>(
 );
 
 /**
+ * Every regional claim on one sentence, narrowed to the region that satisfies
+ * them all — or `null` where they contradict each other.
+ *
+ * The **intersection**, not the union, and the comment at the call site was
+ * already saying so: a word's regions are a *limit*, and two limits on one
+ * sentence are both true at once. Unioning them widened instead, so a sentence
+ * declared `es-419` that reached for a Spain-only noun came out claiming both —
+ * and a learner filtering Browse to `es-419` would be shown wording that is not
+ * theirs, which is the one thing the field exists to prevent.
+ *
+ * An empty intersection is not a narrower answer, it is a contradiction, and the
+ * honest response is to refuse rather than to pick. Returning `[]` would mean
+ * "used everywhere", which is the opposite of what two disjoint claims say, and
+ * `regionConflicts` fails the build on it: two regionalisms from regions that do
+ * not overlap is a sentence no learner should be taught, in any region.
+ *
+ * Overlapping-but-unequal claims are the ordinary case and simply narrow —
+ * `vosotros` (es-ES) beside `nevera` (es-ES and the Caribbean) is an es-ES
+ * sentence, which is what `os` makes it.
+ */
+function narrowRegions(claims: readonly (readonly string[])[]): string[] | null {
+  if (claims.length === 0) return [];
+  let narrowed = [...new Set(claims[0]!)];
+  for (const claim of claims.slice(1)) {
+    const allowed = new Set(claim);
+    narrowed = narrowed.filter((region) => allowed.has(region));
+    if (narrowed.length === 0) return null;
+  }
+  return narrowed;
+}
+
+const regionConflicts: string[] = [];
+
+/**
  * Who a sentence addresses, read from the verb morphology already in the data.
  *
  * Only the unambiguous cases are inferred: a second-person form is `tú` or
@@ -2502,13 +2600,24 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
     : sentence.speakerGender || deriveSpeakerGender(tokens);
   // A sentence inherits the regional limits of the words it uses: a phrase
   // built on `papa` is not one a learner in Spain should be taught unmarked.
-  const regions = [
-    ...new Set([
-      ...sentence.regions,
-      ...lexemes.flatMap((id) => nounRegions.get(id) ?? []),
-      ...(language.regionsForAddress?.(address ?? '') ?? []),
-    ]),
+  const claims: readonly (readonly string[])[] = [
+    ...(sentence.regions.length > 0 ? [sentence.regions] : []),
+    ...lexemes.flatMap((id) => {
+      const declared = nounRegions.get(id);
+      return declared ? [declared] : [];
+    }),
+    ...(() => {
+      const byAddress = language.regionsForAddress?.(address ?? '') ?? [];
+      return byAddress.length > 0 ? [byAddress] : [];
+    })(),
   ];
+  const regions = narrowRegions(claims);
+  if (regions === null) {
+    regionConflicts.push(
+      `${sentence.text} — regional claims that share no region: ` +
+        claims.map((claim) => claim.join('+')).join(' vs '),
+    );
+  }
 
   return {
     id: itemId(sentence.row),
@@ -2519,7 +2628,7 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
     ...(sentence.register ? { register: sentence.register } : {}),
     ...(address ? { address } : {}),
     ...(speakerGender ? { speakerGender } : {}),
-    ...(regions.length > 0 ? { regions } : {}),
+    ...(regions !== null && regions.length > 0 ? { regions } : {}),
     ...(sentence.topics.length > 0 ? { topics: sentence.topics } : {}),
     tokens,
     ...(annotations.length > 0 ? { annotations } : {}),
@@ -2595,6 +2704,15 @@ const passageRecords: PassageRecord[] = passageRows.map((passage) => {
     ...(passage.kind === 'dialogue' ? { speakers: members.map((member) => member.speaker) } : {}),
   };
 });
+
+if (regionConflicts.length > 0) {
+  console.error(
+    'Regional conflicts — each of these sentences mixes wording from regions that do not\n' +
+      'overlap, so there is no learner it is right for. Replace the offending word:\n  ' +
+      regionConflicts.join('\n  '),
+  );
+  process.exit(1);
+}
 
 if (passageProblems.length > 0) {
   console.error('Passage problems:\n  ' + passageProblems.join('\n  '));

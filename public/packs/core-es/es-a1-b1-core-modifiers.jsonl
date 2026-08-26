@@ -93,12 +93,15 @@
 {"id":"core-es:lexeme:usted","lemma":"usted","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:nosotros","lemma":"nosotros","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:ellos","lemma":"ellos","pos":"PRON","level":"a1"}
+{"id":"core-es:lexeme:ustedes","lemma":"ustedes","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:me","lemma":"me","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:te-pron","lemma":"te","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:se","lemma":"se","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:nos","lemma":"nos","pos":"PRON","level":"a1"}
+{"id":"core-es:lexeme:os","lemma":"os","pos":"PRON","level":"a2"}
 {"id":"core-es:lexeme:lo","lemma":"lo","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:le","lemma":"le","pos":"PRON","level":"a1"}
+{"id":"core-es:lexeme:les","lemma":"les","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:que","lemma":"qué","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:quien","lemma":"quién","pos":"PRON","level":"a1"}
 {"id":"core-es:lexeme:cual","lemma":"cuál","pos":"PRON","level":"a1"}

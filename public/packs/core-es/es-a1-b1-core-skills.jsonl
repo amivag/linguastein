@@ -8,6 +8,7 @@
 {"id":"core-es:skill:gustar-type","kind":"pattern","label":"me gusta / me duele","level":"a1"}
 {"id":"core-es:skill:hay","kind":"pattern","label":"hay","level":"a1"}
 {"id":"core-es:skill:negative-command","kind":"pattern","label":"no hables","level":"b1"}
+{"id":"core-es:skill:demonstratives","kind":"pattern","label":"este, ese, aquel","level":"a1"}
 {"id":"core-es:skill:ordinals","kind":"pattern","label":"primero, segundo, tercero","level":"a1"}
 {"id":"core-es:skill:future","kind":"grammar","label":"futuro simple","level":"a2"}
 {"id":"core-es:skill:conditional","kind":"grammar","label":"condicional simple","level":"a2"}

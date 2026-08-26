@@ -83,8 +83,8 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   it rather than declared beside it — a `presente de subjuntivo` skill, plus
   `no hables` as a pattern, because the negative command is the one place the
   mood is not optional-feeling
-- core-es pack: 185 verbs (7,770 generated forms), 476 nouns, 324 modifiers,
-  2,998 sentences — 3,798 practisable items in 800 word cards and the sentences,
+- core-es pack: 185 verbs (7,770 generated forms), 476 nouns, 327 modifiers,
+  3,016 sentences — 3,816 practisable items in 800 word cards and the sentences,
   plus 1,372 nominal forms and 123 passages. Token linking is 99% (see item 0 for
   the three principled classes that make up the rest)
 - Three B1 missions — a complaint, a flatshare negotiation and asking for advice
@@ -127,8 +127,12 @@ are briefed on their own because each needs deciding before authoring:
 [feelings, mood and state](tasks/feelings-mood-state.md) — fifty-two sentences
 and ten lexemes for the question the greeting mission opens with — the
 [past-tense mission](tasks/past-tense-mission.md), and
-[the function words](tasks/function-words.md), where 123 lexemes have no way to be
-studied and `ADV` sits in `STUDYABLE_POS` with no cards behind it.
+[the function words](tasks/function-words.md), **decided 2026-08-26**: no function
+word becomes a card, `ADV` came off `STUDYABLE_POS` rather than being filled, the
+demonstrative contrast is a named skill, and the pronoun paradigms got their
+missing members. What is left there is a follow-up rather than a decision — the
+closed-class paradigms are indexed but not recorded, so nothing can drill their
+agreement yet.
 
 Two more are briefed as decisions rather than as content:
 [pack addressing](tasks/pack-addressing.md) — a link identifies a passage and a
@@ -143,7 +147,7 @@ eight alternatives) and that the real gap is level rather than variation.
 
    The machinery for that pass is now in place, and it is only machinery: review
    is per item via `content/es/reviewed.tsv`, so a slice can be signed off without
-   reading all 3,798 at once, and `npm run review:data` reports the rows worth
+   reading all 3,816 at once, and `npm run review:data` reports the rows worth
    attention rather than asking anyone to scan the lot. Sign-off is pinned to the
    wording that was read, so an edit afterwards fails the build instead of
    inheriting the approval. **Nothing is signed off yet** — the pack is still

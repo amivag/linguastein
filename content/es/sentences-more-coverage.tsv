@@ -122,3 +122,33 @@
 002688	Los dos hermanos hablan igual.	The two brothers talk the same way.	a2	family
 002689	Nos reímos mucho con la película.	We laughed a lot at the film.	a2	entertainment,feelings
 002690	Pidió silencio en la sala.	She asked for quiet in the room.	a2	school
+#
+# ── The pronoun paradigm's missing members ────────────────────────────────────
+# `ustedes` appeared in no sentence and was not even a lexeme, while `vosotros`
+# had seven — so the pack taught Spain's plural "you" and left out the one most
+# of the Spanish-speaking world uses. That is the regional-pair rule failing in
+# the other direction: one side alone teaches a dialect as universal. `ellas`,
+# `nosotras`, `les` and `os` were the same hole in smaller paradigms.
+#
+# `address` is declared rather than derived on all of these: `ustedes` takes
+# third-person morphology, so `son` and `pueden` are `ellos` too and
+# `deriveAddress` rightly refuses to guess. `os` sets `vosotros`, which is what
+# narrows those rows to es-ES.
+002999	¿De dónde son ustedes?	Where are you all from?	a1	greetings,social,questions			ustedes
+003000	¿Ustedes hablan español?	Do you all speak Spanish?	a1	communication			ustedes
+003001	Ustedes pueden esperar aquí.	You can wait here.	a1	place			ustedes
+003002	Ustedes son muy amables.	You are very kind.	a1	social,feelings			ustedes
+003003	¿Les traigo la cuenta?	Shall I bring you the bill?	a1	restaurant	To a table, so «les» rather than «le».		ustedes
+003004	Ellas trabajan en el hospital.	They work at the hospital.	a1	work
+003005	Nosotras somos hermanas.	We are sisters.	a1	family	Two women speaking, so «nosotras».
+003006	Os espero en la puerta.	I'll wait for you at the door.	a2	place			vosotros
+003007	¿Ustedes tienen mesa para cuatro?	Do you have a table for four?	a1	restaurant			ustedes
+003008	¿Ustedes viven aquí cerca?	Do you live near here?	a1	place,questions			ustedes
+003009	¿Les gusta el pescado?	Do you like fish?	a1	food-drink	The same question as «No me gusta el pescado», asked of a group.		ustedes
+003010	Les escribo un correo esta tarde.	I'll write them an email this afternoon.	a1	communication
+003011	Les enseño español a los niños.	I teach the children Spanish.	a1	school,language
+003012	No les digo nada todavía.	I'm not telling them anything yet.	a1	social
+003013	Les preparo la comida a las siete.	I make their dinner at seven.	a1	food-drink,clock
+003014	Os llamo esta tarde.	I'll call you this afternoon.	a2	communication			vosotros
+003015	¿Os gusta la película?	Are you enjoying the film?	a2	entertainment			vosotros
+003016	Os dejo la comida en la cocina.	I'm leaving your dinner in the kitchen.	a2	home,food-drink			vosotros

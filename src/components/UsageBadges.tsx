@@ -1,11 +1,17 @@
-import { regionLabel, type AddressForm, type LanguageTag, type Register } from '../domain/content';
+import { useTargetLanguage } from '../app/course';
+import { regionLabel, type LanguageTag, type Register } from '../domain/content';
+import { addressForm } from '../languages/runtime';
 import { usageHue, type UsageFacet } from '../styles/semantics';
 import { Icon, type IconName } from './Icon';
 import styles from './UsageBadges.module.css';
 
 interface UsageBadgesProps {
   readonly register?: Register | undefined;
-  readonly address?: AddressForm | undefined;
+  /**
+   * The id of an address form, as the pack stored it. Named by the language
+   * rather than by this component — see {@link addressForm}.
+   */
+  readonly address?: string | undefined;
   readonly regions?: readonly LanguageTag[] | undefined;
   readonly compact?: boolean;
 }
@@ -27,10 +33,25 @@ interface UsageBadgesProps {
  * information, and it is what reaches the accessibility tree.
  *
  * Neutral, unmarked content renders nothing: a badge on everything is noise.
+ *
+ * **The address label comes from the language, and its absence is an answer.**
+ * This file used to hold a table of four Spanish pronouns, so a pack in any other
+ * language had no way to be badged and `ADDRESS_FORMS` had to stay Spanish for
+ * this component's sake. `docs/tasks/language-matrix.md` §7 sets the requirement
+ * the table could not meet: Chinese barely marks the distinction, so a screen has
+ * to render **nothing** rather than guess a label. So an id this language does not
+ * declare drops its badge and leaves the others — which is also what a pack read
+ * on a different course looks like, and a raw slug in a badge would be worse than
+ * no badge at all.
  */
 export function UsageBadges({ register, address, regions, compact = false }: UsageBadgesProps) {
+  const language = useTargetLanguage();
+  const form = addressForm(language, address);
+
   const badges = [
-    ...(address ? [{ key: address, ...ADDRESS[address] }] : []),
+    ...(form
+      ? [{ key: form.id, label: form.label, title: form.title, facet: 'address' as const }]
+      : []),
     ...(register && register !== 'neutral' ? [{ key: register, ...REGISTER[register] }] : []),
     ...(regions ?? []).map((region) => ({
       key: region,
@@ -61,29 +82,6 @@ const FACET_ICONS: Record<UsageFacet, IconName> = {
   address: 'audience',
   register: 'tone',
   region: 'place',
-};
-
-const ADDRESS: Record<AddressForm, { label: string; title: string; facet: 'address' }> = {
-  tu: {
-    label: 'tú',
-    title: 'Informal: someone you address as tú — a friend, a peer, a child',
-    facet: 'address',
-  },
-  usted: {
-    label: 'usted',
-    title: 'Formal: someone you address as usted — a stranger, an official, an elder',
-    facet: 'address',
-  },
-  vosotros: {
-    label: 'vosotros',
-    title: 'Informal plural, used in Spain',
-    facet: 'address',
-  },
-  ustedes: {
-    label: 'ustedes',
-    title: 'Plural: formal in Spain, the everyday plural in Latin America',
-    facet: 'address',
-  },
 };
 
 const REGISTER: Record<

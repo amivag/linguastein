@@ -72,11 +72,27 @@ _swap_ two lexeme ids, and mastery is keyed on them. Item ids have
    collides. An empty stem is never recordable — with nothing to disambiguate,
    every lexeme in the language is the same id. `core-es` rebuilds
    byte-identically; German's first collision fails its first build.
-2. **A per-language transliteration**, as part of the language module (§6).
-   German folds `ä ö ü ß` → `ae oe ue ss`, which is the language's own
-   convention and resolves all five pairs above; Greek and Chinese romanise.
-   Spanish keeps today's behaviour exactly, because its ids are permanent — which
-   is what makes its eight rows a record rather than a backlog.
+2. **A per-language transliteration** — landed 2026-08-26, as
+   `LanguageModule.transliterate` and `src/languages/es/orthography.ts`. German
+   folds `ä ö ü ß` → `ae oe ue ss`, which is the language's own convention and
+   resolves all five pairs above; Greek and Chinese romanise. Spanish keeps
+   today's behaviour exactly, because its ids are permanent — which is what makes
+   its eight rows a record rather than a backlog.
+
+   The split is between the language's convention and the id scheme's
+   **reduction**, which no language owns: NFC, the module's say, NFD, drop the
+   combining marks, lowercase, hyphenate the rest. So Spanish contributes one rule
+   (`ñ` → `nn`, before anything strips a diacritic) and the accents still fold,
+   which is why the eight recorded pairs stay recorded. `core-es` rebuilds
+   **byte-identically** across the move, and that is the whole evidence that the
+   ids did not shift — a wiring mistake would have silently renamed nineteen
+   lexemes.
+
+   A module that declines the seam gets the bare fold, right for a Latin-script
+   language whose accents carry no id-level distinction. For a non-Latin one it
+   yields an empty stem, and `lexemeId` already refuses that: `stem-collisions.tsv`
+   is explicitly not the answer where every word in the language collides at once.
+   `tests/languages/orthography.test.ts` holds both halves, the refusal included.
 
 **One region facet is still Spanish, and it is a product call rather than a fix.**
 `isRegion` in `session-url.ts` policed `?region=` against `FILTERABLE_REGIONS` —
@@ -342,7 +358,7 @@ stops a language being half-added.
 | Level: an open per-pack ladder, not the closed `CEFR_LEVELS` enum | Token-level alignment records  |
 | §3 translation addressing and versioning                          | The twelve non-English pairs   |
 | §5 pack path versioning and level sharding                        | Per-pair translation authoring |
-| `ADDRESS_FORMS` → neutral concepts + per-language pronouns        |                                |
+| ~~`ADDRESS_FORMS` → per-language pronouns~~ **done**              |                                |
 | §6 `LanguageModule`, both halves                                  |                                |
 | `second-language.md` §3 local-id resolution scope                 |                                |
 
@@ -357,6 +373,34 @@ of it.
 So the field must be **droppable**, and `UsageBadges` must render nothing rather
 than guess a label — which is a stronger requirement than "one label table per
 language".
+
+**Landed 2026-08-26.** The vocabulary is `LanguageModule.addressForms`, declared
+in `src/languages/es/address.ts`, and each row carries both halves of the fact:
+the pronoun a learner reads, and the neutral `number`/`formality` the build
+reasons with when it matches a command to the audience its row declares. Both
+neutral fields are optional, which is what German's `Sie` needs — formal in both
+numbers, so a 2×2 would have forced two rows or a missing field — and a language
+that marks nothing simply declares nothing.
+
+Three consumers had a copy of the list and none of them owned it. `model.ts` held
+the closed enum, so `AddressForm` is a slug now and the _build_ refuses a value
+the language does not declare — the same place, and for the same reason, as a
+topic or a skill slug; a shared zod schema could only ever have checked one
+language's list, and `z.enum(ADDRESS_FORMS)` would have rejected a German pack for
+saying `sie`. `UsageBadges` held a table of four Spanish pronouns, so it asks the
+runtime module and **drops the badge for an id it cannot name**, keeping the
+register and region badges beside it — which is also what a pack authored
+elsewhere looks like when read on this course. And the build's own
+`COMMAND_AUDIENCE` was a third copy.
+
+`regionsForAddress` is gone with them, folded into the same rows. It answered one
+question about address forms without listing them, so `vosotros` had its
+Spain-only limit in one file and its existence in another, and a fifth form could
+have been added and quietly got no region.
+
+`core-es` rebuilds byte-identically: the ids a row authors are unchanged, only
+where they are declared moved. `tests/languages/address-forms.test.tsx` holds the
+build gate and both halves of the render-nothing rule.
 
 ### The reference language stays out of the URL
 
@@ -378,10 +422,15 @@ is not, because it wants a preference value and a sentence of UI copy.
 
 ## 8. Recommended order
 
-1. **§1's gate and transliteration.** Before any German or Greek row exists.
-2. **The schema decisions** — level ladder, address forms,
+1. ~~**§1's gate and transliteration.**~~ **Done** — the gate landed with this
+   brief, the transliteration on 2026-08-26. Both before any German or Greek row
+   exists, which was the point.
+2. **The schema decisions** — level ladder, ~~address forms~~,
    `second-language.md` §3 — together, because every authored row depends on all
-   three.
+   three. **Address forms landed 2026-08-26**, ahead of the other two and on
+   purpose: it is the only one of the three that reaches no URL, so it could be
+   done without a migration. The level ladder still cannot — it is a URL change
+   and a data change at once, and §5's shard names come out of it.
 3. **§6, the language module**, and `second-language.md` §2's parameterised
    build. With 1 and 2 settled this is refactoring rather than design.
 4. **§3 and §5 in one pass** — translation units, pack versioning, level
@@ -403,13 +452,21 @@ Steps 1–4 are the whole "decide it in alpha" window.
   (`tests/data/stem-collisions.test.ts`)
 - **done** — the reference-language picker never offers the language being
   learned, and the AI summary names the course's language rather than `es`
-- `schön` and `schon` are distinct lexemes with ids naming the right word, and
-  `content/de` needs no `stem-collisions.tsv` at all
+- **the seam is done, the language is not** — `LanguageModule.transliterate` is
+  where `schön`/`schon` gets fixed, and a German module folding `ä ö ü ß` is all
+  it takes; `content/de` will then need no `stem-collisions.tsv` at all. Asserted
+  as far as it can be without German content: Spanish's own rule, and the refusal
+  of a script no module can romanise (`tests/languages/orthography.test.ts`)
 - **done** — `build:data <tag>` builds `content/<tag>` into `core-<tag>` with
   only that language's module loaded, `core-es` rebuilds byte-identically, and
   the catalog lists the packs on disk rather than a literal
   (`tests/data/second-language-build.test.ts`)
-- `slug` is reached through the language module, and no caller assumes ASCII
+- **done** — `slug` is reached through the language module, and a lemma it cannot
+  reduce fails the build rather than taking an id belonging to another word;
+  `core-es` rebuilds byte-identically across the change
+- **done** — the address vocabulary is the language module's; the build refuses a
+  form it does not declare, and a badge with no label for one renders nothing
+  rather than a raw slug (`tests/languages/address-forms.test.tsx`)
 - **done** — a headword spanning tokens that do not touch is expressible, and a
   span naming a missing lexeme is reported (`tests/data/multi-word-lexeme.test.ts`)
 - **done** — the capability vocabulary is shared rather than per-language: a

@@ -111,6 +111,31 @@ export interface NumeralSupport {
   spellOrdinal(value: number, options?: { readonly beforeNoun?: boolean }): string;
 }
 
+/**
+ * One way a language addresses a person, as both halves of the fact.
+ *
+ * `id` is what a source row authors and the pack stores. `label` and `title` are
+ * what a learner reads. `number` and `formality` are the neutral half the build
+ * reasons with — a command has to match the audience its row declares, and no
+ * amount of knowing the word `ustedes` tells it that.
+ *
+ * Neither neutral field is required, and that is the point rather than laxity.
+ * German's `Sie` is formal in both numbers, and Chinese barely marks the
+ * distinction at all (`docs/tasks/language-matrix.md` §7) — so nothing here
+ * assumes a 2×2, and a language that does not mark address declares no forms.
+ */
+export interface AddressFormSpec {
+  readonly id: string;
+  /** The pronoun as a learner sees it: `tú`. */
+  readonly label: string;
+  /** One sentence saying who it is for. */
+  readonly title: string;
+  readonly number?: 'singular' | 'plural';
+  readonly formality?: 'informal' | 'formal';
+  /** Regions this form alone is confined to. Absent means wherever the language is. */
+  readonly regions?: readonly LanguageTag[];
+}
+
 export interface AlphabetSupport {
   /** Whether a word is the *name* of a letter — `eñe`, `i griega`. */
   isLetterName(word: string): boolean;
@@ -129,5 +154,32 @@ export interface LanguageModule {
    * not about the schema — German's `ihr` is used everywhere German is, so a
    * German module simply does not implement this.
    */
-  regionsForAddress?(address: string): readonly LanguageTag[];
+  /**
+   * How this language addresses a person, or absent where it does not mark it.
+   *
+   * This replaced `regionsForAddress(address)`, which answered one question about
+   * address forms without listing them — so `vosotros` had its Spain-only limit
+   * in one place and its existence in another, and a fifth form could be added
+   * and quietly get no region. The build validates a row's declared `address`
+   * against this list, matches a command to the audience it names, and reads the
+   * regional limit off the same row.
+   */
+  readonly addressForms?: readonly AddressFormSpec[];
+  /**
+   * A lemma rewritten into letters an id can keep, before the build reduces it
+   * to `[a-z0-9-]` (`docs/tasks/language-matrix.md` §1).
+   *
+   * The reduction is the **id scheme's** and is the same for every pack: NFD,
+   * drop the combining marks, lowercase, hyphenate the rest. What differs by
+   * language is which letters must survive it, and that is a spelling convention
+   * rather than a rule the build could infer — German writes `ä` as `ae`, Greek
+   * and Chinese romanise, and Spanish keeps `ñ` apart from `n` because `año` and
+   * `ano` are different words.
+   *
+   * The input is already NFC. Absent means the bare fold, which is right for a
+   * Latin-script language whose accents carry no id-level distinction — and for a
+   * non-Latin one produces an empty stem, which the build refuses rather than
+   * handing every word in the language the same id.
+   */
+  transliterate?(text: string): string;
 }

@@ -10,7 +10,6 @@
 
 import { z } from 'zod';
 import {
-  ADDRESS_FORMS,
   ANNOTATION_TYPES,
   CASES,
   CEFR_LEVELS,
@@ -44,6 +43,19 @@ const languageTag = z.string().regex(/^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/, {
   message: 'expected a BCP 47 language tag',
 });
 const packId = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+
+/**
+ * The id of an address form, checked for shape and not for membership.
+ *
+ * It used to be `z.enum(ADDRESS_FORMS)`, which is four Spanish pronouns — so this
+ * boundary would have rejected a German pack for saying `sie`. The vocabulary
+ * belongs to the language module and the *build* is what refuses an undeclared
+ * value, exactly as it does for a topic or a skill slug. What a loader can still
+ * insist on is that the value is a slug rather than prose.
+ */
+const addressForm = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+  message: 'expected an address-form slug',
+});
 
 /** Rejects `/x`, `C:\x`, `https://x` and `../x`: a pack must stay portable. */
 const notAbsolute = (path: string): boolean =>
@@ -119,7 +131,7 @@ export const learningItemSchema = z
     reading: z.string().optional(),
     level: level.optional(),
     register: z.enum(REGISTERS).optional(),
-    address: z.enum(ADDRESS_FORMS).optional(),
+    address: addressForm.optional(),
     speakerGender: z.enum(SPEAKER_GENDERS).optional(),
     regions: z.array(languageTag).optional(),
     topics: z.array(z.string()).optional(),

@@ -12,10 +12,12 @@
 
 import type { GeneratedForm, LanguageModule } from '../types';
 import { conjugate as conjugateEs } from './conjugation';
+import { SPANISH_ADDRESS_FORMS } from './address';
 import { IRREGULAR_VERBS, isDeclaredIrregular } from './irregulars';
 import { isLetterName } from './alphabet';
 import { closedClassForms as closedClassFormsEs } from './closed-class';
 import { adjectiveForms as adjectiveFormsEs, pluralOf } from './morphology';
+import { transliterate } from './orthography';
 import {
   parseCardinal,
   parseOrdinal,
@@ -118,10 +120,7 @@ export const spanish: LanguageModule = {
 
   alphabet: { isLetterName },
 
-  /**
-   * `vosotros` is Spain's. Every other address form is used wherever Spanish is,
-   * so this narrows one and says nothing about the rest — which is why it
-   * returns a list rather than a single region.
-   */
-  regionsForAddress: (address) => (address === 'vosotros' ? ['es-ES'] : []),
+  addressForms: SPANISH_ADDRESS_FORMS,
+
+  transliterate,
 };

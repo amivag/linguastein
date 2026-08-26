@@ -45,16 +45,29 @@ export const REGISTER_LABELS: Record<Register, string> = {
 };
 
 /**
- * Who a phrase addresses. Spanish forces this choice in almost every sentence
- * spoken to another person, and getting it wrong is the difference between
- * polite and rude — so it is first-class data rather than a note.
+ * Who a phrase addresses, as the id its language calls that choice.
  *
- * Named after the pronouns because that is the choice a learner is making.
- * Third-person singular is deliberately never inferred: `está` is `usted` or
- * `él`/`ella` depending on context, and guessing would teach the wrong thing.
+ * Spanish forces this choice in almost every sentence spoken to another person,
+ * and getting it wrong is the difference between polite and rude — so it is
+ * first-class data rather than a note. Third-person singular is deliberately
+ * never inferred: `está` is `usted` or `él`/`ella` depending on context, and
+ * guessing would teach the wrong thing.
+ *
+ * **A slug, not an enum, and that is a language-neutrality fix rather than a
+ * loosening.** This was `['tu', 'usted', 'vosotros', 'ustedes']` — four Spanish
+ * pronouns in the model every pack shares, reaching the zod boundary as a closed
+ * enum and `UsageBadges` as a label table. German's `du`/`Sie`/`ihr` could not be
+ * spelled through it, and `docs/tasks/language-matrix.md` §7 records the case that
+ * settles it: Chinese barely marks the distinction, so the field has to be
+ * droppable and a screen has to render nothing rather than guess.
+ *
+ * The vocabulary is the language module's (`LanguageModule.addressForms`), which
+ * is where the pronoun, the label a learner reads and the neutral number and
+ * formality now live together. The **build** is what refuses a value the language
+ * does not declare — the same place, and for the same reason, as a topic or a
+ * skill slug. A shared schema could only ever have checked one language's list.
  */
-export const ADDRESS_FORMS = ['tu', 'usted', 'vosotros', 'ustedes'] as const;
-export type AddressForm = (typeof ADDRESS_FORMS)[number];
+export type AddressForm = string;
 
 /**
  * The gender a sentence commits its *speaker* to.

@@ -1159,18 +1159,22 @@ function formStem(lexeme: string): string {
 /**
  * A lemma as an id fragment: lowercase, ASCII, hyphen-separated.
  *
- * `ñ` is handled before the accents come off, and becomes `nn` rather than
- * `n`. The strip below cannot tell a tilde from an acute, so folding it away
- * made `año` into `ano` — a different word entirely — and collided the letter
- * name `eñe` with `ene`, which is how one letter's plural shipped under the
- * other's form id. Nineteen lemmas carry an `ñ`; all of them are now distinct
- * from their tilde-less near-twins, including the pairs no content has reached
- * yet (`caña`/`cana`, `peña`/`pena`).
+ * Two steps, and the split is the point. The **reduction** below is the id
+ * scheme's and is the same for every pack. Which letters have to survive it is
+ * the *language's* business, and it used to be this function's: a `ñ → nn` regex
+ * sat here, in the file that is supposed to build any language, so German's
+ * `schon`/`schön` and Greek's every-lemma-slugs-to-nothing had no place to be
+ * fixed. `docs/tasks/language-matrix.md` §1 briefed the move; the reasoning for
+ * Spanish's one rule now lives in `src/languages/es/orthography.ts`.
+ *
+ * A module that declines the seam gets the bare fold, which is right for a
+ * Latin-script language whose accents carry no id-level distinction. For a
+ * non-Latin one it yields an empty stem, and `lexemeId` refuses that rather than
+ * handing every word in the language the same id.
  */
 function slug(text: string): string {
-  return text
-    .normalize('NFC')
-    .replace(/[ñÑ]/g, 'nn')
+  const written = text.normalize('NFC');
+  return (language.transliterate?.(written) ?? written)
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
@@ -2573,8 +2577,11 @@ function retagCommand(tokens: Token[], sentence: SentenceRow): void {
   // The command must be the one the declared address asks for. Without this,
   // "Está muy cerca. Siga por esta calle." — declared usted — would match
   // estar's *tú* command, which is spelled `está`, and mislabel a statement.
-  const wanted = COMMAND_AUDIENCE[sentence.address];
-  if (!wanted) return;
+  const wanted = addressForms.get(sentence.address);
+  // No neutral half, nothing to match a command against. German's `Sie` is formal
+  // in both numbers, so a language may legitimately declare a form with no
+  // `number` — and a command it cannot pin is left as the statement it reads as.
+  if (!wanted || !wanted.number || !wanted.formality) return;
 
   const command = verbForms.find(
     (form) =>
@@ -2587,12 +2594,46 @@ function retagCommand(tokens: Token[], sentence: SentenceRow): void {
   if (command) opening.morph = command.morph;
 }
 
-const COMMAND_AUDIENCE: Record<string, { number: string; formality: string } | undefined> = {
-  tu: { number: 'singular', formality: 'informal' },
-  usted: { number: 'singular', formality: 'formal' },
-  vosotros: { number: 'plural', formality: 'informal' },
-  ustedes: { number: 'plural', formality: 'formal' },
-};
+/**
+ * The address forms this language declares, by the id a row authors.
+ *
+ * This was a literal table of four Spanish pronouns mapped to number and
+ * formality, in the file that builds any language. It is the language module's
+ * now (`LanguageModule.addressForms`), which is also where the label a learner
+ * reads and `vosotros`'s Spain-only limit live — one list, so a fifth form cannot
+ * be added and quietly miss half of what a form needs.
+ */
+const addressForms = new Map((language.addressForms ?? []).map((form) => [form.id, form]));
+const addressProblems: string[] = [];
+
+/*
+ * A row may only declare an address form the language has.
+ *
+ * This guarantee used to live in the zod boundary as `z.enum(ADDRESS_FORMS)`,
+ * which could only ever have checked one language's list — and did, four Spanish
+ * pronouns deep, in the schema every pack shares. It belongs here for the same
+ * reason a topic slug and a skill slug are checked here: the vocabulary is
+ * declared, so the build can hold a row against the declaration, and a loader
+ * cannot.
+ *
+ * A language that marks no address gets a clearer message than "unknown value",
+ * because the fix is different: the column does not apply, rather than being
+ * misspelled.
+ */
+for (const sentence of sentences) {
+  if (!sentence.address || addressForms.has(sentence.address)) continue;
+  addressProblems.push(
+    (language.addressForms ?? []).length === 0
+      ? `${sentence.text} — declares address "${sentence.address}", but ${language.tag} marks none`
+      : `${sentence.text} — unknown address "${sentence.address}"; ${language.tag} has ` +
+          [...addressForms.keys()].join(', '),
+  );
+}
+
+if (addressProblems.length > 0) {
+  console.error('Address problems:\n  ' + addressProblems.join('\n  '));
+  process.exit(1);
+}
 
 const authoredSkillId = (slug: string): string => `${NS}skill:${slug}`;
 
@@ -2673,7 +2714,7 @@ const sentenceItems: ItemRecord[] = sentences.map((sentence) => {
       return declared ? [declared] : [];
     }),
     ...(() => {
-      const byAddress = language.regionsForAddress?.(address ?? '') ?? [];
+      const byAddress = addressForms.get(address ?? '')?.regions ?? [];
       return byAddress.length > 0 ? [byAddress] : [];
     })(),
   ];

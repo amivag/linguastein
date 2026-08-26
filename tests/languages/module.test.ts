@@ -37,7 +37,7 @@ describe('the registry', () => {
     expect(module.nominals).toBeUndefined();
     expect(module.numerals).toBeUndefined();
     expect(module.alphabet).toBeUndefined();
-    expect(module.regionsForAddress).toBeUndefined();
+    expect(module.addressForms).toBeUndefined();
   });
 });
 
@@ -100,9 +100,27 @@ describe('Spanish as a module', () => {
     expect(spanish.alphabet!.isLetterName('casa')).toBe(false);
   });
 
+  it('declares its address forms with both halves of each one', () => {
+    // The label a learner reads and the neutral pair the build reasons with, in
+    // one row. They were in three places before — `UsageBadges`, the domain enum
+    // and the build's own `COMMAND_AUDIENCE` — and only one of them listed the
+    // forms, so `vosotros` could have had a region and no label or the reverse.
+    const forms = spanish.addressForms!;
+    expect(forms.map((form) => form.id)).toEqual(['tu', 'usted', 'vosotros', 'ustedes']);
+    for (const form of forms) {
+      expect(form.label).toBeTruthy();
+      expect(form.title).toBeTruthy();
+      expect(form.number).toBeTruthy();
+      expect(form.formality).toBeTruthy();
+    }
+  });
+
   it('narrows only the address form that is regional', () => {
-    expect(spanish.regionsForAddress!('vosotros')).toEqual(['es-ES']);
-    expect(spanish.regionsForAddress!('ustedes')).toEqual([]);
-    expect(spanish.regionsForAddress!('')).toEqual([]);
+    const regionsOf = (id: string) =>
+      spanish.addressForms!.find((form) => form.id === id)?.regions ?? [];
+
+    expect(regionsOf('vosotros')).toEqual(['es-ES']);
+    expect(regionsOf('ustedes')).toEqual([]);
+    expect(regionsOf('')).toEqual([]);
   });
 });

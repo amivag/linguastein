@@ -23,6 +23,8 @@
  */
 
 import { baseLanguage, type LanguageTag } from '../domain/content/language';
+import { SPANISH_ADDRESS_FORMS } from './es/address';
+import type { AddressFormSpec } from './types';
 
 /** A word that shows a letter doing its job, and what it means. */
 export interface LetterExample {
@@ -105,4 +107,44 @@ export function alphabetGuide(tag: LanguageTag): AlphabetGuideLoader | undefined
     default:
       return undefined;
   }
+}
+
+/**
+ * How a language addresses a person, for the badge that names it.
+ *
+ * Statically imported rather than loaded, unlike the alphabet: four short rows
+ * against a chart of thirty letters with examples and notes, and this is read
+ * while rendering a list rather than when somebody opens a page.
+ *
+ * An empty list is the honest answer for a language that does not mark address,
+ * and it is what makes {@link addressForm} able to return `undefined` — which is
+ * the requirement `docs/tasks/language-matrix.md` §7 sets out: a screen must
+ * render nothing rather than guess a label, because Chinese barely marks this at
+ * all and a pack may carry the field regardless.
+ */
+export function addressForms(tag: LanguageTag | undefined): readonly AddressFormSpec[] {
+  if (tag === undefined) return [];
+  switch (baseLanguage(tag)) {
+    case 'es':
+      return SPANISH_ADDRESS_FORMS;
+    default:
+      return [];
+  }
+}
+
+/**
+ * One address form by the id a pack stored, or `undefined` where this language
+ * has nothing to call it.
+ *
+ * `undefined` covers both halves of the same rule and neither is an error: a
+ * language that does not mark address, and a value this language does not know.
+ * The second is what a shipped pack read on a different course looks like, and
+ * showing a raw slug in a badge would be worse than showing nothing.
+ */
+export function addressForm(
+  tag: LanguageTag | undefined,
+  id: string | undefined,
+): AddressFormSpec | undefined {
+  if (id === undefined) return undefined;
+  return addressForms(tag).find((form) => form.id === id);
 }

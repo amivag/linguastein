@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useCourse, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
@@ -91,6 +91,26 @@ export function ProgressScreen() {
   if (!data) return <AppShell title="Progress">{null}</AppShell>;
 
   const { summary, weakest, sessions, accuracy, mastery } = data;
+
+  /**
+   * Where a word or a pattern goes when it is tapped: a study session over the
+   * content that uses it.
+   *
+   * `flashcards` and `mode: 'study'`, so opening a weak word to look at it
+   * records nothing and cannot reschedule what it happened to show — the same
+   * choice Study makes for the same reason. A word travels as `?word=`, which
+   * reaches `ItemFilter.lexemes`; that filter was honoured by the repository and
+   * reachable from no link at all until this row needed it.
+   */
+  const practiseLink = (record: MasteryRecord) =>
+    sessionPath(course, {
+      preset: 'flashcards',
+      size: { kind: 'all' },
+      ordering: 'random',
+      ...(record.kind === 'skill'
+        ? { skills: [localIdOf(record.id)] }
+        : { words: [localIdOf(record.id)] }),
+    });
   const started = summary.seen > 0;
   const openItem = words.item ? services.repository.getItem(words.item) : undefined;
 
@@ -193,20 +213,29 @@ export function ProgressScreen() {
               <ul className={styles.list}>
                 {mastery.map((record) => (
                   <li key={record.id} className={styles.row}>
-                    <span className={styles.rowLabel}>
-                      <Icon
-                        name={record.status === 'strong' ? 'improving' : 'slipping'}
-                        size="sm"
-                        className={
-                          record.status === 'strong' ? styles.rowIconUp : styles.rowIconDown
-                        }
-                      />
-                      <span lang={lang}>{record.label}</span>
-                    </span>
-                    <span className={styles.muted}>
-                      {MASTERY_LABELS[record.status]} · seen in {record.encounters}{' '}
-                      {record.encounters === 1 ? 'sentence' : 'sentences'}
-                    </span>
+                    {/* A row on the one screen that says what is shaky had nowhere
+                        to send anybody: inspection is entered through an item and
+                        a mastery record is a lexeme or a skill. It links to a
+                        study session over the sentences that use it now — the same
+                        destination Study's own word and grammar tiles use, so
+                        "this is weak" and "practise this" are one tap apart. */}
+                    <Link className={styles.rowLink} to={practiseLink(record)}>
+                      <span className={styles.rowLabel}>
+                        <Icon
+                          name={record.status === 'strong' ? 'improving' : 'slipping'}
+                          size="sm"
+                          className={
+                            record.status === 'strong' ? styles.rowIconUp : styles.rowIconDown
+                          }
+                        />
+                        <span lang={lang}>{record.label}</span>
+                      </span>
+                      <span className={styles.muted}>
+                        {MASTERY_LABELS[record.status]} · seen in {record.encounters}{' '}
+                        {record.encounters === 1 ? 'sentence' : 'sentences'}
+                      </span>
+                      <Icon name="next" size="sm" className={styles.rowChevron} />
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -278,4 +307,16 @@ export function ProgressScreen() {
       )}
     </AppShell>
   );
+}
+
+/**
+ * The local half of a namespaced id — `core-es:lexeme:persona` → `persona`.
+ *
+ * A link addresses a word and a skill by their local id, so a shared link does
+ * not carry a pack namespace it will outlive (`session-url.ts`). `StudyScreen`
+ * has the same three lines for the same reason; they are worth sharing the day
+ * there is a third.
+ */
+function localIdOf(id: string): string {
+  return id.slice(id.lastIndexOf(':') + 1);
 }

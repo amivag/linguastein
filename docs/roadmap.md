@@ -273,11 +273,20 @@ eight alternatives) and that the real gap is level rather than variation.
 
 8. **Word-level progress** — inspection knows which lexeme a tapped word maps
    to, so "words I keep looking up" is a natural weak-item signal to feed back
-   into session planning. Two smaller gaps of the same shape: the "words &
-   patterns" rows on Progress are lexemes and skills rather than items, so there
-   is nothing to tap them open with yet (inspection is entered through an item),
-   and the sentences named in the end-of-session summary are inline in a
+   into session planning. That is still open.
+
+   **One of the two smaller gaps is closed.** The "words & skills" rows on
+   Progress are links now: a word opens a study session over the sentences that
+   use it, a skill over the content that teaches it — the same destinations
+   Study's own tiles use, so "this is shaky" and "practise this" are one tap
+   apart. Reaching a word needed a new session parameter, `?word=`, because
+   `ItemFilter.lexemes` was honoured by the repository and reachable from no link
+   at all: a filter the engine supported that nothing could ask for. It goes by
+   local id, like `?skill=`, so a shared link carries no pack namespace.
+
+   Still open: the sentences named in the end-of-session summary are inline in a
    paragraph rather than tokenised.
+
 9. **Offline dataset caching** — verify precache coverage and add a visible
    "available offline" state.
 10. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.

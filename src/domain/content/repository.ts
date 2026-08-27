@@ -339,6 +339,25 @@ export class ContentRepository {
   }
 
   /**
+   * Resolves a lexeme reference — `persona`, or `core-es:persona` when a link
+   * needs to say which pack. The same rules as {@link skillByRef}: bare and
+   * unique resolves, bare and contested resolves to nothing rather than a guess,
+   * and `packs` narrows it to a course.
+   *
+   * A link addresses a word this way for the reason it addresses a skill this
+   * way — a shared link should not carry a pack namespace it will outlive.
+   */
+  lexemeByRef(ref: string, packs?: readonly PackId[]): Lexeme | undefined {
+    const found = this.resolveLexeme(ref, packs);
+    return found.kind === 'found' ? found.value : undefined;
+  }
+
+  /** As {@link lexemeByRef}, but says *why* when it did not resolve. */
+  resolveLexeme(ref: string, packs?: readonly PackId[]): RefResolution<Lexeme> {
+    return resolveRef(this.allLexemes(), 'lexeme', ref, packs);
+  }
+
+  /**
    * The lexemes a written surface can be: `tengo` → `tener`, `entre` →
    * `entre` the preposition *and* `entrar`.
    *

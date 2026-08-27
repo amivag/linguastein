@@ -109,6 +109,42 @@
   padding: var(--space-3) var(--space-4);
 }
 
+/*
+ * A row that opens something, which the words-and-skills rows now do.
+ *
+ * The `li` keeps the card and the link fills it, rather than the link becoming
+ * the card: a list of links inside cards is one shape, and a list of cards that
+ * happen to be links is another — this list has both kinds of row in it, so the
+ * card has to stay where it is. `cardInteractive` would draw a second surface
+ * inside the first, so this takes `pressable` alone: the lift and the press
+ * without another background.
+ */
+.rowLink {
+  composes: pressable from '../../styles/surfaces.module.css';
+
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  min-width: 0;
+  /* The row's own padding is on the `li`, so the link is inset by nothing and
+     the whole card is the tap target — which is what a `--tap-target` row on a
+     phone needs. */
+  margin: calc(-1 * var(--space-3)) calc(-1 * var(--space-4));
+  padding: var(--space-3) var(--space-4);
+  min-height: var(--tap-target);
+  align-content: center;
+}
+
+/* Points the way out, as it does on a mission row. Baseline-aligned siblings, so
+   it is nudged rather than centred. */
+.rowChevron {
+  align-self: center;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
 .rowLabel {
   display: flex;
   align-items: center;

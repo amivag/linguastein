@@ -4,7 +4,7 @@ import { useCourse, usePronunciationLocale } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MISSIONS } from '../../app/missions';
 import { batchById } from '../../domain/batches';
-import type { SkillId } from '../../domain/content';
+import type { LexemeId, SkillId } from '../../domain/content';
 import { missionById } from '../../domain/missions';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
@@ -62,6 +62,11 @@ export function SessionScreen() {
     const skills = (url.skills ?? [])
       .map((slug) => repository.skillByRef(slug, courseScope.packs)?.id)
       .filter((id): id is SkillId => id !== undefined);
+    // `?word=persona` narrows to the sentences a word appears in, and drops an
+    // unknown slug exactly as `?skill=` does — a facet, not an allow-list.
+    const lexemes = (url.words ?? [])
+      .map((slug) => repository.lexemeByRef(slug, courseScope.packs)?.id)
+      .filter((id): id is LexemeId => id !== undefined);
     // Both spell "exactly these items", so a link carrying both would have one
     // quietly overwrite the other. A passage is the narrower and the authored
     // one, so it wins — and no screen builds such a link in the first place.
@@ -70,6 +75,7 @@ export function SessionScreen() {
       ...url.filter,
       ...(allowList ? { ids: allowList } : {}),
       ...(skills.length ? { skills } : {}),
+      ...(lexemes.length ? { lexemes } : {}),
     };
 
     // A batch whose material has all fallen outside this course — a different

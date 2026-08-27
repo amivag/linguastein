@@ -68,6 +68,20 @@ export interface SessionUrl {
    * needs the repository, and this module deliberately parses without it.
    */
   readonly skills?: readonly string[];
+  /**
+   * Words to practise, by the local id of their lexeme: `?word=persona,dinero`.
+   *
+   * `ItemFilter.lexemes` has always been honoured by the repository and was
+   * reachable from no link at all — a filter the engine supported and nothing
+   * could ask for. What wanted it is Progress: a row saying a word is weak had
+   * nowhere to send anybody, because inspection is entered through an item and a
+   * mastery record is a lexeme.
+   *
+   * Spelled like `?skill=` and for the same reasons: local ids, comma-separated,
+   * pack vocabulary rather than an allow-list, and a slug no loaded pack declares
+   * drops out so a stale link widens rather than planning an empty session.
+   */
+  readonly words?: readonly string[];
   readonly dueOnly?: boolean;
   /** Which items to lead with. Absent means the planner's balanced default. */
   readonly focus?: SessionFocus;
@@ -99,6 +113,7 @@ export function sessionPath(course: Course, input: SessionUrlInput): string {
   if (input.batch) params.set('batch', input.batch);
   if (input.mission) params.set('mission', input.mission);
   if (input.skills?.length) params.set('skill', input.skills.join(','));
+  if (input.words?.length) params.set('word', input.words.join(','));
   if (input.dueOnly) params.set('due', '1');
   if (input.focus && input.focus !== 'balanced') params.set('focus', input.focus);
   if (input.ordering) params.set('order', input.ordering);
@@ -120,6 +135,7 @@ export function parseSessionUrl(params: URLSearchParams): SessionUrl {
   // unknown slug resolving to nothing is the same "degrade to broader, never
   // empty" outcome the rest of this module is built on.
   const skills = slugs(params.get('skill'));
+  const words = slugs(params.get('word'));
 
   return {
     preset: isPresetId(preset) ? preset : 'quick',
@@ -129,6 +145,7 @@ export function parseSessionUrl(params: URLSearchParams): SessionUrl {
     ...(batch ? { batch } : {}),
     ...(mission ? { mission } : {}),
     ...(skills.length ? { skills } : {}),
+    ...(words.length ? { words } : {}),
     ...(isTruthy(params.get('due')) ? { dueOnly: true } : {}),
     ...(isFocus(focus) ? { focus } : {}),
     ...(isOrdering(ordering) ? { ordering } : {}),

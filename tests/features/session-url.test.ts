@@ -93,6 +93,26 @@ describe('parseSessionUrl', () => {
    * Chinese course's own link; the course filter narrows to what the course
    * actually offers, which is where an unknown level goes.
    */
+  /*
+   * `ItemFilter.lexemes` was honoured by the repository and reachable from no link
+   * at all — a filter the engine supported that nothing could ask for. What wanted
+   * it is Progress: a row saying a word is shaky had nowhere to send anybody,
+   * because inspection is entered through an item and a mastery record is a lexeme.
+   */
+  it('carries the words to practise, by local id like a skill', () => {
+    expect(parse('/session?preset=quick&word=persona').words).toEqual(['persona']);
+    expect(parse('/session?preset=quick&word=persona,dinero').words).toEqual(['persona', 'dinero']);
+  });
+
+  it('round-trips a word list through the path it builds', () => {
+    const path = sessionPath(
+      { language: 'es', level: 'a1' },
+      { preset: 'flashcards', size: { kind: 'all' }, words: ['persona'] },
+    );
+    expect(path).toContain('word=persona');
+    expect(parse(path.slice(path.indexOf('/session'))).words).toEqual(['persona']);
+  });
+
   it('carries a level the way it carries a topic, since packs declare both', () => {
     expect(parse('/session?preset=quick&level=hsk1').filter.levels).toEqual(['hsk1']);
     expect(parse('/session?preset=quick&level=a1,a2').filter.levels).toEqual(['a1', 'a2']);

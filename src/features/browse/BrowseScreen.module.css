@@ -279,3 +279,17 @@
   flex-wrap: wrap;
   gap: var(--space-2);
 }
+
+/*
+ * A note under a control, saying what its numbers count.
+ *
+ * The region counts are words *particular to* a region while the filter keeps
+ * region-neutral content as well — so `Spain (95)` returns thousands, and the
+ * figure was true while reading as a promise. Cheaper and more honest than
+ * changing what is counted: see `repository.regions` for why counting what the
+ * filter returns would make every region report nearly the whole pack.
+ */
+.hint {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}

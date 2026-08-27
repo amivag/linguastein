@@ -330,7 +330,7 @@
 {"id":"core-es:lexeme:otonno","lemma":"otoño","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:invierno","lemma":"invierno","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:favor","lemma":"favor","pos":"NOUN","level":"a1","gender":"masculine"}
-{"id":"core-es:lexeme:nevera","lemma":"nevera","pos":"NOUN","level":"a2","gender":"feminine","regions":["es-ES","es-CO","es-VE","es-CU","es-DO","es-PR"]}
+{"id":"core-es:lexeme:nevera","lemma":"nevera","pos":"NOUN","level":"a2","gender":"feminine","regions":["es-ES"]}
 {"id":"core-es:lexeme:centro","lemma":"centro","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:euro","lemma":"euro","pos":"NOUN","level":"a1","gender":"masculine"}
 {"id":"core-es:lexeme:talla","lemma":"talla","pos":"NOUN","level":"a2","gender":"feminine"}
@@ -345,7 +345,7 @@
 {"id":"core-es:lexeme:computadora","lemma":"computadora","pos":"NOUN","level":"a1","gender":"feminine","regions":["es-419"]}
 {"id":"core-es:lexeme:celular","lemma":"celular","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-419"]}
 {"id":"core-es:lexeme:boleto","lemma":"boleto","pos":"NOUN","level":"a1","gender":"masculine","regions":["es-419"]}
-{"id":"core-es:lexeme:camion","lemma":"camión","pos":"NOUN","level":"a2","gender":"masculine","register":"colloquial","regions":["es-MX"]}
+{"id":"core-es:lexeme:camion","lemma":"camión","pos":"NOUN","level":"a2","gender":"masculine","register":"colloquial"}
 {"id":"core-es:lexeme:plata","lemma":"plata","pos":"NOUN","level":"a2","gender":"feminine","register":"colloquial","regions":["es-419"]}
 {"id":"core-es:lexeme:pasta","lemma":"pasta","pos":"NOUN","level":"a2","gender":"feminine","register":"colloquial","regions":["es-ES"]}
 {"id":"core-es:lexeme:camarero","lemma":"camarero","pos":"NOUN","level":"a2","gender":"masculine"}

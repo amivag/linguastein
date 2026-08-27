@@ -79,27 +79,33 @@ describe('shipped packs', () => {
   });
 
   /**
-   * `nevera` used to ship marked `es-ES`, which was not imprecise but inverted:
-   * `es-CO` is a filterable locale and `nevera` is what everyone in Colombia
-   * says, so a learner aiming there was denied it and shown `refrigerador`. And
-   * blank would have been wrong the other way, because the column means "where
-   * this word is the usual choice" and Mexico says `refrigerador`. A `regions`
-   * list takes more than one locale; the general lesson is to reach for several
-   * before reaching for none.
+   * `nevera` has been marked three ways and the third is a product decision
+   * rather than a correction, so the history is worth keeping.
+   *
+   * It shipped `es-ES`, which was inverted: `nevera` is what everyone in Colombia
+   * says, and a learner aiming there was denied it. It then shipped
+   * `es-ES,es-CO,es-VE,es-CU,es-DO,es-PR` — every locale that actually uses it,
+   * which was true and is now more precision than the app carries: **Spanish
+   * distinguishes Spain and Latin America and nothing finer**
+   * (`FILTERABLE_REGIONS`, and `language-matrix.md` §1 where the call was left
+   * open). So it is `es-ES` again, and a Colombian learner meets `refrigerador`.
+   *
+   * That loses a true fact, and the trade is deliberate: "also said in Colombia
+   * and Venezuela but not Mexico" is trivia to a learner, while Spain against
+   * Latin America is the split they actually choose between.
    */
-  it('regionalises a word to every region that actually uses it', async () => {
+  it('splits a regional word along the one line the app draws', async () => {
     const { repository } = await loadAll();
     const fridge = repository.allItems().filter((item) => /nevera|refrigerador/i.test(item.text));
     const seenIn = (locale: string) =>
       fridge.filter((item) => isUsableIn(item.regions, locale as never)).map((item) => item.text);
 
-    // Spain never says refrigerador; Mexico and the macro-region never say nevera.
+    // Spain never says refrigerador; Latin America never says nevera — and every
+    // Latin American accent resolves through `es-419`, Colombia included.
     expect(seenIn('es-ES').join(' ')).not.toMatch(/refrigerador/);
-    expect(seenIn('es-MX').join(' ')).not.toMatch(/nevera/);
-    expect(seenIn('es-419').join(' ')).not.toMatch(/nevera/);
-    // Colombia says both, and used to be shown only the one it does not lead with.
-    expect(seenIn('es-CO').join(' ')).toMatch(/nevera/);
-    expect(seenIn('es-CO').join(' ')).toMatch(/refrigerador/);
+    for (const locale of ['es-419', 'es-MX', 'es-AR', 'es-CO']) {
+      expect(seenIn(locale).join(' '), locale).not.toMatch(/nevera/);
+    }
     // Nobody is left without a fridge.
     for (const locale of ['es-ES', 'es-MX', 'es-AR', 'es-CO', 'es-419']) {
       expect(seenIn(locale).length, locale).toBeGreaterThan(0);

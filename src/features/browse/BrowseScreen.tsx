@@ -531,6 +531,17 @@ export function BrowseScreen() {
                       </option>
                     ))}
                   </select>
+                  {/* The number is words *particular to* a region, and the filter
+                      keeps everything region-neutral as well — so picking Spain
+                      shows far more than the count beside it. `repository.regions`
+                      explains why counting the other way is worse: region-neutral
+                      content is usable everywhere, so every region would report
+                      nearly the whole pack and the figure would say nothing. The
+                      count is right and was not saying what it counted. */}
+                  <span className={styles.hint}>
+                    Counts are words particular to each region. Choosing one keeps everything that
+                    is not regional too.
+                  </span>
                 </label>
               </div>
 

@@ -349,7 +349,7 @@
 # say `refrigerador` and `heladera`. So it carries the regions it actually owns,
 # which `regionCovers` supports and which leaves the `es-419` macro-filter
 # showing `refrigerador` — correctly, as the wider Latin American choice.
-500331	nevera	fridge	f		a2	home	es-ES,es-CO,es-VE,es-CU,es-DO,es-PR
+500331	nevera	fridge	f		a2	home	es-ES
 500332	centro	centre	m		a1	city
 500333	euro	euro	m		a1	shopping
 500334	talla	size	f		a2	shopping
@@ -364,7 +364,7 @@
 500343	computadora	computer	f		a1	objects	es-419	
 500344	celular	mobile phone	m		a1	objects	es-419	
 500345	boleto	ticket	m		a1	travel	es-419	
-500346	camión	bus, lorry	m	camiones	a2	travel	es-MX	colloquial
+500346	camión	lorry; in Mexico also a bus	m	camiones	a2	travel		colloquial
 500347	plata	money	f		a2	shopping	es-419	colloquial
 500348	pasta	cash	f		a2	shopping	es-ES	colloquial
 # Words that sentences already used but the lexicon did not carry, so the tokens

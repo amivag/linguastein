@@ -81,15 +81,31 @@ export const PRONUNCIATION_LOCALES: readonly PronunciationLocaleOption[] = [
 export const DEFAULT_PRONUNCIATION_LOCALE: LanguageTag = 'es-ES';
 
 /**
- * Regions content can be filtered to (`ItemFilter.usableIn`). Wider than the
- * pronunciation locales because a learner aims at a region, not a voice: it
- * includes the `es-419` macro-region, which every Latin American locale
- * satisfies. Shared so the Browse controls and the session URL cannot disagree
- * about which values are valid.
+ * Regions content can be filtered to (`ItemFilter.usableIn`).
+ *
+ * **Two, and deliberately not the pronunciation locales.** This was `es-419`
+ * plus all four accents, on the assumption that a region filter and a voice
+ * picker want the same list. They do not, and the content says so: every regional
+ * word in `core-es` is Spain's or Latin America's, so the finer chips offered a
+ * learner Argentina with nothing behind it and Mexico with one word. A filter
+ * that leads nowhere is the thing `Nothing on a screen is a hard-coded list`
+ * exists to prevent, and this was the hard-coded list.
+ *
+ * `docs/tasks/language-matrix.md` §1 left this open as a product call rather than
+ * a refactor, because deriving the candidates from content counts would have
+ * gained four Caribbean locales and *lost* Argentina, which a learner can select
+ * today. It is decided now: Spanish carries the Spain / Latin America split and
+ * nothing finer. Declaring the two rather than deriving them keeps `?region=`
+ * meaningful — a link naming a region the pack does not distinguish is a link
+ * that should widen, and it can only be seen to do that against a list.
+ *
+ * The accents stay four, because a voice is not a variation:
+ * {@link PRONUNCIATION_LOCALES} is what a TTS engine is asked for, and `es-419`
+ * is not a voice any engine has.
  */
 export const FILTERABLE_REGIONS: readonly PronunciationLocaleOption[] = [
+  { locale: 'es-ES', label: 'Spain' },
   { locale: 'es-419', label: 'Latin America' },
-  ...PRONUNCIATION_LOCALES,
 ];
 
 /** `es-419-x-foo` → `es-419` → `es`. */

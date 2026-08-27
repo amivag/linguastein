@@ -3360,7 +3360,7 @@
 {"ref":"core-es:item:500343","lang":"en","text":"computer","type":"natural"}
 {"ref":"core-es:item:500344","lang":"en","text":"mobile phone","type":"natural"}
 {"ref":"core-es:item:500345","lang":"en","text":"ticket","type":"natural"}
-{"ref":"core-es:item:500346","lang":"en","text":"bus, lorry","type":"natural"}
+{"ref":"core-es:item:500346","lang":"en","text":"lorry; in Mexico also a bus","type":"natural"}
 {"ref":"core-es:item:500347","lang":"en","text":"money","type":"natural"}
 {"ref":"core-es:item:500348","lang":"en","text":"cash","type":"natural"}
 {"ref":"core-es:item:500349","lang":"en","text":"waiter","type":"natural"}
@@ -4346,7 +4346,7 @@
 {"ref":"core-es:lexeme:computadora","lang":"en","text":"computer"}
 {"ref":"core-es:lexeme:celular","lang":"en","text":"mobile phone"}
 {"ref":"core-es:lexeme:boleto","lang":"en","text":"ticket"}
-{"ref":"core-es:lexeme:camion","lang":"en","text":"bus, lorry"}
+{"ref":"core-es:lexeme:camion","lang":"en","text":"lorry; in Mexico also a bus"}
 {"ref":"core-es:lexeme:plata","lang":"en","text":"money"}
 {"ref":"core-es:lexeme:pasta","lang":"en","text":"cash"}
 {"ref":"core-es:lexeme:camarero","lang":"en","text":"waiter"}

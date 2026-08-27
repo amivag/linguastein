@@ -108,6 +108,45 @@ deriving them gains four Caribbean locales and **loses Argentina**, which a
 learner can select today. Decide which list a chip should come from; do not
 migrate it as a refactor.
 
+### Decided, 2026-08-26: two variations, Spain and Latin America
+
+Neither list. **Spanish carries the Spain / Latin America split and nothing
+finer**, so both sides collapse to the same two and the question of which one to
+derive from stops mattering.
+
+The finer chips were never earning their place. `es-AR` had **no** content behind
+it at all and `es-MX` had exactly one word — so a learner could pick Argentina and
+be told, in effect, that the whole pack was Argentinian. That is precisely what
+_Nothing on a screen is a hard-coded list_ exists to prevent, and this was the
+hard-coded list.
+
+Two content rows had to move, and only one of them was mechanical.
+
+- **`nevera`** was `es-ES,es-CO,es-VE,es-CU,es-DO,es-PR` — every locale that
+  really says it, which is true and is more precision than the app now carries. It
+  is `es-ES`, and a Colombian learner meets `refrigerador`. The trade is
+  deliberate: "also said in Colombia and Venezuela but not Mexico" is trivia to a
+  learner, while Spain against Latin America is the split they choose between.
+- **`camión`** was `es-MX`, and that tag was never a Spain/Latin America
+  variation — it marked a **sense**. `camión` means lorry everywhere Spanish is
+  spoken, Spain included; Mexico _additionally_ uses it for a bus. So it carries no
+  region now and says the Mexican reading in its gloss, where a sense belongs. It
+  was not half of a regional pair and had been filed as one.
+
+**The accents stay four.** `PRONUNCIATION_LOCALES` is what a TTS engine is asked
+for, and `es-419` is not a voice any engine has — a voice is not a variation. A
+learner who picks the Colombian accent still reads Latin American wording, because
+`regionCovers` resolves `es-CO` through `es-419`.
+
+**And the chip counts were saying the wrong thing.** `Spain (95)` returns 3,786
+items, because the count is words _particular to_ a region while the filter also
+keeps everything region-neutral. `repository.regions` argues at length for
+counting it that way and the argument is right — counting what the filter returns
+would have every region report nearly the whole pack. So the number stayed and the
+control now says what it counts. Found by checking the chips after the collapse,
+which is the same shape of gap as the letter index's and would have gone on
+unnoticed.
+
 **Do not** widen `slug` to accept non-ASCII instead. Ids are permanent, appear in
 `id-ledger.tsv` and are referenced by learner progress; a scheme that admits any
 codepoint makes the collision _harder_ to see rather than impossible.

@@ -73,7 +73,7 @@ method §3.1 describes, confirmed on a level where nothing had to be retrofitted
 | Questions / statements               | 534 / 2,467, with **5** minimal pairs     |
 | Items marked with register           | 1,085                                     |
 | Items marked with address (tú/usted) | 590                                       |
-| Items marked with a region           | 131                                       |
+| Items marked with a region           | 125                                       |
 | Items containing `¡`                 | 15                                        |
 | Items with audio                     | 0                                         |
 | Senses                               | 0                                         |

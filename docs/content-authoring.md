@@ -352,3 +352,13 @@ Content carries usage as data, not prose: `register`, `address` (tú/usted) and
 `regions`. `address` is derived from morphology where unambiguous and declared
 otherwise; third person is never guessed. When adding a word that differs by
 region, add both sides of the pair — one alone teaches a dialect as universal.
+
+**`regions` takes `es-ES` or `es-419` and nothing finer.** Spanish carries the
+Spain / Latin America split only: a country-level tag reads as precision the app
+cannot act on, and it offered chips with one word behind them. Two rules follow
+from it. A word used in _most_ of Latin America is `es-419` even where a country
+or two says otherwise — the alternative is a list nobody maintains. And a word
+whose regional fact is a **sense** rather than a variation carries no region at
+all: `camión` means lorry everywhere and a bus in Mexico, so it says that in its
+gloss instead of claiming to be Mexico's word. See
+`docs/tasks/language-matrix.md` §1.

@@ -8,6 +8,7 @@ import type { LexemeId, SkillId } from '../../domain/content';
 import { missionById } from '../../domain/missions';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';
+import { SessionOrder } from './SessionOrder';
 import { SessionOutcomeSummary } from './SessionOutcomeSummary';
 import { SessionProgress } from './SessionProgress';
 import { formatDuration, spokenDuration } from './duration';
@@ -35,7 +36,7 @@ export function SessionScreen() {
   // query string is the dependency, so the plan changes only when the link does.
   const search = params.toString();
   const repository = services.repository;
-  const { preset, config, mission, batchLabel, passageTitle, emptyBatch } = useMemo(() => {
+  const { url, preset, config, mission, batchLabel, passageTitle, emptyBatch } = useMemo(() => {
     const url = parseSessionUrl(new URLSearchParams(search));
     const chosen = PRESETS[url.preset];
     // `?passage=` practises exactly one text; facets narrow it further, since
@@ -89,6 +90,9 @@ export function SessionScreen() {
       repository.query({ ...courseScope, ids: batch.itemIds }).length === 0;
 
     return {
+      // Kept, not only read: the order toggle rebuilds this same session with one
+      // facet changed, so it needs the whole of what was asked for.
+      url,
       preset: chosen,
       mission: url.mission,
       // What the session is *over*, in the two shapes that have a name of their
@@ -181,6 +185,11 @@ export function SessionScreen() {
               Skip <Icon name="skip" />
             </Button>
           </div>
+
+          {/* Studying is browsing, so the order is the reader's. A tracked
+              session's order is the scheduler's opinion about what to lead with —
+              see `SessionOrder`. */}
+          {!runner.tracked && <SessionOrder course={course} url={url} />}
         </>
       )}
 

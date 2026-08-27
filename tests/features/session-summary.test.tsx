@@ -13,7 +13,7 @@
  *   implying otherwise would contradict the line printed above it.
  */
 
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
@@ -45,12 +45,12 @@ describe('the outcome summary', () => {
   it('renders nothing when the session moved nothing', () => {
     // A session where every item held its stage is a normal session. An empty
     // panel announcing that reads as a failure report.
-    const { container } = render(<SessionOutcomeSummary outcome={outcome()} />);
+    const { container } = renderWithServices(<SessionOutcomeSummary outcome={outcome()} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it('names the words that moved up', () => {
-    render(
+    renderWithServices(
       <SessionOutcomeSummary
         outcome={outcome({
           advanced: [
@@ -62,13 +62,17 @@ describe('the outcome summary', () => {
     );
 
     expect(screen.getByText(/2/)).toBeInTheDocument();
-    expect(screen.getByText(/cerveza and agua/)).toBeInTheDocument();
     expect(screen.getByText(/words moved up/)).toBeInTheDocument();
+    // One row each, not `cerveza and agua` in a comma list. Every entry is itself
+    // a sentence with its own commas, so joining them separated nothing — and a
+    // joined string is a string, which is the reason no word in it could be tapped.
+    expect(screen.getByText('cerveza')).toBeInTheDocument();
+    expect(screen.getByText('agua')).toBeInTheDocument();
   });
 
   it('names the words that slipped back rather than hiding them', () => {
     // The most useful thing the screen can say. Softening it wastes the finding.
-    render(
+    renderWithServices(
       <SessionOutcomeSummary
         outcome={outcome({ lapsed: [change('006', 'pan', 'review', 'learning')] })}
       />,
@@ -99,10 +103,43 @@ describe('the outcome summary', () => {
     const many = ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis'].map((text, index) =>
       change(`00${index}`, text, 'new', 'learning'),
     );
-    render(<SessionOutcomeSummary outcome={outcome({ advanced: many })} />);
+    renderWithServices(<SessionOutcomeSummary outcome={outcome({ advanced: many })} />);
 
     expect(screen.getByText(/\+2 more/)).toBeInTheDocument();
     expect(screen.queryByText(/seis/)).not.toBeInTheDocument();
+  });
+
+  /**
+   * The gap roadmap item 8 recorded: the sentences here were a joined string, so
+   * the one screen that has just said a word slipped back was the one place a
+   * learner could not ask which word was the problem.
+   */
+  it('lets a word be tapped, on the screen that just said it slipped', async () => {
+    const user = userEvent.setup();
+    renderWithServices(
+      <SessionOutcomeSummary
+        outcome={outcome({ lapsed: [change('001', 'Tengo que trabajar.', 'review', 'learning')] })}
+      />,
+      { route: '/es/a1' },
+    );
+
+    // Anchored: every token's accessible name names the whole sentence too
+    // (`contextLabel`), so a loose match finds each word in the row.
+    await user.click(screen.getByRole('button', { name: /^About .Tengo./ }));
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('still names an item whose pack has gone, untappable rather than missing', () => {
+    // A change carries the text it had at the time, so the row survives a pack
+    // being removed mid-session and simply stops being tappable.
+    renderWithServices(
+      <SessionOutcomeSummary
+        outcome={outcome({ advanced: [change('nope', 'una frase', 'new', 'learning')] })}
+      />,
+    );
+
+    expect(screen.getByText('una frase')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /frase/ })).not.toBeInTheDocument();
   });
 
   it.each([
@@ -115,8 +152,51 @@ describe('the outcome summary', () => {
   ])('describes a %i-day interval as "%s"', (days, expected) => {
     // Coarse on purpose: an interval given to the hour invites treating the
     // schedule as a deadline, which is the opposite of how spacing works.
-    render(<SessionOutcomeSummary outcome={outcome({ nextDueInDays: days })} />);
+    renderWithServices(<SessionOutcomeSummary outcome={outcome({ nextDueInDays: days })} />);
     expect(screen.getByText(new RegExp(expected))).toBeInTheDocument();
+  });
+});
+
+/**
+ * The last of roadmap item 2. `?order=` has been carried since sessions existed
+ * and three screens set it when they build a link, but a learner already inside a
+ * set had no way to change it.
+ */
+describe('the card order', () => {
+  it('is offered in a study session, with the current one marked', async () => {
+    renderWithServices(<SessionScreen />, {
+      services: testServices(),
+      route: '/session?preset=flashcards&size=items:2&order=random',
+    });
+
+    const shuffled = await screen.findByRole('link', { name: 'Shuffled' });
+    expect(shuffled).toHaveAttribute('aria-current', 'true');
+    // An address, so the state is `aria-current` and not `aria-pressed` — a
+    // pressed link is a category error a screen reader reads out as one.
+    expect(shuffled).not.toHaveAttribute('aria-pressed');
+    expect(screen.getByRole('link', { name: 'In order' })).not.toHaveAttribute('aria-current');
+  });
+
+  it('keeps every other facet of the session it switches', async () => {
+    renderWithServices(<SessionScreen />, {
+      services: testServices(),
+      route: '/session?preset=flashcards&size=items:2&order=random&level=a1',
+    });
+
+    const href = (await screen.findByRole('link', { name: 'In order' })).getAttribute('href') ?? '';
+    expect(href).toContain('order=sequential');
+    expect(href).toContain('preset=flashcards');
+    expect(href).toContain('level=a1');
+  });
+
+  it('is absent from a tracked session, whose order the scheduler owns', async () => {
+    renderWithServices(<SessionScreen />, {
+      services: testServices(),
+      route: '/session?preset=quick&size=items:2',
+    });
+
+    await screen.findByRole('button', { name: /Skip/ });
+    expect(screen.queryByRole('navigation', { name: 'Card order' })).not.toBeInTheDocument();
   });
 });
 

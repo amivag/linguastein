@@ -393,6 +393,38 @@
   text-align: left;
 }
 
+/*
+ * One heading and the sentences under it.
+ *
+ * A group rather than a line, because the sentences stopped being part of the
+ * sentence: they were joined with commas into the heading, and each of them has
+ * commas of its own, so the separators separated nothing. Stacked, they are also
+ * tappable, which is the rule the whole app follows and this screen did not.
+ */
+.outcomeGroup {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.outcomeItems {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: grid;
+  gap: var(--space-1);
+  /* Indented to the width of the icon above, so the rows read as belonging to
+     their heading rather than as a second list. */
+  padding-inline-start: calc(var(--icon-sm) + var(--space-2));
+}
+
+.outcomeItem {
+  font-size: var(--text-sm);
+}
+
+.outcomeMore {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
 .outcomeLine {
   display: flex;
   align-items: flex-start;
@@ -418,4 +450,57 @@
 
 .outcomeIconDue {
   color: var(--color-text-muted);
+}
+
+/*
+ * The card-order switch, under the transport controls it belongs with.
+ *
+ * A row of addresses rather than a segmented control drawn to look like one
+ * widget: they *are* three links, one of which is where you are, and the design
+ * language's rule about outlines applies — the current one is filled, the rest
+ * are plain text, and no boundary is drawn around any of them.
+ */
+.order {
+  display: flex;
+  justify-content: center;
+}
+
+.orderRow {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  justify-content: center;
+}
+
+.orderOption {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+/*
+ * The one you are at, as ARIA state rather than a class: the attribute outranks
+ * the rule above it, so the current option cannot be repainted back to its
+ * resting colours by a later declaration.
+ */
+.orderOption[aria-current='true'] {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .orderOption:hover {
+    color: var(--color-text);
+  }
 }

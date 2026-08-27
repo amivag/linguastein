@@ -194,9 +194,14 @@ eight alternatives) and that the real gap is level rather than variation.
    of the past-tense mission briefed in
    [docs/tasks/past-tense-mission.md](tasks/past-tense-mission.md); the others
    read as supporting material for missions that already exist.
-2. **Study mode for flashcards** — previous/next and no scoring are in place: a
-   study session records nothing and reports a count rather than a score. What
-   remains is the order toggle in the UI; `?order=` already carries it.
+2. ~~**Study mode for flashcards**~~ — **done.** Previous/next and no scoring
+   were already in place; the order toggle landed 2026-08-26. Three links under
+   the transport controls — in order, shuffled, needs work — offered in a study
+   session only, since a tracked session's order is the scheduler's opinion about
+   what to lead with. Links rather than buttons because the URL is the state, so a
+   switch is a different address for the same material: it restarts the set, which
+   is the honest consequence of asking for a different order and costs nothing in
+   a session that records nothing.
 3. **Canonical audio pipeline** — generate in batches → review the voice →
    approve → store, plus an `audio/<locale>/<voice>/` layout in packs. This is the
    real fix for pronunciation quality: device voices vary wildly between platforms,
@@ -284,8 +289,13 @@ eight alternatives) and that the real gap is level rather than variation.
    at all: a filter the engine supported that nothing could ask for. It goes by
    local id, like `?skill=`, so a shared link carries no pack namespace.
 
-   Still open: the sentences named in the end-of-session summary are inline in a
-   paragraph rather than tokenised.
+   **The other one is closed too.** The end-of-session summary named its
+   sentences in a joined string — `3 words moved up: a, b and c` — which was
+   unreadable, because each entry is a sentence with its own commas, and
+   untappable, because a joined string is a string. They are rows now, tokenised
+   through the same two components Progress and Browse use. That mattered most on
+   this screen of all of them: it has just told you a word slipped back, which is
+   exactly when "which word is the problem" is the question.
 
 9. **Offline dataset caching** — verify precache coverage and add a visible
    "available offline" state.

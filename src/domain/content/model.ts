@@ -12,8 +12,28 @@ import type { AudioId, FormId, ItemId, LexemeId, PackId, PassageId, SenseId, Ski
 import type { LanguageTag } from './language';
 import type { Provenance, ReviewState } from './provenance';
 
-export const CEFR_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'] as const;
-export type CefrLevel = (typeof CEFR_LEVELS)[number];
+/**
+ * A level, as the id its pack's ladder calls that rung.
+ *
+ * **A slug, not an enum, and the order is not here.** This was
+ * `['a1','a2','b1','b2','c1','c2']` with a `CEFR_LEVELS.indexOf(...)` comparison
+ * at six call sites, which made two Spanish-shaped assumptions in the model every
+ * pack shares: that a curriculum has CEFR levels, and that the app knows what
+ * order they climb in. Chinese is taught in HSK bands and Japanese in JLPT ones,
+ * and `docs/tasks/language-matrix.md` §7 calls this the most urgent of its schema
+ * decisions because the level reaches the zod boundary, the URL path, mission
+ * filtering, `session-url.ts` and `ReadScreen`.
+ *
+ * The ladder is **declared per pack** (`content/<tag>/levels.tsv` → `PackManifest.levels`,
+ * in the order it climbs) and read back through `levelLadder`. Level is still a
+ * ceiling everywhere — `a2` means "a2 and below" — but "below" is now a fact
+ * about the pack rather than about this file.
+ *
+ * The **build** is what refuses a level its ladder does not declare, as it does
+ * for a topic slug and an address form. A shared schema could only ever have
+ * checked one curriculum's list, and did.
+ */
+export type Level = string;
 
 /**
  * How a phrase is pitched. Ordered from most to least widely usable, which is
@@ -170,7 +190,7 @@ export interface Lexeme {
   readonly id: LexemeId;
   readonly lemma: string;
   readonly pos: PartOfSpeech;
-  readonly level?: CefrLevel;
+  readonly level?: Level;
   /** Frequency rank in the target language; lower is more frequent. */
   readonly frequencyRank?: number;
   readonly register?: Register;
@@ -208,7 +228,7 @@ export interface InflectedForm {
   readonly lexeme: LexemeId;
   readonly form: string;
   readonly morph: Morphology;
-  readonly level?: CefrLevel;
+  readonly level?: Level;
   readonly regions?: readonly LanguageTag[];
   readonly provenance?: Provenance;
 }
@@ -222,7 +242,7 @@ export interface Skill {
   readonly kind: SkillKind;
   /** Target-language or neutral label, e.g. `tener que + infinitivo`. */
   readonly label: string;
-  readonly level?: CefrLevel;
+  readonly level?: Level;
   readonly prerequisites?: readonly SkillId[];
   readonly provenance?: Provenance;
 }
@@ -257,7 +277,7 @@ export interface LearningItem {
    * `docs/tasks/second-language.md` §6.
    */
   readonly reading?: string;
-  readonly level?: CefrLevel;
+  readonly level?: Level;
   readonly register?: Register;
   /** Set when the phrase is spoken to someone; derived from morphology where possible. */
   readonly address?: AddressForm;
@@ -305,7 +325,7 @@ export interface Passage {
   readonly kind: PassageKind;
   /** Target-language title, e.g. `Una mañana normal`. Translated separately. */
   readonly title: string;
-  readonly level?: CefrLevel;
+  readonly level?: Level;
   readonly topics?: readonly string[];
   /** Union of the regions its sentences are limited to; absent means anywhere. */
   readonly regions?: readonly LanguageTag[];
@@ -370,7 +390,24 @@ export interface PackManifest {
   readonly authors?: readonly PackAuthor[];
   readonly description?: string;
   readonly license?: string;
-  readonly levels?: readonly CefrLevel[];
+  /**
+   * The pack's level ladder, **in the order it climbs**.
+   *
+   * The order is the whole of it. `a2` means "a2 and below" everywhere in the
+   * app, and this list is what "below" is read from — it replaced
+   * `CEFR_LEVELS.indexOf(...)`, which could only ever order one curriculum's
+   * codes. Only levels the pack actually has content for are listed, so this
+   * doubles as what Settings advertises.
+   */
+  readonly levels?: readonly Level[];
+  /**
+   * What to call each rung, where the id does not name itself.
+   *
+   * Absent for CEFR, deliberately: `a1` reads correctly as `A1` once upper-cased,
+   * and a label repeating it would be a second place for it to go stale. `hsk1`
+   * does not name itself, so an HSK pack declares `{ hsk1: 'HSK 1' }`.
+   */
+  readonly levelLabels?: Readonly<Record<string, string>>;
   readonly referenceLanguages?: readonly LanguageTag[];
   readonly pronunciationLocales?: readonly LanguageTag[];
   /** Thematic categories this pack offers, in the order they should be shown. */

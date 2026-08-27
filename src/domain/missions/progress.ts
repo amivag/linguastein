@@ -15,7 +15,7 @@
  */
 
 import type { LearningItem, Passage } from '../content';
-import type { Course } from '../content';
+import { levelLadder, packsOfLanguage, type Course } from '../content';
 import type { ContentRepository } from '../content';
 import {
   missionIsComplete,
@@ -116,8 +116,16 @@ export function missionStandings(
   const inCourse = (passage: Passage) =>
     repository.itemsOfPassage(passage.id).some((item) => courseItemIds.has(item.id));
 
-  const authored = missionsForCourse(catalog, course).flatMap((mission) => {
-    const passage = repository.passageByRef(mission.passage);
+  // A mission addresses its passage by local id, so it resolves within this
+  // language's packs — see `pack-addressing.md` §3.
+  const packs = packsOfLanguage(repository, course.language);
+
+  const authored = missionsForCourse(
+    catalog,
+    course,
+    levelLadder(repository, course.language),
+  ).flatMap((mission) => {
+    const passage = repository.passageByRef(mission.passage, packs);
     return passage && inCourse(passage) ? [{ mission, passage }] : [];
   });
 
@@ -128,7 +136,7 @@ export function missionStandings(
     // transfer passages, so the ladder is what actually resolves rather than
     // what was authored.
     const transfers = missionTransfers(mission).flatMap((transfer) => {
-      const candidate = repository.passageByRef(transfer.passage);
+      const candidate = repository.passageByRef(transfer.passage, packs);
       return candidate ? [candidate] : [];
     });
 

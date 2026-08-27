@@ -24,6 +24,7 @@ import {
   type CourseOption,
   type ItemFilter,
   type LanguageTag,
+  type Level,
 } from '../domain/content';
 import { ServicesContext, useServices } from './services-context';
 
@@ -35,6 +36,16 @@ export interface CourseScope {
   readonly filter: ItemFilter;
   /** The option the current course belongs to, for labels and level lists. */
   readonly option: CourseOption | undefined;
+  /**
+   * The language's level ladder, in the order it climbs.
+   *
+   * Here rather than fetched per screen because it is what "level is a ceiling"
+   * is read from, and three screens need it to order missions. It was
+   * `CEFR_LEVELS` — a constant, so no screen had to be handed anything, which is
+   * exactly why the assumption went unnoticed until a second curriculum was
+   * briefed (`docs/tasks/language-matrix.md` §7).
+   */
+  readonly ladder: readonly Level[];
   /** `path('browse')` → `/es/a1/browse`. */
   readonly path: (screen?: string) => string;
 }
@@ -54,6 +65,7 @@ export function useCourse(): CourseScope {
       options,
       filter: courseFilter(course, options),
       option: options.find((candidate) => candidate.language === course.language),
+      ladder: options.find((candidate) => candidate.language === course.language)?.ladder ?? [],
       path: (screen?: string) => coursePath(course, screen),
     };
   }, [options, language, level]);

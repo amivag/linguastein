@@ -28,6 +28,14 @@ const manifest: PackManifest = {
   name: 'Test Spanish',
   targetLanguage: 'es',
   version: '1.0.0',
+  /*
+   * The ladder, in the order it climbs, because a pack now declares its own.
+   * `courseOptions` reads the order from here rather than from a `CEFR_LEVELS`
+   * constant — see `docs/tasks/language-matrix.md` §7 — so a fixture with items
+   * at a level it does not declare would offer no levels at all, which is the
+   * same message a real pack gets from the build.
+   */
+  levels: ['a1', 'a2', 'b1'],
   files: [
     { kind: 'items', path: 'items.jsonl' },
     { kind: 'passages', path: 'passages.jsonl' },
@@ -346,6 +354,7 @@ export const TEST_PACK_FR: ContentPack = {
     name: 'Test French',
     targetLanguage: 'fr',
     version: '1.0.0',
+    levels: ['a1', 'a2', 'b1'],
     files: [{ kind: 'items', path: 'items.jsonl' }],
     topics: [{ id: 'greetings', label: 'Greetings', group: 'People' }],
   },

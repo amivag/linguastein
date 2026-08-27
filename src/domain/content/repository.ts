@@ -20,7 +20,7 @@ import type {
   AddressForm,
   AudioClip,
   AudioRef,
-  CefrLevel,
+  Level,
   ContentPack,
   ItemType,
   LearningItem,
@@ -70,7 +70,7 @@ export interface ItemFilter {
    */
   readonly ids?: readonly ItemId[];
   readonly types?: readonly ItemType[];
-  readonly levels?: readonly CefrLevel[];
+  readonly levels?: readonly Level[];
   readonly registers?: readonly Register[];
   /**
    * Keep only content usable where the learner is aiming. Region-neutral
@@ -318,14 +318,14 @@ export class ContentRepository {
    * needs to say which pack. See {@link resolveRef} for why both are accepted
    * and why an ambiguous bare reference resolves to nothing.
    */
-  skillByRef(ref: string): Skill | undefined {
-    const found = this.resolveSkill(ref);
+  skillByRef(ref: string, packs?: readonly PackId[]): Skill | undefined {
+    const found = this.resolveSkill(ref, packs);
     return found.kind === 'found' ? found.value : undefined;
   }
 
   /** As {@link skillByRef}, but says *why* when it did not resolve. */
-  resolveSkill(ref: string): RefResolution<Skill> {
-    return resolveRef(this.allSkills(), 'skill', ref);
+  resolveSkill(ref: string, packs?: readonly PackId[]): RefResolution<Skill> {
+    return resolveRef(this.allSkills(), 'skill', ref, packs);
   }
 
   getForm(id: FormId): InflectedForm | undefined {
@@ -353,11 +353,19 @@ export class ContentRepository {
   }
 
   /**
-   * Resolves the stable local part of an item id for curriculum references.
-   * Like passage and skill local ids, the first loaded match wins.
+   * Resolves the stable local part of an item id for curriculum references —
+   * `{ item: '001147' }` in a mission's response palette.
+   *
+   * `packs` narrows it to a course, which is what makes it safe with a second
+   * language loaded: two packs from one generator both number their sentences from
+   * `000001`, so every Spanish mission would otherwise resolve against whichever
+   * pack the catalog listed first. Without `packs` the first loaded match still
+   * wins, and `validateAcrossPacks` is what stops two packs of the *same*
+   * language reaching that state at all.
    */
-  itemByLocalId(local: string): LearningItem | undefined {
-    return this.allItems().find((item) => item.id.endsWith(`:item:${local}`));
+  itemByLocalId(local: string, packs?: readonly PackId[]): LearningItem | undefined {
+    const found = resolveRef(this.allItems(), 'item', local, packs);
+    return found.kind === 'found' ? found.value : undefined;
   }
 
   getPassage(id: PassageId): Passage | undefined {
@@ -373,14 +381,14 @@ export class ContentRepository {
    * Resolves a passage reference — `700001`, or `core-es:700001` when a link
    * needs to say which pack. See {@link resolveRef}.
    */
-  passageByRef(ref: string): Passage | undefined {
-    const found = this.resolvePassage(ref);
+  passageByRef(ref: string, packs?: readonly PackId[]): Passage | undefined {
+    const found = this.resolvePassage(ref, packs);
     return found.kind === 'found' ? found.value : undefined;
   }
 
   /** As {@link passageByRef}, but says *why* when it did not resolve. */
-  resolvePassage(ref: string): RefResolution<Passage> {
-    return resolveRef(this.allPassages(), 'passage', ref);
+  resolvePassage(ref: string, packs?: readonly PackId[]): RefResolution<Passage> {
+    return resolveRef(this.allPassages(), 'passage', ref, packs);
   }
 
   /** The passages a sentence reads as part of, usually none or one. */
@@ -665,11 +673,11 @@ export class ContentRepository {
 
   /** Distinct values available for building filter UIs. */
   facets(filter: ItemFilter = {}): {
-    levels: readonly CefrLevel[];
+    levels: readonly Level[];
     topics: readonly string[];
     types: readonly ItemType[];
   } {
-    const levels = new Set<CefrLevel>();
+    const levels = new Set<Level>();
     const topics = new Set<string>();
     const types = new Set<ItemType>();
     for (const item of this.query(filter)) {
@@ -781,12 +789,32 @@ export type RefResolution<T> =
  * unambiguously the pack separator.
  */
 function resolveRef<T extends { readonly id: string }>(
-  entries: readonly T[],
+  all: readonly T[],
   kind: string,
   ref: string,
+  packs?: readonly PackId[],
 ): RefResolution<T> {
   const trimmed = ref.trim();
   if (trimmed.length === 0) return { kind: 'missing' };
+
+  /*
+   * The course's packs, where the caller said which course it meant.
+   *
+   * This is `docs/tasks/pack-addressing.md` §3's decision: across *languages* a
+   * bare local id is already unambiguous in context, because the path carries the
+   * language and `/de/a1/read/700001` cannot mean the Spanish passage. Two packs
+   * from one generator both number their passages from `700001`, so a second
+   * language guarantees that collision — and scoping costs nothing, since the
+   * callers that resolve a curriculum reference already hold a course.
+   *
+   * Narrowing rather than preferring: a ref naming nothing in scope resolves to
+   * `missing`, not to a match outside it. The caller asked a narrower question, and
+   * answering a wider one is how `/de/a1/read/700001` would open a Spanish text.
+   */
+  const entries =
+    packs === undefined
+      ? all
+      : all.filter((entry) => packs.includes(entry.id.slice(0, entry.id.indexOf(':')) as PackId));
 
   const separator = trimmed.indexOf(':');
   if (separator !== -1) {

@@ -205,12 +205,21 @@ function Stat({ value, label }: { readonly value: number; readonly label: string
   );
 }
 
-/** `A1` on its own, `A1–A2` for a span: a level is a ceiling, not a chapter. */
+/**
+ * `A1` on its own, `A1–A2` for a span: a level is a ceiling, not a chapter.
+ *
+ * The ends of the pack's **declared** ladder rather than a sorted pair, which is
+ * the same reason the ladder is ordered data: `hsk10` sorts before `hsk2`, so a
+ * span read off a sort would advertise an HSK pack as `HSK1–HSK9`.
+ */
 function levelRange(pack: PackContents): string {
   const first = pack.levels[0];
   const last = pack.levels[pack.levels.length - 1];
   if (!first) return '';
-  return first === last ? levelLabel(first) : `${levelLabel(first)}–${levelLabel(last!)}`;
+  const labels = pack.levelLabels;
+  return first === last
+    ? levelLabel(first, labels)
+    : `${levelLabel(first, labels)}–${levelLabel(last!, labels)}`;
 }
 
 function describeProvenance(pack: PackContents): string {

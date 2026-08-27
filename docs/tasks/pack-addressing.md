@@ -1,6 +1,8 @@
 # Task: address content when there is more than one pack
 
-**Status:** briefed, not started — the decision has to come before the code
+**Status:** decided 2026-08-26 — see _Decided_ in §3. Resolution is scoped to
+the course where a caller means it, and `validateAcrossPacks` is the wall for
+the same-language case. Always-qualified links (B) are deferred, not rejected
 **Written:** 2026-08-24
 **For:** a fresh agent session, no prior context assumed
 **Scope:** URL spelling, pack identity and the missing-content path. No content
@@ -138,6 +140,50 @@ not depend on what else is installed, which is the property that actually matter
 when packs are add-ons. Take the ugliness; it is one segment. But that is a
 recommendation, not the finding: whoever picks this up should confirm it in this
 file, or say why not, before writing code.
+
+### Decided, 2026-08-26
+
+**D, narrowed — and B is deferred rather than rejected.** The two briefs
+recommended different things, and the reason is that they were each looking at
+half of the problem. Naming the halves is the decision:
+
+- **Across languages**, a bare local id is already unambiguous _in context_: the
+  path carries the language, so `/de/a1/read/700001` cannot mean the Spanish
+  passage. This half is free, and it is the half a second language **guarantees**
+  — two packs from one generator both number their passages from `700001`.
+- **Within one language**, the course cannot disambiguate anything, because both
+  packs are in it. Only a qualified spelling can, which is
+  `pack-addressing.md`'s B.
+
+So: the course's packs narrow resolution where a caller means "in this course",
+and `validateAcrossPacks` keeps being a **wall for the same-language case** —
+narrowed to compare within a target language, which is what it was actually
+protecting. `core-es` + `core-de` loads. `core-es` + `extra-es` still fails
+loudly, at build time, naming the local ids both packs claim.
+
+**Why B is not done now.** It costs every link today — `?skill=core-es:preterite`
+in place of `?skill=preterite` — for a case that does not exist: there is no
+second Spanish pack, and `session-url.ts`'s reason for the bare form
+("a shared link should not carry a pack namespace it will outlive") is still
+good. Half of B is in place regardless and always was: `resolveRef` **accepts** a
+qualified ref and resolves it exactly. What B would change is what the app
+_generates_, and that is a link-spelling decision better made with the real
+second-Spanish-pack case in hand than guessed at now. The wall is what buys the
+time: nobody can ship the ambiguity while it stands.
+
+**Scoping is opt-in per call site, and that is the narrowing.** The repository
+stays course-blind — "a lexeme lookup should not care which pack it came from" is
+still right — so the optional pack scope is a parameter the callers that already
+hold a course pass in. It is deliberately **not** passed everywhere:
+
+- **Passed** where the caller means "within this course": a mission's passage and
+  its transfers, `?passage=` and `?skill=` on a session link, and the passage
+  route. A ref that names nothing in scope resolves to `missing` rather than
+  widening, because the caller asked a narrower question.
+- **Not passed** by search. A focus is a bias and never a filter, and search
+  deliberately shows content outside the current level — narrowing it here would
+  turn the one screen that answers "where does this word appear" into one that
+  answers it only partially.
 
 Two things to weigh while deciding:
 

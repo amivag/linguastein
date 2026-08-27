@@ -464,7 +464,7 @@ export function HomeScreen() {
     start('quick', { kind: 'time', minutes: 5 });
   };
 
-  const title = `${option?.label ?? 'Practice'} · ${levelLabel(course.level)}`;
+  const title = `${option?.label ?? 'Practice'} · ${levelLabel(course.level, option?.levelLabels)}`;
 
   return (
     <AppShell title={title} action={<ThemeToggle variant="compact" />} wide>

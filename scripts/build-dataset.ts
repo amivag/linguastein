@@ -24,7 +24,7 @@
 
 import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { CEFR_LEVELS, PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
+import { PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
 import { sentenceMood } from '../src/domain/content/mood.ts';
 import { languageModule } from '../src/languages/index.ts';
 
@@ -177,6 +177,7 @@ interface SourceRow {
 
 const NO_CARD = '-';
 
+const LEVELS_FILE = 'levels.tsv';
 const TOPICS_FILE = 'topics.tsv';
 const SKILLS_FILE = 'skills.tsv';
 
@@ -359,6 +360,37 @@ const topicRows: TopicRow[] = existsSync(join(CONTENT_DIR, TOPICS_FILE))
       return { slug: slug!, label: label ?? slug!, group: group ?? '' };
     })
   : [];
+
+/**
+ * The level ladder, in the order the rows declare it.
+ *
+ * **The order is the ladder**, and that is the whole reason this file exists.
+ * Level is a ceiling everywhere in the app — `a2` means "a2 and below" — and the
+ * comparison was `CEFR_LEVELS.indexOf(...)` against a closed enum of six CEFR
+ * codes in the model every pack shares. Chinese is taught in HSK bands, so that
+ * enum is a Spanish fact in a language-neutral place;
+ * `docs/tasks/language-matrix.md` §7 calls it the most urgent of the schema
+ * decisions. The manifest carries this order now, and every ordering read in the
+ * app comes from there.
+ *
+ * Read like `topics.tsv` and not through `readRows`, for the same reason: the
+ * file carries no ids, so registering it for id write-back would hand the
+ * allocator a file it must never touch.
+ */
+interface LevelRow {
+  id: string;
+  /** Optional: a CEFR code names itself once upper-cased, and `hsk1` does not. */
+  label: string;
+}
+
+const levelRows: LevelRow[] = existsSync(join(CONTENT_DIR, LEVELS_FILE))
+  ? readSource(LEVELS_FILE).rows.map((row) => {
+      const [id, label] = row.fields;
+      return { id: id!, label: label ?? '' };
+    })
+  : [];
+
+const declaredLevels = levelRows.map((row) => row.id);
 
 /** Authored skills are semantic curriculum data, so they own stable slugs, not item ids. */
 const authoredSkillRows: AuthoredSkillRow[] = existsSync(join(CONTENT_DIR, SKILLS_FILE))
@@ -574,6 +606,47 @@ for (const author of authorRows) {
  * neither looking wrong in a diff — and a category picker built from whatever
  * the items happen to say would show both.
  */
+/*
+ * A row may only claim a level the ladder declares.
+ *
+ * The same guard `topics.tsv` gives its own column, and it has to be here rather
+ * than in the zod boundary for the same reason the address forms did: the
+ * vocabulary is declared per pack, so only the build can hold a row against the
+ * declaration. A `z.enum` could check one curriculum's list, and did.
+ *
+ * The ladder may be declared ahead of the content that fills it — it is the
+ * curriculum's shape, and `presentLevels` below advertises only what exists — so
+ * an unused level is not a problem. A *used* level that is not declared is.
+ */
+{
+  const declared = new Set(declaredLevels);
+  const used = new Map<string, string>();
+  const note = (level: string | undefined, where: string) => {
+    if (level && !used.has(level)) used.set(level, where);
+  };
+  for (const verb of verbs) note(verb.level, 'verbs.tsv');
+  for (const noun of nouns) note(noun.level, 'nouns.tsv');
+  for (const modifier of modifiers) note(modifier.level, 'modifiers.tsv');
+  for (const sentence of sentences) note(sentence.level, sentence.source);
+  for (const passage of passageRows) note(passage.level, 'passages.tsv');
+  for (const skill of authoredSkillRows) note(skill.level, SKILLS_FILE);
+
+  for (const [level, where] of used) {
+    if (declared.has(level)) continue;
+    problems.push(
+      levelRows.length === 0
+        ? `level "${level}" in ${where}, but there is no ${LEVELS_FILE} — declare the ladder, ` +
+            'in the order it climbs'
+        : `unknown level "${level}" in ${where} — add it to ${LEVELS_FILE} or fix the typo`,
+    );
+  }
+
+  const duplicated = declaredLevels.filter((id, index) => declaredLevels.indexOf(id) !== index);
+  for (const id of new Set(duplicated)) {
+    problems.push(`${LEVELS_FILE}: "${id}" is declared more than once`);
+  }
+}
+
 if (topicRows.length > 0) {
   const registered = new Set(topicRows.map((topic) => topic.slug));
   const seen = new Map<string, string>();
@@ -3308,7 +3381,7 @@ const voiceRows: VoiceRow[] = existsSync(join(CONTENT_DIR, VOICES_FILE))
  * Derived from the emitted items rather than from the source rows, so a level
  * that is authored but filtered out before shipping is not advertised.
  */
-const presentLevels = CEFR_LEVELS.filter((level) =>
+const presentLevels = declaredLevels.filter((level) =>
   [...sentenceItems, ...vocabularyItems].some((item) => item.level === level),
 );
 

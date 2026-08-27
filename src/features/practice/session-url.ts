@@ -13,7 +13,6 @@
  */
 
 import {
-  CEFR_LEVELS,
   coursePath,
   initialLetter,
   ITEM_TYPES,
@@ -21,7 +20,6 @@ import {
   posSlug,
   REGISTERS,
   SENTENCE_MOODS,
-  type CefrLevel,
   type Course,
   type ItemFilter,
   type ItemType,
@@ -171,7 +169,11 @@ export function parseItemFilter(params: URLSearchParams): ItemFilter {
   // Several on purpose — `?pos=verb,noun` is a batch of word kinds, and the
   // repository ORs them exactly as it does types.
   const pos = parts(params.get('pos'));
-  const levels = list(params.get('level'), CEFR_LEVELS as readonly CefrLevel[]);
+  // Slugs rather than a closed list, for the reason `topic` already is: which
+  // levels exist is the loaded packs' business, and `courseFilter` narrows to what
+  // the course actually offers. `list(..., CEFR_LEVELS)` silently dropped
+  // `?level=hsk1` from a Chinese course's own link.
+  const levels = slugs(params.get('level'));
   const registers = list(params.get('register'), REGISTERS as readonly Register[]);
   // `?mood=question` — a form, and a narrowing like any other, so it travels
   // into a session link. Several are allowed for symmetry with the rest, even

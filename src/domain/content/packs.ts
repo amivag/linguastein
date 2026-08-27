@@ -25,7 +25,7 @@ import {
   type LanguageTag,
   type PronunciationLocaleOption,
 } from './language';
-import type { CefrLevel, ItemType, PackManifest } from './model';
+import type { Level, ItemType, PackManifest } from './model';
 import type { ProvenanceSource, ReviewState } from './provenance';
 import type { ContentRepository } from './repository';
 
@@ -43,8 +43,16 @@ export interface PackContents {
   readonly skills: number;
   /** Declared categories that something in the pack actually uses. */
   readonly topics: number;
-  /** Levels the manifest declares, in CEFR order. */
-  readonly levels: readonly CefrLevel[];
+  /**
+   * Levels the manifest declares, **in the order its ladder climbs**.
+   *
+   * "In CEFR order" is what this said, which was true of the only pack that
+   * existed and is not a property of a pack — see `docs/tasks/language-matrix.md`
+   * §7. The order is the pack's own, so a span read off it is right for HSK too.
+   */
+  readonly levels: readonly Level[];
+  /** What the pack calls each rung, where the id does not name itself. */
+  readonly levelLabels: Readonly<Record<string, string>>;
   /** Languages meanings are available in. */
   readonly referenceLanguages: readonly LanguageTag[];
   /** Accents the pack can be spoken in, whether by clip or by device voice. */
@@ -83,6 +91,7 @@ export function packContents(repository: ContentRepository, id: PackId): PackCon
     skills: repository.allSkills().filter((skill) => packIdOf(skill.id) === id).length,
     topics: repository.topics({ packs: [id] }).filter((topic) => topic.count > 0).length,
     levels: manifest.levels ?? [],
+    levelLabels: manifest.levelLabels ?? {},
     referenceLanguages: manifest.referenceLanguages ?? [],
     pronunciationLocales: manifest.pronunciationLocales ?? [],
     voices: manifest.voices?.length ?? 0,

@@ -287,8 +287,33 @@ function duplicates(values: readonly string[]): readonly string[] {
  *
  * An error rather than a warning, because the alternative to failing here is
  * shipping a link that means two things.
+ *
+ * ## Within one target language, not across all packs
+ *
+ * That narrowing is `docs/tasks/pack-addressing.md` §3's decision, and it is what
+ * lets a second *language* load at all. Two packs from one generator both number
+ * their passages from `700001`, so `core-es` + `core-de` failed this check — an
+ * error, correctly reported, for a collision that cannot mislead anybody: the path
+ * carries the language, and `/de/a1/read/700001` cannot mean the Spanish passage.
+ * The resolvers now take the course's packs for exactly that reason.
+ *
+ * What the check was actually protecting is the case a course *cannot*
+ * disambiguate, because both packs are in it: two packs of the same language. It
+ * still fails that, and loudly, which is what buys the time to decide link
+ * spelling (option B) with a real second Spanish pack in hand rather than now.
  */
 export function validateAcrossPacks(packs: readonly ContentPack[]): readonly ValidationIssue[] {
+  const byLanguage = new Map<string, ContentPack[]>();
+  for (const pack of packs) {
+    const language = pack.manifest.targetLanguage;
+    const existing = byLanguage.get(language);
+    if (existing) existing.push(pack);
+    else byLanguage.set(language, [pack]);
+  }
+  return [...byLanguage.values()].flatMap(withinOneLanguage);
+}
+
+function withinOneLanguage(packs: readonly ContentPack[]): readonly ValidationIssue[] {
   const issues: ValidationIssue[] = [];
 
   const kinds = [

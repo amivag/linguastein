@@ -310,13 +310,13 @@ export function StudyScreen() {
         onClick={() => setScopeOpen(true)}
         aria-expanded={scopeOpen}
         aria-controls={scopeSheetId}
-        aria-label={`Course: ${option?.label ?? course.language}, ${levelLabel(course.level)}, ${inScope} ${
+        aria-label={`Course: ${option?.label ?? course.language}, ${levelLabel(course.level, option?.levelLabels)}, ${inScope} ${
           inScope === 1 ? 'item' : 'items'
         } in scope. Change course`}
       >
         <Icon name="language" size="sm" className={styles.scopeIcon} />
         <span className={styles.scopeName}>
-          {option?.label ?? course.language} · {levelLabel(course.level)}
+          {option?.label ?? course.language} · {levelLabel(course.level, option?.levelLabels)}
         </span>
         <span className={styles.scopeCount}>{inScope}</span>
         <Icon name="expand" size="sm" />
@@ -348,7 +348,12 @@ export function StudyScreen() {
           note="A short journey to one real-world outcome: understand the exchange, practise it, then use it somewhere new. The last stage is recorded."
         >
           {missions.map((standing) => (
-            <MissionRow key={standing.mission.id} standing={standing} course={course} />
+            <MissionRow
+              key={standing.mission.id}
+              standing={standing}
+              course={course}
+              levelLabels={option?.levelLabels ?? {}}
+            />
           ))}
         </Section>
       )}
@@ -553,9 +558,12 @@ function Section({ label, icon, note, layout = 'tiles', children }: SectionProps
 function MissionRow({
   standing,
   course,
+  levelLabels,
 }: {
   readonly standing: MissionStanding;
   readonly course: Parameters<typeof missionPath>[0];
+  /** What the course's packs call each rung — see `levelLabel`. */
+  readonly levelLabels: Readonly<Record<string, string>>;
 }) {
   const { mission, complete, position } = standing;
 
@@ -575,7 +583,7 @@ function MissionRow({
         <span className={styles.missionBody}>
           <span className={styles.missionTitle}>{mission.title}</span>
           <span className={styles.missionGoal}>{mission.goal}</span>
-          <span className={styles.missionState}>{describeStanding(standing)}</span>
+          <span className={styles.missionState}>{describeStanding(standing, levelLabels)}</span>
         </span>
         <Icon name="next" size="sm" />
       </Link>
@@ -673,8 +681,11 @@ function describeBatch(standing: BatchStanding): string {
  * ` · ` is already this row's separator and a level is one more fact about the
  * mission, not a second kind of thing.
  */
-function describeStanding(standing: MissionStanding): string {
-  const level = levelLabel(standing.mission.level);
+function describeStanding(
+  standing: MissionStanding,
+  levelLabels: Readonly<Record<string, string>>,
+): string {
+  const level = levelLabel(standing.mission.level, levelLabels);
   if (standing.complete) return `${level} · Complete`;
   if (standing.stage === 'use') {
     return `${level} · Transfer ${standing.transferPosition} of ${standing.transferTotal}`;

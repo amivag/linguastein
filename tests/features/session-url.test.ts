@@ -79,11 +79,23 @@ describe('parseSessionUrl', () => {
    * unknown facet must not be mistaken for "match nothing".
    */
   it('drops values the domain does not recognise rather than emptying the session', () => {
-    const url = parse('/session?preset=nonsense&type=bogus&level=z9&order=sideways');
+    const url = parse('/session?preset=nonsense&type=bogus&order=sideways');
 
     expect(url.preset).toBe('quick');
     expect(url.filter).toEqual({});
     expect(url.ordering).toBeUndefined();
+  });
+
+  /*
+   * A level is pack vocabulary now, so it is carried rather than checked off a
+   * list — the same treatment `topic` and `region` already get, and for the same
+   * reason. `list(..., CEFR_LEVELS)` silently dropped `?level=hsk1` from a
+   * Chinese course's own link; the course filter narrows to what the course
+   * actually offers, which is where an unknown level goes.
+   */
+  it('carries a level the way it carries a topic, since packs declare both', () => {
+    expect(parse('/session?preset=quick&level=hsk1').filter.levels).toEqual(['hsk1']);
+    expect(parse('/session?preset=quick&level=a1,a2').filter.levels).toEqual(['a1', 'a2']);
   });
 
   it('keeps the region macro-filter, not only the pronunciation locales', () => {
@@ -91,7 +103,8 @@ describe('parseSessionUrl', () => {
   });
 
   /**
-   * A region is pack vocabulary, like a topic and unlike a level, so it is
+   * A region is pack vocabulary, like a topic and — since the ladder moved into
+   * the packs — like a level too, so it is
    * carried rather than checked off a list here. `region=fr-FR` used to be
    * dropped — which was the right instinct enforced by the wrong list, five
    * Spanish locales that no English or German pack appears in.

@@ -10,9 +10,20 @@ import {
   nextMissionTransfer,
 } from '../../src/domain/missions';
 
+/**
+ * The ladder these tests order against.
+ *
+ * `missionsForCourse` used to read `CEFR_LEVELS` from the model, so no caller had
+ * to be handed anything — which is exactly why the assumption that every
+ * curriculum climbs A1→C2 went unnoticed until a second one was briefed. The
+ * ladder is a pack's now (`docs/tasks/language-matrix.md` §7), so a test states
+ * the one it means.
+ */
+const CEFR = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
+
 describe('missions', () => {
   it('orders the authored journey and respects the course ceiling', () => {
-    const a1 = missionsForCourse(MISSIONS, { language: 'es', level: 'a1' });
+    const a1 = missionsForCourse(MISSIONS, { language: 'es', level: 'a1' }, CEFR);
 
     expect(a1).toHaveLength(13);
     expect(a1.map((mission) => mission.id)).toEqual([
@@ -30,11 +41,13 @@ describe('missions', () => {
       'market-shopping',
       'introduce-your-family',
     ]);
-    expect(missionsForCourse(MISSIONS, { language: 'fr', level: 'all' })).toEqual([]);
+    expect(missionsForCourse(MISSIONS, { language: 'fr', level: 'all' }, CEFR)).toEqual([]);
   });
 
   it('never resolves a mission outside the current language', () => {
-    expect(missionById(MISSIONS, { language: 'fr', level: 'all' }, 'cafe-order')).toBeUndefined();
+    expect(
+      missionById(MISSIONS, { language: 'fr', level: 'all' }, 'cafe-order', CEFR),
+    ).toBeUndefined();
   });
 
   it('gives every mission a substantial response palette', () => {
@@ -64,7 +77,12 @@ describe('missions', () => {
   });
 
   it('uses a different connected situation for transfer when one is authored', () => {
-    const greeting = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'greet-and-respond')!;
+    const greeting = missionById(
+      MISSIONS,
+      { language: 'es', level: 'a1' },
+      'greet-and-respond',
+      CEFR,
+    )!;
     expect(missionPassageForStage(greeting, 'understand')).toBe('700033');
     expect(missionTransfers(greeting).map((transfer) => transfer.passage)).toEqual([
       '700034',
@@ -73,7 +91,7 @@ describe('missions', () => {
     ]);
     expect(greeting.responsePalettes?.[0]?.responses).toHaveLength(10);
 
-    const cafe = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'cafe-order')!;
+    const cafe = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'cafe-order', CEFR)!;
 
     expect(missionPassageForStage(cafe, 'understand')).toBe('700009');
     expect(missionPassageForStage(cafe, 'practise')).toBe('700009');
@@ -90,7 +108,12 @@ describe('missions', () => {
       'close-service-exchange',
     ]);
 
-    const directions = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'ask-directions')!;
+    const directions = missionById(
+      MISSIONS,
+      { language: 'es', level: 'a1' },
+      'ask-directions',
+      CEFR,
+    )!;
     expect(missionPassageForStage(directions, 'understand')).toBe('700011');
     expect(missionPassageForStage(directions, 'use')).toBe('700016');
     expect(directions.capabilities).toEqual([
@@ -100,7 +123,7 @@ describe('missions', () => {
       'thank-for-help',
     ]);
 
-    const shopping = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'shop-clothes')!;
+    const shopping = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'shop-clothes', CEFR)!;
     expect(missionPassageForStage(shopping, 'understand')).toBe('700010');
     expect(missionPassageForStage(shopping, 'use')).toBe('700017');
     expect(shopping.capabilities).toEqual([
@@ -111,7 +134,7 @@ describe('missions', () => {
       'ask-understand-item-price',
     ]);
 
-    const hotel = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'hotel-check-in')!;
+    const hotel = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'hotel-check-in', CEFR)!;
     expect(missionPassageForStage(hotel, 'understand')).toBe('700012');
     expect(missionPassageForStage(hotel, 'use')).toBe('700018');
     expect(hotel.capabilities).toEqual([
@@ -122,7 +145,7 @@ describe('missions', () => {
       'locate-hotel-facility',
     ]);
 
-    const plans = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'make-plans')!;
+    const plans = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'make-plans', CEFR)!;
     expect(missionPassageForStage(plans, 'understand')).toBe('700014');
     expect(missionPassageForStage(plans, 'use')).toBe('700019');
     expect(plans.capabilities).toEqual([
@@ -133,7 +156,12 @@ describe('missions', () => {
       'confirm-social-plan',
     ]);
 
-    const routine = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'morning-routine')!;
+    const routine = missionById(
+      MISSIONS,
+      { language: 'es', level: 'a1' },
+      'morning-routine',
+      CEFR,
+    )!;
     expect(missionPassageForStage(routine, 'understand')).toBe('700001');
     expect(missionPassageForStage(routine, 'use')).toBe('700020');
     expect(routine.capabilities).toEqual([
@@ -146,7 +174,7 @@ describe('missions', () => {
   });
 
   it('selects the first unfinished transfer and revisits the final rung after completion', () => {
-    const cafe = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'cafe-order')!;
+    const cafe = missionById(MISSIONS, { language: 'es', level: 'a1' }, 'cafe-order', CEFR)!;
 
     expect(nextMissionTransfer(cafe, new Set())).toMatchObject({ index: 0, total: 3 });
     expect(nextMissionTransfer(cafe, new Set(['700015']))).toMatchObject({

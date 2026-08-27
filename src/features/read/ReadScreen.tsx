@@ -6,7 +6,7 @@ import { AppShell } from '../../components/AppShell';
 import { Icon } from '../../components/Icon';
 import { CourseBar } from '../../components/CourseBar';
 import { UsageBadges } from '../../components/UsageBadges';
-import { CEFR_LEVELS, type PassageKind } from '../../domain/content';
+import type { PassageKind } from '../../domain/content';
 import { kindHue } from '../../styles/kinds';
 import surfaces from '../../styles/surfaces.module.css';
 import { studyPath } from '../study/study-url';
@@ -41,14 +41,16 @@ export function ReadScreen() {
     // A passage carries its own level, so the course narrows this list the same
     // way it narrows the pack: a B1 text has no business appearing in an A1
     // course just because its sentences are individually practisable.
-    const ceiling = filter.levels?.length
-      ? Math.max(...filter.levels.map((level) => CEFR_LEVELS.indexOf(level)))
-      : undefined;
+    // The course filter has *already* resolved its ceiling into the explicit set
+    // of levels in scope, so membership is the whole test. This used to re-derive
+    // the ceiling with `CEFR_LEVELS.indexOf`, which was both a second copy of the
+    // rule and the reason an HSK course could not narrow a reading list at all.
+    const inScope = filter.levels?.length ? new Set(filter.levels) : undefined;
     return services.repository.allPassages().filter((passage) => {
       if (kind !== 'all' && passage.kind !== kind) return false;
       if (filter.packs?.length && !filter.packs.includes(passage.pack)) return false;
-      if (ceiling === undefined) return true;
-      return passage.level !== undefined && CEFR_LEVELS.indexOf(passage.level) <= ceiling;
+      if (inScope === undefined) return true;
+      return passage.level !== undefined && inScope.has(passage.level);
     });
   }, [services.repository, kind, filter]);
 

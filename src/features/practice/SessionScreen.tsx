@@ -26,7 +26,7 @@ import { studyPath } from '../study/study-url';
 export function SessionScreen() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const { course, filter: courseScope, path } = useCourse();
+  const { course, filter: courseScope, path, ladder } = useCourse();
   const { services, preferences, batches } = useServices();
   const pronunciationLocale = usePronunciationLocale();
 
@@ -40,7 +40,9 @@ export function SessionScreen() {
     const chosen = PRESETS[url.preset];
     // `?passage=` practises exactly one text; facets narrow it further, since
     // the repository ANDs an id allow-list with everything else.
-    const passageRecord = url.passage ? repository.passageByRef(url.passage) : undefined;
+    const passageRecord = url.passage
+      ? repository.passageByRef(url.passage, courseScope.packs)
+      : undefined;
     const passageItems = url.passage ? (passageRecord?.items ?? []) : undefined;
     /*
      * `?batch=` practises exactly the set a learner assembled.
@@ -58,7 +60,7 @@ export function SessionScreen() {
     // widens to a broader session rather than planning an empty one — a facet
     // like every other, not an id allow-list.
     const skills = (url.skills ?? [])
-      .map((slug) => repository.skillByRef(slug)?.id)
+      .map((slug) => repository.skillByRef(slug, courseScope.packs)?.id)
       .filter((id): id is SkillId => id !== undefined);
     // Both spell "exactly these items", so a link carrying both would have one
     // quietly overwrite the other. A passage is the narrower and the authored
@@ -105,7 +107,7 @@ export function SessionScreen() {
   }, [search, repository, preferences, pronunciationLocale, courseScope, batches]);
 
   const runner = useSessionRunner(config, course);
-  const activeMission = mission ? missionById(MISSIONS, course, mission) : undefined;
+  const activeMission = mission ? missionById(MISSIONS, course, mission, ladder) : undefined;
   /*
    * What is being practised, which is the question the header used to answer
    * with the preset. "Quick practice" is *how*, and it is the same five words

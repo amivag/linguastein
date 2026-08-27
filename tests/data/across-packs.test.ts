@@ -15,7 +15,7 @@
 import { describe, expect, it } from 'vitest';
 import { validateAcrossPacks } from '../../src/data/validation';
 import { ContentRepository } from '../../src/domain/content';
-import type { ContentPack, ItemId, PassageId, SkillId } from '../../src/domain/content';
+import type { ContentPack, ItemId, PackId, PassageId, SkillId } from '../../src/domain/content';
 import { id, TEST_PACK, TEST_PACK_FR } from '../fixtures/pack';
 
 const withPassage = (pack: ContentPack, local: string): ContentPack => ({
@@ -58,9 +58,40 @@ const withItem = (pack: ContentPack, local: string): ContentPack => ({
   ],
 });
 
+/**
+ * A second pack of the *same* language, which is the case a course cannot
+ * disambiguate — both packs are in it, so no path segment tells them apart.
+ * `TEST_PACK_FR` is a second *language*, which is a different question entirely:
+ * see the cross-language case below.
+ */
+const SECOND_ES: ContentPack = {
+  ...TEST_PACK,
+  manifest: { ...TEST_PACK.manifest, id: id<PackId>('extra-es'), name: 'Extra Spanish' },
+  items: [],
+  passages: [],
+  skills: [],
+  translations: [],
+};
+
 describe('validateAcrossPacks', () => {
   it('passes when local ids are unique across the packs', () => {
-    expect(validateAcrossPacks([TEST_PACK, TEST_PACK_FR])).toEqual([]);
+    expect(validateAcrossPacks([TEST_PACK, SECOND_ES])).toEqual([]);
+  });
+
+  /**
+   * Two packs of different languages may claim one local id, and this is the
+   * change `docs/tasks/pack-addressing.md` §3 decided. Two packs from one
+   * generator both number their passages from `700001`, so `core-es` + `core-de`
+   * failed this check — an error, correctly reported, for a collision that cannot
+   * mislead anyone: the path carries the language, and `/de/a1/read/700001` cannot
+   * mean the Spanish passage. The resolvers take the course's packs for that
+   * reason, and this check now polices only what a course cannot sort out.
+   */
+  it('allows two languages to number their content the same way', () => {
+    const es = withPassage(withSkill(withItem(TEST_PACK, '000001'), 'preterite'), '700001');
+    const fr = withPassage(withSkill(withItem(TEST_PACK_FR, '000001'), 'preterite'), '700001');
+
+    expect(validateAcrossPacks([es, fr])).toEqual([]);
   });
 
   it('passes for a single pack whatever it contains', () => {
@@ -74,14 +105,14 @@ describe('validateAcrossPacks', () => {
   it('rejects two packs claiming one passage local id', () => {
     const issues = validateAcrossPacks([
       withPassage(TEST_PACK, '700001'),
-      withPassage(TEST_PACK_FR, '700001'),
+      withPassage(SECOND_ES, '700001'),
     ]);
 
     expect(issues).toHaveLength(1);
     expect(issues[0]?.severity).toBe('error');
     expect(issues[0]?.message).toContain('passage local id "700001"');
     expect(issues[0]?.source).toContain('test-es');
-    expect(issues[0]?.source).toContain('test-fr');
+    expect(issues[0]?.source).toContain('extra-es');
   });
 
   /**
@@ -96,20 +127,20 @@ describe('validateAcrossPacks', () => {
   it('rejects two packs claiming one item local id', () => {
     const issues = validateAcrossPacks([
       withItem(TEST_PACK, '001147'),
-      withItem(TEST_PACK_FR, '001147'),
+      withItem(SECOND_ES, '001147'),
     ]);
 
     expect(issues).toHaveLength(1);
     expect(issues[0]?.severity).toBe('error');
     expect(issues[0]?.message).toContain('item local id "001147"');
     expect(issues[0]?.source).toContain('test-es');
-    expect(issues[0]?.source).toContain('test-fr');
+    expect(issues[0]?.source).toContain('extra-es');
   });
 
   it('rejects two packs claiming one skill local id', () => {
     const issues = validateAcrossPacks([
       withSkill(TEST_PACK, 'preterite'),
-      withSkill(TEST_PACK_FR, 'preterite'),
+      withSkill(SECOND_ES, 'preterite'),
     ]);
 
     expect(issues).toHaveLength(1);

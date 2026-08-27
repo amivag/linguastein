@@ -1,5 +1,5 @@
 import {
-  type CefrLevel,
+  type Level,
   DEFAULT_PRONUNCIATION_LOCALE,
   DEFAULT_REFERENCE_LANGUAGE,
   DEFAULT_TARGET_LANGUAGE,
@@ -18,7 +18,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   targetLanguage: DEFAULT_TARGET_LANGUAGE,
   // A new learner needs a coherent starting point, not every loaded item at
   // once. `resolveCourse` widens safely when a future language has no A1 pack.
-  level: 'a1' satisfies CefrLevel,
+  level: 'a1' satisfies Level,
   referenceLanguage: DEFAULT_REFERENCE_LANGUAGE,
   focusTopics: [],
   focus: DEFAULT_SESSION_FOCUS,

@@ -12,7 +12,6 @@ import { z } from 'zod';
 import {
   ANNOTATION_TYPES,
   CASES,
-  CEFR_LEVELS,
   ENTITY_KINDS,
   ITEM_TYPES,
   MOODS,
@@ -61,7 +60,15 @@ const addressForm = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
 const notAbsolute = (path: string): boolean =>
   !/^([a-zA-Z]:[\\/]|[\\/]|[a-zA-Z][a-zA-Z0-9+.-]*:)/.test(path) &&
   !path.split(/[\\/]/).includes('..');
-const level = z.enum(CEFR_LEVELS);
+/**
+ * A level id, checked for shape and not for membership.
+ *
+ * `z.enum(CEFR_LEVELS)` is six CEFR codes, so this boundary would have rejected a
+ * Chinese pack for saying `hsk1`. The ladder is declared per pack and the *build*
+ * refuses a level it does not declare — the same division the address forms and
+ * the topic slugs already use. What a loader can still insist on is a slug.
+ */
+const level = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, { message: 'expected a level id' });
 
 export const provenanceSchema = z
   .object({
@@ -308,6 +315,7 @@ export const packManifestSchema = z
     description: z.string().optional(),
     license: z.string().optional(),
     levels: z.array(level).optional(),
+    levelLabels: z.record(z.string(), z.string()).optional(),
     referenceLanguages: z.array(languageTag).optional(),
     pronunciationLocales: z.array(languageTag).optional(),
     topics: z.array(packTopicSchema).optional(),

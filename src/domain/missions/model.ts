@@ -7,7 +7,7 @@
  * item ids. A mission merely turns those existing systems into a journey.
  */
 
-import { CEFR_LEVELS, LEVEL_SCOPE_ALL, type CefrLevel, type Course } from '../content';
+import { LEVEL_SCOPE_ALL, levelsUpTo, type Course, type Level } from '../content';
 
 export const MISSION_STAGES = ['understand', 'practise', 'use'] as const;
 export type MissionStage = (typeof MISSION_STAGES)[number];
@@ -46,7 +46,7 @@ export interface MissionDefinition {
   /** Stable, shareable curriculum id — deliberately independent of a pack id. */
   readonly id: string;
   readonly language: string;
-  readonly level: CefrLevel;
+  readonly level: Level;
   readonly order: number;
   readonly title: string;
   /** The real-world thing the learner should be able to do afterwards. */
@@ -152,7 +152,7 @@ export interface MissionRealisation {
   /** The spine this realises, by {@link MissionSpine.id}. */
   readonly mission: string;
   readonly language: string;
-  readonly level: CefrLevel;
+  readonly level: Level;
   /** Local passage id, resolved against whichever compatible pack is loaded. */
   readonly passage: string;
   /** Which line gives Home a useful preview. */
@@ -263,18 +263,28 @@ export function missionCapabilitiesHaveEvidence(
   );
 }
 
-/** Missions that belong in a course, in their authored dependency order. */
+/**
+ * Missions that belong in a course, in their authored dependency order.
+ *
+ * The ladder is a parameter rather than a constant, which is the change
+ * `docs/tasks/language-matrix.md` §7 asks for: this compared
+ * `CEFR_LEVELS.indexOf(...)`, so an HSK course could not order its own missions.
+ * `levelsUpTo` is the same ceiling rule the course filter uses, so a mission and
+ * an item at the same rung are always in or out together.
+ */
 export function missionsForCourse(
   catalog: readonly MissionDefinition[],
   course: Course,
+  ladder: readonly Level[],
 ): readonly MissionDefinition[] {
-  const ceiling =
-    course.level === LEVEL_SCOPE_ALL ? Number.POSITIVE_INFINITY : CEFR_LEVELS.indexOf(course.level);
+  const inScope =
+    course.level === LEVEL_SCOPE_ALL
+      ? undefined
+      : new Set(levelsUpTo(course.level, ladder, ladder));
 
   return catalog
     .filter(
-      (mission) =>
-        mission.language === course.language && CEFR_LEVELS.indexOf(mission.level) <= ceiling,
+      (mission) => mission.language === course.language && (inScope?.has(mission.level) ?? true),
     )
     .sort((a, b) => a.order - b.order);
 }
@@ -304,8 +314,9 @@ export function missionsUsingPassage(
   catalog: readonly MissionDefinition[],
   course: Course,
   localPassageId: string,
+  ladder: readonly Level[],
 ): readonly MissionDefinition[] {
-  return missionsForCourse(catalog, course).filter((mission) =>
+  return missionsForCourse(catalog, course, ladder).filter((mission) =>
     missionPassages(mission).includes(localPassageId),
   );
 }
@@ -314,8 +325,9 @@ export function missionById(
   catalog: readonly MissionDefinition[],
   course: Course,
   id: string,
+  ladder: readonly Level[],
 ): MissionDefinition | undefined {
-  return missionsForCourse(catalog, course).find((mission) => mission.id === id);
+  return missionsForCourse(catalog, course, ladder).find((mission) => mission.id === id);
 }
 
 /** Completion stays derived: every sentence in the mission has retrieval evidence. */

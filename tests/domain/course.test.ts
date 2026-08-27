@@ -119,12 +119,33 @@ describe('coursePath', () => {
 });
 
 describe('isLevelScope', () => {
-  it('accepts the CEFR levels and the widest scope, and nothing else', () => {
+  /*
+   * Shape, not membership, and the change is deliberate. This checked membership
+   * of `CEFR_LEVELS`, so `/zh/hsk1/browse` could not be parsed at all — which is
+   * the assumption `docs/tasks/language-matrix.md` §7 exists to remove. Which ids
+   * exist is the loaded packs' business, and `resolveCourse` below is what holds a
+   * value against the levels a course actually offers.
+   */
+  it('accepts any level id and the widest scope', () => {
     expect(isLevelScope('a1')).toBe(true);
     expect(isLevelScope('c2')).toBe(true);
+    expect(isLevelScope('hsk1')).toBe(true);
     expect(isLevelScope('all')).toBe(true);
-    expect(isLevelScope('a3')).toBe(false);
+  });
+
+  it('still refuses what could not be a level id', () => {
+    expect(isLevelScope('A1')).toBe(false);
+    expect(isLevelScope('a 1')).toBe(false);
+    expect(isLevelScope('')).toBe(false);
     expect(isLevelScope(null)).toBe(false);
+  });
+
+  it('leaves an id no pack declares to be widened, not rejected', () => {
+    // `a3` is a well-formed id and no longer a parse failure. It is dropped a
+    // step later, where there is a course to compare it against — the same place
+    // a stale bookmark has always been handled.
+    expect(isLevelScope('a3')).toBe(true);
+    expect(resolveCourse(courseOptions(testRepository()), 'es', 'a3').level).toBe('all');
   });
 });
 

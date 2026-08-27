@@ -18,12 +18,23 @@
 
 import type { PackId } from './ids';
 import { languageOption, type LanguageTag } from './language';
-import { CEFR_LEVELS, type CefrLevel } from './model';
+import type { Level } from './model';
 import type { ContentRepository, ItemFilter, TopicFacet } from './repository';
 
 /** Every level, plus the unnarrowed case. `all` is the default, not a fallback. */
 export const LEVEL_SCOPE_ALL = 'all';
-export type LevelScope = CefrLevel | typeof LEVEL_SCOPE_ALL;
+export type LevelScope = Level | typeof LEVEL_SCOPE_ALL;
+
+/**
+ * The shape a level id has to have to appear in a path.
+ *
+ * All this can check is the shape, and that is the point rather than a weakness:
+ * which ids exist is the loaded packs' business, and `resolveCourse` already
+ * holds the value against the levels a course actually offers before using it.
+ * This used to be membership of `CEFR_LEVELS`, which meant a Chinese pack's
+ * `/zh/hsk1/browse` could not be parsed at all.
+ */
+const LEVEL_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /** What the learner is studying. Serialised into the path as `/<language>/<level>`. */
 export interface Course {
@@ -43,6 +54,14 @@ export interface CourseLevel {
 /** One selectable language, derived from the packs that are actually loaded. */
 export interface CourseOption {
   readonly language: LanguageTag;
+  /**
+   * The language's ladder, in the order it climbs — every rung its packs declare,
+   * whether or not content has reached it yet. `levels` below is the subset with
+   * content; this is what orders them.
+   */
+  readonly ladder: readonly Level[];
+  /** What each rung is called, where its pack names it. */
+  readonly levelLabels: Readonly<Record<string, string>>;
   /** Name in the language itself, e.g. `Español`. */
   readonly label: string;
   readonly englishLabel: string;
@@ -54,11 +73,80 @@ export interface CourseOption {
 
 export function isLevelScope(value: string | null | undefined): value is LevelScope {
   if (value === null || value === undefined) return false;
-  return value === LEVEL_SCOPE_ALL || (CEFR_LEVELS as readonly string[]).includes(value);
+  return value === LEVEL_SCOPE_ALL || LEVEL_ID.test(value);
 }
 
-export function levelLabel(level: LevelScope): string {
-  return level === LEVEL_SCOPE_ALL ? 'All levels' : level.toUpperCase();
+/**
+ * What to call a rung, preferring what its pack calls it.
+ *
+ * The fallback is upper-casing the id, which is right for CEFR and is why
+ * `core-es` declares no labels: `a1` reads correctly as `A1`, and a label
+ * repeating it would be a second place for it to go stale. `hsk1` does not name
+ * itself, so an HSK pack declares a label and every screen that has the course
+ * option passes them through.
+ */
+export function levelLabel(
+  level: LevelScope,
+  labels: Readonly<Record<string, string>> = {},
+): string {
+  if (level === LEVEL_SCOPE_ALL) return 'All levels';
+  return labels[level] ?? level.toUpperCase();
+}
+
+/**
+ * A language's level ladder, in the order it climbs, read off the packs loaded.
+ *
+ * The one place the order comes from now. Several packs of one language are
+ * merged in load order with duplicates dropped, which keeps a supplementary pack
+ * from reordering the core one's ladder — the first pack to name a rung fixes
+ * where it sits.
+ */
+export function levelLadder(
+  repository: ContentRepository,
+  language: LanguageTag,
+): readonly Level[] {
+  const ladder: Level[] = [];
+  for (const manifest of repository.packs) {
+    if (manifest.targetLanguage !== language) continue;
+    for (const level of manifest.levels ?? []) {
+      if (!ladder.includes(level)) ladder.push(level);
+    }
+  }
+  return ladder;
+}
+
+/**
+ * The packs of one language, which is the scope a curriculum reference resolves
+ * in (`docs/tasks/pack-addressing.md` §3).
+ *
+ * The *language's* packs and not the course's level-narrowed filter, because the
+ * collision being solved is across languages: two packs from one generator both
+ * number their passages from `700001`, and a mission's passage may sit at any
+ * rung at or below the course's ceiling. Narrowing by level here would hide a
+ * mission's own text from it.
+ */
+export function packsOfLanguage(
+  repository: ContentRepository,
+  language: LanguageTag,
+): readonly PackId[] {
+  return repository.packs
+    .filter((manifest) => manifest.targetLanguage === language)
+    .map((manifest) => manifest.id);
+}
+
+/** The labels those packs declare, merged the same way. */
+function levelLabelsOf(
+  repository: ContentRepository,
+  language: LanguageTag,
+): Readonly<Record<string, string>> {
+  const labels: Record<string, string> = {};
+  for (const manifest of repository.packs) {
+    if (manifest.targetLanguage !== language) continue;
+    for (const [id, label] of Object.entries(manifest.levelLabels ?? {})) {
+      labels[id] ??= label;
+    }
+  }
+  return labels;
 }
 
 /** `/es/a1`. The path prefix every course-scoped screen hangs off. */
@@ -77,11 +165,26 @@ export function coursePath(course: Course, screen = ''): string {
   return suffix ? `${coursePrefix(course)}/${suffix}` : coursePrefix(course);
 }
 
-/** Levels at or below `level`; the whole set for `all`. */
-function levelsUpTo(level: LevelScope, available: readonly CefrLevel[]): readonly CefrLevel[] {
+/**
+ * Levels at or below `level` on `ladder`; the whole set for `all`.
+ *
+ * A ceiling the ladder does not name yields nothing rather than everything, which
+ * is the safe direction: `resolveCourse` has already widened an unknown level to
+ * `all` before this is reached, so getting here with one means the ladder and the
+ * content disagree, and silently returning every level would hide that.
+ */
+export function levelsUpTo(
+  level: LevelScope,
+  ladder: readonly Level[],
+  available: readonly Level[] = ladder,
+): readonly Level[] {
   if (level === LEVEL_SCOPE_ALL) return available;
-  const ceiling = CEFR_LEVELS.indexOf(level);
-  return available.filter((candidate) => CEFR_LEVELS.indexOf(candidate) <= ceiling);
+  const ceiling = ladder.indexOf(level);
+  if (ceiling === -1) return [];
+  return available.filter((candidate) => {
+    const rung = ladder.indexOf(candidate);
+    return rung !== -1 && rung <= ceiling;
+  });
 }
 
 /**
@@ -95,10 +198,10 @@ function levelsUpTo(level: LevelScope, available: readonly CefrLevel[]): readonl
 export function courseFilter(course: Course, options: readonly CourseOption[]): ItemFilter {
   const option = options.find((candidate) => candidate.language === course.language);
   const packs = option?.packs ?? [];
-  const declared = option?.levels.flatMap((entry) =>
+  const present = option?.levels.flatMap((entry) =>
     entry.level === LEVEL_SCOPE_ALL ? [] : [entry.level],
   );
-  const levels = levelsUpTo(course.level, declared ?? []);
+  const levels = levelsUpTo(course.level, option?.ladder ?? [], present ?? []);
 
   return {
     ...(packs.length ? { packs } : {}),
@@ -124,14 +227,16 @@ export function courseOptions(repository: ContentRepository): readonly CourseOpt
 
   return [...byLanguage].map(([language, packs]) => {
     const items = repository.query({ packs });
-    const present = CEFR_LEVELS.filter((level) => items.some((item) => item.level === level));
+    const ladder = levelLadder(repository, language);
+    const labels = levelLabelsOf(repository, language);
+    const present = ladder.filter((level) => items.some((item) => item.level === level));
 
     const levels: CourseLevel[] = present.map((level) => ({
       level,
-      label: levelLabel(level),
+      label: levelLabel(level, labels),
       count: items.filter(
         (item) =>
-          item.level !== undefined && CEFR_LEVELS.indexOf(item.level) <= CEFR_LEVELS.indexOf(level),
+          item.level !== undefined && levelsUpTo(level, ladder, present).includes(item.level),
       ).length,
     }));
 
@@ -146,6 +251,8 @@ export function courseOptions(repository: ContentRepository): readonly CourseOpt
     const named = languageOption(language);
     return {
       language,
+      ladder,
+      levelLabels: labels,
       label: named.nativeName,
       englishLabel: named.englishName,
       packs,

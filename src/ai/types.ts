@@ -8,13 +8,13 @@
  * receive instead of a bare "teach me Spanish".
  */
 
-import type { CefrLevel, ItemId, LanguageTag, LexemeId, SkillId } from '../domain/content';
+import type { Level, ItemId, LanguageTag, LexemeId, SkillId } from '../domain/content';
 
 /** What the learner can already do, in a form an AI can act on (spec §18). */
 export interface LearnerContext {
   readonly targetLanguage: LanguageTag;
   readonly referenceLanguage: LanguageTag;
-  readonly level: CefrLevel;
+  readonly level: Level;
   /** Lemmas the learner handles reliably. */
   readonly known: readonly string[];
   /** Lemmas and patterns they get wrong or hesitate over. */

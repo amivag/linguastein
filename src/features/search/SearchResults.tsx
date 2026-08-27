@@ -289,7 +289,7 @@ function Phrases({
  * `missionsUsingPassage` is the one place that chain is spelled out.
  */
 function Destinations({ destinations }: { readonly destinations: readonly SearchDestination[] }) {
-  const { course, path } = useCourse();
+  const { course, path, ladder } = useCourse();
   const passages = destinations.filter((entry) => entry.kind === 'passage');
 
   /**
@@ -316,7 +316,12 @@ function Destinations({ destinations }: { readonly destinations: readonly Search
     ...new Map(
       passages
         .flatMap((entry) =>
-          missionsUsingPassage(MISSIONS, course, parseEntityId(entry.ref)?.local ?? entry.ref),
+          missionsUsingPassage(
+            MISSIONS,
+            course,
+            parseEntityId(entry.ref)?.local ?? entry.ref,
+            ladder,
+          ),
         )
         .map((mission) => [mission.id, mission]),
     ).values(),

@@ -11,7 +11,7 @@
  * produces data. Nothing here talks to a network.
  */
 
-import type { CefrLevel, ContentRepository } from '../domain/content';
+import type { Level, ContentRepository } from '../domain/content';
 import { inferMastery, isDue, type ItemProgress } from '../domain/progress';
 import type { LearnerContext, WeakPoint } from './types';
 
@@ -97,11 +97,8 @@ export function buildLearnerContext(options: BuildContextOptions): LearnerContex
 }
 
 /** The level the learner is actually working at, not the level they claim. */
-function dominantLevel(
-  repository: ContentRepository,
-  progress: readonly ItemProgress[],
-): CefrLevel {
-  const counts = new Map<CefrLevel, number>();
+function dominantLevel(repository: ContentRepository, progress: readonly ItemProgress[]): Level {
+  const counts = new Map<Level, number>();
   for (const record of progress) {
     const level = repository.getItem(record.itemId)?.level;
     if (level) counts.set(level, (counts.get(level) ?? 0) + 1);

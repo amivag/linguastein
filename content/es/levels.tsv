@@ -1,0 +1,33 @@
+# The level ladder for core-es — the controlled vocabulary for the `level`
+# column of every other source file, and the order those levels climb in.
+#
+# Columns: id	label (en, optional)
+#
+# **The order of the rows is the ladder.** Level is a *ceiling* everywhere in the
+# app — `a2` means "a2 and below" — and that comparison used to be
+# `CEFR_LEVELS.indexOf(...)` against a closed enum in `src/domain/content/model.ts`.
+# Chinese is taught in HSK bands and Japanese in JLPT ones, so an enum of six CEFR
+# codes is a Spanish fact in a model every pack shares; see
+# docs/tasks/language-matrix.md §7, where this is the schema decision it calls
+# the most urgent. The build now emits this order into the manifest and every
+# ordering read comes from there.
+#
+# The build fails on a level used in a source file but missing here, which is the
+# same guard `topics.tsv` gives its own column. It does **not** fail on a
+# declared level nothing uses: the ladder is the curriculum's shape and may be
+# declared ahead of the rows that fill it — only the levels actually present are
+# advertised in the manifest.
+#
+# `label` is optional and is left off here on purpose. A CEFR code reads correctly
+# as its own name once upper-cased, which is what the app falls back to, and a
+# label repeating `A1` would be a second place for it to go stale. A pack whose
+# ladder is not self-naming declares one: `hsk1	HSK 1`.
+#
+# Do not reorder these rows. The ladder is the order, so moving one changes what
+# every `?level=` link and every course scope means.
+a1
+a2
+b1
+b2
+c1
+c2

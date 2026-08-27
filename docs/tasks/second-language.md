@@ -155,6 +155,12 @@ it was actually protecting.
 Whichever wins, decide it before generating a second pack: the id ledger makes
 ids permanent, and a scheme changed afterwards is a migration.
 
+**Decided 2026-08-26: D, narrowed, exactly as recommended above.** The full
+reasoning — including why `pack-addressing.md`'s B is deferred rather than
+rejected, and which call sites do and do not pass a course scope — is written up
+once, in [`pack-addressing.md`](pack-addressing.md) §3, because that is the brief
+that owns the question.
+
 ---
 
 ## 4. The morphology model has no case, and address is Spanish pronouns

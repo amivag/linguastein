@@ -43,6 +43,10 @@ let result: { ok: boolean; output: string };
 beforeAll(() => {
   mkdirSync(content, { recursive: true });
 
+  // A pack that uses levels declares the ladder they climb, and the build refuses
+  // a level the ladder does not name. CEFR here because the fixture's rows are
+  // A1; `non-cefr-ladder.test.ts` is where a ladder that is not CEFR is proven.
+  write('levels.tsv', '# Columns: id\tlabel\na1\na2\n');
   write('pack.tsv', '# Columns: version\titems\tupdated\tnote\n0.1.0\t2\t2026-08-25\tfixture\n');
   write(
     'manifest.tsv',
@@ -69,7 +73,11 @@ beforeAll(() => {
   write(
     'sentences-core.tsv',
     '# Columns: id\ttarget\tgloss\tlevel\ttopics\tnote\tregister\taddress\tregions\tpassage\tspeaker\tskills\n' +
-      '\tDas Haus ist alt.\tThe house is old.\ta1\t\t\t\t\t\t\t\t\n',
+      // No leading tab. The id column is *omitted* on a new row, not left empty —
+      // the sentences header says so and this fixture did it anyway, which parsed
+      // the gloss as the level and shipped an item with no text. It built for as
+      // long as nothing checked a level against a ladder.
+      'Das Haus ist alt.\tThe house is old.\ta1\n',
   );
 
   result = tryRunScript('scripts/build-dataset.ts', {

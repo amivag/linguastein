@@ -73,14 +73,17 @@ export function MissionScreen() {
   const { missionId = '', stage = 'understand' } = useParams();
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const { course, filter, option } = useCourse();
+  const { course, filter, option, ladder } = useCourse();
+  // Every reference on this screen is a curriculum one — a passage, a skill, a
+  // palette's item — so all of them resolve inside this language's packs.
+  const packs = filter.packs;
   const { services, preferences } = useServices();
   const locale = usePronunciationLocale();
   // Named once for the copy that has to say which language a learner is being
   // asked to respond in. `Respond naturally … in Spanish` was the fallback cue
   // on every mission whose turns declare no communicative function.
   const courseLanguageName = languageOption(course.language).englishName;
-  const mission = missionById(MISSIONS, course, missionId);
+  const mission = missionById(MISSIONS, course, missionId, ladder);
   const chosenStage: MissionStage = stage === 'use' ? 'use' : 'understand';
   /**
    * Which rung of the ladder the Use stage is on: `undefined` until the attempt
@@ -104,13 +107,14 @@ export function MissionScreen() {
         : undefined;
   const passageLocalId = chosenStage === 'use' ? transferStep?.transfer.passage : mission?.passage;
   const requestedPassage = passageLocalId
-    ? services.repository.passageByRef(passageLocalId)
+    ? services.repository.passageByRef(passageLocalId, packs)
     : undefined;
   // A curriculum may run against a compatible pack version that predates its
   // optional transfer passage. Widen to the taught exchange instead of making
   // the whole mission unavailable.
   const passage =
-    requestedPassage ?? (mission ? services.repository.passageByRef(mission.passage) : undefined);
+    requestedPassage ??
+    (mission ? services.repository.passageByRef(mission.passage, packs) : undefined);
   const isTransfer = requestedPassage !== undefined && passageLocalId !== mission?.passage;
   const items = useMemo(
     () => (passage ? services.repository.itemsOfPassage(passage.id) : []),
@@ -136,11 +140,11 @@ export function MissionScreen() {
           .map((attempt) => attempt.itemId),
       );
       const availableTransfers = missionTransfers(mission).filter((transfer) =>
-        services.repository.passageByRef(transfer.passage),
+        services.repository.passageByRef(transfer.passage, packs),
       );
       const complete = new Set<string>();
       for (const transfer of availableTransfers) {
-        const candidate = services.repository.passageByRef(transfer.passage);
+        const candidate = services.repository.passageByRef(transfer.passage, packs);
         if (!candidate) continue;
         const learnerItems = services.repository
           .itemsOfPassage(candidate.id)
@@ -161,7 +165,7 @@ export function MissionScreen() {
     return () => {
       cancelled = true;
     };
-  }, [chosenStage, mission, services]);
+  }, [chosenStage, mission, packs, services]);
 
   useEffect(() => {
     if (chosenStage === 'use' || !mission?.capabilities?.length) return;
@@ -177,7 +181,7 @@ export function MissionScreen() {
   const capabilities = useMemo(
     () =>
       (mission?.capabilities ?? []).flatMap((slug): readonly MissionCapability[] => {
-        const skill = services.repository.skillByRef(slug);
+        const skill = services.repository.skillByRef(slug, packs);
         if (!skill || skill.kind !== 'function') return [];
         const label =
           services.repository.translationOf(skill.id, preferences.referenceLanguage)?.text ??
@@ -185,15 +189,15 @@ export function MissionScreen() {
         const evidence = skillMastery.get(skill.id);
         return [{ id: skill.id, label, ...(evidence ? { evidence } : {}) }];
       }),
-    [mission, preferences.referenceLanguage, services.repository, skillMastery],
+    [mission, packs, preferences.referenceLanguage, services.repository, skillMastery],
   );
   const responsePalettes = useMemo(
     () =>
       (mission?.responsePalettes ?? []).flatMap((palette): readonly ResolvedResponsePalette[] => {
-        const capability = services.repository.skillByRef(palette.capability);
+        const capability = services.repository.skillByRef(palette.capability, packs);
         if (!capability || capability.kind !== 'function') return [];
         const responses = palette.responses.flatMap((response) => {
-          const item = services.repository.itemByLocalId(response.item);
+          const item = services.repository.itemByLocalId(response.item, packs);
           if (!item) return [];
           const meaning = services.repository.translationOf(
             item.id,
@@ -219,7 +223,7 @@ export function MissionScreen() {
           },
         ];
       }),
-    [mission, preferences.referenceLanguage, services.repository],
+    [mission, packs, preferences.referenceLanguage, services.repository],
   );
   /**
    * Which word is open, held here rather than in the stage that shows it.

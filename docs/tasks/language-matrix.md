@@ -352,21 +352,65 @@ stops a language being half-added.
 
 ## 7. Decisions, and which are permanent
 
-| Decide now (schema, URL, ids, cache keys)                         | Can wait                       |
-| ----------------------------------------------------------------- | ------------------------------ |
-| §1 transliteration, per language                                  | Chinese segmentation, pinyin   |
-| Level: an open per-pack ladder, not the closed `CEFR_LEVELS` enum | Token-level alignment records  |
-| §3 translation addressing and versioning                          | The twelve non-English pairs   |
-| §5 pack path versioning and level sharding                        | Per-pair translation authoring |
-| ~~`ADDRESS_FORMS` → per-language pronouns~~ **done**              |                                |
-| §6 `LanguageModule`, both halves                                  |                                |
-| `second-language.md` §3 local-id resolution scope                 |                                |
+| Decide now (schema, URL, ids, cache keys)            | Can wait                       |
+| ---------------------------------------------------- | ------------------------------ |
+| §1 transliteration, per language                     | Chinese segmentation, pinyin   |
+| ~~Level: an open per-pack ladder~~ **done**          | Token-level alignment records  |
+| §3 translation addressing and versioning             | The twelve non-English pairs   |
+| §5 pack path versioning and level sharding           | Per-pair translation authoring |
+| ~~`ADDRESS_FORMS` → per-language pronouns~~ **done** |                                |
+| §6 `LanguageModule`, both halves                     |                                |
+| `second-language.md` §3 local-id resolution scope    |                                |
 
 `CEFR_LEVELS` ([`model.ts:15`](../../src/domain/content/model.ts)) is the most
 urgent of these, because Chinese is taught in HSK bands and the level reaches the
 zod schema, the URL path, mission filtering, `session-url.ts` and `ReadScreen`.
 It is a URL migration and a data migration at once, and §5's shard names come out
 of it.
+
+**Landed 2026-08-26 — and it was neither migration.** That is worth recording,
+because the fear is what kept it late. The _values_ never changed: `core-es` still
+authors `a1`, `a2`, `b1`, still ships them, and rebuilds **byte-identically**. What
+opened was the type and the ordering, so no link and no stored record moved. A
+migration only arrives with a pack that is not CEFR, and by then the seam is there
+to receive it.
+
+The ladder is declared in `content/<tag>/levels.tsv` — **the row order is the
+ladder** — and the build emits it into `PackManifest.levels`, in that order, with
+the levels that have content. `levelLadder(repository, language)` reads it back,
+and every ordering question now goes through it:
+
+- `CEFR_LEVELS.indexOf(...)` is gone from all six call sites. `levelsUpTo` takes a
+  ladder; `courseOptions` derives the rungs and the cumulative counts from it;
+  `missionsForCourse` takes it as a parameter and `CourseScope.ladder` carries it
+  to the three screens that need it.
+- `ReadScreen` stopped re-deriving a ceiling at all. The course filter has
+  _already_ resolved its ceiling into the explicit set of levels in scope, so
+  membership is the whole test — one copy of the rule instead of two.
+- `isLevelScope` checks the **shape** of an id, not membership. `/zh/hsk1/browse`
+  parses now; an id no pack declares is widened by `resolveCourse`, which is where
+  a stale bookmark was always handled.
+- `?level=` is carried like `?topic=` and `?region=`. `list(..., CEFR_LEVELS)`
+  silently dropped `?level=hsk1` from a Chinese course's own link.
+- The zod boundary checks a slug. `z.enum(CEFR_LEVELS)` would have rejected a
+  Chinese pack at load, so the guarantee moved to the build, which can hold a row
+  against the pack's own declaration — the third time this division has been the
+  answer, after the topic slugs and the address forms.
+- `PackManifest.levelLabels` names a rung that does not name itself. Absent for
+  CEFR on purpose: `a1` reads correctly as `A1`, and a label repeating it is a
+  second place for it to go stale. `hsk1` is not, so the four screens that show a
+  level pass the declared labels through.
+
+`tests/domain/non-cefr-ladder.test.ts` is the proof §9 asks for, on an HSK ladder
+chosen because it breaks two things CEFR happens to get right: `hsk10` sorts
+before `hsk2`, so any order but the declared one puts the hardest band second, and
+the bands do not name themselves.
+
+**One pre-existing bug fell out of the new gate.** `second-language-build.test.ts`
+wrote its German sentence row with a _leading tab_ — the id column left empty
+rather than omitted, which is the trap the sentences header documents — so the
+gloss parsed as the level and the fixture shipped an item with no text. It built
+for as long as nothing compared a level against a ladder.
 
 `ADDRESS_FORMS` gains a third case with Chinese: German makes the T–V choice with
 `du`/`Sie`/`ihr` and Greek with `εσύ`/`εσείς`, but Chinese barely makes it at all.
@@ -425,12 +469,17 @@ is not, because it wants a preference value and a sentence of UI copy.
 1. ~~**§1's gate and transliteration.**~~ **Done** — the gate landed with this
    brief, the transliteration on 2026-08-26. Both before any German or Greek row
    exists, which was the point.
-2. **The schema decisions** — level ladder, ~~address forms~~,
-   `second-language.md` §3 — together, because every authored row depends on all
-   three. **Address forms landed 2026-08-26**, ahead of the other two and on
-   purpose: it is the only one of the three that reaches no URL, so it could be
-   done without a migration. The level ladder still cannot — it is a URL change
-   and a data change at once, and §5's shard names come out of it.
+2. ~~**The schema decisions** — level ladder, address forms,
+   `second-language.md` §3.~~ **Done, all three, 2026-08-26.** The level ladder
+   turned out to be neither a URL migration nor a data one: the values are
+   unchanged and `core-es` rebuilds byte-identically, so only the type and the
+   ordering opened, and §5's shard names can now be read off `manifest.levels`.
+   Local-id resolution went the way §3 recommended — the course's packs narrow a
+   curriculum reference where the caller means it, and `validateAcrossPacks`
+   compares within a target language, so `core-es` + `core-de` loads while two
+   packs of one language still fail loudly. `pack-addressing.md` §3 holds the
+   reasoning, including why always-qualified links are deferred rather than
+   rejected.
 3. **§6, the language module**, and `second-language.md` §2's parameterised
    build. With 1 and 2 settled this is refactoring rather than design.
 4. **§3 and §5 in one pass** — translation units, pack versioning, level
@@ -467,6 +516,14 @@ Steps 1–4 are the whole "decide it in alpha" window.
 - **done** — the address vocabulary is the language module's; the build refuses a
   form it does not declare, and a badge with no label for one renders nothing
   rather than a raw slug (`tests/languages/address-forms.test.tsx`)
+- **done** — a pack declares a level ladder that is not CEFR and the URL carries
+  it: the order is the pack's, `?level=` and `/<language>/<level>` accept its ids,
+  the build refuses a level the ladder does not name, and `core-es` rebuilds
+  byte-identically across the change (`tests/domain/non-cefr-ladder.test.ts`)
+- **done** — two packs of different languages may number their content the same
+  way and both load; a bare local id resolves inside the course that asked, and
+  narrows rather than prefers, so a scope cannot reach past itself
+  (`tests/domain/scoped-refs.test.ts`)
 - **done** — a headword spanning tokens that do not touch is expressible, and a
   span naming a missing lexeme is reported (`tests/data/multi-word-lexeme.test.ts`)
 - **done** — the capability vocabulary is shared rather than per-language: a
@@ -482,7 +539,6 @@ Steps 1–4 are the whole "decide it in alpha" window.
   no capability rows of its own, and realises the existing spines rather than
   authoring new ones
 - tapping `up` in `look it up` names the phrasal verb and glosses it
-- a pack declares a level ladder that is not CEFR, and the URL carries it
 - an A1 learner's first session downloads A1 shards, and no B1 file is fetched
 - `translations-zh` can be added to a shipped `core-de` without re-versioning it
 - a learner can install and remove one pack from Settings → Packs, offline after

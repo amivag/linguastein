@@ -116,6 +116,7 @@ export interface ItemFilter {
 }
 
 const EMPTY: readonly never[] = [];
+const NONE: ReadonlySet<string> = new Set();
 
 export class ContentRepository {
   private readonly packsById = new Map<PackId, PackManifest>();
@@ -166,10 +167,63 @@ export class ContentRepository {
   /** item → every recording of it, across locales and voices. */
   private readonly clipsByItem = new Map<ItemId, AudioClip[]>();
 
-  static from(packs: readonly ContentPack[]): ContentRepository {
+  /**
+   * Letters a language keeps unfolded in a letter index, by language.
+   *
+   * Supplied once at composition rather than looked up here, because
+   * `src/languages` is not the engine and the engine may not reach for it (Rule
+   * 1). `Ñ` was written into `alphabet.ts` instead, which
+   * `docs/tasks/language-matrix.md` §6 calls the same leak in miniature. The
+   * default folds everything — right for a language nobody has written a module
+   * for, and never wrong, only sometimes incomplete.
+   *
+   * It has to be *one* answer for the whole repository rather than a parameter on
+   * each read, because the index and the filter must agree: shown `ñoño` under Ñ
+   * and then not returned by the Ñ chip, a learner has been handed two alphabets.
+   */
+  private standaloneLetters: (tag: LanguageTag | undefined) => ReadonlySet<string> = () => NONE;
+
+  static from(
+    packs: readonly ContentPack[],
+    options: {
+      readonly standaloneLetters?: (tag: LanguageTag | undefined) => ReadonlySet<string>;
+    } = {},
+  ): ContentRepository {
     const repository = new ContentRepository();
+    if (options.standaloneLetters) repository.standaloneLetters = options.standaloneLetters;
     for (const pack of packs) repository.add(pack);
     return repository;
+  }
+
+  /** The letter one item files under, by its own language's rules. */
+  private initialOf(item: LearningItem): string {
+    return initialLetter(item.text, this.standaloneLetters(this.languageOfItem(item)));
+  }
+
+  /**
+   * A requested letter read in the *index's* vocabulary, which is the union of
+   * every loaded language's standalone letters.
+   *
+   * Not the asking item's own set, which is the version that looked right and was
+   * not: with a Spanish and a French pack loaded, `ñoño` files under Ñ on the
+   * Spanish side and under N on the French, so folding the request per item made
+   * `Ñ` fold to `N` for the French rows and the Ñ chip returned three French words
+   * it had not counted. A chip *came from* the index, so it has to be interpreted
+   * the way the index spells letters — and then the count a learner reads and the
+   * rows a tap produces are the same set, which is the only property that matters
+   * here.
+   *
+   * Still folded rather than taken as given, because a URL may carry `?initial=café`
+   * or a lower-case letter, and both have to land on the same bucket.
+   */
+  private requestedInitial(letter: string): string {
+    const union = new Set<string>();
+    for (const manifest of this.packsById.values()) {
+      for (const standalone of this.standaloneLetters(manifest.targetLanguage)) {
+        union.add(standalone);
+      }
+    }
+    return initialLetter(letter, union);
   }
 
   add(pack: ContentPack): void {
@@ -516,7 +570,10 @@ export class ContentRepository {
 
   query(filter: ItemFilter = {}): readonly LearningItem[] {
     const search = filter.search ? normalise(filter.search) : undefined;
-    const initial = filter.initial ? initialLetter(filter.initial) : undefined;
+    // Folded in the index's own vocabulary — see `requestedInitial` for why that
+    // is the union of the loaded languages rather than any one of them.
+    const requested = filter.initial?.trim();
+    const initial = requested ? this.requestedInitial(requested) : undefined;
     return this.allItems().filter((item) => {
       if (filter.packs?.length && !filter.packs.includes(item.pack)) return false;
       if (filter.ids && !filter.ids.includes(item.id)) return false;
@@ -541,7 +598,7 @@ export class ContentRepository {
       if (filter.pos?.length && !this.exemplifies(item, filter.pos)) return false;
       if (filter.skills?.length && !overlaps(item.skills, filter.skills)) return false;
       if (search && !normalise(item.text).includes(search)) return false;
-      if (initial && initialLetter(item.text) !== initial) return false;
+      if (initial !== undefined && this.initialOf(item) !== initial) return false;
       return true;
     });
   }
@@ -599,7 +656,7 @@ export class ContentRepository {
   initials(filter: ItemFilter = {}, locale?: LanguageTag): readonly InitialFacet[] {
     const counts = new Map<string, number>();
     for (const item of this.query(filter)) {
-      const letter = initialLetter(item.text);
+      const letter = this.initialOf(item);
       counts.set(letter, (counts.get(letter) ?? 0) + 1);
     }
     const order = byLetter(locale);

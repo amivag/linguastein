@@ -324,13 +324,13 @@ architecture reads, and **Greek and Chinese will end it.**
 
 Runtime language behaviour is already being called, just not by that name:
 
-| Caller                       | Needs                          |
-| ---------------------------- | ------------------------------ |
-| `domain/exercises/speech.ts` | `normalise`, `splitWords`      |
-| `ItemFilter.search`          | diacritic-insensitive matching |
-| `initialLetter` / `byLetter` | bucketing and collation        |
-| `ExerciseView`'s `PRAISE`    | a target-language string       |
-| `UsageBadges`                | address-form pronouns          |
+| Caller                       | Needs                          | State                          |
+| ---------------------------- | ------------------------------ | ------------------------------ |
+| `domain/exercises/speech.ts` | `normalise`, `splitWords`      | open                           |
+| `ItemFilter.search`          | diacritic-insensitive matching | open                           |
+| `initialLetter` / `byLetter` | bucketing and collation        | **done** — `standaloneLetters` |
+| `ExerciseView`'s `PRAISE`    | a target-language string       | **done** — `correctnessPraise` |
+| `UsageBadges`                | address-form pronouns          | **done** — `addressForms`      |
 
 For Greek that means final sigma and accent handling; for Chinese, segmentation
 and pinyin bucketing. `Ñ` is already special-cased inside the language-neutral
@@ -347,6 +347,39 @@ Load the runtime half when the course resolves, hold it in
 at every call site while shipping as a per-language chunk — the same story as the
 datasets. Keeping both halves under one `src/languages/<tag>/` directory is what
 stops a language being half-added.
+
+**Three of the five rows are done, 2026-08-26 (address forms with the schema
+decisions).** `src/languages/runtime.ts` is the half a screen asks, and the two
+new answers went in the way rule 1 requires rather than the way §6's sketch
+implies: **the engine is handed the behaviour, it does not import it.** `Ñ` was a
+literal inside the language-neutral `alphabet.ts` — §6 calls it "the same leak in
+miniature" — so `standaloneLetters` is now the language's answer, `initialLetter`
+takes it as a parameter, and `services.ts` hands the resolver to the repository
+once. `src/domain` importing `src/languages` would have been a cycle _and_ a
+layering inversion; a parameter is neither.
+
+**One thing was subtly wrong and the test caught it.** Folding the requested
+letter by each _item's_ language looks obviously right and is not: with a Spanish
+and a French pack loaded, `Ñ` folds to `N` for the French rows, so the Ñ chip
+returned three French words it had never counted. A chip _came from_ the index, so
+it is read in the index's vocabulary — the union of the loaded languages — and
+then the count a learner reads and the rows a tap produces are the same set.
+`tests/domain/letter-index.test.ts` asserts that round trip over every chip, which
+nothing did before: the two halves live in one file precisely so they cannot
+disagree, and the layer above had no such guarantee.
+
+`PRAISE` moved on its own terms. Its comment named its expiry — _when there is a
+second of these strings, they move somewhere together_ — and both halves of the
+reason it gave had since become false: the runtime half exists, the app does
+import it, and the address-form labels are the second string.
+
+**What is left of §6** is the pair that matters for Greek and Chinese rather than
+for a second Latin-script language: `normalise`/`splitWords` in
+`domain/exercises/speech.ts`, and the diacritic-insensitive matching behind
+`ItemFilter.search`. Both work correctly for any language whose accents fold, so
+the urgency arrives with final sigma and with segmentation — and both thread
+through grading and the repository's search index, which is a wider change than
+either of the two above.
 
 ---
 

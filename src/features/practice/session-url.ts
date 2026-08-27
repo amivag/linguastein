@@ -14,7 +14,6 @@
 
 import {
   coursePath,
-  initialLetter,
   ITEM_TYPES,
   posFromSlug,
   posSlug,
@@ -188,7 +187,13 @@ export function parseItemFilter(params: URLSearchParams): ItemFilter {
 
   return {
     ...(search ? { search } : {}),
-    ...(initial ? { initial: initialLetter(initial) } : {}),
+    /*
+     * Carried as written, not folded here. The repository folds both the filter
+     * and each item by that *item's* language, so a second fold against no
+     * language would compare `N` to `Ñ` and drop every result. Normalising here
+     * was belt-and-braces over a rule that has to live in one place.
+     */
+    ...(initial ? { initial } : {}),
     ...(types.length ? { types } : {}),
     ...(pos.length ? { pos } : {}),
     ...(levels.length ? { levels } : {}),

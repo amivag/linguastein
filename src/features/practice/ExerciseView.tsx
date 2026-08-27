@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useTargetLanguage } from '../../app/course';
+import { correctnessPraise } from '../../languages/runtime';
 import { useServices } from '../../app/services-context';
 import { Button, type ButtonVariant } from '../../components/Button';
 import type { Exercise, GradeResult } from '../../domain/exercises';
@@ -368,34 +369,12 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
  * next card: an icon, the word, and — when it was wrong — the answer itself,
  * announced through `role="status"` for anyone not looking at the screen.
  */
-/**
- * "Correct!" in the language being learned, where the app knows how to say it.
- *
- * The praise is deliberately in the target language — it is the one piece of
- * chrome a learner reads as the language talking back — but that only works if
- * it is *the* language. Spelled `¡Correcto!` unconditionally, a German course
- * congratulated its learner in Spanish, so an unknown language falls back to
- * the plain English below rather than to somebody else's.
- *
- * A table rather than a lookup in `src/languages/`, which is build-time
- * morphology and deliberately never imported by the app. When there is a
- * second of these strings, they move somewhere together.
- */
-const PRAISE: Record<string, string> = {
-  es: '¡Correcto!',
-  fr: 'Correct !',
-  de: 'Richtig!',
-  it: 'Corretto!',
-  pt: 'Correto!',
-  nl: 'Juist!',
-  el: 'Σωστά!',
-};
 
 function Verdict({ result }: { readonly result: GradeResult | null }) {
   const lang = useTargetLanguage();
   if (result === null) return null;
   const correct = result.correct;
-  const praise = lang === undefined ? undefined : PRAISE[lang];
+  const praise = correctnessPraise(lang);
 
   // No panel of its own any more: the band around it carries the region, so this
   // is a line of coloured type with an icon. A full-width tinted rectangle at the

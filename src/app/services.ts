@@ -16,6 +16,7 @@ import { httpDatasetSource, loadCatalog, loadPacks } from '../data/loaders';
 import type { ValidationIssue } from '../data/validation';
 import type { BatchDefinition } from '../domain/batches';
 import { ContentRepository } from '../domain/content';
+import { standaloneLetters } from '../languages/runtime';
 import { ExerciseEngine } from '../domain/exercises';
 import { createStorage } from '../storage';
 import type { LearnerStorage, Preferences } from '../storage';
@@ -58,7 +59,12 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     catalog.packs.map((entry) => entry.manifest),
   );
 
-  const repository = ContentRepository.from(packs);
+  /*
+   * The one place the engine is told a language's letter rules, per rule 5 and
+   * `docs/tasks/language-matrix.md` §6. `Ñ` used to be a literal inside
+   * `alphabet.ts`, which is the language-neutral half of the domain.
+   */
+  const repository = ContentRepository.from(packs, { standaloneLetters });
   const storage = await createStorage();
   const [preferences, batches] = await Promise.all([
     storage.preferences.read(),

@@ -148,3 +148,64 @@ export function addressForm(
   if (id === undefined) return undefined;
   return addressForms(tag).find((form) => form.id === id);
 }
+
+/**
+ * Letters this language buckets in their own right rather than folding.
+ *
+ * A letter index folds accents, because a learner hunting for `está` looks under
+ * E. Some languages have letters that *look* like an accented one and are not:
+ * Spanish `Ñ` is a letter between N and O, so folding it would make the `Ñ` chip
+ * list every word starting with n — which is the one thing a letter index must
+ * not do. Danish and Norwegian have `Æ Ø Å`, Icelandic `Þ Ð`, and Greek has the
+ * opposite problem in final sigma.
+ *
+ * `Ñ` was hard-coded inside `src/domain/content/alphabet.ts`, which is
+ * language-neutral: `docs/tasks/language-matrix.md` §6 names it as "the same leak
+ * in miniature". Upper case, because that is what the fold produces before it
+ * decides whether to strip anything.
+ *
+ * An empty set is the answer for a language with no such letter, and for one
+ * nobody has written a module for — a caller told nothing folds everything, which
+ * is the collator's own rule and never wrong, only sometimes incomplete.
+ */
+export function standaloneLetters(tag: LanguageTag | undefined): ReadonlySet<string> {
+  if (tag === undefined) return NO_LETTERS;
+  switch (baseLanguage(tag)) {
+    case 'es':
+      return SPANISH_LETTERS;
+    default:
+      return NO_LETTERS;
+  }
+}
+
+const NO_LETTERS: ReadonlySet<string> = new Set();
+const SPANISH_LETTERS: ReadonlySet<string> = new Set(['Ñ']);
+
+/**
+ * "Correct!" in the language being learned.
+ *
+ * A learner practising Spanish is congratulated in Spanish. This was a table
+ * inside `ExerciseView`, whose comment gave the reason — `src/languages/` "is
+ * build-time morphology and deliberately never imported by the app" — and named
+ * its own expiry: *when there is a second of these strings, they move somewhere
+ * together*. Both halves of that have since come true. The runtime half of the
+ * module exists and the app does import it, and the address-form labels are the
+ * second string. So this is where a new language's copy goes.
+ *
+ * Still a table rather than a per-language file: it is one word each, and six of
+ * these seven languages have no directory to put it in. A language that grows one
+ * can move its own string there without moving the rest.
+ */
+export function correctnessPraise(tag: LanguageTag | undefined): string | undefined {
+  return tag === undefined ? undefined : PRAISE[baseLanguage(tag)];
+}
+
+const PRAISE: Readonly<Record<string, string>> = {
+  es: '\u00a1Correcto!',
+  fr: 'Correct !',
+  de: 'Richtig!',
+  it: 'Corretto!',
+  pt: 'Correto!',
+  nl: 'Juist!',
+  el: '\u03a3\u03c9\u03c3\u03c4\u03ac!',
+};

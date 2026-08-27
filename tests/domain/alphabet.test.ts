@@ -8,6 +8,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { byLetter, initialLetter, OTHER_INITIAL, sortItems } from '../../src/domain/content';
+import { standaloneLetters } from '../../src/languages/runtime';
 
 const texts = (items: readonly { text: string }[]) => items.map((item) => item.text);
 const items = (...values: string[]) => values.map((text) => ({ text }));
@@ -20,11 +21,21 @@ describe('the letter a phrase files under', () => {
     expect(initialLetter('Ça va')).toBe('C');
   });
 
-  it('keeps ñ as its own letter', () => {
+  it('keeps a letter its language calls a letter, when told which', () => {
     // Folded, an Ñ chip would list every word starting with n — which is the one
-    // thing a letter index must not do.
-    expect(initialLetter('ñoño')).toBe('Ñ');
-    expect(initialLetter('niño')).toBe('N');
+    // thing a letter index must not do. `Ñ` was written into `alphabet.ts` until
+    // `language-matrix.md` §6 named it as a Spanish fact in a language-neutral
+    // file, so the set is the language's now and this test says whose it is.
+    expect(initialLetter('ñoño', standaloneLetters('es'))).toBe('Ñ');
+    expect(initialLetter('niño', standaloneLetters('es'))).toBe('N');
+  });
+
+  it('folds everything when nothing said otherwise', () => {
+    // The honest default for a language nobody has written a module for: the
+    // collator's own rule, never wrong and only sometimes incomplete. A French
+    // pack wants exactly this — `ñ` there is an n with a tilde.
+    expect(initialLetter('ñoño')).toBe('N');
+    expect(initialLetter('ñoño', standaloneLetters('fr'))).toBe('N');
   });
 
   it('steps over the punctuation a question opens with', () => {

@@ -33,13 +33,22 @@ const ACCENTS = /\p{Mn}/gu;
  * Leading punctuation is stepped over rather than filed, because `¿` is not
  * where a Spanish question starts to anyone reading it. Accents fold, since a
  * learner hunting for `está` looks under E.
+ *
+ * `standalone` is the letters a language keeps *unfolded* — Spanish `Ñ`, Danish
+ * `Æ Ø Å` — and it is a parameter because this file is language-neutral and
+ * `Ñ` used to be written into it (`docs/tasks/language-matrix.md` §6). Told
+ * nothing, everything folds, which is the collator's own rule: never wrong, only
+ * sometimes incomplete. `src/languages/runtime.ts` is where a language answers,
+ * and `services.ts` is where the answer is handed to the repository.
  */
-export function initialLetter(text: string): string {
+export function initialLetter(text: string, standalone: ReadonlySet<string> = NONE): string {
   for (const character of text) {
-    if (LETTER.test(character)) return fold(character);
+    if (LETTER.test(character)) return fold(character, standalone);
   }
   return OTHER_INITIAL;
 }
+
+const NONE: ReadonlySet<string> = new Set();
 
 /**
  * Items in the order asked for. `pack` is returned untouched — copying an array
@@ -86,12 +95,13 @@ function sortKey(text: string): string {
 /**
  * One character, as the letter it files under.
  *
- * `Ñ` is set aside before the accents come off, because it is a letter in its
- * own right and not an n wearing a tilde: folded, it would make Ñ a chip that
- * lists every word starting with n.
+ * A standalone letter is set aside before the accents come off, because it is a
+ * letter in its own right and not an n wearing a tilde: folded, `Ñ` would be a
+ * chip that lists every word starting with n. Which letters those are is the
+ * language's to say — see {@link initialLetter}.
  */
-function fold(letter: string): string {
+function fold(letter: string, standalone: ReadonlySet<string>): string {
   const upper = letter.normalize('NFC').toUpperCase();
-  if (upper === 'Ñ') return upper;
+  if (standalone.has(upper)) return upper;
   return upper.normalize('NFD').replace(ACCENTS, '').normalize('NFC');
 }

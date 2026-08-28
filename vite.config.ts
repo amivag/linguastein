@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 // With the extension: Vite's future native config loader refuses an
 // extensionless import, and it already warns about one today.
-import { APP } from './src/app/identity.ts';
+import { APP, cacheName } from './src/app/identity.ts';
 import { prePaintAxes } from './src/styles/axes.ts';
 
 const pkg = JSON.parse(
@@ -116,31 +116,73 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // App shell + datasets are precached so a session works offline.
-        globPatterns: ['**/*.{js,css,html,svg,woff2,json,jsonl}'],
         /**
-         * Workbox refuses to precache a file over 2 MiB by default, and the
-         * B1 content took the sentences file to 2.65 MB — which failed the
-         * build rather than silently shipping a pack the app could not open
-         * offline. That is the right failure mode and the wrong limit for this
-         * app: the whole point of precaching the datasets is that a session
-         * works on a train, and a learner is not choosing to download the pack
-         * — it is bundled, so it is already in the artifact either way.
+         * The shell, and the two small files that describe the packs — not the
+         * packs.
          *
-         * 8 MiB is roughly three times the current largest file. It is a
-         * ceiling to be raised deliberately, not a headroom to grow into: a
-         * pack heading past it wants `runtimeCaching` and an install step, the
-         * add-on story in docs/tasks/pack-addressing.md §4, rather than a
-         * bigger number here.
+         * `jsonl` was in this list, which precached the whole 6.3 MB dataset
+         * before a learner saw a screen: 7.1 MB across 28 entries, of which the
+         * app itself was under a megabyte. That was the honest shape while boot
+         * loaded every file anyway. It stopped being honest when the app started
+         * fetching only the shards its course reads, and it was never the right
+         * shape for an add-on — a pack is a 6 MB download, and the install
+         * prompt is where a 6 MB download belongs.
+         *
+         * `json` stays, and `catalog.json` and each `pack.json` are why: they are
+         * a few kilobytes between them, and they are what lets the app name its
+         * packs, count its courses and say what is missing while offline. A pack
+         * that cannot describe itself offline cannot be offered for installing.
+         *
+         * `maximumFileSizeToCacheInBytes` went with the datasets. It was raised
+         * to 8 MiB because the B1 sentences file crossed Workbox's 2 MiB refusal,
+         * and that comment said the real fix was `runtimeCaching` and an install
+         * step rather than a bigger number. This is that fix, so the number goes
+         * back to the default — where it is a useful alarm again: nothing in the
+         * shell has any business being 2 MiB.
          */
-        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+        globPatterns: ['**/*.{js,css,html,svg,woff2,json}'],
         runtimeCaching: [
+          {
+            /*
+             * The packs: fetched on demand, kept until the learner says
+             * otherwise.
+             *
+             * `CacheFirst` is safe because a pack's version is in its path
+             * (`packs/core-es/0.16.0/…`), so an update is a new URL rather than a
+             * revalidation of an old one — which is the whole reason that landed
+             * first. What a learner keeps offline is therefore an exact set of
+             * URLs, and `src/app/offline.ts` puts them here and takes them away.
+             *
+             * `maxEntries` is a floor under old versions rather than a budget:
+             * nothing evicts a pack a learner is using, but a device that has
+             * seen four cuts of a fifteen-file pack should not hold all four
+             * forever. Removing one is the learner's own control, in Settings.
+             *
+             * The matcher closes over **nothing**, and that is load-bearing rather
+             * than tidy. `workbox-build` serialises this function into `sw.js` as
+             * text, so a reference to `BASE` type-checks here, ships as a
+             * `ReferenceError` inside the worker, and matches no route at all —
+             * a pack that is never cached and a Settings screen reporting that
+             * nothing is kept, with the failure visible only in a built worker.
+             * It was written that way, caught in a browser, and is guarded by
+             * `precache.test.ts` now. The path needs no base: the worker's scope
+             * already is the base.
+             */
+            urlPattern: ({ url, sameOrigin }) =>
+              sameOrigin && /\/packs\/.+\.jsonl$/.test(url.pathname),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: cacheName('packs'),
+              expiration: { maxEntries: 60 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             // Canonical audio is fetched on demand and kept for replay.
             urlPattern: ({ request }) => request.destination === 'audio',
             handler: 'CacheFirst',
             options: {
-              cacheName: `${APP.id}-audio`,
+              cacheName: cacheName('audio'),
               expiration: { maxEntries: 500, maxAgeSeconds: 60 * 60 * 24 * 90 },
               cacheableResponse: { statuses: [0, 200] },
             },

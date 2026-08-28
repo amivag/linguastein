@@ -107,14 +107,40 @@ literal in the build script it went four expansions without moving, so the file
 also records the item count the version was cut at and
 `tests/data/pack-version.test.ts` fails when the two disagree.
 
-**Datasets and audio.** Packs are precached by revision, so a rebuilt pack is
-refetched. That revision is a content hash of each file, computed at build time
-and written into `sw.js` — so it is the _file changing_ that invalidates the
-cache, not the version string. Bumping the pack version does not make a client
-refetch anything, and forgetting to bump it does not stop one: the two mechanisms
-are independent, and only one of them is displayed. Audio is `CacheFirst` for 90 days, which is safe because a clip is named
-for a hash of the text it speaks: correcting a sentence produces a different
-filename rather than leaving a stale clip behind a stable item id.
+**Datasets and audio.** Packs are **not** precached. They were — `**/*.jsonl` was
+in `globPatterns`, which made installing the app a 7.1 MB download before the
+first screen — and they left it when the app started fetching only the shards its
+course reads. What ships now is **841 KB across 13 entries**: the shell, plus
+`catalog.json` and each `pack.json`, which are a few kilobytes and are what let
+the app name its packs and say what is missing with no connection to ask.
+
+The packs are `CacheFirst` at runtime instead, into `linguastein-packs`. That is
+safe because the version is in the path (`packs/core-es/0.16.0/…`), so a rebuilt
+pack is a new URL rather than a revalidation — which is why that landed first.
+There is no revision hash any more and none is wanted: a cut of a pack is
+immutable at its address, and `maxEntries` is what keeps a device that has seen
+four cuts from holding all four.
+
+So a pack accumulates as it is read, and **`Settings → Packs` is where the rest of
+it is chosen**: `src/app/offline.ts` is the seam, reporting what is on the device,
+downloading what is missing file by file, and taking it all off again. It is also
+the condition on the background read-ahead in `App.tsx` — the levels above the
+course's ceiling are pulled into memory only when the device is already holding
+them, because 3.3 MB of somebody's data plan is not the price of making a rare
+interaction instant.
+
+Two things follow that are easy to get wrong. A Workbox `urlPattern` is
+**serialised into `sw.js` as source text**, so it may read its arguments and
+literals and nothing else; closing over a variable from `vite.config.ts` compiles,
+ships as a `ReferenceError` in the worker, and silently matches no route.
+`tests/app/precache.test.ts` refuses one. And the cache name is written in two
+files, so both take it from `cacheName()` in `identity.ts` — a typo there would
+not fail anything, it would give the app a second, empty cache and a Settings
+screen reporting that nothing is kept.
+
+Audio is `CacheFirst` for 90 days, which is safe because a clip is named for a
+hash of the text it speaks: correcting a sentence produces a different filename
+rather than leaving a stale clip behind a stable item id.
 
 **Taking the update.** `registerType: 'autoUpdate'` reloads the page itself the
 moment a new worker activates. That is the wrong behaviour here: it can land

@@ -18,6 +18,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { App } from '../../src/app/App';
 import * as services from '../../src/app/services';
 import { NOTHING_TO_LOAD } from '../../src/app/content';
+import { NO_OFFLINE_PACKS } from '../../src/app/offline';
 import { createMemoryStorage, DEFAULT_PREFERENCES } from '../../src/storage';
 import { ExerciseEngine } from '../../src/domain/exercises';
 import { testRepository } from '../fixtures/pack';
@@ -59,6 +60,7 @@ async function bootApp() {
   vi.spyOn(services, 'createServices').mockResolvedValue({
     repository: testRepository(),
     content: NOTHING_TO_LOAD,
+    offline: NO_OFFLINE_PACKS,
     storage,
     audio: silentAudio,
     speech: {

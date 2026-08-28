@@ -328,24 +328,36 @@ with the UI chrome, not here.
 
 ## 5. Transport: precache the shell, install the packs
 
-`workbox.globPatterns` precaches `**/*.jsonl`
-([`vite.config.ts`](../../vite.config.ts)). `core-es` alone is 6.0 MB; five
-languages is ~30 MB fetched before a learner sees the first screen. The ceiling
-comment in that file already says what to do — this is the moment it does.
+**All four parts have landed; the section is kept for the reasoning.**
+`workbox.globPatterns` precached `**/*.jsonl`
+([`vite.config.ts`](../../vite.config.ts)) — `core-es` alone is 6.4 MB, and five
+languages would have been ~30 MB fetched before a learner saw the first screen.
 
-- **Precache the shell and `catalog.json`.** The catalog is small and is what
-  makes the course picker work offline.
-- **Runtime-cache packs, `CacheFirst`, explicitly installed.** Settings → Packs
-  already lists each pack with its version, levels, accents and licence; it
-  becomes the install and remove surface, which is the honest UI for a 6 MB
-  download a learner is now choosing. **Still open**, and it is the half that
-  needs a real browser: a service worker's behaviour is not something the test
-  suite or a dev server exercises, so it wants verifying against an installed app
-  going offline rather than against a build log.
+- ~~**Precache the shell and `catalog.json`.**~~ — done. The catalog is small and
+  is what makes the course picker work offline; each `pack.json` is precached
+  beside it for the same reason, since a pack that cannot describe itself offline
+  cannot be offered for installing.
+- ~~**Runtime-cache packs, `CacheFirst`, explicitly installed.**~~ — **done
+  2026-08-28.** Installing the app is **841 KB across 13 entries**, against the
+  **7.1 MB across 28** it was measured at before starting. The shell and the two
+  small files that describe the packs are precached; the packs themselves are
+  `CacheFirst` into `linguastein-packs`, which the versioned path is what makes
+  safe.
 
-  Measured before starting, so the change has a number to beat: **7.1 MB across 22
-  precached entries**, of which `sentences.jsonl` is 3.6 MB (52%) and
-  `forms.jsonl` 1.8 MB (25%).
+  Settings → Packs became the install and remove surface as this said it would,
+  and it can price the offer because the build now writes each file's `bytes` into
+  the manifest: `Partly on this device · 3.1 MB of 6.4 MB`, `Keep offline
+(3.3 MB)`, `Remove`. `src/app/offline.ts` is the seam — the Cache Storage API
+  does not appear above it — and it reads every cache rather than one by name,
+  because a file is equally here whether the worker stored it while the app read
+  it or an install put it there.
+
+  It was verified the way this said it had to be: **a built worker with the origin
+  server stopped**, loading, browsing and switching level with nothing serving it.
+  That found the bug no test could — a `urlPattern` closing over `BASE` from
+  `vite.config.ts`, which type-checks, serialises into `sw.js` as text, and throws
+  `ReferenceError` inside the worker, where it matched no route and cached nothing
+  at all.
 
 - ~~**Version in the path**~~ — **done 2026-08-26.** `packs/core-es/0.16.0/…`,
   with the version in `catalog.json` beside the manifest path. `CacheFirst` is now

@@ -1,5 +1,7 @@
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { PackOffline } from '../../app/offline';
 import { useServices } from '../../app/services-context';
+import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import {
   installedPacks,
@@ -7,6 +9,7 @@ import {
   languageOption,
   levelLabel,
   type PackContents,
+  type PackManifest,
 } from '../../domain/content';
 import styles from './Settings.module.css';
 
@@ -181,6 +184,8 @@ function Pack({ pack }: { readonly pack: PackContents }) {
         </p>
       )}
 
+      <OfflineState manifest={manifest} />
+
       {skipped > 0 && (
         <p className={styles.packIssues}>
           {skipped} {skipped === 1 ? 'record was' : 'records were'} skipped as invalid when this
@@ -189,6 +194,138 @@ function Pack({ pack }: { readonly pack: PackContents }) {
       )}
     </article>
   );
+}
+
+/**
+ * Whether this pack is on the device, and the offer to change that.
+ *
+ * The packs used to be precached, so "available offline" was a property of
+ * having opened the app at all and there was nothing to say. They are
+ * runtime-cached now — the app fetches the shards its course reads and nothing
+ * else — which makes this a real state with a real answer, and makes the rest of
+ * the pack a download a learner should be asked about rather than given.
+ *
+ * The size is stated before the download rather than after, which is the whole
+ * reason `PackFile.bytes` is in the manifest: an offer that cannot say what it
+ * costs is not a fair one. What is already here is subtracted, because a learner
+ * who has been studying A1 has most of the A1 half already.
+ */
+function OfflineState({ manifest }: { readonly manifest: PackManifest }) {
+  const { services } = useServices();
+  const [held, setHeld] = useState<PackOffline | undefined>(undefined);
+  const [downloading, setDownloading] = useState<{ done: number; total: number } | undefined>(
+    undefined,
+  );
+  const [failure, setFailure] = useState('');
+
+  const refresh = useCallback(
+    () =>
+      services.offline
+        .status()
+        .then((packs) => setHeld(packs.find((pack) => pack.pack === manifest.id))),
+    [services.offline, manifest.id],
+  );
+
+  useEffect(() => {
+    void refresh().catch(() => {
+      // A cache that cannot be read is reported as "not kept" rather than as an
+      // error: the app works either way, and the only thing lost is the offer.
+    });
+  }, [refresh]);
+
+  if (!services.offline.supported) {
+    return (
+      <p className={styles.hint}>
+        This browser cannot keep packs on the device, so the app needs a connection to load one.
+      </p>
+    );
+  }
+  if (!held) return null;
+
+  const kept = held.cached === held.files;
+  const remaining = held.bytes - held.cachedBytes;
+  // A pack that declares no sizes can still be kept; the offer just cannot say
+  // what it costs, and saying nothing beats saying a number that is not one.
+  const priced = held.bytes > 0;
+
+  const install = () => {
+    setDownloading({ done: 0, total: held.files - held.cached });
+    services.offline
+      .install(manifest.id, (done, total) => setDownloading({ done, total }))
+      .then(refresh, (error: unknown) => {
+        setFailure(error instanceof Error ? error.message : String(error));
+      })
+      .finally(() => setDownloading(undefined));
+  };
+
+  const remove = () => {
+    services.offline.remove(manifest.id).then(refresh, (error: unknown) => {
+      setFailure(error instanceof Error ? error.message : String(error));
+    });
+  };
+
+  return (
+    <div className={styles.offline}>
+      <p className={styles.offlineState} role="status">
+        <Icon name={kept ? 'check' : 'download'} size="sm" />
+        {downloading
+          ? `Downloading… ${downloading.done} of ${downloading.total} files`
+          : describeHeld(held)}
+      </p>
+
+      {kept ? (
+        <Button
+          variant="ghost"
+          aria-label={`Remove ${manifest.name} from this device`}
+          onClick={remove}
+        >
+          Remove
+        </Button>
+      ) : (
+        <Button
+          variant="tonal"
+          disabled={downloading !== undefined}
+          aria-label={`Keep ${manifest.name} offline${priced ? `, ${size(remaining)} to download` : ''}`}
+          onClick={install}
+        >
+          {priced ? `Keep offline (${size(remaining)})` : 'Keep offline'}
+        </Button>
+      )}
+
+      {failure && <p className={styles.packIssues}>Could not finish: {failure}</p>}
+    </div>
+  );
+}
+
+/**
+ * The state as a sentence, in the units the question is asked in.
+ *
+ * Three states rather than a percentage: nothing here, some of it here, all of
+ * it here. "Some" is the one worth spelling out in megabytes, because it is the
+ * one where a learner is deciding whether to finish the download — and it falls
+ * back to a file count for a pack that does not say what it weighs, which is a
+ * real answer rather than a blank.
+ */
+function describeHeld(held: PackOffline): string {
+  if (held.cached === held.files) {
+    return held.bytes > 0 ? `Available offline · ${size(held.bytes)}` : 'Available offline';
+  }
+  if (held.cached === 0) return 'Not kept on this device';
+  return held.bytes > 0
+    ? `Partly on this device · ${size(held.cachedBytes)} of ${size(held.bytes)}`
+    : `Partly on this device · ${held.cached} of ${held.files} files`;
+}
+
+/**
+ * `6.4 MB`.
+ *
+ * Decimal megabytes rather than mebibytes, because this number is read against a
+ * data plan rather than against a disk — and one decimal place, because the
+ * third significant figure of a download is not a fact anybody acts on.
+ */
+function size(bytes: number): string {
+  if (bytes < 1_000_000) return `${Math.max(1, Math.round(bytes / 1000))} kB`;
+  return `${(bytes / 1_000_000).toFixed(1)} MB`;
 }
 
 /**

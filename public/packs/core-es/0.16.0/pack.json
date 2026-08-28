@@ -251,72 +251,87 @@
   "files": [
     {
       "kind": "skills",
-      "path": "es-a1-b1-core-skills.jsonl"
+      "path": "es-a1-b1-core-skills.jsonl",
+      "bytes": 16755
     },
     {
       "kind": "lexemes",
-      "path": "es-a1-b1-core-verbs.jsonl"
+      "path": "es-a1-b1-core-verbs.jsonl",
+      "bytes": 15548
     },
     {
       "kind": "lexemes",
-      "path": "es-a1-b1-core-nouns.jsonl"
+      "path": "es-a1-b1-core-nouns.jsonl",
+      "bytes": 45662
     },
     {
       "kind": "lexemes",
-      "path": "es-a1-b1-core-modifiers.jsonl"
+      "path": "es-a1-b1-core-modifiers.jsonl",
+      "bytes": 24025
     },
     {
       "kind": "forms",
       "path": "es-a1-b1-core-forms-a1.jsonl",
-      "level": "a1"
+      "level": "a1",
+      "bytes": 532331
     },
     {
       "kind": "forms",
       "path": "es-a1-b1-core-forms-a2.jsonl",
-      "level": "a2"
+      "level": "a2",
+      "bytes": 1038073
     },
     {
       "kind": "forms",
       "path": "es-a1-b1-core-forms-b1.jsonl",
-      "level": "b1"
+      "level": "b1",
+      "bytes": 268017
     },
     {
       "kind": "items",
       "path": "es-a1-b1-core-vocabulary-a1.jsonl",
-      "level": "a1"
+      "level": "a1",
+      "bytes": 110093
     },
     {
       "kind": "items",
       "path": "es-a1-b1-core-vocabulary-a2.jsonl",
-      "level": "a2"
+      "level": "a2",
+      "bytes": 37910
     },
     {
       "kind": "items",
       "path": "es-a1-b1-core-vocabulary-b1.jsonl",
-      "level": "b1"
+      "level": "b1",
+      "bytes": 29922
     },
     {
       "kind": "items",
       "path": "es-a1-b1-core-sentences-a1.jsonl",
-      "level": "a1"
+      "level": "a1",
+      "bytes": 1800300
     },
     {
       "kind": "items",
       "path": "es-a1-b1-core-sentences-a2.jsonl",
-      "level": "a2"
+      "level": "a2",
+      "bytes": 1150406
     },
     {
       "kind": "items",
       "path": "es-a1-b1-core-sentences-b1.jsonl",
-      "level": "b1"
+      "level": "b1",
+      "bytes": 809651
     },
     {
       "kind": "passages",
-      "path": "es-a1-b1-core-passages.jsonl"
+      "path": "es-a1-b1-core-passages.jsonl",
+      "bytes": 60223
     },
     {
       "kind": "translations",
-      "path": "es-a1-b1-core-translations-en.jsonl"
+      "path": "es-a1-b1-core-translations-en.jsonl",
+      "bytes": 479461
     }
   ]
 }

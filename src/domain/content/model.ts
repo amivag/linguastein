@@ -459,6 +459,19 @@ export interface PackFile {
    * a field.
    */
   readonly level?: Level;
+  /**
+   * What the file weighs, so a download can be priced before it is started.
+   *
+   * Packs are runtime-cached rather than precached, so keeping one on the device
+   * is a choice a learner is offered — and an offer that cannot say what it costs
+   * is not a fair one. Per file rather than per pack because the ceiling decides
+   * which of them a course wants.
+   *
+   * Optional because a pack written by hand may not state it; a screen that adds
+   * these up has to be able to say "some of this is unmeasured" rather than
+   * report a smaller download than it will make.
+   */
+  readonly bytes?: number;
 }
 
 /** A fully loaded pack, before normalisation into the repository index. */

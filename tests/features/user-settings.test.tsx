@@ -128,8 +128,12 @@ describe('the You section of Settings', () => {
 
     renderWithServices(<SettingsScreen />, { services, route });
 
+    // Both halves awaited, because they arrive in two renders: the label is
+    // there at once and the count follows when storage answers. A synchronous
+    // `getByText` here passed on an idle machine and lost the race under a full
+    // suite, which is the worst way for a test to be wrong.
     const answers = (await screen.findByText('Answers recorded')).closest('li');
-    expect(within(answers as HTMLElement).getByText('1')).toBeInTheDocument();
+    expect(await within(answers as HTMLElement).findByText('1')).toBeInTheDocument();
   });
 
   it('stores a name once, on the way out of the field rather than per keystroke', async () => {

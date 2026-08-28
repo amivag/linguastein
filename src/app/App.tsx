@@ -89,21 +89,37 @@ export function App() {
   const services = boot.phase === 'ready' ? boot.services : null;
 
   /*
-   * The rest of the pack, once the app is up.
+   * The rest of the pack, once the app is up — but only what the device is
+   * already holding.
    *
-   * Boot fetched the shards this course reads; the levels above it are fetched
-   * here, in the background, and added to the repository as they land. Not
-   * because the learner will need them — they may not — but because a level chip
-   * should be instant when they do, and `ContentLoading.ensure` is what a chip
-   * tapped before this lands will wait on rather than duplicate.
+   * Boot fetched the shards this course reads. The levels above it are read into
+   * memory here so a level chip is instant, and `ContentLoading.ensure` is what a
+   * chip tapped before that lands waits on rather than duplicates.
+   *
+   * The condition is the whole of the manners. A learner at A1 does not need B1,
+   * and 3.3 MB of somebody's data plan is not a reasonable price for making a
+   * rare interaction instant — so this only runs when the pack is already kept
+   * offline, where it costs a disk read. The material is the same either way;
+   * asking first is what Settings → Packs is for.
    */
   useEffect(() => {
     if (!services) return;
-    void services.content.ensure(LEVEL_SCOPE_ALL).catch((error: unknown) => {
-      // No screen is waiting on this, so a failure is a slower level switch
-      // later rather than anything the learner can act on now.
-      console.warn('Could not prefetch the rest of the content', error);
-    });
+    let cancelled = false;
+    void services.offline
+      .status()
+      .then((packs) => {
+        const kept = packs.length > 0 && packs.every((pack) => pack.cached === pack.files);
+        if (kept && !cancelled) return services.content.ensure(LEVEL_SCOPE_ALL);
+        return undefined;
+      })
+      .catch((error: unknown) => {
+        // No screen is waiting on this, so a failure is a slower level switch
+        // later rather than anything the learner can act on now.
+        console.warn('Could not read the rest of the content', error);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [services]);
 
   /**

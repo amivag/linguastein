@@ -60,3 +60,16 @@ export function documentTitle(screen: string): string {
 export function storageKey(name: string): string {
   return `${APP.id}.${name}`;
 }
+
+/**
+ * `linguastein-packs` — the one spelling of a runtime cache's name.
+ *
+ * Two files have to agree on it exactly: `vite.config.ts` declares the cache a
+ * Workbox strategy writes into, and `src/app/offline.ts` opens the same one to
+ * put a pack there or take it away. A typo would not fail anything — it would
+ * quietly give the app a second, empty cache and a Settings screen reporting
+ * that nothing is kept while the worker serves everything from the other one.
+ */
+export function cacheName(name: string): string {
+  return `${APP.id}-${name}`;
+}

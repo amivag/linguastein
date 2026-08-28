@@ -363,3 +363,27 @@
 
   font-size: var(--text-sm);
 }
+
+/*
+ * Whether a pack is on the device, and the control for changing it.
+ *
+ * A readout and one action on a row, wrapping to two on a narrow phone. No
+ * boundary: the state is a sentence and the action is a filled control, so both
+ * are identified by their own labels (design language rule 1).
+ */
+.offline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.offlineState {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}

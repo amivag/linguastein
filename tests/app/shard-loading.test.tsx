@@ -20,12 +20,19 @@ import { Route, Routes } from 'react-router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../src/app/App';
 import type { ContentLoading } from '../../src/app/content';
+import type { OfflinePacks } from '../../src/app/offline';
 import * as boot from '../../src/app/services';
 import { createServices } from '../../src/app/services';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
-import { ContentRepository, courseOptions, type ContentPack } from '../../src/domain/content';
+import {
+  ContentRepository,
+  courseOptions,
+  LEVEL_SCOPE_ALL,
+  type ContentPack,
+  type LevelScope,
+} from '../../src/domain/content';
 import { repoRoot } from '../fixtures/dataset';
-import { TEST_PACK_FR } from '../fixtures/pack';
+import { TEST_PACK_FR, TEST_PACK_ID } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
 
 const PUBLIC = join(repoRoot, 'public');
@@ -145,6 +152,54 @@ describe('widening the course', () => {
     await Promise.all([services.content.ensure('all'), services.content.ensure('b1')]);
 
     expect(shards(served.fetched).sort()).toEqual(['a2', 'a2', 'a2', 'b1', 'b1', 'b1']);
+  });
+});
+
+describe('the levels above the ceiling', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    window.history.pushState({}, '', '/');
+  });
+
+  /** An app whose device is holding `cached` of the pack's four files. */
+  async function bootWith(cached: number) {
+    const ensured: LevelScope[] = [];
+    const content: ContentLoading = {
+      has: () => true,
+      ensure: (level) => {
+        ensured.push(level);
+        return Promise.resolve();
+      },
+      issues: () => [],
+    };
+    const status = () =>
+      Promise.resolve([{ pack: TEST_PACK_ID, files: 4, cached, bytes: 6_400_000, cachedBytes: 0 }]);
+    const offline: OfflinePacks = {
+      supported: true,
+      status,
+      install: () => Promise.resolve(),
+      remove: () => Promise.resolve(),
+    };
+
+    vi.spyOn(boot, 'createServices').mockResolvedValue(testServices({ content, offline }));
+    window.history.pushState({}, '', '/es/a1');
+    await act(async () => {
+      render(<App />);
+    });
+    return ensured;
+  }
+
+  it('are left on the server while the device is not keeping the pack', async () => {
+    // 3.3 MB of somebody's data plan is not a reasonable price for making a rare
+    // interaction instant. A chip tapped meanwhile waits, which is what the
+    // loading state below is for.
+    expect(await bootWith(1)).toEqual([]);
+  });
+
+  it('are read into memory when they are already on the device', async () => {
+    // Nothing is downloaded here: the pack is kept, so this costs a disk read
+    // and buys an instant level chip.
+    expect(await bootWith(4)).toEqual([LEVEL_SCOPE_ALL]);
   });
 });
 

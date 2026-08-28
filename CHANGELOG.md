@@ -278,6 +278,45 @@ segundo piso`: a **wrong** link, which the coverage report counts as a success,
 
 ### Changed
 
+- **Installing the app is 841 KB, not 7.1 MB — and the pack is a download you
+  choose.** `**/*.jsonl` was in the service worker's precache list, so installing
+  the app fetched the entire 6.4 MB dataset before a learner saw a screen: 28
+  entries, of which the app itself was under a megabyte. That was the honest shape
+  while boot loaded every file anyway. It stopped being honest the moment the app
+  started fetching only the shards its course reads, and it was never the right
+  shape for an add-on.
+
+  The shell is precached — 13 entries — along with `catalog.json` and each
+  `pack.json`, because a pack that cannot describe itself offline cannot be
+  offered for installing. The packs themselves are `CacheFirst` at runtime, which
+  their versioned path is what makes safe: a new cut is a new URL rather than a
+  revalidation of an old one. So a pack accumulates as it is read, and an A1
+  course leaves nine of its fifteen files on the device without asking for
+  anything.
+
+  **Settings → Packs is where the rest is chosen.** It says what is here — `Partly
+on this device · 3.1 MB of 6.4 MB` — what finishing costs, `Keep offline
+(3.3 MB)`, and offers to take it all off again. It can price the offer because
+  the build now writes each file's `bytes` into the manifest; an offer that cannot
+  say what it costs is not a fair one. The download runs a file at a time rather
+  than as one `addAll`, so it can report progress and so one failure out of fifteen
+  leaves fourteen on the device instead of none.
+
+  The background read-ahead added with the sharding is now conditional on that
+  choice: the levels above the course's ceiling are pulled into memory only when
+  the device is already holding them. 3.3 MB of somebody's data plan is not the
+  price of making a rare interaction instant, and a learner who has not asked for
+  the pack waits a moment on a level switch instead — behind the loading state
+  that shipped with it.
+
+  Verified against a built worker with the origin server stopped: the app loads,
+  browses and switches level with nothing serving it. That pass is what caught the
+  one real bug here, which no test could have — the route matcher read
+  `` `${BASE}packs/` ``, which type-checks in `vite.config.ts`, serialises into
+  `sw.js` as source text, and throws `ReferenceError` inside the worker, where it
+  matched no route and cached nothing while everything still appeared to work.
+  `tests/app/precache.test.ts` refuses a `urlPattern` that closes over anything now.
+
 - **Boot fetches the course, not the pack.** The dataset has shipped sharded by
   level since the build learned to split it, and the loader has known how to skip
   a shard for just as long — but the app asked for all of it anyway, so nothing

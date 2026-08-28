@@ -297,31 +297,32 @@ eight alternatives) and that the real gap is level rather than variation.
    this screen of all of them: it has just told you a word slipped back, which is
    exactly when "which word is the problem" is the question.
 
-9. **Offline dataset caching** — **precache coverage is verified and measured**,
-   the pack is versioned in its path and sharded by level, and **the app now
-   fetches only the shards its course reads**: an A1 course is **3.0 MB of the
-   6.3**, with the levels above it fetched in the background once the first screen
-   is up ([`docs/tasks/shard-loading.md`](tasks/shard-loading.md), done
-   2026-08-28). A course is described by its packs rather than by its contents, so
-   B1 is on offer with its real count before a byte of it is loaded, and a chip
-   tapped before the background load lands waits behind the loading state rather
-   than showing an empty course. What remains is runtime caching behind an install
-   step, and the visible "available offline" state.
+9. ~~**Offline dataset caching**~~ — **done 2026-08-28.** The pack is versioned in
+   its path, sharded by level, fetched up to the course's ceiling, runtime-cached
+   rather than precached, and offered as a download a learner chooses.
 
-   What ships is 28 entries and **7.1 MB**, of which the pack is 6.3 MB: the three
-   `sentences` shards are 3.6 MB between them (52% of everything precached) and
-   the three `forms` shards 1.8 MB (25%). Precaching is still all-or-nothing and
-   still the whole pack — the boot saving is in what a learner waits for, not in
-   what an installed app eventually holds, and moving the packs out of the
-   precache is the runtime-caching half that needs a real browser going offline.
+   Installing the app is **841 KB across 13 entries**, down from 7.1 MB across 28:
+   the shell, plus `catalog.json` and each `pack.json` — a few kilobytes that are
+   what let the app name its packs and say what is missing while offline. The
+   packs themselves are `CacheFirst` into `linguastein-packs`, which the versioned
+   path is what makes safe, and they accumulate as they are read: an A1 course
+   leaves nine of the fifteen files on the device without asking for anything.
 
-   The measuring found one defect: `includeAssets` and `workbox.globPatterns` both
-   claimed `favicon.svg` and the two icons, so three files were precached twice and
-   the build reported **25 entries for 22 files**. Harmless bytes — the revisions
-   matched — but the entry count is the one number a reader checks coverage
-   against, and it has to be trustworthy before the packs move out of the
-   precache. `tests/app/precache.test.ts` now fails on a second list overlapping
-   the glob.
+   Settings → Packs is the rest of it. It says what is here (`Partly on this
+device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
+(3.3 MB)`, priced from the `bytes` the build now writes into the manifest), and
+   offers to take it all off again. The background read-ahead of the levels above
+   the ceiling is conditional on that choice — 3.3 MB of somebody's data plan is
+   not the price of making a rare interaction instant — so a learner who has not
+   asked for the pack waits a moment on a level switch, behind the loading state
+   [shard-loading](tasks/shard-loading.md) put there.
+
+   **Verified against a built worker with the origin server stopped**, which is
+   what §5 said this half needed and no test could do: the app loads, browses and
+   switches level with nothing serving it. That pass found the one bug worth
+   recording — a `urlPattern` closing over `BASE` from `vite.config.ts`, which
+   type-checks, serialises into `sw.js` as text, throws `ReferenceError` inside the
+   worker, and silently caches nothing. `tests/app/precache.test.ts` refuses one now.
 
 10. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
 11. **Appearance axes** — landed, and further than this item asked for: seven

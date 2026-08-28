@@ -22,7 +22,15 @@
  * Usage: tsx scripts/build-dataset.ts [language]   (default `es`)
  */
 
-import { readFileSync, mkdirSync, writeFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
+import {
+  readFileSync,
+  mkdirSync,
+  writeFileSync,
+  readdirSync,
+  existsSync,
+  rmSync,
+  statSync,
+} from 'node:fs';
 import { join, resolve } from 'node:path';
 import { PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
 import { sentenceMood } from '../src/domain/content/mood.ts';
@@ -3627,6 +3635,19 @@ const manifest = {
     kind: file.kind,
     path: file.path,
     ...('level' in file && file.level ? { level: file.level } : {}),
+    /*
+     * What each file weighs, read off the file this build just wrote.
+     *
+     * Packs are runtime-cached rather than precached now, so keeping one offline
+     * is a download a learner is asked about — and a question that cannot say
+     * what it costs is not a fair one. Stated per file rather than per pack
+     * because the ceiling decides which of them are wanted: an A1 course is 3.0
+     * MB of the 6.3, and the screen can only add that up if the parts are here.
+     *
+     * Derived from the bytes on disk, so it is reproducible: the same content
+     * builds the same manifest, which is what the CI drift check rests on.
+     */
+    bytes: statSync(join(OUT_DIR, file.path)).size,
   })),
 };
 

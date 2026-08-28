@@ -17,6 +17,7 @@ import type { ValidationIssue } from '../data/validation';
 import type { BatchDefinition } from '../domain/batches';
 import { ContentRepository, parseCoursePath } from '../domain/content';
 import { createContentLoading, type ContentLoading } from './content';
+import { createOfflinePacks, type OfflinePacks } from './offline';
 import { standaloneLetters } from '../languages/runtime';
 import { ExerciseEngine } from '../domain/exercises';
 import { createStorage } from '../storage';
@@ -31,6 +32,14 @@ export interface AppServices {
    * (`docs/tasks/shard-loading.md`).
    */
   readonly content: ContentLoading;
+  /**
+   * What this device is keeping, and the control for changing it.
+   *
+   * The pair to `content` above and deliberately not the same thing: that one is
+   * what the repository holds, this one is what survives a flight-mode
+   * (`docs/tasks/language-matrix.md` §5).
+   */
+  readonly offline: OfflinePacks;
   readonly storage: LearnerStorage;
   readonly audio: AudioService;
   /** Optional speech input; absent where the browser cannot listen. */
@@ -108,16 +117,19 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     { standaloneLetters },
   );
   const content = createContentLoading({ source, repository, loaded });
+  const assetBaseUrl = new URL(datasetBaseUrl, location.origin).toString();
+  const offline = createOfflinePacks({ packs: loaded, baseUrl: assetBaseUrl });
 
   const audio = createAudioService({
     repository,
-    assetBaseUrl: new URL(datasetBaseUrl, location.origin).toString(),
+    assetBaseUrl,
     tts: createWebSpeechTtsProvider(),
   });
 
   return {
     repository,
     content,
+    offline,
     storage,
     audio,
     /*

@@ -238,6 +238,8 @@ export const packFileSchema = z
     path: z.string().min(1),
     /** Present on a sharded file; absent means load it whatever the course is. */
     level: level.optional(),
+    /** The file's size, so a download can be priced before it is started. */
+    bytes: z.number().int().nonnegative().optional(),
   })
   .loose();
 

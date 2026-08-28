@@ -28,12 +28,15 @@ import {
   type RecordKind,
   type ValidationIssue,
 } from '../validation';
+import { levelsUpTo, type LevelScope } from '../../domain/content';
 import { parseJsonl } from './jsonl';
 import type { DatasetSource } from './source';
 
 export interface LoadedPack {
   readonly pack: ContentPack;
   readonly issues: readonly ValidationIssue[];
+  /** Whether a shard was deliberately skipped — see {@link LoadOptions.upTo}. */
+  readonly partial: boolean;
 }
 
 /** A catalog lists the packs an installation ships with. */
@@ -57,7 +60,27 @@ export async function loadCatalog(
   return parsed as PackCatalog;
 }
 
-export async function loadPack(source: DatasetSource, manifestPath: string): Promise<LoadedPack> {
+export interface LoadOptions {
+  /**
+   * The level ceiling to load up to, or `all` for the whole pack.
+   *
+   * A course is a ceiling and the big files are sharded by level, so an A1
+   * learner needs about half the bytes (`docs/tasks/language-matrix.md` §5). A
+   * file with no declared level is always loaded: the lexemes, the skills, the
+   * passages and the translations are small, and the last of them carries no
+   * level of its own.
+   *
+   * Absent means the whole pack, which is what every caller that is not the app's
+   * boot path wants — a validation run, a test, a script.
+   */
+  readonly upTo?: LevelScope;
+}
+
+export async function loadPack(
+  source: DatasetSource,
+  manifestPath: string,
+  options: LoadOptions = {},
+): Promise<LoadedPack> {
   const manifestText = await source.read(manifestPath);
   const manifestResult = packManifestSchema.safeParse(JSON.parse(manifestText));
   if (!manifestResult.success) {
@@ -89,7 +112,21 @@ export async function loadPack(source: DatasetSource, manifestPath: string): Pro
     audio: [],
   };
 
-  for (const file of manifest.files) {
+  /*
+   * The shards in scope, plus everything unsharded. `levelsUpTo` is the same
+   * ceiling rule the course filter uses, so a level is in the session and in the
+   * download together — two answers to "is this in scope" would be one too many.
+   */
+  const inScope =
+    options.upTo === undefined
+      ? undefined
+      : new Set(levelsUpTo(options.upTo, manifest.levels ?? []));
+  const wanted = manifest.files.filter(
+    (file) => file.level === undefined || inScope === undefined || inScope.has(file.level),
+  );
+  const partial = wanted.length < manifest.files.length;
+
+  for (const file of wanted) {
     const path = `${root}${file.path}`;
     const text = await source.read(path);
     const parsed = parseJsonl(text, file.path);
@@ -112,8 +149,8 @@ export async function loadPack(source: DatasetSource, manifestPath: string): Pro
     audio: collected.audio as AudioClip[],
   };
 
-  issues.push(...validatePackIntegrity(pack));
-  return { pack, issues };
+  issues.push(...validatePackIntegrity(pack, { partial }));
+  return { pack, issues, partial };
 }
 
 export async function loadPacks(

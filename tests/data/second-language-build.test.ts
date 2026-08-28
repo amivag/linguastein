@@ -118,13 +118,13 @@ describe('building a language with no module', () => {
 
   it('names its files for its own language and levels', () => {
     const names = readdirSync(packDir()).filter((name) => name.endsWith('.jsonl'));
-    expect(names).toContain('de-a1-core-sentences.jsonl');
+    expect(names).toContain('de-a1-core-sentences-a1.jsonl');
     expect(names.every((name) => name.startsWith('de-a1-core-'))).toBe(true);
   });
 
   it('derives only what needs no module, and says nothing it cannot derive', () => {
     const forms = readJsonl<{ form: string; morph: { number?: string } }>(
-      join(packDir(), 'de-a1-core-forms.jsonl'),
+      join(packDir(), 'de-a1-core-forms-a1.jsonl'),
     );
 
     // A noun's singular *is* its lemma, so it needs no morphology and ships.

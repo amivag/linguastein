@@ -236,6 +236,8 @@ export const packFileSchema = z
   .object({
     kind: z.enum(PACK_FILE_KINDS),
     path: z.string().min(1),
+    /** Present on a sharded file; absent means load it whatever the course is. */
+    level: level.optional(),
   })
   .loose();
 
@@ -315,6 +317,7 @@ export const packManifestSchema = z
     description: z.string().optional(),
     license: z.string().optional(),
     levels: z.array(level).optional(),
+    levelItems: z.record(z.string(), z.number().int().nonnegative()).optional(),
     levelLabels: z.record(z.string(), z.string()).optional(),
     referenceLanguages: z.array(languageTag).optional(),
     pronunciationLocales: z.array(languageTag).optional(),

@@ -23,6 +23,11 @@
     "a2",
     "b1"
   ],
+  "levelItems": {
+    "a1": 2059,
+    "a2": 1004,
+    "b1": 753
+  },
   "referenceLanguages": [
     "en"
   ],
@@ -262,15 +267,48 @@
     },
     {
       "kind": "forms",
-      "path": "es-a1-b1-core-forms.jsonl"
+      "path": "es-a1-b1-core-forms-a1.jsonl",
+      "level": "a1"
+    },
+    {
+      "kind": "forms",
+      "path": "es-a1-b1-core-forms-a2.jsonl",
+      "level": "a2"
+    },
+    {
+      "kind": "forms",
+      "path": "es-a1-b1-core-forms-b1.jsonl",
+      "level": "b1"
     },
     {
       "kind": "items",
-      "path": "es-a1-b1-core-vocabulary.jsonl"
+      "path": "es-a1-b1-core-vocabulary-a1.jsonl",
+      "level": "a1"
     },
     {
       "kind": "items",
-      "path": "es-a1-b1-core-sentences.jsonl"
+      "path": "es-a1-b1-core-vocabulary-a2.jsonl",
+      "level": "a2"
+    },
+    {
+      "kind": "items",
+      "path": "es-a1-b1-core-vocabulary-b1.jsonl",
+      "level": "b1"
+    },
+    {
+      "kind": "items",
+      "path": "es-a1-b1-core-sentences-a1.jsonl",
+      "level": "a1"
+    },
+    {
+      "kind": "items",
+      "path": "es-a1-b1-core-sentences-a2.jsonl",
+      "level": "a2"
+    },
+    {
+      "kind": "items",
+      "path": "es-a1-b1-core-sentences-b1.jsonl",
+      "level": "b1"
     },
     {
       "kind": "passages",

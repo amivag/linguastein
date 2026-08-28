@@ -371,15 +371,44 @@ comment in that file already says what to do — this is the moment it does.
   derives file names from `presentLevels`, so the machinery is there; the change
   is one shard per level rather than one file per kind.
 
-  **Still open, and one thing about it is worth knowing before starting.**
-  Sharding on its own buys _nothing_: `globPatterns` precaches every shard, so the
-  bytes are identical until the runtime-caching bullet above lands too. The
-  startup win is a third, separate thing — the _loader_ fetching only the shards
-  the course needs — and that one is independent of the service worker. It has a
-  design question attached: `courseOptions` derives the levels a course offers
-  from the items actually loaded, so skipping the B1 shards would hide the B1
-  course. The manifest declares its ladder now (§7), which is what that would read
-  instead.
+  **The build half and the loader half landed 2026-08-26; the app half has not.**
+
+  `sentences`, `forms` and `vocabulary` are one file per level, each declaring its
+  level in the manifest so a loader decides without opening it. `loadPack(source,
+path, { upTo })` fetches the shards at or below a ceiling plus everything
+  unsharded, and `levelsUpTo` is the same rule the course filter uses — a level is
+  in the session and in the download together, because two answers to "is this in
+  scope" would be one too many. **An A1 course is 3.0 MB of the 6.3.**
+
+  The half worth the care was not the arithmetic. **A partly loaded pack has to be
+  a valid one**, and every _cross-record_ check reads as a defect when a shard is
+  missing — a B1 passage naming B1 sentences looks exactly like a broken passage,
+  and 1,757 translations point at items that were not fetched. Reporting those
+  would teach a reader to ignore the issue list, which is worse than not having
+  one. So `validatePackIntegrity(pack, { partial })` skips the checks that need
+  the whole pack and keeps every check a single record can fail on its own.
+  `tests/data/level-shards.test.ts` asserts both halves of that.
+
+  **What is left is the app half, and it is where the bytes are actually saved.**
+  `services.ts` still loads everything, so nothing has got faster yet. It is
+  briefed on its own in [`shard-loading.md`](shard-loading.md), because it is a
+  session's work and touches none of this file's subject matter. Three things, in
+  order:
+
+  1. `courseOptions` derives a course's levels from the items _loaded_, so
+     skipping B1 would hide the B1 course. It reads `manifest.levels` instead —
+     the ladder is declared (§7) — and `manifest.levelItems` for the chip counts,
+     which the build now emits for exactly this: a count taken from memory would
+     report a smaller course rather than an unfetched one.
+  2. Boot loads up to the ceiling in the URL, then prefetches the rest in the
+     background so a level chip is usually instant.
+  3. A chip tapped before the prefetch lands awaits it behind the loading state
+     the app already has. **Not a reload** — the level chips sit on most screens
+     and are tapped often. A _language_ switch may reload: rare, a different pack,
+     and unreachable today because the picker hides itself with one pack loaded.
+
+  Only (2) and (3) need a change signal, so a screen re-renders when late shards
+  arrive.
 
 Level sharding and the level scheme are the same decision, which is why they
 belong in one pass — see §7.

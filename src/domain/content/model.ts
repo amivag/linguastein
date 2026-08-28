@@ -401,6 +401,15 @@ export interface PackManifest {
    */
   readonly levels?: readonly Level[];
   /**
+   * Practisable items per level, exact rather than cumulative.
+   *
+   * A course is described before its content is fetched: the level chips carry a
+   * count, and with the big files sharded by level an A1 learner has not loaded
+   * B1. Counting the items in memory would report a smaller course rather than an
+   * unfetched one, so the pack states its own figures.
+   */
+  readonly levelItems?: Readonly<Record<string, number>>;
+  /**
    * What to call each rung, where the id does not name itself.
    *
    * Absent for CEFR, deliberately: `a1` reads correctly as `A1` once upper-cased,
@@ -434,6 +443,22 @@ export interface PackFile {
   readonly kind: PackFileKind;
   /** Path relative to the pack root, e.g. `es-a1-core-phrases.jsonl`. */
   readonly path: string;
+  /**
+   * The one level this file holds, where it holds one.
+   *
+   * The two biggest files are sharded by level — `sentences` is 3.6 MB and
+   * `forms` 1.8 MB, 87% of the pack with `vocabulary` — because a course is a
+   * level *ceiling*, so an A1 learner has no use for the B1 corpus at boot
+   * (`docs/tasks/language-matrix.md` §5). This is what lets a loader decide that
+   * without reading the file first.
+   *
+   * Absent means "not sharded, load it always": the skills, the lexemes, the
+   * passages and the translations, none of which is big enough to be worth
+   * splitting, and the last of which carries no level of its own — a translation
+   * references an item, a lexeme or a skill, so its level is a join rather than
+   * a field.
+   */
+  readonly level?: Level;
 }
 
 /** A fully loaded pack, before normalisation into the repository index. */

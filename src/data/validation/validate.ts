@@ -66,7 +66,26 @@ export function validateRecords<K extends RecordKind>(
  * dangling references, translations pointing at nothing, annotations naming
  * tokens that do not exist.
  */
-export function validatePackIntegrity(pack: ContentPack): readonly ValidationIssue[] {
+export interface IntegrityOptions {
+  /**
+   * Whether some of the pack's files were deliberately not loaded.
+   *
+   * The big files are sharded by level and a course is a ceiling, so an A1
+   * learner holds part of the pack on purpose
+   * (`docs/tasks/language-matrix.md` §5). Every *cross-record* check then reports
+   * on the absence rather than on a defect — a B1 passage naming B1 sentences
+   * looks exactly like a broken passage — so those are skipped and the checks
+   * that read one record at a time are not. "This reference is unresolved because
+   * we chose not to fetch it" is not a finding.
+   */
+  readonly partial?: boolean;
+}
+
+export function validatePackIntegrity(
+  pack: ContentPack,
+  options: IntegrityOptions = {},
+): readonly ValidationIssue[] {
+  const whole = !options.partial;
   const issues: ValidationIssue[] = [];
   const source = pack.manifest.id;
   const report = (message: string, severity: IssueSeverity = 'error', path?: string) => {
@@ -135,7 +154,7 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
 
   // Example links are checked after all items are known, so order in the file
   // never matters.
-  for (const item of pack.items) {
+  for (const item of whole ? pack.items : []) {
     for (const example of item.examples ?? []) {
       if (!itemIds.has(example)) report(`unknown example item ${example}`, 'warning', item.id);
     }
@@ -164,7 +183,7 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
     }
     // A passage the reader cannot follow is worse than no passage: its sentences
     // are the text, so a missing one leaves a hole mid-paragraph.
-    for (const item of passage.items) {
+    for (const item of whole ? passage.items : []) {
       if (!itemIds.has(item)) {
         report(`passage ${passage.id} references unknown item ${item}`, 'error', passage.id);
       }
@@ -192,7 +211,7 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
     ...formIds,
     ...passageIds,
   ]);
-  for (const translation of pack.translations) {
+  for (const translation of whole ? pack.translations : []) {
     if (!known.has(translation.ref)) {
       report(
         `translation references unknown entity ${translation.ref}`,
@@ -212,8 +231,9 @@ export function validatePackIntegrity(pack: ContentPack): readonly ValidationIss
       report(`audio ${clip.id} declares pack "${clip.pack}"`, 'error', clip.id);
     }
     // A clip for an item that is not here plays for nobody. Only a warning: the
-    // audio is useless but everything else in the pack still works.
-    if (!itemIds.has(clip.item)) {
+    // audio is useless but everything else in the pack still works. Skipped on a
+    // partial load, where "not here" means "not fetched yet".
+    if (whole && !itemIds.has(clip.item)) {
       report(`audio ${clip.id} references unknown item ${clip.item}`, 'warning', clip.id);
     }
     // An undeclared voice cannot be credited, licensed or offered in settings,

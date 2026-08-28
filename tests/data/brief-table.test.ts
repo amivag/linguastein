@@ -22,7 +22,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { packFile, readJsonl, repoRoot } from '../fixtures/dataset';
+import { packFiles, readJsonl, repoRoot } from '../fixtures/dataset';
 
 const PACKS = join(repoRoot, 'public/packs');
 const BRIEF = 'docs/tasks/dataset-expansion.md';
@@ -36,9 +36,9 @@ interface Item {
   readonly tokens?: readonly { readonly pos?: string; readonly lexeme?: string }[];
 }
 
-const sentences = readJsonl<Item>(packFile(PACKS, 'sentences'));
-const cards = readJsonl<Item>(packFile(PACKS, 'vocabulary'));
-const passages = readJsonl<{ kind: string }>(packFile(PACKS, 'passages'));
+const sentences = packFiles(PACKS, 'sentences').flatMap((path) => readJsonl<Item>(path));
+const cards = packFiles(PACKS, 'vocabulary').flatMap((path) => readJsonl<Item>(path));
+const passages = packFiles(PACKS, 'passages').flatMap((path) => readJsonl<{ kind: string }>(path));
 
 const words = sentences.reduce((total, item) => total + item.text.split(/\s+/).length, 0);
 const tokens = sentences.flatMap((item) => (item.tokens ?? []).filter((t) => t.pos !== 'PUNCT'));
@@ -52,7 +52,9 @@ const tokens = sentences.flatMap((item) => (item.tokens ?? []).filter((t) => t.p
  */
 const lexemeIds = new Set(
   (['nouns', 'verbs', 'modifiers'] as const).flatMap((kind) =>
-    readJsonl<{ id: string }>(packFile(PACKS, kind)).map((lexeme) => lexeme.id),
+    packFiles(PACKS, kind)
+      .flatMap((path) => readJsonl<{ id: string }>(path))
+      .map((lexeme) => lexeme.id),
   ),
 );
 const encounters = new Map<string, number>();

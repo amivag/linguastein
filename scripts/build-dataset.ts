@@ -3417,18 +3417,43 @@ const filePrefix = ((levels: readonly string[]) => {
 /** The languages the translation records are actually in, in first-seen order. */
 const translationLanguages = [...new Set(translations.map((record) => record.lang))];
 
+/**
+ * One file per level, for the kinds big enough to be worth it.
+ *
+ * `sentences` is 3.6 MB, `forms` 1.8 MB and `vocabulary` 174 KB — 87% of the
+ * pack in three files. A course is a level *ceiling*, so an A1 learner has no use
+ * for the B1 corpus at boot, and `docs/tasks/language-matrix.md` §5 asks for one
+ * shard per level rather than one file per kind so a loader can decline to fetch
+ * what the course cannot show.
+ *
+ * In the ladder's order rather than the records', so the manifest reads like the
+ * curriculum and a diff of it is stable. A level the records do not reach emits
+ * nothing: the `.filter` on `records.length` below drops it, exactly as it drops
+ * a translation language nobody wrote.
+ *
+ * A record with **no** level would vanish here, which is why the build refuses
+ * one further down rather than trusting this.
+ */
+const shardedByLevel = <T extends { readonly level?: string }>(
+  kind: string,
+  name: string,
+  records: readonly T[],
+) =>
+  presentLevels.map((level) => ({
+    kind,
+    path: `${filePrefix}-${name}-${level}.jsonl`,
+    level,
+    records: records.filter((record) => record.level === level),
+  }));
+
 const files = [
   { kind: 'skills', path: `${filePrefix}-skills.jsonl`, records: skillRecords },
   { kind: 'lexemes', path: `${filePrefix}-verbs.jsonl`, records: clean(verbLexemes) },
   { kind: 'lexemes', path: `${filePrefix}-nouns.jsonl`, records: clean(nounLexemes) },
   { kind: 'lexemes', path: `${filePrefix}-modifiers.jsonl`, records: clean(modifierLexemes) },
-  {
-    kind: 'forms',
-    path: `${filePrefix}-forms.jsonl`,
-    records: [...verbForms, ...packedNominalForms],
-  },
-  { kind: 'items', path: `${filePrefix}-vocabulary.jsonl`, records: vocabularyItems },
-  { kind: 'items', path: `${filePrefix}-sentences.jsonl`, records: sentenceItems },
+  ...shardedByLevel('forms', 'forms', [...verbForms, ...packedNominalForms]),
+  ...shardedByLevel('items', 'vocabulary', vocabularyItems),
+  ...shardedByLevel('items', 'sentences', sentenceItems),
   { kind: 'passages', path: `${filePrefix}-passages.jsonl`, records: passageRecords },
   // One file per language the records are in, so a second reference language
   // is a file beside this one rather than a change to it. See
@@ -3444,6 +3469,35 @@ const files = [
     records: audioClips.filter((clip) => clip.locale === locale),
   })),
 ].filter((file) => file.records.length > 0);
+
+/*
+ * A sharded record with no level would be written to no file at all — silently,
+ * because `shardedByLevel` filters rather than partitions. Reported here rather
+ * than trusted, since the symptom is content that simply stops existing.
+ */
+{
+  const shardedKinds = new Map<string, readonly { readonly level?: string }[]>([
+    ['forms', [...verbForms, ...packedNominalForms]],
+    ['vocabulary', vocabularyItems],
+    ['sentences', sentenceItems],
+  ]);
+  const known = new Set(presentLevels);
+  for (const [name, records] of shardedKinds) {
+    const orphaned = records.filter((record) => !record.level || !known.has(record.level));
+    if (orphaned.length > 0) {
+      problems.push(
+        `${orphaned.length} ${name} record(s) carry a level outside the shipped ladder ` +
+          `(${presentLevels.join(', ')}) and would be written to no file — first is ` +
+          `"${JSON.stringify(orphaned[0]).slice(0, 80)}"`,
+      );
+    }
+  }
+}
+
+if (problems.length > 0) {
+  console.error('Source problems:\n  ' + problems.join('\n  '));
+  process.exit(1);
+}
 
 /** Drops empty arrays and undefined fields so the JSONL stays readable. */
 function clean<T extends object>(records: readonly T[]): T[] {
@@ -3508,6 +3562,23 @@ const manifest = {
     `Generated from ${SOURCE_LABEL} and not yet reviewed by a human editor.`,
   license: authored('license') ?? 'CC0-1.0',
   levels: presentLevels,
+  /*
+   * How many practisable items each level holds, so a course can be described
+   * before its shards are fetched.
+   *
+   * The level chips carry a count — `A1 2059` — derived from the items loaded.
+   * Sharding means an A1 learner has not loaded B1, so that count would read as
+   * a smaller course rather than as an unfetched one. Declared here, it is the
+   * pack's own number and true whatever is in memory. Exact per level, not
+   * cumulative: a ceiling is the app's arithmetic and the ladder is in the
+   * manifest beside this.
+   */
+  levelItems: Object.fromEntries(
+    presentLevels.map((level) => [
+      level,
+      [...sentenceItems, ...vocabularyItems].filter((item) => item.level === level).length,
+    ]),
+  ),
   // Derived rather than authored: this says what the pack can explain itself
   // in, and the translation files it ships are the only honest answer.
   referenceLanguages: translationLanguages,
@@ -3550,7 +3621,13 @@ const manifest = {
     review: 'unreviewed',
     revision: 1,
   },
-  files: files.map((file) => ({ kind: file.kind, path: file.path })),
+  // `level` where the file is a shard, so a loader can decline to fetch what the
+  // course cannot show without reading the file to find out.
+  files: files.map((file) => ({
+    kind: file.kind,
+    path: file.path,
+    ...('level' in file && file.level ? { level: file.level } : {}),
+  })),
 };
 
 writeFileSync(join(OUT_DIR, 'pack.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');

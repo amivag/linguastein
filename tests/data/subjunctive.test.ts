@@ -10,7 +10,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { packFile, readJsonl, repoRoot } from '../fixtures/dataset';
+import { packFiles, readJsonl, repoRoot } from '../fixtures/dataset';
 import { join } from 'node:path';
 
 interface Token {
@@ -37,8 +37,8 @@ interface Form {
 }
 
 const PACKS = join(repoRoot, 'public/packs');
-const items = readJsonl<Item>(packFile(PACKS, 'sentences'));
-const forms = readJsonl<Form>(packFile(PACKS, 'forms'));
+const items = packFiles(PACKS, 'sentences').flatMap((path) => readJsonl<Item>(path));
+const forms = packFiles(PACKS, 'forms').flatMap((path) => readJsonl<Form>(path));
 
 const byText = (text: string): Item => {
   const found = items.find((item) => item.text === text);

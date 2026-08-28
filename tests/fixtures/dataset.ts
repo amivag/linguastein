@@ -111,20 +111,43 @@ export function readJsonl<T>(path: string): T[] {
  * what the app's own loader does. `kind` is the part after the prefix:
  * `verbs`, `vocabulary`, `translations-en`, `audio-es-ES`.
  */
-export function packFile(packsRoot: string, kind: string): string {
+export function packFiles(packsRoot: string, kind: string): string[] {
   const manifestPath = packManifestPath(packsRoot);
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
-    files?: readonly { readonly path: string }[];
+    files?: readonly { readonly path: string; readonly level?: string }[];
   };
   const files = manifest.files ?? [];
-  const match = files.find((file) => file.path.endsWith(`-${kind}.jsonl`));
-  if (!match) {
+  /*
+   * `-sentences.jsonl` **or** `-sentences-a1.jsonl`: the big kinds are sharded by
+   * level now, so a kind is one file or several
+   * (`docs/tasks/language-matrix.md` §5). Matched on the manifest's own `level`
+   * rather than by guessing at the suffix, so a kind whose name happens to end in
+   * a level cannot be mistaken for a shard.
+   */
+  const matches = files.filter(
+    (file) =>
+      file.path.endsWith(`-${kind}.jsonl`) ||
+      (file.level !== undefined && file.path.endsWith(`-${kind}-${file.level}.jsonl`)),
+  );
+  if (matches.length === 0) {
     throw new Error(
       `no pack file holds "${kind}" — ${manifestPath} lists ${files.map((f) => f.path).join(', ')}`,
     );
   }
   // Beside the manifest, exactly as `loadPack` resolves it.
-  return join(manifestPath.replace(/pack\.json$/, ''), match.path);
+  const root = manifestPath.replace(/pack\.json$/, '');
+  return matches.map((match) => join(root, match.path));
+}
+
+/**
+ * One file of a kind — the first shard where the kind is sharded.
+ *
+ * For a caller that wants a *path* to read or edit rather than the kind's whole
+ * contents. Anything wanting the records should use {@link shippedRecords} or
+ * `ScratchPack.records`, which read every shard.
+ */
+export function packFile(packsRoot: string, kind: string): string {
+  return packFiles(packsRoot, kind)[0]!;
 }
 
 /** Whether the pack emitted a file of this kind at all. */
@@ -137,9 +160,15 @@ export function hasPackFile(packsRoot: string, kind: string): boolean {
   }
 }
 
-/** A JSONL file of the shipped `public/packs` pack, by kind — see {@link packFile}. */
+/**
+ * Every record of a kind in the shipped `public/packs` pack, across its shards.
+ *
+ * In manifest order, which is ladder order for a sharded kind — so `sentences`
+ * reads a1 then a2 then b1, and a test asserting on the first record still sees
+ * the same one it did before the split.
+ */
 export function shippedRecords<T>(kind: string): T[] {
-  return readJsonl<T>(packFile(join(repoRoot, 'public/packs'), kind));
+  return packFiles(join(repoRoot, 'public/packs'), kind).flatMap((path) => readJsonl<T>(path));
 }
 
 export interface ScratchPack {
@@ -211,7 +240,7 @@ export function createScratchPack(prefix: string): ScratchPack {
     read,
     write: (file, text) => writeFileSync(path(file), text, 'utf8'),
     append: (file, row) => writeFileSync(path(file), `${read(file).trimEnd()}\n${row}\n`, 'utf8'),
-    records: <T>(kind: string) => readJsonl<T>(packFile(packs, kind)),
+    records: <T>(kind: string) => packFiles(packs, kind).flatMap((path) => readJsonl<T>(path)),
     build: (extra) => runScript('scripts/build-dataset.ts', { env: { ...env, ...extra } }),
     tryBuild: (extra) => tryRunScript('scripts/build-dataset.ts', { env: { ...env, ...extra } }),
     run: (script: string) => runScript(script, { args: [packs], env }),

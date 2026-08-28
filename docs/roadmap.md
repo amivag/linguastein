@@ -297,8 +297,12 @@ eight alternatives) and that the real gap is level rather than variation.
    this screen of all of them: it has just told you a word slipped back, which is
    exactly when "which word is the problem" is the question.
 
-9. **Offline dataset caching** — **precache coverage is verified and measured**;
-   the visible "available offline" state is still open.
+9. **Offline dataset caching** — **precache coverage is verified and measured**,
+   and the pack is versioned in its path and sharded by level; the loader can
+   fetch up to a ceiling. What remains is the app asking it to
+   ([`docs/tasks/shard-loading.md`](tasks/shard-loading.md) — 6.3 MB down to 3.0
+   for an A1 course), runtime caching behind an install step, and the visible
+   "available offline" state.
 
    What ships is 22 entries and **7.1 MB**, of which the pack is 6.3 MB:
    `sentences.jsonl` alone is 3.6 MB (52% of everything precached) and

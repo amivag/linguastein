@@ -21,7 +21,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import type { PackManifest } from '../../src/domain/content';
 import {
   createScratchPack,
-  packFile,
+  packFiles,
   packManifestPath,
   readJsonl,
   repoRoot,
@@ -48,7 +48,9 @@ const shipped = JSON.parse(
 ) as PackManifest;
 
 const shippedItems = ['sentences', 'vocabulary'].reduce(
-  (total, kind) => total + readJsonl(packFile(join(repoRoot, 'public/packs'), kind)).length,
+  (total, kind) =>
+    total +
+    packFiles(join(repoRoot, 'public/packs'), kind).flatMap((path) => readJsonl(path)).length,
   0,
 );
 
@@ -91,7 +93,9 @@ describe('the authored pack version', () => {
 describe('the levels the manifest advertises', () => {
   const levelsOfShippedItems = () => {
     const items = ['sentences', 'vocabulary'].flatMap((kind) =>
-      readJsonl<{ level?: string }>(packFile(join(repoRoot, 'public/packs'), kind)),
+      packFiles(join(repoRoot, 'public/packs'), kind).flatMap((path) =>
+        readJsonl<{ level?: string }>(path),
+      ),
     );
     return [...new Set(items.map((item) => item.level).filter(Boolean))].sort();
   };

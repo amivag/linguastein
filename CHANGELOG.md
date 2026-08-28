@@ -278,6 +278,29 @@ segundo piso`: a **wrong** link, which the coverage report counts as a success,
 
 ### Changed
 
+- **The playback transport stopped rearranging itself under your thumb, and a
+  speaking line now stops.** Two reports about reading a dialogue along, and both
+  are about the same thing: a control that means one thing and does another.
+
+  The transport was one button while idle and three controls while playing, on
+  the argument that a learner reading along needs the control that is _next_
+  rather than the full set. That is true of the controls and false of the layout —
+  Pause and Stop appeared where the single button had been, so the row grew and
+  everything under it jumped, at the moment a thumb was on its way back to the
+  screen. The same three slots are there in every state now: the play button
+  changes its word (`Listen` → `Pause` → `Resume`), Stop is disabled while there
+  is nothing to stop, and the readout says how long the passage is before it
+  starts rather than appearing once it has.
+
+  And **a line being read swaps its play icon for moving bars, so pressing it
+  stops the reading** — it played the line again. `Sequence.listen` has a third
+  meaning rather than every line growing a second button: this line alone when
+  nothing is playing, stop while this is the line speaking, carry on from here for
+  any other. The accessible name says which offer is live, so the difference is
+  not only in the icon. Held rather than speaking, the bars hold still and the
+  button goes back to meaning "carry on from here", which is what a paused line
+  honestly is.
+
 - **Installing the app is 841 KB, not 7.1 MB — and the pack is a download you
   choose.** `**/*.jsonl` was in the service worker's precache list, so installing
   the app fetched the entire 6.4 MB dataset before a learner saw a screen: 28

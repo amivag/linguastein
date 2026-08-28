@@ -77,13 +77,20 @@ export interface Sequence {
   resume(): void;
   stop(): void;
   /**
-   * What one line's own play button does, and it is two things: that line alone
-   * when nothing is being read, and "carry on from here" while something is.
+   * What one line's own play button does, and it is three things: that line
+   * alone when nothing is being read, **stop** while that line is the one
+   * speaking, and "carry on from here" for any other line while something is.
    *
-   * One control with a meaning that follows the state, rather than two controls
-   * on every line of a twenty-line passage. `Transcript` names the button for
-   * whichever meaning is live, so the difference is in the accessible name and
-   * not only in the context.
+   * One control with a meaning that follows the state, rather than three
+   * controls on every line of a twenty-line passage. `Transcript` names the
+   * button for whichever meaning is live, so the difference is in the accessible
+   * name and not only in the context.
+   *
+   * Stop is the one that had to be added rather than designed: the button
+   * replaces its icon with moving bars while its line is read, and the control a
+   * learner reaches for when a voice is talking is the one that started it.
+   * Pressing it played the line again, which is the opposite of what a button
+   * showing "this is speaking" offers.
    */
   listen(item: LearningItem): void;
 }
@@ -114,6 +121,17 @@ export function useSequence(items: readonly LearningItem[]): Sequence {
     resume: () => audio.resume(),
     stop: () => audio.stop(),
     listen: (item) => {
+      /*
+       * Speaking, so this is the stop button — see {@link Sequence.listen}.
+       *
+       * Only while it is actually speaking: held on this line, the bars are
+       * still and "carry on from here" is both the honest offer and what the
+       * name says, so the paused case falls through to the queue below.
+       */
+      if (state !== null && !state.paused && isSpeaking(state, item)) {
+        audio.stop();
+        return;
+      }
       if (queued) void audio.playAll(items, { ...options, startAt: item.id });
       else void audio.play(item, options);
     },

@@ -85,6 +85,10 @@ export function Transcript({
   // rather than "read this one". `Sequence.listen` decides it the same way; this
   // is the half of the decision that has to be said out loud, in the name.
   const queued = playback !== null && playback.total > 1;
+  // Held, so the bars on the speaking line hold with it: motion means sound, and
+  // there is none. It is also what keeps that line's button meaning "carry on
+  // from here" rather than "stop" — see `Sequence.listen`.
+  const paused = playback?.paused ?? false;
 
   if (!dialogue) {
     return (
@@ -109,6 +113,7 @@ export function Transcript({
               item={line.item}
               onListen={onListen}
               speaking={isSpeaking(playback, line.item)}
+              paused={paused}
               queued={queued}
             />
             {line.meaning !== undefined && <p className={styles.meaning}>{line.meaning}</p>}
@@ -171,6 +176,7 @@ export function Transcript({
                 item={line.item}
                 onListen={onListen}
                 speaking={isSpeaking(playback, line.item)}
+                paused={paused}
                 queued={queued}
               />
             </div>
@@ -218,34 +224,50 @@ function speakerSides(
  * control neither a screen reader nor an agent can pick — the same rule
  * `TokenizedText`'s `contextLabel` follows for the words inside the line.
  *
- * It has two jobs, because a line in a passage being read is two different
- * offers: hear this sentence, when nothing is playing, and pick up the reading
- * here, when something is. One control rather than two on every line, and the
- * name is what carries the difference — a screen reader user gets told which
- * offer is live rather than being left to infer it from the state of the page.
+ * It has three jobs, because a line in a passage is three different offers:
+ * hear this sentence, when nothing is playing; **stop**, while this is the line
+ * being read; and pick up the reading here, for any other line while something
+ * is. One control rather than three on every line, and the name is what carries
+ * the difference — a screen reader user gets told which offer is live rather
+ * than being left to infer it from the state of the page.
+ *
+ * The icon says the same thing: bars where the speaker glyph was, moving while
+ * the voice is, still while it is held. A button showing that its line is
+ * speaking is a button whose obvious press makes it stop, and it used to play the
+ * line again.
  */
 function PlayLine({
   item,
   onListen,
   speaking,
+  paused,
   queued,
 }: {
   readonly item: LearningItem;
   readonly onListen: (item: LearningItem) => void;
-  /** This line is the one being read. */
+  /** This line is the one being read, whether the reading is running or held. */
   readonly speaking: boolean;
+  /** The reading is held, so this line is the place it would pick up from. */
+  readonly paused: boolean;
   /** A whole passage is being read, so this button restarts it here. */
   readonly queued: boolean;
 }) {
+  const stops = speaking && !paused;
   return (
     <button
       type="button"
       className={styles.play}
       onClick={() => onListen(item)}
-      aria-label={queued ? `Play from “${item.text}”` : `Listen to “${item.text}”`}
+      aria-label={
+        stops
+          ? `Stop reading “${item.text}”`
+          : queued
+            ? `Play from “${item.text}”`
+            : `Listen to “${item.text}”`
+      }
       {...(speaking ? { 'data-speaking': 'true' } : {})}
     >
-      {speaking ? <SpeakingBars /> : <Icon name="speak" size="lg" />}
+      {speaking ? <SpeakingBars paused={paused} /> : <Icon name="speak" size="lg" />}
     </button>
   );
 }

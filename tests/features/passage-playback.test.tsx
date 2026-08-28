@@ -124,6 +124,55 @@ describe('reading a passage aloud', () => {
     expect(lines()[0]).not.toHaveAttribute('aria-current');
   });
 
+  it('keeps the same controls in every state, so none appears under a thumb', async () => {
+    /*
+     * The transport was one button while idle and three controls while playing,
+     * so Pause and Stop appeared where the single button had been and everything
+     * under them jumped — at the moment a thumb was on its way back to the
+     * screen. The controls are all present now and Stop is merely disabled while
+     * there is nothing to stop.
+     */
+    const { user } = readDialogue();
+    await screen.findByRole('heading', { level: 1 });
+
+    expect(screen.getByRole('button', { name: 'Stop' })).toBeDisabled();
+    // The readout holds the row's shape, and says how long the thing is before
+    // it starts rather than filling space.
+    expect(screen.getByText('2 sentences')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Listen' }));
+
+    expect(screen.getByRole('button', { name: 'Stop' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
+  });
+
+  it('stops the reading from the line that is speaking, which is what its bars offer', async () => {
+    // The line being read swaps its play icon for moving bars, and the control a
+    // learner reaches for while a voice is talking is the one that started it.
+    // Pressing it played the line again.
+    const { voice, user } = readDialogue();
+    await screen.findByRole('heading', { level: 1 });
+    await user.click(screen.getByRole('button', { name: 'Listen' }));
+
+    await user.click(screen.getByRole('button', { name: 'Stop reading “¿Tienes tiempo?”' }));
+
+    expect(screen.getByRole('button', { name: 'Listen' })).toBeInTheDocument();
+    expect(lines()[0]).not.toHaveAttribute('aria-current');
+    // Stopped rather than restarted: the voice was asked for that line once.
+    expect(voice.spoken).toEqual(['¿Tienes tiempo?']);
+  });
+
+  it('goes back to “carry on from here” while the reading is held', async () => {
+    // Held, the bars are still and the line is a place to pick up from, so the
+    // button keeps the meaning it has for every other line.
+    const { user } = readDialogue();
+    await screen.findByRole('heading', { level: 1 });
+    await user.click(screen.getByRole('button', { name: 'Listen' }));
+    await user.click(screen.getByRole('button', { name: 'Pause' }));
+
+    expect(screen.getByRole('button', { name: 'Play from “¿Tienes tiempo?”' })).toBeInTheDocument();
+  });
+
   it('offers one line on its own, and carries on from a line once it is reading', async () => {
     const { voice, user } = readDialogue();
     await screen.findByRole('heading', { level: 1 });

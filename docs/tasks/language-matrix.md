@@ -338,17 +338,48 @@ comment in that file already says what to do — this is the moment it does.
 - **Runtime-cache packs, `CacheFirst`, explicitly installed.** Settings → Packs
   already lists each pack with its version, levels, accents and licence; it
   becomes the install and remove surface, which is the honest UI for a 6 MB
-  download a learner is now choosing.
-- **Version in the path** so `CacheFirst` is safe and an update is a new URL
-  rather than a revalidation. Note this retires a workaround: the build currently
-  deletes any `.jsonl` it did not write, because appending left the old set beside
-  the new one for the service worker to precache. Versioned paths make that
-  deletion unnecessary rather than load-bearing.
+  download a learner is now choosing. **Still open**, and it is the half that
+  needs a real browser: a service worker's behaviour is not something the test
+  suite or a dev server exercises, so it wants verifying against an installed app
+  going offline rather than against a build log.
+
+  Measured before starting, so the change has a number to beat: **7.1 MB across 22
+  precached entries**, of which `sentences.jsonl` is 3.6 MB (52%) and
+  `forms.jsonl` 1.8 MB (25%).
+
+- ~~**Version in the path**~~ — **done 2026-08-26.** `packs/core-es/0.16.0/…`,
+  with the version in `catalog.json` beside the manifest path. `CacheFirst` is now
+  safe to add: an update is a new URL rather than a revalidation.
+
+  **The loader needed no change at all**, which is worth recording because it is
+  why this half was cheap: `loadPack` derives its root from the manifest path it
+  was handed and resolves every `files` entry beside it, so moving the manifest
+  moved everything. What did have the flat path typed into it was nine test files
+  and `generate-audio.ts`; they resolve through `packManifestPath` now, the same
+  question the app asks.
+
+  It retired the workaround as promised. The build deleted any `.jsonl` it had not
+  written, because a level change renames every file and the old set stayed on
+  disk for `globPatterns` to precache. Under a version the old set is a different
+  directory, so the deletion is housekeeping — one copy in the artifact — rather
+  than a correctness guard. The build removes other version directories, and any
+  file left loose from the flat layout, for that reason and no other.
+
 - **Shard by level.** `sentences.jsonl` is 3.5 MB and `forms.jsonl` 1.8 MB —
   88% of the pack in two files. A course is a level _ceiling_, so an A1 learner
   currently downloads the entire B1 corpus to study A1. `filePrefix` already
   derives file names from `presentLevels`, so the machinery is there; the change
   is one shard per level rather than one file per kind.
+
+  **Still open, and one thing about it is worth knowing before starting.**
+  Sharding on its own buys _nothing_: `globPatterns` precaches every shard, so the
+  bytes are identical until the runtime-caching bullet above lands too. The
+  startup win is a third, separate thing — the _loader_ fetching only the shards
+  the course needs — and that one is independent of the service worker. It has a
+  design question attached: `courseOptions` derives the levels a course offers
+  from the items actually loaded, so skipping the B1 shards would hide the B1
+  course. The manifest declares its ladder now (§7), which is what that would read
+  instead.
 
 Level sharding and the level scheme are the same decision, which is why they
 belong in one pass — see §7.

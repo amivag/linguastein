@@ -19,7 +19,13 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import type { PackManifest } from '../../src/domain/content';
-import { createScratchPack, packFile, readJsonl, repoRoot } from '../fixtures/dataset';
+import {
+  createScratchPack,
+  packFile,
+  packManifestPath,
+  readJsonl,
+  repoRoot,
+} from '../fixtures/dataset';
 
 const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
@@ -38,7 +44,7 @@ function declared(): Declared {
 }
 
 const shipped = JSON.parse(
-  readFileSync(join(repoRoot, 'public/packs/core-es/pack.json'), 'utf8'),
+  readFileSync(packManifestPath(join(repoRoot, 'public/packs')), 'utf8'),
 ) as PackManifest;
 
 const shippedItems = ['sentences', 'vocabulary'].reduce(
@@ -116,7 +122,7 @@ describe('the levels the manifest advertises', () => {
       scratch.build();
 
       const grown = JSON.parse(
-        readFileSync(join(scratch.packs, 'core-es/pack.json'), 'utf8'),
+        readFileSync(packManifestPath(scratch.packs), 'utf8'),
       ) as PackManifest;
 
       expect(grown.levels).toContain('b1');

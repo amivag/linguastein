@@ -9,7 +9,13 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { PackManifest } from '../../src/domain/content';
-import { createScratchPack, packFile, readJsonl, repoRoot } from '../fixtures/dataset';
+import {
+  createScratchPack,
+  packFile,
+  packManifestPath,
+  readJsonl,
+  repoRoot,
+} from '../fixtures/dataset';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -19,7 +25,7 @@ interface Item {
 }
 
 const shipped = JSON.parse(
-  readFileSync(join(repoRoot, 'public/packs/core-es/pack.json'), 'utf8'),
+  readFileSync(packManifestPath(join(repoRoot, 'public/packs')), 'utf8'),
 ) as PackManifest;
 
 describe('the shipped topic registry', () => {
@@ -90,9 +96,7 @@ describe('the build gate', () => {
     pack.append('topics.tsv', ['fruit', 'Fruit', 'Everyday life'].join('\t'));
 
     expect(pack.tryBuild().ok).toBe(true);
-    const manifest = JSON.parse(
-      readFileSync(join(pack.packs, 'core-es', 'pack.json'), 'utf8'),
-    ) as PackManifest;
+    const manifest = JSON.parse(readFileSync(packManifestPath(pack.packs), 'utf8')) as PackManifest;
     expect(manifest.topics?.at(-1)).toMatchObject({ id: 'fruit', label: 'Fruit' });
   });
 

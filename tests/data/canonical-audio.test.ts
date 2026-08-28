@@ -10,9 +10,10 @@
  * untouched and the ledger under test is one this file wrote.
  */
 
+import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { AudioClip, PackManifest } from '../../src/domain/content';
-import { createScratchPack, type ScratchPack } from '../fixtures/dataset';
+import { createScratchPack, packManifestPath, type ScratchPack } from '../fixtures/dataset';
 
 const LEDGER = 'audio-ledger.tsv';
 const VOICES = 'voices.tsv';
@@ -51,7 +52,9 @@ describe('canonical audio', () => {
     scratch = createScratchPack('audio-none');
     scratch.build();
 
-    const manifest = JSON.parse(scratch.read('../packs/core-es/pack.json')) as PackManifest;
+    const manifest = JSON.parse(
+      readFileSync(packManifestPath(scratch.packs), 'utf8'),
+    ) as PackManifest;
     expect(manifest.files.some((file) => file.kind === 'audio')).toBe(false);
     expect(manifest.voices).toBeUndefined();
   });
@@ -94,7 +97,9 @@ describe('canonical audio', () => {
     // prefix rather than as two literals: the prefix carries the pack's level
     // range and moves when the content does, and what this test is about is the
     // per-locale split, not the range.
-    const manifest = JSON.parse(scratch.read('../packs/core-es/pack.json')) as PackManifest;
+    const manifest = JSON.parse(
+      readFileSync(packManifestPath(scratch.packs), 'utf8'),
+    ) as PackManifest;
     const audio = manifest.files.filter((file) => file.kind === 'audio').map((file) => file.path);
     const prefix = audio[0]?.replace(/-audio-es-ES\.jsonl$/, '') ?? '';
     expect(prefix).toMatch(/^es-a1-[a-c][12]-core$/);
@@ -129,7 +134,9 @@ describe('canonical audio', () => {
     scratch.write(LEDGER, [header, clip('499999', 'approved')].join('\n'));
     scratch.build();
 
-    const manifest = JSON.parse(scratch.read('../packs/core-es/pack.json')) as PackManifest;
+    const manifest = JSON.parse(
+      readFileSync(packManifestPath(scratch.packs), 'utf8'),
+    ) as PackManifest;
     expect(manifest.files.some((file) => file.kind === 'audio')).toBe(false);
   });
 
@@ -150,7 +157,9 @@ describe('canonical audio', () => {
     );
     scratch.build();
 
-    const manifest = JSON.parse(scratch.read('../packs/core-es/pack.json')) as PackManifest;
+    const manifest = JSON.parse(
+      readFileSync(packManifestPath(scratch.packs), 'utf8'),
+    ) as PackManifest;
     expect(manifest.voices).toEqual([
       {
         id: 'lucia',

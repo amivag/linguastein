@@ -3,7 +3,8 @@
   "packs": [
     {
       "id": "core-es",
-      "manifest": "core-es/pack.json"
+      "version": "0.16.0",
+      "manifest": "core-es/0.16.0/pack.json"
     }
   ]
 }

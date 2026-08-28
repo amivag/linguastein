@@ -13,7 +13,15 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
@@ -21,6 +29,32 @@ export const repoRoot = resolve(process.cwd());
 
 /** Directory the `core-es` pack is written into, inside any packs root. */
 export const PACK_DIR = 'core-es';
+
+/**
+ * The pack's manifest, wherever its version put it.
+ *
+ * A pack's files live under its version now — `core-es/0.16.0/pack.json` — so
+ * that an update is a new URL and `CacheFirst` is safe for a 6 MB file
+ * (`docs/tasks/language-matrix.md` §5). Nine test files had the flat path typed
+ * into them; they ask here instead, which is also what the app does: `loadPack`
+ * reads the manifest and resolves every file beside it.
+ *
+ * The version is discovered rather than passed, because a test knows which pack
+ * it means and never which release it is looking at — and the build keeps one
+ * version per pack in the artifact, so there is nothing to disambiguate.
+ */
+export function packManifestPath(packsRoot: string, packId = PACK_DIR): string {
+  const packDir = join(packsRoot, packId);
+  const versions = readdirSync(packDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && existsSync(join(packDir, entry.name, 'pack.json')))
+    .map((entry) => entry.name)
+    .sort();
+  const version = versions.at(-1);
+  if (!version) {
+    throw new Error(`no versioned manifest under ${packDir} — did the build run?`);
+  }
+  return join(packDir, version, 'pack.json');
+}
 
 export interface RunResult {
   readonly ok: boolean;
@@ -78,7 +112,7 @@ export function readJsonl<T>(path: string): T[] {
  * `verbs`, `vocabulary`, `translations-en`, `audio-es-ES`.
  */
 export function packFile(packsRoot: string, kind: string): string {
-  const manifestPath = join(packsRoot, PACK_DIR, 'pack.json');
+  const manifestPath = packManifestPath(packsRoot);
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
     files?: readonly { readonly path: string }[];
   };
@@ -89,7 +123,8 @@ export function packFile(packsRoot: string, kind: string): string {
       `no pack file holds "${kind}" — ${manifestPath} lists ${files.map((f) => f.path).join(', ')}`,
     );
   }
-  return join(packsRoot, PACK_DIR, match.path);
+  // Beside the manifest, exactly as `loadPack` resolves it.
+  return join(manifestPath.replace(/pack\.json$/, ''), match.path);
 }
 
 /** Whether the pack emitted a file of this kind at all. */

@@ -35,6 +35,14 @@ import type { PackManifest } from '../../src/domain/content';
 const workspace = mkdtempSync(join(tmpdir(), 'build-de-'));
 const content = join(workspace, 'content');
 const packs = join(workspace, 'packs');
+/**
+ * `core-de/<version>/`, because a pack's files live under its version now — an
+ * update is a new URL so `CacheFirst` is safe for a 6 MB file
+ * (`docs/tasks/language-matrix.md` §5). Resolved from the manifest the same way
+ * `loadPack` does, rather than by spelling the version here, so a fixture that
+ * bumps its `pack.tsv` does not also have to edit five paths.
+ */
+const packDir = () => join(packs, 'core-de', '0.1.0');
 
 const write = (name: string, text: string) => writeFileSync(join(content, name), text, 'utf8');
 
@@ -95,9 +103,7 @@ describe('building a language with no module', () => {
   });
 
   it('writes core-de from content/de, named and tagged for the language', () => {
-    const manifest = JSON.parse(
-      readFileSync(join(packs, 'core-de', 'pack.json'), 'utf8'),
-    ) as PackManifest;
+    const manifest = JSON.parse(readFileSync(join(packDir(), 'pack.json'), 'utf8')) as PackManifest;
 
     expect(manifest.id).toBe('core-de');
     expect(manifest.targetLanguage).toBe('de');
@@ -111,14 +117,14 @@ describe('building a language with no module', () => {
   });
 
   it('names its files for its own language and levels', () => {
-    const names = readdirSync(join(packs, 'core-de')).filter((name) => name.endsWith('.jsonl'));
+    const names = readdirSync(packDir()).filter((name) => name.endsWith('.jsonl'));
     expect(names).toContain('de-a1-core-sentences.jsonl');
     expect(names.every((name) => name.startsWith('de-a1-core-'))).toBe(true);
   });
 
   it('derives only what needs no module, and says nothing it cannot derive', () => {
     const forms = readJsonl<{ form: string; morph: { number?: string } }>(
-      join(packs, 'core-de', 'de-a1-core-forms.jsonl'),
+      join(packDir(), 'de-a1-core-forms.jsonl'),
     );
 
     // A noun's singular *is* its lemma, so it needs no morphology and ships.
@@ -129,8 +135,8 @@ describe('building a language with no module', () => {
     expect(forms.some((form) => form.morph.number === 'plural')).toBe(false);
 
     // A numeral rule is a skill, and the rules come from the module.
-    const skills = existsSync(join(packs, 'core-de', 'de-a1-core-skills.jsonl'))
-      ? readJsonl<{ id: string }>(join(packs, 'core-de', 'de-a1-core-skills.jsonl'))
+    const skills = existsSync(join(packDir(), 'de-a1-core-skills.jsonl'))
+      ? readJsonl<{ id: string }>(join(packDir(), 'de-a1-core-skills.jsonl'))
       : [];
     expect(skills.filter((skill) => skill.id.includes('numerals-'))).toEqual([]);
   });
@@ -156,10 +162,15 @@ describe('building a language with no module', () => {
    */
   it('writes a catalog of the packs that are there, not of the one just built', () => {
     const catalog = JSON.parse(readFileSync(join(packs, 'catalog.json'), 'utf8')) as {
-      packs: { id: string; manifest: string }[];
+      packs: { id: string; version: string; manifest: string }[];
     };
 
-    expect(catalog.packs).toEqual([{ id: 'core-de', manifest: 'core-de/pack.json' }]);
+    // The version is in the path, so the catalog carries it too — it is what a
+    // fresh install resolves the manifest through, and a deployment may serve
+    // more than one release at once.
+    expect(catalog.packs).toEqual([
+      { id: 'core-de', version: '0.1.0', manifest: 'core-de/0.1.0/pack.json' },
+    ]);
     expect(existsSync(join(packs, 'core-es'))).toBe(false);
   });
 });

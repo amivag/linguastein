@@ -40,7 +40,7 @@ const LANGUAGE = (process.argv[2] ?? 'es').trim().toLowerCase();
 const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? `content/${LANGUAGE}`);
 const PACKS_DIR = resolve(process.env['LINGUASTEIN_PACKS_DIR'] ?? 'public/packs');
 const PACK_ID = `core-${LANGUAGE}`;
-const OUT_DIR = join(PACKS_DIR, PACK_ID);
+const PACK_DIR = join(PACKS_DIR, PACK_ID);
 const NS = `${PACK_ID}:`;
 /** Where the sources are, as the generated files should name them. */
 const SOURCE_LABEL = `content/${LANGUAGE}`;
@@ -3460,6 +3460,25 @@ function clean<T extends object>(records: readonly T[]): T[] {
 const idsWrittenBack = writeBackIds();
 writeLedger();
 
+/**
+ * The pack's files live under its version: `packs/core-es/0.16.0/…`.
+ *
+ * `docs/tasks/language-matrix.md` §5 asks for this so a pack can be
+ * runtime-cached `CacheFirst` — an update then arrives as a **new URL** rather
+ * than as a revalidation of an old one, which is the only way a cache-first
+ * strategy is safe for a 6 MB file. The loader needed no change: `loadPack`
+ * derives its root from the manifest path it was handed, so every `files` entry
+ * resolves beside the manifest wherever that is.
+ *
+ * It also retires a workaround rather than adding one. The build used to delete
+ * any `.jsonl` it had not written, because a level change renames every file and
+ * the old set stayed on disk for `globPatterns` to precache. Under a version the
+ * old set is a different directory, so the deletion below is housekeeping — one
+ * copy in the artifact — instead of a correctness guard.
+ */
+const PACK_VERSION = packRow?.version ?? '0.0.0';
+const OUT_DIR = join(PACK_DIR, PACK_VERSION);
+
 mkdirSync(OUT_DIR, { recursive: true });
 
 for (const file of files) {
@@ -3473,7 +3492,7 @@ const manifest = {
   name: `${authored('name') ?? PACK_ID} ${levelSpan(presentLevels)}`.trim(),
   targetLanguage: LANGUAGE,
   // Authored in `pack.tsv`, beside the content it describes.
-  version: packRow?.version ?? '0.0.0',
+  version: PACK_VERSION,
   ...(packRow?.updated ? { updated: packRow.updated } : {}),
   ...(authorRows.length > 0
     ? {
@@ -3555,6 +3574,28 @@ const stale = readdirSync(OUT_DIR).filter((name) => name.endsWith('.jsonl') && !
 for (const name of stale) rmSync(join(OUT_DIR, name));
 
 /*
+ * And one *version* of the pack in the artifact.
+ *
+ * Versioned paths are what make an update a new URL, so two versions on disk are
+ * harmless to correctness — which is exactly why they need saying no to
+ * deliberately: `dist` would otherwise grow a 6 MB copy per release and precache
+ * every one of them. The shipped artifact holds the version just built; keeping
+ * older ones served is a deployment's business, not a build's.
+ */
+for (const entry of readdirSync(PACK_DIR, { withFileTypes: true })) {
+  // A *file* directly here is from before the version was in the path: the pack
+  // used to write `core-es/es-a1-b1-core-sentences.jsonl`. Removed for the same
+  // reason as an old version — one copy in the artifact — and this is what makes
+  // the layout change a migration rather than an addition.
+  if (!entry.isDirectory()) {
+    rmSync(join(PACK_DIR, entry.name), { force: true });
+    continue;
+  }
+  if (entry.name === PACK_VERSION) continue;
+  rmSync(join(PACK_DIR, entry.name), { recursive: true, force: true });
+}
+
+/*
  * The catalog lists every pack in the output directory, not the one just built.
  *
  * It was a literal naming `core-es`, which was correct while there was one
@@ -3569,16 +3610,48 @@ for (const name of stale) rmSync(join(OUT_DIR, name));
  * folder cannot make the app fetch a 404 on startup.
  */
 const catalogued = readdirSync(PACKS_DIR, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory() && existsSync(join(PACKS_DIR, entry.name, 'pack.json')))
-  .map((entry) => entry.name)
-  .sort();
+  .filter((entry) => entry.isDirectory())
+  .flatMap((entry) => {
+    /*
+     * One level deeper than it used to look, because a pack's files now sit under
+     * its version. The newest version wins where a directory holds several — a
+     * deployment may serve more than one so an installed learner's URLs keep
+     * resolving, and the catalog is what a *fresh* install reads.
+     */
+    const versions = readdirSync(join(PACKS_DIR, entry.name), { withFileTypes: true })
+      .filter(
+        (version) =>
+          version.isDirectory() &&
+          existsSync(join(PACKS_DIR, entry.name, version.name, 'pack.json')),
+      )
+      .map((version) => version.name)
+      .sort(compareVersions);
+    const newest = versions.at(-1);
+    return newest ? [{ id: entry.name, version: newest }] : [];
+  })
+  .sort((a, b) => a.id.localeCompare(b.id));
+
+/** Semver order, so `0.10.0` follows `0.9.0` rather than preceding it. */
+function compareVersions(a: string, b: string): number {
+  const parts = (value: string) => value.split('.').map((part) => Number.parseInt(part, 10) || 0);
+  const [left, right] = [parts(a), parts(b)];
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    const difference = (left[index] ?? 0) - (right[index] ?? 0);
+    if (difference !== 0) return difference;
+  }
+  return 0;
+}
 
 writeFileSync(
   join(PACKS_DIR, 'catalog.json'),
   `${JSON.stringify(
     {
       $comment: 'Packs shipped with this build. Generated by scripts/build-dataset.ts.',
-      packs: catalogued.map((id) => ({ id, manifest: `${id}/pack.json` })),
+      packs: catalogued.map(({ id, version }) => ({
+        id,
+        version,
+        manifest: `${id}/${version}/pack.json`,
+      })),
     },
     null,
     2,

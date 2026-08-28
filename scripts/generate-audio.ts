@@ -63,6 +63,26 @@ const LANGUAGE = (() => {
 
 const PACKS_DIR = resolve(process.env['LINGUASTEIN_PACKS_DIR'] ?? 'public/packs');
 const PACK_DIR = join(PACKS_DIR, `core-${LANGUAGE}`);
+
+/**
+ * The pack's contents, wherever its version put them: `core-es/0.16.0/`.
+ *
+ * A pack's files live under its version so an update is a new URL and
+ * `CacheFirst` is safe for a 6 MB file (`docs/tasks/language-matrix.md` §5). This
+ * script had the flat path, which is the same assumption `loadPack` never made —
+ * it resolves everything beside the manifest it was handed. Resolved lazily
+ * because the build may not have run yet, and `readItems` says so rather than
+ * throwing here.
+ */
+function packContentsDir(): string | undefined {
+  if (!existsSync(PACK_DIR)) return undefined;
+  const versions = readdirSync(PACK_DIR, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && existsSync(join(PACK_DIR, entry.name, 'pack.json')))
+    .map((entry) => entry.name)
+    .sort();
+  const newest = versions.at(-1);
+  return newest ? join(PACK_DIR, newest) : undefined;
+}
 const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? `content/${LANGUAGE}`);
 
 /** Overridable so a test can pin the date the ledger records. */
@@ -146,7 +166,9 @@ interface Item {
  * gone on synthesising nothing and reporting success.
  */
 function readItems(): Item[] {
-  const manifestPath = join(PACK_DIR, 'pack.json');
+  const contents = packContentsDir();
+  if (!contents) return [];
+  const manifestPath = join(contents, 'pack.json');
   if (!existsSync(manifestPath)) return [];
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
     files?: readonly { readonly kind: string; readonly path: string }[];
@@ -157,7 +179,7 @@ function readItems(): Item[] {
 
   const items: Item[] = [];
   for (const file of files) {
-    const path = join(PACK_DIR, file);
+    const path = join(contents, file);
     if (!existsSync(path)) continue;
     for (const line of readFileSync(path, 'utf8').split('\n')) {
       if (line.length === 0 || line.startsWith('#')) continue;

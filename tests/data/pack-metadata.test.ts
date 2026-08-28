@@ -15,10 +15,15 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { PackManifest } from '../../src/domain/content';
-import { createScratchPack, repoRoot, type ScratchPack } from '../fixtures/dataset';
+import {
+  createScratchPack,
+  packManifestPath,
+  repoRoot,
+  type ScratchPack,
+} from '../fixtures/dataset';
 
 const shipped = JSON.parse(
-  readFileSync(join(repoRoot, 'public/packs/core-es/pack.json'), 'utf8'),
+  readFileSync(packManifestPath(join(repoRoot, 'public/packs')), 'utf8'),
 ) as PackManifest;
 
 /** The first data row of `content/es/pack.tsv`, which owns the version and date. */
@@ -132,7 +137,7 @@ describe('the guards on that metadata', () => {
     const { ok } = scratch.tryBuild();
     expect(ok).toBe(true);
     const manifest = JSON.parse(
-      readFileSync(join(scratch.packs, 'core-es/pack.json'), 'utf8'),
+      readFileSync(packManifestPath(scratch.packs), 'utf8'),
     ) as PackManifest;
     expect(manifest.authors).toBeUndefined();
   });

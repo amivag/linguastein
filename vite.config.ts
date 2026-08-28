@@ -82,7 +82,18 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons/*.svg'],
+      /*
+       * No `includeAssets`. It listed `favicon.svg` and `icons/*.svg`, which
+       * `workbox.globPatterns` below already matches — so all three were precached
+       * **twice**, and the manifest reported 25 entries for 22 files.
+       *
+       * Harmless in itself: the revisions were identical, so the second entry
+       * described the same bytes. What it cost is the one number a reader uses to
+       * check coverage at a glance, which is exactly the number
+       * `docs/tasks/language-matrix.md` §5 has to be read against when the packs
+       * move to runtime caching. One list decides what is precached now, and
+       * `tests/app/precache.test.ts` fails if a second one starts overlapping it.
+       */
       manifest: {
         name: `${APP.name} — ${APP.tagline}`,
         short_name: APP.name,

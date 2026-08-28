@@ -297,8 +297,24 @@ eight alternatives) and that the real gap is level rather than variation.
    this screen of all of them: it has just told you a word slipped back, which is
    exactly when "which word is the problem" is the question.
 
-9. **Offline dataset caching** — verify precache coverage and add a visible
-   "available offline" state.
+9. **Offline dataset caching** — **precache coverage is verified and measured**;
+   the visible "available offline" state is still open.
+
+   What ships is 22 entries and **7.1 MB**, of which the pack is 6.3 MB:
+   `sentences.jsonl` alone is 3.6 MB (52% of everything precached) and
+   `forms.jsonl` 1.8 MB (25%). Those are the two numbers
+   `docs/tasks/language-matrix.md` §5 is asking about — one shard per level rather
+   than one file per kind, packs runtime-cached behind an install step, and a
+   version in the path so `CacheFirst` is safe.
+
+   The measuring found one defect: `includeAssets` and `workbox.globPatterns` both
+   claimed `favicon.svg` and the two icons, so three files were precached twice and
+   the build reported **25 entries for 22 files**. Harmless bytes — the revisions
+   matched — but the entry count is the one number a reader checks coverage
+   against, and it has to be trustworthy before the packs move out of the
+   precache. `tests/app/precache.test.ts` now fails on a second list overlapping
+   the glob.
+
 10. **Icons** — replace the SVG-only PWA icons with rasterised 192/512 PNGs.
 11. **Appearance axes** — landed, and further than this item asked for: seven
     palettes in light and dark, a four-step contrast scale rather than the

@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { ServicesContext } from '../../src/app/services-context';
 import type { AppServices } from '../../src/app/services';
+import { NOTHING_TO_LOAD } from '../../src/app/content';
 import type { BatchDefinition } from '../../src/domain/batches';
 import { NOOP_PLAYBACK, type AudioService, type SpeechRecognitionProvider } from '../../src/audio';
 import { ExerciseEngine } from '../../src/domain/exercises';
@@ -56,6 +57,9 @@ const noSpeech: SpeechRecognitionProvider = {
 export function testServices(overrides: Partial<AppServices> = {}): AppServices {
   return {
     repository: testRepository(),
+    // A hand-built repository is already whole: there are no shards to fetch, so
+    // every course is ready and nothing here ever goes to the network.
+    content: NOTHING_TO_LOAD,
     storage: createMemoryStorage(),
     audio: silentAudio,
     speech: noSpeech,

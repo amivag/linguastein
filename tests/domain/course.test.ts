@@ -9,15 +9,20 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  ContentRepository,
   courseFilter,
   courseOptions,
   coursePath,
   isLevelScope,
+  parseCoursePath,
   reachableTopics,
   resolveCourse,
+  type ContentPack,
   type Course,
+  type ItemId,
+  type PackId,
 } from '../../src/domain/content';
-import { multilingualRepository, testRepository } from '../fixtures/pack';
+import { id, multilingualRepository, testRepository } from '../fixtures/pack';
 
 describe('courseOptions', () => {
   it('derives one course per target language of the loaded packs', () => {
@@ -28,10 +33,12 @@ describe('courseOptions', () => {
     expect(options.map((option) => option.label)).toEqual(['Español', 'Français']);
   });
 
-  it('offers only the levels its own content actually has', () => {
+  it('offers the levels its own packs declare', () => {
     const [spanish, french] = courseOptions(multilingualRepository());
 
-    // The Spanish fixture is all A1; the French one skips A2 entirely.
+    // The Spanish fixture is all A1; the French one skips A2 entirely. Both are
+    // read off `manifest.levels`, which the build derives from the items it
+    // emitted — so a rung is offered before its shard has been fetched.
     expect(spanish?.levels.map((level) => level.level)).toEqual(['a1', 'all']);
     expect(french?.levels.map((level) => level.level)).toEqual(['a1', 'b1', 'all']);
   });
@@ -45,6 +52,70 @@ describe('courseOptions', () => {
     expect(french?.levels.find((level) => level.level === 'a1')?.count).toBe(1);
     expect(french?.levels.find((level) => level.level === 'b1')?.count).toBe(2);
     expect(french?.levels.find((level) => level.level === 'all')?.count).toBe(2);
+  });
+});
+
+/**
+ * A course has to be describable before its content is fetched.
+ *
+ * Boot loads the shards the course reads and nothing above it
+ * (`docs/tasks/shard-loading.md`), so counting the items in memory would hide
+ * the chip a learner taps to *get* the next level — and would report the levels
+ * below it as a smaller course than they are. The pack states its own figures;
+ * this is where they are believed.
+ */
+describe('a partly loaded pack', () => {
+  const manifest = {
+    id: id<PackId>('sharded-es'),
+    name: 'Sharded Spanish',
+    targetLanguage: 'es',
+    version: '1.0.0',
+    levels: ['a1', 'a2'],
+    levelItems: { a1: 10, a2: 5 },
+    files: [
+      { kind: 'items' as const, path: 'items-a1.jsonl', level: 'a1' },
+      { kind: 'items' as const, path: 'items-a2.jsonl', level: 'a2' },
+    ],
+  };
+  const loaded: ContentPack = {
+    manifest,
+    // Two of the ten A1 rows, and none of A2: what a shard boundary looks like
+    // from in here.
+    items: ['001', '002'].map((local) => ({
+      id: id<ItemId>(`sharded-es:item:${local}`),
+      pack: manifest.id,
+      type: 'sentence' as const,
+      text: `Frase ${local}.`,
+      level: 'a1',
+    })),
+    lexemes: [],
+    senses: [],
+    forms: [],
+    skills: [],
+    translations: [],
+    passages: [],
+    audio: [],
+  };
+  const [option] = courseOptions(ContentRepository.from([loaded]));
+
+  it('offers a level nothing has fetched yet', () => {
+    expect(option?.levels.map((level) => level.level)).toEqual(['a1', 'a2', 'all']);
+  });
+
+  it('counts what the pack says it holds, not what is in memory', () => {
+    const counts = new Map(option?.levels.map((level) => [level.level, level.count]));
+
+    expect(counts.get('a1')).toBe(10);
+    expect(counts.get('a2')).toBe(15);
+    expect(counts.get('all')).toBe(15);
+  });
+
+  it('still narrows to the level, so a session cannot plan what is not there', () => {
+    // The counts are the pack's; the filter is still the repository's. A ceiling
+    // of A2 puts both rungs in scope and yields the two rows that exist.
+    const filter = courseFilter({ language: 'es', level: 'a2' }, [option!]);
+    expect(filter.levels).toEqual(['a1', 'a2']);
+    expect(ContentRepository.from([loaded]).query(filter)).toHaveLength(2);
   });
 });
 
@@ -115,6 +186,37 @@ describe('coursePath', () => {
 
   it('tolerates a leading slash on the screen, so callers cannot double it', () => {
     expect(coursePath(course, '/progress')).toBe('/es/a1/progress');
+  });
+});
+
+/**
+ * The other direction, which exists for the one caller that has no course to ask.
+ *
+ * `services.ts` needs the level ceiling *before* it fetches, so it reads the
+ * address rather than the router or the repository — neither of which exists
+ * yet. Deliberately no resolution: this says what a path claims, and
+ * `resolveCourse` is still what decides whether it is real.
+ */
+describe('parseCoursePath', () => {
+  it('reads the course a screen’s address carries', () => {
+    expect(parseCoursePath('/es/a1/browse')).toEqual({ language: 'es', level: 'a1' });
+    expect(parseCoursePath('/es/all')).toEqual({ language: 'es', level: 'all' });
+  });
+
+  it('names no level where the path carries none', () => {
+    // `/` is the entry point, and `/browse` is a link from before courses were in
+    // the path. Both mean "no ceiling to narrow by" rather than a level called
+    // `browse` — which is also all this could tell them apart by.
+    expect(parseCoursePath('/')).toEqual({ language: undefined, level: undefined });
+    expect(parseCoursePath('/browse')).toEqual({ language: 'browse', level: undefined });
+  });
+
+  it('reads a level it cannot vouch for, rather than none', () => {
+    // `a3` is well-formed and no pack has it. Dropping it here would look like a
+    // safe default and would silently mean "fetch everything"; it is held against
+    // the loaded courses one step later, where there is something to hold it to.
+    expect(parseCoursePath('/es/a3').level).toBe('a3');
+    expect(parseCoursePath('/es/A1').level).toBeUndefined();
   });
 });
 

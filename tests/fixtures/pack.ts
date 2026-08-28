@@ -30,12 +30,17 @@ const manifest: PackManifest = {
   version: '1.0.0',
   /*
    * The ladder, in the order it climbs, because a pack now declares its own.
-   * `courseOptions` reads the order from here rather than from a `CEFR_LEVELS`
-   * constant — see `docs/tasks/language-matrix.md` §7 — so a fixture with items
-   * at a level it does not declare would offer no levels at all, which is the
-   * same message a real pack gets from the build.
+   * `courseOptions` reads the order *and the rungs* from here rather than from a
+   * `CEFR_LEVELS` constant — see `docs/tasks/language-matrix.md` §7 — so a
+   * fixture with items at a level it does not declare would offer no course at
+   * that level, which is the same message a real pack gets from the build.
+   *
+   * A1 alone, because that is what these items are. The build derives this list
+   * from the items it emitted, so a manifest claiming a rung it has no content
+   * for is not a shape a real pack can have — and since boot stopped loading
+   * every shard, this list is what the level chips are drawn from.
    */
-  levels: ['a1', 'a2', 'b1'],
+  levels: ['a1'],
   files: [
     { kind: 'items', path: 'items.jsonl' },
     { kind: 'passages', path: 'passages.jsonl' },
@@ -354,7 +359,9 @@ export const TEST_PACK_FR: ContentPack = {
     name: 'Test French',
     targetLanguage: 'fr',
     version: '1.0.0',
-    levels: ['a1', 'a2', 'b1'],
+    // A1 and B1 with nothing between them: a ladder is what a pack has content
+    // for, and this one deliberately skips a rung the Spanish fixture has.
+    levels: ['a1', 'b1'],
     files: [{ kind: 'items', path: 'items.jsonl' }],
     topics: [{ id: 'greetings', label: 'Greetings', group: 'People' }],
   },

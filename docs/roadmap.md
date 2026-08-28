@@ -298,18 +298,22 @@ eight alternatives) and that the real gap is level rather than variation.
    exactly when "which word is the problem" is the question.
 
 9. **Offline dataset caching** — **precache coverage is verified and measured**,
-   and the pack is versioned in its path and sharded by level; the loader can
-   fetch up to a ceiling. What remains is the app asking it to
-   ([`docs/tasks/shard-loading.md`](tasks/shard-loading.md) — 6.3 MB down to 3.0
-   for an A1 course), runtime caching behind an install step, and the visible
-   "available offline" state.
+   the pack is versioned in its path and sharded by level, and **the app now
+   fetches only the shards its course reads**: an A1 course is **3.0 MB of the
+   6.3**, with the levels above it fetched in the background once the first screen
+   is up ([`docs/tasks/shard-loading.md`](tasks/shard-loading.md), done
+   2026-08-28). A course is described by its packs rather than by its contents, so
+   B1 is on offer with its real count before a byte of it is loaded, and a chip
+   tapped before the background load lands waits behind the loading state rather
+   than showing an empty course. What remains is runtime caching behind an install
+   step, and the visible "available offline" state.
 
-   What ships is 22 entries and **7.1 MB**, of which the pack is 6.3 MB:
-   `sentences.jsonl` alone is 3.6 MB (52% of everything precached) and
-   `forms.jsonl` 1.8 MB (25%). Those are the two numbers
-   `docs/tasks/language-matrix.md` §5 is asking about — one shard per level rather
-   than one file per kind, packs runtime-cached behind an install step, and a
-   version in the path so `CacheFirst` is safe.
+   What ships is 28 entries and **7.1 MB**, of which the pack is 6.3 MB: the three
+   `sentences` shards are 3.6 MB between them (52% of everything precached) and
+   the three `forms` shards 1.8 MB (25%). Precaching is still all-or-nothing and
+   still the whole pack — the boot saving is in what a learner waits for, not in
+   what an installed app eventually holds, and moving the packs out of the
+   precache is the runtime-caching half that needs a real browser going offline.
 
    The measuring found one defect: `includeAssets` and `workbox.globPatterns` both
    claimed `favicon.svg` and the two icons, so three files were precached twice and

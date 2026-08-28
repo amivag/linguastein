@@ -389,26 +389,29 @@ path, { upTo })` fetches the shards at or below a ceiling plus everything
   the whole pack and keeps every check a single record can fail on its own.
   `tests/data/level-shards.test.ts` asserts both halves of that.
 
-  **What is left is the app half, and it is where the bytes are actually saved.**
-  `services.ts` still loads everything, so nothing has got faster yet. It is
-  briefed on its own in [`shard-loading.md`](shard-loading.md), because it is a
-  session's work and touches none of this file's subject matter. Three things, in
-  order:
+  **The app half landed 2026-08-28**, and it is where the bytes are actually
+  saved: boot fetches the shards the address asks for — **3.0 MB of the 6.3** for
+  an A1 course — and the rest arrives behind the first screen. It was briefed on
+  its own in [`shard-loading.md`](shard-loading.md), whose §0 records what was
+  built; that file is the place to read for how, rather than this one. The three
+  things it asked for, all done:
 
-  1. `courseOptions` derives a course's levels from the items _loaded_, so
-     skipping B1 would hide the B1 course. It reads `manifest.levels` instead —
+  1. `courseOptions` derived a course's levels from the items _loaded_, so
+     skipping B1 would have hidden the B1 course. It reads `manifest.levels` now —
      the ladder is declared (§7) — and `manifest.levelItems` for the chip counts,
-     which the build now emits for exactly this: a count taken from memory would
+     which the build emits for exactly this: a count taken from memory would
      report a smaller course rather than an unfetched one.
   2. Boot loads up to the ceiling in the URL, then prefetches the rest in the
-     background so a level chip is usually instant.
+     background so a level chip is usually instant. The ceiling comes from
+     `parseCoursePath`, and from the stored level for `/`, which names no course
+     and is where most sessions start.
   3. A chip tapped before the prefetch lands awaits it behind the loading state
      the app already has. **Not a reload** — the level chips sit on most screens
      and are tapped often. A _language_ switch may reload: rare, a different pack,
      and unreachable today because the picker hides itself with one pack loaded.
 
-  Only (2) and (3) need a change signal, so a screen re-renders when late shards
-  arrive.
+  (2) and (3) needed the change signal, which is a revision and a `subscribe` on
+  `ContentRepository` read through `useSyncExternalStore` in `useCourse`.
 
 Level sharding and the level scheme are the same decision, which is why they
 belong in one pass — see §7.

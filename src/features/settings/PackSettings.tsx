@@ -60,8 +60,10 @@ function Pack({ pack }: { readonly pack: PackContents }) {
   const language = languageOption(manifest.targetLanguage);
 
   // Attributed to the pack rather than counted globally: a skipped record is
-  // only actionable if you know which add-on dropped it.
-  const skipped = services.datasetIssues.filter(
+  // only actionable if you know which add-on dropped it. Both lists, because
+  // most of a pack now arrives after boot — counting only what boot validated
+  // would report a clean pack whose late shards were full of problems.
+  const skipped = [...services.datasetIssues, ...services.content.issues()].filter(
     (issue) => issue.severity === 'error' && issueBelongsTo(manifest, issue.source),
   ).length;
 

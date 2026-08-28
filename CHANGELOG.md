@@ -278,6 +278,37 @@ segundo piso`: a **wrong** link, which the coverage report counts as a success,
 
 ### Changed
 
+- **Boot fetches the course, not the pack.** The dataset has shipped sharded by
+  level since the build learned to split it, and the loader has known how to skip
+  a shard for just as long — but the app asked for all of it anyway, so nothing
+  had got faster. It asks for the level in the address now: **3.0 MB rather than
+  6.3** for an A1 course, with the levels above it fetched in the background once
+  the first screen is up, so a level chip is usually instant and the saving is in
+  what a learner waits for rather than in what they eventually hold.
+
+  The address is read before the router exists, so `parseCoursePath` is the
+  inverse of `coursePath` — one module owning that spelling in both directions —
+  and `/`, which names no course and is the commonest way in, reads the level the
+  learner left off at, since that is exactly where it is about to redirect them.
+  A ceiling no pack declares fetches everything rather than nothing: a stale link
+  is corrected against the courses that exist, and at boot there are none yet.
+
+  Two things had to be true for that to be honest rather than merely smaller. A
+  course is now **described by its packs rather than by its contents** — the
+  chips read `manifest.levels` and the counts read `manifest.levelItems`, so B1
+  is on offer, with its real 3,816, before a byte of it is loaded; counting items
+  in memory would have hidden the chip a learner taps to _get_ B1 and reported
+  the rungs below as a smaller course than they are. And a level tapped before
+  the background load lands now **waits behind the loading state** instead of
+  showing an empty course — not a navigation, because the chips sit on most
+  screens and are tapped often. Narrowing waits for nothing at all, since a lower
+  ceiling is already in memory.
+
+  `ContentRepository` grows after the first render as a result, so it says when:
+  a revision and a `subscribe`, read through `useSyncExternalStore` in
+  `useCourse`, which is the one hook every screen reads its scope through. A
+  screen open when late shards arrive shows them without a navigation.
+
 - **You is a Settings section now, not a screen only Settings linked to.** The
   learner's own page lived at `/user`, outside the course routes, on the argument
   that a name is not a property of what is being studied. True, and not the

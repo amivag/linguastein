@@ -1,4 +1,13 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { BrowseScreen } from '../features/browse/BrowseScreen';
 import { StudyScreen } from '../features/study/StudyScreen';
@@ -10,7 +19,16 @@ import { SessionScreen } from '../features/practice/SessionScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { MissionScreen } from '../features/missions/MissionScreen';
 import type { BatchDefinition } from '../domain/batches';
-import { courseOptions, coursePath, resolveCourse, type Course } from '../domain/content';
+import {
+  courseOptions,
+  coursePath,
+  LEVEL_SCOPE_ALL,
+  levelLabel,
+  parseCoursePath,
+  resolveCourse,
+  type Course,
+  type LevelScope,
+} from '../domain/content';
 import { settingsPath } from '../features/settings/settings-url';
 import { mergePreferences, type Preferences } from '../storage';
 import { applyPalette, applyTheme, DEFAULT_PALETTE } from '../styles/themes';
@@ -69,6 +87,24 @@ export function App() {
   }, []);
 
   const services = boot.phase === 'ready' ? boot.services : null;
+
+  /*
+   * The rest of the pack, once the app is up.
+   *
+   * Boot fetched the shards this course reads; the levels above it are fetched
+   * here, in the background, and added to the repository as they land. Not
+   * because the learner will need them — they may not — but because a level chip
+   * should be instant when they do, and `ContentLoading.ensure` is what a chip
+   * tapped before this lands will wait on rather than duplicate.
+   */
+  useEffect(() => {
+    if (!services) return;
+    void services.content.ensure(LEVEL_SCOPE_ALL).catch((error: unknown) => {
+      // No screen is waiting on this, so a failure is a slower level switch
+      // later rather than anything the learner can act on now.
+      console.warn('Could not prefetch the rest of the content', error);
+    });
+  }, [services]);
 
   /**
    * A preference change, applied at once and persisted in order.
@@ -183,65 +219,70 @@ export function App() {
     >
       <ErrorBoundary>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <Routes>
-            {/* Every screen lives inside a course, so what is being studied is
+          <CourseContent>
+            <Routes>
+              {/* Every screen lives inside a course, so what is being studied is
               legible in the address bar and travels with a shared link. */}
-            <Route path="/:language/:level" element={<HomeScreen />} />
-            <Route path="/:language/:level/study" element={<StudyScreen />} />
-            <Route path="/:language/:level/browse" element={<BrowseScreen />} />
-            <Route path="/:language/:level/read" element={<ReadScreen />} />
-            <Route path="/:language/:level/read/:id" element={<PassageScreen />} />
-            <Route path="/:language/:level/progress" element={<ProgressScreen />} />
-            <Route path="/:language/:level/session" element={<SessionScreen />} />
-            <Route path="/:language/:level/mission/:missionId/:stage" element={<MissionScreen />} />
-            <Route path="/:language/:level/settings" element={<SettingsScreen />} />
-            {/* An unknown screen *inside* a course, matched before the global
+              <Route path="/:language/:level" element={<HomeScreen />} />
+              <Route path="/:language/:level/study" element={<StudyScreen />} />
+              <Route path="/:language/:level/browse" element={<BrowseScreen />} />
+              <Route path="/:language/:level/read" element={<ReadScreen />} />
+              <Route path="/:language/:level/read/:id" element={<PassageScreen />} />
+              <Route path="/:language/:level/progress" element={<ProgressScreen />} />
+              <Route path="/:language/:level/session" element={<SessionScreen />} />
+              <Route
+                path="/:language/:level/mission/:missionId/:stage"
+                element={<MissionScreen />}
+              />
+              <Route path="/:language/:level/settings" element={<SettingsScreen />} />
+              {/* An unknown screen *inside* a course, matched before the global
               catch-all so the 404 keeps the course it was reached from: a
               learner on A1 who follows a stale link should be offered A1, not
               whichever scope their preference happens to hold. */}
-            <Route path="/:language/:level/*" element={<NotFoundScreen />} />
+              <Route path="/:language/:level/*" element={<NotFoundScreen />} />
 
-            {/* Who the learner is, and what this device is holding about them:
+              {/* Who the learner is, and what this device is holding about them:
               the first Settings section now, not a screen of its own. The
               address stays because it was one — a learner's bookmark, and the
               shortest thing to type — and a redirect is how it keeps meaning
               what it meant. */}
-            <Route
-              path="/user"
-              element={<CourseRedirect to={(course) => settingsPath(course, 'user')} />}
-            />
+              <Route
+                path="/user"
+                element={<CourseRedirect to={(course) => settingsPath(course, 'user')} />}
+              />
 
-            {/* Outside the course routes: the design system is a property of the
+              {/* Outside the course routes: the design system is a property of the
               app, not of what is being studied. `useCourse` resolves to the
               widest real course when the path carries none, so the navigation
               still points somewhere sensible. */}
-            <Route
-              path="/design"
-              element={
-                <Suspense fallback={<Splash message="Loading the design system…" />}>
-                  <StyleGuideScreen />
-                </Suspense>
-              }
-            />
+              <Route
+                path="/design"
+                element={
+                  <Suspense fallback={<Splash message="Loading the design system…" />}>
+                    <StyleGuideScreen />
+                  </Suspense>
+                }
+              />
 
-            {/* Links written before courses existed, kept working: the query
+              {/* Links written before courses existed, kept working: the query
               string is what carries a shared session, so it has to survive the
               hop rather than being dropped at the door. */}
-            {LEGACY_SCREENS.map((screen) => (
-              <Route
-                key={screen}
-                path={`/${screen}`}
-                element={<CourseRedirect screen={screen} keepSearch />}
-              />
-            ))}
-            <Route path="/read/:id" element={<LegacyPassageRedirect />} />
+              {LEGACY_SCREENS.map((screen) => (
+                <Route
+                  key={screen}
+                  path={`/${screen}`}
+                  element={<CourseRedirect screen={screen} keepSearch />}
+                />
+              ))}
+              <Route path="/read/:id" element={<LegacyPassageRedirect />} />
 
-            {/* `/` has no screen of its own, so it redirects to the course the
+              {/* `/` has no screen of its own, so it redirects to the course the
               learner left. Anything else unrecognised is a 404 and says so —
               see `NotFoundScreen` for why silently redirecting was worse. */}
-            <Route path="/" element={<CourseRedirect />} />
-            <Route path="*" element={<NotFoundScreen />} />
-          </Routes>
+              <Route path="/" element={<CourseRedirect />} />
+              <Route path="*" element={<NotFoundScreen />} />
+            </Routes>
+          </CourseContent>
         </BrowserRouter>
       </ErrorBoundary>
     </ServicesContext>
@@ -250,6 +291,67 @@ export function App() {
 
 /** One-segment paths the app used before courses. */
 const LEGACY_SCREENS = ['browse', 'read', 'progress', 'session', 'settings'] as const;
+
+/**
+ * The content the address needs, before the screens that read it.
+ *
+ * A level chip is a link, and a learner may follow one before the background
+ * prefetch has landed — so the wait happens here, behind the loading state boot
+ * already uses, rather than as an empty Browse and a session with nothing in it.
+ *
+ * **Not a reload**, and that was decided rather than assumed: the chips sit in
+ * `CourseBar` on most screens and are tapped often, so navigating away to fetch
+ * would trade a frequent interaction for one screen's simplicity. Narrowing
+ * never waits at all — a lower ceiling is a subset of what is already in memory,
+ * so `has` is true before the click finishes.
+ *
+ * The level is read off the path rather than from `useParams`, because this sits
+ * outside the routes it is gating; `parseCoursePath` is the same reader boot
+ * uses. A path naming no level — `/design`, `/user`, a legacy `/browse` — needs
+ * nothing beyond what boot loaded.
+ */
+function CourseContent({ children }: { readonly children: ReactNode }) {
+  const { services } = useServices();
+  const { pathname } = useLocation();
+  const { level } = parseCoursePath(pathname);
+  // Kept with the level it belongs to rather than cleared when the next fetch
+  // starts: a failure is about one ceiling, and clearing it on the way in would
+  // be a `setState` in an effect body, which is the one thing the compiler rules
+  // forbid outright.
+  const [failure, setFailure] = useState<{ level: LevelScope; error: Error } | null>(null);
+
+  // Subscribed for the re-render rather than for the number: `has` below is what
+  // answers, and it can only change when content arrives.
+  useSyncExternalStore(services.repository.subscribe, services.repository.revision);
+  const ready = level === undefined || services.content.has(level);
+
+  useEffect(() => {
+    if (ready || level === undefined) return;
+    let cancelled = false;
+    void services.content.ensure(level).then(
+      () => {
+        if (!cancelled) setFailure(null);
+      },
+      (error: unknown) => {
+        if (!cancelled) {
+          setFailure({ level, error: error instanceof Error ? error : new Error(String(error)) });
+        }
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, level, services.content]);
+
+  if (level !== undefined && failure?.level === level) {
+    // Said rather than swallowed: the alternative was a screen that quietly
+    // showed A1 content under a B1 heading, with every count promising material
+    // that is not there. Going back is a step the browser already offers.
+    return <Splash message={`Could not load ${levelLabel(level)}: ${failure.error.message}`} />;
+  }
+  if (!ready) return <Splash message="Loading…" />;
+  return children;
+}
 
 /**
  * Sends a path with no course on it into one — the learner's last, or the

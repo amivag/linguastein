@@ -47,7 +47,10 @@ export interface CourseLevel {
   readonly level: LevelScope;
   /** `A1`, or `All levels` for the unnarrowed scope. */
   readonly label: string;
-  /** Items in scope at this level, i.e. cumulative rather than exact. */
+  /**
+   * Items in scope at this level: cumulative rather than exact, and the pack's
+   * own figure rather than a count of what is loaded — see {@link itemsPerLevel}.
+   */
   readonly count: number;
 }
 
@@ -55,9 +58,9 @@ export interface CourseLevel {
 export interface CourseOption {
   readonly language: LanguageTag;
   /**
-   * The language's ladder, in the order it climbs — every rung its packs declare,
-   * whether or not content has reached it yet. `levels` below is the subset with
-   * content; this is what orders them.
+   * The language's ladder, in the order it climbs — every rung its packs declare.
+   * `levels` below is the same set as selectable courses, with `all` after them;
+   * this is what orders them, and what "below" is read from.
    */
   readonly ladder: readonly Level[];
   /** What each rung is called, where its pack names it. */
@@ -66,7 +69,7 @@ export interface CourseOption {
   readonly label: string;
   readonly englishLabel: string;
   readonly packs: readonly PackId[];
-  /** Levels with content, lowest first, followed by `all`. */
+  /** The rungs the packs declare, lowest first, followed by `all`. */
   readonly levels: readonly CourseLevel[];
   readonly itemCount: number;
 }
@@ -166,6 +169,34 @@ export function coursePath(course: Course, screen = ''): string {
 }
 
 /**
+ * The other direction: what a path *claims* to be studying.
+ *
+ * Deliberately no resolution. `resolveCourse` is what corrects a stale language
+ * or level, and it needs the loaded courses to do it — so this reads the two
+ * segments and says nothing about whether they exist. It is here rather than in
+ * the app because the spelling of `/es/a1/browse` belongs to one module in both
+ * directions, and it exists at all because the boot path has to know the level
+ * ceiling *before* it fetches the shards a course reads: no repository, no
+ * router, and nothing yet to resolve against (`docs/tasks/shard-loading.md`
+ * §3.2).
+ *
+ * A level is absent unless it is shaped like one, so `/browse` — a path from
+ * before courses were in the URL — names no level rather than a level called
+ * `browse`... which it cannot distinguish, and does not have to: an
+ * unrecognisable level and no level both mean "no ceiling to narrow by".
+ */
+export function parseCoursePath(pathname: string): {
+  readonly language: string | undefined;
+  readonly level: LevelScope | undefined;
+} {
+  const [language, level] = pathname.replace(/^\/+/, '').split('/');
+  return {
+    language: language === '' ? undefined : language,
+    level: isLevelScope(level) ? level : undefined,
+  };
+}
+
+/**
  * Levels at or below `level` on `ladder`; the whole set for `all`.
  *
  * A ceiling the ladder does not name yields nothing rather than everything, which
@@ -210,12 +241,57 @@ export function courseFilter(course: Course, options: readonly CourseOption[]): 
 }
 
 /**
- * The courses the loaded packs actually offer.
+ * How many items each level holds: what the packs declare, and a count of what
+ * is loaded for a pack that declares nothing.
  *
- * Derived from content rather than declared: a pack manifest lists the levels it
- * *intends* to cover, and a level whose rows have not been written yet would
- * otherwise appear as an empty course. Languages come out in pack order, so the
- * first-loaded pack's language is the default.
+ * A course has to be describable before its content is fetched. The big files
+ * are sharded by level and boot fetches only the shards the course reads
+ * (`docs/tasks/shard-loading.md`), so counting items in memory would report a
+ * *smaller course* rather than an unfetched one — and the chip a learner taps to
+ * get B1 would be the one thing missing. `levelItems` is the pack's own figure
+ * and stays true whatever is loaded.
+ *
+ * Counting is the fallback rather than the rule, because a pack built by hand or
+ * by an older build may not declare it. That pack is loaded whole — nothing
+ * shards a file it has not split — so counting is exactly right there.
+ */
+function itemsPerLevel(
+  repository: ContentRepository,
+  language: LanguageTag,
+): { readonly byLevel: ReadonlyMap<string, number>; readonly unlevelled: number } {
+  const byLevel = new Map<string, number>();
+  let unlevelled = 0;
+
+  for (const manifest of repository.packs) {
+    if (manifest.targetLanguage !== language) continue;
+    if (manifest.levelItems) {
+      for (const [level, count] of Object.entries(manifest.levelItems)) {
+        byLevel.set(level, (byLevel.get(level) ?? 0) + count);
+      }
+      continue;
+    }
+    for (const item of repository.query({ packs: [manifest.id] })) {
+      if (item.level === undefined) unlevelled += 1;
+      else byLevel.set(item.level, (byLevel.get(item.level) ?? 0) + 1);
+    }
+  }
+
+  return { byLevel, unlevelled };
+}
+
+/**
+ * The courses the loaded packs offer.
+ *
+ * Declared rather than derived from the items in memory, and that is a change
+ * rather than a detail: this used to filter the ladder down to the levels whose
+ * rows were actually loaded, which was right while boot loaded every pack whole
+ * and became wrong the moment it stopped. `manifest.levels` already lists only
+ * the rungs a pack has content for — the build derives it from the items it
+ * emitted — so the filter was not merely replaceable, it was a second, worse
+ * copy of the same fact.
+ *
+ * Languages come out in pack order, so the first-loaded pack's language is the
+ * default.
  */
 export function courseOptions(repository: ContentRepository): readonly CourseOption[] {
   const byLanguage = new Map<LanguageTag, PackId[]>();
@@ -226,26 +302,26 @@ export function courseOptions(repository: ContentRepository): readonly CourseOpt
   }
 
   return [...byLanguage].map(([language, packs]) => {
-    const items = repository.query({ packs });
     const ladder = levelLadder(repository, language);
     const labels = levelLabelsOf(repository, language);
-    const present = ladder.filter((level) => items.some((item) => item.level === level));
+    const { byLevel, unlevelled } = itemsPerLevel(repository, language);
 
-    const levels: CourseLevel[] = present.map((level) => ({
+    const levels: CourseLevel[] = ladder.map((level) => ({
       level,
       label: levelLabel(level, labels),
-      count: items.filter(
-        (item) =>
-          item.level !== undefined && levelsUpTo(level, ladder, present).includes(item.level),
-      ).length,
+      // Cumulative, because a level is a ceiling: the declared figures are exact
+      // per rung, and adding them up is the app's arithmetic.
+      count: levelsUpTo(level, ladder).reduce((total, rung) => total + (byLevel.get(rung) ?? 0), 0),
     }));
+
+    const itemCount = [...byLevel.values()].reduce((total, count) => total + count, unlevelled);
 
     // Offered even for a single-level pack: it is the scope that includes
     // content carrying no level at all, so it is never redundant.
     levels.push({
       level: LEVEL_SCOPE_ALL,
       label: levelLabel(LEVEL_SCOPE_ALL),
-      count: items.length,
+      count: itemCount,
     });
 
     const named = languageOption(language);
@@ -257,7 +333,7 @@ export function courseOptions(repository: ContentRepository): readonly CourseOpt
       englishLabel: named.englishName,
       packs,
       levels,
-      itemCount: items.length,
+      itemCount,
     };
   });
 }

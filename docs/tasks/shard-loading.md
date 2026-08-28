@@ -1,12 +1,54 @@
 # Task: fetch only the shards the course needs
 
-**Status:** briefed, not started — the build and the loader are done, the app is not
+**Status:** **done 2026-08-28.** All three steps landed; §7's manual pass was run
+against the dev server and matched. What is left of `language-matrix.md` §5 is
+runtime caching, which was never this task
 **Written:** 2026-08-26
 **For:** a fresh agent session, no prior context assumed
 **Scope:** `src/app/services.ts`, `src/app/course.ts`, `src/domain/content/course.ts`
 and one new piece of React plumbing. No content, no build changes, no service
 worker. The dataset already ships sharded and the loader already knows how to
 skip.
+
+---
+
+## 0. What landed
+
+Read this before the brief below, which is kept as written so the reasoning it
+records stays legible.
+
+- **A course is described by its packs, not by its contents.** `courseOptions`
+  reads `manifest.levels` and `manifest.levelItems`; the ladder filter over loaded
+  items is gone, and `itemsPerLevel` falls back to counting only for a pack that
+  declares no figures — which is a pack loaded whole, so counting is right there.
+- **Boot reads the address.** `parseCoursePath` is the inverse of `coursePath`, in
+  the module that owns that spelling, and `services.ts` calls it before the
+  router exists. A path naming no level — `/`, which is the commonest way in —
+  falls back to `preferences.level`, because `/` is about to redirect there.
+- **`loadPack` gained `only`**, the complement of `upTo`, for topping a pack up
+  without re-reading the unsharded files; `LoadedPack` now carries the manifest
+  path it came from and the shard levels it put in memory, which is the
+  bookkeeping the widening needs. `shardLevelsFor` is exported because the app
+  asks the same question one step later — the §5 trap, avoided by there being one
+  function rather than two agreeing ones. It also widens a ceiling the pack does
+  not declare to the whole pack: `levelsUpTo` yields nothing there deliberately,
+  which is right everywhere `resolveCourse` has already corrected the level and
+  wrong at boot, where nothing has.
+- **`src/app/content.ts` is the widening**, chosen in `services.ts` like every
+  other seam. `has` and `ensure`, one chained queue so a chip tapped during the
+  prefetch waits on it instead of fetching the same shards again, and an `issues`
+  list so validation problems in late shards still reach Settings.
+- **The change signal is option A**, a revision and a `subscribe` on
+  `ContentRepository`, read through `useSyncExternalStore` in `useCourse`. The
+  memo problem §4 names is solved by making the courses themselves the snapshot,
+  cached per revision in a `WeakMap` — stable between arrivals, which the hook
+  requires, and new exactly once per arrival, which is what re-renders a screen.
+- **`CourseContent` in `App.tsx`** gates the routes on the address's level and
+  shows the boot loading state while a widening is in flight.
+
+`tests/app/shard-loading.test.tsx` holds the whole of it against the real shipped
+pack, `tests/data/level-shards.test.ts` the loader half, and
+`tests/domain/course.test.ts` the description-without-content half.
 
 Read [`AGENTS.md`](../../AGENTS.md) — **Architecture rules** 1 and 5, and
 **Courses and the URL** — then [`language-matrix.md`](language-matrix.md) §5,
@@ -141,15 +183,15 @@ whichever is chosen has to invalidate that too.
 
 ## 6. Definition of done
 
-- [ ] A cold load of `/es/a1` fetches the a1 shards and no others — assert on the
+- [x] A cold load of `/es/a1` fetches the a1 shards and no others — assert on the
       paths a `DatasetSource` was asked for, the way `level-shards.test.ts` does
-- [ ] The level chips show every level the pack declares, with its real count,
+- [x] The level chips show every level the pack declares, with its real count,
       before any of that level is loaded
-- [ ] Tapping B1 shows B1 content — after a wait if the prefetch has not landed,
+- [x] Tapping B1 shows B1 content — after a wait if the prefetch has not landed,
       immediately if it has
-- [ ] Narrowing to A1 fetches nothing
-- [ ] A screen open when late shards arrive shows them without a navigation
-- [ ] `npm run check` passes; the app loads with no console errors
+- [x] Narrowing to A1 fetches nothing
+- [x] A screen open when late shards arrive shows them without a navigation
+- [x] `npm run check` passes; the app loads with no console errors
 
 ## 7. Verification
 
@@ -161,3 +203,10 @@ Then in the running app, with the network panel open: load `/es/a1` and count th
 `.jsonl` requests — three shards plus the unsharded files, ~3.0 MB rather than
 6.3. Tap B1 and watch the rest arrive. Reload on `/es/all` and confirm every shard
 is fetched.
+
+**Run 2026-08-28**, and it matched: `/es/a1/browse` fetched `forms-a1`,
+`vocabulary-a1` and `sentences-a1` plus the five unsharded files, then the six
+a2/b1 shards arrived behind the rendered screen. The chips read `A1 2059`,
+`A2 3063`, `B1 3816`, `All levels 3816` with only A1 loaded. `/es/b1` fetched all
+nine at boot. Every file is requested twice in dev — that is StrictMode
+double-invoking the boot effect, and it predates this change.

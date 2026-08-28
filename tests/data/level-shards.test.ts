@@ -82,6 +82,42 @@ describe('loading a pack up to a level', () => {
     expect(pack.items.length).toBeGreaterThan(3000);
   });
 
+  it('fetches named shards alone, for topping a pack up', async () => {
+    // What raising the ceiling costs: the shards that were skipped, and nothing
+    // else. The unsharded files are already indexed, so re-reading them would
+    // list every translation a second time.
+    const source = diskSource();
+    const { pack, levels } = await loadPack(source, MANIFEST, { only: ['a2', 'b1'] });
+
+    expect(source.fetched.filter((path) => path.endsWith('-a1.jsonl'))).toEqual([]);
+    expect(source.fetched.filter((path) => path.endsWith('.jsonl'))).toHaveLength(6);
+    expect([...levels].sort()).toEqual(['a2', 'b1']);
+    expect(pack.translations).toEqual([]);
+    expect(pack.items.every((item) => item.level !== 'a1')).toBe(true);
+  });
+
+  it('reports the shard levels it put in memory, so a caller can skip them', async () => {
+    expect([...(await loadPack(diskSource(), MANIFEST, { upTo: 'a2' })).levels].sort()).toEqual([
+      'a1',
+      'a2',
+    ]);
+  });
+
+  it('widens a ceiling the pack does not declare, rather than fetching nothing', async () => {
+    /*
+     * `levelsUpTo` yields nothing for an unknown ceiling, deliberately: everywhere
+     * else `resolveCourse` has already corrected a stale level against the courses
+     * that exist. The boot path has not — it reads its ceiling off the address bar
+     * before there is a loaded course to correct it against — so a link saying
+     * `/es/a3` has to over-fetch rather than load an empty pack.
+     */
+    const source = diskSource();
+    const { partial } = await loadPack(source, MANIFEST, { upTo: 'a3' });
+
+    expect(partial).toBe(false);
+    expect(source.fetched.filter((path) => /-(a1|a2|b1)\.jsonl$/.test(path))).toHaveLength(9);
+  });
+
   it('narrows the content, not only the requests', async () => {
     const a1 = await loadPack(diskSource(), MANIFEST, { upTo: 'a1' });
     const all = await loadPack(diskSource(), MANIFEST, { upTo: 'all' });

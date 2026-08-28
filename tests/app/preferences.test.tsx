@@ -17,6 +17,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { App } from '../../src/app/App';
 import * as services from '../../src/app/services';
+import { NOTHING_TO_LOAD } from '../../src/app/content';
 import { createMemoryStorage, DEFAULT_PREFERENCES } from '../../src/storage';
 import { ExerciseEngine } from '../../src/domain/exercises';
 import { testRepository } from '../fixtures/pack';
@@ -57,6 +58,7 @@ async function bootApp() {
   const storage = slowStorage();
   vi.spyOn(services, 'createServices').mockResolvedValue({
     repository: testRepository(),
+    content: NOTHING_TO_LOAD,
     storage,
     audio: silentAudio,
     speech: {

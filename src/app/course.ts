@@ -12,11 +12,12 @@
  * a screen — it resolves the same way, to the first pack's language, unnarrowed.
  */
 
-import { use, useMemo } from 'react';
+import { use, useMemo, useSyncExternalStore } from 'react';
 import { useParams } from 'react-router';
 import {
   courseFilter,
   courseOptions,
+  type ContentRepository,
   coursePath,
   resolveCourse,
   resolvePronunciationFor,
@@ -50,13 +51,41 @@ export interface CourseScope {
   readonly path: (screen?: string) => string;
 }
 
+/**
+ * The courses on offer, recomputed only when the content changes.
+ *
+ * The repository grows after the first render — boot fetches the shards the
+ * course reads and the rest arrives behind it (`docs/tasks/shard-loading.md`
+ * §4) — while its identity never changes, so a memo keyed on it would hold the
+ * courses as they looked at boot. Keyed on the revision instead, this doubles as
+ * the `useSyncExternalStore` snapshot every screen reads: stable between
+ * changes, which is what that hook requires, and a new object exactly once per
+ * arrival, which is what makes a screen re-render for it.
+ */
+const courses = new WeakMap<
+  ContentRepository,
+  { readonly revision: number; readonly options: readonly CourseOption[] }
+>();
+
+function currentCourses(repository: ContentRepository): readonly CourseOption[] {
+  const revision = repository.revision();
+  const cached = courses.get(repository);
+  if (cached?.revision === revision) return cached.options;
+
+  const options = courseOptions(repository);
+  courses.set(repository, { revision, options });
+  return options;
+}
+
 export function useCourse(): CourseScope {
   const { services } = useServices();
   const params = useParams();
   const language = params['language'];
   const level = params['level'];
 
-  const options = useMemo(() => courseOptions(services.repository), [services.repository]);
+  const options = useSyncExternalStore(services.repository.subscribe, () =>
+    currentCourses(services.repository),
+  );
 
   return useMemo(() => {
     const course = resolveCourse(options, language, level);

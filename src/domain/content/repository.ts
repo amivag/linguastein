@@ -183,6 +183,32 @@ export class ContentRepository {
    */
   private standaloneLetters: (tag: LanguageTag | undefined) => ReadonlySet<string> = () => NONE;
 
+  private changes = 0;
+  private readonly listeners = new Set<() => void>();
+
+  /**
+   * How many times content has been added, and who to tell when it is.
+   *
+   * The repository used to be filled once and never touched again, which is why
+   * nothing needed either of these. It grows after the first render now: boot
+   * fetches the shards the course reads and the rest arrives behind it
+   * (`docs/tasks/shard-loading.md` §4), so a screen showing a count, a list or a
+   * session plan is looking at a snapshot that can still change.
+   *
+   * The signal lives here rather than beside the loader because this is the thing
+   * that changes — a second record of "what is in memory" is a record that can be
+   * wrong about it. Arrow properties so a subscriber can be handed the pair
+   * directly; a method would arrive without its `this`.
+   */
+  readonly revision = (): number => this.changes;
+
+  readonly subscribe = (listener: () => void): (() => void) => {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  };
+
   static from(
     packs: readonly ContentPack[],
     options: {
@@ -290,6 +316,9 @@ export class ContentRepository {
       // is exactly the one they are least likely to guess the first spelling of.
       push(this.translationsByLanguage, translation.lang, translation);
     }
+
+    this.changes += 1;
+    for (const listener of this.listeners) listener();
   }
 
   /** Records a surface a lexeme can appear as, folded the way a query will be. */

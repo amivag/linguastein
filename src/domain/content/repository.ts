@@ -301,7 +301,33 @@ export class ContentRepository {
 
     for (const clip of pack.audio) push(this.clipsByItem, clip.item, clip);
 
-    for (const translation of pack.translations) {
+    this.indexTranslations(pack.translations);
+
+    this.changes += 1;
+    for (const listener of this.listeners) listener();
+  }
+
+  /**
+   * Meanings that arrived on their own, without a pack around them.
+   *
+   * Translations are their own addressable, independently versioned unit
+   * (`docs/tasks/language-matrix.md` §3), so the commonest way they reach the
+   * index is no longer inside a `ContentPack` at all — a learner switching
+   * reference language fetches one and nothing else. A separate entry point
+   * rather than a synthetic pack with eight empty arrays, because `add` also
+   * registers a manifest in `packsById` and a translation unit is not a pack:
+   * it has no target language, no ladder and no items, and listing it beside
+   * `core-es` would put it in every count on the Packs screen.
+   */
+  addTranslations(translations: readonly Translation[]): void {
+    this.indexTranslations(translations);
+    this.changes += 1;
+    for (const listener of this.listeners) listener();
+  }
+
+  /** The indexing half, shared so both entry points file a record identically. */
+  private indexTranslations(translations: readonly Translation[]): void {
+    for (const translation of translations) {
       let byLanguage = this.translationsByRef.get(translation.ref);
       if (!byLanguage) {
         byLanguage = new Map();
@@ -316,9 +342,6 @@ export class ContentRepository {
       // is exactly the one they are least likely to guess the first spelling of.
       push(this.translationsByLanguage, translation.lang, translation);
     }
-
-    this.changes += 1;
-    for (const listener of this.listeners) listener();
   }
 
   /** Records a surface a lexeme can appear as, folded the way a query will be. */

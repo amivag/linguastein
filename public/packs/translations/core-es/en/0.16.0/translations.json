@@ -1,0 +1,27 @@
+{
+  "pack": "core-es",
+  "referenceLanguage": "en",
+  "version": "0.16.0",
+  "updated": "2026-08-30",
+  "name": "Spanish Core A1–B1 · English meanings",
+  "license": "CC0-1.0",
+  "authors": [
+    {
+      "name": "Linguastein",
+      "role": "engineering",
+      "url": "https://github.com/amivag/linguastein"
+    },
+    {
+      "name": "Claude (Anthropic)",
+      "role": "generation",
+      "url": "https://www.anthropic.com/claude"
+    }
+  ],
+  "files": [
+    {
+      "kind": "translations",
+      "path": "es-a1-b1-core-translations-en.jsonl",
+      "bytes": 479461
+    }
+  ]
+}

@@ -15,6 +15,7 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { loadCatalog, loadPack } from '../src/data/loaders/pack.ts';
+import { loadTranslationUnit } from '../src/data/loaders/translations.ts';
 import type { DatasetSource } from '../src/data/loaders/source.ts';
 import type { ItemId } from '../src/domain/content/ids.ts';
 import type { ContentPack, LearningItem } from '../src/domain/content/model.ts';
@@ -295,7 +296,22 @@ const catalog = await loadCatalog(source);
 let total = 0;
 
 for (const entry of catalog.packs) {
-  const { pack } = await loadPack(source, entry.manifest);
+  const { pack: loadedPack } = await loadPack(source, entry.manifest);
+  /*
+   * With its meanings folded back in. Every finding this script raises is about
+   * a *gloss* — two sentences sharing one, a word held twice, a gender the
+   * English disagrees with — so a pack read without its translation units would
+   * report nothing at all and look like a clean bill of health.
+   */
+  const units = await Promise.all(
+    (catalog.translations ?? [])
+      .filter((unit) => unit.pack === entry.id)
+      .map((unit) => loadTranslationUnit(source, unit.manifest)),
+  );
+  const pack = {
+    ...loadedPack,
+    translations: [...loadedPack.translations, ...units.flatMap((unit) => unit.translations)],
+  };
   const glosses = glossesOf(pack);
   const raised = [
     ...collidingGlosses(pack, glosses),

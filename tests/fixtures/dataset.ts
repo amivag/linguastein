@@ -56,6 +56,47 @@ export function packManifestPath(packsRoot: string, packId = PACK_DIR): string {
   return join(packDir, version, 'pack.json');
 }
 
+/**
+ * The manifest of one translation unit, wherever its own version put it.
+ *
+ * The sibling of {@link packManifestPath}, one level deeper: a unit is keyed by
+ * the pack it explains *and* the language it explains it in, so the path is
+ * `translations/core-es/en/0.16.0/translations.json`. As there, the version is
+ * discovered rather than passed — a test knows which meanings it means and never
+ * which release it is looking at.
+ */
+export function translationUnitPath(
+  packsRoot: string,
+  language: string,
+  packId = PACK_DIR,
+): string {
+  const languageDir = join(packsRoot, 'translations', packId, language);
+  if (!existsSync(languageDir)) {
+    throw new Error(`no translation unit at ${languageDir} — did the build run?`);
+  }
+  const versions = readdirSync(languageDir, { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isDirectory() && existsSync(join(languageDir, entry.name, 'translations.json')),
+    )
+    .map((entry) => entry.name)
+    .sort();
+  const version = versions.at(-1);
+  if (!version) throw new Error(`no versioned manifest under ${languageDir}`);
+  return join('translations', packId, language, version, 'translations.json');
+}
+
+/** The one JSONL a translation unit is made of, resolved beside its manifest. */
+function translationUnitFile(packsRoot: string, language: string): string {
+  const manifestPath = join(packsRoot, translationUnitPath(packsRoot, language));
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
+    files?: readonly { readonly path: string }[];
+  };
+  const file = manifest.files?.[0]?.path;
+  if (!file) throw new Error(`${manifestPath} lists no files`);
+  return join(manifestPath.replace(/translations\.json$/, ''), file);
+}
+
 export interface RunResult {
   readonly ok: boolean;
   /** Stdout when the script succeeded, stderr when it failed. */
@@ -112,6 +153,19 @@ export function readJsonl<T>(path: string): T[] {
  * `verbs`, `vocabulary`, `translations-en`, `audio-es-ES`.
  */
 export function packFiles(packsRoot: string, kind: string): string[] {
+  /*
+   * Meanings live outside the pack now.
+   *
+   * A translation set is its own addressed, independently versioned unit
+   * (`docs/tasks/language-matrix.md` §3), so `translations-en` is no longer one
+   * of the pack manifest's `files` and asking the pack for it finds nothing.
+   * Answered here rather than in each of the nine suites that ask, for the reason
+   * this helper exists at all: a test asks for a kind and something else knows
+   * where that lives.
+   */
+  const language = /^translations-(.+)$/.exec(kind)?.[1];
+  if (language) return [translationUnitFile(packsRoot, language)];
+
   const manifestPath = packManifestPath(packsRoot);
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
     files?: readonly { readonly path: string; readonly level?: string }[];

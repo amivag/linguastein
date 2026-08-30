@@ -17,13 +17,45 @@ import styles from './Settings.module.css';
 export function LearningSettings() {
   const { services, preferences, updatePreferences } = useServices();
   const targetLanguage = useTargetLanguage();
-  // What the loaded packs can actually explain in, rather than a list of what
-  // the app hopes to support one day, and never the language being learned.
-  // See `referenceLanguages`.
+  /*
+   * What this installation can actually explain in, rather than a list of what
+   * the app hopes to support one day, and never the language being learned.
+   *
+   * Two sources, because meanings are their own downloadable unit: what is in
+   * the index, and what the catalog says could be fetched. Only the learner's
+   * own language is downloaded, so the index alone would offer a picker holding
+   * one option — the setting would look broken in exactly the situation it is
+   * for. See `referenceLanguages`.
+   */
   const languages = useMemo(
-    () => referenceLanguages(services.repository, targetLanguage),
-    [services.repository, targetLanguage],
+    () =>
+      referenceLanguages(
+        services.repository,
+        targetLanguage,
+        services.content.availableReferences(),
+      ),
+    [services.repository, services.content, targetLanguage],
   );
+
+  /*
+   * The meanings are fetched, then the preference is set.
+   *
+   * That order rather than the reverse, and it is not a detail: a preference
+   * pointing at a language whose records have not arrived shows the fallback
+   * chain's English, which reads as "the setting did nothing". Setting it after
+   * means the moment the control changes is the moment the screen changes with
+   * it. `ensureReference` resolves immediately for a language already held, so
+   * switching back costs nothing.
+   *
+   * A failure leaves the preference alone rather than stranding it: offline, the
+   * setting stays where it was and the learner keeps the meanings they had.
+   */
+  const chooseReference = (referenceLanguage: string) => {
+    void services.content.ensureReference(referenceLanguage).then(
+      () => updatePreferences({ referenceLanguage }),
+      (error: unknown) => console.warn('Could not fetch meanings', error),
+    );
+  };
 
   return (
     <>
@@ -47,7 +79,7 @@ export function LearningSettings() {
         </span>
         <select
           value={preferences.referenceLanguage}
-          onChange={(event) => updatePreferences({ referenceLanguage: event.target.value })}
+          onChange={(event) => chooseReference(event.target.value)}
         >
           {languages.map((language) => (
             <option key={language.tag} value={language.tag}>
@@ -57,8 +89,8 @@ export function LearningSettings() {
         </select>
         <span className={styles.hint}>
           {languages.length > 1
-            ? 'The language meanings are shown in.'
-            : 'The language meanings are shown in. A pack that ships another one adds it here.'}
+            ? 'The language meanings are shown in. Choosing one that is not on the device yet fetches it.'
+            : 'The language meanings are shown in. A translation set published for this pack adds it here.'}
         </span>
       </label>
 

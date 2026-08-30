@@ -51,9 +51,30 @@ export interface LoadedPack {
   readonly levels: readonly Level[];
 }
 
-/** A catalog lists the packs an installation ships with. */
+/** One pack's meanings in one language, as the catalog lists them. */
+export interface CatalogTranslations {
+  readonly pack: string;
+  readonly language: string;
+  readonly version?: string;
+  readonly manifest: string;
+}
+
+/**
+ * A catalog lists what an installation ships: the packs, and the translation
+ * units that explain them.
+ *
+ * Two lists rather than one, because they are addressed and versioned
+ * separately — that is the whole of `docs/tasks/language-matrix.md` §3. The
+ * catalog is the only unversioned file in the tree, which is what lets a
+ * translation unit be *added* to a shipped pack: the pack's own manifest never
+ * mentions it, so the pack does not move.
+ *
+ * `translations` is optional so a catalog written before this existed, or by
+ * hand for a pack that ships none, still loads.
+ */
 export interface PackCatalog {
   readonly packs: readonly { readonly id: string; readonly manifest: string }[];
+  readonly translations?: readonly CatalogTranslations[];
 }
 
 export async function loadCatalog(

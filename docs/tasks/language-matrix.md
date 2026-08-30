@@ -1,6 +1,11 @@
 # Task: any-direction language pairs, and datasets that arrive on demand
 
-**Status:** briefed, decisions open — supersedes [`second-language.md`](second-language.md) §7
+**Status:** §§1–5 done, §6 half done — supersedes [`second-language.md`](second-language.md) §7.
+Steps 1–4 of §8's order have all landed, which closes the "decide it in alpha"
+window: the id scheme, the schema decisions, the transport and the translation
+units are settled and in the shipped format. What is left is content (German,
+`core-en`, Greek, Chinese) and the two rows of §6 that only bite when a language
+arrives whose accents do not simply fold.
 **Written:** 2026-08-25
 **For:** a fresh agent session, no prior context assumed
 **Scope:** the direction model, the id scheme's non-Latin half, the pack
@@ -192,6 +197,57 @@ Pivot at _authoring_ time if you must, and mark it `generated`.
 ---
 
 ## 3. Translations become their own loadable unit
+
+**Done 2026-08-30.** The addressing decision below went the first way:
+`packs/translations/<pack>/<language>/<version>/translations.json`, with the unit
+listed in `catalog.json` and the pack's manifest saying nothing about it at all.
+Inside the packs root rather than beside it, because the root is what
+`DatasetSource` is pointed at, what the service worker precaches JSON from and
+what its `/packs/.+\.jsonl$` runtime route matches — a unit under here is
+fetched, cached and installable with no change to any of the four. The cost is
+one reserved word: a pack may not be called `translations`, refused by a build
+gate rather than a note.
+
+What moved with the files: `referenceLanguages` is off the pack manifest. It was
+derived from the translation files the pack shipped, which was honest while it
+shipped them — and it was also the one field that would still have forced a
+re-version to add a language, which is the whole cost this section exists to
+remove. The picker reads the catalog and the index instead
+(`referenceLanguages` in `src/domain/content/packs.ts`), and Settings → Packs
+reports what is _loaded_ by reading each translation's `ref` back through the id
+parser.
+
+What it bought, beyond the additivity: boot fetches **one** reference language
+rather than every language the pack was ever published in, and
+`ContentLoading.ensureReference` fetches another when a learner changes the
+setting — the same queue as the shard widening, so two indexers never run on one
+repository at once. The setting is applied _after_ the fetch resolves, because a
+preference pointing at meanings that have not arrived shows the fallback chain's
+English and reads as a control that did nothing.
+
+Two things are checked that nothing could check before. A unit whose records are
+not in the language its address claims is reported at load
+(`loadTranslationUnit`), because the repository indexes by the record's `lang`
+field while the fetch is decided by the directory — a German gloss under `en/`
+would be downloaded by an English learner and then be invisible in both
+languages. And `validateTranslationsAgainst` is the dangling-reference check
+moved to where it can now fail: a unit and its pack move at different speeds by
+design, so "this gloss explains an item that no longer exists" stopped being
+impossible.
+
+**One boundary worth stating, because it is easy to over-read the result.** The
+_addressing_ is additive: nothing about `core-es` has to change for a unit in a
+new language to exist and be found. The _build_ is not, and deliberately so — it
+owns its output directory, so `build:data es` deletes unit directories for
+languages it did not write, the same housekeeping that keeps one version of the
+pack in the artifact. That is right while the build is the only publisher, and it
+is: a unit's records come from the gloss column of `content/<tag>/*.tsv`, so one
+build produces exactly one reference language. A unit written by somebody else
+belongs in their own tree, served beside this one and named by their catalog —
+which is what the addressing makes possible and the build has no part in. Revisit
+this if a second gloss column ever lands.
+
+The original reasoning follows.
 
 This is the pivot decision of the whole brief.
 
@@ -629,10 +685,14 @@ is not, because it wants a preference value and a sentence of UI copy.
    rejected.
 3. **§6, the language module**, and `second-language.md` §2's parameterised
    build. With 1 and 2 settled this is refactoring rather than design.
-4. **§3 and §5 in one pass** — translation units, pack versioning, level
-   sharding, runtime caching. They are one decision wearing four hats, and this
-   is the step most likely to be deferred and most expensive to retrofit, because
-   it changes URLs _and_ cache keys _and_ the manifest shape simultaneously.
+4. ~~**§3 and §5 in one pass** — translation units, pack versioning, level
+   sharding, runtime caching.~~ **Done.** Not in one pass in the end: §5 landed
+   2026-08-26 to 2026-08-28 and §3 on 2026-08-30, which cost one migration of the
+   catalog rather than the two this warned about, because §5 left the manifest
+   shape and the cache keys where §3 needed them. The order was lucky rather than
+   planned — doing §3 first would have meant versioning a pack whose path had no
+   version in it — and the warning stands for anyone reading this before doing
+   the same thing to a second language.
 5. **German**, to exercise the seam cheaply.
 6. **`core-en`** (§4), which unlocks every reverse direction at once.
 7. **Greek**, then **Chinese** — `second-language.md` §5 and §6 respectively.
@@ -687,7 +747,13 @@ Steps 1–4 are the whole "decide it in alpha" window.
   authoring new ones
 - tapping `up` in `look it up` names the phrasal verb and glosses it
 - an A1 learner's first session downloads A1 shards, and no B1 file is fetched
-- `translations-zh` can be added to a shipped `core-de` without re-versioning it
+- **done** — `translations-zh` can be added to a shipped `core-de` without
+  re-versioning it: the pack's manifest names neither the file nor the language,
+  the catalog names both, and bumping a unit's version leaves every pack file and
+  a byte-identical `pack.json` exactly where they were
+  (`tests/data/translation-units.test.ts`). Boot fetches one reference language
+  and a switch fetches another, once, without dragging a language nobody asked
+  for along (`tests/app/reference-loading.test.ts`)
 - a learner can install and remove one pack from Settings → Packs, offline after
 - a German pack exists to build, and `build:data de` derives its morphology
 - `tests/features/courses.test.tsx` passes with a third fixture language

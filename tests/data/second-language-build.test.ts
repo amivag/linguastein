@@ -56,6 +56,17 @@ beforeAll(() => {
   // A1; `non-cefr-ladder.test.ts` is where a ladder that is not CEFR is proven.
   write('levels.tsv', '# Columns: id\tlabel\na1\na2\n');
   write('pack.tsv', '# Columns: version\titems\tupdated\tnote\n0.1.0\t2\t2026-08-25\tfixture\n');
+  /*
+   * And a version for the meanings, which are their own unit now
+   * (`docs/tasks/language-matrix.md` §3). Required rather than defaulted, for the
+   * reason `pack.tsv` is: the version is in the *path*, so a unit without one
+   * would ship at `0.0.0` and the next build would overwrite it at the same URL —
+   * exactly the hazard the versioned path exists to remove.
+   */
+  write(
+    'translations.tsv',
+    '# Columns: language\tversion\trecords\tupdated\tnote\nen\t0.1.0\t7\t2026-08-25\tfixture\n',
+  );
   write(
     'manifest.tsv',
     '# Columns: key\tvalue\nname\tGerman Core\ndescription\tA fixture.\nglossLanguage\ten\n',
@@ -112,8 +123,40 @@ describe('building a language with no module', () => {
     // No accents declared, so the bare tag: a pack with no regional accents is
     // still speakable, and the device picks the voice.
     expect(manifest.pronunciationLocales).toEqual(['de']);
-    // Derived from the translations actually emitted, never declared.
-    expect(manifest.referenceLanguages).toEqual(['en']);
+    /*
+     * And nothing about which languages explain it, because that is no longer a
+     * fact about the pack. A translation set is its own addressed, independently
+     * versioned unit (`docs/tasks/language-matrix.md` §3), so a `referenceLanguages`
+     * field here would be the one thing that still had to be edited — and the pack
+     * re-versioned — to add a language, which is the exact cost the split removes.
+     * The catalog is where the languages are named; the assertion below is the
+     * other half of this one.
+     */
+    expect(manifest.referenceLanguages).toBeUndefined();
+  });
+
+  it('writes its meanings as a unit of their own, versioned apart from the pack', () => {
+    const unit = join(packs, 'translations', 'core-de', 'en', '0.1.0');
+    const manifest = JSON.parse(readFileSync(join(unit, 'translations.json'), 'utf8')) as {
+      pack: string;
+      referenceLanguage: string;
+      version: string;
+      files: readonly { path: string; bytes: number }[];
+    };
+
+    expect(manifest.pack).toBe('core-de');
+    expect(manifest.referenceLanguage).toBe('en');
+    // Its own, from `translations.tsv`, and not the pack's — which happens to be
+    // the same string here because the fixture cut both at once. The point is
+    // that it was *read* from the other file: `es` ships 0.16.0 for both today
+    // and they diverge the first time a gloss is reworded on its own.
+    expect(manifest.version).toBe('0.1.0');
+    // Priced, so Settings can add it to what keeping the course offline costs.
+    expect(manifest.files[0]?.bytes).toBeGreaterThan(0);
+
+    // And the file is not in the pack, which is the whole of the change.
+    const packFiles = readdirSync(packDir()).filter((name) => name.endsWith('.jsonl'));
+    expect(packFiles.some((name) => name.includes('translations'))).toBe(false);
   });
 
   it('names its files for its own language and levels', () => {

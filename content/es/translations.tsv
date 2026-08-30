@@ -1,0 +1,41 @@
+# The version of each translation unit — one row per reference language.
+#
+# Columns: language	version	records	updated	note
+#
+# A translation unit is this pack's meanings in one language, addressed and
+# versioned on its own: `packs/translations/core-es/en/0.16.0/`. It used to be a
+# file inside the pack, which made the language matrix multiplicative in the
+# worst place — adding Chinese meanings meant re-versioning core-es, which
+# changes every one of its file URLs, which makes every device that had it
+# re-download 6.4 MB of unchanged Spanish. Separately addressed, adding a
+# language is a new directory and one more line in `catalog.json`, and the pack
+# does not move. See `docs/tasks/language-matrix.md` §3.
+#
+# So this file is the whole point of the split, and a version that cannot move
+# on its own would undo it. Do not copy `pack.tsv`'s version here out of habit:
+# a build that only rewords a gloss bumps this and leaves the pack alone, and a
+# build that adds a hundred sentences bumps both.
+#
+# `records` is the translation-record count the version was cut at, and it does
+# here exactly what `items` does in `pack.tsv`: it stops the version freezing.
+# The build reports a disagreement and `tests/data/pack-version.test.ts` fails on
+# one, so changing the meanings forces an edit to this file, with the version on
+# the same line. Run `npm run build:data` to learn the current count; it prints
+# it either way.
+#
+# Which number to move: a new gloss or a new sentence's meaning is additive, so
+# it is the minor. The major is for a change that could invalidate what a learner
+# has read — retranslating in bulk, or changing what a gloss is for. A typo fix
+# changes no count, needs no bump, and should not get one.
+#
+# `updated` is the date this version was cut, as `YYYY-MM-DD`. Authored rather
+# than stamped from the clock, for the reason `pack.tsv` gives: the build has to
+# be reproducible, and CI fails when a rebuild changes `public/packs`.
+#
+# The English unit starts at the pack version it last shipped inside rather than
+# at `1.0.0`. These are the same meanings that were in core-es 0.16.0 — a fresh
+# `1.0.0` would claim a maturity an unreviewed pack does not have, and going
+# backwards from 0.16.0 would read as a downgrade to anyone comparing the two.
+# From here the two numbers diverge, which is the point.
+#
+en	0.16.0	5013	2026-08-30	The same English meanings that shipped inside core-es 0.16.0, now a unit of their own

@@ -15,6 +15,45 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Changed
+
+- **Meanings are their own download now.** A pack's translations were a file inside
+  its manifest, which made the language matrix multiplicative in the worst place:
+  adding Chinese meanings to a Spanish pack meant editing that manifest, which
+  re-versions the pack, which changes every one of its file URLs — so serving one
+  new audience cost every existing learner a 6.4 MB re-download of Spanish that had
+  not changed a byte.
+
+  A translation set is now keyed `(pack, reference language)` and addressed on its
+  own: `packs/translations/core-es/en/0.16.0/`, versioned in its path, listed in
+  `catalog.json`, and named nowhere in `pack.json`. Adding a language is a new
+  directory and one more line in the catalog. `catalog.json` is the only unversioned
+  file in the tree, which is exactly what lets it name a unit published _after_ the
+  pack it explains.
+
+  `referenceLanguages` came off the pack manifest with the files. It was derived
+  from the translations the pack shipped and was honest while it shipped them — and
+  it was also the last field that would have forced a re-version to add a language.
+  The picker reads what is loaded plus what the catalog can supply; Settings → Packs
+  reports what is on the device by reading each meaning's `ref` back through the id
+  parser.
+
+  For a learner the visible half is the download. Boot fetches **one** reference
+  language rather than every language a pack was ever published in, and choosing a
+  different one in Settings fetches it then — the setting applies after the meanings
+  arrive, because a preference pointing at glosses that have not landed shows the
+  English fallback and reads as a control that did nothing. Keeping a course offline
+  still keeps its meanings: they are priced, downloaded and removed with the pack,
+  since a pack held without them opens offline and cannot explain a single word.
+
+  Two failures that could not previously exist are checked, because a unit and its
+  pack now move at different speeds by design. A unit whose records are not in the
+  language its address claims is reported at load — the fetch is decided by the
+  directory and the index is built from each record's own `lang`, so a German gloss
+  under `en/` would be downloaded by an English learner and then be invisible in
+  both languages. And the dangling-reference check moved to where it can now fail:
+  a gloss explaining an item the pack has since dropped.
+
 ### Added
 
 - **Playback you can follow.** Audio used to be a button that made a sound: nothing

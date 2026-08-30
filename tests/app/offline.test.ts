@@ -11,7 +11,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createOfflinePacks, NO_OFFLINE_PACKS } from '../../src/app/offline';
-import type { LoadedPack } from '../../src/data/loaders';
+import type { LoadedPack, LoadedTranslations } from '../../src/data/loaders';
 import type { PackId } from '../../src/domain/content';
 import { id } from '../fixtures/pack';
 
@@ -19,6 +19,17 @@ const PACK = id<PackId>('core-es');
 /** Where the packs are served from, and where this pack's own files sit under it. */
 const BASE = 'http://localhost/packs/';
 const ROOT = `${BASE}core-es/1.0.0/`;
+/**
+ * And where its meanings sit, which is somewhere else and under a version of
+ * their own.
+ *
+ * A translation set is its own addressed, independently versioned unit
+ * (`docs/tasks/language-matrix.md` §3). It is still counted, downloaded and
+ * removed *with* the pack, because "keep this course offline" means the whole
+ * course to the person choosing it — a pack held without its meanings opens
+ * offline and cannot explain a single word.
+ */
+const UNIT = `${BASE}translations/core-es/en/2.0.0/`;
 
 const loaded = (): LoadedPack => ({
   path: 'core-es/1.0.0/pack.json',
@@ -32,7 +43,6 @@ const loaded = (): LoadedPack => ({
       files: [
         { kind: 'items', path: 'sentences-a1.jsonl', level: 'a1', bytes: 2_000_000 },
         { kind: 'items', path: 'sentences-a2.jsonl', level: 'a2', bytes: 1_000_000 },
-        { kind: 'translations', path: 'translations-en.jsonl', bytes: 500_000 },
       ],
     },
     items: [],
@@ -48,6 +58,21 @@ const loaded = (): LoadedPack => ({
   partial: false,
   levels: ['a1', 'a2'],
 });
+
+const meanings = (): LoadedTranslations => ({
+  path: 'translations/core-es/en/2.0.0/translations.json',
+  manifest: {
+    pack: PACK,
+    referenceLanguage: 'en',
+    version: '2.0.0',
+    files: [{ kind: 'translations', path: 'translations-en.jsonl', bytes: 500_000 }],
+  },
+  translations: [],
+  issues: [],
+});
+
+/** The pack and the meanings it is read with, which is what a course is. */
+const course = () => ({ packs: [loaded()], translations: () => [meanings()], baseUrl: BASE });
 
 /**
  * Cache Storage, as much of it as this module uses, plus a `fetch` that serves
@@ -100,7 +125,7 @@ describe('a device with no cache storage', () => {
   it('says so rather than offering something that would do nothing', () => {
     // jsdom has no Cache Storage, so this is the unstubbed case as well as the
     // honest answer for a browser without it.
-    const offline = createOfflinePacks({ packs: [loaded()], baseUrl: BASE });
+    const offline = createOfflinePacks(course());
 
     expect(offline.supported).toBe(false);
     expect(offline).toBe(NO_OFFLINE_PACKS);
@@ -110,7 +135,7 @@ describe('a device with no cache storage', () => {
 describe('what the device is holding', () => {
   it('counts the files and adds up what they weigh, before anything is downloaded', async () => {
     fakeCaches();
-    const [status] = await createOfflinePacks({ packs: [loaded()], baseUrl: BASE }).status();
+    const [status] = await createOfflinePacks(course()).status();
 
     expect(status).toEqual({
       pack: PACK,
@@ -128,7 +153,7 @@ describe('what the device is holding', () => {
     // was reading it, or because `install` put it there. To a learner asking
     // whether the pack is available offline, those are the same answer.
     fakeCaches({ 'workbox-runtime': [`${ROOT}sentences-a1.jsonl`] });
-    const [status] = await createOfflinePacks({ packs: [loaded()], baseUrl: BASE }).status();
+    const [status] = await createOfflinePacks(course()).status();
 
     expect(status?.cached).toBe(1);
     expect(status?.cachedBytes).toBe(2_000_000);
@@ -138,13 +163,13 @@ describe('what the device is holding', () => {
 describe('keeping a pack', () => {
   it('downloads what is missing, in order, and reports as each file lands', async () => {
     const fake = fakeCaches({ 'linguastein-packs': [`${ROOT}sentences-a1.jsonl`] });
-    const offline = createOfflinePacks({ packs: [loaded()], baseUrl: BASE });
+    const offline = createOfflinePacks(course());
     const progress: string[] = [];
 
     await offline.install(PACK, (done, total) => progress.push(`${done}/${total}`));
 
     // The two it did not have, and not the one it did.
-    expect(fake.fetched).toEqual([`${ROOT}sentences-a2.jsonl`, `${ROOT}translations-en.jsonl`]);
+    expect(fake.fetched).toEqual([`${ROOT}sentences-a2.jsonl`, `${UNIT}translations-en.jsonl`]);
     expect(progress).toEqual(['0/2', '1/2', '2/2']);
 
     const [status] = await offline.status();
@@ -155,11 +180,11 @@ describe('keeping a pack', () => {
     const urls = [
       `${ROOT}sentences-a1.jsonl`,
       `${ROOT}sentences-a2.jsonl`,
-      `${ROOT}translations-en.jsonl`,
+      `${UNIT}translations-en.jsonl`,
     ];
     const fake = fakeCaches({ 'linguastein-packs': urls });
 
-    await createOfflinePacks({ packs: [loaded()], baseUrl: BASE }).install(PACK);
+    await createOfflinePacks(course()).install(PACK);
 
     expect(fake.fetched).toEqual([]);
   });
@@ -169,7 +194,7 @@ describe('keeping a pack', () => {
     vi.stubGlobal('fetch', (url: string) =>
       Promise.resolve({ ok: !url.endsWith('translations-en.jsonl'), status: 200 }),
     );
-    const offline = createOfflinePacks({ packs: [loaded()], baseUrl: BASE });
+    const offline = createOfflinePacks(course());
 
     await expect(offline.install(PACK)).rejects.toThrow();
 
@@ -188,7 +213,7 @@ describe('removing a pack', () => {
       'linguastein-packs': [`${ROOT}sentences-a1.jsonl`],
       'workbox-runtime': [`${ROOT}sentences-a2.jsonl`],
     });
-    const offline = createOfflinePacks({ packs: [loaded()], baseUrl: BASE });
+    const offline = createOfflinePacks(course());
 
     await offline.remove(PACK);
 
@@ -198,7 +223,7 @@ describe('removing a pack', () => {
 
   it('ignores a pack it was never given', async () => {
     fakeCaches();
-    const offline = createOfflinePacks({ packs: [loaded()], baseUrl: BASE });
+    const offline = createOfflinePacks(course());
 
     await expect(offline.remove(id<PackId>('nothing'))).resolves.toBeUndefined();
     await expect(offline.install(id<PackId>('nothing'))).resolves.toBeUndefined();

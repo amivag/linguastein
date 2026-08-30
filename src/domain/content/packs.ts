@@ -16,7 +16,7 @@
  * item that happens to exemplify a word.
  */
 
-import { packIdOf, type PackId } from './ids';
+import { packIdOf, type EntityId, type PackId } from './ids';
 import {
   DEFAULT_REFERENCE_LANGUAGE,
   languageOption,
@@ -92,7 +92,30 @@ export function packContents(repository: ContentRepository, id: PackId): PackCon
     topics: repository.topics({ packs: [id] }).filter((topic) => topic.count > 0).length,
     levels: manifest.levels ?? [],
     levelLabels: manifest.levelLabels ?? {},
-    referenceLanguages: manifest.referenceLanguages ?? [],
+    /*
+     * Counted from the meanings actually indexed for *this* pack, rather than
+     * read off the manifest, which no longer says.
+     *
+     * The field went with the files: a translation set is its own addressed,
+     * independently versioned unit now, so a pack listing the languages it has
+     * been explained in would be the one thing that still had to be edited — and
+     * the pack re-versioned — to add one (`docs/tasks/language-matrix.md` §3).
+     * A translation's `ref` carries the pack in its namespace, so which pack a
+     * meaning belongs to is read back through the id parser, the way this
+     * function already reads a skill's.
+     *
+     * It therefore reports what is *loaded*, which is one language rather than
+     * every published one. That is the honest answer for a screen describing
+     * what is on the device; the picker's question is a different one, and
+     * {@link referenceLanguages} answers it from the catalog.
+     */
+    referenceLanguages: repository
+      .translationLanguages()
+      .filter((tag) =>
+        repository
+          .translationsIn(tag)
+          .some((translation) => packIdOf(translation.ref as EntityId) === id),
+      ),
     pronunciationLocales: manifest.pronunciationLocales ?? [],
     voices: manifest.voices?.length ?? 0,
     hasAudio: manifest.files.some((file) => file.kind === 'audio'),
@@ -153,8 +176,22 @@ export function issueBelongsTo(manifest: PackManifest, source: string): boolean 
 export function referenceLanguages(
   repository: ContentRepository,
   exclude?: LanguageTag,
+  available: readonly LanguageTag[] = [],
 ): readonly LanguageOption[] {
-  const present = repository.translationLanguages();
+  /*
+   * What is loaded, plus what can be fetched.
+   *
+   * Both halves are needed and neither is enough. Meanings are their own unit
+   * now and only the learner's own language is downloaded, so "what is in the
+   * index" would offer a picker of exactly one option and hide every language
+   * the app could actually switch to — the setting would look broken in the one
+   * situation it exists for. `available` is the catalog's list, handed in rather
+   * than imported, because the catalog is a fact about the installation and this
+   * is `src/domain` (rule 1).
+   *
+   * Loaded first, so the language a learner is reading in heads the list.
+   */
+  const present = [...new Set([...repository.translationLanguages(), ...available])];
   const tags = present.length > 0 ? present : [DEFAULT_REFERENCE_LANGUAGE];
   const offered = exclude ? tags.filter((tag) => tag !== exclude) : tags;
   return (offered.length > 0 ? offered : tags).map((tag) => languageOption(tag));

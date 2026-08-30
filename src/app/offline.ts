@@ -17,8 +17,8 @@
  * cache (a browser with no worker at all).
  */
 
-import type { LoadedPack } from '../data/loaders';
-import type { PackFile, PackId, PackManifest } from '../domain/content';
+import type { LoadedPack, LoadedTranslations } from '../data/loaders';
+import type { PackFile, PackId } from '../domain/content';
 import { cacheName } from './identity';
 
 /** What a pack weighs, and how much of it this device is holding. */
@@ -72,6 +72,21 @@ export const NO_OFFLINE_PACKS: OfflinePacks = {
 export interface OfflinePacksOptions {
   /** What boot loaded: each pack's manifest, and the path it was read from. */
   readonly packs: readonly LoadedPack[];
+  /**
+   * The translation units in memory, counted against the pack each explains.
+   *
+   * A function rather than a list, because the set changes after boot: a learner
+   * who switches reference language has different meanings on the device, and a
+   * screen that had been handed the old list would price a download that no
+   * longer describes what is here.
+   *
+   * Counted with the pack rather than listed separately because that is what
+   * "keep this course offline" means to the person choosing it. A pack held
+   * without its meanings is a pack that opens offline and cannot explain a
+   * single word — technically installed, and useless in exactly the situation
+   * installing it was for.
+   */
+  readonly translations?: () => readonly LoadedTranslations[];
   /** Absolute url the packs are served from, so a cache key is a real url. */
   readonly baseUrl: string;
 }
@@ -79,18 +94,31 @@ export interface OfflinePacksOptions {
 export function createOfflinePacks(options: OfflinePacksOptions): OfflinePacks {
   if (typeof caches === 'undefined') return NO_OFFLINE_PACKS;
 
-  const packs = options.packs.map((loaded) => ({
-    id: loaded.pack.manifest.id,
-    files: fileUrls(loaded.pack.manifest, loaded.path, options.baseUrl),
-  }));
-  const find = (id: PackId) => packs.find((pack) => pack.id === id);
+  /*
+   * Resolved per call rather than once, because the translation half of a pack
+   * can arrive after this module was created — see {@link
+   * OfflinePacksOptions.translations}.
+   */
+  const packsNow = () =>
+    options.packs.map((loaded) => {
+      const id = loaded.pack.manifest.id;
+      const units = (options.translations?.() ?? []).filter((unit) => unit.manifest.pack === id);
+      return {
+        id,
+        files: [
+          ...fileUrls(loaded.pack.manifest.files, loaded.path, options.baseUrl),
+          ...units.flatMap((unit) => fileUrls(unit.manifest.files, unit.path, options.baseUrl)),
+        ],
+      };
+    });
+  const find = (id: PackId) => packsNow().find((pack) => pack.id === id);
 
   return {
     supported: true,
 
     async status() {
       return Promise.all(
-        packs.map(async (pack) => {
+        packsNow().map(async (pack) => {
           /*
            * `caches.match` searches every cache in the origin rather than one by
            * name, which is the point: a file may be here because the worker's
@@ -168,12 +196,12 @@ const PACK_CACHE = cacheName('packs');
  * always reports empty.
  */
 function fileUrls(
-  manifest: PackManifest,
+  files: readonly PackFile[],
   manifestPath: string,
   baseUrl: string,
 ): readonly { readonly url: string; readonly bytes: number }[] {
   const root = manifestPath.replace(/[^/]+$/, '');
-  return manifest.files.map((file: PackFile) => ({
+  return files.map((file: PackFile) => ({
     url: new URL(`${root}${file.path}`, baseUrl).toString(),
     bytes: file.bytes ?? 0,
   }));

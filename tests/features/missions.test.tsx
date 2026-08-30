@@ -5,7 +5,12 @@ import userEvent from '@testing-library/user-event';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import type { SpeechRecognitionProvider } from '../../src/audio';
-import { loadCatalog, loadPack, type DatasetSource } from '../../src/data/loaders';
+import {
+  loadCatalog,
+  loadPack,
+  loadTranslationUnit,
+  type DatasetSource,
+} from '../../src/data/loaders';
 import { ContentRepository } from '../../src/domain/content';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';
 import { missionPracticePath } from '../../src/features/missions/mission-url';
@@ -20,15 +25,28 @@ const packSource: DatasetSource = {
   read: (path) => readFile(resolve(packRoot, path), 'utf8'),
 };
 
+/**
+ * The shipped packs *and* their meanings, which are two fetches now.
+ *
+ * A translation set is its own addressed, independently versioned unit
+ * (`docs/tasks/language-matrix.md` §3), so loading `catalog.packs` alone gives a
+ * repository with every sentence and no gloss. This screen is where that shows
+ * first and worst: a mission lists what it will teach in the *reference*
+ * language, so without the unit it offers a learner "Saludar a alguien" as the
+ * explanation of `Saludar a alguien`.
+ */
 async function shippedServices(speech?: SpeechRecognitionProvider) {
   const catalog = await loadCatalog(packSource);
   const loaded = await Promise.all(
     catalog.packs.map((entry) => loadPack(packSource, entry.manifest)),
   );
-  return testServices({
-    repository: ContentRepository.from(loaded.map((result) => result.pack)),
-    ...(speech ? { speech } : {}),
-  });
+  const units = await Promise.all(
+    (catalog.translations ?? []).map((entry) => loadTranslationUnit(packSource, entry.manifest)),
+  );
+  const repository = ContentRepository.from(loaded.map((result) => result.pack));
+  for (const unit of units) repository.addTranslations(unit.translations);
+
+  return testServices({ repository, ...(speech ? { speech } : {}) });
 }
 
 function Where() {

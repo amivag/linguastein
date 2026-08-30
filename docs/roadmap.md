@@ -111,7 +111,13 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
 - An alphabetical way into the pack on Browse: a letter index derived from the
   initials the loaded packs actually have, a pack-order/A–Z/Z–A sort, and a play
   button on every result
-- Reference-language architecture (English is the first, not the only)
+- Reference-language architecture (English is the first, not the only), with the
+  meanings addressed and versioned apart from the pack they explain:
+  `packs/translations/core-es/en/0.16.0/`, listed in `catalog.json`, and named
+  nowhere in `pack.json`. Adding a reference language is a new directory and one
+  catalog line rather than a re-version of 6.4 MB of unchanged Spanish, and boot
+  downloads the one language a learner reads instead of every language the pack
+  was ever published in
 - WCAG 2.2 AA accessibility, enforced by axe and contrast tests in CI
 - Switchable dark/light themes on a modular, extensible token system
 - Small, Medium and Large reading sizes, persisted independently of colour theme
@@ -301,9 +307,13 @@ eight alternatives) and that the real gap is level rather than variation.
    its path, sharded by level, fetched up to the course's ceiling, runtime-cached
    rather than precached, and offered as a download a learner chooses.
 
-   Installing the app is **841 KB across 13 entries**, down from 7.1 MB across 28:
-   the shell, plus `catalog.json` and each `pack.json` — a few kilobytes that are
-   what let the app name its packs and say what is missing while offline. The
+   Installing the app is **841 KB across 14 entries**, down from 7.1 MB across 28:
+   the shell, plus `catalog.json`, each `pack.json` and each `translations.json` —
+   a few kilobytes that are what let the app name its packs and say what is
+   missing while offline. (Thirteen when this landed; the fourteenth is the
+   translation unit's own manifest, which arrived when the meanings moved out of
+   the pack — `language-matrix.md` §3 — and is precached by the same `json` glob,
+   its 479 KB of records left runtime-cached like every other dataset file.) The
    packs themselves are `CacheFirst` into `linguastein-packs`, which the versioned
    path is what makes safe, and they accumulate as they are read: an A1 course
    leaves nine of the fifteen files on the device without asking for anything.

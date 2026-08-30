@@ -170,6 +170,12 @@ describe('the levels above the ceiling', () => {
         ensured.push(level);
         return Promise.resolve();
       },
+      // Not what this suite is about: meanings are fetched by reference language
+      // rather than by level, so a stub for the shard half holds them all.
+      hasReference: () => true,
+      ensureReference: () => Promise.resolve(),
+      translationUnits: () => [],
+      availableReferences: () => [],
       issues: () => [],
     };
     const status = () =>
@@ -231,6 +237,10 @@ describe('a level tapped before its shards have landed', () => {
         held = true;
         repository.add(late);
       },
+      hasReference: () => true,
+      ensureReference: () => Promise.resolve(),
+      translationUnits: () => [],
+      availableReferences: () => [],
       issues: () => [],
     };
 

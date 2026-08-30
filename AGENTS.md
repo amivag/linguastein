@@ -296,6 +296,18 @@ learner. The count is what stops a repeat — the build reports a disagreement a
 _contains_ forces an edit to the file the version lives on. A wording fix changes
 no count and needs no bump.
 
+**A pack's meanings version separately again**, one level further down. A
+translation set is keyed `(pack, reference language)` and lives at
+`packs/translations/<pack>/<language>/<version>/`, versioned in its path from a
+row in `content/es/translations.tsv` and listed in `catalog.json` — never in
+`pack.json`, which is the point: anything the pack names is something that has to
+be edited, and the pack re-versioned, to add a language. A reworded gloss ships as
+a new translations URL and no device re-downloads 6.4 MB of unchanged Spanish for
+it. Same two guards as `pack.tsv`: an authored date, and a record count that makes
+the build report a version left behind by its content. A row is required rather
+than defaulted, because a unit with no version would ship at `0.0.0` and the next
+build would overwrite it at the same URL. `translations` is a reserved pack id.
+
 JS and CSS are content-hashed, so they need no cache-busting of their own.
 `index.html` and `sw.js` cannot be hashed and must be served no-store; a service
 worker update is offered to the learner rather than force-reloading the page. The

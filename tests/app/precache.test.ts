@@ -133,6 +133,36 @@ describe('the packs at runtime', () => {
     }
   });
 
+  /**
+   * A translation unit is under `packs/` and two directories deeper than a pack.
+   *
+   * That depth is the reason the tree was put inside the packs root rather than
+   * beside it (`docs/tasks/language-matrix.md` §3): the route below already
+   * matches it, the `json` glob already precaches its manifest, and neither had
+   * to learn a second place to look. Asserted rather than assumed, because the
+   * failure is the silent one this whole suite exists for — a route that matches
+   * nothing caches nothing, and Settings truthfully reports that the meanings are
+   * not on the device while the app reads them from the network every time.
+   */
+  it('matches a translation unit, which is under `packs/` and deeper than a pack', () => {
+    const pattern = /\/packs\/.+\.jsonl$/;
+    expect(runtimeCaching()).toContain(String(pattern));
+
+    expect(pattern.test('/linguastein/packs/core-es/0.16.0/es-a1-b1-core-sentences-a1.jsonl')).toBe(
+      true,
+    );
+    expect(
+      pattern.test(
+        '/linguastein/packs/translations/core-es/en/0.16.0/es-a1-b1-core-translations-en.jsonl',
+      ),
+    ).toBe(true);
+    // And the manifests are not runtime-cached: they are precached by the `json`
+    // glob, so a pack and a unit can both describe themselves with no connection.
+    expect(
+      pattern.test('/linguastein/packs/translations/core-es/en/0.16.0/translations.json'),
+    ).toBe(false);
+  });
+
   it('names the cache through `cacheName`, because two files have to agree on it', () => {
     // `src/app/offline.ts` opens the same cache to put a pack there or take it
     // away. A literal in either place would not fail anything — it would quietly

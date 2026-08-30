@@ -427,6 +427,47 @@ export interface PackManifest {
   readonly provenance?: Provenance;
 }
 
+/**
+ * One pack's meanings in one reference language, addressed and versioned on its
+ * own.
+ *
+ * A translation set used to be a file *inside* the pack manifest, which made the
+ * language matrix multiplicative in the worst place: adding Chinese meanings to
+ * a shipped German pack meant re-versioning German, re-writing its manifest and
+ * re-downloading all of it on every device that had it. Keyed `(pack,
+ * referenceLanguage)` and fetched separately, the matrix becomes additive —
+ * `docs/tasks/language-matrix.md` §3, which calls this the pivot decision of the
+ * whole brief.
+ *
+ * It carries no levels. A translation references an item, a lexeme or a skill,
+ * so its level is a join rather than a field — the same reason {@link PackFile}
+ * gives for leaving `level` off the translations file when it lived in the pack.
+ * The unit is therefore whole or absent, never partial.
+ */
+export interface TranslationUnitManifest {
+  /** The pack whose content this explains. */
+  readonly pack: PackId;
+  /** The language it explains it *in*. */
+  readonly referenceLanguage: LanguageTag;
+  /**
+   * The unit's own version, moving independently of the pack's.
+   *
+   * The point of the whole change: a reworded gloss ships as
+   * `translations/core-es/en/1.1.0/` and the pack stays where it is, so no
+   * device re-downloads 6.4 MB of unchanged Spanish to get a better English
+   * sentence.
+   */
+  readonly version: string;
+  /** The day this version was cut, `YYYY-MM-DD`. See {@link PackManifest.updated}. */
+  readonly updated?: string;
+  /** What to call it in a list — `Spanish Core A1–B1 · English meanings`. */
+  readonly name?: string;
+  readonly license?: string;
+  /** Who wrote these meanings, which need not be who wrote the pack. */
+  readonly authors?: readonly PackAuthor[];
+  readonly files: readonly PackFile[];
+}
+
 export const PACK_FILE_KINDS = [
   'items',
   'lexemes',
@@ -452,11 +493,11 @@ export interface PackFile {
    * (`docs/tasks/language-matrix.md` §5). This is what lets a loader decide that
    * without reading the file first.
    *
-   * Absent means "not sharded, load it always": the skills, the lexemes, the
-   * passages and the translations, none of which is big enough to be worth
-   * splitting, and the last of which carries no level of its own — a translation
-   * references an item, a lexeme or a skill, so its level is a join rather than
-   * a field.
+   * Absent means "not sharded, load it always": the skills, the lexemes and the
+   * passages, none of which is big enough to be worth splitting. Translations
+   * were the fourth of these and have left the pack altogether — they are their
+   * own addressable unit now ({@link TranslationUnitManifest}), which is also
+   * where the reason they could never be sharded is written down.
    */
   readonly level?: Level;
   /**

@@ -36,19 +36,41 @@ content/es/            ← humans edit this (TSV, one row per lemma or sentence)
         ▼
 
 public/packs/          ← generated, shipped, never hand-edited
-├── catalog.json
-└── core-es/
-    ├── pack.json
-    ├── es-a1-a2-core-skills.jsonl
-    ├── es-a1-a2-core-verbs.jsonl          lexemes
-    ├── es-a1-a2-core-nouns.jsonl          lexemes
-    ├── es-a1-a2-core-modifiers.jsonl      lexemes
-    ├── es-a1-a2-core-verb-forms.jsonl     2,808 generated forms, commands included
-    ├── es-a1-a2-core-vocabulary.jsonl     word cards
-    ├── es-a1-a2-core-sentences.jsonl      tokenised, annotated sentences
-    ├── es-a1-a2-core-passages.jsonl       ordered runs of those sentences
-    └── es-a1-a2-core-translations-en.jsonl
+├── catalog.json                          the packs and the units, unversioned
+├── core-es/
+│   └── 0.16.0/                           the pack's version is in its path
+│       ├── pack.json
+│       ├── es-a1-b1-core-skills.jsonl
+│       ├── es-a1-b1-core-verbs.jsonl          lexemes
+│       ├── es-a1-b1-core-nouns.jsonl          lexemes
+│       ├── es-a1-b1-core-modifiers.jsonl      lexemes
+│       ├── es-a1-b1-core-forms-a1.jsonl       generated forms, per level
+│       ├── es-a1-b1-core-vocabulary-a1.jsonl  word cards, per level
+│       ├── es-a1-b1-core-sentences-a1.jsonl   sentences, per level
+│       └── es-a1-b1-core-passages.jsonl       ordered runs of those sentences
+└── translations/                         meanings, addressed apart from the pack
+    └── core-es/
+        └── en/
+            └── 0.16.0/                   and versioned apart from it too
+                ├── translations.json
+                └── es-a1-b1-core-translations-en.jsonl
 ```
+
+Two things in that tree are load-bearing rather than tidy.
+
+**The version is in the path.** An update is a new URL rather than a
+revalidation of an old one, which is the only way `CacheFirst` is safe for a
+6 MB file. `catalog.json` is the sole unversioned file, because something has to
+be fetched fresh to learn what the current versions are.
+
+**The meanings are not in the pack.** A translation set is keyed
+`(pack, referenceLanguage)`, addressed under `translations/` and versioned on its
+own. While it was a file inside `pack.json`, adding a reference language edited
+that manifest, which re-versioned the pack, which changed every one of its file
+URLs — so giving Chinese speakers a Spanish course cost every existing learner a
+re-download of Spanish that had not changed. Split out, adding a language is a
+new directory and one more line in the catalog, and the pack does not move. See
+[`docs/tasks/language-matrix.md`](tasks/language-matrix.md) §3.
 
 The build derives everything mechanical: conjugations (`src/languages/es`),
 plurals and adjective agreement, stable ids, sentence tokenisation, token →
@@ -376,18 +398,61 @@ whether a person has checked it.
   "version": "0.1.0",
   "license": "CC0-1.0",
   "levels": ["a1"],
-  "referenceLanguages": ["en"],
   "pronunciationLocales": ["es-ES", "es-MX"],
   "topics": [{ "id": "numbers", "label": "Numbers", "group": "Foundations" }],
+  "files": [{ "kind": "items", "path": "es-a1-core-phrases.jsonl", "level": "a1", "bytes": 110093 }]
+}
+```
+
+`kind` is one of `items`, `lexemes`, `senses`, `forms`, `skills`,
+`translations`, `passages`, `audio`. A pack may list several files of the same
+kind.
+
+`level` marks a shard, so a loader can decline to fetch what the course cannot
+show without opening the file to find out. `bytes` is what the file weighs, so a
+download can be priced before it is started — Settings → Packs adds these up to
+say `Keep offline (3.3 MB)`.
+
+There is deliberately no `referenceLanguages`. A pack does not say which
+languages explain it, because anything it says is something that has to be
+edited — and the pack re-versioned — to add one.
+
+## Translation unit
+
+One pack's meanings in one language, as its own manifest at
+`translations/<pack>/<language>/<version>/translations.json`:
+
+```json
+{
+  "pack": "core-es",
+  "referenceLanguage": "en",
+  "version": "0.16.0",
+  "updated": "2026-08-30",
+  "name": "Spanish Core A1–B1 · English meanings",
+  "license": "CC0-1.0",
   "files": [
-    { "kind": "items", "path": "es-a1-core-phrases.jsonl" },
-    { "kind": "translations", "path": "es-a1-core-translations-en.jsonl" }
+    { "kind": "translations", "path": "es-a1-b1-core-translations-en.jsonl", "bytes": 479461 }
   ]
 }
 ```
 
-`kind` is one of `items`, `lexemes`, `senses`, `verb-forms`, `skills`,
-`translations`, `passages`. A pack may list several files of the same kind.
+Not a `PackManifest` with fields left out: it has no target language, no level
+ladder, no topics and nothing to shard by, and each of those absences is a fact
+about what a translation unit _is_. It carries no levels for the same reason it
+never could — a translation references an item, a lexeme or a skill, so its level
+is a join rather than a field — which makes a unit whole or absent, never partial.
+
+The version is authored in `content/<tag>/translations.tsv`, one row per
+language, exactly the way the pack's own is authored in `pack.tsv`. Both carry a
+record count beside the version so a build that changes the content and not the
+file reports the disagreement; `tests/data/pack-version.test.ts` is where that
+bites. A row is required rather than defaulted, because the version is in the
+path: a unit shipped at `0.0.0` would be overwritten at the same URL by the next
+build, which is the hazard the versioned path exists to remove.
+
+`catalog.json` lists the units beside the packs. It is the only unversioned file
+in the tree, which is exactly what lets it name a unit published _after_ the pack
+it explains.
 
 `topics` is the pack's thematic categories, built from `content/es/topics.tsv`.
 It is declared here rather than inferred from the items because scanning items

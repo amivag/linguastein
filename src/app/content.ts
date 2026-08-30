@@ -11,9 +11,19 @@
  * it knows that content arrives over HTTP or in pieces.
  */
 
-import { loadPack, shardLevelsFor, type DatasetSource, type LoadedPack } from '../data/loaders';
+import {
+  catalogReferenceLanguages,
+  loadPack,
+  loadTranslationUnit,
+  shardLevelsFor,
+  translationUnitFor,
+  type DatasetSource,
+  type LoadedPack,
+  type LoadedTranslations,
+  type PackCatalog,
+} from '../data/loaders';
 import type { ValidationIssue } from '../data/validation';
-import type { ContentRepository, Level, LevelScope } from '../domain/content';
+import type { ContentRepository, LanguageTag, Level, LevelScope } from '../domain/content';
 
 export interface ContentLoading {
   /** Whether every shard a course at this ceiling reads is already in memory. */
@@ -26,6 +36,42 @@ export interface ContentLoading {
    * once.
    */
   ensure(level: LevelScope): Promise<void>;
+  /** Whether meanings in this language are already in the index. */
+  hasReference(language: LanguageTag): boolean;
+  /**
+   * Fetches this language's meanings for every loaded pack, once.
+   *
+   * The second thing a course can be missing, and the one a *preference*
+   * decides rather than an address. Translations are their own versioned unit
+   * (`docs/tasks/language-matrix.md` §3), so boot fetches one language and a
+   * learner changing the setting fetches another — the alternative being to
+   * download every language the catalog offers in case one is picked, which is
+   * the multiplicative download the split exists to avoid.
+   *
+   * Idempotent on the same terms as {@link ensure}: a language already held
+   * resolves without a request.
+   */
+  ensureReference(language: LanguageTag): Promise<void>;
+  /**
+   * The translation units in memory, with the paths they were read from.
+   *
+   * Read by `offline.ts` so Settings → Packs can price a course's meanings
+   * beside its content. A function rather than a list handed over once, because
+   * the set changes: a learner who switches reference language after boot has a
+   * different unit on the device, and a download offer quoting the old one is
+   * quoting a number that is no longer true.
+   */
+  translationUnits(): readonly LoadedTranslations[];
+  /**
+   * Reference languages this installation could switch to, loaded or not.
+   *
+   * The picker's list. What is *in* the index is one language — the learner's —
+   * so a picker built from that would offer no alternative to the setting it is
+   * showing. Read from the catalog, which is the only unversioned file in the
+   * tree and therefore the only one that can name a unit published after the
+   * pack it explains.
+   */
+  availableReferences(): readonly LanguageTag[];
   /** Problems in what arrived after boot, for the list Settings already shows. */
   issues(): readonly ValidationIssue[];
 }
@@ -39,6 +85,10 @@ export interface ContentLoading {
 export const NOTHING_TO_LOAD: ContentLoading = {
   has: () => true,
   ensure: () => Promise.resolve(),
+  hasReference: () => true,
+  ensureReference: () => Promise.resolve(),
+  translationUnits: () => [],
+  availableReferences: () => [],
   issues: () => [],
 };
 
@@ -47,6 +97,17 @@ export interface ContentLoadingOptions {
   readonly repository: ContentRepository;
   /** What boot loaded, carrying each pack's manifest path and shard levels. */
   readonly loaded: readonly LoadedPack[];
+  /** What else is published, which is where a translation unit is addressed. */
+  readonly catalog?: PackCatalog;
+  /**
+   * The translation units boot already indexed.
+   *
+   * Which languages are held is read off these rather than passed beside them,
+   * so the two cannot disagree — the bug that shape prevents is a language
+   * listed as held whose records never arrived, which reads to a learner as a
+   * reference language that silently shows nothing.
+   */
+  readonly translations?: readonly LoadedTranslations[];
 }
 
 export function createContentLoading(options: ContentLoadingOptions): ContentLoading {
@@ -56,6 +117,8 @@ export function createContentLoading(options: ContentLoadingOptions): ContentLoa
     have: new Set<Level>(loaded.levels),
   }));
   const issues: ValidationIssue[] = [];
+  const units: LoadedTranslations[] = [...(options.translations ?? [])];
+  const references = new Set<LanguageTag>(units.map((unit) => unit.manifest.referenceLanguage));
   let queue = Promise.resolve();
 
   /** Per pack, the shards this ceiling needs and this install has not got. */
@@ -81,8 +144,64 @@ export function createContentLoading(options: ContentLoadingOptions): ContentLoa
     }
   }
 
+  /**
+   * Every unit that would supply this language, for the packs actually loaded.
+   *
+   * Per pack rather than per language, because the unit is keyed by the pair:
+   * a learner with `core-es` and `core-de` installed and German as their
+   * reference language wants the German meanings of the Spanish pack, and the
+   * German pack has none to give. A pack the catalog lists no unit for simply
+   * contributes nothing here — it is not an error for a pack to be unexplained
+   * in a language, it is the normal state of a matrix that is filled in over
+   * time.
+   */
+  const catalog = options.catalog;
+  const unitsFor = (language: LanguageTag): readonly string[] =>
+    catalog
+      ? packs.flatMap((pack) => {
+          const path = translationUnitFor(catalog, pack.manifest.id, language);
+          return path ? [path] : [];
+        })
+      : [];
+
+  async function fetchReference(language: LanguageTag): Promise<void> {
+    if (references.has(language)) return;
+
+    for (const path of unitsFor(language)) {
+      const unit = await loadTranslationUnit(options.source, path);
+      options.repository.addTranslations(unit.translations);
+      units.push(unit);
+      issues.push(...unit.issues);
+    }
+
+    /*
+     * Held once it has arrived, and held for a language nothing was published in
+     * — the loop above simply ran zero times, and asking again next render would
+     * be asking the same catalog the same question. What it is deliberately *not*
+     * is held after a failed fetch: this line is unreachable when the await
+     * throws, so a learner who changed language on a dead connection gets a real
+     * retry rather than a permanent gap with the preference set.
+     */
+    references.add(language);
+  }
+
   return {
     has: (level) => missing(level).length === 0,
+
+    hasReference: (language) => references.has(language),
+
+    ensureReference(language) {
+      /*
+       * The same queue as the shards, not a second one. A learner who changes
+       * reference language while the background prefetch is still widening the
+       * pack should get both, in the order they were asked for, and a single
+       * chain is what makes `repository.add` calls serial — two concurrent
+       * indexers on one repository is a race nothing above here could see.
+       */
+      const next = queue.then(() => fetchReference(language));
+      queue = next.catch(() => {});
+      return next;
+    },
 
     ensure(level) {
       /*
@@ -98,6 +217,14 @@ export function createContentLoading(options: ContentLoadingOptions): ContentLoa
       queue = next.catch(() => {});
       return next;
     },
+
+    translationUnits: () => units,
+
+    availableReferences: () =>
+      catalogReferenceLanguages(
+        catalog ?? {},
+        packs.map((pack) => pack.manifest.id),
+      ),
 
     issues: () => issues,
   };

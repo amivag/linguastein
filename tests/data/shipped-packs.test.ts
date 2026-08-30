@@ -4,7 +4,12 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MISSIONS } from '../../src/app/missions';
-import { loadCatalog, loadPack, type DatasetSource } from '../../src/data/loaders';
+import {
+  loadCatalog,
+  loadPack,
+  loadTranslationUnit,
+  type DatasetSource,
+} from '../../src/data/loaders';
 import { ContentRepository, isUsableIn, moodOf } from '../../src/domain/content';
 import { missionPassageForStage, missionTransfers } from '../../src/domain/missions';
 
@@ -14,13 +19,31 @@ const source: DatasetSource = {
   read: (path) => readFile(resolve(root, path), 'utf8'),
 };
 
+/**
+ * The packs and their meanings, which are two fetches rather than one.
+ *
+ * A translation set is its own addressed, independently versioned unit
+ * (`docs/tasks/language-matrix.md` §3), so a repository built from
+ * `catalog.packs` alone holds every sentence and not one gloss — and the
+ * assertions below about what the shipped datasets explain would pass or fail on
+ * whether this function knew that, rather than on the content. Assembled here
+ * the way `services.ts` assembles it at boot, which is the point of loading
+ * through the real loaders at all.
+ */
 async function loadAll() {
   const catalog = await loadCatalog(source);
   const loaded = await Promise.all(catalog.packs.map((entry) => loadPack(source, entry.manifest)));
+  const units = await Promise.all(
+    (catalog.translations ?? []).map((entry) => loadTranslationUnit(source, entry.manifest)),
+  );
+  const repository = ContentRepository.from(loaded.map((result) => result.pack));
+  for (const unit of units) repository.addTranslations(unit.translations);
+
   return {
     catalog,
-    issues: loaded.flatMap((result) => result.issues),
-    repository: ContentRepository.from(loaded.map((result) => result.pack)),
+    units,
+    issues: [...loaded.flatMap((result) => result.issues), ...units.flatMap((u) => u.issues)],
+    repository,
   };
 }
 

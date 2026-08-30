@@ -5,7 +5,7 @@
  */
 
 import type { z } from 'zod';
-import type { ContentPack } from '../../domain/content';
+import type { ContentPack, Translation } from '../../domain/content';
 import { RECORD_SCHEMAS, type RecordKind } from './schemas';
 
 export type IssueSeverity = 'error' | 'warning';
@@ -322,6 +322,54 @@ function duplicates(values: readonly string[]): readonly string[] {
  * still fails that, and loudly, which is what buys the time to decide link
  * spelling (option B) with a real second Spanish pack in hand rather than now.
  */
+/**
+ * Translations that point at nothing, when the meanings arrived on their own.
+ *
+ * The same check `validatePackIntegrity` makes over a pack's own
+ * `translations` — and it has to live here as well, because meanings are their
+ * own addressed, independently versioned unit now
+ * (`docs/tasks/language-matrix.md` §3). A unit and the pack it explains move at
+ * different speeds by design, which makes "this gloss explains an item that no
+ * longer exists" a *new* failure mode rather than an impossible one: it is
+ * exactly what publishing a unit against a pack version that has since dropped
+ * an item looks like.
+ *
+ * A warning rather than an error, matching the in-pack check. A stale gloss is
+ * unreachable rather than harmful — nothing renders a translation whose entity
+ * is gone — and refusing to load the pack over one would take a course offline
+ * to protect it from a dead row.
+ *
+ * The complement — an item with no gloss — is deliberately not checked here.
+ * That is the normal state of a matrix filled in over time, and
+ * `tests/data/shipped-packs.test.ts` is where this repository's own datasets are
+ * held to a higher bar than a pack from anywhere else has to meet.
+ */
+export function validateTranslationsAgainst(
+  pack: ContentPack,
+  translations: readonly Translation[],
+): readonly ValidationIssue[] {
+  const known = new Set<string>([
+    ...pack.items.map((item) => item.id),
+    ...pack.lexemes.map((lexeme) => lexeme.id),
+    ...pack.skills.map((skill) => skill.id),
+    ...pack.senses.map((sense) => sense.id),
+    ...pack.forms.map((form) => form.id),
+    ...pack.passages.map((passage) => passage.id),
+  ]);
+  return translations.flatMap((translation) =>
+    known.has(translation.ref)
+      ? []
+      : [
+          {
+            severity: 'warning' as const,
+            source: pack.manifest.id,
+            message: `translation references unknown entity ${translation.ref}`,
+            id: translation.ref,
+          },
+        ],
+  );
+}
+
 export function validateAcrossPacks(packs: readonly ContentPack[]): readonly ValidationIssue[] {
   const byLanguage = new Map<string, ContentPack[]>();
   for (const pack of packs) {

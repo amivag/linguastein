@@ -12,10 +12,17 @@ import {
   type AudioService,
   type SpeechRecognitionProvider,
 } from '../audio';
-import { httpDatasetSource, loadCatalog, loadPacks } from '../data/loaders';
+import {
+  httpDatasetSource,
+  loadCatalog,
+  loadPacks,
+  loadTranslationUnit,
+  translationUnitFor,
+  type LoadedTranslations,
+} from '../data/loaders';
 import type { ValidationIssue } from '../data/validation';
 import type { BatchDefinition } from '../domain/batches';
-import { ContentRepository, parseCoursePath } from '../domain/content';
+import { ContentRepository, DEFAULT_REFERENCE_LANGUAGE, parseCoursePath } from '../domain/content';
 import { createContentLoading, type ContentLoading } from './content';
 import { createOfflinePacks, type OfflinePacks } from './offline';
 import { standaloneLetters } from '../languages/runtime';
@@ -116,9 +123,53 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     loaded.map((entry) => entry.pack),
     { standaloneLetters },
   );
-  const content = createContentLoading({ source, repository, loaded });
+
+  /*
+   * The meanings, in one language rather than in all of them.
+   *
+   * Translations left the pack and became their own addressed, independently
+   * versioned unit (`docs/tasks/language-matrix.md` §3), which is what makes
+   * this a choice at all: the pack no longer carries every reference language it
+   * has ever been explained in, so boot fetches the one the learner reads and
+   * `content.ensureReference` fetches another if they change their mind.
+   *
+   * English as the fallback, not as an addition. `referenceLanguageChain` ends
+   * there, so a learner whose language nothing has been translated into yet sees
+   * English rather than bare Spanish — and fetching both when the preference
+   * *is* supplied would download a language nothing will read.
+   */
+  const published = (language: string) =>
+    catalog.translations?.some((entry) => entry.language === language) ?? false;
+  const references = published(preferences.referenceLanguage)
+    ? [preferences.referenceLanguage]
+    : [DEFAULT_REFERENCE_LANGUAGE];
+
+  const units: LoadedTranslations[] = [];
+  for (const language of references) {
+    for (const entry of loaded) {
+      const path = translationUnitFor(catalog, entry.pack.manifest.id, language);
+      if (!path) continue;
+      const unit = await loadTranslationUnit(source, path);
+      repository.addTranslations(unit.translations);
+      units.push(unit);
+    }
+  }
+
+  const content = createContentLoading({
+    source,
+    repository,
+    loaded,
+    catalog,
+    translations: units,
+  });
   const assetBaseUrl = new URL(datasetBaseUrl, location.origin).toString();
-  const offline = createOfflinePacks({ packs: loaded, baseUrl: assetBaseUrl });
+  const offline = createOfflinePacks({
+    packs: loaded,
+    // Asked each time rather than handed over, so a reference language chosen
+    // after boot is priced with the pack it explains.
+    translations: () => content.translationUnits(),
+    baseUrl: assetBaseUrl,
+  });
 
   const audio = createAudioService({
     repository,
@@ -142,7 +193,7 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     exercises: new ExerciseEngine(),
     preferences,
     batches,
-    datasetIssues: issues,
+    datasetIssues: [...issues, ...units.flatMap((unit) => unit.issues)],
   };
 }
 

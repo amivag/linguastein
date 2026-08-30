@@ -34,6 +34,7 @@ import {
 import { join, resolve } from 'node:path';
 import { PASSAGE_KINDS, SKILL_KINDS } from '../src/domain/content/model.ts';
 import { sentenceMood } from '../src/domain/content/mood.ts';
+import { languageOption } from '../src/domain/content/language.ts';
 import { languageModule } from '../src/languages/index.ts';
 
 /**
@@ -49,6 +50,22 @@ const CONTENT_DIR = resolve(process.env['LINGUASTEIN_CONTENT_DIR'] ?? `content/$
 const PACKS_DIR = resolve(process.env['LINGUASTEIN_PACKS_DIR'] ?? 'public/packs');
 const PACK_ID = `core-${LANGUAGE}`;
 const PACK_DIR = join(PACKS_DIR, PACK_ID);
+/**
+ * Where translation units live: `packs/translations/<pack>/<language>/<version>/`.
+ *
+ * Inside the packs root rather than beside it, which is not a detail. The root is
+ * what `DatasetSource` is pointed at, what `catalog.json` sits in, what the
+ * service worker precaches JSON from and what its `\/packs\/.+\.jsonl$` runtime
+ * route matches — so a unit under here is fetched, cached and installable with no
+ * change to any of the four. A sibling directory would have needed all of them
+ * edited to say "and also over there".
+ *
+ * The cost is one reserved word: a pack may not be called `translations`. That is
+ * a guard below rather than a note here, because the failure it prevents — a pack
+ * and the translation tree writing into one directory — is silent.
+ */
+const TRANSLATIONS_ROOT = 'translations';
+const TRANSLATIONS_DIR = join(PACKS_DIR, TRANSLATIONS_ROOT);
 const NS = `${PACK_ID}:`;
 /** Where the sources are, as the generated files should name them. */
 const SOURCE_LABEL = `content/${LANGUAGE}`;
@@ -534,9 +551,63 @@ const authorRows: AuthorRow[] = existsSync(join(CONTENT_DIR, AUTHORS_FILE))
     })
   : [];
 
+/**
+ * A translation unit's own version, one row per reference language.
+ *
+ * The same shape as `pack.tsv` and for the same reason, one level down. Meanings
+ * are their own independently versioned unit now
+ * (`docs/tasks/language-matrix.md` §3), and a unit that cannot be versioned
+ * separately is not separate: the whole point is that a reworded gloss ships as
+ * a new translations URL while the pack it explains stays exactly where it is,
+ * so no device re-downloads 6.4 MB of unchanged Spanish for it.
+ *
+ * `records` does here what `items` does in `pack.tsv` — it is the count the
+ * version was cut at, so a build that changes the meanings and not this file
+ * reports a disagreement instead of shipping a stale version number. That guard
+ * is the only reason `pack.tsv`'s version is not still `0.1.0`.
+ */
+const TRANSLATIONS_FILE = 'translations.tsv';
+
+interface TranslationUnitRow {
+  language: string;
+  version: string;
+  records: number;
+  /** `YYYY-MM-DD`, authored beside the version. */
+  updated: string;
+}
+
+const translationUnitRows: TranslationUnitRow[] = existsSync(join(CONTENT_DIR, TRANSLATIONS_FILE))
+  ? readSource(TRANSLATIONS_FILE).rows.map((row) => {
+      const [language, version, records, updated] = row.fields;
+      return {
+        language: (language ?? '').trim(),
+        version: (version ?? '').trim(),
+        records: Number(records ?? Number.NaN),
+        updated: (updated ?? '').trim(),
+      };
+    })
+  : [];
+
+const translationUnitFor = (language: string): TranslationUnitRow | undefined =>
+  translationUnitRows.find((row) => row.language === language);
+
 // ── guards ──────────────────────────────────────────────────────────────────
 
 const problems: string[] = [];
+
+/*
+ * A pack may not be called `translations`, because the translation units live in
+ * a directory of that name inside the packs root.
+ *
+ * A collision here is not a build error that stops anything — both would write
+ * into `public/packs/translations/`, one in version directories and one in
+ * language directories, and the catalog scan would report whichever it found.
+ * The symptom is a pack that is intermittently missing from the app. Refused
+ * here, where the name is decided.
+ */
+if (PACK_ID === TRANSLATIONS_ROOT) {
+  problems.push(`"${TRANSLATIONS_ROOT}" is reserved for translation units and cannot be a pack id`);
+}
 
 if (!packRow) {
   problems.push(`${PACK_FILE}: missing — the pack has no version to ship`);
@@ -3463,20 +3534,87 @@ const files = [
   ...shardedByLevel('items', 'vocabulary', vocabularyItems),
   ...shardedByLevel('items', 'sentences', sentenceItems),
   { kind: 'passages', path: `${filePrefix}-passages.jsonl`, records: passageRecords },
-  // One file per language the records are in, so a second reference language
-  // is a file beside this one rather than a change to it. See
-  // `docs/tasks/language-matrix.md` §3.
-  ...translationLanguages.map((lang) => ({
-    kind: 'translations',
-    path: `${filePrefix}-translations-${lang}.jsonl`,
-    records: translations.filter((record) => record.lang === lang),
-  })),
   ...audioLocales.map((locale) => ({
     kind: 'audio',
     path: `${filePrefix}-audio-${locale}.jsonl`,
     records: audioClips.filter((clip) => clip.locale === locale),
   })),
 ].filter((file) => file.records.length > 0);
+
+/**
+ * The translation units: one per reference language, each its own artifact.
+ *
+ * This used to be four lines in `files` above — one file per language, written
+ * into the pack's own version directory and listed in its manifest. That was the
+ * right file split and the wrong address, and the difference is the whole of
+ * `docs/tasks/language-matrix.md` §3: while the unit is listed in `pack.json`,
+ * adding Chinese meanings to a shipped pack edits that manifest, which re-versions
+ * the pack, which changes every one of its file URLs, which makes every device
+ * that had it re-download 6.4 MB of Spanish that did not change. Keyed
+ * `(pack, referenceLanguage)` and versioned on its own, adding a language is a new
+ * directory and one more line in the catalog. The pack does not move.
+ *
+ * The version comes from `translations.tsv` rather than from the pack's, because
+ * a version the build derives from another version is not an independent one.
+ */
+const translationUnits = translationLanguages.map((lang) => ({
+  language: lang,
+  row: translationUnitFor(lang),
+  version: translationUnitFor(lang)?.version ?? '0.0.0',
+  // The file keeps the name it had inside the pack. It is addressed by its
+  // directory now, so the name is for a human reading a directory listing —
+  // and one that still says which pack and which levels it explains is more use
+  // there than `translations.jsonl` repeated under every language.
+  path: `${filePrefix}-translations-${lang}.jsonl`,
+  records: translations.filter((record) => record.lang === lang),
+}));
+
+/*
+ * Guards on the authored unit rows, mirroring `pack.tsv`'s.
+ *
+ * A missing row is an error rather than a default, unlike most of this build:
+ * the version is in the *path*, so a unit with no authored version would ship at
+ * `0.0.0` and stay there — and the second build to do it would overwrite the
+ * first at the same URL, which is exactly the cache-first hazard the versioned
+ * path exists to remove.
+ */
+for (const unit of translationUnits) {
+  if (!unit.row) {
+    problems.push(
+      `${TRANSLATIONS_FILE}: no row for "${unit.language}", which ${unit.records.length} ` +
+        'translation record(s) are written in — add one with a version, a count and a date',
+    );
+    continue;
+  }
+  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(unit.row.version)) {
+    problems.push(`${TRANSLATIONS_FILE}: "${unit.row.version}" is not a semver version`);
+  }
+  if (!Number.isInteger(unit.row.records)) {
+    problems.push(`${TRANSLATIONS_FILE}: "${unit.row.records}" is not a record count`);
+  }
+  const shaped = /^\d{4}-\d{2}-\d{2}$/.test(unit.row.updated);
+  const parsed = new Date(`${unit.row.updated}T00:00:00Z`);
+  const real =
+    shaped && !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(unit.row.updated);
+  if (!real) {
+    problems.push(`${TRANSLATIONS_FILE}: "${unit.row.updated}" is not a real YYYY-MM-DD date`);
+  } else if (parsed.getTime() > Date.now()) {
+    problems.push(`${TRANSLATIONS_FILE}: "${unit.row.updated}" is in the future`);
+  }
+}
+
+/*
+ * And a row for a language nothing was written in, which is the failure the
+ * count guard cannot see: deleting the last German gloss leaves the row behind,
+ * and a row is what the catalog would otherwise be built from.
+ */
+for (const row of translationUnitRows) {
+  if (!translationLanguages.includes(row.language)) {
+    problems.push(
+      `${TRANSLATIONS_FILE}: a row for "${row.language}" but no translation records are in it`,
+    );
+  }
+}
 
 /*
  * A sharded record with no level would be written to no file at all — silently,
@@ -3587,9 +3725,19 @@ const manifest = {
       [...sentenceItems, ...vocabularyItems].filter((item) => item.level === level).length,
     ]),
   ),
-  // Derived rather than authored: this says what the pack can explain itself
-  // in, and the translation files it ships are the only honest answer.
-  referenceLanguages: translationLanguages,
+  /*
+   * `referenceLanguages` is deliberately **not** here any more.
+   *
+   * It was derived from the translation files the pack shipped, which was the
+   * honest answer while it shipped them. It no longer does: a translation unit is
+   * addressed and versioned on its own, so the languages available are a fact
+   * about the catalog rather than about this manifest — and a field here listing
+   * them would be the one thing that still had to be edited, and the pack
+   * re-versioned, to add a language. That is precisely the cost
+   * `docs/tasks/language-matrix.md` §3 exists to remove, so the field goes with
+   * the files. What a learner is offered is read from the catalog and from what
+   * is loaded (`referenceLanguages` in `src/domain/content/packs.ts`).
+   */
   pronunciationLocales: (authored('pronunciationLocales') ?? LANGUAGE)
     .split(',')
     .map((locale) => locale.trim())
@@ -3694,6 +3842,88 @@ for (const entry of readdirSync(PACK_DIR, { withFileTypes: true })) {
 }
 
 /*
+ * The translation units, each under its own `(pack, language, version)` address.
+ *
+ * Written after the pack and independently of it, which is the point: nothing
+ * above reads `PACK_VERSION`, so a build that changes only a gloss leaves every
+ * pack URL exactly where it was.
+ */
+mkdirSync(TRANSLATIONS_DIR, { recursive: true });
+
+for (const unit of translationUnits) {
+  const dir = join(TRANSLATIONS_DIR, PACK_ID, unit.language, unit.version);
+  mkdirSync(dir, { recursive: true });
+
+  const header = `# Generated by scripts/build-dataset.ts from ${SOURCE_LABEL} — do not edit by hand.\n`;
+  const body = unit.records.map((record) => JSON.stringify(record)).join('\n');
+  writeFileSync(join(dir, unit.path), `${header}${body}\n`, 'utf8');
+
+  const unitManifest = {
+    pack: PACK_ID,
+    referenceLanguage: unit.language,
+    version: unit.version,
+    ...(unit.row?.updated ? { updated: unit.row.updated } : {}),
+    /*
+     * Named for a list rather than derived from the pack's name, so a unit read
+     * on its own says what it is. The pack's own name is not repeated: it is
+     * versioned separately, so a stale copy of it here would be a second place
+     * for the pack's title to go out of date.
+     */
+    name: `${authored('name') ?? PACK_ID} ${levelSpan(presentLevels)} · ${languageOption(unit.language).englishName} meanings`.trim(),
+    ...(authored('license') ? { license: authored('license') } : {}),
+    ...(authorRows.length > 0
+      ? {
+          authors: authorRows.map((author) => ({
+            name: author.name,
+            ...(author.role ? { role: author.role } : {}),
+            ...(author.url ? { url: author.url } : {}),
+          })),
+        }
+      : {}),
+    files: [
+      {
+        kind: 'translations',
+        path: unit.path,
+        // Priced the same way the pack's files are, because Settings adds these
+        // up beside them: a learner keeping a course offline is keeping the
+        // meanings too, and an offer that omits half its bytes is not an offer.
+        bytes: statSync(join(dir, unit.path)).size,
+      },
+    ],
+  };
+  writeFileSync(
+    join(dir, 'translations.json'),
+    `${JSON.stringify(unitManifest, null, 2)}\n`,
+    'utf8',
+  );
+
+  /*
+   * One version of each unit in the artifact, for the reason there is one
+   * version of the pack: two are harmless to correctness and both get precached.
+   * Scoped to this pack and this language, so building Spanish never touches
+   * German's meanings.
+   */
+  const languageDir = join(TRANSLATIONS_DIR, PACK_ID, unit.language);
+  for (const entry of readdirSync(languageDir, { withFileTypes: true })) {
+    if (entry.name === unit.version) continue;
+    rmSync(join(languageDir, entry.name), { recursive: true, force: true });
+  }
+}
+
+/*
+ * And a language whose last gloss was deleted: its directory is not written
+ * above and nothing else would remove it, so the unit would go on being served
+ * and catalogued after the content behind it was gone.
+ */
+if (existsSync(join(TRANSLATIONS_DIR, PACK_ID))) {
+  const built = new Set(translationUnits.map((unit) => unit.language));
+  for (const entry of readdirSync(join(TRANSLATIONS_DIR, PACK_ID), { withFileTypes: true })) {
+    if (entry.isDirectory() && built.has(entry.name)) continue;
+    rmSync(join(TRANSLATIONS_DIR, PACK_ID, entry.name), { recursive: true, force: true });
+  }
+}
+
+/*
  * The catalog lists every pack in the output directory, not the one just built.
  *
  * It was a literal naming `core-es`, which was correct while there was one
@@ -3709,6 +3939,15 @@ for (const entry of readdirSync(PACK_DIR, { withFileTypes: true })) {
  */
 const catalogued = readdirSync(PACKS_DIR, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
+  /*
+   * `translations/` sits in this directory too and is not a pack. It would fall
+   * out of the scan below anyway — it holds language directories rather than
+   * version directories, so none of its children has a `pack.json` — but the
+   * exclusion is written rather than relied upon, because "a directory that
+   * happens not to match" is not the same statement as "not a pack", and the
+   * reserved-name guard further up is what makes this one true.
+   */
+  .filter((entry) => entry.name !== TRANSLATIONS_ROOT)
   .flatMap((entry) => {
     /*
      * One level deeper than it used to look, because a pack's files now sit under
@@ -3729,6 +3968,46 @@ const catalogued = readdirSync(PACKS_DIR, { withFileTypes: true })
   })
   .sort((a, b) => a.id.localeCompare(b.id));
 
+/**
+ * Every translation unit on disk, as `(pack, language, newest version)`.
+ *
+ * Two levels deeper than the pack scan and otherwise identical, including the
+ * "newest version wins" rule: a deployment may serve more than one so an
+ * installed learner's URLs keep resolving, and the catalog is what a *fresh*
+ * install reads.
+ */
+function catalogueTranslations() {
+  if (!existsSync(TRANSLATIONS_DIR)) return [];
+  return readdirSync(TRANSLATIONS_DIR, { withFileTypes: true })
+    .filter((pack) => pack.isDirectory())
+    .flatMap((pack) =>
+      readdirSync(join(TRANSLATIONS_DIR, pack.name), { withFileTypes: true })
+        .filter((language) => language.isDirectory())
+        .flatMap((language) => {
+          const dir = join(TRANSLATIONS_DIR, pack.name, language.name);
+          const versions = readdirSync(dir, { withFileTypes: true })
+            .filter(
+              (version) =>
+                version.isDirectory() && existsSync(join(dir, version.name, 'translations.json')),
+            )
+            .map((version) => version.name)
+            .sort(compareVersions);
+          const newest = versions.at(-1);
+          return newest
+            ? [
+                {
+                  pack: pack.name,
+                  language: language.name,
+                  version: newest,
+                  manifest: `${TRANSLATIONS_ROOT}/${pack.name}/${language.name}/${newest}/translations.json`,
+                },
+              ]
+            : [];
+        }),
+    )
+    .sort((a, b) => a.pack.localeCompare(b.pack) || a.language.localeCompare(b.language));
+}
+
 /** Semver order, so `0.10.0` follows `0.9.0` rather than preceding it. */
 function compareVersions(a: string, b: string): number {
   const parts = (value: string) => value.split('.').map((part) => Number.parseInt(part, 10) || 0);
@@ -3744,12 +4023,24 @@ writeFileSync(
   join(PACKS_DIR, 'catalog.json'),
   `${JSON.stringify(
     {
-      $comment: 'Packs shipped with this build. Generated by scripts/build-dataset.ts.',
+      $comment:
+        'Packs and translation units shipped with this build. Generated by scripts/build-dataset.ts.',
       packs: catalogued.map(({ id, version }) => ({
         id,
         version,
         manifest: `${id}/${version}/pack.json`,
       })),
+      /*
+       * And the translation units, read off the same directory rather than off
+       * this build's own output — for the reason the packs are: `build:data de`
+       * must not publish a catalog that drops Spanish's meanings.
+       *
+       * This list is the whole mechanism. A pack's manifest no longer says which
+       * languages explain it, so adding one is this line appearing and nothing
+       * else changing: the catalog is the only unversioned file in the tree,
+       * which is exactly what lets it name a unit that a shipped pack cannot.
+       */
+      translations: catalogueTranslations(),
     },
     null,
     2,
@@ -3807,6 +4098,23 @@ if (packRow && packRow.items !== totalItems) {
   );
 } else if (packRow) {
   console.log(`  pack version ${packRow.version}, cut at ${packRow.items} items`);
+}
+
+/*
+ * The same report per translation unit, for the same reason and with the same
+ * consequence: `tests/data/pack-version.test.ts` is where a disagreement bites.
+ */
+for (const unit of translationUnits) {
+  const label = `${TRANSLATIONS_ROOT}/${PACK_ID}/${unit.language}/${unit.version}`;
+  if (unit.row && unit.row.records !== unit.records.length) {
+    console.log(
+      `  ${label} was cut at ${unit.row.records} records, and this build has` +
+        ` ${unit.records.length} — bump the version in ${TRANSLATIONS_FILE} and record` +
+        ` ${unit.records.length}`,
+    );
+  } else {
+    console.log(`  ${label}, cut at ${unit.records.length} records`);
+  }
 }
 
 const reviewedShare = totalItems === 0 ? 0 : Math.round((reviewedCount / totalItems) * 100);

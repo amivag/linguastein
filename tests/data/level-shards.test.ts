@@ -48,11 +48,18 @@ describe('loading a pack up to a level', () => {
     expect(shards.every((path) => path.endsWith('-a1.jsonl'))).toBe(true);
     // Three kinds are sharded, so three shards at a ceiling of a1.
     expect(shards).toHaveLength(3);
-    // And the small files come whatever the course is: they carry no level, and
-    // translations could not carry one — a translation references an item, a
-    // lexeme or a skill, so its level is a join rather than a field.
-    expect(source.fetched.some((path) => path.endsWith('-translations-en.jsonl'))).toBe(true);
+    // And the small files come whatever the course is: they carry no level.
     expect(source.fetched.some((path) => path.endsWith('-passages.jsonl'))).toBe(true);
+    /*
+     * The translations are not among them, and no longer could be. A translation
+     * could never carry a level — it references an item, a lexeme or a skill, so
+     * its level is a join rather than a field — and it has now left the pack
+     * altogether for a unit of its own, fetched by reference *language* rather
+     * than by level (`docs/tasks/language-matrix.md` §3). Two axes, two requests:
+     * this one narrows by how far up the ladder a course reaches, and it must not
+     * quietly drag a whole language's meanings along with it.
+     */
+    expect(source.fetched.some((path) => path.includes('translations'))).toBe(false);
   });
 
   it('reports a partial pack as valid, rather than as a broken one', async () => {

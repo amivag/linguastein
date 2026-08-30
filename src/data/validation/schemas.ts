@@ -330,6 +330,34 @@ export const packManifestSchema = z
   })
   .loose();
 
+/**
+ * One pack's meanings in one reference language, as its own manifest.
+ *
+ * Deliberately not a `PackManifest` with fields left out: it has no target
+ * language, no level ladder, no topics and no ladder to shard by, and every one
+ * of those absences is a fact about what a translation unit *is* rather than a
+ * pack that failed to fill them in. See `docs/tasks/language-matrix.md` §3.
+ */
+export const translationUnitManifestSchema = z
+  .object({
+    pack: packId,
+    referenceLanguage: languageTag,
+    version: z.string().min(1),
+    updated: isoDate.optional(),
+    name: z.string().min(1).optional(),
+    license: z.string().optional(),
+    authors: z.array(packAuthorSchema).optional(),
+    /*
+     * Every file is a translations file. A unit that could carry sentences would
+     * be a pack, and the whole point of the split is that it is not one — so this
+     * is a gate rather than a convention, and a hand-written unit that gets it
+     * wrong fails to load rather than quietly indexing content under a manifest
+     * with no target language.
+     */
+    files: z.array(packFileSchema.extend({ kind: z.literal('translations') })).min(1),
+  })
+  .loose();
+
 /** Registry mapping a pack file kind to the schema for one record. */
 export const RECORD_SCHEMAS = {
   items: learningItemSchema,

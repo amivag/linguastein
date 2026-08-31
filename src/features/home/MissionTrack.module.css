@@ -64,22 +64,53 @@
 }
 
 /*
- * A card is the width of the strip minus a peek of the next one, which is what
- * says "there is more this way" without a caption saying so. It stops growing at
- * a readable measure, so a wide screen shows two or three rather than one
- * enormous card.
+ * Whole cards, plus a constant sliver of the next one.
+ *
+ * `min(92%, 30rem)` looked equivalent and was not: with a fixed card width the
+ * *peek* is whatever is left over, so it swung with the window — a thin hint at
+ * one width and, at another, most of a card sliced through the middle of its
+ * button, which reads as a broken layout rather than as "there is more this
+ * way". Sizing the card from the strip instead pins the peek and lets the count
+ * change, which is the way round that keeps every width deliberate.
  */
+.list {
+  --peek: var(--space-6);
+  --columns: 1;
+}
+
 .slide {
-  flex: 0 0 min(92%, 30rem);
+  flex: 0 0 calc((100% - var(--peek) - (var(--columns) - 1) * var(--space-3)) / var(--columns));
   scroll-snap-align: start;
 }
 
+/*
+ * Two cards, and only two.
+ *
+ * The shell caps its own width, so past about 1300px the strip stops growing —
+ * which means a third column never shows more of the journey, it only makes each
+ * card narrower. At three, a two-line title and a four-line phrase turned every
+ * card into a column of fragments. Two is where the text still reads as text.
+ */
+@media (min-width: 64rem) {
+  .list {
+    --columns: 2;
+  }
+}
+
+/*
+ * A column rather than a grid, so the button can be pushed to the bottom.
+ *
+ * It was `display: grid; align-content: start`, which packs the rows to the top
+ * and leaves `margin-top: auto` on the last of them with nothing to push
+ * against — so a short card's button sat wherever its text ended while a long
+ * card's sat at the foot, and a row of cards had a ragged line of buttons.
+ */
 .card {
   position: relative;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
   height: 100%;
-  align-content: start;
   padding: var(--space-5);
   border-radius: var(--radius-xl);
   /* The same two role stops the single card used, kept because both are grounds
@@ -92,10 +123,9 @@
   box-shadow: var(--shadow-md);
 }
 
-/* The button sits at the foot of the card whatever the title above it costs, so
-   a strip of cards has one row of buttons rather than a ragged edge. */
+/* The button sits at the foot of the card whatever the text above it costs, so
+   a row of cards has one line of buttons rather than a ragged edge. */
 .card > :last-child {
-  align-self: end;
   margin-top: auto;
 }
 

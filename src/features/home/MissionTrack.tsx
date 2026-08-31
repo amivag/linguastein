@@ -93,9 +93,9 @@ export function MissionTrack({ cards, startIndex, label }: MissionTrackProps) {
   const sync = useCallback(() => {
     const element = track.current;
     if (!element) return;
-    const width = element.clientWidth;
-    if (width === 0) return;
-    const at = Math.min(cards.length - 1, Math.max(0, Math.round(element.scrollLeft / width)));
+    const step = pitchOf(element);
+    if (step === 0) return;
+    const at = Math.min(cards.length - 1, Math.max(0, Math.round(element.scrollLeft / step)));
     // A swipe is the learner overruling wherever the arrows were sending it.
     heading.current = at;
     setCurrent(at);
@@ -233,4 +233,19 @@ function offsetOf(track: HTMLElement, index: number): number {
   const first = track.querySelector<HTMLElement>('[data-slide="0"]');
   const slide = track.querySelector<HTMLElement>(`[data-slide="${index}"]`);
   return first && slide ? slide.offsetLeft - first.offsetLeft : 0;
+}
+
+/**
+ * The distance from one card to the next, which is not the width of the strip.
+ *
+ * Dividing the scroll position by the *container* width assumes one card fills
+ * it, which is true on a phone and false on anything wider: at desktop width two
+ * and a bit cards show, so the readout said `2 of 17` while cards three and four
+ * were on screen. Measured card-to-card it is right at every width, and it
+ * picks up the gap between them without being told what it is.
+ */
+function pitchOf(track: HTMLElement): number {
+  const first = track.querySelector<HTMLElement>('[data-slide="0"]');
+  const second = track.querySelector<HTMLElement>('[data-slide="1"]');
+  return first && second ? second.offsetLeft - first.offsetLeft : 0;
 }

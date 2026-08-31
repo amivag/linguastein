@@ -65,6 +65,11 @@ in the pack's own counts.
   scrolled to, which is not something a screen reader can convey. Study still holds
   the ladder and still says more about a rung than a card can.
 
+  On a wide screen it shows two cards and a sliver of the next, on a phone one — the
+  card is sized from the strip so the peek stays the same at every width, rather
+  than the peek being whatever is left over after a fixed card, which sliced the
+  third card through the middle of its button at some window sizes.
+
   It is a scrolling list rather than a carousel, and that is the whole of the
   accessibility story: every card is a real list item that is always in the
   accessibility tree, the strip itself takes keyboard focus so it can be moved

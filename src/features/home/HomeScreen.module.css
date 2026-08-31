@@ -20,22 +20,22 @@
  * text on it is asserted at every contrast level and intensity — which is what
  * makes a tinted ground safe here where an invented tint would not be.
  */
-.mission {
-  position: relative;
+/*
+ * The mission section: the strip, and the link to the full ladder under it.
+ *
+ * The card's own surface moved to `MissionTrack.module.css` with the card — a
+ * strip draws one per slide rather than one around the section.
+ */
+.missions {
   display: grid;
-  gap: var(--space-4);
-  padding: var(--space-5);
-  border-radius: var(--radius-xl);
-  /* Both stops are roles, and body text is asserted against each of them. A
-     blend between two grounds that each carry text is the one gradient this file
-     is entitled to draw; a stop invented with `color-mix` would be a background
-     nothing verifies. */
-  background: radial-gradient(
-    120% 100% at 0% 0%,
-    var(--color-accent-soft),
-    var(--color-surface) 68%
-  );
-  box-shadow: var(--shadow-md);
+  gap: var(--space-3);
+}
+
+/* Only the link shrinks to its text; the strip has to have the full width to
+   size its cards against, which `justify-items: start` on the section quietly
+   took away from it. */
+.missions .missionAll {
+  justify-self: start;
 }
 
 .eyebrow,

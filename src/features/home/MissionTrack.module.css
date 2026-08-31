@@ -1,0 +1,194 @@
+/*
+ * The mission journey as a horizontal strip.
+ *
+ * The bleed-and-snap shape is `SectionTabs`': negative margins so the strip
+ * reaches the edges of the shell and the next card is visibly cut off rather
+ * than looking like a clipped row, and no scrollbar, because on a phone the
+ * peeking card is the affordance and on a desktop the arrows are.
+ */
+
+.wrap {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.track {
+  margin: 0 calc(var(--space-4) * -1);
+  padding: 0 var(--space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  /*
+   * The snapport is the *padding box*, so `scroll-snap-align: start` on a slide
+   * lines its edge up with the display edge and undoes the padding above —
+   * which is what put the first card flush against the side of the screen while
+   * everything else on Home sat inset. `scroll-padding` moves the snapport in by
+   * the same amount, so a snapped card lands where the search box starts.
+   */
+  scroll-padding-left: var(--space-4);
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * The strip takes the global focus ring, and the rounding is so the ring follows
+ * the cards rather than boxing them: it is focusable so it can be scrolled from
+ * the keyboard, and a focusable thing that shows nothing when focused is the
+ * accessibility bug the `tabindex` was added to fix, in a new place.
+ */
+.track:focus-visible {
+  border-radius: var(--radius-xl);
+}
+
+/*
+ * Smooth scrolling is motion, and someone who has asked for less of it means
+ * this too. `global.css` clamps animations and transitions; `scroll-behavior` is
+ * neither, so it is turned off here rather than assumed covered.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    scroll-behavior: auto;
+  }
+}
+
+.list {
+  composes: listReset from '../../styles/surfaces.module.css';
+
+  display: flex;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
+/*
+ * A card is the width of the strip minus a peek of the next one, which is what
+ * says "there is more this way" without a caption saying so. It stops growing at
+ * a readable measure, so a wide screen shows two or three rather than one
+ * enormous card.
+ */
+.slide {
+  flex: 0 0 min(92%, 30rem);
+  scroll-snap-align: start;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  gap: var(--space-4);
+  height: 100%;
+  align-content: start;
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  /* The same two role stops the single card used, kept because both are grounds
+     body text is asserted against. */
+  background: radial-gradient(
+    120% 100% at 0% 0%,
+    var(--color-accent-soft),
+    var(--color-surface) 68%
+  );
+  box-shadow: var(--shadow-md);
+}
+
+/* The button sits at the foot of the card whatever the title above it costs, so
+   a strip of cards has one row of buttons rather than a ragged edge. */
+.card > :last-child {
+  align-self: end;
+  margin-top: auto;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* Marked rather than dimmed. A finished mission is still worth reopening — the
+   transfer ladder is where the value is — so this says what happened without
+   suggesting the card is spent. */
+.done {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-success);
+}
+
+.heading {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.title {
+  font-family: var(--font-display);
+  /* A step down from the single card's `2xl`: the strip is narrower, and a
+     three-line title pushed the button below the fold on a phone. */
+  font-size: var(--text-xl);
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-heading);
+}
+
+.phrase {
+  margin-top: var(--space-3);
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-style: italic;
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-heading);
+}
+
+.meaning {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.facts span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.position {
+  min-width: 5rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}

@@ -31,6 +31,7 @@ import {
   type SessionSize,
 } from '../../domain/sessions';
 import { FocusPicker } from '../practice/FocusPicker';
+import { MissionTrack, type MissionCard } from './MissionTrack';
 import { PRESET_IDS, PRESETS, type PresetId } from '../practice/presets';
 import { sessionPath } from '../practice/session-url';
 import { missionPath } from '../missions/mission-url';
@@ -324,6 +325,62 @@ export function HomeScreen() {
   }, [preferences.referenceLanguage, scope.ids, services.repository, standings]);
 
   /**
+   * Every mission as a card, in the order the course teaches them.
+   *
+   * The journey rather than only its next rung. Missions are not gated —
+   * `missionStandings` returns all of them with a `complete` flag and Study has
+   * always linked to any one — so a learner picking the fourth is choosing, not
+   * skipping a lock. What the strip keeps is the *recommendation*: `startCard`
+   * below is the card it opens on, and the card says so.
+   *
+   * Built from `standings` rather than from `mission`, which resolves one
+   * passage. The spotlight line and its meaning are looked up per mission the
+   * same way that one does — index lookups, thirteen of them.
+   */
+  const missionCards = useMemo(
+    () =>
+      standings.map((standing): MissionCard => {
+        const items = services.repository.itemsOfPassage(standing.passage.id);
+        const phrase = items[standing.mission.spotlight ?? 0];
+        const meaning = phrase
+          ? services.repository.translationOf(phrase.id, preferences.referenceLanguage)?.text
+          : undefined;
+        const transfer = standing.stage === 'use';
+
+        return {
+          id: standing.mission.id,
+          eyebrow: transfer
+            ? `Mission ${standing.position} · Transfer ${standing.transferPosition} of ${standing.transferTotal}`
+            : `Mission ${standing.position} of ${standing.total}`,
+          title: standing.mission.title,
+          phrase: phrase?.text ?? standing.passage.title,
+          ...(meaning ? { phraseMeaning: meaning } : {}),
+          language: course.language,
+          icon: 'speak' as IconName,
+          /*
+           * The estimate is a fact about the mission rather than part of the
+           * action, and in a strip it has to be: `Begin mission · 18 min` wrapped
+           * onto two lines in a card narrower than the screen. It sits directly
+           * above the button either way, and the button's accessible name still
+           * carries it, so nothing is lost at the moment of committing.
+           */
+          facts: [
+            { icon: 'passage' as IconName, text: `${standing.lineCount} useful lines` },
+            { icon: 'due' as IconName, text: `${standing.mission.estimatedMinutes} min` },
+          ],
+          action: transfer ? 'Continue transfer' : 'Begin mission',
+          // Thirteen buttons reading `Begin mission · 18 min` are thirteen
+          // identical rows in a screen reader's control list, differing only by
+          // the one thing that decides which to press.
+          actionName: `${transfer ? 'Continue' : 'Begin'} ${standing.mission.title} · ${standing.mission.estimatedMinutes} min`,
+          ...(standing.complete ? { done: true } : {}),
+          onStart: () => void navigate(missionPath(course, standing.mission.id, standing.stage)),
+        };
+      }),
+    [course, navigate, preferences.referenceLanguage, services.repository, standings],
+  );
+
+  /**
    * The chosen categories this course can actually reach.
    *
    * The list is this course's own now, so it can no longer name another
@@ -466,6 +523,79 @@ export function HomeScreen() {
     start('quick', { kind: 'time', minutes: 5 });
   };
 
+  /**
+   * The strip, with today's recommendation at the front of it.
+   *
+   * Not memoised, deliberately. It assembles a handful of objects around
+   * `missionCards`, which *is* memoised because it does the repository work —
+   * and its inputs include the two navigation callbacks, which are rebuilt every
+   * render, so a `useMemo` here would recompute every time while looking as
+   * though it did not.
+   *
+   * Review leads when anything is due, exactly as the single card did: the
+   * adaptive path's job is to say what to do now, and the strip is where the
+   * alternatives live rather than a reason to stop recommending. A course with no
+   * authored missions still gets one card — the first passage it can offer —
+   * which is what kept a pack without a mission catalog usable.
+   */
+  const journey = ((): readonly MissionCard[] => {
+    const review: MissionCard[] = reviewDue
+      ? [
+          {
+            id: 'review',
+            eyebrow: 'Ready for review',
+            title: 'Keep it fresh',
+            phrase: 'Repasa lo que ya sabes.',
+            language: course.language,
+            icon: 'memory',
+            facts: [
+              { icon: 'passage', text: `${due} ${due === 1 ? 'item' : 'items'} ready` },
+              { icon: 'waveform', text: 'Adaptive recall' },
+            ],
+            action: `Review ${due} due`,
+            actionName: `Review ${due} due`,
+            onStart: startRecommended,
+          },
+        ]
+      : [];
+
+    if (missionCards.length > 0) return [...review, ...missionCards];
+
+    // No authored missions: the fallback passage `mission` resolved, so the
+    // screen still opens on something rather than on an empty strip.
+    return [
+      ...review,
+      ...(mission
+        ? [
+            {
+              id: mission.localId,
+              eyebrow: "Today's mission",
+              title: mission.title,
+              phrase: mission.phrase,
+              ...(mission.phraseMeaning ? { phraseMeaning: mission.phraseMeaning } : {}),
+              language: course.language,
+              icon: 'speak' as IconName,
+              facts: [
+                { icon: 'passage' as IconName, text: `${mission.lineCount} useful lines` },
+                { icon: 'due' as IconName, text: `${mission.estimatedMinutes} min` },
+              ],
+              action: 'Begin mission',
+              actionName: `Begin ${mission.title} · ${mission.estimatedMinutes} min`,
+              onStart: continueMission,
+            } satisfies MissionCard,
+          ]
+        : []),
+    ];
+  })();
+
+  /** Which card the strip opens on, and marks as the one to do next. */
+  const startCard = useMemo(() => {
+    if (reviewDue) return 0;
+    const next = nextMissionStanding(standings);
+    const index = next ? standings.indexOf(next) : -1;
+    return index < 0 ? 0 : index;
+  }, [reviewDue, standings]);
+
   const title = `${option?.label ?? 'Practice'} · ${levelLabel(course.level, option?.levelLabels)}`;
 
   return (
@@ -506,61 +636,16 @@ export function HomeScreen() {
         <SearchResults results={results} words={words} />
       ) : (
         <>
-          <section className={styles.mission} aria-labelledby="mission-title">
-            <p className={styles.eyebrow}>
-              {reviewDue
-                ? 'Ready for review'
-                : mission
-                  ? mission.stage === 'use'
-                    ? `Mission ${mission.position} · Transfer ${mission.transferPosition} of ${mission.transferTotal}`
-                    : `Mission ${mission.position} of ${mission.total}`
-                  : "Today's mission"}
-            </p>
-            <div className={styles.missionHeading}>
-              <div>
-                <h2 id="mission-title" className={styles.missionTitle}>
-                  {reviewDue ? 'Keep it fresh' : (mission?.title ?? 'Build your foundation')}
-                </h2>
-                <p className={styles.missionPhrase} lang={course.language}>
-                  {reviewDue
-                    ? 'Repasa lo que ya sabes.'
-                    : (mission?.phrase ?? 'Empieza con frases útiles.')}
-                </p>
-                {!reviewDue && mission?.phraseMeaning && (
-                  <p className={styles.missionMeaning}>{mission.phraseMeaning}</p>
-                )}
-              </div>
-              <span className={styles.missionIcon} aria-hidden="true">
-                <Icon name={reviewDue ? 'memory' : 'speak'} size="xl" />
-              </span>
-            </div>
+          <section className={styles.missions} aria-labelledby="missions-title">
+            <h2 id="missions-title" className="visually-hidden">
+              Where to start
+            </h2>
 
-            <div className={styles.missionFacts}>
-              <span>
-                <Icon name="passage" />
-                {reviewDue
-                  ? `${due} ${due === 1 ? 'item' : 'items'} ready`
-                  : `${mission?.lineCount ?? 8} useful lines`}
-              </span>
-              <span>
-                <Icon name="waveform" />
-                {reviewDue ? 'Adaptive recall' : 'Short exchange'}
-              </span>
-            </div>
+            <MissionTrack cards={journey} startIndex={startCard} label="The mission journey" />
 
-            <Button variant="primary" block large onClick={startRecommended}>
-              <Icon name="play" />
-              {reviewDue
-                ? `Review ${due} due`
-                : mission?.stage === 'use'
-                  ? `Continue transfer · ${mission.estimatedMinutes} min`
-                  : `Begin mission · ${mission?.estimatedMinutes ?? 5} min`}
-            </Button>
-
-            {/* The whole ladder lives in Study, which is where a mission belongs:
-            this card only ever shows the next rung, and a learner who wants to
-            see the route — or go back to an earlier one — needs somewhere to
-            look that is not this button. */}
+            {/* Study still holds the ladder, and still says more about a rung
+            than a card can — the strip makes choosing one a gesture rather than
+            a trip, it does not replace the list. */}
             {standings.length > 1 && (
               <Link className={styles.missionAll} to={path('study')}>
                 All {standings.length} missions

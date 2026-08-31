@@ -50,6 +50,29 @@ in the pack's own counts.
 
 ### Changed
 
+- **The journey on Home is a strip you can move through.** The mission card showed
+  the next rung and nothing else; the whole ladder lived in Study, so "not that
+  one, the one after" — a one-gesture decision — was a two-screen trip.
+
+  Every mission the course offers is now a card on Home, swipeable on a phone and
+  with arrows and a `3 of 13` readout for everyone the swipe does not serve.
+  Missions were never gated, so nothing about this skips a lock: Study has always
+  linked to any of them.
+
+  The recommendation survives it. The strip opens on what the app suggests doing
+  next — review when anything is due, otherwise the first unfinished mission — and
+  marks that card rather than leaving it to whichever one the strip happens to be
+  scrolled to, which is not something a screen reader can convey. Study still holds
+  the ladder and still says more about a rung than a card can.
+
+  It is a scrolling list rather than a carousel, and that is the whole of the
+  accessibility story: every card is a real list item that is always in the
+  accessibility tree, the strip itself takes keyboard focus so it can be moved
+  without a pointer, and each card's button names its own mission — thirteen rows
+  reading `Begin mission · 18 min` would be unusable in the control list a learner
+  is choosing from. The estimate moved into the card's facts, beside the line
+  count, where a duration belongs.
+
 - **The level is a dropdown, and Home's practice choice sits with the button it
   changes.** Two small things about the screen a learner opens most.
 

@@ -21,7 +21,10 @@ describe('HomeScreen', () => {
     // Two authored missions are built on passages the fixture holds, so the
     // count is what the ladder actually has rather than a fixed 1.
     expect(screen.getByText('Mission 1 of 2')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Begin mission/ })).toBeInTheDocument();
+    // Named by the mission rather than by the word "mission": the strip shows
+    // every one of them, so thirteen buttons all reading `Begin mission · 18 min`
+    // would be thirteen identical rows in a screen reader's control list.
+    expect(screen.getByRole('button', { name: /Begin Describe your morning/ })).toBeInTheDocument();
 
     // The scope the mission and free-practice choices will draw from, on the
     // screen itself rather than inside the sheet: the chosen level carries the
@@ -51,7 +54,7 @@ describe('HomeScreen', () => {
       { route: '/es/a1' },
     );
 
-    await user.click(await screen.findByRole('button', { name: /Begin mission/ }));
+    await user.click(await screen.findByRole('button', { name: /Begin Describe your morning/ }));
     expect(screen.getByTestId('where')).toHaveTextContent(
       '/es/all/mission/morning-routine/understand',
     );
@@ -81,7 +84,7 @@ describe('HomeScreen', () => {
       { route: '/es/all', services },
     );
 
-    await user.click(await screen.findByRole('button', { name: /Continue transfer/ }));
+    await user.click(await screen.findByRole('button', { name: /Continue Describe your morning/ }));
     expect(screen.getByTestId('where')).toHaveTextContent('/es/all/mission/morning-routine/use');
   });
 

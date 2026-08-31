@@ -55,31 +55,45 @@
   }
 }
 
+/*
+ * The gap between cards is the strip's own inset, and they have to match.
+ *
+ * With a smaller gap the next card starts *inside* the right-hand padding, so a
+ * few pixels of it show past the last whole one — four, at the width this was
+ * measured at, which is a card's rounded corner peeping out and reads as a
+ * rendering fault rather than as anything. Equal, a card that is off-screen
+ * begins exactly at the edge of the screen.
+ */
 .list {
   composes: listReset from '../../styles/surfaces.module.css';
 
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-4);
   align-items: stretch;
 }
 
 /*
- * Whole cards, plus a constant sliver of the next one.
+ * Whole cards, and only whole cards.
  *
- * `min(92%, 30rem)` looked equivalent and was not: with a fixed card width the
- * *peek* is whatever is left over, so it swung with the window — a thin hint at
- * one width and, at another, most of a card sliced through the middle of its
- * button, which reads as a broken layout rather than as "there is more this
- * way". Sizing the card from the strip instead pins the peek and lets the count
- * change, which is the way round that keeps every width deliberate.
+ * There was a deliberate sliver of the next one, on the usual carousel argument
+ * that a cut-off card is what says "there is more this way". It does not say that
+ * here: a mission card's edge is a fragment of a title, a fragment of a Spanish
+ * phrase and a fragment of its meaning, and three columns of broken words read as
+ * a layout that has gone wrong rather than as an invitation. The strip has real
+ * affordances directly under it — two arrows and `5 of 17` — so the peek was
+ * saying, badly, something already said plainly.
+ *
+ * The card is still sized *from the strip* rather than fixed, which is the part
+ * worth keeping: a fixed width leaves the remainder wherever it falls, and the
+ * remainder is exactly what used to slice a card through the middle of its
+ * button at some window sizes.
  */
 .list {
-  --peek: var(--space-6);
   --columns: 1;
 }
 
 .slide {
-  flex: 0 0 calc((100% - var(--peek) - (var(--columns) - 1) * var(--space-3)) / var(--columns));
+  flex: 0 0 calc((100% - (var(--columns) - 1) * var(--space-4)) / var(--columns));
   scroll-snap-align: start;
 }
 

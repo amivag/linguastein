@@ -65,10 +65,12 @@ in the pack's own counts.
   scrolled to, which is not something a screen reader can convey. Study still holds
   the ladder and still says more about a rung than a card can.
 
-  On a wide screen it shows two cards and a sliver of the next, on a phone one — the
-  card is sized from the strip so the peek stays the same at every width, rather
-  than the peek being whatever is left over after a fixed card, which sliced the
-  third card through the middle of its button at some window sizes.
+  Whole cards only, and as many as fit: two on a wide screen, one on a phone. The
+  card is sized from the strip rather than being fixed, so nothing is ever cut off
+  at the edge — a mission card's cropped edge is a fragment of a title over a
+  fragment of a Spanish phrase, which reads as a layout that has gone wrong rather
+  than as the invitation a peeking card is supposed to be. The arrows and the
+  `5 of 17` beneath say there is more, plainly.
 
   It is a scrolling list rather than a carousel, and that is the whole of the
   accessibility story: every card is a real list item that is always in the

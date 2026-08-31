@@ -32,6 +32,14 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   composition that climbs recognition → cued recall → production, and derived
   word- and pattern-level mastery
 - IndexedDB storage with an in-memory fallback and identical contract tests
+- Settings split into what belongs to the device and what belongs to a course:
+  the level, the chosen categories, the practice focus, the accent and the voice
+  are stored per target language, so Spanish-at-A2 and French-at-A1 are both true
+  at once and a French course is no longer read aloud by a Spanish voice. Screens
+  read them through `useCourse().state`, never from a global record, and what
+  comes back out of storage goes through a zod boundary that repairs a bad value
+  per field rather than rejecting the record — groundwork for the export/import
+  under _Later_, and the same four things a sync would need
 - Audio service with pre-generated-audio-first resolution and a TTS seam
 - Word and phrase inspection: tap any word for its meaning, grammar, the pattern
   it belongs to, its other forms and other phrases that use it — or grow the

@@ -1,5 +1,10 @@
 import { useEffect, useId, useMemo, useState } from 'react';
-import { useCourse, usePronunciationLocale, useTargetLanguage } from '../../app/course';
+import {
+  useCourse,
+  usePronunciationLocale,
+  useTargetLanguage,
+  useVoiceName,
+} from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { Annotation } from '../../components/Annotation';
 import { Button } from '../../components/Button';
@@ -34,10 +39,11 @@ import styles from './AlphabetSection.module.css';
  * ids today.
  */
 export function AlphabetSection() {
-  const { services, preferences } = useServices();
+  const { services } = useServices();
   const { course } = useCourse();
   const lang = useTargetLanguage();
   const locale = usePronunciationLocale();
+  const voice = useVoiceName();
   const [guide, setGuide] = useState<AlphabetGuide | null>(null);
 
   /*
@@ -85,7 +91,7 @@ export function AlphabetSection() {
     void services.audio.speak({
       text,
       locale,
-      ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
+      ...(voice ? { voice } : {}),
     });
 
   if (!guide) {

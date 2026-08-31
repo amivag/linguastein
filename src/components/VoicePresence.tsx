@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { useCourse, usePronunciationLocale } from '../app/course';
+import { useCourse, usePronunciationLocale, useVoiceName } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
 import { Icon } from './Icon';
@@ -20,12 +20,13 @@ import styles from './VoicePresence.module.css';
  * place, on every screen.
  */
 export function VoicePresence() {
-  const { services, preferences } = useServices();
+  const { services } = useServices();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<TtsVoice | undefined>(undefined);
   const [available, setAvailable] = useState(true);
 
   const locale = usePronunciationLocale();
+  const voice = useVoiceName();
 
   // Voice discovery is asynchronous, so the chip reports "unknown yet" as
   // available and corrects itself rather than flashing a false "silent".
@@ -33,13 +34,13 @@ export function VoicePresence() {
     let cancelled = false;
     void services.audio.ready().then(() => {
       if (cancelled) return;
-      setActive(services.audio.voiceFor(locale, preferences.voiceName || undefined));
+      setActive(services.audio.voiceFor(locale, voice));
       setAvailable(services.audio.canSpeak(locale));
     });
     return () => {
       cancelled = true;
     };
-  }, [services.audio, locale, preferences.voiceName]);
+  }, [services.audio, locale, voice]);
 
   const close = useCallback(() => setOpen(false), []);
 

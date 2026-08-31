@@ -34,6 +34,7 @@ import {
 import { repoRoot } from '../fixtures/dataset';
 import { TEST_PACK_FR, TEST_PACK_ID } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
+import { createStorage } from '../../src/storage';
 
 const PUBLIC = join(repoRoot, 'public');
 
@@ -80,6 +81,26 @@ describe('a cold load', () => {
     await createServices({ path: '/' });
 
     expect(shards(served.fetched)).toEqual(['a1', 'a1', 'a1']);
+  });
+
+  /**
+   * And "where they left off" is now a fact about the *course*, not the device.
+   *
+   * One global level could not hold Spanish-at-B1 and French-at-A1
+   * (`docs/tasks/learner-profile.md` §4.1), so boot reads the ceiling out of the
+   * course the pointer names. Worth its own case because getting it wrong is
+   * invisible rather than broken: the app would open at A1 and silently work,
+   * having thrown away the ceiling the learner had climbed to.
+   */
+  it('reads that ceiling from the course, not from one global level', async () => {
+    const storage = await createStorage();
+    await storage.preferences.write({ targetLanguage: 'es' });
+    await storage.courses.write('es', { level: 'b1' });
+
+    const served = servePacks();
+    await createServices({ path: '/' });
+
+    expect(shards(served.fetched).sort()).toEqual(['a1', 'a1', 'a1', 'a2', 'a2', 'a2', 'b1', 'b1', 'b1']); // prettier-ignore
   });
 
   it('widens a ceiling the pack does not declare, rather than fetching nothing', async () => {

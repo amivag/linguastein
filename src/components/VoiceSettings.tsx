@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useState } from 'react';
-import { useCourse, usePronunciationLocale } from '../app/course';
+import { useCourse, usePronunciationLocale, useVoiceName } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
 import { languageOption, pronunciationLocales } from '../domain/content';
@@ -38,12 +38,13 @@ interface VoiceSettingsProps {
  */
 export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
   const { services, preferences, updatePreferences } = useServices();
-  const { course } = useCourse();
+  const { course, state, updateState } = useCourse();
   const ids = useId();
   const [voices, setVoices] = useState<readonly TtsVoice[]>([]);
   const [active, setActive] = useState<TtsVoice | undefined>(undefined);
 
   const locale = usePronunciationLocale();
+  const voice = useVoiceName();
   const accents = useMemo(
     () => pronunciationLocales(services.repository, course.language),
     [services.repository, course.language],
@@ -59,18 +60,18 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
     void services.audio.ready().then(() => {
       if (cancelled) return;
       setVoices(services.audio.voicesFor(locale));
-      setActive(services.audio.voiceFor(locale, preferences.voiceName || undefined));
+      setActive(services.audio.voiceFor(locale, voice));
     });
     return () => {
       cancelled = true;
     };
-  }, [services.audio, locale, preferences.voiceName]);
+  }, [services.audio, locale, voice]);
 
   const testVoice = () =>
     void services.audio.speak({
       text: sample,
       locale,
-      voice: preferences.voiceName || undefined,
+      voice,
     });
 
   const silent = voices.length === 0;
@@ -103,7 +104,9 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
           value={locale}
           onChange={(event) =>
             // A voice chosen for one accent should not survive into another.
-            updatePreferences({ pronunciationLocale: event.target.value, voiceName: '' })
+            // Written to *this course*: an accent belongs to a language, so
+            // choosing `es-MX` here says nothing about a German course.
+            updateState({ pronunciationLocale: event.target.value, voiceName: '' })
           }
         >
           {accents.map((option) => (
@@ -120,9 +123,9 @@ export function VoiceSettings({ variant = 'page' }: VoiceSettingsProps) {
         </label>
         <select
           id={`${ids}-voice`}
-          value={preferences.voiceName}
+          value={state.voiceName}
           disabled={silent}
-          onChange={(event) => updatePreferences({ voiceName: event.target.value })}
+          onChange={(event) => updateState({ voiceName: event.target.value })}
         >
           <option value="">Best match automatically</option>
           {voices.map((voice) => (

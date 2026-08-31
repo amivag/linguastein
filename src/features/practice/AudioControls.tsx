@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { usePronunciationLocale } from '../../app/course';
+import { usePronunciationLocale, useVoiceName } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { SLOW_RATE } from '../../audio';
 import { Button } from '../../components/Button';
@@ -19,14 +19,15 @@ export function AudioControls({ item, autoPlay = false }: AudioControlsProps) {
   const { services, preferences } = useServices();
   const { audio } = services;
   const locale = usePronunciationLocale();
+  const voice = useVoiceName();
   const [playable, setPlayable] = useState(true);
   const speaking = useIsSpeaking(item);
 
   const play = useCallback(
     (rate: number, repeat = 1) => {
-      void audio.play(item, { locale, rate, repeat, voice: preferences.voiceName || undefined });
+      void audio.play(item, { locale, rate, repeat, voice });
     },
-    [audio, item, locale, preferences.voiceName],
+    [audio, item, locale, voice],
   );
 
   // Voice discovery is asynchronous, so availability is re-checked once the

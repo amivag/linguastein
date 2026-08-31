@@ -59,7 +59,7 @@ const RECENT_ITEMS = 5;
  */
 export function HomeScreen() {
   const { services, preferences, batches } = useServices();
-  const { course, option, filter, path } = useCourse();
+  const { course, option, filter, path, state } = useCourse();
   const navigate = useNavigate();
   const practiceSheetId = useId();
   const words = useWordSelection();
@@ -326,22 +326,24 @@ export function HomeScreen() {
   /**
    * The chosen categories this course can actually reach.
    *
-   * The stored list is global and a topic is course-relative, so it has to be
-   * narrowed before it is written anywhere — see `reachableTopics`. `FocusPicker`
-   * narrows the same list for its summary, which is precisely why this cannot
-   * stay inline: the two disagreeing is what put an unreachable `?topic=` into a
-   * link under a bar that read "Everything".
+   * The list is this course's own now, so it can no longer name another
+   * language's categories — but it still has to be narrowed, and the reason is
+   * the other half of §4.2: a level is a ceiling, so a category whose content is
+   * all B1 survives a switch down to A1 within one course. `FocusPicker` narrows
+   * the same list for its summary, which is precisely why this cannot stay
+   * inline: the two disagreeing is what put an unreachable `?topic=` into a link
+   * under a bar that read "Everything".
    */
   const focusTopics = useMemo(
-    () => reachableTopics(repository.topics(filter), preferences.focusTopics),
-    [filter, preferences.focusTopics, repository],
+    () => reachableTopics(repository.topics(filter), state.focusTopics),
+    [filter, state.focusTopics, repository],
   );
 
   // The standing focus is written into every free-practice link so the session
   // remains reloadable and shareable rather than secretly reading preferences.
   const focused = {
     ...(focusTopics.length ? { filter: { topics: focusTopics } } : {}),
-    ...(preferences.focus !== 'balanced' ? { focus: preferences.focus } : {}),
+    ...(state.focus !== 'balanced' ? { focus: state.focus } : {}),
   };
 
   const start = (preset: PresetId, size: SessionSize) => {

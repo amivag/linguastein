@@ -11,7 +11,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import type { ItemId } from '../../src/domain/content';
 import { newItemProgress } from '../../src/domain/progress';
-import { createMemoryStorage, DEFAULT_PREFERENCES, type Preferences } from '../../src/storage';
+import {
+  createMemoryStorage,
+  DEFAULT_COURSE_STATE,
+  DEFAULT_PREFERENCES,
+  type CourseState,
+  type Preferences,
+} from '../../src/storage';
 import { READING_SIZE_STORAGE_KEY } from '../../src/styles/reading-size';
 import { THEME_STORAGE_KEY } from '../../src/styles/themes';
 import { id } from '../fixtures/pack';
@@ -53,6 +59,7 @@ const BATCH = {
 async function renderSettings(
   updatePreferences?: (patch: Partial<Preferences>) => void,
   removeBatch?: (id: string) => void,
+  updateCourse?: (language: string, patch: Partial<CourseState>) => void,
 ) {
   const storage = await storageWithHistory();
   await storage.batches.put(BATCH);
@@ -62,6 +69,7 @@ async function renderSettings(
     route: '/settings?tab=about',
     ...(updatePreferences ? { updatePreferences } : {}),
     ...(removeBatch ? { removeBatch } : {}),
+    ...(updateCourse ? { updateCourse } : {}),
   });
   return { ...view, storage };
 }
@@ -116,13 +124,19 @@ describe('reset progress', () => {
   it('keeps preferences, which are not history', async () => {
     const user = userEvent.setup();
     const { storage } = await renderSettings();
-    await storage.preferences.write({ voiceName: 'Paulina' });
+    await storage.preferences.write({ referenceLanguage: 'de' });
+    // Both halves of the settings, because they are two records now and only
+    // one of them was ever checked: a reset that kept the device preferences
+    // and quietly wiped every course's level, categories and voice would pass
+    // the assertion above and still be the bug this test exists to catch.
+    await storage.courses.write('es', { voiceName: 'Paulina' });
 
     await user.click(screen.getByRole('button', { name: 'Reset progress' }));
     await user.click(screen.getByRole('button', { name: 'Erase learning history' }));
 
     await screen.findByText('Learning history cleared.');
-    expect((await storage.preferences.read()).voiceName).toBe('Paulina');
+    expect((await storage.preferences.read()).referenceLanguage).toBe('de');
+    expect((await storage.courses.read())['es']?.voiceName).toBe('Paulina');
   });
 
   /**
@@ -146,14 +160,14 @@ describe('reset progress', () => {
     const user = userEvent.setup();
     const updatePreferences = vi.fn();
     const removeBatch = vi.fn();
-    const { storage } = await renderSettings(updatePreferences, removeBatch);
+    const updateCourse = vi.fn();
+    const { storage } = await renderSettings(updatePreferences, removeBatch, updateCourse);
     await storage.preferences.write({
       targetLanguage: 'fr',
-      level: 'all',
-      voiceName: 'Paulina',
       theme: 'dark',
       readingSize: 'large',
     });
+    await storage.courses.write('fr', { level: 'all', voiceName: 'Paulina' });
     localStorage.setItem(THEME_STORAGE_KEY, 'dark');
     localStorage.setItem(READING_SIZE_STORAGE_KEY, 'large');
 
@@ -166,8 +180,16 @@ describe('reset progress', () => {
 
     expect(await stored(storage)).toEqual({ progress: 0, attempts: 0, sessions: 0 });
     expect(await storage.preferences.read()).toEqual(DEFAULT_PREFERENCES);
+    expect(await storage.courses.read()).toEqual({});
     expect(await storage.batches.all()).toEqual([]);
     expect(updatePreferences).toHaveBeenCalledWith(DEFAULT_PREFERENCES);
+    // And the live course state, for the reason the live preferences do: the
+    // reset navigates to the default course a line later, and a screen still
+    // holding French at `all` would disagree with the address it lands on.
+    expect(updateCourse).toHaveBeenCalledWith(
+      DEFAULT_PREFERENCES.targetLanguage,
+      DEFAULT_COURSE_STATE,
+    );
     // The live list has to catch up too, exactly as preferences do: without this
     // a full reset would leave every batch on screen until a reload.
     expect(removeBatch).toHaveBeenCalledWith(BATCH.id);
@@ -179,12 +201,12 @@ describe('reset progress', () => {
   it('leaves all local data intact when a full reset is cancelled', async () => {
     const user = userEvent.setup();
     const { storage } = await renderSettings();
-    await storage.preferences.write({ voiceName: 'Paulina' });
+    await storage.courses.write('es', { voiceName: 'Paulina' });
 
     await user.click(screen.getByRole('button', { name: 'Reset all local data' }));
     await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
     expect(await stored(storage)).toEqual({ progress: 1, attempts: 1, sessions: 1 });
-    expect((await storage.preferences.read()).voiceName).toBe('Paulina');
+    expect((await storage.courses.read())['es']?.voiceName).toBe('Paulina');
   });
 });

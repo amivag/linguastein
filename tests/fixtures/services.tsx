@@ -8,7 +8,12 @@ import { NO_OFFLINE_PACKS } from '../../src/app/offline';
 import type { BatchDefinition } from '../../src/domain/batches';
 import { NOOP_PLAYBACK, type AudioService, type SpeechRecognitionProvider } from '../../src/audio';
 import { ExerciseEngine } from '../../src/domain/exercises';
-import { createMemoryStorage, DEFAULT_PREFERENCES, type Preferences } from '../../src/storage';
+import {
+  createMemoryStorage,
+  DEFAULT_PREFERENCES,
+  type CourseState,
+  type Preferences,
+} from '../../src/storage';
 import { testRepository } from './pack';
 
 /**
@@ -70,6 +75,13 @@ export function testServices(overrides: Partial<AppServices> = {}): AppServices 
     speech: noSpeech,
     exercises: new ExerciseEngine(),
     preferences: DEFAULT_PREFERENCES,
+    /*
+     * Empty rather than a row per language, because that is what a fresh install
+     * holds: a course reads as `DEFAULT_COURSE_STATE` until something in it is
+     * chosen. A test that needs a course to have been set up passes
+     * `testServices({ courses: { es: { ...DEFAULT_COURSE_STATE, level: 'a2' } } })`.
+     */
+    courses: {},
     batches: [],
     datasetIssues: [],
     ...overrides,
@@ -83,6 +95,8 @@ export function renderWithServices(
     route?: string;
     /** Supply one to assert on what a control tried to change. */
     updatePreferences?: (patch: Partial<Preferences>) => void;
+    /** Supply one to assert on what a control tried to change *about a course*. */
+    updateCourse?: (language: string, patch: Partial<CourseState>) => void;
     /** Supply one to assert on a batch a control tried to save. */
     saveBatch?: (batch: BatchDefinition) => void;
     removeBatch?: (id: string) => void;
@@ -95,6 +109,11 @@ export function renderWithServices(
         services,
         preferences: services.preferences,
         updatePreferences: options.updatePreferences ?? (() => {}),
+        // Read from the services for the same reason `preferences` is: one place
+        // decides what the app was booted holding, and a test that needs a
+        // different course sets it there rather than through a second channel.
+        courses: services.courses,
+        updateCourse: options.updateCourse ?? (() => {}),
         // The batches a screen reads are the ones the services were built with,
         // exactly as `preferences` is: a test that needs one supplies it through
         // `testServices({ batches })` rather than through a second channel.

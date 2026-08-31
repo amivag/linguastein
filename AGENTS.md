@@ -96,6 +96,18 @@ These are load-bearing. Breaking one is a design change, not a refactor. Rules
    Progress is untouched by it: records reference item ids, which carry their
    pack, so switching course can never invalidate what has been practised.
 
+   **A setting is a property of the device or of a course, and the difference is
+   load-bearing.** `Preferences` holds what belongs to the person — their name,
+   the reference language, the theme, which course `/` reopens — and `CourseState`
+   holds what belongs to one course, keyed by target language: the level, the
+   chosen categories, the practice focus, the accent and the voice. Five of these
+   were global once, and it was not a tidiness problem: Spanish-at-A2 and
+   French-at-A1 cannot both be true of one `level`, a topic slug is pack
+   vocabulary, and a device voice that reads Spanish cannot read French. Read
+   course state through `useCourse()` — never from `preferences` — so a screen
+   gets this course's answer by construction rather than by remembering to narrow
+   a global one.
+
 ## Layout
 
 ```text

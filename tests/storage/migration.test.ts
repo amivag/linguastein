@@ -21,7 +21,12 @@ import { deleteDB, openDB } from 'idb';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { APP } from '../../src/app/identity';
 import type { ItemId } from '../../src/domain/content';
-import { createIndexedDbStorage, openAppDatabase } from '../../src/storage';
+import {
+  createIndexedDbStorage,
+  DEFAULT_COURSE_STATE,
+  DEFAULT_PREFERENCES,
+  openAppDatabase,
+} from '../../src/storage';
 import { id } from '../fixtures/pack';
 
 const REVIEWED = id<ItemId>('test-es:item:001');
@@ -260,5 +265,166 @@ describe('upgrading a version-2 database', () => {
 
     const [record] = await storage.sessions.recent(10);
     expect(record?.course).toEqual({ language: 'es', level: 'a1' });
+  });
+});
+
+/**
+ * Version 3 as it shipped: one flat settings record holding both halves.
+ *
+ * The five values that moved are all here and all set to something other than
+ * their default, because a migration that dropped them would be invisible
+ * against a seed that used the defaults.
+ */
+async function seedVersion3(): Promise<void> {
+  await deleteDB(APP.id);
+  const db = await openDB(APP.id, 3, {
+    upgrade(database) {
+      const progress = database.createObjectStore('progress', { keyPath: 'itemId' });
+      progress.createIndex('by-due', 'dueAt');
+      progress.createIndex('by-status', 'status');
+      progress.createIndex('by-pack', 'packId');
+
+      const attempts = database.createObjectStore('attempts', { keyPath: 'id' });
+      attempts.createIndex('by-item', 'itemId');
+      attempts.createIndex('by-time', 'at');
+
+      const sessions = database.createObjectStore('sessions', { keyPath: 'id' });
+      sessions.createIndex('by-time', 'startedAt');
+
+      database.createObjectStore('batches', { keyPath: 'id' });
+      database.createObjectStore('meta');
+    },
+  });
+
+  await db.put(
+    'meta',
+    {
+      displayName: 'Ada',
+      targetLanguage: 'fr',
+      referenceLanguage: 'en',
+      readingSize: 'large',
+      // The five that move.
+      level: 'b1',
+      focusTopics: ['food-drink', 'work'],
+      focus: 'struggling',
+      pronunciationLocale: 'fr-CA',
+      voiceName: 'Amelie',
+    },
+    'preferences',
+  );
+
+  db.close();
+}
+
+/**
+ * Splitting the settings in two.
+ *
+ * The third kind of upgrade this file has seen, and the first that *rewrites* a
+ * record rather than backfilling a field or adding a store. What makes it worth
+ * testing is that doing nothing would not look broken: an un-migrated
+ * `meta:preferences` still reads perfectly well, it just answers with the
+ * defaults for everything that moved — so a learner would find their level,
+ * their categories and their voice quietly reset, with nothing in any log.
+ */
+describe('upgrading a version-3 database', () => {
+  let upgraded: AppDatabase | undefined;
+
+  const open = async (): Promise<AppDatabase> => {
+    upgraded = await openAppDatabase();
+    return upgraded;
+  };
+
+  beforeEach(seedVersion3);
+  afterEach(() => {
+    upgraded?.close();
+    upgraded = undefined;
+  });
+
+  it('moves the five course settings under the language they were chosen in', async () => {
+    const storage = createIndexedDbStorage(await open());
+
+    // French, because that is what the learner was studying — the one course
+    // those values could possibly have been about.
+    expect((await storage.courses.read())['fr']).toEqual({
+      level: 'b1',
+      focusTopics: ['food-drink', 'work'],
+      focus: 'struggling',
+      pronunciationLocale: 'fr-CA',
+      voiceName: 'Amelie',
+    });
+  });
+
+  it('leaves the device settings where they were', async () => {
+    const storage = createIndexedDbStorage(await open());
+    const preferences = await storage.preferences.read();
+
+    expect(preferences.displayName).toBe('Ada');
+    expect(preferences.targetLanguage).toBe('fr');
+    expect(preferences.readingSize).toBe('large');
+  });
+
+  it('takes the moved fields out of the settings record', async () => {
+    const db = await open();
+
+    /*
+     * Read raw rather than through the store, which is the only way to see this:
+     * `readPreferences` drops unknown keys, so a `level` left behind in `meta`
+     * would be invisible through the API and would still be there to be found by
+     * an importer, an export, or the next person to read the record by hand.
+     */
+    const raw = (await db.get('meta', 'preferences')) as Record<string, unknown>;
+    expect(Object.keys(raw)).not.toContain('level');
+    expect(Object.keys(raw)).not.toContain('voiceName');
+    expect(Object.keys(raw)).not.toContain('focusTopics');
+  });
+
+  /**
+   * A record written before one of the five existed has no value for it, and the
+   * migration must not invent one.
+   *
+   * Writing `undefined` into the course would shadow the default with a hole,
+   * which is a different thing from never having chosen: `courseStateOf` answers
+   * with the defaults for a course it has never seen, and that is the right
+   * answer for a field nobody ever set.
+   */
+  it('does not invent a value for a field the old record never had', async () => {
+    await deleteDB(APP.id);
+    const seeded = await openDB(APP.id, 3, {
+      upgrade(database) {
+        database.createObjectStore('meta');
+      },
+    });
+    await seeded.put('meta', { targetLanguage: 'es', level: 'a2' }, 'preferences');
+    seeded.close();
+
+    const db = await open();
+    const storage = createIndexedDbStorage(db);
+
+    // Raw, because this is a claim about what was *written*: reading through the
+    // store fills every absent field with its default, which is the right answer
+    // to give a caller and would hide a hole written into the record.
+    const raw = (await db.get('meta', 'courses')) as Record<string, Record<string, unknown>>;
+    expect(Object.keys(raw['es'] ?? {})).toEqual(['level']);
+
+    // And through the API it reads as a course that has only ever set a level.
+    const course = (await storage.courses.read())['es'];
+    expect(course?.level).toBe('a2');
+    expect(course?.voiceName).toBe(DEFAULT_COURSE_STATE.voiceName);
+    expect(course?.focus).toBe(DEFAULT_COURSE_STATE.focus);
+  });
+
+  it('has nothing to split on a database with no settings yet', async () => {
+    await deleteDB(APP.id);
+    const seeded = await openDB(APP.id, 3, {
+      upgrade(database) {
+        database.createObjectStore('meta');
+      },
+    });
+    seeded.close();
+
+    const storage = createIndexedDbStorage(await open());
+
+    expect(await storage.courses.read()).toEqual({});
+    expect(await storage.preferences.read()).toEqual(DEFAULT_PREFERENCES);
   });
 });

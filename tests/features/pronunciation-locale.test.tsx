@@ -21,7 +21,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { NOOP_PLAYBACK } from '../../src/audio';
 import type { PlayOptions } from '../../src/audio';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
-import { DEFAULT_PREFERENCES } from '../../src/storage';
+import { DEFAULT_COURSE_STATE } from '../../src/storage';
 import { multilingualRepository } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
 
@@ -41,7 +41,17 @@ async function localeSpokenAt(route: string, stored: string, phrase: string) {
   const user = userEvent.setup();
   const base = testServices({
     repository: multilingualRepository(),
-    preferences: { ...DEFAULT_PREFERENCES, pronunciationLocale: stored },
+    /*
+     * Seeded on *both* languages, which is what makes this test still test
+     * something. An accent is stored per course now, so the honest way to ask
+     * "does a French screen speak French?" is to give French the same stored
+     * `es-ES` the global value used to force on it, and check the course
+     * narrows it anyway.
+     */
+    courses: {
+      es: { ...DEFAULT_COURSE_STATE, pronunciationLocale: stored },
+      fr: { ...DEFAULT_COURSE_STATE, pronunciationLocale: stored },
+    },
   });
   const play = vi.fn(() => Promise.resolve(NOOP_PLAYBACK));
 
@@ -58,6 +68,40 @@ async function localeSpokenAt(route: string, stored: string, phrase: string) {
 
   const [, options] = play.mock.calls[0] as unknown as [unknown, PlayOptions];
   return options.locale;
+}
+
+/**
+ * The same trip, with each course holding its *own* accent and voice.
+ *
+ * The helper above seeds both languages with one value, because it is about the
+ * narrowing that has to happen when a stored accent cannot be right. This one is
+ * about the thing that made that narrowing necessary: there was one value, and
+ * two courses cannot share it (`docs/tasks/learner-profile.md` §4.1).
+ */
+async function spokenAt(route: string, phrase: string) {
+  const user = userEvent.setup();
+  const base = testServices({
+    repository: multilingualRepository(),
+    courses: {
+      es: { ...DEFAULT_COURSE_STATE, pronunciationLocale: 'es-MX', voiceName: 'Paulina' },
+      fr: { ...DEFAULT_COURSE_STATE, pronunciationLocale: 'fr', voiceName: 'Amelie' },
+    },
+  });
+  const play = vi.fn(() => Promise.resolve(NOOP_PLAYBACK));
+
+  renderWithServices(
+    <Routes>
+      <Route path="/:language/:level/browse" element={<BrowseScreen />} />
+    </Routes>,
+    { services: { ...base, audio: { ...base.audio, play } }, route },
+  );
+
+  await user.click(
+    await screen.findByRole('button', { name: `Listen to “${phrase}”` }, DISCOVERED),
+  );
+
+  const [, options] = play.mock.calls[0] as unknown as [unknown, PlayOptions];
+  return options;
 }
 
 describe('the accent a course is spoken in', () => {
@@ -80,5 +124,27 @@ describe('the accent a course is spoken in', () => {
 
   it('corrects an accent this language does not have to its first', async () => {
     expect(await localeSpokenAt('/es/a1/browse', 'fr', 'agua')).toBe('es-ES');
+  });
+});
+
+/**
+ * Two courses, two sets of choices, neither reaching the other.
+ *
+ * This is the failure §4.1 describes rather than the patch over it. While the
+ * accent and the voice were single global values, a learner studying both
+ * languages had one of them wrong at all times — and the voice was the worse
+ * half, because a `voiceName` is a *device* voice: `Paulina` cannot read French
+ * at all, and nothing on screen would have said why the sound stopped.
+ */
+describe('two courses on one device', () => {
+  it('speaks each one with its own accent and its own voice', async () => {
+    expect(await spokenAt('/es/a1/browse', 'agua')).toMatchObject({
+      locale: 'es-MX',
+      voice: 'Paulina',
+    });
+    expect(await spokenAt('/fr/b1/browse', 'Je dois travailler.')).toMatchObject({
+      locale: 'fr',
+      voice: 'Amelie',
+    });
   });
 });

@@ -18,7 +18,7 @@
  */
 
 import { use, useCallback, useSyncExternalStore } from 'react';
-import { usePronunciationLocale } from '../app/course';
+import { usePronunciationLocale, useVoiceName } from '../app/course';
 import { ServicesContext, useServices } from '../app/services-context';
 import { isSpeaking, speakingToken, type PlaybackState } from '../audio';
 import type { LearningItem, TokenId } from '../domain/content';
@@ -98,12 +98,12 @@ export interface Sequence {
 export function useSequence(items: readonly LearningItem[]): Sequence {
   // `useServices` rather than the tolerant read above: a transport is a control,
   // and a control with nothing behind it has no honest shape to render.
-  const { services, preferences } = useServices();
+  const { services } = useServices();
   const { audio } = services;
   const locale = usePronunciationLocale();
   const state = usePlayback();
 
-  const voice = preferences.voiceName || undefined;
+  const voice = useVoiceName();
   const options = { locale, ...(voice ? { voice } : {}) };
 
   const mine = state !== null && items.some((item) => isSpeaking(state, item));

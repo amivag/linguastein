@@ -15,6 +15,39 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Fixed
+
+- **A second course no longer inherits the first one's settings.** Five things a
+  learner chooses — how far up the levels they are working, which categories they
+  are practising, what a session leads with, the accent, and the voice — were stored
+  once for the whole device. That was correct while there was one course and quietly
+  wrong the moment a second pack could load: Spanish-at-A2 and French-at-A1 cannot
+  both be true of one level, `food-drink` means nothing to a French pack, and a device
+  voice that can read Spanish cannot read French. The last was the worst of them,
+  because there is nothing on screen to explain it — the play button simply goes quiet.
+
+  They are stored per target language now. Switching away from a course and back
+  finds its level, its categories and its voice as that course left them, rather
+  than as the last course did. Which course `/` reopens is still one setting,
+  because it is one pointer; everything about _that_ course travels with it.
+
+  Two workarounds went with the change, and their absence is the point. The course
+  switcher used to carry the accent across a language switch and reset the voice
+  along with it, correcting a value that could not be right for two courses at
+  once. It does not have to any more. The narrowing that happens when a course is
+  _opened_ stays, and stays necessary: a learner can still have stored an accent
+  that the pack has since stopped offering, which is a resolution rather than a
+  correction.
+
+- **Settings that come back malformed are repaired rather than obeyed.** What is
+  read out of storage was trusted exactly as written, so a palette id retired by a
+  later build reached the theme attribute and a nonsense level reached the course
+  resolver. Every field is now checked on its own: an unreadable value is replaced
+  by its default and reported, a key this build does not know is dropped, and the
+  rest of the record survives — losing a name, a reading size and a reference
+  language to one bad palette id would be a worse answer than the bad palette.
+  Practice never fails because a setting is malformed.
+
 ### Changed
 
 - **Meanings are their own download now.** A pack's translations were a file inside

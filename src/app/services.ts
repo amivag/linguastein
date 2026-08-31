@@ -27,8 +27,8 @@ import { createContentLoading, type ContentLoading } from './content';
 import { createOfflinePacks, type OfflinePacks } from './offline';
 import { standaloneLetters } from '../languages/runtime';
 import { ExerciseEngine } from '../domain/exercises';
-import { createStorage } from '../storage';
-import type { LearnerStorage, Preferences } from '../storage';
+import { courseStateOf, createStorage } from '../storage';
+import type { CourseStates, LearnerStorage, Preferences } from '../storage';
 
 export interface AppServices {
   readonly repository: ContentRepository;
@@ -53,6 +53,15 @@ export interface AppServices {
   readonly speech: SpeechRecognitionProvider;
   readonly exercises: ExerciseEngine;
   readonly preferences: Preferences;
+  /**
+   * Every course's own choices, as they stood at boot.
+   *
+   * Beside `preferences` rather than inside it, because the five fields here are
+   * properties of a course rather than of the device
+   * (`docs/tasks/learner-profile.md` §5.1). Read whole: `/` has to answer "which
+   * course, at which level" before any course is open.
+   */
+  readonly courses: CourseStates;
   /**
    * The learner's batches, read once at boot like `preferences` above.
    *
@@ -91,8 +100,9 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
    * preference for how much of it when the address does not say.
    */
   const [catalog, storage] = await Promise.all([loadCatalog(source), createStorage()]);
-  const [preferences, batches] = await Promise.all([
+  const [preferences, courses, batches] = await Promise.all([
     storage.preferences.read(),
+    storage.courses.read(),
     storage.batches.all(),
   ]);
 
@@ -111,7 +121,7 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
   const { loaded, issues } = await loadPacks(
     source,
     catalog.packs.map((entry) => entry.manifest),
-    { upTo: level ?? preferences.level },
+    { upTo: level ?? courseStateOf(courses, preferences.targetLanguage).level },
   );
 
   /*
@@ -192,6 +202,7 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     speech: createWebSpeechRecognitionProvider({ microphone: createWebMicrophoneLevels() }),
     exercises: new ExerciseEngine(),
     preferences,
+    courses,
     batches,
     datasetIssues: [...issues, ...units.flatMap((unit) => unit.issues)],
   };

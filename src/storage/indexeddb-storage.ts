@@ -14,15 +14,29 @@ import {
 } from 'idb';
 import { APP } from '../app/identity';
 import type { BatchDefinition } from '../domain/batches';
-import { LEVEL_SCOPE_ALL, packIdOf, type Course, type ItemId } from '../domain/content';
+import {
+  LEVEL_SCOPE_ALL,
+  packIdOf,
+  type Course,
+  type ItemId,
+  type LanguageTag,
+  type LevelScope,
+} from '../domain/content';
 import type { Attempt, ItemProgress, Timestamp } from '../domain/progress';
-import type { SessionRecord } from '../domain/sessions';
-import { DEFAULT_PREFERENCES, mergePreferences } from './preferences';
+import type { SessionFocus, SessionRecord } from '../domain/sessions';
+import {
+  courseStateOf,
+  DEFAULT_PREFERENCES,
+  mergeCourseState,
+  mergePreferences,
+} from './preferences';
+import { readCourseStates, readPreferences } from './schemas';
 import type { LearnerStorage, Preferences } from './types';
 
 const DB_NAME = APP.id;
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 const PREFERENCES_KEY = 'preferences';
+const COURSES_KEY = 'courses';
 
 interface AppDatabase extends DBSchema {
   progress: {
@@ -64,6 +78,20 @@ interface AppDatabase extends DBSchema {
  */
 type LegacyProgress = Omit<ItemProgress, 'updatedAt'> & { readonly updatedAt?: Timestamp };
 type LegacySession = Omit<SessionRecord, 'course'> & { readonly course?: Course };
+/**
+ * The one flat settings record, as versions 1 to 3 wrote it.
+ *
+ * Every field optional, because this type describes what may be *on disk* rather
+ * than what the app requires: a record written before `focus` existed simply has
+ * no `focus`, and the migration must not invent one.
+ */
+type LegacyPreferences = Partial<Preferences> & {
+  readonly level?: LevelScope;
+  readonly focusTopics?: readonly string[];
+  readonly focus?: SessionFocus;
+  readonly pronunciationLocale?: LanguageTag;
+  readonly voiceName?: string;
+};
 
 type UpgradeTransaction = IDBPTransaction<AppDatabase, StoreNames<AppDatabase>[], 'versionchange'>;
 
@@ -99,6 +127,8 @@ export async function openAppDatabase(): Promise<IDBPDatabase<AppDatabase>> {
        * copying either one.
        */
       if (oldVersion < 3) db.createObjectStore('batches', { keyPath: 'id' });
+
+      if (oldVersion < 4) await upgradeToV4(tx, oldVersion);
     },
   });
 }
@@ -148,6 +178,62 @@ async function upgradeToV2(tx: UpgradeTransaction, oldVersion: number): Promise<
     if (record.course) continue;
     await sessions.put({ ...record, course });
   }
+}
+
+/**
+ * Version 4: the settings that are properties of a *course* stop being global.
+ *
+ * `level`, `focusTopics`, `focus`, `pronunciationLocale` and `voiceName` move out
+ * of `meta:preferences` and into `meta:courses`, under the language the learner
+ * was studying when they were written. Spanish-at-A2 and French-at-A1 could not
+ * both be true of one `level`, and one `voiceName` is how a French course came to
+ * be read aloud by a Spanish voice (`docs/tasks/learner-profile.md` §4.1).
+ *
+ * Nothing is guessed. The stored `targetLanguage` is *exactly* the course those
+ * five values were chosen in — there was only one — so the move is a fact rather
+ * than an attribution, unlike version 2's session backfill, which had to settle
+ * for the best evidence available.
+ *
+ * A third kind of upgrade, and worth naming beside the other two: version 2 had
+ * to backfill because a row missing a new key path drops out of the index built
+ * on it, version 3 added an empty store and had nothing to do, and this one
+ * *rewrites* one record into two. It is the only one so far where doing nothing
+ * would silently reset a setting rather than hide a row — an un-migrated
+ * `meta:preferences` still reads, it just answers with the defaults for
+ * everything that moved.
+ */
+async function upgradeToV4(tx: UpgradeTransaction, oldVersion: number): Promise<void> {
+  // A database created a moment ago has no preferences to split.
+  if (oldVersion < 1) return;
+
+  const meta = tx.objectStore('meta');
+  const stored = (await meta.get(PREFERENCES_KEY)) as LegacyPreferences | undefined;
+  if (!stored) return;
+
+  const { level, focusTopics, focus, pronunciationLocale, voiceName, ...device } = stored;
+  const moved = { level, focusTopics, focus, pronunciationLocale, voiceName };
+
+  /*
+   * Only the fields that were actually there. A record written before one of
+   * them existed has no value for it, and writing `undefined` into the course
+   * would shadow the default with a hole — `courseStateOf` answers with the
+   * defaults for a course it has never seen, and that is the right answer for a
+   * field nobody ever set.
+   */
+  const present = Object.fromEntries(
+    Object.entries(moved).filter(([, value]) => value !== undefined),
+  );
+
+  if (Object.keys(present).length > 0) {
+    const courses = ((await meta.get(COURSES_KEY)) as Record<string, unknown> | undefined) ?? {};
+    const language = stored.targetLanguage ?? DEFAULT_PREFERENCES.targetLanguage;
+    await meta.put(
+      { ...courses, [language]: { ...(courses[language] ?? {}), ...present } },
+      COURSES_KEY,
+    );
+  }
+
+  await meta.put(device, PREFERENCES_KEY);
 }
 
 export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerStorage {
@@ -243,13 +329,39 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
     },
     preferences: {
       async read() {
-        const stored = (await db.get('meta', PREFERENCES_KEY)) as Partial<Preferences> | undefined;
-        return stored ? mergePreferences(DEFAULT_PREFERENCES, stored) : DEFAULT_PREFERENCES;
+        // Repaired rather than trusted: what comes back out of `meta` is a record
+        // an older or newer build wrote, and Stage C will make it a file a person
+        // can edit. See `schemas.ts`.
+        return readPreferences(await db.get('meta', PREFERENCES_KEY));
       },
       async write(patch) {
-        const current = (await db.get('meta', PREFERENCES_KEY)) as Partial<Preferences> | undefined;
-        const next = mergePreferences(mergePreferences(DEFAULT_PREFERENCES, current ?? {}), patch);
+        const next = mergePreferences(
+          readPreferences(await db.get('meta', PREFERENCES_KEY)),
+          patch,
+        );
         await db.put('meta', next, PREFERENCES_KEY);
+        return next;
+      },
+    },
+
+    courses: {
+      async read() {
+        return readCourseStates(await db.get('meta', COURSES_KEY));
+      },
+      async write(language, patch) {
+        const current = readCourseStates(await db.get('meta', COURSES_KEY));
+        /*
+         * Read, merge and put the whole record, which is why `App.tsx` chains
+         * these writes exactly as it chains preference writes: two concurrent
+         * calls would both read this same starting point and the last put would
+         * silently discard the other. Picking three categories in a row is what
+         * broke it the first time.
+         */
+        const next = {
+          ...current,
+          [language]: mergeCourseState(courseStateOf(current, language), patch),
+        };
+        await db.put('meta', next, COURSES_KEY);
         return next;
       },
     },

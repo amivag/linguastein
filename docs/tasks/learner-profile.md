@@ -1,12 +1,19 @@
 # Task: learner state as a profile
 
-**Status:** **Stage B has landed** — stored state is at database version 2, and
-§6 now reads as a record of why those fields exist rather than as work to do.
-Stage A is briefed and unstarted: every blocking unknown below is resolved, and
-nothing has been written. Stage C is briefed in shape, and §9.1 — the decision
-its file format was waiting on — is **settled as of 2026-08-25**: the attempt log
-is authoritative and progress is a projection folded out of it.
+**Status:** **Stages A and B have landed.** Stored state is at database version 4:
+version 2 gave a progress row its pack and its clock, and version 4 split the one
+flat settings record into device preferences plus per-course state. §5 and §6 now
+read as a record of why each piece is shaped as it is rather than as work to do.
+Stage C is briefed in shape and is the one that remains — §9.1, the decision its
+file format was waiting on, is **settled as of 2026-08-25**: the attempt log is
+authoritative and progress is a projection folded out of it.
 **Written:** 2026-08-21
+**Stage A landed:** 2026-08-30 — `CourseState` keyed by target language, a
+`CourseStateStore` beside the preferences store, `useCourse().state` /
+`updateState` as the only way a screen reads or writes any of the five, the
+version-4 migration that moves them out of `meta:preferences`, and the zod
+repair boundary §5.5 asked for. What it changed at the call sites, and the one
+thing it made simpler rather than more complex, is at the end of §5.
 **Stage B landed:** 2026-08-21 — `packId` and `updatedAt` on a progress row,
 `course` on a session row, collision-free attempt and session ids, the version-2
 migration that backfills all four, and the Progress screen narrowed to its own
@@ -276,6 +283,56 @@ no importer yet: unknown keys dropped, bad values replaced by the default, and a
 `console.warn` rather than a throw. Practice must never fail because a preference
 is malformed — the same rule `createStorage()` already follows when IndexedDB is
 refused.
+
+### 5.6 What landed, 2026-08-30
+
+The five moved as briefed, and `useCourse()` is the only way a screen reaches
+them: `state` to read, `updateState` to write, both narrowed to the open course
+before a caller sees them. Nothing outside `App.tsx` and the root redirect reads
+`courses` from the context at all — the redirect is the one place that has to
+answer "which course" before there is one open, which is the question §5.2 says
+`useCourse` cannot answer.
+
+**One thing got simpler rather than more complex, which is worth recording.**
+`CourseBar` carried the accent across a language switch and reset the voice with
+it, and `usePronunciationLocale` narrowed the stored accent again at every read
+because a shared link or a reload reaches a course without passing through the
+switcher. Both were patches over a value that could not be right for two courses
+at once. The switcher's half is gone — each course holds its own accent and its
+own voice, so switching away and back finds them as they were rather than as the
+last course left them. The _read-time_ narrowing stays, and stays necessary: a
+learner can still store `es-MX` for Spanish and then meet a Spanish pack that has
+dropped that accent, which is a resolution rather than a correction.
+
+**Two hooks rather than nine reads.** `voiceName` was read at nine sites through
+`preferences`; it is `useVoiceName()` now, beside `usePronunciationLocale()`.
+Nine call sites is exactly why: it is the shape of thing that gets narrowed at
+eight of them and forgotten at the ninth.
+
+**§5.4 was already done** — `pronunciationLocales(repository, language)` derives
+the accent list from the loaded packs and `useVoiceSample` takes the sample from
+the course, both landed with the appearance and language-matrix work. Only §5.1,
+§5.2, §5.3 and §5.5 were outstanding when this stage started.
+
+**§5.5's boundary repairs rather than rejects**, per field. A record that fails
+to parse as a whole would cost a learner their name, their reading size and their
+reference language to one retired palette id; per field, a bad value costs that
+field. An unknown key is dropped in silence, because that is what a field removed
+by a later build looks like from an older one — `showRomanisationHints` is the
+proof it happens — and warning about it would train a reader to ignore the
+channel. A key that is not a language tag is dropped rather than repaired: unlike
+a field, it names nothing to fall back to.
+
+**The migration is a third kind of upgrade** and `tests/storage/migration.test.ts`
+now holds all three. Version 2 backfilled, because a row missing a new key path
+drops out of the index built on it. Version 3 added an empty store and had
+nothing to do. Version 4 _rewrites_ one record into two — and it is the only one
+so far where doing nothing would look fine: an un-migrated `meta:preferences`
+still reads, it just answers with the defaults for everything that moved, so a
+learner would find their level, their categories and their voice quietly reset
+with nothing in any log.
+
+---
 
 ## 6. Stage B — the dimensions the records were missing (landed)
 

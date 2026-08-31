@@ -6,7 +6,7 @@ import { buildDate, buildLabel } from '../../app/version';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
-import { DEFAULT_PREFERENCES } from '../../storage';
+import { DEFAULT_COURSE_STATE, DEFAULT_PREFERENCES } from '../../storage';
 import { CONTRAST_STORAGE_KEY } from '../../styles/contrast';
 import { READING_SIZE_STORAGE_KEY } from '../../styles/reading-size';
 import { PALETTE_STORAGE_KEY, THEME_STORAGE_KEY } from '../../styles/themes';
@@ -22,7 +22,7 @@ type ResetResult = ResetTarget | null;
 
 /** This build, the design system, and the data this device is holding. */
 export function AboutSettings() {
-  const { services, updatePreferences, batches, removeBatch } = useServices();
+  const { services, updatePreferences, updateCourse, batches, removeBatch } = useServices();
   const navigate = useNavigate();
   const [resetTarget, setResetTarget] = useState<ResetTarget | null>(null);
   const [resetResult, setResetResult] = useState<ResetResult>(null);
@@ -47,13 +47,22 @@ export function AboutSettings() {
     // to see that the reset worked, and the next route should be the same clean
     // A1 course a new install opens.
     updatePreferences(DEFAULT_PREFERENCES);
+    /*
+     * And the course's own settings, which `clearAll` has already emptied on
+     * disk. The live copy has to catch up for the same reason preferences do:
+     * without this the app would go on offering the reset learner their old
+     * level, categories and voice until a reload — and it navigates to the
+     * default course a line below, which would then disagree with what is on
+     * screen.
+     */
+    updateCourse(DEFAULT_PREFERENCES.targetLanguage, DEFAULT_COURSE_STATE);
     // `clearAll` has already emptied the store; this is the live list catching
     // up, which is the same thing the line above does for preferences. Without
     // it a reset would leave every batch on screen until a reload.
     for (const batch of batches) removeBatch(batch.id);
     setResetTarget(null);
     setResetResult('all');
-    void navigate(`/${DEFAULT_PREFERENCES.targetLanguage}/${DEFAULT_PREFERENCES.level}`);
+    void navigate(`/${DEFAULT_PREFERENCES.targetLanguage}/${DEFAULT_COURSE_STATE.level}`);
   };
 
   return (

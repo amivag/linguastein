@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { useCourse, usePronunciationLocale } from '../../app/course';
+import { useCourse, usePronunciationLocale, useVoiceName } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Icon } from '../../components/Icon';
@@ -210,6 +210,7 @@ export function BrowseScreen() {
   };
   const words = useWordSelection();
   const locale = usePronunciationLocale();
+  const voice = useVoiceName();
 
   // Voice discovery is asynchronous, so what can be heard is re-read once the
   // provider is ready rather than assumed on the first render — the approach
@@ -358,7 +359,7 @@ export function BrowseScreen() {
   const play = (item: LearningItem) =>
     void services.audio.play(item, {
       locale,
-      ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
+      ...(voice ? { voice } : {}),
     });
   // Never offer a longer session than the filter actually found.
   const size: SessionSize = { kind: 'items', count: Math.min(results.length, SESSION_CAP) };

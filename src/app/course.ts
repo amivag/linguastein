@@ -28,6 +28,7 @@ import {
   type Level,
 } from '../domain/content';
 import { ServicesContext, useServices } from './services-context';
+import { courseStateOf, type CourseState } from '../storage';
 
 export interface CourseScope {
   readonly course: Course;
@@ -49,6 +50,23 @@ export interface CourseScope {
   readonly ladder: readonly Level[];
   /** `path('browse')` → `/es/a1/browse`. */
   readonly path: (screen?: string) => string;
+  /**
+   * What the learner has chosen *in this course* — level, categories, focus,
+   * accent and voice.
+   *
+   * Here rather than on `preferences`, and that is the whole of Stage A. These
+   * five were global, so `focusTopics` read on a French screen was Spanish's
+   * list of categories and a French course was read aloud by a Spanish voice.
+   * Read through the open course, they are the course's own by construction, and
+   * a screen cannot get it wrong by forgetting to narrow — there is nothing left
+   * to narrow (`docs/tasks/learner-profile.md` §5.2).
+   *
+   * A course nobody has opened yet reads as {@link DEFAULT_COURSE_STATE} rather
+   * than as absent, so every caller gets a value and none of them branches.
+   */
+  readonly state: CourseState;
+  /** Changes this course's own choices. Never another course's. */
+  updateState: (patch: Partial<CourseState>) => void;
 }
 
 /**
@@ -78,7 +96,7 @@ function currentCourses(repository: ContentRepository): readonly CourseOption[] 
 }
 
 export function useCourse(): CourseScope {
-  const { services } = useServices();
+  const { services, courses, updateCourse } = useServices();
   const params = useParams();
   const language = params['language'];
   const level = params['level'];
@@ -96,8 +114,10 @@ export function useCourse(): CourseScope {
       option: options.find((candidate) => candidate.language === course.language),
       ladder: options.find((candidate) => candidate.language === course.language)?.ladder ?? [],
       path: (screen?: string) => coursePath(course, screen),
+      state: courseStateOf(courses, course.language),
+      updateState: (patch: Partial<CourseState>) => updateCourse(course.language, patch),
     };
-  }, [options, language, level]);
+  }, [options, language, level, courses, updateCourse]);
 }
 
 /**
@@ -153,16 +173,25 @@ export function useTargetLanguage(): LanguageTag | undefined {
  * the narrowing belongs at every read rather than at one write.
  */
 export function usePronunciationLocale(): LanguageTag {
-  const { services, preferences } = useServices();
-  const { course } = useCourse();
+  const { services } = useServices();
+  const { course, state } = useCourse();
 
   return useMemo(
-    () =>
-      resolvePronunciationFor(
-        services.repository,
-        course.language,
-        preferences.pronunciationLocale,
-      ),
-    [services.repository, course.language, preferences.pronunciationLocale],
+    () => resolvePronunciationFor(services.repository, course.language, state.pronunciationLocale),
+    [services.repository, course.language, state.pronunciationLocale],
   );
+}
+
+/**
+ * The voice this course is spoken by, or `undefined` for "pick the best match".
+ *
+ * A hook rather than `preferences.voiceName` read at nine sites, because a voice
+ * belongs to an accent and an accent belongs to a course: the same value read on
+ * a French screen used to be the name of a Spanish voice. Nine call sites is also
+ * exactly why this is worth a hook — it is the shape of thing that gets narrowed
+ * at eight of them.
+ */
+export function useVoiceName(): string | undefined {
+  const { state } = useCourse();
+  return state.voiceName || undefined;
 }

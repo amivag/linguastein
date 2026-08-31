@@ -30,7 +30,14 @@ import {
   type LevelScope,
 } from '../domain/content';
 import { settingsPath } from '../features/settings/settings-url';
-import { mergePreferences, type Preferences } from '../storage';
+import {
+  courseStateOf,
+  mergeCourseState,
+  mergePreferences,
+  type CourseState,
+  type CourseStates,
+  type Preferences,
+} from '../storage';
 import { applyPalette, applyTheme, DEFAULT_PALETTE } from '../styles/themes';
 import { applyContrast, DEFAULT_CONTRAST } from '../styles/contrast';
 import { applyIntensity, DEFAULT_INTENSITY } from '../styles/intensity';
@@ -61,6 +68,7 @@ type BootState =
 export function App() {
   const [boot, setBoot] = useState<BootState>({ phase: 'loading' });
   const [preferences, setPreferences] = useState<Preferences | null>(null);
+  const [courses, setCourses] = useState<CourseStates>({});
   const [batches, setBatches] = useState<readonly BatchDefinition[]>([]);
 
   useEffect(() => {
@@ -70,6 +78,7 @@ export function App() {
         if (cancelled) return;
         setBoot({ phase: 'ready', services });
         setPreferences(services.preferences);
+        setCourses(services.courses);
         setBatches(services.batches);
       },
       (error: unknown) => {
@@ -144,6 +153,36 @@ export function App() {
           // The change still holds for this session; storage being unavailable
           // is not a reason to snap a control back to where it was.
           console.warn('Could not persist preferences', error);
+        });
+    },
+    [services],
+  );
+
+  /**
+   * A course's own choices, changed the same way and chained on the same queue.
+   *
+   * The same queue rather than a second one, and that is the point rather than
+   * an economy. `CourseBar` writes both in one gesture — the language it is
+   * switching to is a preference, the level and the accent it carries are the
+   * course's — and two queues would let the second land before the first, so a
+   * reload could reopen a language whose level had not been written yet.
+   *
+   * `meta:courses` is one record holding every course, so this store has exactly
+   * the read-merge-put shape that made chaining necessary for preferences:
+   * picking three categories in a row is what broke it the first time, and
+   * `tests/app/preferences.test.tsx` is the test that caught it.
+   */
+  const updateCourse = useCallback(
+    (language: string, patch: Partial<CourseState>) => {
+      if (!services) return;
+      setCourses((current) => ({
+        ...current,
+        [language]: mergeCourseState(courseStateOf(current, language), patch),
+      }));
+      pending.current = pending.current
+        .then(() => services.storage.courses.write(language, patch))
+        .then(setCourses, (error: unknown) => {
+          console.warn('Could not persist course settings', error);
         });
     },
     [services],
@@ -231,7 +270,16 @@ export function App() {
       boundary has no use for router context.
     */
     <ServicesContext
-      value={{ services, preferences, updatePreferences, batches, saveBatch, removeBatch }}
+      value={{
+        services,
+        preferences,
+        updatePreferences,
+        courses,
+        updateCourse,
+        batches,
+        saveBatch,
+        removeBatch,
+      }}
     >
       <ErrorBoundary>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
@@ -391,10 +439,20 @@ function CourseRedirect({
    */
   readonly to?: (course: Course) => string;
 }) {
-  const { services, preferences } = useServices();
+  const { services, preferences, courses } = useServices();
   const location = useLocation();
   const options = courseOptions(services.repository);
-  const course = resolveCourse(options, preferences.targetLanguage, preferences.level);
+  /*
+   * The one question `useCourse` cannot answer: which course, when the address
+   * names none. The language is the device's pointer and the level is that
+   * course's own, which is the pair Stage A separated — one global level could
+   * not reopen Spanish at A2 and French at A1.
+   */
+  const course = resolveCourse(
+    options,
+    preferences.targetLanguage,
+    courseStateOf(courses, preferences.targetLanguage).level,
+  );
   const search = keepSearch ? location.search : '';
 
   return <Navigate replace to={`${to ? to(course) : coursePath(course, screen)}${search}`} />;

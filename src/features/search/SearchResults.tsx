@@ -1,6 +1,11 @@
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
-import { useCourse, usePronunciationLocale, useTargetLanguage } from '../../app/course';
+import {
+  useCourse,
+  usePronunciationLocale,
+  useTargetLanguage,
+  useVoiceName,
+} from '../../app/course';
 import { MISSIONS } from '../../app/missions';
 import { useServices } from '../../app/services-context';
 import { Annotation } from '../../components/Annotation';
@@ -105,10 +110,11 @@ export function SearchResults({ results, words }: SearchResultsProps) {
  * below it is an `Annotation` rather than another heading.
  */
 function WordEntry({ word, words }: { readonly word: WordResult; readonly words: WordSelection }) {
-  const { services, preferences } = useServices();
+  const { services } = useServices();
   const { course } = useCourse();
   const lang = useTargetLanguage();
   const locale = usePronunciationLocale();
+  const voice = useVoiceName();
   const [expanded, setExpanded] = useState(false);
   const info = word.info;
   const headword = info.lemma ?? info.token.text;
@@ -117,7 +123,7 @@ function WordEntry({ word, words }: { readonly word: WordResult; readonly words:
     void services.audio.speak({
       text: headword,
       locale,
-      ...(preferences.voiceName ? { voice: preferences.voiceName } : {}),
+      ...(voice ? { voice } : {}),
     });
 
   const shown = expanded ? info.examples : info.examples.slice(0, SHOWN);

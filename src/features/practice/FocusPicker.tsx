@@ -49,8 +49,8 @@ const FOCUS_LABELS: Record<SessionFocus, { label: string; description: string; i
  * no longer a function of whether this is open.
  */
 export function FocusPicker() {
-  const { services, preferences, updatePreferences } = useServices();
-  const { filter } = useCourse();
+  const { services } = useServices();
+  const { filter, state, updateState } = useCourse();
   const [open, setOpen] = useState(false);
   const panelId = useId();
 
@@ -71,17 +71,17 @@ export function FocusPicker() {
    * session link have to narrow the same way — this used to be the only half
    * that did, so the summary said "Everything" and the link said `?topic=hotel`.
    */
-  const chosen = reachableTopics(topics, preferences.focusTopics);
+  const chosen = reachableTopics(topics, state.focusTopics);
 
   const toggle = (topic: string) => {
     // Written against the *stored* list rather than the visible one, so
     // toggling a category while narrowed does not silently discard a choice
     // made at a wider level.
-    const stored = preferences.focusTopics;
+    const stored = state.focusTopics;
     const next = stored.includes(topic)
       ? stored.filter((entry) => entry !== topic)
       : [...stored, topic];
-    updatePreferences({ focusTopics: next });
+    updateState({ focusTopics: next });
   };
 
   const summary = [
@@ -90,7 +90,7 @@ export function FocusPicker() {
       : chosen.length <= 2
         ? chosen.map((topic) => offered.get(topic) ?? topic).join(' + ')
         : `${chosen.length} categories`,
-    FOCUS_LABELS[preferences.focus].label.toLowerCase(),
+    FOCUS_LABELS[state.focus].label.toLowerCase(),
   ].join(' · ');
 
   return (
@@ -134,14 +134,14 @@ export function FocusPicker() {
           <fieldset className={styles.modes}>
             <legend className={styles.legend}>Lead with</legend>
             {SESSION_FOCUSES.map((focus) => {
-              const pressed = preferences.focus === focus;
+              const pressed = state.focus === focus;
               return (
                 <button
                   key={focus}
                   type="button"
                   className={styles.mode}
                   aria-pressed={pressed}
-                  onClick={() => updatePreferences({ focus })}
+                  onClick={() => updateState({ focus })}
                 >
                   <Icon name={FOCUS_LABELS[focus].icon} size="lg" className={styles.modeIcon} />
                   <span className={styles.modeText}>
@@ -168,7 +168,7 @@ export function FocusPicker() {
           />
 
           {chosen.length > 0 && (
-            <Button block onClick={() => updatePreferences({ focusTopics: [] })}>
+            <Button block onClick={() => updateState({ focusTopics: [] })}>
               Practise everything
             </Button>
           )}

@@ -14,7 +14,7 @@ import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
-import { DEFAULT_PREFERENCES, type Preferences } from '../../src/storage';
+import { DEFAULT_COURSE_STATE, type CourseState } from '../../src/storage';
 import { renderWithServices, testServices } from '../fixtures/services';
 
 /** Surfaces the router's current URL, since MemoryRouter never touches window. */
@@ -23,16 +23,25 @@ function Where() {
   return <output data-testid="where">{`${location.pathname}${location.search}`}</output>;
 }
 
-function homeWith(preferences: Partial<Preferences>) {
-  const written: Partial<Preferences>[] = [];
+/**
+ * Home, with this course already set up the way a case needs it.
+ *
+ * Categories and focus are the *course's* choices rather than the device's
+ * (`docs/tasks/learner-profile.md` §5.1), so they are seeded under the language
+ * the fixture pack teaches and read back through `useCourse`. `written` records
+ * what a control tried to change, which is now a patch to one course rather than
+ * to a global record — the language is asserted below where it matters.
+ */
+function homeWith(state: Partial<CourseState>) {
+  const written: Partial<CourseState>[] = [];
   const result = renderWithServices(
     <>
       <HomeScreen />
       <Where />
     </>,
     {
-      services: testServices({ preferences: { ...DEFAULT_PREFERENCES, ...preferences } }),
-      updatePreferences: (patch) => written.push(patch),
+      services: testServices({ courses: { es: { ...DEFAULT_COURSE_STATE, ...state } } }),
+      updateCourse: (_language, patch) => written.push(patch),
     },
   );
   return { ...result, written };
@@ -273,7 +282,7 @@ describe('the session the choice starts', () => {
   it('leaves "review what is due" unnarrowed', async () => {
     const user = userEvent.setup();
     const services = testServices({
-      preferences: { ...DEFAULT_PREFERENCES, focusTopics: ['work'] },
+      courses: { es: { ...DEFAULT_COURSE_STATE, focusTopics: ['work'] } },
     });
     const itemId = (await services.repository.allItems())[0]!.id;
     await services.storage.progress.put({

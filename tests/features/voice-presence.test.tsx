@@ -10,7 +10,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { NOOP_PLAYBACK, type AudioService, type TtsVoice } from '../../src/audio';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
-import type { Preferences } from '../../src/storage';
+import type { CourseState } from '../../src/storage';
 import { expectNoViolations } from '../a11y/axe';
 import { renderWithServices, stubAudio, testServices } from '../fixtures/services';
 
@@ -85,30 +85,35 @@ describe('the voice control in the header', () => {
     expect(menu.parentElement?.parentElement).toBe(document.body);
   });
 
-  it('writes a voice change to the same preference Settings writes', async () => {
-    const changes: Partial<Preferences>[] = [];
+  it('writes a voice change to the same setting Settings writes', async () => {
+    const changes: { language: string; patch: Partial<CourseState> }[] = [];
     renderWithServices(<HomeScreen />, {
       services: testServices({ audio: speakingAudio() }),
-      updatePreferences: (patch) => changes.push(patch),
+      updateCourse: (language, patch) => changes.push({ language, patch }),
     });
 
     const { user, menu } = await openMenu();
     await user.selectOptions(within(menu).getByLabelText('Voice'), 'Paulina');
 
-    expect(changes).toEqual([{ voiceName: 'Paulina' }]);
+    // Against the course rather than the device: a voice that can read Spanish
+    // cannot read French, so it is one of the five settings that belongs to a
+    // course (`docs/tasks/learner-profile.md` §4.1).
+    expect(changes).toEqual([{ language: 'es', patch: { voiceName: 'Paulina' } }]);
   });
 
   it('drops a voice picked for one accent when the accent changes', async () => {
-    const changes: Partial<Preferences>[] = [];
+    const changes: { language: string; patch: Partial<CourseState> }[] = [];
     renderWithServices(<HomeScreen />, {
       services: testServices({ audio: speakingAudio() }),
-      updatePreferences: (patch) => changes.push(patch),
+      updateCourse: (language, patch) => changes.push({ language, patch }),
     });
 
     const { user, menu } = await openMenu();
     await user.selectOptions(within(menu).getByLabelText('Accent'), 'es-MX');
 
-    expect(changes).toEqual([{ pronunciationLocale: 'es-MX', voiceName: '' }]);
+    expect(changes).toEqual([
+      { language: 'es', patch: { pronunciationLocale: 'es-MX', voiceName: '' } },
+    ]);
   });
 
   it('speaks a sample on request and can be stopped again', async () => {

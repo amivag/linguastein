@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { ReadScreen } from '../../src/features/read/ReadScreen';
-import type { Preferences } from '../../src/storage';
+import type { CourseState, Preferences } from '../../src/storage';
 import { multilingualRepository } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
 
@@ -106,11 +106,13 @@ describe('the course bar', () => {
     const user = userEvent.setup();
     const services = testServices({ repository: multilingualRepository() });
     const written: Partial<Preferences>[] = [];
+    const courses: { language: string; patch: Partial<CourseState> }[] = [];
 
     renderWithServices(courseRoutes({ '/browse': <BrowseScreen /> }), {
       services,
       route: '/fr/a1/browse',
       updatePreferences: (patch) => written.push(patch),
+      updateCourse: (language, patch) => courses.push({ language, patch }),
     });
 
     await screen.findByText('1 item');
@@ -118,13 +120,19 @@ describe('the course bar', () => {
 
     // Still Browse, now wider — and the course is stored so `/` reopens it.
     expect(await screen.findByText('2 items')).toBeInTheDocument();
-    // The accent comes along, because it is one preference across every course
-    // and this one is French: left at the `es-ES` default, every play button on
-    // this screen would ask the device for a Spanish voice to read French with.
-    // A voice is chosen within an accent, so it cannot outlive one.
-    expect(written).toEqual([
-      { targetLanguage: 'fr', level: 'b1', pronunciationLocale: 'fr', voiceName: '' },
-    ]);
+    /*
+     * Two records, one gesture. Which course `/` reopens is the device's
+     * pointer; the level it opens at belongs to French.
+     *
+     * The accent is conspicuously *not* here, and that is the change. It used to
+     * be carried along and corrected on every switch, because one global
+     * `pronunciationLocale` could not be right for Spanish and French at once —
+     * left alone it would have asked the device for a Spanish voice to read
+     * French. Each course holds its own now, so there is nothing to correct and
+     * switching back finds French's accent as French left it.
+     */
+    expect(written).toEqual([{ targetLanguage: 'fr' }]);
+    expect(courses).toEqual([{ language: 'fr', patch: { level: 'b1' } }]);
   });
 
   it('offers the languages the loaded packs provide', async () => {

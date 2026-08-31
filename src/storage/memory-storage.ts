@@ -8,17 +8,24 @@ import type { BatchDefinition } from '../domain/batches';
 import type { ItemId } from '../domain/content';
 import type { Attempt, ItemProgress } from '../domain/progress';
 import type { SessionRecord } from '../domain/sessions';
-import { DEFAULT_PREFERENCES, mergePreferences } from './preferences';
-import type { LearnerStorage, Preferences } from './types';
+import {
+  courseStateOf,
+  DEFAULT_PREFERENCES,
+  mergeCourseState,
+  mergePreferences,
+} from './preferences';
+import type { CourseStates, LearnerStorage, Preferences } from './types';
 
 export function createMemoryStorage(
   initialPreferences: Preferences = DEFAULT_PREFERENCES,
+  initialCourses: CourseStates = {},
 ): LearnerStorage {
   const progress = new Map<ItemId, ItemProgress>();
   let attempts: Attempt[] = [];
   let sessions: SessionRecord[] = [];
   const batches = new Map<string, BatchDefinition>();
   let preferences = initialPreferences;
+  let courses = initialCourses;
 
   return {
     progress: {
@@ -103,12 +110,23 @@ export function createMemoryStorage(
         return Promise.resolve(preferences);
       },
     },
+    courses: {
+      read: () => Promise.resolve(courses),
+      write: (language, patch) => {
+        courses = {
+          ...courses,
+          [language]: mergeCourseState(courseStateOf(courses, language), patch),
+        };
+        return Promise.resolve(courses);
+      },
+    },
     clearAll: () => {
       progress.clear();
       attempts = [];
       sessions = [];
       batches.clear();
       preferences = DEFAULT_PREFERENCES;
+      courses = initialCourses;
       return Promise.resolve();
     },
   };

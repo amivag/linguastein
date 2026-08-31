@@ -4,16 +4,17 @@ import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
 import { planSession } from '../../src/domain/sessions';
 import { buildSessionConfig, PRESETS } from '../../src/features/practice/presets';
-import { DEFAULT_PREFERENCES } from '../../src/storage';
+import { DEFAULT_COURSE_STATE, DEFAULT_PREFERENCES } from '../../src/storage';
 import { seededRng } from '../../src/utils/random';
 import { id, testRepository } from '../fixtures/pack';
 
 const base = () => ({
   repository: testRepository(),
   preferences: DEFAULT_PREFERENCES,
-  // Resolved by the caller, not read off `preferences`: the stored accent is
-  // global and the effective one depends on the course's language.
-  pronunciationLocale: DEFAULT_PREFERENCES.pronunciationLocale,
+  // Resolved by the caller rather than read off a setting: an accent is stored
+  // per course and the effective one is narrowed against the open course's
+  // language before it reaches here.
+  pronunciationLocale: DEFAULT_COURSE_STATE.pronunciationLocale,
   size: { kind: 'items', count: 20 } as const,
 });
 

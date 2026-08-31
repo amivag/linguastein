@@ -37,31 +37,17 @@ export interface Preferences {
    * `SpeakerGender` in `domain/content/model.ts`.
    */
   readonly speakerGender: SpeakerGender | '';
-  /** What is being learned. With the level below it, this is the current course. */
-  readonly targetLanguage: LanguageTag;
   /**
-   * How far up the course the learner is working, as a ceiling rather than a
-   * partition: `a2` includes A1 content. Remembered so `/` can reopen the
-   * course they left, which is the only reason it is stored — the URL is the
-   * source of truth once a screen is open.
-   */
-  readonly level: LevelScope;
-  readonly referenceLanguage: LanguageTag;
-  /**
-   * Categories the learner wants to practise, or empty for everything.
+   * Which course `/` reopens. The pointer, and nothing else.
    *
-   * A standing choice rather than a per-session one: "I am working on food and
-   * travel" stays true across sessions, and having to re-pick it before every
-   * Quick session is how a preference that exists goes unused. It is written
-   * into the session link all the same, so a session remains fully described by
-   * its URL.
+   * What is being learned *now* comes from the path — `/es/a1/browse` says so —
+   * and this is only where the app looks when the address names no course. The
+   * level that goes with it is per course and lives in {@link CourseState}: one
+   * global level could not hold Spanish-at-A2 and French-at-A1 at the same time,
+   * which is the whole of Stage A.
    */
-  readonly focusTopics: readonly string[];
-  /** Which items a session leads with. A bias, never a filter. */
-  readonly focus: SessionFocus;
-  readonly pronunciationLocale: LanguageTag;
-  /** Chosen speech voice name; empty means "pick the best match automatically". */
-  readonly voiceName: string;
+  readonly targetLanguage: LanguageTag;
+  readonly referenceLanguage: LanguageTag;
   readonly autoPlayAudio: boolean;
   /**
    * Whether a session shows how long it has been running. On by default: it
@@ -103,6 +89,73 @@ export interface Preferences {
   /** Global type scale, deliberately independent of palette and contrast. */
   readonly readingSize: ReadingSize;
 }
+
+/**
+ * What a learner has chosen *about one course*, keyed by its target language.
+ *
+ * These five lived in {@link Preferences} as single global values, which was
+ * correct while there was one course and quietly wrong the moment a second pack
+ * could load. Two of the five say so plainly: Spanish-at-A2 and French-at-A1
+ * cannot both be true of one `level`, and a voice that can read Spanish cannot
+ * read French — one global `voiceName` is how a French course came to be spoken
+ * by a Spanish voice.
+ *
+ * Keyed by *language* rather than by course, because a level is a ceiling rather
+ * than a chapter: moving from A1 to A2 does not start a new set of choices, it
+ * widens the same one. `docs/tasks/learner-profile.md` §5.1.
+ */
+export interface CourseState {
+  /**
+   * How far up the course the learner is working, as a ceiling rather than a
+   * partition: `a2` includes A1 content. Remembered so `/` can reopen the
+   * course they left, which is the only reason it is stored — the URL is the
+   * source of truth once a screen is open.
+   */
+  readonly level: LevelScope;
+  /**
+   * Categories the learner wants to practise, or empty for everything.
+   *
+   * A standing choice rather than a per-session one: "I am working on food and
+   * travel" stays true across sessions, and having to re-pick it before every
+   * Quick session is how a preference that exists goes unused. It is written
+   * into the session link all the same, so a session remains fully described by
+   * its URL.
+   *
+   * Per course because a topic slug is *pack vocabulary*: `food-drink` means
+   * nothing to a French pack, and a stored list from another language is how a
+   * session came to be planned over a category with no content in it.
+   */
+  readonly focusTopics: readonly string[];
+  /**
+   * Which items a session leads with. A bias, never a filter.
+   *
+   * The one of the five that could defensibly have stayed global — it biases the
+   * planner's buckets rather than naming any content. It is here because it is
+   * read beside `focusTopics` at every site, and a picker that writes one record
+   * is simpler to reason about than one that writes two.
+   */
+  readonly focus: SessionFocus;
+  /**
+   * The accent this language is spoken in — `es-MX` — never a bare language.
+   *
+   * Read through `usePronunciationLocale`, which narrows it to the open course
+   * at every read rather than trusting the write: a shared link or a reload
+   * lands in a course without passing through the switcher that would have
+   * corrected it.
+   */
+  readonly pronunciationLocale: LanguageTag;
+  /** Chosen speech voice name; empty means "pick the best match automatically". */
+  readonly voiceName: string;
+}
+
+/**
+ * Every course the learner has touched, by target language.
+ *
+ * A record rather than a list so a language is one lookup, and absent rather
+ * than pre-populated: a course nobody has opened has no stored choices, and
+ * {@link DEFAULT_COURSE_STATE} is what it reads as until it does.
+ */
+export type CourseStates = Readonly<Record<string, CourseState>>;
 
 export interface ProgressStore {
   get(itemId: ItemId): Promise<ItemProgress | undefined>;
@@ -166,6 +219,22 @@ export interface PreferencesStore {
   write(preferences: Partial<Preferences>): Promise<Preferences>;
 }
 
+/**
+ * The per-course half of the settings, read whole and written one course at a
+ * time.
+ *
+ * `read()` returns every course rather than the open one, because the app holds
+ * them all in memory: `/` has to answer "which course, at which level" before
+ * any course is open, and switching language must not await a read. `write`
+ * takes the language it applies to for the same reason `updatePreferences` takes
+ * a patch — the caller knows which course it is changing, and a store that
+ * inferred it would have to be told what "current" means.
+ */
+export interface CourseStateStore {
+  read(): Promise<CourseStates>;
+  write(language: LanguageTag, patch: Partial<CourseState>): Promise<CourseStates>;
+}
+
 /** Everything the app persists, resolved once at the composition root. */
 export interface LearnerStorage {
   readonly progress: ProgressStore;
@@ -173,6 +242,7 @@ export interface LearnerStorage {
   readonly sessions: SessionStore;
   readonly batches: BatchStore;
   readonly preferences: PreferencesStore;
+  readonly courses: CourseStateStore;
   /**
    * Wipes all learner data, preferences and batches included. Settings uses this
    * for a clean local reset; its narrower "reset progress" action clears the

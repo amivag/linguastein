@@ -4,6 +4,7 @@ import type { LearnerStorage } from './types';
 
 export * from './memory-storage';
 export * from './preferences';
+export * from './schemas';
 export * from './types';
 export { createIndexedDbStorage, openAppDatabase };
 

@@ -4,6 +4,7 @@ import { newItemProgress } from '../../src/domain/progress';
 import {
   createIndexedDbStorage,
   createMemoryStorage,
+  DEFAULT_COURSE_STATE,
   DEFAULT_PREFERENCES,
   openAppDatabase,
   type LearnerStorage,
@@ -69,10 +70,32 @@ describe.each(implementations)('%s storage', (_name, create) => {
   it('merges preference patches over defaults', async () => {
     expect(await storage.preferences.read()).toEqual(DEFAULT_PREFERENCES);
 
-    const updated = await storage.preferences.write({ pronunciationLocale: 'es-MX' });
-    expect(updated.pronunciationLocale).toBe('es-MX');
-    expect(updated.referenceLanguage).toBe(DEFAULT_PREFERENCES.referenceLanguage);
-    expect((await storage.preferences.read()).pronunciationLocale).toBe('es-MX');
+    const updated = await storage.preferences.write({ referenceLanguage: 'de' });
+    expect(updated.referenceLanguage).toBe('de');
+    expect(updated.targetLanguage).toBe(DEFAULT_PREFERENCES.targetLanguage);
+    expect((await storage.preferences.read()).referenceLanguage).toBe('de');
+  });
+
+  /**
+   * The per-course half, which is a different record and a different question.
+   *
+   * A course nobody has opened has no row at all — `courseStateOf` answers with
+   * the defaults — and writing one language must leave the others alone. That
+   * last part is what the whole split is for: a global accent could not be
+   * `es-MX` for Spanish and anything else for German at the same time.
+   */
+  it("keeps each course's choices apart", async () => {
+    expect(await storage.courses.read()).toEqual({});
+
+    await storage.courses.write('es', { pronunciationLocale: 'es-MX' });
+    await storage.courses.write('de', { level: 'a2' });
+
+    const stored = await storage.courses.read();
+    expect(stored['es']?.pronunciationLocale).toBe('es-MX');
+    expect(stored['de']?.pronunciationLocale).toBe(DEFAULT_COURSE_STATE.pronunciationLocale);
+    expect(stored['de']?.level).toBe('a2');
+    // Untouched fields keep their defaults rather than becoming undefined.
+    expect(stored['es']?.level).toBe(DEFAULT_COURSE_STATE.level);
   });
 
   /**

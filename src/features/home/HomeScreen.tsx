@@ -776,26 +776,43 @@ export function HomeScreen() {
             </section>
           )}
 
-          <Button
-            block
-            className={styles.freePractice}
-            onClick={() => setPracticeOpen(true)}
-            aria-expanded={practiceOpen}
-            aria-controls={practiceSheetId}
-          >
-            <span className={styles.freePracticeIcon}>
-              <Icon name="listen" size="lg" />
-            </span>
-            <span className={styles.freePracticeText}>
-              <strong>Free practice</strong>
-              <small>Choose the time and training mode</small>
-            </span>
-            <Icon name="next" />
-          </Button>
+          {/*
+            The standing choice above the button it changes, and the two as one
+            block.
 
-          <div className={styles.advancedPractice}>
+            It used to sit *below* Free practice, last on the page and on the bare
+            background, which read as a footnote to a screen it had nothing to do
+            with. It is not a filter on this screen — nothing above it narrows to
+            it: not the mission, not the `IN THIS COURSE` counts, not the due
+            figure — so moving it to the top would assert a scope it has not got,
+            which is the `Everything · balanced` above `?topic=hotel` bug in a new
+            place.
+
+            What it *does* govern is the sessions this screen starts: every button
+            in the Free-practice sheet, and `Meet something new` up in the next
+            steps. So it goes with the button, and the pair reads the way the
+            choice is actually made — practise this, in that mode.
+          */}
+          <section className={styles.practice} aria-label="Free practice">
             <FocusPicker />
-          </div>
+
+            <Button
+              block
+              className={styles.freePractice}
+              onClick={() => setPracticeOpen(true)}
+              aria-expanded={practiceOpen}
+              aria-controls={practiceSheetId}
+            >
+              <span className={styles.freePracticeIcon}>
+                <Icon name="listen" size="lg" />
+              </span>
+              <span className={styles.freePracticeText}>
+                <strong>Free practice</strong>
+                <small>Choose the time and training mode</small>
+              </span>
+              <Icon name="next" />
+            </Button>
+          </section>
         </>
       )}
 

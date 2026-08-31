@@ -1,6 +1,6 @@
 /** End-to-end wiring check: content → planner → engine → UI → stored progress. */
 
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router';
 import { describe, expect, it } from 'vitest';
@@ -24,12 +24,13 @@ describe('HomeScreen', () => {
     expect(screen.getByRole('button', { name: /Begin mission/ })).toBeInTheDocument();
 
     // The scope the mission and free-practice choices will draw from, on the
-    // screen itself rather than inside the sheet: the pressed level carries the
+    // screen itself rather than inside the sheet: the chosen level carries the
     // count, because a level is a ceiling and so includes everything below it.
-    expect(screen.getByRole('button', { name: 'All levels, 7 items' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    const levels = screen.getByRole('combobox', { name: 'Level' });
+    expect(levels).toHaveValue('all');
+    expect(
+      within(levels).getByRole('option', { name: 'All levels · 7 items' }),
+    ).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /Free practice/ }));
     expect(screen.getByRole('button', { name: '5 min' })).toBeInTheDocument();

@@ -90,16 +90,16 @@ describe('the course bar', () => {
     // On the screen itself, not behind the Free-practice sheet: Home's every
     // figure is course-scoped, so the control that sets the scope is visible.
     const group = await screen.findByRole('group', { name: 'Course' });
-    expect(within(group).getByRole('button', { name: 'A1, 1 item' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-    expect(within(group).getByRole('button', { name: 'B1, 2 items' })).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    );
+    const levels = within(group).getByRole('combobox', { name: 'Level' });
+
+    // The count travels with the option rather than being traded away for the
+    // dropdown: it is what makes the control legible, and in `compact` mode it
+    // is the only place the in-scope figure appears at all.
+    expect(levels).toHaveValue('a1');
+    expect(within(levels).getByRole('option', { name: 'A1 · 1 item' })).toBeInTheDocument();
+    expect(within(levels).getByRole('option', { name: 'B1 · 2 items' })).toBeInTheDocument();
     // A2 has no French content, so it is not offered rather than offered empty.
-    expect(within(group).queryByRole('button', { name: /^A2/ })).not.toBeInTheDocument();
+    expect(within(levels).queryByRole('option', { name: /^A2/ })).not.toBeInTheDocument();
   });
 
   it('switches level without leaving the screen, and remembers the choice', async () => {
@@ -116,7 +116,7 @@ describe('the course bar', () => {
     });
 
     await screen.findByText('1 item');
-    await user.click(screen.getByRole('button', { name: 'B1, 2 items' }));
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Level' }), 'b1');
 
     // Still Browse, now wider — and the course is stored so `/` reopens it.
     expect(await screen.findByText('2 items')).toBeInTheDocument();
@@ -155,14 +155,15 @@ describe('the course bar', () => {
 
   /**
    * A picker with one option is not a choice, and offering it would imply
-   * content that is not loaded. The level chips still appear.
+   * content that is not loaded. The level picker still appears — a
+   * single-language pack still has levels.
    */
   it('hides the language picker when only one language is loaded', async () => {
     renderWithServices(courseRoutes({ '': <HomeScreen /> }), { route: '/es/all' });
 
     await screen.findByRole('group', { name: 'Course' });
     expect(screen.queryByRole('combobox', { name: 'Language' })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /^A1/ })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'Level' })).toBeInTheDocument();
   });
 });
 

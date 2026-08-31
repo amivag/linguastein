@@ -50,6 +50,24 @@ in the pack's own counts.
 
 ### Changed
 
+- **The level is a dropdown, and Home's practice choice sits with the button it
+  changes.** Two small things about the screen a learner opens most.
+
+  The level was a row of chips carrying every count at once, which was the right
+  trade for four CEFR rungs and the wrong one now that a pack declares its own
+  ladder — an HSK pack is six rungs plus "all levels", and even four chips wrapped
+  onto a second row on a phone and took the top of the screen away from the search
+  and the first mission. One control now, reading `A1 · 2059 items`, with the count
+  kept because in the compact bar it is the only place the in-scope figure appears.
+
+  And **Practising** — the standing choice of categories and what a session leads
+  with — has moved from the very bottom of Home to directly above the Free practice
+  button, as one block with it. It was last on the page and on the bare background,
+  which read as a footnote to a screen it has nothing to do with. It is not a filter
+  on Home: the mission, the course counts and the due figure all ignore it. What it
+  governs is the sessions Home starts, so it now sits with the button that starts
+  them.
+
 - **Meanings are their own download now.** A pack's translations were a file inside
   its manifest, which made the language matrix multiplicative in the worst place:
   adding Chinese meanings to a Spanish pack meant editing that manifest, which

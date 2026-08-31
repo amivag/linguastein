@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from 'react-router';
 import { useCourse } from '../app/course';
 import { useServices } from '../app/services-context';
 import { coursePath, type LevelScope } from '../domain/content';
-import { Chip } from './Chip';
 import styles from './CourseBar.module.css';
 
 interface CourseBarProps {
@@ -81,26 +80,34 @@ export function CourseBar({ compact = false }: CourseBarProps) {
         </label>
       )}
 
-      <ul className={styles.levels}>
-        {option.levels.map((entry) => {
-          const pressed = entry.level === course.level;
-          return (
-            <li key={entry.level}>
-              <Chip
-                // A level is a ceiling, so the count is what it *includes* —
-                // spelled out because the label and count are adjacent spans
-                // and the computed name would otherwise read "A2168".
-                aria-label={`${entry.label}, ${entry.count} ${entry.count === 1 ? 'item' : 'items'}`}
-                pressed={pressed}
-                count={entry.count}
-                onClick={() => go(course.language, entry.level)}
-              >
-                {entry.label}
-              </Chip>
-            </li>
-          );
-        })}
-      </ul>
+      {/*
+        A `<select>` rather than a row of chips, and the ladder is why.
+
+        Chips were one tap and showed every count at once, which was the right
+        trade for the four CEFR rungs this app shipped with. A pack declares its
+        own ladder now (`docs/tasks/language-matrix.md` §7), so "how many rungs"
+        is a property of the content: HSK is six plus `All levels`, and at 375px
+        four chips already wrap onto a second row and take the top of the screen
+        away from the search and the mission.
+
+        The count comes along rather than being traded away. It is what makes the
+        control legible — `docs/design-language.md`'s "a count is what makes a
+        filter honest" — and in compact mode it is the *only* place the in-scope
+        figure appears, which is why the note below is suppressed there.
+      */}
+      <label className={styles.level}>
+        <span className="visually-hidden">Level</span>
+        <select
+          value={course.level}
+          onChange={(event) => go(course.language, event.target.value as LevelScope)}
+        >
+          {option.levels.map((entry) => (
+            <option key={entry.level} value={entry.level}>
+              {entry.label} · {entry.count} {entry.count === 1 ? 'item' : 'items'}
+            </option>
+          ))}
+        </select>
+      </label>
 
       {!compact && (
         <p className={styles.note}>

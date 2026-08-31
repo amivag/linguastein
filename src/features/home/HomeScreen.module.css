@@ -262,8 +262,22 @@
   font-size: var(--text-lg);
 }
 
-.advancedPractice {
-  padding-top: var(--space-7);
+/*
+ * The standing choice and the button it changes, as one block.
+ *
+ * The choice used to sit *below* the button with `padding-top: var(--space-7)`
+ * pushing it away, which is what made it read as a footnote to the page rather
+ * than as part of the control. The gap here is tighter than the shell's own
+ * `space-4` between sections, which is the whole trick: closer to each other
+ * than to anything else is what makes two elements one thing.
+ *
+ * No margin above it. The old `space-7` was separating an orphan from the button
+ * it belonged to; adding it back would stack on the shell's section gap and
+ * leave the block floating, which is what the screenshot showed.
+ */
+.practice {
+  display: grid;
+  gap: var(--space-3);
 }
 
 .practiceSheet {

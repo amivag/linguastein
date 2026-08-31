@@ -1,39 +1,42 @@
 /*
- * The course scope, as a row of chips.
+ * The course scope: the language, and how far up the levels the learner is.
  *
- * The chips themselves are `Chip` — one component rather than the two
- * near-identical copies this file and `CategoryPicker` used to carry. What is
- * left here is only the layout, and the `<select>` that appears once a second
- * language is loaded.
+ * Two `<select>`s side by side. The levels were a row of chips, which showed
+ * every count at once and cost one tap — the right trade for four CEFR rungs and
+ * the wrong one for a ladder a pack declares itself: HSK is six plus `All
+ * levels`, and even four chips wrap onto a second row at 375px and take the top
+ * of the screen away from the search and the mission.
  */
 
+/*
+ * Wrapping rather than a column grid, because the row holds two things of
+ * different kinds: the controls, which belong side by side, and the note, which
+ * belongs underneath. `flex-basis: 100%` on the note is what puts it there
+ * without the bar needing to know whether it was rendered.
+ */
 .bar {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-2);
 }
 
+/* The controls sit together in both variants; only the note is conditional, so
+   `compact` has nothing left to lay out differently. */
 .compact {
-  grid-auto-flow: column;
-  justify-content: start;
   align-items: center;
 }
 
 /* Chrome from `global.css`, which is also where the reason a field keeps its
-   border is recorded. A pill here so it matches the level chips beside it. */
-.language select {
+   border is recorded. Pills because these are controls that *select*, which is
+   what `--radius-pill` is for (`docs/design-language.md`). */
+.language select,
+.level select {
   border-radius: var(--radius-pill);
 }
 
-.levels {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
 .note {
+  flex-basis: 100%;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }

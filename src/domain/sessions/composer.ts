@@ -19,7 +19,7 @@
 
 import type { ItemId, LearningItem } from '../content';
 import type { ExerciseKind } from '../exercises/types';
-import type { ItemProgress } from '../progress/types';
+import type { SubjectProgress } from '../progress/types';
 import { shuffle, type Rng } from '../../utils/random';
 
 export const RETRIEVAL_MODES = ['recognition', 'cued-recall', 'production', 'study'] as const;
@@ -46,7 +46,7 @@ export interface SessionStep {
 
 export interface ComposeInput {
   readonly items: readonly LearningItem[];
-  readonly progress: ReadonlyMap<ItemId, ItemProgress>;
+  readonly progress: ReadonlyMap<ItemId, SubjectProgress>;
   /** Kinds the session is allowed to use, from the preset. */
   readonly allowed: readonly ExerciseKind[];
   readonly rng: Rng;
@@ -57,7 +57,7 @@ export interface ComposeInput {
 }
 
 /** Where an item sits on the recognition → production ladder. */
-export function retrievalModeFor(progress: ItemProgress | undefined): RetrievalMode {
+export function retrievalModeFor(progress: SubjectProgress | undefined): RetrievalMode {
   if (!progress || progress.attempts === 0) return 'recognition';
   // A lapse drops the item back a rung: rebuild before testing production.
   if (progress.status === 'learning') return 'recognition';

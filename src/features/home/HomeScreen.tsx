@@ -14,12 +14,19 @@ import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import { kindHue } from '../../styles/kinds';
 import surfaces from '../../styles/surfaces.module.css';
-import { levelLabel, reachableTopics, searchContent, type ItemId } from '../../domain/content';
 import {
+  isItemId,
+  levelLabel,
+  reachableTopics,
+  searchContent,
+  type ItemId,
+} from '../../domain/content';
+import {
+  itemProgressIn,
   summarise,
   type Attempt,
-  type ItemProgress,
   type ProgressSummary,
+  type SubjectProgress,
 } from '../../domain/progress';
 import { missionStandings, missionUseEvidence, nextMissionStanding } from '../../domain/missions';
 import { batchStandings, nextBatchStanding, type BatchStanding } from '../../domain/batches';
@@ -123,7 +130,7 @@ export function HomeScreen() {
    * stability and about which days it was produced on. Same one read either way.
    */
   const [history, setHistory] = useState<{
-    readonly progress: ReadonlyMap<ItemId, ItemProgress>;
+    readonly progress: ReadonlyMap<ItemId, SubjectProgress>;
     readonly attempts: readonly Attempt[];
     readonly now: number;
   } | null>(null);
@@ -162,16 +169,22 @@ export function HomeScreen() {
       if (cancelled) return;
 
       const now = Date.now();
-      const inScope = progress.filter((entry) => scope.ids.has(entry.itemId));
-      const attemptsInScope = attempts.filter((attempt) => scope.ids.has(attempt.itemId));
-      setSummary(summarise(inScope, scope.total, now));
-      setPractisedIds(new Set(inScope.map((entry) => entry.itemId)));
+      /*
+       * Narrowed to this course's items, which is also what keeps a row that is
+       * not about an item at all out of every number on this screen. A drill
+       * records against a pattern id (`SubjectProgress.subject`), and a pattern
+       * is neither an item id nor in `scope.ids` — `itemProgressIn` drops both
+       * kinds of miss in one pass, so the due count, the review session and the
+       * practised set stay item-shaped.
+       */
+      const inScope = itemProgressIn(progress, scope.ids);
+      const attemptsInScope = attempts.filter(
+        (attempt) => isItemId(attempt.subject) && scope.ids.has(attempt.subject),
+      );
+      setSummary(summarise([...inScope.values()], scope.total, now));
+      setPractisedIds(new Set(inScope.keys()));
       setMissionUseItems(missionUseEvidence(attempts));
-      setHistory({
-        progress: new Map(inScope.map((entry) => [entry.itemId, entry])),
-        attempts,
-        now,
-      });
+      setHistory({ progress: inScope, attempts, now });
       setPracticeDays(daysPractisedThisWeek(attempts, now));
       setLastPractice(describeLastPractice(attemptsInScope, now));
       setSessions(recentSessions.map((session) => describeSession(session, now)));
@@ -970,9 +983,11 @@ function mostRecentItems(attempts: readonly Attempt[], limit: number): readonly 
   const result: ItemId[] = [];
 
   for (const attempt of [...attempts].sort((a, b) => b.at - a.at)) {
-    if (seen.has(attempt.itemId)) continue;
-    seen.add(attempt.itemId);
-    result.push(attempt.itemId);
+    // "What did I practise recently" is a list of material to reopen, so an
+    // attempt on a pattern has nothing to offer it.
+    if (!isItemId(attempt.subject) || seen.has(attempt.subject)) continue;
+    seen.add(attempt.subject);
+    result.push(attempt.subject);
     if (result.length === limit) break;
   }
 

@@ -22,13 +22,19 @@
 
 import { z } from 'zod';
 import type { BatchDefinition } from '../../domain/batches';
-import { isEntityId, LEVEL_SCOPE_ALL, type ItemId, type PackId } from '../../domain/content';
+import {
+  isEntityId,
+  LEVEL_SCOPE_ALL,
+  type EntityId,
+  type ItemId,
+  type PackId,
+} from '../../domain/content';
 import { EXERCISE_KINDS } from '../../domain/exercises/types';
 import {
   ITEM_STATUSES,
   REVIEW_GRADES,
   type Attempt,
-  type ItemProgress,
+  type SubjectProgress,
 } from '../../domain/progress';
 import type { SessionRecord } from '../../domain/sessions';
 
@@ -47,17 +53,46 @@ const timestamp = z.number().int().nonnegative();
 const languageTag = z.string().regex(/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/);
 
 /**
- * `core-es:item:000123`, checked for the shape rather than for the pack.
+ * `core-es:item:000123`, `core-es:form:ser-pres-1s`,
+ * `core-es:skill:numerals-y-joining` — checked for the shape, not for the kind.
+ *
+ * **Any entity**, because `SubjectProgress.subject` is any entity: a numeral
+ * drill records against a pattern and a form drill against a form, so a schema
+ * insisting on `item` would refuse exactly the rows this format now exists to
+ * carry.
  *
  * Whether the pack is installed is a different question and deliberately not
  * asked here: architecture rule 4 exists so a row can outlive the pack it names,
  * and the importer counts those rather than dropping them. What is worth
- * refusing is a string that is not an item id at all, because that is the one
+ * refusing is a string that is not an entity id at all, because that is the one
  * that reaches the repository and the progress store as a key.
  */
-const itemId = z.string().refine((value) => isEntityId(value, 'item'), {
-  message: 'not an item id',
+const entityId = z.string().refine((value) => isEntityId(value), {
+  message: 'not an entity id',
 });
+
+/**
+ * How a history row says what it is about, in both spellings the format has had.
+ *
+ * `subject` is v2's. `itemId` is v1's, and reading it is the whole of the
+ * compatibility shim — the reason the envelope carries a version at all. Every
+ * row in a v1 file is about an item, so nothing is lost: it simply arrives under
+ * the name it had.
+ */
+const subjectFields = {
+  subject: entityId.optional(),
+  itemId: entityId.optional(),
+};
+
+function subjectOf(row: {
+  readonly subject?: string | undefined;
+  readonly itemId?: string | undefined;
+}): EntityId | undefined {
+  return (row.subject ?? row.itemId) as EntityId | undefined;
+}
+
+/** The issue a row with neither spelling produces, in one place. */
+const NO_SUBJECT = 'no subject: the row has neither `subject` nor `itemId`';
 
 /**
  * The optional fields, rebuilt with the conditional spread `exactOptionalPropertyTypes`
@@ -88,7 +123,7 @@ const course = z.object({
 export const attemptSchema = z
   .object({
     id: z.string().min(1),
-    itemId,
+    ...subjectFields,
     exerciseKind: z.enum(EXERCISE_KINDS),
     grade: z.enum(REVIEW_GRADES),
     at: timestamp,
@@ -97,17 +132,24 @@ export const attemptSchema = z
     hintsUsed: z.number().int().nonnegative().optional(),
     sessionId: z.string().min(1).optional(),
   })
-  .transform((row): Attempt => ({
-    id: row.id,
-    itemId: row.itemId as ItemId,
-    exerciseKind: row.exerciseKind,
-    grade: row.grade,
-    at: row.at,
-    ...optional('correct', row.correct),
-    ...optional('latencyMs', row.latencyMs),
-    ...optional('hintsUsed', row.hintsUsed),
-    ...optional('sessionId', row.sessionId),
-  }));
+  .transform((row, ctx): Attempt => {
+    const subject = subjectOf(row);
+    if (!subject) {
+      ctx.addIssue({ code: 'custom', message: NO_SUBJECT });
+      return z.NEVER;
+    }
+    return {
+      id: row.id,
+      subject,
+      exerciseKind: row.exerciseKind,
+      grade: row.grade,
+      at: row.at,
+      ...optional('correct', row.correct),
+      ...optional('latencyMs', row.latencyMs),
+      ...optional('hintsUsed', row.hintsUsed),
+      ...optional('sessionId', row.sessionId),
+    };
+  });
 
 /**
  * The projection. Read leniently on purpose: a row that survives here is only a
@@ -116,7 +158,7 @@ export const attemptSchema = z
  */
 export const progressSchema = z
   .object({
-    itemId,
+    ...subjectFields,
     packId: z.string().min(1).optional(),
     status: z.enum(ITEM_STATUSES),
     attempts: z.number().int().nonnegative(),
@@ -131,22 +173,29 @@ export const progressSchema = z
     streak: z.number().int().nonnegative(),
     updatedAt: timestamp,
   })
-  .transform((row): ItemProgress => ({
-    itemId: row.itemId as ItemId,
-    ...optional<PackId>('packId', row.packId as PackId | undefined),
-    status: row.status,
-    attempts: row.attempts,
-    correct: row.correct,
-    incorrect: row.incorrect,
-    difficulty: row.difficulty,
-    ...optional('stability', row.stability),
-    ...optional('lastReviewedAt', row.lastReviewedAt),
-    ...optional('dueAt', row.dueAt),
-    ...optional('averageLatencyMs', row.averageLatencyMs),
-    hintsUsed: row.hintsUsed,
-    streak: row.streak,
-    updatedAt: row.updatedAt,
-  }));
+  .transform((row, ctx): SubjectProgress => {
+    const subject = subjectOf(row);
+    if (!subject) {
+      ctx.addIssue({ code: 'custom', message: NO_SUBJECT });
+      return z.NEVER;
+    }
+    return {
+      subject,
+      ...optional<PackId>('packId', row.packId as PackId | undefined),
+      status: row.status,
+      attempts: row.attempts,
+      correct: row.correct,
+      incorrect: row.incorrect,
+      difficulty: row.difficulty,
+      ...optional('stability', row.stability),
+      ...optional('lastReviewedAt', row.lastReviewedAt),
+      ...optional('dueAt', row.dueAt),
+      ...optional('averageLatencyMs', row.averageLatencyMs),
+      hintsUsed: row.hintsUsed,
+      streak: row.streak,
+      updatedAt: row.updatedAt,
+    };
+  });
 
 export const sessionSchema = z
   .object({
@@ -173,7 +222,7 @@ export const batchSchema = z
     id: z.string().min(1),
     label: z.string().min(1),
     course,
-    itemIds: z.array(itemId),
+    itemIds: z.array(entityId),
     createdAt: timestamp,
     perSession: z.number().int().positive().optional(),
   })

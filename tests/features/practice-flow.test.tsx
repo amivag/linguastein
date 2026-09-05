@@ -64,7 +64,7 @@ describe('HomeScreen', () => {
     const services = testServices();
     await services.storage.attempts.append({
       id: 'mission-transfer-attempt',
-      itemId: id<ItemId>('test-es:item:001'),
+      subject: id<ItemId>('test-es:item:001'),
       exerciseKind: 'think-say',
       grade: 'good',
       correct: true,
@@ -92,7 +92,7 @@ describe('HomeScreen', () => {
     const services = testServices();
     const itemId = (await services.repository.allItems())[0]!.id;
     await services.storage.progress.put({
-      itemId,
+      subject: itemId,
       status: 'review',
       attempts: 1,
       correct: 1,
@@ -138,7 +138,7 @@ describe('HomeScreen', () => {
     const services = testServices();
     const itemId = (await services.repository.allItems())[0]!.id;
     await services.storage.progress.put({
-      itemId,
+      subject: itemId,
       status: 'learning',
       attempts: 1,
       correct: 0,
@@ -174,7 +174,7 @@ describe('HomeScreen', () => {
     const itemId = (await services.repository.allItems())[0]!.id;
     await services.storage.attempts.append({
       id: 'recent-attempt',
-      itemId,
+      subject: itemId,
       exerciseKind: 'think-say',
       grade: 'good',
       correct: true,

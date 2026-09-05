@@ -8,7 +8,7 @@ import { ProgressScreen } from '../../src/features/progress/ProgressScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import type { ItemId } from '../../src/domain/content';
-import { newItemProgress } from '../../src/domain/progress';
+import { newProgress } from '../../src/domain/progress';
 import { id } from '../fixtures/pack';
 import { renderWithServices, testServices } from '../fixtures/services';
 
@@ -95,7 +95,7 @@ describe('progress', () => {
     const services = testServices();
     const itemId = id<ItemId>('test-es:item:001');
     await services.storage.progress.put({
-      ...newItemProgress(itemId),
+      ...newProgress(itemId),
       status: 'mastered',
       attempts: 4,
       correct: 3,

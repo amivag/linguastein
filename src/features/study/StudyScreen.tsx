@@ -12,13 +12,7 @@ import { alphabetGuide } from '../../languages/runtime';
 import { AlphabetSection } from './AlphabetSection';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
-import {
-  levelLabel,
-  POS_LABELS,
-  type ItemId,
-  type PartOfSpeech,
-  type SkillKind,
-} from '../../domain/content';
+import { levelLabel, POS_LABELS, type PartOfSpeech, type SkillKind } from '../../domain/content';
 import {
   missionStandings,
   missionUseEvidence,
@@ -26,7 +20,7 @@ import {
   type MissionStanding,
 } from '../../domain/missions';
 import { batchStandings, type BatchStanding } from '../../domain/batches';
-import type { Attempt, ItemProgress } from '../../domain/progress';
+import { itemProgressIn, type Attempt, type SubjectProgress } from '../../domain/progress';
 import { localDay } from '../../utils/calendar';
 import { browsePath } from '../browse/browse-url';
 import { missionPath } from '../missions/mission-url';
@@ -54,14 +48,22 @@ const NO_EVIDENCE: MissionEvidence = { practised: new Set(), used: new Map() };
  */
 interface History {
   readonly evidence: MissionEvidence;
-  readonly progress: ReadonlyMap<ItemId, ItemProgress>;
+  /**
+   * Every stored row, narrowed where it is *used* rather than here.
+   *
+   * A row can be about a pattern or a form rather than an item now, and neither
+   * a mission nor a set is about one of those — but the narrowing needs the
+   * course's item ids, which change when the learner switches course while this
+   * read does not. Keeping the raw rows means the log is still read once.
+   */
+  readonly progress: readonly SubjectProgress[];
   readonly attempts: readonly Attempt[];
   readonly now: number;
 }
 
 const NO_HISTORY: History = {
   evidence: NO_EVIDENCE,
-  progress: new Map(),
+  progress: [],
   attempts: [],
   now: 0,
 };
@@ -126,11 +128,8 @@ export function StudyScreen() {
       ]);
       if (cancelled) return;
       setHistory({
-        evidence: {
-          practised: new Set(progress.map((entry) => entry.itemId)),
-          used: missionUseEvidence(attempts),
-        },
-        progress: new Map(progress.map((entry) => [entry.itemId, entry])),
+        evidence: { practised: new Set(), used: missionUseEvidence(attempts) },
+        progress,
         attempts,
         now: Date.now(),
       });
@@ -146,21 +145,40 @@ export function StudyScreen() {
     [courseScope, repository],
   );
 
+  /**
+   * The stored rows this course's missions and sets are judged on: about an item,
+   * and about one this course admits.
+   *
+   * Both of those matter and `itemProgressIn` does them together — a drill
+   * records against a pattern, and a pattern is neither an item nor in the
+   * course's ids, so a standing computed over raw rows would count evidence that
+   * has nothing to do with the mission it was counted towards.
+   */
+  const practised = useMemo(
+    () => itemProgressIn(history.progress, courseItemIds),
+    [courseItemIds, history.progress],
+  );
+
+  const evidence = useMemo(
+    () => ({ practised: new Set(practised.keys()), used: history.evidence.used }),
+    [history.evidence.used, practised],
+  );
+
   const missions = useMemo(
-    () => missionStandings(MISSIONS, course, repository, courseItemIds, history.evidence),
-    [course, courseItemIds, history.evidence, repository],
+    () => missionStandings(MISSIONS, course, repository, courseItemIds, evidence),
+    [course, courseItemIds, evidence, repository],
   );
 
   const sets = useMemo(
     () =>
       batchStandings(batches, course, {
         courseItemIds,
-        progress: history.progress,
+        progress: practised,
         attempts: history.attempts,
         now: history.now,
         dayOf: localDay,
       }),
-    [batches, course, courseItemIds, history],
+    [batches, course, courseItemIds, history.attempts, history.now, practised],
   );
 
   const counts = useMemo(() => {

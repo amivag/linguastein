@@ -10,7 +10,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SettingsScreen } from '../../src/features/settings/SettingsScreen';
 import type { ItemId } from '../../src/domain/content';
-import { newItemProgress } from '../../src/domain/progress';
+import { newProgress } from '../../src/domain/progress';
 import {
   createMemoryStorage,
   DEFAULT_COURSE_STATE,
@@ -28,10 +28,10 @@ const ITEM = id<ItemId>('test-es:item:001');
 /** Storage with something in every store worth losing. */
 async function storageWithHistory() {
   const storage = createMemoryStorage();
-  await storage.progress.put({ ...newItemProgress(ITEM), attempts: 3 });
+  await storage.progress.put({ ...newProgress(ITEM), attempts: 3 });
   await storage.attempts.append({
     id: 'attempt-1',
-    itemId: ITEM,
+    subject: ITEM,
     exerciseKind: 'reveal',
     grade: 'good',
     at: 1_700_000_000_000,
@@ -195,7 +195,16 @@ describe('reset progress', () => {
     expect(removeBatch).toHaveBeenCalledWith(BATCH.id);
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
     expect(localStorage.getItem(READING_SIZE_STORAGE_KEY)).toBeNull();
+    /*
+     * The confirmation, and it has to survive the navigation that follows it.
+     * This assertion used to pass on a race: the reset navigated to `/es/a1`,
+     * which drops `?tab=about`, so the section holding the message unmounted —
+     * and whether anyone saw it depended on which render won. Asserting it after
+     * the navigation has settled is what makes it a test of the behaviour rather
+     * than of the timing.
+     */
     expect(await screen.findByText('All local data reset to app defaults.')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'About', level: 2 })).toBeInTheDocument();
   });
 
   it('leaves all local data intact when a full reset is cancelled', async () => {

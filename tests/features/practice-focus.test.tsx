@@ -286,7 +286,7 @@ describe('the session the choice starts', () => {
     });
     const itemId = (await services.repository.allItems())[0]!.id;
     await services.storage.progress.put({
-      itemId,
+      subject: itemId,
       status: 'review',
       attempts: 1,
       correct: 1,

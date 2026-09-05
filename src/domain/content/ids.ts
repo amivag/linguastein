@@ -59,6 +59,20 @@ export function isEntityId(id: string, kind?: EntityKind): boolean {
   return parsed !== null && (kind === undefined || parsed.kind === kind);
 }
 
+/**
+ * Narrows an {@link EntityId} to an {@link ItemId}.
+ *
+ * A type predicate rather than a second call to {@link isEntityId}, because the
+ * callers are the ones that only know what to do with items — `mastery.ts`
+ * reading a progress row, a screen resolving a subject to something it can
+ * render — and a bare boolean leaves each of them casting. Since
+ * `SubjectProgress.subject` widened past `ItemId`, that cast would be in a dozen
+ * places, each of them a chance to cast the wrong way.
+ */
+export function isItemId(id: EntityId): id is ItemId {
+  return isEntityId(id, 'item');
+}
+
 export function formatEntityId(namespace: string, kind: EntityKind, local: string): string {
   return `${namespace}:${kind}:${local}`;
 }

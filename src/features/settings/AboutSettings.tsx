@@ -7,6 +7,7 @@ import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { DEFAULT_COURSE_STATE, DEFAULT_PREFERENCES } from '../../storage';
+import { settingsPath } from './settings-url';
 import { CONTRAST_STORAGE_KEY } from '../../styles/contrast';
 import { READING_SIZE_STORAGE_KEY } from '../../styles/reading-size';
 import { PALETTE_STORAGE_KEY, THEME_STORAGE_KEY } from '../../styles/themes';
@@ -62,7 +63,24 @@ export function AboutSettings() {
     for (const batch of batches) removeBatch(batch.id);
     setResetTarget(null);
     setResetResult('all');
-    void navigate(`/${DEFAULT_PREFERENCES.targetLanguage}/${DEFAULT_COURSE_STATE.level}`);
+    /*
+     * The default course, and **still this section** — `/es/a1` alone dropped
+     * `?tab=about`, so the screen fell back to Learning and unmounted the
+     * confirmation one line above had just set. A learner who erased everything
+     * saw the app jump somewhere else with nothing saying the reset had
+     * happened; the message only ever appeared if a render won a race against
+     * the navigation.
+     *
+     * Leaving the stale course behind is what the navigation is for, and going
+     * to About in the new one does that just as well — while keeping somebody
+     * who pressed a button in Settings in Settings.
+     */
+    void navigate(
+      settingsPath(
+        { language: DEFAULT_PREFERENCES.targetLanguage, level: DEFAULT_COURSE_STATE.level },
+        'about',
+      ),
+    );
   };
 
   return (

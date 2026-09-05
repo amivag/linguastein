@@ -13,8 +13,8 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { ItemId } from '../../src/domain/content';
-import { recordAttempt, replayItem, type Attempt } from '../../src/domain/progress';
+import type { EntityId, ItemId } from '../../src/domain/content';
+import { recordAttempt, replaySubject, type Attempt } from '../../src/domain/progress';
 import { createMemoryStorage, type LearnerStorage } from '../../src/storage';
 import {
   applyExport,
@@ -38,14 +38,14 @@ const importing = { installedPacks: ['test-es'], settings: true };
 /** Records one attempt the way the app does — through the tracker, into storage. */
 async function practise(
   storage: LearnerStorage,
-  itemId: ItemId,
+  subject: ItemId,
   at: number,
   grade: 'again' | 'good' = 'good',
 ): Promise<Attempt> {
-  const current = await storage.progress.get(itemId);
+  const current = await storage.progress.get(subject);
   const { progress, attempt } = recordAttempt(
     current,
-    { itemId, exerciseKind: 'think-say', grade },
+    { subject, exerciseKind: 'think-say', grade },
     at,
   );
   await storage.progress.put(progress);
@@ -179,7 +179,7 @@ describe('merging into a device that has been used', () => {
   /**
    * **The heart of it.** Two devices practise the same item apart, and the
    * merged row must be the fold of both logs — not either device's row, and not
-   * a sum of counters. Asserted against `replayItem` over the union rather than
+   * a sum of counters. Asserted against `replaySubject` over the union rather than
    * against numbers written here, so the test states the invariant instead of
    * restating an implementation.
    */
@@ -203,7 +203,7 @@ describe('merging into a device that has been used', () => {
     await applyExport(laptop, await buildExport(phone, options), importing);
 
     const merged = await laptop.progress.get(ITEM);
-    expect(merged).toEqual(replayItem(ITEM, [...onPhone, ...onLaptop]));
+    expect(merged).toEqual(replaySubject(ITEM, [...onPhone, ...onLaptop]));
     // The counters are the fold's, so nothing was lost the way last-write-wins
     // would have lost it: ten attempts recorded, ten counted.
     expect(merged?.attempts).toBe(10);
@@ -266,6 +266,133 @@ describe('merging into a device that has been used', () => {
   });
 });
 
+describe('a file from the version before the rename', () => {
+  /**
+   * The compatibility shim, and the only reason the envelope carries a version.
+   *
+   * A v1 file says `itemId` where a v2 file says `subject`. Every row in one is
+   * about an item, so reading it loses nothing — it simply arrives under the
+   * name it had. Written out by hand rather than captured from a build, because
+   * what is being pinned is the *format*, not whatever happened to be on a
+   * device the day it was saved.
+   */
+  const v1 = {
+    app: APP,
+    schema: 1,
+    exportedAt: NOW,
+    scheduler: 'fsrs-v1',
+    packs: [{ id: 'test-es', version: '1.0.0' }],
+    preferences: { displayName: 'Ada' },
+    courses: { es: { level: 'a2' } },
+    progress: [
+      {
+        itemId: ITEM,
+        packId: 'test-es',
+        status: 'review',
+        attempts: 1,
+        correct: 1,
+        incorrect: 0,
+        difficulty: 0.3,
+        hintsUsed: 0,
+        streak: 1,
+        updatedAt: NOW - DAY,
+      },
+    ],
+    attempts: [
+      {
+        id: 'old-1',
+        itemId: ITEM,
+        exerciseKind: 'think-say',
+        grade: 'good',
+        at: NOW - DAY,
+      },
+    ],
+    sessions: [],
+    batches: [],
+  };
+
+  it('reads it, and the rows arrive as subjects', async () => {
+    const parsed = parseExport(v1, APP);
+
+    expect(parsed.issues).toEqual([]);
+    expect(parsed.envelope?.attempts[0]?.subject).toBe(ITEM);
+    expect(parsed.envelope?.progress[0]?.subject).toBe(ITEM);
+
+    const target = createMemoryStorage();
+    const report = await applyExport(target, parsed.envelope!, importing);
+
+    expect(report.attemptsAdded).toBe(1);
+    expect((await target.progress.get(ITEM))?.subject).toBe(ITEM);
+  });
+
+  /** A row with neither spelling is a row that says nothing about what it is. */
+  it('drops a row that names no subject at all', () => {
+    const parsed = parseExport(
+      { ...v1, attempts: [{ id: 'x', exerciseKind: 'reveal', grade: 'good', at: NOW }] },
+      APP,
+    );
+
+    expect(parsed.envelope?.attempts).toHaveLength(0);
+    expect(parsed.issues[0]?.message).toMatch(/neither `subject` nor `itemId`/);
+  });
+});
+
+describe('a subject that is not an item', () => {
+  const PATTERN = id<EntityId>('test-es:skill:numerals-y-joining');
+
+  /**
+   * The whole point of the widening, carried end to end: a drill's evidence has
+   * to survive an export and a merge exactly as a sentence's does, or a learner
+   * loses it on the one day a backup is what they have.
+   */
+  it('round-trips a pattern the same way a sentence does', async () => {
+    const source = createMemoryStorage();
+    const { progress, attempt } = recordAttempt(
+      undefined,
+      { subject: PATTERN, exerciseKind: 'think-say', grade: 'good' },
+      NOW - DAY,
+    );
+    await source.progress.put(progress);
+    await source.attempts.append(attempt);
+
+    const envelope = await buildExport(source, options);
+    const parsed = parseExport(JSON.parse(serialiseExport(envelope)), APP);
+    expect(parsed.issues).toEqual([]);
+
+    const target = createMemoryStorage();
+    const report = await applyExport(target, parsed.envelope!, importing);
+
+    expect(report.attemptsAdded).toBe(1);
+    expect(report.itemsRebuilt).toBe(1);
+    expect(await target.progress.get(PATTERN)).toEqual(progress);
+  });
+
+  /**
+   * A pattern belongs to a pack like anything else, so a device without that
+   * pack counts it as an orphan and keeps it — the rule that stops an import on
+   * the wrong device throwing away a year of work.
+   */
+  it('counts as an orphan where its pack is not installed', async () => {
+    const source = createMemoryStorage();
+    const { progress, attempt } = recordAttempt(
+      undefined,
+      { subject: PATTERN, exerciseKind: 'think-say', grade: 'good' },
+      NOW - DAY,
+    );
+    await source.progress.put(progress);
+    await source.attempts.append(attempt);
+
+    const target = createMemoryStorage();
+    const report = await applyExport(target, await buildExport(source, options), {
+      installedPacks: ['core-fr'],
+      settings: false,
+    });
+
+    expect(report.orphans).toBe(1);
+    expect(await target.progress.count()).toBe(1);
+  });
+});
+
 describe('a file that is not quite right', () => {
   it('refuses another app’s file', () => {
     const parsed = parseExport({ app: 'something-else', schema: 1, exportedAt: NOW }, APP);
@@ -298,7 +425,7 @@ describe('a file that is not quite right', () => {
       ...envelope,
       attempts: [
         ...envelope.attempts.slice(0, 8),
-        { id: 'broken', itemId: 'not-an-item-id', grade: 'good', at: NOW },
+        { id: 'broken', subject: 'not-an-item-id', grade: 'good', at: NOW },
         { nonsense: true },
       ],
     };
@@ -367,6 +494,6 @@ function sorted(envelope: Awaited<ReturnType<typeof buildExport>>) {
     attempts: by(envelope.attempts),
     sessions: by(envelope.sessions),
     batches: by(envelope.batches),
-    progress: [...envelope.progress].sort((a, b) => a.itemId.localeCompare(b.itemId)),
+    progress: [...envelope.progress].sort((a, b) => a.subject.localeCompare(b.subject)),
   };
 }

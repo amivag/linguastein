@@ -12,9 +12,22 @@
  * other builds have to read. They move for different reasons and must not be
  * confused — a build that adds an index bumps one and not the other.
  *
+ * ## A row is about a *subject*, which is not always an item
+ *
+ * `subject` is any content entity: an item, a verb form
+ * (`core-es:form:ser-pres-1s`), a grammatical pattern
+ * (`core-es:skill:numerals-y-joining`). Three things the app practises are not
+ * items and never can be, and a drill over generated targets records against the
+ * pattern it exercises rather than against an id minted for the target — see
+ * `SubjectProgress` for why 1042 gets no id of its own.
+ *
+ * A file therefore carries rows the *reading* device may have no content for at
+ * all, which is the same case as an uninstalled pack and handled the same way:
+ * counted and kept, never pruned.
+ *
  * ## `progress` is a cache, and `attempts` is the authority
  *
- * `ItemProgress` is a **fold** over the attempt log: every field is a function
+ * `SubjectProgress` is a **fold** over the attempt log: every field is a function
  * of the row before it and the attempt applied to it, and nothing in the chain
  * reads a clock or a random source (`domain/progress/tracker.ts`). So the log is
  * the only thing here that cannot be recomputed, and the projection is carried
@@ -59,7 +72,7 @@
  */
 
 import type { BatchDefinition } from '../../domain/batches';
-import type { Attempt, ItemProgress } from '../../domain/progress';
+import type { Attempt, SubjectProgress } from '../../domain/progress';
 import type { SessionRecord } from '../../domain/sessions';
 import type { CourseStates, Preferences } from '../types';
 
@@ -69,8 +82,20 @@ import type { CourseStates, Preferences } from '../types';
  * Bump it when a reader of an older file would get something wrong — not when a
  * field is added that an older reader can ignore, and never because the database
  * version moved.
+ *
+ * **2 (2026-09-05):** a history row says what it is about in `subject` rather
+ * than `itemId`, and that subject can be any content entity rather than only an
+ * item. Reading a v1 file loses nothing — every row in one is about an item, and
+ * `schemas.ts` accepts either spelling — but a v1 *reader* handed a v2 file would
+ * drop every row about a form or a pattern, which is data loss rather than a
+ * field it can ignore. That is what makes this a bump rather than an addition.
+ *
+ * Taken while the format was one day old and had essentially no files in the
+ * world. Waiting would have made it permanently more expensive: the same
+ * reasoning that deleted `showRomanisationHints` ahead of the format rather than
+ * inside it.
  */
-export const EXPORT_SCHEMA = 1;
+export const EXPORT_SCHEMA = 2;
 
 /** What the records referenced, so an import can say what it cannot resolve. */
 export interface ExportedPack {
@@ -95,7 +120,7 @@ export interface LearnerExport {
   readonly packs: readonly ExportedPack[];
   readonly preferences: Preferences;
   readonly courses: CourseStates;
-  readonly progress: readonly ItemProgress[];
+  readonly progress: readonly SubjectProgress[];
   readonly attempts: readonly Attempt[];
   readonly sessions: readonly SessionRecord[];
   readonly batches: readonly BatchDefinition[];

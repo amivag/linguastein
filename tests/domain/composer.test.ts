@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
-import { newItemProgress, type ItemProgress } from '../../src/domain/progress';
+import { newProgress, type SubjectProgress } from '../../src/domain/progress';
 import {
   composeSession,
   modeCounts,
@@ -21,18 +21,21 @@ const ALL = [
   'reveal',
 ] as const;
 
-const progressAt = (local: string, overrides: Partial<ItemProgress>): [ItemId, ItemProgress] => {
+const progressAt = (
+  local: string,
+  overrides: Partial<SubjectProgress>,
+): [ItemId, SubjectProgress] => {
   const itemId = id<ItemId>(`test-es:item:${local}`);
-  return [itemId, { ...newItemProgress(itemId), attempts: 3, ...overrides }];
+  return [itemId, { ...newProgress(itemId), attempts: 3, ...overrides }];
 };
 
-const compose = (progress: ReadonlyMap<ItemId, ItemProgress>, study = false) =>
+const compose = (progress: ReadonlyMap<ItemId, SubjectProgress>, study = false) =>
   composeSession({ items, progress, allowed: ALL, rng: seededRng(7), study });
 
 describe('retrievalModeFor', () => {
   it('starts a new item on recognition', () => {
     expect(retrievalModeFor(undefined)).toBe('recognition');
-    expect(retrievalModeFor(newItemProgress(id<ItemId>('test-es:item:001')))).toBe('recognition');
+    expect(retrievalModeFor(newProgress(id<ItemId>('test-es:item:001')))).toBe('recognition');
   });
 
   it('promotes to cued recall once the memory holds for a day', () => {

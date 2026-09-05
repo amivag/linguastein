@@ -16,7 +16,7 @@
  * harder items are scheduled sooner) rather than exact constants.
  */
 
-import { type ItemProgress, type ItemStatus, type ReviewGrade, type Timestamp } from './types';
+import { type SubjectProgress, type ItemStatus, type ReviewGrade, type Timestamp } from './types';
 import type { Scheduler } from './scheduler';
 
 const MINUTE = 60_000;
@@ -58,7 +58,7 @@ export function intervalDays(stability: number, retention = REQUEST_RETENTION): 
   return (stability / FACTOR) * (retention ** (1 / DECAY) - 1);
 }
 
-/** `ItemProgress.difficulty` is normalised 0–1 for the UI; FSRS works on 1–10. */
+/** `SubjectProgress.difficulty` is normalised 0–1 for the UI; FSRS works on 1–10. */
 const toFsrsDifficulty = (normalised: number) => clamp(1 + 9 * normalised, 1, 10);
 const toNormalised = (difficulty: number) => round2((clamp(difficulty, 1, 10) - 1) / 9);
 
@@ -112,7 +112,7 @@ function nextDifficulty(difficulty: number, grade: number): number {
 }
 
 function nextStability(
-  progress: ItemProgress,
+  progress: SubjectProgress,
   difficulty: number,
   grade: ReviewGrade,
   now: Timestamp,

@@ -24,8 +24,8 @@
  * ever genuinely needed.
  */
 
-import type { ContentRepository, LexemeId, SkillId } from '../content';
-import { isDue, type ItemProgress, type Timestamp } from './types';
+import { isItemId, type ContentRepository, type LexemeId, type SkillId } from '../content';
+import { isDue, type SubjectProgress, type Timestamp } from './types';
 
 export type MasteryKind = 'lexeme' | 'skill';
 
@@ -70,7 +70,7 @@ interface Accumulator {
 
 export function inferMastery(
   repository: ContentRepository,
-  progress: readonly ItemProgress[],
+  progress: readonly SubjectProgress[],
   now: Timestamp = Date.now(),
 ): Mastery {
   const lexemes = new Map<LexemeId, Accumulator>();
@@ -78,7 +78,26 @@ export function inferMastery(
 
   for (const record of progress) {
     if (record.attempts === 0) continue;
-    const item = repository.getItem(record.itemId);
+    /*
+     * Only rows about an *item*, and the skip is now doing two jobs.
+     *
+     * It always dropped a row whose item the loaded packs do not have. Since a
+     * progress row can be about a form or a pattern as well
+     * (`SubjectProgress.subject`), it also drops **direct** evidence — forty
+     * numeral drills against `numerals-y-joining` do not become forty
+     * encounters here.
+     *
+     * That is deliberate rather than pending. `encounters` means *distinct items
+     * using this word or pattern*, and it is what the strength floor is
+     * calibrated against; folding a drill's repetitions into the same number
+     * would let one afternoon of drilling read as breadth across six contexts.
+     * Direct evidence is real and is scheduled by FSRS on its own row — mixing
+     * the two into one figure is what would corrupt the signal this module
+     * exists to protect. Widening it is a separate decision, with its own
+     * definition of what an encounter is.
+     */
+    if (!isItemId(record.subject)) continue;
+    const item = repository.getItem(record.subject);
     if (!item) continue;
 
     const strength = itemStrength(record);
@@ -109,7 +128,7 @@ export function inferMastery(
 function add<K>(
   index: Map<K, Accumulator>,
   key: K,
-  record: ItemProgress,
+  record: SubjectProgress,
   strength: number,
   due: number,
   context: string,
@@ -164,7 +183,7 @@ function finalise<K extends LexemeId | SkillId>(
 }
 
 /** How well one item is currently held, from its memory stability. */
-function itemStrength(record: ItemProgress): number {
+function itemStrength(record: SubjectProgress): number {
   const accuracy = record.attempts > 0 ? record.correct / record.attempts : 0;
   // A month of stability counts as fully stable; below that it scales.
   const stability = Math.min((record.stability ?? 0) / 21, 1);

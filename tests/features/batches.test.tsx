@@ -15,7 +15,7 @@ import { useLocation } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import type { BatchDefinition } from '../../src/domain/batches';
 import type { ItemId } from '../../src/domain/content';
-import { newItemProgress } from '../../src/domain/progress';
+import { newProgress } from '../../src/domain/progress';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { StudyScreen } from '../../src/features/study/StudyScreen';
@@ -219,7 +219,7 @@ describe('resuming a set on Home', () => {
   it('never displaces due reviews as the leading action', async () => {
     const services = testServices({ batches: [batch()] });
     await services.storage.progress.put({
-      ...newItemProgress(item('003')),
+      ...newProgress(item('003')),
       status: 'review',
       attempts: 3,
       correct: 3,
@@ -259,7 +259,7 @@ describe('resuming a set on Home', () => {
     const services = testServices({ batches: [batch({ itemIds: [item('001')] })] });
     const DAY = 86_400_000;
     await services.storage.progress.put({
-      ...newItemProgress(item('001')),
+      ...newProgress(item('001')),
       status: 'review',
       attempts: 4,
       correct: 4,
@@ -268,7 +268,7 @@ describe('resuming a set on Home', () => {
     for (const at of [Date.now() - 3 * DAY, Date.now() - 2 * DAY]) {
       await services.storage.attempts.append({
         id: `a-${at}`,
-        itemId: item('001'),
+        subject: item('001'),
         exerciseKind: 'think-say',
         grade: 'good',
         at,

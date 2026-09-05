@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
-import { newItemProgress, type ItemProgress } from '../../src/domain/progress';
+import { newProgress, type SubjectProgress } from '../../src/domain/progress';
 import { planSession, type SessionConfig, type SessionFocus } from '../../src/domain/sessions';
 import { id, testRepository } from '../fixtures/pack';
 
@@ -28,12 +28,12 @@ const ITEM = {
  * reorder: due, two weak ones of different difficulty, and a settled one. The
  * remaining fixture items carry no progress and are therefore new.
  */
-function learnerState(): Map<ItemId, ItemProgress> {
-  return new Map<ItemId, ItemProgress>([
+function learnerState(): Map<ItemId, SubjectProgress> {
+  return new Map<ItemId, SubjectProgress>([
     [
       ITEM.due,
       {
-        ...newItemProgress(ITEM.due),
+        ...newProgress(ITEM.due),
         status: 'review',
         attempts: 3,
         dueAt: NOW - 1000,
@@ -46,7 +46,7 @@ function learnerState(): Map<ItemId, ItemProgress> {
     [
       ITEM.hard,
       {
-        ...newItemProgress(ITEM.hard),
+        ...newProgress(ITEM.hard),
         status: 'learning',
         attempts: 4,
         difficulty: 0.6,
@@ -57,7 +57,7 @@ function learnerState(): Map<ItemId, ItemProgress> {
     [
       ITEM.harder,
       {
-        ...newItemProgress(ITEM.harder),
+        ...newProgress(ITEM.harder),
         status: 'learning',
         attempts: 5,
         difficulty: 0.9,
@@ -68,7 +68,7 @@ function learnerState(): Map<ItemId, ItemProgress> {
     [
       ITEM.easy,
       {
-        ...newItemProgress(ITEM.easy),
+        ...newProgress(ITEM.easy),
         status: 'review',
         attempts: 6,
         difficulty: 0.1,

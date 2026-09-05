@@ -512,7 +512,7 @@ describe('MissionScreen', () => {
 
     const attempts = await services.storage.attempts.recent(5);
     expect(attempts[0]).toMatchObject({
-      itemId: expect.stringMatching(/:item:000736$/),
+      subject: expect.stringMatching(/:item:000736$/),
       grade: 'good',
       correct: true,
     });
@@ -535,7 +535,7 @@ describe('MissionScreen', () => {
       const item = services.repository.itemByLocalId(localId)!;
       await services.storage.attempts.append({
         id: `completed-${localId}`,
-        itemId: item.id,
+        subject: item.id,
         exerciseKind: 'think-say',
         grade: 'good',
         correct: true,
@@ -582,8 +582,8 @@ describe('MissionScreen', () => {
     expect(screen.getByRole('button', { name: 'Finish mission' })).toBeInTheDocument();
     expect(await services.storage.attempts.recent(10)).toHaveLength(2);
     const progress = await services.storage.progress.all();
-    expect(progress.find((entry) => entry.itemId.endsWith(':item:001'))?.attempts).toBe(1);
-    expect(progress.find((entry) => entry.itemId.endsWith(':item:002'))?.incorrect).toBe(1);
+    expect(progress.find((entry) => entry.subject.endsWith(':item:001'))?.attempts).toBe(1);
+    expect(progress.find((entry) => entry.subject.endsWith(':item:002'))?.incorrect).toBe(1);
   });
 
   it('turns a matching speech check into a recorded transfer grade', async () => {

@@ -11,13 +11,13 @@
  * produces data. Nothing here talks to a network.
  */
 
-import type { Level, ContentRepository } from '../domain/content';
-import { inferMastery, isDue, type ItemProgress } from '../domain/progress';
+import { isItemId, type ContentRepository, type Level } from '../domain/content';
+import { inferMastery, isDue, type SubjectProgress } from '../domain/progress';
 import type { LearnerContext, WeakPoint } from './types';
 
 export interface BuildContextOptions {
   readonly repository: ContentRepository;
-  readonly progress: readonly ItemProgress[];
+  readonly progress: readonly SubjectProgress[];
   readonly referenceLanguage: string;
   /**
    * Required, and deliberately not defaulted. It was `= 'es'` until 2026-08-25,
@@ -46,9 +46,18 @@ export function buildLearnerContext(options: BuildContextOptions): LearnerContex
     maxNewWords = 3,
   } = options;
 
+  /*
+   * Item rows only, throughout this module. Progress can be about a form or a
+   * pattern now (`SubjectProgress.subject`), and none of the three questions
+   * below — which topics, which level, how many mastered *items* — has an answer
+   * for one of those. `isItemId` makes the narrowing explicit rather than
+   * leaving it to `getItem` returning undefined.
+   */
   const relevant = options.topic
     ? progress.filter((record) =>
-        (repository.getItem(record.itemId)?.topics ?? []).includes(options.topic!),
+        isItemId(record.subject)
+          ? (repository.getItem(record.subject)?.topics ?? []).includes(options.topic!)
+          : false,
       )
     : progress;
 
@@ -60,7 +69,8 @@ export function buildLearnerContext(options: BuildContextOptions): LearnerContex
   let due = 0;
 
   for (const record of relevant) {
-    const item = repository.getItem(record.itemId);
+    if (!isItemId(record.subject)) continue;
+    const item = repository.getItem(record.subject);
     if (!item) continue;
     if (record.status === 'mastered') mastered++;
     if (isDue(record, now)) due++;
@@ -97,10 +107,10 @@ export function buildLearnerContext(options: BuildContextOptions): LearnerContex
 }
 
 /** The level the learner is actually working at, not the level they claim. */
-function dominantLevel(repository: ContentRepository, progress: readonly ItemProgress[]): Level {
+function dominantLevel(repository: ContentRepository, progress: readonly SubjectProgress[]): Level {
   const counts = new Map<Level, number>();
   for (const record of progress) {
-    const level = repository.getItem(record.itemId)?.level;
+    const level = isItemId(record.subject) ? repository.getItem(record.subject)?.level : undefined;
     if (level) counts.set(level, (counts.get(level) ?? 0) + 1);
   }
   const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1]);

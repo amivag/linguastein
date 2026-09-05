@@ -83,6 +83,24 @@ These are load-bearing. Breaking one is a design change, not a refactor. Rules
    key path: without it, "how much of this course have I done?" can be answered
    only by materialising every item id in the course. Derived facts may be
    stored where a query needs them; content may not.
+
+   **The id is any content entity, not only an item.** `SubjectProgress.subject`
+   is an `EntityId`, so a row can be about a verb form
+   (`core-es:form:ser-pres-1s`) or a grammatical pattern
+   (`core-es:skill:numerals-y-joining`) as well as a sentence — three of the
+   things worth practising are not items and never can be. The rule's purpose is
+   untouched: a form and a skill are records the dataset owns, with ids as stable
+   as an item's. What the rule still forbids is the thing it was written against
+   — **minting an id for something the dataset does not have**. A drill on the
+   number 1042 records against the patterns `rulesFor(1042)` names, never against
+   a synthetic `item:1042`.
+
+   The consequence to know before reading progress: **not every row is about an
+   item.** Screens that are item-shaped narrow through `itemProgressIn`
+   (`domain/progress/tracker.ts`), which drops rows that are not about an item
+   and rows outside the course in one pass — and
+   `tests/features/non-item-progress.test.tsx` fails if a new reader forgets.
+
 5. **No vendor above a seam.** TTS, speech recognition, storage, dataset source
    and AI all sit behind interfaces chosen once in `src/app/services.ts`.
 6. **English is the first reference language, not a structural requirement.**

@@ -60,7 +60,7 @@ async function practised(): Promise<LearnerStorage> {
   const storage = createMemoryStorage();
   const { progress, attempt } = recordAttempt(
     undefined,
-    { itemId: ITEM, exerciseKind: 'think-say', grade: 'good' },
+    { subject: ITEM, exerciseKind: 'think-say', grade: 'good' },
     NOW - 86_400_000,
   );
   await storage.progress.put(progress);

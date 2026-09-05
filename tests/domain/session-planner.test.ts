@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
-import { newItemProgress, type ItemProgress } from '../../src/domain/progress';
+import { newProgress, type SubjectProgress } from '../../src/domain/progress';
 import { planSession, type SessionConfig } from '../../src/domain/sessions';
 import { id, testRepository } from '../fixtures/pack';
 
@@ -18,8 +18,10 @@ const config = (overrides: Partial<SessionConfig> = {}): SessionConfig => ({
   ...overrides,
 });
 
-const plan = (overrides: Partial<SessionConfig> = {}, progress = new Map<ItemId, ItemProgress>()) =>
-  planSession({ repository, config: config(overrides), progress, now: NOW });
+const plan = (
+  overrides: Partial<SessionConfig> = {},
+  progress = new Map<ItemId, SubjectProgress>(),
+) => planSession({ repository, config: config(overrides), progress, now: NOW });
 
 describe('a session’s identity', () => {
   /**
@@ -78,11 +80,11 @@ describe('planSession', () => {
 
   it('restricts to due items when asked', () => {
     const dueId = id<ItemId>('test-es:item:003');
-    const progress = new Map<ItemId, ItemProgress>([
-      [dueId, { ...newItemProgress(dueId), status: 'review', dueAt: NOW - 1000 }],
+    const progress = new Map<ItemId, SubjectProgress>([
+      [dueId, { ...newProgress(dueId), status: 'review', dueAt: NOW - 1000 }],
       [
         id<ItemId>('test-es:item:004'),
-        { ...newItemProgress(id<ItemId>('test-es:item:004')), dueAt: NOW + 86_400_000 },
+        { ...newProgress(id<ItemId>('test-es:item:004')), dueAt: NOW + 86_400_000 },
       ],
     ]);
 
@@ -92,9 +94,9 @@ describe('planSession', () => {
   it('puts due and weak items before new ones in smart order', () => {
     const dueId = id<ItemId>('test-es:item:005');
     const weakId = id<ItemId>('test-es:item:006');
-    const progress = new Map<ItemId, ItemProgress>([
-      [dueId, { ...newItemProgress(dueId), status: 'review', dueAt: NOW - 1 }],
-      [weakId, { ...newItemProgress(weakId), status: 'learning', difficulty: 0.8, dueAt: NOW + 1 }],
+    const progress = new Map<ItemId, SubjectProgress>([
+      [dueId, { ...newProgress(dueId), status: 'review', dueAt: NOW - 1 }],
+      [weakId, { ...newProgress(weakId), status: 'learning', difficulty: 0.8, dueAt: NOW + 1 }],
     ]);
 
     const ordered = plan({ ordering: 'smart', seed: 3, maxNewItems: 2 }, progress).itemIds;

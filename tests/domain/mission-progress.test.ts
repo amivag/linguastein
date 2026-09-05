@@ -51,11 +51,11 @@ describe('a Use-stage session id', () => {
 describe('missionUseEvidence', () => {
   it('indexes attempts by the mission whose Use stage recorded them', () => {
     const evidence = missionUseEvidence([
-      { itemId: 'a', sessionId: missionUseSessionId('cafe-order', '700015', '1') },
-      { itemId: 'b', sessionId: missionUseSessionId('cafe-order', '700021', '2') },
-      { itemId: 'c', sessionId: missionUseSessionId('make-plans', '700019', '3') },
-      { itemId: 'd', sessionId: 'quick-session' },
-      { itemId: 'e' },
+      { subject: 'a', sessionId: missionUseSessionId('cafe-order', '700015', '1') },
+      { subject: 'b', sessionId: missionUseSessionId('cafe-order', '700021', '2') },
+      { subject: 'c', sessionId: missionUseSessionId('make-plans', '700019', '3') },
+      { subject: 'd', sessionId: 'quick-session' },
+      { subject: 'e' },
     ]);
 
     expect([...(evidence.get('cafe-order') ?? [])]).toEqual(['a', 'b']);

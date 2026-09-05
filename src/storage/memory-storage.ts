@@ -5,8 +5,8 @@
  */
 
 import type { BatchDefinition } from '../domain/batches';
-import type { ItemId } from '../domain/content';
-import type { Attempt, ItemProgress } from '../domain/progress';
+import type { EntityId } from '../domain/content';
+import type { Attempt, SubjectProgress } from '../domain/progress';
 import type { SessionRecord } from '../domain/sessions';
 import {
   courseStateOf,
@@ -20,7 +20,7 @@ export function createMemoryStorage(
   initialPreferences: Preferences = DEFAULT_PREFERENCES,
   initialCourses: CourseStates = {},
 ): LearnerStorage {
-  const progress = new Map<ItemId, ItemProgress>();
+  const progress = new Map<EntityId, SubjectProgress>();
   let attempts: Attempt[] = [];
   let sessions: SessionRecord[] = [];
   const batches = new Map<string, BatchDefinition>();
@@ -29,23 +29,25 @@ export function createMemoryStorage(
 
   return {
     progress: {
-      get: (itemId) => Promise.resolve(progress.get(itemId)),
-      getMany: (itemIds) =>
+      get: (subject) => Promise.resolve(progress.get(subject)),
+      getMany: (subjects) =>
         Promise.resolve(
           new Map(
-            itemIds
+            subjects
               .map((id) => [id, progress.get(id)] as const)
-              .filter((entry): entry is readonly [ItemId, ItemProgress] => entry[1] !== undefined),
+              .filter(
+                (entry): entry is readonly [EntityId, SubjectProgress] => entry[1] !== undefined,
+              ),
           ),
         ),
       all: () => Promise.resolve([...progress.values()]),
       count: () => Promise.resolve(progress.size),
       put: (record) => {
-        progress.set(record.itemId, record);
+        progress.set(record.subject, record);
         return Promise.resolve();
       },
       putMany: (rows) => {
-        for (const row of rows) progress.set(row.itemId, row);
+        for (const row of rows) progress.set(row.subject, row);
         return Promise.resolve();
       },
       clear: () => {
@@ -72,10 +74,10 @@ export function createMemoryStorage(
       },
       count: () => Promise.resolve(attempts.length),
       recent: (limit) => Promise.resolve([...attempts].sort(byNewest).slice(0, limit)),
-      forItem: (itemId, limit = 20) =>
+      forSubject: (subject, limit = 20) =>
         Promise.resolve(
           attempts
-            .filter((attempt) => attempt.itemId === itemId)
+            .filter((attempt) => attempt.subject === subject)
             .sort(byNewest)
             .slice(0, limit),
         ),

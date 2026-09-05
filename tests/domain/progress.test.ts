@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
 import {
-  newItemProgress,
+  newProgress,
   recordAttempt,
   summarise,
-  type ItemProgress,
+  type SubjectProgress,
   type Scheduler,
 } from '../../src/domain/progress';
 import { seededRng } from '../../src/utils/random';
@@ -28,7 +28,7 @@ describe('the scheduler seam', () => {
 
     const { progress } = recordAttempt(
       undefined,
-      { itemId: ITEM, exerciseKind: 'reveal', grade: 'good', latencyMs: 1000, hintsUsed: 2 },
+      { subject: ITEM, exerciseKind: 'reveal', grade: 'good', latencyMs: 1000, hintsUsed: 2 },
       NOW,
       stub,
     );
@@ -51,7 +51,7 @@ describe('an attempt’s identity', () => {
    * later migration can recover a row that was overwritten.
    */
   it('distinguishes two attempts on one item at the same instant', () => {
-    const input = { itemId: ITEM, exerciseKind: 'reveal' as const, grade: 'good' as const };
+    const input = { subject: ITEM, exerciseKind: 'reveal' as const, grade: 'good' as const };
     // One rng, drawn from twice — a fresh seeded rng would (correctly) repeat.
     const rng = seededRng(7);
 
@@ -62,7 +62,7 @@ describe('an attempt’s identity', () => {
   });
 
   it('stays reproducible under a seed', () => {
-    const input = { itemId: ITEM, exerciseKind: 'reveal' as const, grade: 'good' as const };
+    const input = { subject: ITEM, exerciseKind: 'reveal' as const, grade: 'good' as const };
 
     expect(recordAttempt(undefined, input, NOW, undefined, seededRng(7)).attempt.id).toBe(
       recordAttempt(undefined, input, NOW, undefined, seededRng(7)).attempt.id,
@@ -80,7 +80,7 @@ describe('recordAttempt', () => {
   it('stamps when the record was written', () => {
     const { progress } = recordAttempt(
       undefined,
-      { itemId: ITEM, exerciseKind: 'reveal', grade: 'good' },
+      { subject: ITEM, exerciseKind: 'reveal', grade: 'good' },
       NOW,
     );
 
@@ -91,7 +91,7 @@ describe('recordAttempt', () => {
     const { progress, attempt } = recordAttempt(
       undefined,
       {
-        itemId: ITEM,
+        subject: ITEM,
         exerciseKind: 'multiple-choice',
         grade: 'good',
         correct: true,
@@ -102,7 +102,7 @@ describe('recordAttempt', () => {
 
     expect(progress.attempts).toBe(1);
     expect(progress.averageLatencyMs).toBe(2400);
-    expect(attempt.itemId).toBe(ITEM);
+    expect(attempt.subject).toBe(ITEM);
     expect(attempt.exerciseKind).toBe('multiple-choice');
     expect(attempt.at).toBe(NOW);
   });
@@ -110,12 +110,12 @@ describe('recordAttempt', () => {
   it('smooths latency across attempts', () => {
     const first = recordAttempt(
       undefined,
-      { itemId: ITEM, exerciseKind: 'reveal', grade: 'good', latencyMs: 4000 },
+      { subject: ITEM, exerciseKind: 'reveal', grade: 'good', latencyMs: 4000 },
       NOW,
     );
     const second = recordAttempt(
       first.progress,
-      { itemId: ITEM, exerciseKind: 'reveal', grade: 'good', latencyMs: 2000 },
+      { subject: ITEM, exerciseKind: 'reveal', grade: 'good', latencyMs: 2000 },
       NOW + 1,
     );
     expect(second.progress.averageLatencyMs).toBe(3400);
@@ -124,9 +124,9 @@ describe('recordAttempt', () => {
 
 describe('summarise', () => {
   it('counts due and mastered items', () => {
-    const known: ItemProgress[] = [
-      { ...newItemProgress(ITEM), status: 'review', dueAt: NOW - 1 },
-      { ...newItemProgress(id<ItemId>('test-es:item:002')), status: 'mastered', dueAt: NOW + 1000 },
+    const known: SubjectProgress[] = [
+      { ...newProgress(ITEM), status: 'review', dueAt: NOW - 1 },
+      { ...newProgress(id<ItemId>('test-es:item:002')), status: 'mastered', dueAt: NOW + 1000 },
     ];
 
     expect(summarise(known, 7, NOW)).toEqual({

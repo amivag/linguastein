@@ -143,7 +143,7 @@ export function MissionScreen() {
       const evidenced = new Set(
         attempts
           .filter((attempt) => isMissionUseSession(attempt.sessionId, mission.id))
-          .map((attempt) => attempt.itemId),
+          .map((attempt) => attempt.subject),
       );
       const availableTransfers = missionTransfers(mission).filter((transfer) =>
         services.repository.passageByRef(transfer.passage, packs),
@@ -255,7 +255,7 @@ export function MissionScreen() {
       const recorded = recordAttempt(
         current,
         {
-          itemId: item.id,
+          subject: item.id,
           exerciseKind: 'think-say',
           grade,
           correct,

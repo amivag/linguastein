@@ -12,14 +12,14 @@
 
 import { describe, expect, it } from 'vitest';
 import { id } from '../fixtures/pack';
-import type { ItemId } from '../../src/domain/content';
+import type { EntityId, ItemId } from '../../src/domain/content';
 import type { ExerciseKind } from '../../src/domain/exercises/types';
 import {
   applyAttempt,
   recordAttempt,
-  replayItem,
+  replaySubject,
   type Attempt,
-  type ItemProgress,
+  type SubjectProgress,
   type ReviewGrade,
 } from '../../src/domain/progress';
 import { randomInt, seededRng, type Rng } from '../../src/utils/random';
@@ -38,11 +38,11 @@ const KINDS: readonly ExerciseKind[] = ['think-say', 'tap-to-build', 'multiple-c
  * path actually produces rather than one this test built to match itself.
  */
 function practise(
-  itemId: ItemId,
+  subject: EntityId,
   count: number,
   rng: Rng,
-): { readonly progress: ItemProgress | undefined; readonly attempts: readonly Attempt[] } {
-  let progress: ItemProgress | undefined;
+): { readonly progress: SubjectProgress | undefined; readonly attempts: readonly Attempt[] } {
+  let progress: SubjectProgress | undefined;
   const attempts: Attempt[] = [];
   let at = START;
 
@@ -62,7 +62,7 @@ function practise(
     const recorded = recordAttempt(
       progress,
       {
-        itemId,
+        subject,
         exerciseKind: KINDS[randomInt(rng, KINDS.length)]!,
         grade: GRADES[randomInt(rng, GRADES.length)]!,
         ...(randomInt(rng, 2) ? { latencyMs: 500 + randomInt(rng, 8000) } : {}),
@@ -85,7 +85,7 @@ describe('replaying an attempt log', () => {
       const rng = seededRng(seed);
       const { progress, attempts } = practise(ITEM, 1 + randomInt(rng, 25), rng);
 
-      expect(replayItem(ITEM, attempts)).toEqual(progress);
+      expect(replaySubject(ITEM, attempts)).toEqual(progress);
     }
   });
 
@@ -98,9 +98,9 @@ describe('replaying an attempt log', () => {
     const rng = seededRng(99);
     const { progress, attempts } = practise(ITEM, 12, rng);
 
-    expect(replayItem(ITEM, [...attempts].reverse())).toEqual(progress);
+    expect(replaySubject(ITEM, [...attempts].reverse())).toEqual(progress);
     expect(
-      replayItem(
+      replaySubject(
         ITEM,
         [...attempts].sort((a, b) => a.id.localeCompare(b.id)),
       ),
@@ -113,7 +113,7 @@ describe('replaying an attempt log', () => {
    * order. The tiebreak makes the answer the same on both devices.
    */
   it('orders attempts sharing a millisecond by id', () => {
-    const base = { itemId: ITEM, exerciseKind: 'think-say' as const, at: START };
+    const base = { subject: ITEM, exerciseKind: 'think-say' as const, at: START };
     const again: Attempt = { ...base, id: 'a-zzz', grade: 'again' };
     const good: Attempt = { ...base, id: 'a-aaa', grade: 'good' };
 
@@ -123,8 +123,21 @@ describe('replaying an attempt log', () => {
       [again, good],
       [good, again],
     ]) {
-      expect(replayItem(ITEM, log)).toEqual(applyAttempt(applyAttempt(undefined, good), again));
+      expect(replaySubject(ITEM, log)).toEqual(applyAttempt(applyAttempt(undefined, good), again));
     }
+  });
+
+  /**
+   * The fold knows nothing about what a subject *is*, and that is what lets a
+   * drill exist: `core-es:skill:numerals-y-joining` is scheduled by exactly the
+   * same arithmetic as a sentence.
+   */
+  it('folds a subject that is not an item', () => {
+    const pattern = id<EntityId>('test-es:skill:numerals-y-joining');
+    const { progress, attempts } = practise(pattern, 8, seededRng(3));
+
+    expect(replaySubject(pattern, attempts)).toEqual(progress);
+    expect(replaySubject(pattern, attempts)?.subject).toBe(pattern);
   });
 
   it('reads only the item it was asked about', () => {
@@ -132,8 +145,8 @@ describe('replaying an attempt log', () => {
     const mine = practise(ITEM, 6, rng);
     const theirs = practise(OTHER, 6, rng);
 
-    expect(replayItem(ITEM, [...mine.attempts, ...theirs.attempts])).toEqual(mine.progress);
-    expect(replayItem(OTHER, [...mine.attempts, ...theirs.attempts])).toEqual(theirs.progress);
+    expect(replaySubject(ITEM, [...mine.attempts, ...theirs.attempts])).toEqual(mine.progress);
+    expect(replaySubject(OTHER, [...mine.attempts, ...theirs.attempts])).toEqual(theirs.progress);
   });
 
   /**
@@ -142,7 +155,7 @@ describe('replaying an attempt log', () => {
    * only thing that knows whether to keep the row it already has.
    */
   it('has no answer for an empty log', () => {
-    expect(replayItem(ITEM, [])).toBeUndefined();
-    expect(replayItem(ITEM, practise(OTHER, 3, seededRng(1)).attempts)).toBeUndefined();
+    expect(replaySubject(ITEM, [])).toBeUndefined();
+    expect(replaySubject(ITEM, practise(OTHER, 3, seededRng(1)).attempts)).toBeUndefined();
   });
 });

@@ -66,14 +66,14 @@ export interface MissionEvidence {
 
 /** Indexes an attempt log into the Use-stage evidence, mission by mission. */
 export function missionUseEvidence(
-  attempts: readonly { readonly itemId: string; readonly sessionId?: string }[],
+  attempts: readonly { readonly subject: string; readonly sessionId?: string }[],
 ): ReadonlyMap<string, ReadonlySet<string>> {
   const result = new Map<string, Set<string>>();
   for (const attempt of attempts) {
     const mission = missionOfUseSession(attempt.sessionId);
     if (!mission) continue;
     const items = result.get(mission) ?? new Set<string>();
-    items.add(attempt.itemId);
+    items.add(attempt.subject);
     result.set(mission, items);
   }
   return result;

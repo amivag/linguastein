@@ -9,13 +9,15 @@ import { Icon } from '../../components/Icon';
 import { TokenizedText } from '../../components/TokenizedText';
 import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
+import { isItemId } from '../../domain/content';
 import {
   inferMastery,
+  itemProgressIn,
   summarise,
   weakest as weakestMastery,
-  type ItemProgress,
   type MasteryRecord,
   type ProgressSummary,
+  type SubjectProgress,
 } from '../../domain/progress';
 import type { SessionRecord } from '../../domain/sessions';
 import { formatDuration } from '../practice/duration';
@@ -24,7 +26,7 @@ import styles from './ProgressScreen.module.css';
 
 interface Loaded {
   readonly summary: ProgressSummary;
-  readonly weakest: readonly ItemProgress[];
+  readonly weakest: readonly SubjectProgress[];
   readonly sessions: readonly SessionRecord[];
   readonly accuracy: number | null;
   /** Words and skills, not sentences — what has actually been acquired. */
@@ -68,7 +70,9 @@ export function ProgressScreen() {
       ]);
       if (cancelled) return;
 
-      const progress = stored.filter((entry) => scope.ids.has(entry.itemId));
+      // Narrowed to the course's items, which also excludes a row that is not
+      // about an item — see the same call on Home.
+      const progress = [...itemProgressIn(stored, scope.ids).values()];
       const correct = progress.reduce((total, item) => total + item.correct, 0);
       const attempts = progress.reduce((total, item) => total + item.attempts, 0);
 
@@ -251,14 +255,17 @@ export function ProgressScreen() {
               <h2 className={styles.sectionTitle}>Sentences to revisit</h2>
               <ul className={styles.list}>
                 {weakest.map((record) => {
-                  const item = services.repository.getItem(record.itemId);
+                  // Every row here came through `itemProgressIn`, so the
+                  // subject is an item id and the narrowing already happened.
+                  if (!isItemId(record.subject)) return null;
+                  const item = services.repository.getItem(record.subject);
                   if (!item) return null;
                   const translation = services.repository.translationOf(
                     item.id,
                     preferences.referenceLanguage,
                   );
                   return (
-                    <li key={record.itemId} className={styles.row}>
+                    <li key={record.subject} className={styles.row}>
                       {/* "Sentences to revisit" is exactly where a learner
                           wants to ask which word is the problem. */}
                       <TokenizedText

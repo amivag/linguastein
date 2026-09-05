@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useServices } from '../../app/services-context';
-import type { Course, ItemId, LearningItem } from '../../domain/content';
+import { isItemId, type Course, type ItemId, type LearningItem } from '../../domain/content';
 import {
   gradeExercise,
   type Answer,
@@ -16,7 +16,7 @@ import {
 } from '../../domain/exercises';
 import {
   recordAttempt,
-  type ItemProgress,
+  type SubjectProgress,
   type ItemStatus,
   type ReviewGrade,
 } from '../../domain/progress';
@@ -133,7 +133,7 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
 
   const tracked = config.mode !== 'study';
 
-  const progressRef = useRef(new Map<ItemId, ItemProgress>());
+  const progressRef = useRef(new Map<ItemId, SubjectProgress>());
 
   useEffect(() => {
     let cancelled = false;
@@ -143,7 +143,12 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
       const stored = await storage.progress.all();
       if (cancelled) return;
 
-      const progress = new Map(stored.map((entry) => [entry.itemId, entry]));
+      // A session plans over items, so the rows a drill writes against a pattern
+      // are not part of one and are dropped rather than carried and never read.
+      const progress = new Map<ItemId, SubjectProgress>();
+      for (const entry of stored) {
+        if (isItemId(entry.subject)) progress.set(entry.subject, entry);
+      }
       progressRef.current = progress;
 
       const plan = planSession({ repository, config, progress, now: Date.now() });
@@ -234,7 +239,7 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
         const { progress, attempt } = recordAttempt(
           progressRef.current.get(item.id),
           {
-            itemId: item.id,
+            subject: item.id,
             exerciseKind: exercise.kind,
             grade,
             sessionId,

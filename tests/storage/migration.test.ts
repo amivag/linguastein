@@ -146,7 +146,9 @@ describe('upgrading a version-1 database', () => {
     const storage = createIndexedDbStorage(await open());
 
     expect(await storage.progress.get(REVIEWED)).toMatchObject({
-      itemId: REVIEWED,
+      // Under its new name, and that is version 5's whole job — the key path
+      // moved from `itemId` to `subject`, so the row had to be rewritten.
+      subject: REVIEWED,
       status: 'review',
       attempts: 2,
       correct: 2,
@@ -249,7 +251,7 @@ describe('upgrading a version-2 database', () => {
     expect(await db.getAllFromIndex('progress', 'by-pack', 'test-es')).toHaveLength(1);
 
     expect(await storage.progress.get(REVIEWED)).toEqual({
-      itemId: REVIEWED,
+      subject: REVIEWED,
       packId: 'test-es',
       status: 'review',
       attempts: 2,
@@ -326,6 +328,215 @@ async function seedVersion3(): Promise<void> {
  * defaults for everything that moved — so a learner would find their level,
  * their categories and their voice quietly reset, with nothing in any log.
  */
+/**
+ * Version 4 as it shipped: the settings are already split, and the two history
+ * stores are still keyed on `itemId`.
+ *
+ * Two progress rows and two attempts, because the thing that can go wrong here
+ * is *partial*: a store recreated with some rows copied and some lost would pass
+ * any test that only looked at one.
+ */
+async function seedVersion4(): Promise<void> {
+  await deleteDB(APP.id);
+  const db = await openDB(APP.id, 4, {
+    upgrade(database) {
+      const progress = database.createObjectStore('progress', { keyPath: 'itemId' });
+      progress.createIndex('by-due', 'dueAt');
+      progress.createIndex('by-status', 'status');
+      progress.createIndex('by-pack', 'packId');
+
+      const attempts = database.createObjectStore('attempts', { keyPath: 'id' });
+      attempts.createIndex('by-item', 'itemId');
+      attempts.createIndex('by-time', 'at');
+
+      const sessions = database.createObjectStore('sessions', { keyPath: 'id' });
+      sessions.createIndex('by-time', 'startedAt');
+
+      database.createObjectStore('batches', { keyPath: 'id' });
+      database.createObjectStore('meta');
+    },
+  });
+
+  for (const [itemId, extra] of [
+    [REVIEWED, { status: 'review', attempts: 2, correct: 2, streak: 2, dueAt: 5_000 }],
+    [UNSEEN, { status: 'new', attempts: 0, correct: 0, streak: 0 }],
+  ] as const) {
+    await db.put('progress', {
+      itemId,
+      packId: 'test-es',
+      incorrect: 0,
+      difficulty: 0.3,
+      hintsUsed: 0,
+      lastReviewedAt: 1_000,
+      updatedAt: 1_000,
+      ...extra,
+    });
+  }
+
+  for (const [attemptId, itemId] of [
+    ['a1', REVIEWED],
+    ['a2', UNSEEN],
+  ] as const) {
+    await db.put('attempts', {
+      id: attemptId,
+      itemId,
+      exerciseKind: 'think-say',
+      grade: 'good',
+      at: 1_000,
+    });
+  }
+
+  db.close();
+}
+
+/**
+ * The rename, and the only migration so far that has had to **destroy a store**
+ * to do its job.
+ *
+ * `subject` is the `progress` store's key path, and a key path is fixed when the
+ * store is created — so version 5 reads every row out, deletes the store,
+ * rebuilds it and writes them back. Everything below is a way of asking the one
+ * question that matters: did anything fall out on the way?
+ */
+describe('upgrading a version-4 database', () => {
+  let upgraded: AppDatabase | undefined;
+
+  const open = async (): Promise<AppDatabase> => {
+    upgraded = await openAppDatabase();
+    return upgraded;
+  };
+
+  beforeEach(seedVersion4);
+  afterEach(() => {
+    upgraded?.close();
+    upgraded = undefined;
+  });
+
+  it('keeps every progress row, under its new key', async () => {
+    const storage = createIndexedDbStorage(await open());
+
+    expect(await storage.progress.count()).toBe(2);
+    expect(await storage.progress.get(REVIEWED)).toMatchObject({
+      subject: REVIEWED,
+      status: 'review',
+      attempts: 2,
+      correct: 2,
+      streak: 2,
+      dueAt: 5_000,
+      packId: 'test-es',
+    });
+    // The row nobody has practised matters as much: a store rebuilt from
+    // `by-status` or `by-due` rather than from `getAll` would drop it.
+    expect(await storage.progress.get(UNSEEN)).toMatchObject({ subject: UNSEEN, attempts: 0 });
+  });
+
+  /**
+   * Through the indexes rather than the store, for the reason version 2's block
+   * gives: a row that never reached an index is still in `getAll()`, so reading
+   * it that way would report a rebuild that had quietly lost every query the
+   * app actually makes.
+   */
+  it('rebuilds the indexes the recreated store needs', async () => {
+    const db = await open();
+
+    expect(await db.getAllFromIndex('progress', 'by-pack', 'test-es')).toHaveLength(2);
+    expect(await db.getAllFromIndex('progress', 'by-status', 'review')).toHaveLength(1);
+    expect(
+      await db.getAllFromIndex('progress', 'by-due', IDBKeyRange.upperBound(10_000)),
+    ).toHaveLength(1);
+  });
+
+  it('keeps every attempt, and finds it under the new index', async () => {
+    const storage = createIndexedDbStorage(await open());
+
+    expect(await storage.attempts.count()).toBe(2);
+    expect((await storage.attempts.all()).map((attempt) => attempt.subject)).toEqual([
+      REVIEWED,
+      UNSEEN,
+    ]);
+    // `forSubject` reads `by-subject`, which is built from the stored key path —
+    // so a row rewritten without `subject` would be absent here while still
+    // showing up in the count above. That gap is the whole risk.
+    expect(await storage.attempts.forSubject(REVIEWED)).toHaveLength(1);
+  });
+
+  it('loses nothing else on the way past', async () => {
+    const storage = createIndexedDbStorage(await open());
+
+    expect((await storage.preferences.read()).targetLanguage).toBe(
+      DEFAULT_PREFERENCES.targetLanguage,
+    );
+    expect(await storage.batches.all()).toEqual([]);
+  });
+});
+
+/**
+ * A version-3 database that has rows but **no stored settings**.
+ *
+ * The combination matters: version 4 returns as soon as it finds no settings to
+ * split, and a version-change transaction commits the moment the microtask queue
+ * drains with no request pending. So an early return there used to leave the
+ * transaction dead before version 5 could open a store — and version 5 is the
+ * one that renames the key every progress row is found by.
+ *
+ * Nothing about that looked wrong: the settings migrated, the database opened,
+ * and the history quietly stayed in the old shape.
+ */
+async function seedVersion3WithRowsAndNoSettings(): Promise<void> {
+  await deleteDB(APP.id);
+  const db = await openDB(APP.id, 3, {
+    upgrade(database) {
+      const progress = database.createObjectStore('progress', { keyPath: 'itemId' });
+      progress.createIndex('by-due', 'dueAt');
+      progress.createIndex('by-status', 'status');
+      progress.createIndex('by-pack', 'packId');
+
+      const attempts = database.createObjectStore('attempts', { keyPath: 'id' });
+      attempts.createIndex('by-item', 'itemId');
+      attempts.createIndex('by-time', 'at');
+
+      const sessions = database.createObjectStore('sessions', { keyPath: 'id' });
+      sessions.createIndex('by-time', 'startedAt');
+
+      database.createObjectStore('batches', { keyPath: 'id' });
+      database.createObjectStore('meta');
+    },
+  });
+
+  await db.put('progress', {
+    itemId: REVIEWED,
+    packId: 'test-es',
+    status: 'review',
+    attempts: 2,
+    correct: 2,
+    incorrect: 0,
+    difficulty: 0.3,
+    hintsUsed: 0,
+    streak: 2,
+    lastReviewedAt: 1_000,
+    updatedAt: 1_000,
+  });
+
+  db.close();
+}
+
+describe('upgrading a version-3 database that has no settings', () => {
+  let upgraded: AppDatabase | undefined;
+
+  beforeEach(seedVersion3WithRowsAndNoSettings);
+  afterEach(() => {
+    upgraded?.close();
+    upgraded = undefined;
+  });
+
+  it('still renames the key on every progress row', async () => {
+    upgraded = await openAppDatabase();
+    const storage = createIndexedDbStorage(upgraded);
+
+    expect(await storage.progress.get(REVIEWED)).toMatchObject({ subject: REVIEWED });
+  });
+});
+
 describe('upgrading a version-3 database', () => {
   let upgraded: AppDatabase | undefined;
 

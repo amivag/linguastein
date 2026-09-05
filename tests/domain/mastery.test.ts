@@ -10,9 +10,9 @@ import {
 import {
   ENCOUNTERS_FOR_STRENGTH,
   inferMastery,
-  newItemProgress,
+  newProgress,
   weakest,
-  type ItemProgress,
+  type SubjectProgress,
 } from '../../src/domain/progress';
 import { id, TEST_PACK, TEST_PACK_ID, testRepository } from '../fixtures/pack';
 
@@ -22,15 +22,15 @@ const TENER = id<LexemeId>('test-es:lexeme:tener');
 const TENER_QUE = id<SkillId>('test-es:skill:tener-que');
 const FUNCTION = id<SkillId>('test-es:skill:handle-situation');
 
-const record = (local: string, overrides: Partial<ItemProgress> = {}): ItemProgress => ({
-  ...newItemProgress(id<ItemId>(`test-es:item:${local}`)),
+const record = (local: string, overrides: Partial<SubjectProgress> = {}): SubjectProgress => ({
+  ...newProgress(id<ItemId>(`test-es:item:${local}`)),
   attempts: 4,
   correct: 4,
   stability: 20,
   ...overrides,
 });
 
-const infer = (progress: readonly ItemProgress[]) => inferMastery(repository, progress, NOW);
+const infer = (progress: readonly SubjectProgress[]) => inferMastery(repository, progress, NOW);
 
 const contextualPack: ContentPack = {
   ...TEST_PACK,

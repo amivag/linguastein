@@ -4,7 +4,7 @@
  * extended without invalidating what the learner has done.
  */
 
-import { packIdOf, type ItemId, type PackId } from '../content';
+import { packIdOf, type EntityId, type PackId } from '../content';
 import type { ExerciseKind } from '../exercises/types';
 
 export const ITEM_STATUSES = ['new', 'learning', 'review', 'mastered'] as const;
@@ -16,17 +16,46 @@ export type ReviewGrade = (typeof REVIEW_GRADES)[number];
 /** Epoch milliseconds. Stored as numbers so records survive JSON round-trips. */
 export type Timestamp = number;
 
-export interface ItemProgress {
-  readonly itemId: ItemId;
+/**
+ * What one thing the learner is getting better at looks like.
+ *
+ * **The subject is any content entity, not only an item**, and that widening is
+ * what lets a drill exist at all. Three things the app wants to practise are not
+ * items and never can be: a verb form (`core-es:form:ser-pres-1s`), a grammatical
+ * pattern (`core-es:skill:numerals-y-joining`), and a passage as a whole. The
+ * first two already ship as records with stable ids — 9,206 forms in `core-es` —
+ * so nothing new had to be minted for them.
+ *
+ * It also answers the question `docs/tasks/numerals.md` §6.1 got stuck on. A
+ * generated target like 1042 has no id and must not be given one; what it
+ * *exercises* does. An attempt on 1042 is recorded against the patterns
+ * `rulesFor(1042)` names, which are closed, stable and few — so the scheduler
+ * sees a handful of durable skills rather than an infinity of integers.
+ *
+ * Architecture rule 4 is unchanged in substance: a progress row still references
+ * an id the dataset owns and can never invalidate. Only the set of ids widened,
+ * and it widened to one that already existed.
+ */
+export interface SubjectProgress {
   /**
-   * The pack the item belongs to, derived from its id rather than new
+   * What this row is about: `core-es:item:000123`, `core-es:form:ser-pres-1s`,
+   * `core-es:skill:numerals-y-joining`.
+   *
+   * Named `subject` rather than `itemId` because it stopped being an item id.
+   * The rename cost a database migration and a file-format version, and was
+   * taken while the format was one day old rather than later, when every
+   * exported file in existence would have had to be read through a shim forever.
+   */
+  readonly subject: EntityId;
+  /**
+   * The pack the subject belongs to, derived from its id rather than new
    * information — `packIdOf('core-es:item:000123')`.
    *
    * Stored because an IndexedDB index is built from a stored key path and
    * nothing else: "how much of the French course have I done?" cannot be asked
    * of a value computed in memory, and answering it by materialising every item
    * id in the course is what every screen does today. The record still
-   * *references* only the item (architecture rule 4) — this is the same fact,
+   * *references* only the subject (architecture rule 4) — this is the same fact,
    * written where the database can group by it.
    *
    * Absent only where the id does not parse, which is also the one case where
@@ -63,7 +92,8 @@ export interface ItemProgress {
 
 export interface Attempt {
   readonly id: string;
-  readonly itemId: ItemId;
+  /** What was practised. See {@link SubjectProgress.subject}. */
+  readonly subject: EntityId;
   readonly exerciseKind: ExerciseKind;
   readonly grade: ReviewGrade;
   readonly correct?: boolean;
@@ -74,17 +104,17 @@ export interface Attempt {
 }
 
 /**
- * A record for an item nothing has been recorded against yet.
+ * A record for a subject nothing has been recorded against yet.
  *
  * `now` defaults to 0 rather than reading a clock — this module is pure, and a
  * fresh record only reaches storage through `recordAttempt`, which stamps
  * `updatedAt` with the attempt's own clock. Epoch zero is also the right answer
  * for a merge: a row nobody has written loses to one somebody has.
  */
-export function newItemProgress(itemId: ItemId, now: Timestamp = 0): ItemProgress {
-  const packId = packIdOf(itemId);
+export function newProgress(subject: EntityId, now: Timestamp = 0): SubjectProgress {
+  const packId = packIdOf(subject);
   return {
-    itemId,
+    subject,
     ...(packId ? { packId } : {}),
     status: 'new',
     attempts: 0,
@@ -97,6 +127,6 @@ export function newItemProgress(itemId: ItemId, now: Timestamp = 0): ItemProgres
   };
 }
 
-export function isDue(progress: ItemProgress, now: Timestamp): boolean {
+export function isDue(progress: SubjectProgress, now: Timestamp): boolean {
   return progress.dueAt !== undefined && progress.dueAt <= now;
 }

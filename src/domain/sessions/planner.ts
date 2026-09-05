@@ -6,7 +6,7 @@
  */
 
 import type { ContentRepository, ItemId, LearningItem, SpeakerGender } from '../content';
-import { isDue, type ItemProgress, type Timestamp } from '../progress/types';
+import { isDue, type SubjectProgress, type Timestamp } from '../progress/types';
 import { seededRng, shuffle, systemRng, token, type Rng } from '../../utils/random';
 import {
   DEFAULT_SESSION_FOCUS,
@@ -20,7 +20,7 @@ import {
 export interface PlanInput {
   readonly repository: ContentRepository;
   readonly config: SessionConfig;
-  readonly progress: ReadonlyMap<ItemId, ItemProgress>;
+  readonly progress: ReadonlyMap<ItemId, SubjectProgress>;
   readonly now: Timestamp;
   /** Overrides the seeded/system RNG; mainly for tests. */
   readonly rng?: Rng;
@@ -67,7 +67,7 @@ function capacity(size: SessionSize, available: number): number {
 function order(
   items: readonly LearningItem[],
   config: SessionConfig,
-  progress: ReadonlyMap<ItemId, ItemProgress>,
+  progress: ReadonlyMap<ItemId, SubjectProgress>,
   now: Timestamp,
   rng: Rng,
 ): readonly LearningItem[] {
@@ -158,7 +158,7 @@ const isOtherGender = (item: LearningItem, speakerGender: SpeakerGender): boolea
  */
 function smartOrder(
   items: readonly LearningItem[],
-  progress: ReadonlyMap<ItemId, ItemProgress>,
+  progress: ReadonlyMap<ItemId, SubjectProgress>,
   now: Timestamp,
   rng: Rng,
   focus: SessionFocus,

@@ -9,9 +9,9 @@ import type { ItemId } from '../../src/domain/content';
 import {
   fsrsScheduler,
   intervalDays,
-  newItemProgress,
+  newProgress,
   retrievability,
-  type ItemProgress,
+  type SubjectProgress,
   type ReviewGrade,
 } from '../../src/domain/progress';
 import { id } from '../fixtures/pack';
@@ -21,7 +21,7 @@ const DAY = 24 * 60 * 60 * 1000;
 const NOW = 1_700_000_000_000;
 
 /** Reviews at the moment each item falls due, as a real learner would. */
-function study(grades: readonly ReviewGrade[], from: ItemProgress = newItemProgress(ITEM)) {
+function study(grades: readonly ReviewGrade[], from: SubjectProgress = newProgress(ITEM)) {
   let progress = from;
   let clock = NOW;
   for (const grade of grades) {
@@ -31,7 +31,7 @@ function study(grades: readonly ReviewGrade[], from: ItemProgress = newItemProgr
   return progress;
 }
 
-const intervalOf = (progress: ItemProgress) =>
+const intervalOf = (progress: SubjectProgress) =>
   (progress.dueAt ?? 0) - (progress.lastReviewedAt ?? 0);
 
 describe('forgetting curve', () => {
@@ -54,10 +54,10 @@ describe('forgetting curve', () => {
 
 describe('fsrsScheduler', () => {
   it('gives a new item its first interval from how well it went', () => {
-    const again = fsrsScheduler.review(newItemProgress(ITEM), 'again', NOW);
-    const hard = fsrsScheduler.review(newItemProgress(ITEM), 'hard', NOW);
-    const good = fsrsScheduler.review(newItemProgress(ITEM), 'good', NOW);
-    const easy = fsrsScheduler.review(newItemProgress(ITEM), 'easy', NOW);
+    const again = fsrsScheduler.review(newProgress(ITEM), 'again', NOW);
+    const hard = fsrsScheduler.review(newProgress(ITEM), 'hard', NOW);
+    const good = fsrsScheduler.review(newProgress(ITEM), 'good', NOW);
+    const easy = fsrsScheduler.review(newProgress(ITEM), 'easy', NOW);
 
     expect(intervalOf(again)).toBeLessThan(intervalOf(hard));
     expect(intervalOf(hard)).toBeLessThan(intervalOf(good));
@@ -65,14 +65,14 @@ describe('fsrsScheduler', () => {
   });
 
   it('brings a failed item back within the same session', () => {
-    const lapsed = fsrsScheduler.review(newItemProgress(ITEM), 'again', NOW);
+    const lapsed = fsrsScheduler.review(newProgress(ITEM), 'again', NOW);
     expect(intervalOf(lapsed)).toBeLessThanOrEqual(15 * 60 * 1000);
     expect(lapsed.status).toBe('learning');
   });
 
   it('lengthens intervals as a memory stabilises', () => {
     const intervals: number[] = [];
-    let progress = newItemProgress(ITEM);
+    let progress = newProgress(ITEM);
     let clock = NOW;
 
     for (let review = 0; review < 5; review++) {
@@ -95,7 +95,7 @@ describe('fsrsScheduler', () => {
     expect(lapsed.stability).toBeLessThan(learned.stability!);
     expect(lapsed.streak).toBe(0);
     // Relearning is faster than learning it for the first time.
-    const fresh = fsrsScheduler.review(newItemProgress(ITEM), 'good', NOW);
+    const fresh = fsrsScheduler.review(newProgress(ITEM), 'good', NOW);
     expect(recovered.stability).toBeGreaterThan(fresh.stability!);
   });
 
@@ -120,8 +120,8 @@ describe('fsrsScheduler', () => {
 
   it('adopts records written before scheduling was upgraded', () => {
     // No stability field: the ladder scheduler wrote these.
-    const legacy: ItemProgress = {
-      ...newItemProgress(ITEM),
+    const legacy: SubjectProgress = {
+      ...newProgress(ITEM),
       attempts: 3,
       correct: 3,
       streak: 3,

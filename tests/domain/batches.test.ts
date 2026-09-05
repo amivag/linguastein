@@ -11,7 +11,7 @@ import {
   type BatchDefinition,
 } from '../../src/domain/batches';
 import type { Course, ItemId } from '../../src/domain/content';
-import { newItemProgress, type Attempt, type ItemProgress } from '../../src/domain/progress';
+import { newProgress, type Attempt, type SubjectProgress } from '../../src/domain/progress';
 import { seededRng } from '../../src/utils/random';
 import { id } from '../fixtures/pack';
 
@@ -36,13 +36,13 @@ function batch(overrides: Partial<BatchDefinition> = {}): BatchDefinition {
 }
 
 /** A record held well enough to pass the stability half of the bar. */
-function held(itemId: ItemId, stability = ABSORBED_STABILITY_DAYS): ItemProgress {
-  return { ...newItemProgress(itemId), attempts: 3, correct: 3, stability, status: 'review' };
+function held(subject: ItemId, stability = ABSORBED_STABILITY_DAYS): SubjectProgress {
+  return { ...newProgress(subject), attempts: 3, correct: 3, stability, status: 'review' };
 }
 
-function attempt(overrides: Partial<Attempt> & { itemId: ItemId; at: number }): Attempt {
+function attempt(overrides: Partial<Attempt> & { subject: ItemId; at: number }): Attempt {
   return {
-    id: `a-${overrides.itemId}-${overrides.at}`,
+    id: `a-${overrides.subject}-${overrides.at}`,
     exerciseKind: 'think-say',
     grade: 'good',
     ...overrides,
@@ -51,7 +51,7 @@ function attempt(overrides: Partial<Attempt> & { itemId: ItemId; at: number }): 
 
 function standing(input: {
   batch?: BatchDefinition;
-  progress?: readonly ItemProgress[];
+  progress?: readonly SubjectProgress[];
   attempts?: readonly Attempt[];
   courseItemIds?: readonly ItemId[];
   now?: number;
@@ -60,7 +60,10 @@ function standing(input: {
   return batchStanding({
     batch: definition,
     courseItemIds: new Set(input.courseItemIds ?? definition.itemIds),
-    progress: new Map((input.progress ?? []).map((record) => [record.itemId, record])),
+    // A batch is over items, so the map it is given is keyed by them.
+    progress: new Map(
+      (input.progress ?? []).map((record) => [record.subject as ItemId, record] as const),
+    ),
     attempts: input.attempts ?? [],
     now: input.now ?? 100 * DAY,
     dayOf,
@@ -112,8 +115,8 @@ describe('batch standing', () => {
    */
   it('needs production, stability and two days together', () => {
     const days = [
-      attempt({ itemId: item(1), at: 10 * DAY }),
-      attempt({ itemId: item(1), at: 11 * DAY }),
+      attempt({ subject: item(1), at: 10 * DAY }),
+      attempt({ subject: item(1), at: 11 * DAY }),
     ];
 
     // All three: absorbed.
@@ -138,8 +141,8 @@ describe('batch standing', () => {
       standing({
         progress: [held(item(1))],
         attempts: [
-          attempt({ itemId: item(1), at: 10 * DAY }),
-          attempt({ itemId: item(1), at: 10 * DAY + 60_000 }),
+          attempt({ subject: item(1), at: 10 * DAY }),
+          attempt({ subject: item(1), at: 10 * DAY + 60_000 }),
         ],
       }).absorbed,
     ).toBe(0);
@@ -149,8 +152,8 @@ describe('batch standing', () => {
     const standingWithFailures = standing({
       progress: [held(item(1))],
       attempts: [
-        attempt({ itemId: item(1), at: 10 * DAY, grade: 'again' }),
-        attempt({ itemId: item(1), at: 11 * DAY, grade: 'again' }),
+        attempt({ subject: item(1), at: 10 * DAY, grade: 'again' }),
+        attempt({ subject: item(1), at: 11 * DAY, grade: 'again' }),
       ],
     });
 
@@ -163,8 +166,8 @@ describe('batch standing', () => {
     const built = standing({
       progress: [held(item(1))],
       attempts: [
-        attempt({ itemId: item(1), at: 10 * DAY, exerciseKind: 'tap-to-build' }),
-        attempt({ itemId: item(1), at: 12 * DAY, exerciseKind: 'tap-to-build' }),
+        attempt({ subject: item(1), at: 10 * DAY, exerciseKind: 'tap-to-build' }),
+        attempt({ subject: item(1), at: 12 * DAY, exerciseKind: 'tap-to-build' }),
       ],
     });
 
@@ -198,8 +201,8 @@ describe('batch standing', () => {
       attempts: ids
         .slice(0, count)
         .flatMap((one) => [
-          attempt({ itemId: one, at: 10 * DAY }),
-          attempt({ itemId: one, at: 11 * DAY }),
+          attempt({ subject: one, at: 10 * DAY }),
+          attempt({ subject: one, at: 11 * DAY }),
         ]),
     });
 
@@ -226,8 +229,8 @@ describe('batch standing', () => {
     const result = standing({
       progress: [held(item(1))],
       attempts: [
-        attempt({ itemId: item(2), at: 10 * DAY }),
-        attempt({ itemId: item(2), at: 11 * DAY }),
+        attempt({ subject: item(2), at: 10 * DAY }),
+        attempt({ subject: item(2), at: 11 * DAY }),
       ],
     });
 

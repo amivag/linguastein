@@ -13,7 +13,7 @@ import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
-import { newItemProgress } from '../../src/domain/progress';
+import { newProgress } from '../../src/domain/progress';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
@@ -33,7 +33,7 @@ const where = () => screen.getByTestId('where').textContent ?? '';
 async function servicesWithDueItem() {
   const services = testServices();
   await services.storage.progress.put({
-    ...newItemProgress(id<ItemId>('test-es:item:001')),
+    ...newProgress(id<ItemId>('test-es:item:001')),
     status: 'review',
     attempts: 3,
     correct: 3,

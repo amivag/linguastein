@@ -29,8 +29,8 @@
  */
 
 import type { BatchDefinition } from '../../domain/batches';
-import { replayItem, type Attempt, type ItemProgress } from '../../domain/progress';
-import type { ItemId } from '../../domain/content';
+import { replaySubject, type Attempt, type SubjectProgress } from '../../domain/progress';
+import type { EntityId } from '../../domain/content';
 import type { LearnerStorage } from '../types';
 import { readCourseStates, readPreferences } from '../schemas';
 import { EXPORT_SCHEMA, type LearnerExport } from './format';
@@ -146,7 +146,7 @@ export interface ImportReport {
    * control updates the live app rather than reloading it.
    */
   readonly batchesAdded: readonly BatchDefinition[];
-  /** Items whose progress row was recomputed from the merged log. */
+  /** Subjects whose progress row was recomputed from the merged log. */
   readonly itemsRebuilt: number;
   /**
    * Rows referencing a pack this device does not have installed.
@@ -200,29 +200,29 @@ export async function applyExport(
   const newBatches = envelope.batches.filter((batch) => !heldBatches.has(batch.id));
 
   /*
-   * Only the items the file actually touched, which is what keeps this bounded:
-   * a learner importing one phone's week replays that week's items, not every
-   * item they have ever seen. The whole merged log is what each of those is
-   * folded from, though — a file can carry attempts *older* than the local ones,
-   * and a fold over the tail alone would be a different row.
+   * Only the subjects the file actually touched, which is what keeps this
+   * bounded: a learner importing one phone's week replays that week's subjects,
+   * not everything they have ever practised. The whole merged log is what each
+   * of those is folded from, though — a file can carry attempts *older* than the
+   * local ones, and a fold over the tail alone would be a different row.
    */
-  const touched = new Set<ItemId>(newAttempts.map((attempt) => attempt.itemId));
-  const mergedByItem = new Map<ItemId, Attempt[]>();
+  const touched = new Set<EntityId>(newAttempts.map((attempt) => attempt.subject));
+  const mergedBySubject = new Map<EntityId, Attempt[]>();
   for (const attempt of [...localAttempts, ...newAttempts]) {
-    if (!touched.has(attempt.itemId)) continue;
-    const existing = mergedByItem.get(attempt.itemId);
+    if (!touched.has(attempt.subject)) continue;
+    const existing = mergedBySubject.get(attempt.subject);
     if (existing) existing.push(attempt);
-    else mergedByItem.set(attempt.itemId, [attempt]);
+    else mergedBySubject.set(attempt.subject, [attempt]);
   }
 
-  const rebuilt: ItemProgress[] = [];
-  for (const [itemId, log] of mergedByItem) {
-    const row = replayItem(itemId, log);
+  const rebuilt: SubjectProgress[] = [];
+  for (const [subject, log] of mergedBySubject) {
+    const row = replaySubject(subject, log);
     if (row) rebuilt.push(row);
   }
 
   /*
-   * Rows the file carries for items with no attempts anywhere. Impossible for
+   * Rows the file carries for subjects with no attempts anywhere. Impossible for
    * this build to have written — every row comes from an attempt — but the
    * format says progress is a cache, and a cache whose source is gone is the
    * only evidence left. Inserted only where the device has nothing, so a local
@@ -230,9 +230,9 @@ export async function applyExport(
    * checked.
    */
   const known = await storage.progress.all();
-  const heldItems = new Set(known.map((row) => row.itemId));
+  const heldSubjects = new Set(known.map((row) => row.subject));
   const unbacked = envelope.progress.filter(
-    (row) => !touched.has(row.itemId) && !heldItems.has(row.itemId),
+    (row) => !touched.has(row.subject) && !heldSubjects.has(row.subject),
   );
 
   await Promise.all([

@@ -119,7 +119,7 @@ describe('the You section of Settings', () => {
     const services = testServices();
     await services.storage.attempts.append({
       id: 'a1',
-      itemId: id<ItemId>('test-es:item:000001'),
+      subject: id<ItemId>('test-es:item:000001'),
       exerciseKind: 'reveal',
       grade: 'good',
       at: 1,

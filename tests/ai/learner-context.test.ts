@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { buildLearnerContext, formatLearnerContext } from '../../src/ai';
 import type { ItemId } from '../../src/domain/content';
-import { newItemProgress, type ItemProgress } from '../../src/domain/progress';
+import { newProgress, type SubjectProgress } from '../../src/domain/progress';
 import { id, testRepository } from '../fixtures/pack';
 
 const repository = testRepository();
 const NOW = 1_700_000_000_000;
 
-const record = (local: string, overrides: Partial<ItemProgress>): ItemProgress => ({
-  ...newItemProgress(id<ItemId>(`test-es:item:${local}`)),
+const record = (local: string, overrides: Partial<SubjectProgress>): SubjectProgress => ({
+  ...newProgress(id<ItemId>(`test-es:item:${local}`)),
   attempts: 3,
   ...overrides,
 });
 
-const build = (progress: readonly ItemProgress[]) =>
+const build = (progress: readonly SubjectProgress[]) =>
   buildLearnerContext({
     repository,
     progress,

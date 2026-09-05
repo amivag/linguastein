@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { ItemId } from '../../src/domain/content';
-import { newItemProgress } from '../../src/domain/progress';
+import type { EntityId, ItemId } from '../../src/domain/content';
+import { newProgress } from '../../src/domain/progress';
 import {
   createIndexedDbStorage,
   createMemoryStorage,
@@ -39,7 +39,7 @@ describe.each(implementations)('%s storage', (_name, create) => {
   });
 
   it('round-trips progress', async () => {
-    const progress = { ...newItemProgress(ITEM), status: 'review' as const, dueAt: 123 };
+    const progress = { ...newProgress(ITEM), status: 'review' as const, dueAt: 123 };
     await storage.progress.put(progress);
 
     expect(await storage.progress.get(ITEM)).toEqual(progress);
@@ -50,21 +50,21 @@ describe.each(implementations)('%s storage', (_name, create) => {
   it('returns attempts newest first', async () => {
     await storage.attempts.append({
       id: 'a1',
-      itemId: ITEM,
+      subject: ITEM,
       exerciseKind: 'reveal',
       grade: 'good',
       at: 1000,
     });
     await storage.attempts.append({
       id: 'a2',
-      itemId: ITEM,
+      subject: ITEM,
       exerciseKind: 'reveal',
       grade: 'easy',
       at: 2000,
     });
 
     expect((await storage.attempts.recent(10)).map((attempt) => attempt.id)).toEqual(['a2', 'a1']);
-    expect(await storage.attempts.forItem(ITEM)).toHaveLength(2);
+    expect(await storage.attempts.forSubject(ITEM)).toHaveLength(2);
   });
 
   /**
@@ -75,12 +75,12 @@ describe.each(implementations)('%s storage', (_name, create) => {
   it('writes many rows at once, and writing them twice changes nothing', async () => {
     const attempts = [1, 2, 3].map((n) => ({
       id: `a${n}`,
-      itemId: ITEM,
+      subject: ITEM,
       exerciseKind: 'reveal' as const,
       grade: 'good' as const,
       at: 1000 * n,
     }));
-    const rows = [ITEM, id<ItemId>('test-es:item:002')].map((itemId) => newItemProgress(itemId));
+    const rows = [ITEM, id<ItemId>('test-es:item:002')].map((itemId) => newProgress(itemId));
     const records = ['s1', 's2'].map((recordId) => ({
       ...session(recordId),
       course: { language: 'es', level: 'a1' },
@@ -112,8 +112,8 @@ describe.each(implementations)('%s storage', (_name, create) => {
    */
   it('reads the whole log oldest first', async () => {
     await storage.attempts.appendMany([
-      { id: 'a2', itemId: ITEM, exerciseKind: 'reveal', grade: 'good', at: 2000 },
-      { id: 'a1', itemId: ITEM, exerciseKind: 'reveal', grade: 'good', at: 1000 },
+      { id: 'a2', subject: ITEM, exerciseKind: 'reveal', grade: 'good', at: 2000 },
+      { id: 'a1', subject: ITEM, exerciseKind: 'reveal', grade: 'good', at: 1000 },
     ]);
     await storage.sessions.putMany([
       { ...session('s2'), startedAt: 2000, course: { language: 'es', level: 'a1' } },
@@ -122,6 +122,30 @@ describe.each(implementations)('%s storage', (_name, create) => {
 
     expect((await storage.attempts.all()).map((attempt) => attempt.id)).toEqual(['a1', 'a2']);
     expect((await storage.sessions.all()).map((record) => record.id)).toEqual(['s1', 's2']);
+  });
+
+  /**
+   * A progress row is about a **subject**, which is not always an item: a drill
+   * records against a pattern and a form drill against a form. Both stores have
+   * to treat one exactly as they treat a sentence, because the widening is only
+   * worth anything if the thing underneath it does not care.
+   */
+  it('stores a subject that is not an item', async () => {
+    const pattern = id<EntityId>('test-es:skill:numerals-y-joining');
+    await storage.progress.put({ ...newProgress(pattern), status: 'review', dueAt: 123 });
+    await storage.attempts.append({
+      id: 'a-pattern',
+      subject: pattern,
+      exerciseKind: 'think-say',
+      grade: 'good',
+      at: 1000,
+    });
+
+    expect((await storage.progress.get(pattern))?.subject).toBe(pattern);
+    // Derived from the id like any other row, so a pattern is part of "how much
+    // of this pack have I done" rather than invisible to it.
+    expect((await storage.progress.get(pattern))?.packId).toBe('test-es');
+    expect(await storage.attempts.forSubject(pattern)).toHaveLength(1);
   });
 
   it('merges preference patches over defaults', async () => {
@@ -162,7 +186,7 @@ describe.each(implementations)('%s storage', (_name, create) => {
    * asked of a value that only exists in memory.
    */
   it('derives the pack from the item id', async () => {
-    await storage.progress.put(newItemProgress(ITEM));
+    await storage.progress.put(newProgress(ITEM));
 
     expect((await storage.progress.get(ITEM))?.packId).toBe('test-es');
   });
@@ -204,7 +228,7 @@ describe.each(implementations)('%s storage', (_name, create) => {
   });
 
   it('clears everything on reset', async () => {
-    await storage.progress.put(newItemProgress(ITEM));
+    await storage.progress.put(newProgress(ITEM));
     await storage.sessions.put({
       id: 's1',
       course: { language: 'es', level: 'all' },

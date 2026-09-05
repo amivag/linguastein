@@ -4,21 +4,21 @@
  */
 
 import { systemRng, token, type Rng } from '../../utils/random';
-import type { ItemId } from '../content';
+import { isItemId, type EntityId, type ItemId } from '../content';
 import type { ExerciseKind } from '../exercises/types';
 import { fsrsScheduler } from './fsrs';
 import type { Scheduler } from './scheduler';
 import {
   isDue,
-  newItemProgress,
+  newProgress,
   type Attempt,
-  type ItemProgress,
   type ReviewGrade,
+  type SubjectProgress,
   type Timestamp,
 } from './types';
 
 export interface AttemptInput {
-  readonly itemId: ItemId;
+  readonly subject: EntityId;
   readonly exerciseKind: ExerciseKind;
   readonly grade: ReviewGrade;
   readonly correct?: boolean;
@@ -28,14 +28,14 @@ export interface AttemptInput {
 }
 
 export interface RecordedAttempt {
-  readonly progress: ItemProgress;
+  readonly progress: SubjectProgress;
   readonly attempt: Attempt;
 }
 
 /**
  * One attempt applied to one progress row — the transition, and nothing else.
  *
- * Split out of {@link recordAttempt} because **`ItemProgress` is a fold, not a
+ * Split out of {@link recordAttempt} because **`SubjectProgress` is a fold, not a
  * document**: every field is a function of the row before it and the attempt
  * applied to it, and nothing in the chain reads a clock or a random source. That
  * makes the row reproducible from the log, which is what
@@ -49,11 +49,11 @@ export interface RecordedAttempt {
  * the mapping back is lossless and no logic is duplicated.
  */
 export function applyAttempt(
-  current: ItemProgress | undefined,
+  current: SubjectProgress | undefined,
   attempt: Attempt,
   scheduler: Scheduler = fsrsScheduler,
-): ItemProgress {
-  const previous = current ?? newItemProgress(attempt.itemId, attempt.at);
+): SubjectProgress {
+  const previous = current ?? newProgress(attempt.subject, attempt.at);
   const reviewed = scheduler.review(previous, attempt.grade, attempt.at);
 
   return {
@@ -67,7 +67,7 @@ export function applyAttempt(
 }
 
 /**
- * The progress row an item's whole attempt log implies.
+ * The progress row a subject's whole attempt log implies.
  *
  * `undefined` for an empty log, which is the honest answer: a row for an item
  * nothing has been recorded against is not the same thing as no row, and only
@@ -86,17 +86,17 @@ export function applyAttempt(
  * Reachable only synthetically: an attempt is a person answering a card. This
  * order is the canonical one because it is the one two devices agree on.
  */
-export function replayItem(
-  itemId: ItemId,
+export function replaySubject(
+  subject: EntityId,
   attempts: readonly Attempt[],
   scheduler: Scheduler = fsrsScheduler,
-): ItemProgress | undefined {
+): SubjectProgress | undefined {
   const ordered = attempts
-    .filter((attempt) => attempt.itemId === itemId)
+    .filter((attempt) => attempt.subject === subject)
     .sort((a, b) => a.at - b.at || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   if (ordered.length === 0) return undefined;
 
-  let progress: ItemProgress | undefined;
+  let progress: SubjectProgress | undefined;
   for (const attempt of ordered) progress = applyAttempt(progress, attempt, scheduler);
   return progress;
 }
@@ -112,7 +112,7 @@ export function replayItem(
  * randomness here, so a test can pin it.
  */
 export function recordAttempt(
-  current: ItemProgress | undefined,
+  current: SubjectProgress | undefined,
   input: AttemptInput,
   now: Timestamp,
   scheduler: Scheduler = fsrsScheduler,
@@ -122,7 +122,7 @@ export function recordAttempt(
     // Time-ordered so a log stays readable, and unique so two of them can be
     // merged; see the `rng` note above for why the clock alone was not enough.
     id: `${now.toString(36)}-${token(rng)}`,
-    itemId: input.itemId,
+    subject: input.subject,
     exerciseKind: input.exerciseKind,
     grade: input.grade,
     at: now,
@@ -135,6 +135,31 @@ export function recordAttempt(
   return { progress: applyAttempt(current, attempt, scheduler), attempt };
 }
 
+/**
+ * The rows about items the caller cares about, keyed by those items.
+ *
+ * Three screens did this filter inline and all three now need a narrowing as
+ * well as a filter: `subject` is an {@link EntityId}, so a row about a pattern
+ * or a verb form has to be dropped before its id can be used as an `ItemId`.
+ * That is the whole of what keeps a drill's rows out of the due count, the
+ * review session, the weak-item list and the practised set — one function with
+ * one explanation, rather than the same two-part condition written three times
+ * and, eventually, two-and-a-half times.
+ *
+ * The filter is by *membership*, not by shape: a course's `ids` are the items it
+ * admits, so this narrows to the course and to items in one pass.
+ */
+export function itemProgressIn(
+  rows: readonly SubjectProgress[],
+  ids: ReadonlySet<ItemId>,
+): ReadonlyMap<ItemId, SubjectProgress> {
+  const found = new Map<ItemId, SubjectProgress>();
+  for (const row of rows) {
+    if (isItemId(row.subject) && ids.has(row.subject)) found.set(row.subject, row);
+  }
+  return found;
+}
+
 export interface ProgressSummary {
   readonly total: number;
   readonly seen: number;
@@ -145,7 +170,7 @@ export interface ProgressSummary {
 }
 
 export function summarise(
-  known: readonly ItemProgress[],
+  known: readonly SubjectProgress[],
   totalItems: number,
   now: Timestamp,
 ): ProgressSummary {

@@ -5,8 +5,8 @@
  */
 
 import type { BatchDefinition } from '../domain/batches';
-import type { ItemId, LanguageTag, LevelScope, SpeakerGender } from '../domain/content';
-import type { Attempt, ItemProgress } from '../domain/progress';
+import type { EntityId, LanguageTag, LevelScope, SpeakerGender } from '../domain/content';
+import type { Attempt, SubjectProgress } from '../domain/progress';
 import type { SessionFocus, SessionRecord } from '../domain/sessions';
 import type { PaletteId, ThemePreference } from '../styles/themes';
 import type { ContrastLevel } from '../styles/contrast';
@@ -158,7 +158,7 @@ export interface CourseState {
 export type CourseStates = Readonly<Record<string, CourseState>>;
 
 export interface ProgressStore {
-  get(itemId: ItemId): Promise<ItemProgress | undefined>;
+  get(subject: EntityId): Promise<SubjectProgress | undefined>;
   /**
    * How many rows this store holds.
    *
@@ -169,9 +169,9 @@ export interface ProgressStore {
    * counts without materialising anything.
    */
   count(): Promise<number>;
-  getMany(itemIds: readonly ItemId[]): Promise<ReadonlyMap<ItemId, ItemProgress>>;
-  all(): Promise<readonly ItemProgress[]>;
-  put(progress: ItemProgress): Promise<void>;
+  getMany(subjects: readonly EntityId[]): Promise<ReadonlyMap<EntityId, SubjectProgress>>;
+  all(): Promise<readonly SubjectProgress[]>;
+  put(progress: SubjectProgress): Promise<void>;
   /**
    * Many rows, one transaction.
    *
@@ -181,7 +181,7 @@ export interface ProgressStore {
    * All three history stores carry one for the same reason — see
    * `docs/tasks/learner-profile.md` §7.3, which named the first two.
    */
-  putMany(rows: readonly ItemProgress[]): Promise<void>;
+  putMany(rows: readonly SubjectProgress[]): Promise<void>;
   clear(): Promise<void>;
 }
 
@@ -191,7 +191,7 @@ export interface AttemptStore {
   appendMany(attempts: readonly Attempt[]): Promise<void>;
   count(): Promise<number>;
   recent(limit: number): Promise<readonly Attempt[]>;
-  forItem(itemId: ItemId, limit?: number): Promise<readonly Attempt[]>;
+  forSubject(subject: EntityId, limit?: number): Promise<readonly Attempt[]>;
   /**
    * Every attempt, oldest first.
    *

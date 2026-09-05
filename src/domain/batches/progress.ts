@@ -14,9 +14,9 @@
  * the learner. Do not mix the two definitions on one screen.
  */
 
-import type { Course, ItemId } from '../content';
+import { isItemId, type Course, type ItemId } from '../content';
 import type { ExerciseKind } from '../exercises/types';
-import { isDue, type Attempt, type ItemProgress, type Timestamp } from '../progress/types';
+import { isDue, type Attempt, type SubjectProgress, type Timestamp } from '../progress/types';
 import { batchesForCourse, type BatchDefinition } from './model';
 
 /**
@@ -84,7 +84,7 @@ export interface BatchStandingInput {
   readonly batch: BatchDefinition;
   /** Item ids the current course admits, as every screen already builds. */
   readonly courseItemIds: ReadonlySet<string>;
-  readonly progress: ReadonlyMap<ItemId, ItemProgress>;
+  readonly progress: ReadonlyMap<ItemId, SubjectProgress>;
   readonly attempts: readonly Attempt[];
   readonly now: Timestamp;
   readonly dayOf: DayOf;
@@ -97,7 +97,7 @@ export interface BatchStandingInput {
  * rewards a good afternoon, and either without distinct days rewards cramming.
  */
 export function isItemAbsorbed(
-  progress: ItemProgress | undefined,
+  progress: SubjectProgress | undefined,
   productionDays: ReadonlySet<string>,
 ): boolean {
   if (!progress) return false;
@@ -194,9 +194,11 @@ function productionDaysByItem(
 
   for (const attempt of attempts) {
     if (!isProduction(attempt.exerciseKind) || attempt.grade === 'again') continue;
-    const seen = days.get(attempt.itemId) ?? new Set<string>();
+    // A batch holds items, so an attempt on anything else has no bearing on one.
+    if (!isItemId(attempt.subject)) continue;
+    const seen = days.get(attempt.subject) ?? new Set<string>();
     seen.add(dayOf(attempt.at));
-    days.set(attempt.itemId, seen);
+    days.set(attempt.subject, seen);
   }
 
   return days;

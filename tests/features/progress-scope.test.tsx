@@ -12,7 +12,7 @@ import { screen } from '@testing-library/react';
 import { Route, Routes } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { ProgressScreen } from '../../src/features/progress/ProgressScreen';
-import { newItemProgress } from '../../src/domain/progress';
+import { newProgress } from '../../src/domain/progress';
 import { createMemoryStorage, type LearnerStorage } from '../../src/storage';
 import type { PackId } from '../../src/domain/content';
 import { id, multilingualRepository } from '../fixtures/pack';
@@ -28,7 +28,7 @@ async function storageWithBothLanguages(): Promise<LearnerStorage> {
     .map((item) => item.id);
 
   await storage.progress.put({
-    ...newItemProgress(spanish[0]!, STARTED_AT),
+    ...newProgress(spanish[0]!, STARTED_AT),
     status: 'review',
     attempts: 1,
     correct: 1,

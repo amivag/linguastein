@@ -17,6 +17,25 @@ in the pack's own counts.
 
 ### Fixed
 
+- **The confirmation after erasing all local data is now visible.** Resetting
+  everything navigated to `/es/a1`, which drops the `?tab=about` the reset controls
+  live under — so the section holding "All local data reset to app defaults."
+  unmounted at the same moment it was set. Whether anybody saw it came down to
+  which render won a race, and the test covering it had been passing on exactly
+  that race.
+
+  A learner who had just erased their entire history was shown the app jumping
+  somewhere else with nothing saying the erase had happened, which is the worst
+  moment in the app to be silent. It navigates to About in the default course now:
+  leaving the stale course behind is what the navigation was for, and doing it this
+  way also keeps somebody who pressed a button in Settings in Settings.
+
+- **A migration no longer assumes the stores it converts exist.** Opening a
+  database that is missing one threw, and the rejection was unhandled rather than
+  reported. Not hypothetical: an upgrade that aborts part-way leaves a database at
+  the old version with whatever stores it had reached, and a migration is precisely
+  the code that has to survive meeting one.
+
 - **A second course no longer inherits the first one's settings.** Five things a
   learner chooses — how far up the levels they are working, which categories they
   are practising, what a session leads with, the accent, and the voice — were stored
@@ -136,6 +155,30 @@ in the pack's own counts.
   a gloss explaining an item the pack has since dropped.
 
 ### Added
+
+- **Progress can be about things that are not sentences.** A progress row was keyed
+  on an item id, and three of the things worth practising are not items and never
+  can be: a verb form, a grammatical pattern, and a passage as a whole. That single
+  constraint is what blocked the unbounded numbers drill, verb-form drills and
+  passage practice — each of which had been written up separately as its own
+  problem.
+
+  A row is now about a **subject**, which is any content entity the packs already
+  ship: `core-es:item:000123`, `core-es:form:ser-pres-1s`,
+  `core-es:skill:numerals-y-joining`. Nothing new had to be minted — `core-es`
+  already carries 9,206 verb-form records with stable ids — so this widened the
+  set of ids progress may reference to one that already existed.
+
+  **1042 still gets no id, and must not.** A drill over generated targets records
+  against the _patterns_ the target exercises, which are closed, stable and few, so
+  the scheduler sees a handful of durable skills rather than an infinity of
+  integers. Architecture rule 4 is unchanged in substance: what it forbids is
+  minting an id for something the dataset does not have.
+
+  Everything item-shaped stays item-shaped. The due count, the review session, the
+  weak-item list, mastery and the session planner all narrow through the course's
+  item ids, so a drill's rows cannot reach them — and that is now one function with
+  one explanation rather than the same two-part condition written in three screens.
 
 - **Your practice can leave the device, and come back.** There is no account and no
   server — Settings → You says so plainly — which has meant that a browser evicting

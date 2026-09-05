@@ -125,6 +125,32 @@ describe('agreement', () => {
     expect(spellCardinal(101, { beforeNoun: true })).toBe('ciento un');
   });
 
+  /**
+   * **Only the ones ending in one.** The whole twenties range used to be run
+   * through the apocopation, which drops two letters and adds an `n` — so
+   * `veinticuatro mil` came out `veinticuatn mil` and `veintidós casas` came out
+   * `veintidóa casas`.
+   *
+   * It survived because nothing asked. The sweep below spells 0–1000 in their
+   * *citation* form, where no gender and no following noun are set and the
+   * apocopation is a no-op; the agreement cases above only ever named 21, 31 and
+   * 101. A number nobody had authored and nobody had listed was wrong for as
+   * long as the module existed.
+   */
+  it('leaves the rest of the twenties alone', () => {
+    for (const [value, form] of [
+      [22, 'veintidós'],
+      [24, 'veinticuatro'],
+      [29, 'veintinueve'],
+    ] as const) {
+      expect(spellCardinal(value, { beforeNoun: true })).toBe(form);
+      expect(spellCardinal(value, { gender: 'feminine' })).toBe(form);
+      expect(spellCardinal(value, { gender: 'feminine', beforeNoun: true })).toBe(form);
+    }
+    expect(spellCardinal(24_000)).toBe('veinticuatro mil');
+    expect(spellCardinal(22_000, { gender: 'feminine' })).toBe('veintidós mil');
+  });
+
   it('keeps the accent that apocopation creates', () => {
     // Dropping the syllable moves the stress onto the `u`, so `veintiun` is a
     // spelling error rather than a variant.
@@ -249,6 +275,34 @@ describe('every cardinal 0–1000', () => {
 
   it('spells every number distinctly', () => {
     expect(new Set(all.map(([, form]) => form)).size).toBe(all.length);
+  });
+});
+
+/**
+ * Spell it, read it back, get the same number — over a range wide enough to
+ * reach the multipliers.
+ *
+ * The sweep above checks 0–1000 in one form and looks at the *shape* of the
+ * output; this one closes the loop with `parseCardinal`, which is what actually
+ * marks a learner's typed answer. It is also the check that found the twenties
+ * bug: `veinticuatn mil` is well-formed, uses only legal letters, has no doubled
+ * space and is distinct from every other spelling — every assertion above passes
+ * on it. Only reading it back says it is not a number.
+ */
+describe('every cardinal round-trips', () => {
+  it('reads back exactly what it spelled, 0–50,000', () => {
+    const broken: number[] = [];
+    for (let value = 0; value <= 50_000; value++) {
+      if (parseCardinal(spellCardinal(value)) !== value) broken.push(value);
+      if (broken.length >= 5) break;
+    }
+    expect(broken).toEqual([]);
+  });
+
+  it('reads back the multipliers and the millions', () => {
+    for (const value of [100_000, 101_101, 250_000, 1_000_000, 21_000_000, 999_999_999]) {
+      expect(parseCardinal(spellCardinal(value)), String(value)).toBe(value);
+    }
   });
 });
 

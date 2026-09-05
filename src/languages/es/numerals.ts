@@ -18,6 +18,7 @@
  */
 
 import type { Gender } from '../../domain/content';
+import { randomInt, type Rng } from '../../utils/random';
 
 /**
  * How the numeral is being used, which is what decides its form. `veintiún
@@ -235,7 +236,23 @@ function underHundred(value: number, agreement: Context): string {
   if (value < 16) return unit(value, agreement);
   if (value < 20) return TEENS[value - 16]!;
   if (value === 20) return 'veinte';
-  if (value < 30) return apocopate(TWENTIES[value - 21]!, agreement);
+  if (value < 30) {
+    const word = TWENTIES[value - 21]!;
+    /*
+     * Only `veintiuno` changes shape. The whole twenties range used to go
+     * through `apocopate`, which drops the last two letters and adds an `n` —
+     * so `veinticuatro mil` came out as `veinticuatn mil`, and
+     * `veintidós casas` as `veintidóa casas`.
+     *
+     * Invisible until something asked for a number nobody had authored: the
+     * build generates numeral lemmas in their citation form, where neither
+     * `beforeNoun` nor a gender is set and `apocopate` returns the word
+     * untouched. `tests/domain/numeral-drill.test.ts` found it by spelling and
+     * re-reading every value in a range, which is the check a table of examples
+     * cannot make.
+     */
+    return value === 21 ? apocopate(word, agreement) : word;
+  }
 
   const tens = TENS[Math.floor(value / 10)]!;
   const rest = value % 10;
@@ -443,6 +460,56 @@ export function rulesFor(value: number): readonly NumeralRule[] {
   // Registry order, so a caller listing rules gets them in a stable order
   // rather than one that depends on how the number happened to decompose.
   return NUMERAL_RULES.filter((rule) => rules.has(rule));
+}
+
+/**
+ * A number that puts one rule to work, for a drill to ask.
+ *
+ * The inverse of {@link rulesFor}, and deliberately not its exact inverse: a
+ * sample is *guaranteed* to exercise the rule asked for and is free to exercise
+ * others alongside it. Spanish does not let you isolate them — `ciento treinta y
+ * uno` cannot show `cien-ciento` without also showing `y-joining` — and a drill
+ * that only ever asked numbers exercising exactly one rule would ask a strange,
+ * narrow set of numbers no learner ever needs to say.
+ *
+ * Ranges are the ones a learner meets rather than the ones the module can spell:
+ * prices, platforms, room numbers and years. `sampleFor('mil-millon')` will not
+ * hand back 758,214,003 just because {@link MAX_CARDINAL} allows it.
+ *
+ * `tests/domain/numeral-drill.test.ts` asserts the guarantee across every rule
+ * and many seeds, which is the only way to know a construction here has not
+ * drifted from what `rulesFor` recognises.
+ */
+export function sampleFor(rule: NumeralRule, rng: Rng): number {
+  switch (rule) {
+    case 'teens':
+      return 16 + randomInt(rng, 4);
+    case 'twenties':
+      return 21 + randomInt(rng, 9);
+    // 31–99 with a unit digit, the only place `y` appears.
+    case 'y-joining':
+      return (3 + randomInt(rng, 7)) * 10 + 1 + randomInt(rng, 9);
+    /*
+     * Ends in a one that shortens. Drawn from two shapes rather than one so the
+     * drill does not only ever ask `veintiuno`: a bare ...1, and a hundreds
+     * number whose last group is 1.
+     */
+    case 'apocopation':
+      return randomInt(rng, 2) === 0
+        ? (2 + randomInt(rng, 8)) * 10 + 1
+        : (1 + randomInt(rng, 9)) * 100 + 1;
+    case 'hundreds-agreement':
+      return (2 + randomInt(rng, 8)) * 100 + randomInt(rng, 100);
+    // `ciento treinta`, and `cien mil` — the same hundreds digit of one, in the
+    // two places it is spelled differently.
+    case 'cien-ciento':
+      return randomInt(rng, 4) === 0 ? 100_000 + randomInt(rng, 900) : 100 + randomInt(rng, 100);
+    // A year, a price, a population. Bounded well below what the speller allows.
+    case 'mil-millon':
+      return randomInt(rng, 5) === 0
+        ? 1_000_000 * (1 + randomInt(rng, 9))
+        : 1000 + randomInt(rng, 99_000);
+  }
 }
 
 /** Index into {@link groupsOf}: units are 0, so thousands are 1. */

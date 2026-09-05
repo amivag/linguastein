@@ -8,8 +8,9 @@ import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon, type IconName } from '../../components/Icon';
 import { SectionTabs } from '../../components/SectionTabs';
-import { alphabetGuide } from '../../languages/runtime';
+import { alphabetGuide, numeralGuide } from '../../languages/runtime';
 import { AlphabetSection } from './AlphabetSection';
+import { NumbersSection } from './NumbersSection';
 import { Sheet } from '../../components/Sheet';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { levelLabel, POS_LABELS, type PartOfSpeech, type SkillKind } from '../../domain/content';
@@ -245,6 +246,7 @@ export function StudyScreen() {
     to agree with the registry about which of them have one.
   */
   const hasAlphabet = alphabetGuide(course.language) !== undefined;
+  const hasNumerals = numeralGuide(course.language) !== undefined;
 
   /**
    * The sections this course actually has, in order.
@@ -268,6 +270,13 @@ export function StudyScreen() {
           // content is filed under it: the alphabet is a property of Spanish,
           // not a count of rows in a pack.
           { id: 'alphabet', label: 'Alphabet', icon: 'alphabet', size: hasAlphabet ? 1 : 0 },
+          /*
+           * Beside the alphabet, and sized the same way: by whether the
+           * *language* has a numeral module rather than by how much content is
+           * filed under numbers. How you say 1042 is a property of Spanish, and
+           * a pack could contain no numeral rows at all without changing it.
+           */
+          { id: 'numbers', label: 'Numbers', icon: 'number', size: hasNumerals ? 1 : 0 },
           { id: 'words', label: 'Words', icon: 'word', size: counts.words.length },
           {
             id: 'phrases',
@@ -285,7 +294,7 @@ export function StudyScreen() {
           size: number;
         }[]
       ).filter((section) => section.size > 0),
-    [counts, hasAlphabet, missions.length, sets.length],
+    [counts, hasAlphabet, hasNumerals, missions.length, sets.length],
   );
 
   // An unrecognised or absent section opens the first one this course has, the
@@ -392,6 +401,17 @@ export function StudyScreen() {
               onRemove={removeBatch}
             />
           ))}
+        </Section>
+      )}
+
+      {current?.id === 'numbers' && (
+        <Section
+          label="Numbers"
+          icon="number"
+          layout="flow"
+          note="How the language builds numbers, drilled against generated ones rather than a list. Unlike the rest of Study this is recorded, because a typed answer is evidence."
+        >
+          <NumbersSection />
         </Section>
       )}
 

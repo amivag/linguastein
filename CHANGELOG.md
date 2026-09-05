@@ -17,6 +17,20 @@ in the pack's own counts.
 
 ### Fixed
 
+- **Twenty-two to twenty-nine were misspelled wherever they were used before a
+  noun.** `veinticuatro mil` came out as `veinticuatn mil`, and
+  `veintidós casas` as `veintidóa casas`: the whole twenties range was being run
+  through the apocopation that only `veintiuno` takes, which drops two letters and
+  adds an `n`.
+
+  It was invisible because nothing had asked. The build generates its numeral
+  lemmas in citation form, where no gender and no following noun are set and the
+  apocopation does nothing; the tests spelled every number from 0 to 1000 the same
+  way, and checked the _shape_ of what came out — `veinticuatn` is well-formed,
+  uses only legal letters, and is distinct from every other spelling, so every
+  assertion passed on it. What found it was spelling a number and reading it back:
+  a wrong word is still a word, and only the round trip says it is not a number.
+
 - **The confirmation after erasing all local data is now visible.** Resetting
   everything navigated to `/es/a1`, which drops the `?tab=about` the reset controls
   live under — so the section holding "All local data reset to app defaults."
@@ -155,6 +169,23 @@ in the pack's own counts.
   a gloss explaining an item the pack has since dropped.
 
 ### Added
+
+- **Numbers, drilled rather than listed.** A learner's question is "how do I say
+  1042?", and no number of authored rows answers it — the value is in the joining
+  rules, the solid teens, the apocopation and the hundreds agreement. Study → Numbers
+  now asks about **generated** numbers, in both directions: digits to write in
+  words, and a number spoken aloud to write in digits. The second is the one that
+  actually fails at a ticket desk.
+
+  1042 has no id and does not get one. An answer is recorded against the
+  **patterns the number puts to work** — `rulesFor(1042)` names two of them — so
+  the scheduler sees seven durable patterns rather than an infinity of integers,
+  and the set of numbers a learner can be asked stays unbounded. That is what the
+  progress change above was for, and the drill is the first thing to use it.
+
+  The section exists only where the app can actually generate the language's
+  numerals, exactly as the alphabet chart does, and it says that it records —
+  unlike the rest of Study, which promises the opposite.
 
 - **Progress can be about things that are not sentences.** A progress row was keyed
   on an item id, and three of the things worth practising are not items and never

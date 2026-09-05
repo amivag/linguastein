@@ -328,6 +328,31 @@ export const TEST_PACK: ContentPack = {
       kind: 'pattern',
       label: 'tener que + infinitivo',
     },
+    /*
+     * The seven numeral patterns, because the numbers drill records against
+     * them and a fixture without them makes the drill correctly refuse to run —
+     * a pack that declares no pattern has nowhere to put the evidence.
+     *
+     * Ids and labels follow `content/es/skills.tsv`, since the drill finds them
+     * by the local id `numerals-<rule>` that the language module names. Only the
+     * shipped pack's spelling is load-bearing; the labels here are short on
+     * purpose, so a test asserting on one is obviously asserting on a fixture.
+     */
+    ...(
+      [
+        ['teens', 'dieciséis, diecisiete…'],
+        ['twenties', 'veintiuno, veintidós…'],
+        ['y-joining', 'treinta y uno'],
+        ['apocopation', 'veintiún libros'],
+        ['hundreds-agreement', 'doscientas casas'],
+        ['cien-ciento', 'cien mil / ciento treinta'],
+        ['mil-millon', 'mil / un millón de'],
+      ] as const
+    ).map(([rule, label]) => ({
+      id: id<SkillId>(`test-es:skill:numerals-${rule}`),
+      kind: 'pattern' as const,
+      label,
+    })),
   ],
   translations: TRANSLATIONS,
 };

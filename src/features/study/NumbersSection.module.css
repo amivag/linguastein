@@ -1,0 +1,84 @@
+/*
+ * The drill, as one column: the number, the box, the verdict.
+ *
+ * Deliberately not a card grid. A drill has exactly one thing on screen at a
+ * time and the eye should not have to find it — the same reason a practice card
+ * is one column and not a dashboard.
+ */
+.drill {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.lead {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+
+.prompt {
+  display: flex;
+  justify-content: center;
+  padding-block: var(--space-4);
+}
+
+/*
+ * The number, in the display voice and set large — rule 4 of the design
+ * language. It is the target-language content of this exercise even though it is
+ * written in digits, and it is the one thing on the screen worth looking at.
+ */
+.digits {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.answer {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.label {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.verdict {
+  composes: well from '../../styles/surfaces.module.css';
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* Colour means something (rule 5), and it is never the only carrier: the glyph
+   and the words "Yes" / "Not quite" say it too. */
+.right {
+  color: var(--color-success);
+}
+
+.wrong {
+  color: var(--color-danger);
+}
+
+.spelled {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+}
+
+.plain {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rules {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-body);
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}

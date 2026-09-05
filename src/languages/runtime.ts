@@ -23,7 +23,9 @@
  */
 
 import { baseLanguage, type LanguageTag } from '../domain/content/language';
+import type { Rng } from '../utils/random';
 import { SPANISH_ADDRESS_FORMS } from './es/address';
+import type { NumeralRule } from './es/numerals';
 import type { AddressFormSpec } from './types';
 
 /** A word that shows a letter doing its job, and what it means. */
@@ -104,6 +106,60 @@ export function alphabetGuide(tag: LanguageTag): AlphabetGuideLoader | undefined
   switch (baseLanguage(tag)) {
     case 'es':
       return async () => (await import('./es/alphabet')).SPANISH_ALPHABET;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Everything a numbers drill needs from a language, or nothing.
+ *
+ * "How do I say 1042?" is not a question any number of authored rows answers —
+ * the value is in the joining rules, the solid teens, the apocopation and the
+ * hundreds agreement — so a numeral capability is a *module*, exactly as the
+ * conjugator is. `docs/tasks/numerals.md` §2.
+ *
+ * A **loader**, like {@link alphabetGuide} and for the same reason: Study
+ * decides whether the section exists while it decides every other section, and
+ * the speller itself arrives in its own chunk only for the learner who opens it.
+ * A language with no entry here simply has no Numbers section, which is the rule
+ * every other list on that screen already follows.
+ */
+export interface NumeralGuide {
+  /** The rules this language's numerals put to work, in teaching order. */
+  readonly rules: readonly string[];
+  /** `1042` → `mil cuarenta y dos`. Throws on a value it cannot spell. */
+  spell(value: number): string;
+  /** The inverse, for grading what a learner typed. `null` when it is not one. */
+  parse(text: string): number | null;
+  /** Which rules a value exercises — what an attempt on it is evidence about. */
+  rulesFor(value: number): readonly string[];
+  /** A number that puts one rule to work, for the drill to ask. */
+  sampleFor(rule: string, rng: Rng): number;
+  /** The largest value the speller will produce, so a drill cannot exceed it. */
+  readonly maxValue: number;
+}
+
+export type NumeralGuideLoader = () => Promise<NumeralGuide>;
+
+export function numeralGuide(tag: LanguageTag): NumeralGuideLoader | undefined {
+  switch (baseLanguage(tag)) {
+    case 'es':
+      return async () => {
+        const es = await import('./es/numerals');
+        return {
+          rules: es.NUMERAL_RULES,
+          spell: (value) => es.spellCardinal(value),
+          parse: es.parseCardinal,
+          rulesFor: es.rulesFor,
+          // Narrowed at the boundary rather than in the module: the interface
+          // takes a plain string because another language's rules are its own,
+          // and a rule that is not one of this language's is a caller error
+          // rather than something to answer with a wrong number.
+          sampleFor: (rule, rng) => es.sampleFor(rule as NumeralRule, rng),
+          maxValue: es.MAX_CARDINAL,
+        };
+      };
     default:
       return undefined;
   }

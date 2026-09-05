@@ -1,9 +1,16 @@
 # Task: numbers as a system, not as vocabulary
 
-**Status:** in progress — §3 (the module, now with `parseCardinal`), §4.1 (the
-number cards) and §5 (the pattern records) have landed, and the carded numerals
-are practisable today through the existing exercise kinds. §4.2 and the bespoke
-kinds in §6 remain, blocked on a decision recorded in §6.1.
+**Status:** **done.** §3 (the module), §4.1 (the number cards), §5 (the pattern
+records) and — as of 2026-09-05 — §4.2 and §6 have all landed. The unbounded
+drill is Study → Numbers, and it scores against pattern ids exactly as §4.2
+recommended. What §6.1 recorded as the blocker is gone: a progress row is about a
+**subject** now, and a skill id is one.
+**Drill landed:** 2026-09-05 — `sampleFor` in the module, `numeralGuide` on the
+runtime seam, `nextSubject` in `src/domain/drills/`, and `NumbersSection`. Two of
+§6's three directions ship; recognition is deliberately skipped as the most
+flattering. Building it found a **shipped bug**: the whole twenties range was
+being apocopated, so `veinticuatro mil` spelled as `veinticuatn mil`. Nothing had
+asked for one of those numbers before.
 **Written:** 2026-08-20
 **Revised:** 2026-08-20 — `src/languages/es/numerals.ts` exists and is tested at
 100%. §3.2 is new: it records what building it turned up, including one rule the
@@ -291,7 +298,16 @@ a topic, falling back when a topic is too thin to fill four choices. This is a
 general improvement, not a numeral fix: `comida` now competes with fish, sugar
 and cheese.
 
-**Blocked: the unbounded drill, and why.** A session is planned from a list of
+**Unblocked, and landed 2026-09-05.** What follows is the analysis as it stood,
+kept because it is right and because it names the wall three other tasks hit.
+
+The second option is the one that happened: `SubjectProgress.subject` is any
+content entity, so a skill id is somewhere to record against and no synthetic
+item was minted. The "separate practice surface" turned out to be a Study section
+rather than a screen — the address is `/es/a1/study?tab=numbers`, and everything a
+route would have bought was already there.
+
+**The original finding.** A session is planned from a list of
 item ids (`SessionPlan.itemIds`, and the runner reads `step.itemId`), and a
 generated target like 1042 has no item. So asking for 1042 needs more than a
 generator: it needs either

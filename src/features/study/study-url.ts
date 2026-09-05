@@ -18,6 +18,7 @@ export const STUDY_TABS = [
   'missions',
   'batches',
   'alphabet',
+  'numbers',
   'words',
   'phrases',
   'grammar',

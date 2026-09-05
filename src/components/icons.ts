@@ -23,6 +23,7 @@ import {
   Flame,
   Gauge,
   GraduationCap,
+  Hash,
   History,
   House,
   Info,
@@ -171,6 +172,9 @@ export const ICONS = {
      rather than a single glyph, because the pair is what a chart of letters
      shows and a lone `A` is already `word`'s neighbour. */
   alphabet: CaseSensitive,
+  /* Numbers as a system the language builds, the pair to `alphabet`: the digits
+     themselves, before any of them is spelled out. */
+  number: Hash,
   grammar: Ruler,
   passage: NotebookPen,
   /* A dialogue: a passage that is two people talking rather than one voice

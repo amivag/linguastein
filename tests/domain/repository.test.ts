@@ -320,8 +320,20 @@ describe('letters', () => {
 describe('skills', () => {
   const repository = testRepository();
 
+  /**
+   * Every skill the packs declare, in load order, and nothing invented.
+   *
+   * Asserted against the fixture's own list rather than a literal one: the claim
+   * is that the repository reports what was loaded, and a copy of the expected
+   * labels here only asserts that somebody kept two lists in step — which is
+   * exactly what it stopped doing when the fixture grew the numeral patterns the
+   * numbers drill records against.
+   */
   it('lists what the loaded packs teach', () => {
-    expect(repository.allSkills().map((skill) => skill.label)).toEqual(['tener que + infinitivo']);
+    expect(repository.allSkills().map((skill) => skill.id)).toEqual(
+      TEST_PACK.skills.map((skill) => skill.id),
+    );
+    expect(repository.allSkills().map((skill) => skill.label)).toContain('tener que + infinitivo');
   });
 
   it('resolves the local part of a skill id, as a route carries it', () => {

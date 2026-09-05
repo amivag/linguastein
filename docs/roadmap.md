@@ -40,6 +40,16 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   comes back out of storage goes through a zod boundary that repairs a bad value
   per field rather than rejecting the record — groundwork for the export/import
   under _Later_, and the same four things a sync would need
+- Progress about **any content entity**, not only an item: a verb form, a
+  grammatical pattern, a passage. Three roadmap items were separately blocked on
+  this and none of them needed a new identity scheme — the packs already ship
+  9,206 form records and seven numeral patterns with stable ids. A generated
+  target still gets no id: a drill on 1042 records against the patterns it
+  exercises, so the scheduler sees a closed, small set while the questions stay
+  unbounded. Item-shaped screens stay item-shaped by construction, through one
+  narrowing (`itemProgressIn`) with one test that fails if a new reader forgets
+- Numbers as a system, drilled: generated targets in two directions, scored
+  against pattern ids. See item 4
 - Backup and restore: everything a learner owns as one dated JSON file, and an
   import that **merges** rather than replaces. Answers and sessions union by id, so
   running the same file twice changes nothing the second time and a device that has
@@ -260,14 +270,25 @@ eight alternatives) and that the real gap is level rather than variation.
    item id. Briefed in full in
    [docs/tasks/canonical-audio.md](tasks/canonical-audio.md).
 
-4. **Numbers as a system** — `spellCardinal(1042)` gives `mil cuarenta y dos`
-   from rules in `src/languages/es/numerals.ts`, the way verb forms already come
-   from the conjugator. A learner's actual question is "how do I say 1042?", and
-   no number of authored rows answers it: the value is in the joining rules, the
-   solid teens, apocopation and hundreds agreement. Two ways to practise it,
-   because progress references stable ids and an integer cannot have one — a
-   closed set of number cards, plus an unbounded drill scored against pattern
-   ids. Briefed in full in [docs/tasks/numerals.md](tasks/numerals.md).
+4. ~~**Numbers as a system**~~ — **done 2026-09-05.** `spellCardinal(1042)` gives
+   `mil cuarenta y dos` from rules in `src/languages/es/numerals.ts`, the way verb
+   forms already come from the conjugator, and both ways of practising it now
+   exist: the closed set of number cards, and **the unbounded drill** at
+   Study → Numbers.
+
+   The drill asks generated numbers in two directions — digits to write in words,
+   and a number spoken aloud to write in digits — and records against the
+   **patterns** each number puts to work rather than against the number, which has
+   no id and does not get one. Seven durable patterns for an unbounded set of
+   questions. It is the first consumer of the progress widening listed under _In
+   place_, and the reason that widening was worth doing rather than groundwork
+   nobody had used.
+
+   Building it turned up a bug the module had shipped with: the whole twenties
+   range was being apocopated, so `veinticuatro mil` spelled as `veinticuatn mil`.
+   Nothing had ever asked for one of those numbers. Found by spelling a number and
+   reading it back, which is the check a table of examples cannot make.
+
 5. **Game feel** — mostly landed. The motion scale, answer feedback, segmented
    session progress, the earned end-of-session summary and the adaptive daily
    path are all in. What remains is optional sound and haptics (§4.6 of
@@ -296,9 +317,11 @@ eight alternatives) and that the real gap is level rather than variation.
    natural sentences" is not what a bare infinitive card is.
 
    What remains is the harder half: surfacing `VerbForm` records directly as
-   person and tense drills. Word inspection already shows the forms; practising
-   them needs progress against something that is not a `LearningItem`, which is
-   the same wall [passage practice](tasks/passage-practice.md) hits.
+   person and tense drills. Word inspection already shows the forms — **and the
+   wall is down.** A progress row is about a subject now (see _In place_), a form
+   ships as `core-es:form:ser-pres-1s`, and 9,206 of them are in the pack. The numbers
+   drill is the worked example of what remains: a surface with its own loop, and
+   `nextSubject` in `src/domain/drills/` to decide what to ask.
 
 8. **Word-level progress** — inspection knows which lexeme a tapped word maps
    to, so "words I keep looking up" is a natural weak-item signal to feed back

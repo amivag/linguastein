@@ -32,11 +32,18 @@ const study = (tab?: string) =>
 const tabs = () => screen.getByRole('navigation', { name: 'Study sections' });
 
 describe('the study section', () => {
+  /**
+   * Up front, and true — which is the part that took a correction. The line used
+   * to promise that nothing here is recorded except the last stage of a mission,
+   * while a saved set already fed the scheduler and the numbers drill made a
+   * third exception. A blanket promise that sections quietly break is worse than
+   * none, since the reason for saying it is that a learner can browse without
+   * wondering whether they are being marked.
+   */
   it('says up front that nothing here is graded', async () => {
     study();
-    expect(
-      await screen.findByText(/nothing is graded and nothing is recorded/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Nothing here is graded/i)).toBeInTheDocument();
+    expect(screen.queryByText(/nothing is recorded here/i)).not.toBeInTheDocument();
   });
 
   /**

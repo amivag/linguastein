@@ -350,9 +350,17 @@ export function StudyScreen() {
         <Icon name="expand" size="sm" />
       </button>
 
+      {/*
+        Named by exception, and the exceptions have to be kept true. This said
+        "nothing is recorded here — except the last stage of a mission" while a
+        set already fed the scheduler, and Numbers made a third. A blanket
+        promise that three sections quietly break is worse than no promise: the
+        point of saying it at all is that a learner can browse without wondering
+        whether they are being marked.
+      */}
       <p className={styles.intro}>
-        Nothing is graded and nothing is recorded here — except the last stage of a mission, which
-        says so.
+        Nothing here is graded. Most of it is not recorded either — the few sections that do feed
+        your review schedule say so under their own heading.
       </p>
 
       {sections.length > 0 && (

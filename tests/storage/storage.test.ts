@@ -67,6 +67,63 @@ describe.each(implementations)('%s storage', (_name, create) => {
     expect(await storage.attempts.forItem(ITEM)).toHaveLength(2);
   });
 
+  /**
+   * The bulk writes an import runs on, held to the same contract as the singular
+   * ones — including idempotence, which is what makes a re-import after an
+   * interrupted one safe rather than a way to double a learner's history.
+   */
+  it('writes many rows at once, and writing them twice changes nothing', async () => {
+    const attempts = [1, 2, 3].map((n) => ({
+      id: `a${n}`,
+      itemId: ITEM,
+      exerciseKind: 'reveal' as const,
+      grade: 'good' as const,
+      at: 1000 * n,
+    }));
+    const rows = [ITEM, id<ItemId>('test-es:item:002')].map((itemId) => newItemProgress(itemId));
+    const records = ['s1', 's2'].map((recordId) => ({
+      ...session(recordId),
+      course: { language: 'es', level: 'a1' },
+    }));
+
+    for (const pass of [1, 2]) {
+      await storage.attempts.appendMany(attempts);
+      await storage.progress.putMany(rows);
+      await storage.sessions.putMany(records);
+
+      expect(await storage.attempts.count(), `pass ${pass}`).toBe(3);
+      expect(await storage.progress.count(), `pass ${pass}`).toBe(2);
+      expect(await storage.sessions.count(), `pass ${pass}`).toBe(2);
+    }
+  });
+
+  it('writing none of them is not an error', async () => {
+    await storage.attempts.appendMany([]);
+    await storage.progress.putMany([]);
+    await storage.sessions.putMany([]);
+
+    expect(await storage.attempts.count()).toBe(0);
+  });
+
+  /**
+   * `all()` is oldest first, which is the opposite of `recent()` and deliberate:
+   * its two callers are an export and a replay, and both want the order things
+   * happened in. A fold applied backwards is a different row.
+   */
+  it('reads the whole log oldest first', async () => {
+    await storage.attempts.appendMany([
+      { id: 'a2', itemId: ITEM, exerciseKind: 'reveal', grade: 'good', at: 2000 },
+      { id: 'a1', itemId: ITEM, exerciseKind: 'reveal', grade: 'good', at: 1000 },
+    ]);
+    await storage.sessions.putMany([
+      { ...session('s2'), startedAt: 2000, course: { language: 'es', level: 'a1' } },
+      { ...session('s1'), startedAt: 1000, course: { language: 'es', level: 'a1' } },
+    ]);
+
+    expect((await storage.attempts.all()).map((attempt) => attempt.id)).toEqual(['a1', 'a2']);
+    expect((await storage.sessions.all()).map((record) => record.id)).toEqual(['s1', 's2']);
+  });
+
   it('merges preference patches over defaults', async () => {
     expect(await storage.preferences.read()).toEqual(DEFAULT_PREFERENCES);
 

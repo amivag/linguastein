@@ -172,19 +172,44 @@ export interface ProgressStore {
   getMany(itemIds: readonly ItemId[]): Promise<ReadonlyMap<ItemId, ItemProgress>>;
   all(): Promise<readonly ItemProgress[]>;
   put(progress: ItemProgress): Promise<void>;
+  /**
+   * Many rows, one transaction.
+   *
+   * Not an optimisation of `put` in a loop but a different guarantee: an import
+   * writes a year of history, and `put` per row is a transaction per row, so a
+   * tab closed halfway leaves the store holding an arbitrary prefix of a file.
+   * All three history stores carry one for the same reason — see
+   * `docs/tasks/learner-profile.md` §7.3, which named the first two.
+   */
+  putMany(rows: readonly ItemProgress[]): Promise<void>;
   clear(): Promise<void>;
 }
 
 export interface AttemptStore {
   append(attempt: Attempt): Promise<void>;
+  /** See {@link ProgressStore.putMany}. Idempotent: an attempt id is unique. */
+  appendMany(attempts: readonly Attempt[]): Promise<void>;
   count(): Promise<number>;
   recent(limit: number): Promise<readonly Attempt[]>;
   forItem(itemId: ItemId, limit?: number): Promise<readonly Attempt[]>;
+  /**
+   * Every attempt, oldest first.
+   *
+   * `recent(Number.MAX_SAFE_INTEGER)` would answer the same question and reads
+   * the whole table into memory to reverse it. The two callers that want the
+   * *whole* log — an export, and a replay that rebuilds a projection — both want
+   * it in the order it happened.
+   */
+  all(): Promise<readonly Attempt[]>;
   clear(): Promise<void>;
 }
 
 export interface SessionStore {
   put(record: SessionRecord): Promise<void>;
+  /** See {@link ProgressStore.putMany}. */
+  putMany(records: readonly SessionRecord[]): Promise<void>;
+  /** Every session, for an export. `recent` is the paged read screens use. */
+  all(): Promise<readonly SessionRecord[]>;
   count(): Promise<number>;
   /**
    * The newest sessions, optionally only those of one target language.

@@ -40,6 +40,16 @@ Tracks the v0.1 requirements in §28 of the spec against what exists today.
   comes back out of storage goes through a zod boundary that repairs a bad value
   per field rather than rejecting the record — groundwork for the export/import
   under _Later_, and the same four things a sync would need
+- Backup and restore: everything a learner owns as one dated JSON file, and an
+  import that **merges** rather than replaces. Answers and sessions union by id, so
+  running the same file twice changes nothing the second time and a device that has
+  been practised on keeps what the file does not know about; the review schedule is
+  **rebuilt by folding the merged answer log** rather than copied, which is what
+  makes merging two devices safe — copying counters would be last-write-wins on an
+  accumulator, and the schedule would end up disagreeing with the log it came from
+  with nothing able to notice. Settings are a separate, defaulted-off choice, since
+  history adds and a theme replaces. Rows naming an uninstalled pack are kept and
+  reported, never pruned. The same four things a sync would need, which is the point
 - Audio service with pre-generated-audio-first resolution and a TTS seam
 - Word and phrase inspection: tap any word for its meaning, grammar, the pattern
   it belongs to, its other forms and other phrases that use it — or grow the
@@ -383,8 +393,9 @@ Story mode · speech recognition and pronunciation scoring · AI tutor behind an
 `LearnerStorage` · translation packs beyond English · the subjunctive proper (and
 so negative commands), the future and the compound tenses · senses for polysemous
 words · **importing and exporting language packs**, including their audio, as
-self-contained units — the audio task (item 3) keeps pack paths relative and
-routes asset resolution through one seam so this stays possible.
+self-contained units — a learner's own data now travels (see _In place_), but a
+**pack** is a different problem: the audio task (item 3) keeps pack paths relative
+and routes asset resolution through one seam so this stays possible.
 
 ## Growth tracks, briefed rather than scheduled
 
@@ -407,13 +418,18 @@ before re-investigating any of this.
   understood to conflict with the App Store's terms, and the repository has a
   single copyright holder who can settle that in a day and no code.
 - **[Accounts and sync](tasks/accounts-and-sync.md)** — the best-prepared of the
-  three, because Stage B of [learner-profile.md](tasks/learner-profile.md) already
-  landed the record clock and the collision-free ids a merge has to trust. Local
-  stays authoritative and no screen ever awaits the network for a learner's own
-  progress; an account is a backup and a second device, never a precondition.
-  Stage C's export/import is worth shipping on its own first — it is the same four
-  things sync needs, and it is the only thing standing between a storage eviction
-  and a lost year of history.
+  three, and better prepared again since **Stage C landed on 2026-09-05**. Stage B
+  had already given a merge the record clock and the collision-free ids it has to
+  trust; Stage C shipped the rest of what sync actually needs and proved it against
+  a file. `replayItem` is the reconciler — merging a file's answer log into a local
+  one is the same problem as merging a device's — and the invariant that keeps it
+  honest (`fold(attempts) === stored progress`) is asserted over generated logs
+  rather than argued for. What is left for the backend is the backend: an account,
+  a transport, and the two gaps §9.1.2 names — a tombstone for a deleted set, which
+  union-by-id cannot express, and a scheduler id per progress row, which only
+  matters once two writers can disagree. Local stays authoritative and no screen
+  ever awaits the network for a learner's own progress; an account is a backup and
+  a second device, never a precondition.
 - **[Paying for it](tasks/monetisation.md)** — donations in Settings → About are
   nearly free and the only part worth doing now. Ads are recommended against on
   the web build for reasons that are enforced rather than aesthetic, and the

@@ -63,8 +63,20 @@ emptying a session.
 **Stage C of the same task — a versioned export/import envelope**, validation on
 the way in, and bulk read/write APIs on the stores.
 
-Ship Stage C **on its own, in the UI, before there is any backend**. Three
-reasons, in ascending order of importance:
+**Landed 2026-09-05**, on its own and in the UI, exactly as recommended below.
+`src/storage/transfer/` holds the envelope, the zod boundary and the merge;
+`putMany` / `appendMany` / `all` are on all three history stores. Two things this
+buys the backend beyond the file itself: **`replayItem` is the reconciler** — a
+file's log merged into a local one is the same problem as a device's — and the
+invariant §9.1.2 of the learner-profile task said must be asserted now is,
+against generated logs rather than examples. What is still owed here is in §9.1.2
+of that task and is not much: a tombstone for a deleted batch (union-by-id cannot
+express a deletion) and a scheduler id per progress row, which only matters once
+two writers can disagree.
+
+The reasoning for shipping it first is kept because it is what should be read
+before the backend, not because it is still a recommendation. Three reasons, in
+ascending order of importance:
 
 1. It is the same four things sync needs, so none of the work is spent twice.
 2. It is real value with no account, no server and no privacy surface — which is

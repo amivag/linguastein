@@ -309,6 +309,38 @@
   gap: var(--space-1);
 }
 
+/*
+ * A checkbox with a sentence under it, for a choice that is not the main
+ * action of the dialog it sits in.
+ *
+ * Shaped like `.check` above and not `composes:`-ing it, because the two are
+ * only coincidentally alike: that one is a *statement* about where data lives,
+ * and this is a control. Sharing the rule would make a change to either an
+ * accidental change to the other — and the difference already shows in
+ * `align-items`, which centres a checkbox against its title rather than
+ * top-aligning a glyph against a paragraph.
+ */
+.choice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+  cursor: pointer;
+}
+
+.choice input {
+  /* Optical: the box sits on the title's line rather than the box's own top. */
+  margin-block-start: 0.15em;
+}
+
+.choiceText {
+  display: grid;
+  gap: var(--space-1);
+}
+
 .checkLabel {
   font-weight: var(--weight-semibold);
 }

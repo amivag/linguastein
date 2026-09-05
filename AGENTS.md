@@ -118,7 +118,8 @@ src/languages/   language-specific morphology and the alphabet, behind two
                  interfaces: `types.ts` is the build's half (`index.ts` loads one
                  by tag) and `runtime.ts` is the screens' half. Not engine
 src/data/        dataset loading + the zod validation boundary
-src/storage/     IndexedDB and in-memory LearnerStorage
+src/storage/     IndexedDB and in-memory LearnerStorage, plus `transfer/` — the
+                 export file's format, and the merge that reads one back in
 src/audio/       audio service + TTS seam
 src/ai/          AI seam and learner-context builder (no vendor, no network)
 src/features/    screens: home, study, browse, read, progress, practice, missions,

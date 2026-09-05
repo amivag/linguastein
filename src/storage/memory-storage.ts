@@ -44,6 +44,10 @@ export function createMemoryStorage(
         progress.set(record.itemId, record);
         return Promise.resolve();
       },
+      putMany: (rows) => {
+        for (const row of rows) progress.set(row.itemId, row);
+        return Promise.resolve();
+      },
       clear: () => {
         progress.clear();
         return Promise.resolve();
@@ -52,6 +56,18 @@ export function createMemoryStorage(
     attempts: {
       append: (attempt) => {
         attempts.push(attempt);
+        return Promise.resolve();
+      },
+      /*
+       * Keyed by id, like the IndexedDB store's `put`: the contract is that
+       * appending an attempt twice leaves one, which is what makes an import
+       * safe to run again after it was interrupted. A bare push would make the
+       * memory store the only one where a re-import doubles the log.
+       */
+      appendMany: (incoming) => {
+        const byId = new Map(attempts.map((attempt) => [attempt.id, attempt]));
+        for (const attempt of incoming) byId.set(attempt.id, attempt);
+        attempts = [...byId.values()];
         return Promise.resolve();
       },
       count: () => Promise.resolve(attempts.length),
@@ -63,6 +79,7 @@ export function createMemoryStorage(
             .sort(byNewest)
             .slice(0, limit),
         ),
+      all: () => Promise.resolve([...attempts].sort((a, b) => a.at - b.at)),
       clear: () => {
         attempts = [];
         return Promise.resolve();
@@ -73,6 +90,13 @@ export function createMemoryStorage(
         sessions = [record, ...sessions.filter((existing) => existing.id !== record.id)];
         return Promise.resolve();
       },
+      putMany: (records) => {
+        const byId = new Map(sessions.map((record) => [record.id, record]));
+        for (const record of records) byId.set(record.id, record);
+        sessions = [...byId.values()];
+        return Promise.resolve();
+      },
+      all: () => Promise.resolve([...sessions].sort((a, b) => a.startedAt - b.startedAt)),
       count: () => Promise.resolve(sessions.length),
       recent: (limit, language) =>
         Promise.resolve(

@@ -6,6 +6,7 @@ import { useServices } from '../../app/services-context';
 import type { AppServices } from '../../app/services';
 import { Icon, type IconName } from '../../components/Icon';
 import { SPEAKER_GENDERS, type SpeakerGender } from '../../domain/content';
+import { DataTransfer } from './DataTransfer';
 import { settingsPath } from './settings-url';
 import styles from './Settings.module.css';
 
@@ -241,6 +242,24 @@ export function UserSettings() {
           Reset or delete it in About
           <Icon name="next" size="sm" />
         </Link>
+      </section>
+
+      {/*
+        Under "Your data" rather than beside the reset in About, because it
+        belongs with the honest account of what is stored and where: the section
+        above says there is no account and no sync, and a backup file is the
+        answer to the question that raises.
+      */}
+      <section className={styles.group} aria-labelledby={`${ids}-transfer`}>
+        <h3 className={styles.groupTitle} id={`${ids}-transfer`}>
+          Backup and restore
+        </h3>
+        <p className={styles.notice}>
+          <Icon name="explain" size="sm" className={styles.labelIcon} />A browser can clear a site’s
+          storage to free up space, and clearing this browser’s data for the site deletes everything
+          above. A file is the only copy that survives either.
+        </p>
+        <DataTransfer />
       </section>
     </div>
   );

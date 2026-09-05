@@ -1,13 +1,31 @@
 # Task: learner state as a profile
 
-**Status:** **Stages A and B have landed.** Stored state is at database version 4:
-version 2 gave a progress row its pack and its clock, and version 4 split the one
-flat settings record into device preferences plus per-course state. §5 and §6 now
-read as a record of why each piece is shaped as it is rather than as work to do.
-Stage C is briefed in shape and is the one that remains — §9.1, the decision its
-file format was waiting on, is **settled as of 2026-08-25**: the attempt log is
-authoritative and progress is a projection folded out of it.
+**Status:** **All three stages have landed.** Stored state is at database version
+4: version 2 gave a progress row its pack and its clock, and version 4 split the
+one flat settings record into device preferences plus per-course state. §5, §6 and
+§7 now read as a record of why each piece is shaped as it is rather than as work
+to do. §9.1 — the decision the file format was waiting on — was settled
+2026-08-25 and is what Stage C is built on: the attempt log is authoritative and
+progress is a projection folded out of it. §9.4 is settled too, in `format.ts`;
+see the note under Stage C landed.
 **Written:** 2026-08-21
+**Stage C landed:** 2026-09-05 — `src/storage/transfer/` (the envelope, a zod
+boundary over it, and the merge), `applyAttempt` / `replayItem` split out of
+`recordAttempt` in `domain/progress/tracker.ts`, `putMany` / `appendMany` / `all`
+on the three history stores, and Backup and restore under Settings → You.
+**Two decisions taken while building it**, both of which §7 left open:
+**import is a merge and there is no replace mode** — a merge into an empty device
+is exactly a restore, so the second mode would add only the half whose failure is
+deleting history the file did not contain — and **§9.4 is answered in the
+including direction**: the file carries `preferences` and `courses`, the import
+applies them wholesale, and it is a checkbox rather than a consequence. The
+objection §9.4 raised, a `voiceName` the target device cannot honour, is answered
+by the boundary Stage A already built rather than by dropping the field.
+**One thing the property test found**, worth knowing before the sync: replay and
+the incremental path disagree for two attempts sharing a millisecond, because the
+canonical order is (`at`, `id`) and arrival order is not recorded. Reachable only
+synthetically — an attempt is a person answering a card — and the id order is the
+right one, since it is the one two devices agree on. Recorded on `replayItem`.
 **Stage A landed:** 2026-08-30 — `CourseState` keyed by target language, a
 `CourseStateStore` beside the preferences store, `useCourse().state` /
 `updateState` as the only way a screen reads or writes any of the five, the
@@ -406,7 +424,7 @@ asserts on the _old_ rows — including a read through the `by-pack` index, sinc
 row the backfill missed is absent from the index rather than merely incomplete —
 and `tests/features/progress-scope.test.tsx` covers the leak §6.2 describes.
 
-## 7. Stage C — export and import
+## 7. Stage C — export and import (landed 2026-09-05)
 
 ### 7.1 The envelope
 
@@ -598,12 +616,35 @@ exact and keeps §9.1.2's invariant assertable. A window without a checkpoint
 quietly makes every progress row older than it unverifiable, which is the same
 class of failure as the unbackfilled index in §6.1: nothing looks wrong.
 
-**9.4 Whether device settings belong in the export at all.** A theme and a voice
-name are properties of the device that was in front of the learner. Exporting
-them is convenient on a new phone and wrong on a shared one, and a `voiceName`
-naming a voice the target device does not have is a silent fallback. Splitting
-the record (§5.1) is what makes either answer expressible; pick one and say so in
-the envelope's doc comment.
+**9.4 Whether device settings belong in the export at all. Settled 2026-09-05:
+they are in the file, and the import applies them — as a choice.**
+
+A theme and a voice name are properties of the device that was in front of the
+learner. Exporting them is convenient on a new phone and wrong on a shared one,
+and a `voiceName` naming a voice the target device does not have is a silent
+fallback. Three things decided it in the including direction.
+
+**The feature is a backup.** What it exists to survive is a browser evicting the
+app's storage, and a restore that returns a year of history while losing the
+palette, the contrast level, the text size and the chosen voice is a worse
+restore. Those five are not incidental — four of them are accessibility settings.
+
+**"Wholesale, never field-merged" was already settled** for these two records in
+§9.1.1, so there was no half-measure available: either the file carries them or
+it does not.
+
+**The silent-fallback objection is answered by machinery Stage A already built.**
+Everything read out of storage goes through `storage/schemas.ts`, which repairs
+per field rather than rejecting a record, and opening a course narrows a stored
+accent the pack has stopped offering. An imported file goes through exactly that
+boundary — it is untrusted input by definition, being something a person can edit
+in a text editor — so a voice this device does not have resolves rather than
+sticks.
+
+What remains of the shared-device worry is handled where it belongs, in the
+confirm: taking the settings is a checkbox, **off by default**, named as
+replacing rather than adding. History adds and settings replace, and the two do
+not ride on one press. Written up in `src/storage/transfer/format.ts`.
 
 **9.5 `SkillProgress` and `showRomanisationHints`.** **Settled 2026-08-24:
 both deleted**, ahead of the rest of this task rather than inside it, because a

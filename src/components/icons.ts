@@ -68,6 +68,7 @@ import {
   TrendingUp,
   Trophy,
   Type,
+  Upload,
   User,
   Users,
   Volume2,
@@ -123,6 +124,10 @@ export const ICONS = {
   add: Plus,
   remove: Minus,
   download: Download,
+  /* The pair of `download`: material coming *in* from a file the learner chose.
+     Named by direction rather than by the arrow, so a better glyph stays
+     adoptable. */
+  upload: Upload,
   delete: Trash2,
 
   // Audio and voice.

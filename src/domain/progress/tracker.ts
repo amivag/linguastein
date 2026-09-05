@@ -33,6 +33,75 @@ export interface RecordedAttempt {
 }
 
 /**
+ * One attempt applied to one progress row — the transition, and nothing else.
+ *
+ * Split out of {@link recordAttempt} because **`ItemProgress` is a fold, not a
+ * document**: every field is a function of the row before it and the attempt
+ * applied to it, and nothing in the chain reads a clock or a random source. That
+ * makes the row reproducible from the log, which is what
+ * `docs/tasks/learner-profile.md` §9.1 settles the merge policy on — an importer
+ * and, later, a sync both rebuild progress by replaying attempts rather than by
+ * merging accumulators, because last-write-wins on a counter is a lost-update
+ * bug that desynchronises two stores meant to be one fact.
+ *
+ * It takes a stored {@link Attempt} rather than an {@link AttemptInput}, which is
+ * what lets replay reuse it: an `Attempt` carries every field an input has, so
+ * the mapping back is lossless and no logic is duplicated.
+ */
+export function applyAttempt(
+  current: ItemProgress | undefined,
+  attempt: Attempt,
+  scheduler: Scheduler = fsrsScheduler,
+): ItemProgress {
+  const previous = current ?? newItemProgress(attempt.itemId, attempt.at);
+  const reviewed = scheduler.review(previous, attempt.grade, attempt.at);
+
+  return {
+    ...reviewed,
+    hintsUsed: previous.hintsUsed + (attempt.hintsUsed ?? 0),
+    updatedAt: attempt.at,
+    ...(attempt.latencyMs !== undefined
+      ? { averageLatencyMs: smoothLatency(previous.averageLatencyMs, attempt.latencyMs) }
+      : {}),
+  };
+}
+
+/**
+ * The progress row an item's whole attempt log implies.
+ *
+ * `undefined` for an empty log, which is the honest answer: a row for an item
+ * nothing has been recorded against is not the same thing as no row, and only
+ * the caller knows whether to keep one it already has.
+ *
+ * Ordering is by `at`, then by `id`, and the tiebreak is not decoration: a fold
+ * whose order depended on which device listed the attempts first would produce
+ * two different answers from one log, and a merge concatenates two logs in
+ * whatever order they arrived.
+ *
+ * That tiebreak is also the one place replay and the incremental path can
+ * disagree. Two attempts inside the same millisecond — what the collision-free
+ * id exists for — are applied here in id order, while the live path applied them
+ * in arrival order, which the log does not record. The stored row and the fold
+ * then differ in the last digit or two of `difficulty` and the latency mean.
+ * Reachable only synthetically: an attempt is a person answering a card. This
+ * order is the canonical one because it is the one two devices agree on.
+ */
+export function replayItem(
+  itemId: ItemId,
+  attempts: readonly Attempt[],
+  scheduler: Scheduler = fsrsScheduler,
+): ItemProgress | undefined {
+  const ordered = attempts
+    .filter((attempt) => attempt.itemId === itemId)
+    .sort((a, b) => a.at - b.at || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  if (ordered.length === 0) return undefined;
+
+  let progress: ItemProgress | undefined;
+  for (const attempt of ordered) progress = applyAttempt(progress, attempt, scheduler);
+  return progress;
+}
+
+/**
  * `rng` is here for the attempt's id and nothing else.
  *
  * The id used to be the item and the clock joined together, which is a value
@@ -49,18 +118,6 @@ export function recordAttempt(
   scheduler: Scheduler = fsrsScheduler,
   rng: Rng = systemRng,
 ): RecordedAttempt {
-  const previous = current ?? newItemProgress(input.itemId, now);
-  const reviewed = scheduler.review(previous, input.grade, now);
-
-  const progress: ItemProgress = {
-    ...reviewed,
-    hintsUsed: previous.hintsUsed + (input.hintsUsed ?? 0),
-    updatedAt: now,
-    ...(input.latencyMs !== undefined
-      ? { averageLatencyMs: smoothLatency(previous.averageLatencyMs, input.latencyMs) }
-      : {}),
-  };
-
   const attempt: Attempt = {
     // Time-ordered so a log stays readable, and unique so two of them can be
     // merged; see the `rng` note above for why the clock alone was not enough.
@@ -75,7 +132,7 @@ export function recordAttempt(
     ...(input.sessionId !== undefined ? { sessionId: input.sessionId } : {}),
   };
 
-  return { progress, attempt };
+  return { progress: applyAttempt(current, attempt, scheduler), attempt };
 }
 
 export interface ProgressSummary {

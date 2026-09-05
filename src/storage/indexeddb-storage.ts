@@ -236,6 +236,25 @@ async function upgradeToV4(tx: UpgradeTransaction, oldVersion: number): Promise<
   await meta.put(device, PREFERENCES_KEY);
 }
 
+/**
+ * Every row in one transaction, so a write of many is all or none.
+ *
+ * `tx.done` is awaited *after* the puts are queued rather than each put being
+ * awaited in turn: `idb` resolves a request when the browser has it, and
+ * awaiting one at a time lets the transaction auto-close between rows on some
+ * engines — the failure this helper exists to make unrepeatable, since the
+ * caller is an import writing a year of somebody's history.
+ */
+async function putAll<K extends 'progress' | 'attempts' | 'sessions'>(
+  db: IDBPDatabase<AppDatabase>,
+  store: K,
+  rows: readonly AppDatabase[K]['value'][],
+): Promise<void> {
+  if (rows.length === 0) return;
+  const tx = db.transaction(store, 'readwrite');
+  await Promise.all([...rows.map((row) => tx.store.put(row)), tx.done]);
+}
+
 export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerStorage {
   return {
     progress: {
@@ -261,6 +280,9 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
       async put(progress) {
         await db.put('progress', progress);
       },
+      async putMany(rows) {
+        await putAll(db, 'progress', rows);
+      },
       async clear() {
         await db.clear('progress');
       },
@@ -268,6 +290,9 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
     attempts: {
       async append(attempt) {
         await db.put('attempts', attempt);
+      },
+      async appendMany(attempts) {
+        await putAll(db, 'attempts', attempts);
       },
       async count() {
         return db.count('attempts');
@@ -280,6 +305,11 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
         const all = await db.getAllFromIndex('attempts', 'by-item', itemId);
         return all.sort((a, b) => b.at - a.at).slice(0, limit);
       },
+      // Read through the time index, so "oldest first" is the database's order
+      // rather than a sort over everything the learner has ever answered.
+      async all() {
+        return db.getAllFromIndex('attempts', 'by-time');
+      },
       async clear() {
         await db.clear('attempts');
       },
@@ -287,6 +317,12 @@ export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerSt
     sessions: {
       async put(record) {
         await db.put('sessions', record);
+      },
+      async putMany(records) {
+        await putAll(db, 'sessions', records);
+      },
+      async all() {
+        return db.getAllFromIndex('sessions', 'by-time');
       },
       async count() {
         return db.count('sessions');

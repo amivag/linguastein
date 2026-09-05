@@ -137,6 +137,46 @@ in the pack's own counts.
 
 ### Added
 
+- **Your practice can leave the device, and come back.** There is no account and no
+  server — Settings → You says so plainly — which has meant that a browser evicting
+  the app's storage, or somebody clearing site data, took a year of history with it
+  and there was nowhere to restore from. Settings → You → Backup and restore now
+  saves everything as one dated JSON file, and reads one back.
+
+  **Importing is a merge, and there is deliberately no "replace" beside it.** A
+  merge into a device with nothing on it is exactly a restore, so a second mode
+  would only add the dangerous half — the one whose way of going wrong is deleting
+  history the file did not happen to contain. Nothing an import does deletes
+  anything: answers and sessions are unioned by id, so importing the same file
+  twice changes nothing the second time, and a device that has been practised on
+  keeps everything the file does not know about.
+
+  **The review schedule is rebuilt from the answers rather than copied**, and that
+  is the part that makes merging two devices safe rather than merely possible. A
+  progress row is a _fold_ over the attempt log — every field a function of the row
+  before it and the answer applied to it, with no clock and no randomness in the
+  chain — so folding an item's answers reproduces its row exactly. Copying the rows
+  instead would be last-write-wins on a set of counters: two devices practising the
+  same word apart would lose several counted answers while the answers themselves
+  survived, leaving the schedule disagreeing with the log it came from, and nothing
+  in the app able to notice. `tests/domain/replay.test.ts` generates random logs and
+  asserts the fold against what the live path actually wrote.
+
+  **Settings are a separate choice, and off by default.** History adds; a theme, a
+  text size, a level and a voice replace. Somebody merging a second device's
+  practice is not usually asking for that device's colours, so the two do not ride
+  on one press — and when they are asked for, they go through the same per-field
+  repair that reads settings out of storage, because a file a person can edit is
+  untrusted input by definition.
+
+  A file that cannot be read says so rather than appearing to work: another app's
+  export, a format from a newer build, and something that is not JSON are each
+  refused with the reason. Individual records that will not parse are dropped and
+  counted — this is a backup being restored, and three unreadable answers must not
+  cost a learner the other nine hundred. Rows naming a pack this device does not
+  have installed are **kept and reported**, never pruned: that a progress record
+  outlives its pack is exactly what stable ids were for.
+
 - **A set can be removed.** A learner could assemble a set on Browse and had no way
   to unmake one: `BatchStore.remove` existed and only the full local reset called it,
   so the way out of a set you regretted was erasing every attempt, session and review

@@ -156,8 +156,17 @@ export interface ImportReport {
    */
   readonly orphans: number;
   readonly settingsApplied: boolean;
-  readonly issues: readonly ImportIssue[];
 }
+
+/*
+ * There is deliberately no `issues` here. Everything that can go wrong with a
+ * file goes wrong in `parseExport`, which is where the issues are — by the time
+ * a learner has agreed to a confirm, the rows have already been read, and a
+ * second empty list on this side would be a field that is always empty. This
+ * codebase has one worked example of what that costs: `showRomanisationHints`,
+ * deleted ahead of the file format rather than inside it, because a dead field
+ * is one every future reader has to decide what to do with.
+ */
 
 export interface ImportOptions {
   /** Pack ids installed here, used only to count orphans. Never to prune. */
@@ -253,6 +262,5 @@ export async function applyExport(
     itemsRebuilt: rebuilt.length,
     orphans,
     settingsApplied: settings,
-    issues: [],
   };
 }

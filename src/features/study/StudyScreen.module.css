@@ -233,6 +233,40 @@
 }
 
 /*
+ * A set's row is the card plus one control that is not part of it.
+ *
+ * The card stays the whole row's worth of card — same `.mission` recipe the
+ * missions use, so the two lists read as one list — and the remove button sits
+ * beside it in the row's own grid rather than inside the link. Nesting it would
+ * be invalid markup; putting it in the card without nesting would mean the card
+ * is no longer the thing you press.
+ */
+.batchRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* The one thing standing between a tap and a set that is gone, so it is read
+   out rather than only coloured — see the reset confirm in Settings. */
+.removeNote {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+
+.confirm {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.confirm > * {
+  flex: 1;
+}
+
+/*
  * The wider grid, for a tile whose title is target-language text with a
  * translation under it — a grammar pattern.
  *

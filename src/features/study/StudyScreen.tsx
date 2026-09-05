@@ -4,6 +4,7 @@ import { useCourse } from '../../app/course';
 import { MISSIONS } from '../../app/missions';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
+import { Button } from '../../components/Button';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon, type IconName } from '../../components/Icon';
 import { SectionTabs } from '../../components/SectionTabs';
@@ -100,7 +101,7 @@ const NO_HISTORY: History = {
  * rule the tiles, the categories and the letters already follow.
  */
 export function StudyScreen() {
-  const { services, preferences, batches } = useServices();
+  const { services, preferences, batches, removeBatch } = useServices();
   const { course, option, filter: courseScope } = useCourse();
   const repository = services.repository;
   const [params] = useSearchParams();
@@ -366,7 +367,12 @@ export function StudyScreen() {
           note="Material you chose, to come back to across short sessions until it is absorbed. Practising a set is recorded, like any other practice."
         >
           {sets.map((standing) => (
-            <BatchRow key={standing.batch.id} standing={standing} course={course} />
+            <BatchRow
+              key={standing.batch.id}
+              standing={standing}
+              course={course}
+              onRemove={removeBatch}
+            />
           ))}
         </Section>
       )}
@@ -606,14 +612,24 @@ function MissionRow({
 function BatchRow({
   standing,
   course,
+  onRemove,
 }: {
   readonly standing: BatchStanding;
   readonly course: Parameters<typeof sessionPath>[0];
+  readonly onRemove: (id: string) => void;
 }) {
   const { batch, complete } = standing;
+  const [confirming, setConfirming] = useState(false);
 
   return (
-    <li>
+    /*
+      Two controls, side by side, rather than one control with a second inside
+      it. A button nested in a link is invalid markup and unreachable by keyboard
+      in the order it looks like it is in — and the row's whole job is to be one
+      tap to practise, so the destructive one sits outside the card it would
+      otherwise be part of.
+    */
+    <li className={styles.batchRow}>
       <Link
         className={styles.mission}
         to={sessionPath(course, {
@@ -638,6 +654,46 @@ function BatchRow({
         </span>
         <Icon name="next" size="sm" />
       </Link>
+
+      {/* Named with the set, not "Remove": a column of identical names is exactly
+          what the agent-surface rule forbids, and this list is where two of them
+          would sit next to each other. */}
+      <Button
+        icon
+        variant="ghost"
+        aria-label={`Remove ${batch.label}`}
+        onClick={() => setConfirming(true)}
+      >
+        <Icon name="delete" size="sm" />
+      </Button>
+
+      {confirming && (
+        <Sheet title={`Remove ${batch.label}?`} onClose={() => setConfirming(false)}>
+          {/*
+            What is being deleted is the *grouping*, and the confirm has to say so.
+            The items were practised, that evidence belongs to the items, and a
+            learner who reads "remove" as "throw away the work" keeps a set they
+            no longer want rather than risk it.
+          */}
+          <p className={styles.removeNote}>
+            This forgets the set. Everything you practised in it stays — the attempts, the review
+            schedule and the progress all belong to the items themselves, not to the set that
+            grouped them.
+          </p>
+          <div className={styles.confirm}>
+            <Button onClick={() => setConfirming(false)}>Keep it</Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                onRemove(batch.id);
+                setConfirming(false);
+              }}
+            >
+              Remove set
+            </Button>
+          </div>
+        </Sheet>
+      )}
     </li>
   );
 }

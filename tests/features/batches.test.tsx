@@ -139,6 +139,66 @@ describe('listing sets on Study', () => {
     expect(heading.closest('section')?.textContent).toMatch(/recorded/i);
   });
 
+  /**
+   * The gap Stage B left: a set could be made and not unmade, so the only way
+   * out of one a learner regretted was the full local reset.
+   */
+  it('removes a set, and says the practice survives it', async () => {
+    const user = userEvent.setup();
+    const removeBatch = vi.fn();
+    renderWithServices(<StudyScreen />, {
+      services: testServices({ batches: [batch()] }),
+      route: '/es/all/study?tab=batches',
+      removeBatch,
+    });
+
+    // Named with the set rather than "Remove": two sets would otherwise offer
+    // two controls a screen reader and an agent cannot tell apart.
+    await user.click(await screen.findByRole('button', { name: 'Remove Words · Nouns' }));
+
+    const dialog = within(screen.getByRole('dialog'));
+    // Deleting a set forgets the grouping. Saying so is the difference between a
+    // learner tidying up and a learner keeping a set they do not want because
+    // removing it reads as throwing the work away.
+    expect(dialog.getByText(/Everything you practised in it stays/i)).toBeInTheDocument();
+
+    await user.click(dialog.getByRole('button', { name: 'Remove set' }));
+
+    expect(removeBatch).toHaveBeenCalledWith('batch-1');
+  });
+
+  it('keeps the set when the confirm is declined', async () => {
+    const user = userEvent.setup();
+    const removeBatch = vi.fn();
+    renderWithServices(<StudyScreen />, {
+      services: testServices({ batches: [batch()] }),
+      route: '/es/all/study?tab=batches',
+      removeBatch,
+    });
+
+    await user.click(await screen.findByRole('button', { name: 'Remove Words · Nouns' }));
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Keep it' }));
+
+    expect(removeBatch).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Words · Nouns/ })).toBeInTheDocument();
+  });
+
+  /**
+   * Removing the last set takes the tab with it, because the section list is
+   * derived from what the course has. The URL still asks for `?tab=batches`, and
+   * a stale tab resolves to the first real section rather than to an empty page
+   * — the same rule a stale course follows.
+   */
+  it('falls back to a real section when the last set goes', async () => {
+    renderWithServices(<StudyScreen />, { route: '/es/all/study?tab=batches' });
+
+    expect(
+      await screen.findByRole('heading', { name: /^missions$/i, level: 2 }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /^sets$/i, level: 2 })).not.toBeInTheDocument();
+  });
+
   it('reports material the current course cannot reach', async () => {
     const wider = batch({ itemIds: [item('001'), id<ItemId>('test-fr:item:101')] });
     renderWithServices(<StudyScreen />, {

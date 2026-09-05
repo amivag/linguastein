@@ -353,11 +353,21 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     half — resolving `system` through `prefers-contrast`, which needs a fifth
     value on that axis (`system`) rather than a fifth level. See
     [the theming note](theming.md#appearance-is-five-independent-axes).
-12. **Practice batches** — **Stages A and B have landed**: `src/domain/batches/`
-    holds the model and the derived standing, and a sheet on Browse can be saved
-    as a set. A batch is a set the learner picks once and returns to across
+12. **Practice batches** — **Stages A and B have landed, and the gap Stage B
+    opened is closed**: `src/domain/batches/` holds the model and the derived
+    standing, a sheet on Browse can be saved as a set, and a set can now be
+    removed. A batch is a set the learner picks once and returns to across
     short sessions until it is absorbed, with where they stand derived from the
-    attempt log the way a mission's standing already is. Read
+    attempt log the way a mission's standing already is.
+
+    Removal was the one thing a learner could not undo without erasing every
+    attempt on the device, and the confirm is the substance of it: deleting a set
+    forgets the **grouping**, and the sheet says the attempts, the review schedule
+    and the progress all stay, because they belong to the items rather than to the
+    set. No archive field was added — a finished set is simply one the learner can
+    delete, and `nextBatchStanding` already stops offering it. Renaming is still
+    declined for a stated reason: the label is derived from the filter, and a text
+    input is a change of a different size. Read
     [docs/tasks/practice-batches.md](tasks/practice-batches.md) for what remains,
     and for why
     this is not a mission and why its graduation bar cannot be lexeme mastery:

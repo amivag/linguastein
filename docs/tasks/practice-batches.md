@@ -1,9 +1,9 @@
 # Task: practice batches — a set the learner picks and keeps coming back to
 
-**Status:** **Stages A and B have landed.** The whole document now reads as a
-record of why each piece is shaped as it is rather than as work to do. What is
-left is listed in §8 (deliberately out of scope) and the one gap Stage B opened,
-recorded at the end of §7.
+**Status:** **Stages A and B have landed, and the gap Stage B opened is closed.**
+The whole document now reads as a record of why each piece is shaped as it is
+rather than as work to do. What is left is listed in §8 (deliberately out of
+scope), plus renaming, which §7.4 declines for a stated reason.
 **Written:** 2026-08-23
 **Stage A landed:** 2026-08-23 — `src/domain/batches/`, `BatchStore` at database
 version 3, `?batch=` in `session-url.ts`, batches loaded at the composition root
@@ -12,6 +12,8 @@ alongside preferences, and the out-of-scope case reported rather than widened.
 Sets section on Study, a follow-up card on Home, `batchStandings` and
 `nextBatchStanding` in the domain, and `localDay` as the app's one definition of
 a calendar day.
+**Removal landed:** 2026-09-05 — a per-set control on the Study row, a confirm
+that says the practice survives it, and no archive field. See §7.4.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** one new domain module (`src/domain/batches/`), one new store on
 `LearnerStorage` at database version 3, one parameter in `session-url.ts`, and
@@ -399,26 +401,44 @@ abandoned. Read the existing `followUps` construction before adding to it.
 The card states the standing plainly — _"Food & travel nouns · 11 of 30
 absorbed"_ — and resumes in one tap at the batch's `perSession` size.
 
-### 7.4 The gap Stage B opened
+### 7.4 The gap Stage B opened — closed 2026-09-05
 
-**A set can be made and cannot be removed.** `BatchStore.remove` and the
-context's `removeBatch` both exist and are used by the full local reset, but no
-screen offers the action, so the only way out of a set a learner regrets is to
-erase everything. That is the next thing to build, and it is smaller than it
-sounds — one control on the Study row. Two decisions come with it rather than
-before it:
+**A set could be made and not removed.** `BatchStore.remove` and the context's
+`removeBatch` both existed and were used by the full local reset, but no screen
+offered the action, so the only way out of a set a learner regretted was erasing
+everything. It was one control on the Study row, as predicted. The two decisions
+it came with were both taken:
 
-- **Removing a set must not touch progress.** The items were practised; that
-  evidence belongs to the items, not to the set that grouped them. Deleting a set
-  is forgetting the grouping, and the confirm should say so — otherwise it reads
-  as throwing away the work.
-- **A finished set probably wants archiving rather than deleting.**
-  `nextBatchStanding` already stops offering a complete one, so the list is the
-  only place a finished set still shows. Whether that is a state on the record or
-  simply the learner deleting it is a real choice; do not add a field until the
-  Study row's behaviour makes one necessary.
+- **Removing a set does not touch progress**, and the confirm says so in those
+  words: _"This forgets the set. Everything you practised in it stays — the
+  attempts, the review schedule and the progress all belong to the items
+  themselves, not to the set that grouped them."_ The items were practised; that
+  evidence belongs to the items, not to the grouping. Without the sentence,
+  "remove" reads as throwing away the work, and a learner keeps a set they do not
+  want rather than risk it — which leaves the feature exactly where it was.
+- **A finished set is deleted, not archived.** No field was added, which is what
+  this document asked for: `nextBatchStanding` already stops offering a complete
+  one, so the list is the only place a finished set still shows, and deleting it
+  is a thing the learner can now do. Revisit only if the Study row's behaviour
+  makes a state necessary — it has not.
 
-Also unbuilt, and deliberately: renaming. The label is derived from the filter,
+Two smaller shapes fell out of building it, and both are worth keeping:
+
+- **The control sits beside the card, not inside it.** The row's card is a `Link`
+  that starts a session, and a `<button>` inside an `<a>` is invalid markup that
+  is reachable in an order it does not look like it is in. The `<li>` is a
+  `1fr auto` grid instead, so the card stays the whole card and the destructive
+  control is visibly not part of it.
+- **The name carries the set.** `Remove Words · Nouns`, not `Remove` — a column
+  of identically named controls is the thing `tests/a11y/agent-surface.test.tsx`
+  exists to refuse, and a list of sets is where two of them would sit adjacent.
+
+**Removing the last set takes the Sets tab with it**, because the section list is
+derived from what the course has (§7.2). A URL still asking for `?tab=batches`
+then opens the first section the course does have — the rule the screen already
+followed for an unrecognised tab, rather than a case added for this one.
+
+Still unbuilt, and deliberately: renaming. The label is derived from the filter,
 which is right at creation and wrong a week later when two sets both read
 "Words · Nouns". It needs a text input and the accessible naming that comes with
 one, which is why it is not smuggled in here.

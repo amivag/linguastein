@@ -137,6 +137,35 @@ in the pack's own counts.
 
 ### Added
 
+- **A set can be removed.** A learner could assemble a set on Browse and had no way
+  to unmake one: `BatchStore.remove` existed and only the full local reset called it,
+  so the way out of a set you regretted was erasing every attempt, session and review
+  schedule on the device. That is not a way out; it is a reason to stop making sets.
+
+  Each set on Study → Sets now carries its own remove control, named with the set —
+  `Remove Words · Food and drink` — rather than a column of buttons all called
+  "Remove", which is the one thing the agent-surface rule forbids and exactly the
+  shape this list would have produced. It sits beside the card rather than inside it,
+  because the card is the thing you press to practise and a button nested in a link is
+  invalid markup reachable in an order it does not look like it is in.
+
+  **The confirm says what is actually being deleted, and that is the substance of it.**
+  Removing a set forgets the _grouping_. The items were practised; the attempts, the
+  review schedule and the progress all belong to the items, and nothing about them
+  changes — so the sheet says so in those words. A learner who reads "remove" as
+  "throw away the work" keeps a set they no longer want rather than risk it, which
+  leaves the feature in the state it was already in.
+
+  Removing the last set takes the Sets tab with it, and a URL still asking for
+  `?tab=batches` opens the first section the course has. That is the rule the screen
+  already followed for a tab this course does not offer, rather than a case added for
+  this one.
+
+  Renaming is still not offered, and deliberately: the label is derived from the
+  filter, which is right at creation and wrong a week later when two sets both read
+  "Words · Nouns". It needs a text input and the accessible naming that comes with
+  one, which is a change of a different size.
+
 - **Playback you can follow.** Audio used to be a button that made a sound: nothing
   said it had started, nothing said where it had got to, and a text or a dialogue was
   spoken as one enormous utterance built by joining every sentence with a space. That

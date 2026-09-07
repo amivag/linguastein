@@ -416,8 +416,20 @@
  * amber ones finds them by colour in both places — which is the only thing a
  * categorical hue is for.
  */
+/*
+ * Rows that pair up when the list is given the whole width.
+ *
+ * `In this course` shares a row with `Where you left off`, and a learner who has
+ * not practised yet does not have that section — so on the first visit the list
+ * sat in a half-width column with the other half of the screen blank beside it.
+ * The section stretches in that case (see `.columns`), and `auto-fit` is what
+ * makes stretching an improvement rather than six rows of mostly whitespace: at
+ * half width the tracks do not fit and the list stays single file, at full width
+ * the six kinds of material fall into two columns, in reading order.
+ */
 .contents {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
   gap: var(--space-2);
   padding: 0;
   list-style: none;
@@ -531,5 +543,18 @@
   .columns {
     grid-template-columns: 1fr 1fr;
     align-items: start;
+  }
+
+  /*
+   * One section on its own takes the width rather than half of it.
+   *
+   * Both halves are conditional — `Where you left off` needs practice history
+   * and `In this course` needs a pack with contents — so the pair is regularly a
+   * single section, and a fixed two-track grid left it in the left-hand column
+   * with an empty column beside it. That empty column is the first thing on Home
+   * a new learner sees, before there is any history to fill it.
+   */
+  .columns > :only-child {
+    grid-column: 1 / -1;
   }
 }

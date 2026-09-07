@@ -12,9 +12,34 @@
   gap: var(--space-3);
 }
 
+/*
+ * The strip's own geometry, in two numbers the rest of the file reads.
+ *
+ * `--inset` is the shell's horizontal padding, so a snapped card lines up with
+ * the search box above it. `--reach` is how far a card's shadow travels past its
+ * own edge — `--shadow-md` is `0 8px 24px` at its largest across the themes, so
+ * 32px covers the furthest of it, downwards.
+ */
 .track {
-  margin: 0 calc(var(--space-4) * -1);
-  padding: 0 var(--space-4);
+  --inset: var(--space-4);
+  --reach: var(--space-6);
+
+  /*
+   * Room for the shadow, taken back with margin so the strip sits where it did.
+   *
+   * `overflow-x: auto` computes `overflow-y` to `auto` as well, so the strip
+   * clips vertically whether or not anything asked it to — and with no vertical
+   * padding the clip fell exactly on the cards' own edges, cutting every shadow
+   * off flat along the top and bottom of the row. The cards read as sliced
+   * rather than raised.
+   *
+   * Only `--inset` above, rather than the full reach: a taller box would overlap
+   * the search field, and because the strip paints after it, the bottom of the
+   * input would stop taking clicks. 16px clears the shadow's upward travel
+   * anyway — it is offset downwards.
+   */
+  margin: calc(var(--inset) * -1) calc(var(--inset) * -1) calc(var(--reach) * -1);
+  padding: var(--inset) var(--inset) var(--reach);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
@@ -25,7 +50,7 @@
    * everything else on Home sat inset. `scroll-padding` moves the snapport in by
    * the same amount, so a snapped card lands where the search box starts.
    */
-  scroll-padding-left: var(--space-4);
+  scroll-padding-left: var(--inset);
   scroll-behavior: smooth;
   scrollbar-width: none;
 }
@@ -56,19 +81,23 @@
 }
 
 /*
- * The gap between cards is the strip's own inset, and they have to match.
+ * The gap clears the strip's inset *and* the shadow that hangs off a card.
  *
- * With a smaller gap the next card starts *inside* the right-hand padding, so a
- * few pixels of it show past the last whole one — four, at the width this was
- * measured at, which is a card's rounded corner peeping out and reads as a
- * rendering fault rather than as anything. Equal, a card that is off-screen
- * begins exactly at the edge of the screen.
+ * The inset alone was the earlier rule, and it did what it promised for the card
+ * itself: a card that is off-screen begins exactly at the edge of the screen,
+ * with no rounded corner peeping past the last whole one. Its shadow does not
+ * stop where it does, though — it reaches 24px further — so the next card threw
+ * a soft vertical band across the inset beside the last visible one, a smudge
+ * with nothing casting it. Cleared by the shadow's reach, the whole of the next
+ * card, shadow included, starts past where the strip is cut.
  */
 .list {
+  --gap: calc(var(--inset) + var(--reach));
+
   composes: listReset from '../../styles/surfaces.module.css';
 
   display: flex;
-  gap: var(--space-4);
+  gap: var(--gap);
   align-items: stretch;
 }
 
@@ -93,7 +122,7 @@
 }
 
 .slide {
-  flex: 0 0 calc((100% - (var(--columns) - 1) * var(--space-4)) / var(--columns));
+  flex: 0 0 calc((100% - (var(--columns) - 1) * var(--gap)) / var(--columns));
   scroll-snap-align: start;
 }
 

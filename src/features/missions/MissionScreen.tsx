@@ -22,6 +22,7 @@ import { useWordSelection, type WordSelection } from '../../components/useWordSe
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import {
   isMissionUseSession,
+  MISSION_STAGE_LABELS,
   missionById,
   missionTransfers,
   missionUseSessionId,
@@ -43,7 +44,7 @@ import {
   type ReviewGrade,
 } from '../../domain/progress';
 import { SpeakCheck } from '../practice/SpeakCheck';
-import { studyPath } from '../study/study-url';
+import { studyPath, studyTrail } from '../study/study-url';
 import { MissionJourney } from './MissionJourney';
 import {
   missionJourneyHrefs,
@@ -275,10 +276,22 @@ export function MissionScreen() {
     [mission, services, transferStep],
   );
 
+  /*
+   * `Study › Missions`, on all three of the shells below.
+   *
+   * A mission hides the tab bar so the exchange fills the screen, which left the
+   * header saying only what the mission was *called*: "Order at a café" drawn
+   * large, with nothing on the screen using the word mission and nothing but a
+   * history-walking Back button leading to the list it came from.
+   */
+  const missionTrail = studyTrail(course, 'missions');
+
   if (chosenStage === 'use' && transferStep === undefined) {
     return (
       <AppShell
         title={mission?.title ?? 'Mission'}
+        subtitle={MISSION_STAGE_LABELS[chosenStage]}
+        trail={missionTrail}
         onBack={() => void navigate(studyPath(course, 'missions'))}
         showNav={false}
       >
@@ -291,6 +304,7 @@ export function MissionScreen() {
     return (
       <AppShell
         title="Mission"
+        trail={missionTrail}
         onBack={() => void navigate(studyPath(course, 'missions'))}
         showNav={false}
       >
@@ -321,6 +335,14 @@ export function MissionScreen() {
   return (
     <AppShell
       title={mission.title}
+      /*
+        The mission is the subject and the stage is the mode, which is the split
+        `subtitle` is for — and the stage is the half that scrolls away. The
+        journey strip below says it too, at the top of the page; halfway down the
+        Understand stage's palettes the header is the only thing left that does.
+      */
+      subtitle={MISSION_STAGE_LABELS[chosenStage]}
+      trail={missionTrail}
       onBack={() => void navigate(studyPath(course, 'missions'))}
       showNav={false}
     >

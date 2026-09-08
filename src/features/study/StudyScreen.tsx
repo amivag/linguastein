@@ -29,7 +29,7 @@ import { readPath } from '../read/read-url';
 import { sessionPath } from '../practice/session-url';
 import { kindHue, type KindHue } from '../../styles/kinds';
 import { posHue } from '../../styles/semantics';
-import { parseStudyTab, studyPath, type StudyTab } from './study-url';
+import { parseStudyTab, studyPath, STUDY_TAB_LABELS, type StudyTab } from './study-url';
 import styles from './StudyScreen.module.css';
 
 const NO_EVIDENCE: MissionEvidence = { practised: new Set(), used: new Map() };
@@ -259,34 +259,64 @@ export function StudyScreen() {
     () =>
       (
         [
-          { id: 'missions', label: 'Missions', icon: 'mission', size: missions.length },
+          {
+            id: 'missions',
+            label: STUDY_TAB_LABELS.missions,
+            icon: 'mission',
+            size: missions.length,
+          },
           // Learner-made rather than pack-derived, so this is the one section
           // whose count is a property of what *they* have done — and the same
           // rule still applies: no sets, no tab, and creation lives on Browse
           // where the sheet being saved is already on screen.
-          { id: 'batches', label: 'Sets', icon: 'batch', size: sets.length },
+          { id: 'batches', label: STUDY_TAB_LABELS.batches, icon: 'batch', size: sets.length },
           // Before the words, because it is what the words are made of — and
           // sized by whether the *language* has a chart rather than by how much
           // content is filed under it: the alphabet is a property of Spanish,
           // not a count of rows in a pack.
-          { id: 'alphabet', label: 'Alphabet', icon: 'alphabet', size: hasAlphabet ? 1 : 0 },
+          {
+            id: 'alphabet',
+            label: STUDY_TAB_LABELS.alphabet,
+            icon: 'alphabet',
+            size: hasAlphabet ? 1 : 0,
+          },
           /*
            * Beside the alphabet, and sized the same way: by whether the
            * *language* has a numeral module rather than by how much content is
            * filed under numbers. How you say 1042 is a property of Spanish, and
            * a pack could contain no numeral rows at all without changing it.
            */
-          { id: 'numbers', label: 'Numbers', icon: 'number', size: hasNumerals ? 1 : 0 },
-          { id: 'words', label: 'Words', icon: 'word', size: counts.words.length },
+          {
+            id: 'numbers',
+            label: STUDY_TAB_LABELS.numbers,
+            icon: 'number',
+            size: hasNumerals ? 1 : 0,
+          },
+          { id: 'words', label: STUDY_TAB_LABELS.words, icon: 'word', size: counts.words.length },
           {
             id: 'phrases',
-            label: 'Phrases',
+            label: STUDY_TAB_LABELS.phrases,
             icon: 'browse',
             size: counts.phrases + counts.sentences + counts.passages,
           },
-          { id: 'grammar', label: 'Grammar', icon: 'grammar', size: counts.grammar.length },
-          { id: 'abilities', label: 'Abilities', icon: 'speak', size: counts.abilities.length },
-          { id: 'categories', label: 'Categories', icon: 'topic', size: counts.topics.length },
+          {
+            id: 'grammar',
+            label: STUDY_TAB_LABELS.grammar,
+            icon: 'grammar',
+            size: counts.grammar.length,
+          },
+          {
+            id: 'abilities',
+            label: STUDY_TAB_LABELS.abilities,
+            icon: 'speak',
+            size: counts.abilities.length,
+          },
+          {
+            id: 'categories',
+            label: STUDY_TAB_LABELS.categories,
+            icon: 'topic',
+            size: counts.topics.length,
+          },
         ] as const satisfies readonly {
           id: StudyTab;
           label: string;
@@ -325,7 +355,17 @@ export function StudyScreen() {
   const inScope = option?.levels.find((entry) => entry.level === course.level)?.count ?? 0;
 
   return (
-    <AppShell title="Study" action={<ThemeToggle variant="compact" />}>
+    <AppShell
+      title="Study"
+      /*
+        Which section is open, in the one place that stays on screen once the
+        strip below has scrolled away — and in the tab title, which said "Study"
+        for all nine of them. The section is the mode and Study is the subject,
+        which is exactly the split `subtitle` exists for.
+      */
+      {...(current ? { subtitle: current.label } : {})}
+      action={<ThemeToggle variant="compact" />}
+    >
       {/*
         The course, as one line that opens the control rather than as the control.
         It used to be a block of chips and a sentence at the top of every screen,

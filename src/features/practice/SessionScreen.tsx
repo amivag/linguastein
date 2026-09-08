@@ -21,7 +21,7 @@ import { parseSessionUrl } from './session-url';
 import { useSessionRunner } from './useSessionRunner';
 import { MissionJourney } from '../missions/MissionJourney';
 import { missionJourneyHrefs, missionPath } from '../missions/mission-url';
-import { studyPath } from '../study/study-url';
+import { studyPath, studyTrail } from '../study/study-url';
 
 /** A session is fully described by the URL, so it survives a reload or a share. */
 export function SessionScreen() {
@@ -137,11 +137,27 @@ export function SessionScreen() {
     : batchLabel !== undefined
       ? studyPath(course, 'batches')
       : path();
+  /*
+   * Where the session sits, for the two subjects that have a place of their own.
+   *
+   * The same fork `back` makes, and deliberately one crumb shorter than it: Back
+   * returns to the mission, while the trail stops at the list of missions,
+   * because the crumb below the list would repeat the `<h1>` — a mission session
+   * is *titled* with the mission. A session over nothing in particular gets no
+   * trail at all rather than a guessed one; its preset is the whole of what the
+   * screen is.
+   */
+  const trail = activeMission
+    ? studyTrail(course, 'missions')
+    : batchLabel !== undefined
+      ? studyTrail(course, 'batches')
+      : undefined;
 
   return (
     <AppShell
       title={subject ?? preset.label}
       {...(subject ? { subtitle: preset.label } : {})}
+      {...(trail ? { trail } : {})}
       onBack={() => void navigate(back)}
       showNav={false}
     >

@@ -9,7 +9,7 @@ import { UsageBadges } from '../../components/UsageBadges';
 import type { PassageKind } from '../../domain/content';
 import { kindHue } from '../../styles/kinds';
 import surfaces from '../../styles/surfaces.module.css';
-import { studyPath } from '../study/study-url';
+import { studyPath, studyTrail } from '../study/study-url';
 import { parseReadUrl } from './read-url';
 import styles from './Read.module.css';
 
@@ -55,7 +55,11 @@ export function ReadScreen() {
   }, [services.repository, kind, filter]);
 
   return (
-    <AppShell title="Read" onBack={() => void navigate(studyPath(course, from))}>
+    <AppShell
+      title="Read"
+      trail={studyTrail(course, from)}
+      onBack={() => void navigate(studyPath(course, from))}
+    >
       <CourseBar compact />
       <p className={styles.intro}>
         Short texts and conversations built from words you already practise. Tap any word for its

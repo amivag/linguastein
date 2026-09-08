@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { documentTitle } from '../app/identity';
 import { AppNav } from './AppNav';
+import { Breadcrumb, type Crumb } from './Breadcrumb';
 import { HomeLink } from './HomeLink';
 import { Icon } from './Icon';
 import { UpdateBanner } from './UpdateBanner';
@@ -17,6 +18,21 @@ interface AppShellProps {
    * subject rather than becoming a sentence about it.
    */
   readonly subtitle?: string;
+  /**
+   * The places above this one, nearest last — `Study › Missions` over a mission.
+   *
+   * A screen passes it rather than the shell deriving it, because the chain is
+   * not the URL's. `/es/a1/mission/cafe/understand` has no `/study` segment in
+   * it, and a session over that mission has neither; where a screen *belongs* is
+   * a fact about the app that only the screen and its URL codec hold, which is
+   * why `studyTrail` lives beside `studyPath` rather than here.
+   *
+   * Omit it on a screen the tab bar already places. Home, Study, Progress and
+   * Settings are the four destinations `AppNav` shows at all times, so a trail
+   * on one of those would spend a line of a sticky header restating what is
+   * already lit up on screen.
+   */
+  readonly trail?: readonly Crumb[];
   readonly children: ReactNode;
   readonly onBack?: 'history' | (() => void);
   readonly action?: ReactNode;
@@ -49,6 +65,7 @@ interface AppShellProps {
 export function AppShell({
   title,
   subtitle,
+  trail,
   children,
   onBack,
   action,
@@ -76,6 +93,11 @@ export function AppShell({
           </button>
         )}
         <div className={styles.heading}>
+          {/* Above the heading, so the chain reads down into the name of the
+              place it ends at — and so a screen reader meets "where is this"
+              before "what is it called", which is the order the two are useful
+              in. */}
+          {trail && <Breadcrumb items={trail} />}
           <h1 className={styles.title}>{title}</h1>
           {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
         </div>

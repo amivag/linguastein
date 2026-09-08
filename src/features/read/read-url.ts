@@ -11,8 +11,9 @@
  * it here in order to send Back there. `study-url.ts` owns that spelling.
  */
 
+import type { Crumb } from '../../components/Breadcrumb';
 import { coursePath, type Course } from '../../domain/content';
-import { parseStudyOrigin, writeStudyOrigin, type StudyTab } from '../study/study-url';
+import { parseStudyOrigin, studyTrail, writeStudyOrigin, type StudyTab } from '../study/study-url';
 
 export interface ReadUrl {
   /** The Study section this list was opened from; where Back returns to. */
@@ -30,4 +31,21 @@ export function readPath(course: Course, url: Partial<ReadUrl> = {}): string {
 
 export function parseReadUrl(params: URLSearchParams): ReadUrl {
   return { from: parseStudyOrigin(params) };
+}
+
+/**
+ * Where a text sits: `Study › Read`.
+ *
+ * A passage is opened from the reading list, and the list is itself a sheet
+ * inside Study, so the chain is two long — which is exactly why it is built here
+ * rather than typed at the screen. `PassageScreen` knows a passage; it does not
+ * know that the list above it is reached through a Study section, and a second
+ * copy of that fact is one that goes stale when the list moves.
+ *
+ * The list carries no `?from=` when it links to a text, so the section above it
+ * is genuinely unknown here and the trail stops at Study rather than guessing
+ * one — the rule `studyTrail` states.
+ */
+export function readTrail(course: Course, from?: StudyTab): readonly Crumb[] {
+  return [...studyTrail(course, from), { label: 'Read', to: readPath(course, { from }) }];
 }

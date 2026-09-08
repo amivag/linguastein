@@ -144,7 +144,8 @@ src/features/    screens: home, study, browse, read, progress, practice, mission
                  settings (one file per section), sharing. `search/` is the one
                  that is not a screen: the box, the results and the `?q=` codec,
                  rendered by Home and movable to any section
-src/components/  shared UI: AppShell, AppNav, Button, Chip, Sheet, Icon, CourseBar,
+src/components/  shared UI: AppShell, AppNav, Breadcrumb, Button, Chip, Sheet, Icon,
+                 CourseBar,
                  ThemeToggle, PaletteControl, ContrastControl, ReadingSizeControl,
                  VoiceInput, TokenizedText, WordInfoSheet and
                  useWordSelection (used by practice, reading, browse and progress
@@ -162,9 +163,9 @@ public/packs/    GENERATED datasets — never edit by hand
 ## Screens and URLs — [docs/screens-and-urls.md](docs/screens-and-urls.md)
 
 Home, Study, Browse, Read, Settings, the learner's own section, courses in the
-path and what a session practises: **420 lines, moved out of this file when it
+path and what a session practises: **476 lines, moved out of this file when it
 passed seventy kilobytes.** Read it before touching a screen, a route or a query
-parameter. What survives here is the shape of it, because these four bite even
+parameter. What survives here is the shape of it, because these five bite even
 when you are working somewhere else:
 
 - **The URL is the state.** A screen is an address; a session is fully described
@@ -184,6 +185,11 @@ when you are working somewhere else:
   the content, and is decided synchronously by `alphabetGuide(tag)`.
 - **Back may cost a learner one step, and never two** — and it may never land
   them somewhere they have not been.
+- **The header says where you are, not only what this is.** A screen inside
+  another one passes `AppShell` a `trail` — `Study › Missions` over a mission —
+  built by the same module that owns its addresses (`studyTrail`, `readTrail`),
+  never derived from the path and never guessed. The four destinations `AppNav`
+  already shows get no trail; they name their open section in `subtitle` instead.
 
 ## Authoring content — [docs/content-authoring.md](docs/content-authoring.md)
 

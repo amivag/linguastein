@@ -120,6 +120,49 @@ list missions without copying the calculation. The Use-stage session id
 (`mission:<id>:use:<passage>:<stamp>`) is built and parsed there too, for the same
 reason: it was spelled out in three places.
 
+## The header says where you are
+
+`AppShell` draws three facts, and they are three because each answers a different
+question: a **trail** of the places above this one, the **title** of the place you
+are in, and a **subtitle** naming the mode you are in it in. Only the title is
+required.
+
+The screens that hide the tab bar are the reason the trail exists. A mission and a
+running session fill the screen deliberately, so `AppNav` is gone — and what was
+left in the header was the mission's _name_. "Order at a café" drawn large is not
+a word about what kind of thing it is, and with no nav there was no visible route
+back to the list it came from either: the single Back button walked history, which
+is however many taps the learner happened to make. A mission with three sections
+and a stage change is six entries deep before anything goes wrong.
+
+Four rules, and the last two are the ones that get broken:
+
+- **A screen passes its trail; the shell does not derive one.** The chain is not
+  the URL's. `/es/a1/mission/cafe/understand` has no `/study` segment in it and a
+  session over that mission has neither, so where a screen _belongs_ is a fact
+  only the screen and its URL codec hold. `studyTrail` lives beside `studyPath` in
+  `study-url.ts` and `readTrail` beside `readPath`, for the reason every other
+  spelling has one owner.
+- **No trail on a screen the tab bar already places.** Home, Study, Progress and
+  Settings are the four destinations `AppNav` shows at all times; a trail on one of
+  those spends a line of a _sticky_ header restating what is lit up on screen. They
+  get the subtitle instead, which names the open section — the strip scrolls away
+  and the header does not, and the tab title said "Study" for all nine of them.
+- **A crumb is never guessed.** A sheet reached by a stale or hand-written link
+  does not know which section sent it — `?from=` is how it usually does — and
+  `Study` alone is still true. A trail pointing at a section the learner was not in
+  is worse than a short one.
+- **The trail stops one short of the heading.** A mission session is _titled_ with
+  its mission, so its trail ends at Missions; the WAI-ARIA pattern's final
+  `aria-current` crumb is left out for the same reason, since the `<h1>` below is
+  already the current page and carries its name. Everything in the trail is
+  somewhere you can go.
+
+On a narrow phone the trail shortens from the left: the ancestors give up their
+width first and the last crumb — the one that answers "what am I inside" — is the
+last thing to ellipsise. Nothing is hidden below a breakpoint, because on the two
+screens with no tab bar the trail is the only route back.
+
 ## Browse's URL, and the filter spelling
 
 A study sheet is a thing you link to, so Browse's filters live in the query

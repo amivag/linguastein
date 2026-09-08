@@ -1,12 +1,10 @@
 import { Link } from 'react-router';
-import { MISSION_STAGES, type MissionStage } from '../../domain/missions';
+import {
+  MISSION_STAGE_LABELS as LABELS,
+  MISSION_STAGES,
+  type MissionStage,
+} from '../../domain/missions';
 import styles from './Mission.module.css';
-
-const LABELS: Readonly<Record<MissionStage, string>> = {
-  understand: 'Understand',
-  practise: 'Practise',
-  use: 'Use',
-};
 
 /**
  * Understand → Practise → Use, as three links.

@@ -1,0 +1,88 @@
+/*
+ * One quiet line above the title, and it has to stay one line.
+ *
+ * The header is sticky, so every pixel it gains is paid on every screen of every
+ * scroll — the reason the title next to it is clamped at two lines. The trail is
+ * held to the type scale's smallest step for the same reason, and it wraps
+ * nowhere: a breadcrumb that reflows to two lines on a narrow phone costs more
+ * than the orientation it buys.
+ */
+.trail {
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/*
+ * Narrow screens shorten the trail from the left.
+ *
+ * The last crumb is the one that answers "what am I inside" — Missions, Sets,
+ * Read — so the ancestors above it give up their width first and it is the last
+ * thing to ellipsise. `flex-shrink` rather than hiding anything: a crumb that
+ * disappears below a breakpoint is a link a phone cannot reach, and the trail is
+ * the only route back on the screens that hide the tab bar.
+ */
+.crumb:not(:last-child) {
+  flex-shrink: 999;
+}
+
+.link {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-tight);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /*
+   * A tap target without a taller row.
+   *
+   * The padding grows the hit area to 26px, over the 24px WCAG 2.2 asks of a
+   * control this small, and the matching negative margin takes it back out of
+   * the layout — so the line stays the height of its own text and the sticky
+   * header does not grow by half a tap target on every screen that has a trail.
+   *
+   * Body leading is load-bearing in that sum rather than left over from the
+   * cascade: tightening this line to `--leading-heading` measured no shorter a
+   * header, and took the target under the floor.
+   */
+  line-height: var(--leading-body);
+  padding-block: var(--space-1);
+  margin-block: calc(var(--space-1) * -1);
+  transition: color var(--transition-fast);
+}
+
+/* The section you are in, drawn a step louder than the way up to it: it is the
+   half of the trail that says what kind of thing this screen is. */
+.crumb:last-child .link {
+  color: var(--color-text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--color-accent);
+  }
+}
+
+.separator {
+  flex: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}

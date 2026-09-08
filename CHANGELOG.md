@@ -15,6 +15,27 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Added
+
+- **The header says where you are, not only what this is.** A breadcrumb sits
+  above the title on every screen that is reached _through_ a section rather than
+  being one: `Study › Missions` over a mission, `Study › Categories` over the
+  sheet a category opened, `Study › Read` over a text. Both crumbs are links.
+
+  The screens it was written for are the two that hide the tab bar. A mission
+  filling the screen used to show its name — "Order at a café" drawn large, with
+  no word anywhere on it saying _mission_ — and, with the nav gone, no visible way
+  back to the list it came from: the one Back button walked history, which is
+  however many taps the learner happened to make. A mission with three sections
+  and a stage change is six entries deep before anything goes wrong.
+
+  Home, Study, Progress and Settings get no trail, because the tab bar already
+  says where they are and the header is sticky. They now name their **open
+  section** under the title instead — Study said "Study" over all nine of its
+  sections, in the header and in the browser tab alike, and the section strip
+  scrolls away while the header does not. A mission names its stage there the same
+  way, so the tab reads `Order at a café · Understand`.
+
 ### Fixed
 
 - **Twenty-two to twenty-nine were misspelled wherever they were used before a

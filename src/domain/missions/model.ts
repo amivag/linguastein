@@ -12,6 +12,20 @@ import { LEVEL_SCOPE_ALL, levelsUpTo, type Course, type Level } from '../content
 export const MISSION_STAGES = ['understand', 'practise', 'use'] as const;
 export type MissionStage = (typeof MISSION_STAGES)[number];
 
+/**
+ * What each rung is called.
+ *
+ * Beside the stages rather than in the component that draws the journey, for the
+ * reason `POS_LABELS` sits beside the parts of speech: the header names the
+ * stage now as well as the strip does, and two copies of the word would let a
+ * mission say Practise in one place and Practice in the other.
+ */
+export const MISSION_STAGE_LABELS: Readonly<Record<MissionStage, string>> = {
+  understand: 'Understand',
+  practise: 'Practise',
+  use: 'Use',
+};
+
 export type MissionTransferSupport = 'guided' | 'independent';
 
 export interface MissionTransfer {

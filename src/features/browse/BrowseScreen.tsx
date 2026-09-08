@@ -37,7 +37,7 @@ import { newBatchId } from '../../domain/batches';
 import { systemRng } from '../../utils/random';
 import { sessionPath } from '../practice/session-url';
 import { settingsPath } from '../settings/settings-url';
-import { studyPath } from '../study/study-url';
+import { studyPath, studyTrail } from '../study/study-url';
 import { browsePath, parseBrowseUrl } from './browse-url';
 import styles from './BrowseScreen.module.css';
 import { CategoryPicker } from './CategoryPicker';
@@ -411,7 +411,13 @@ export function BrowseScreen() {
     // whichever section the course happens to start with — so leaving a category
     // landed you on Missions, undoing a navigation the learner did not make.
     // Back may cost you one step; it may never cost you two.
-    <AppShell title="Browse" onBack={() => void navigate(studyPath(course, from))}>
+    <AppShell
+      title="Browse"
+      /* The section that opened this sheet, which is the same answer `from`
+         already gives Back — said out loud, and tappable one level up. */
+      trail={studyTrail(course, from)}
+      onBack={() => void navigate(studyPath(course, from))}
+    >
       {/* Search stays ready to use. Every deliberate narrowing choice lives in
           one overlay so results remain visible and the page never has nested
           scroll regions. */}

@@ -12,6 +12,7 @@ import { useWordSelection } from '../../components/useWordSelection';
 import { WordInfoSheet } from '../../components/WordInfoSheet';
 import type { LearningItem } from '../../domain/content';
 import { sessionPath } from '../practice/session-url';
+import { readTrail } from './read-url';
 import styles from './Read.module.css';
 
 /** Stable, so an unresolved passage does not hand back a new array each render. */
@@ -92,7 +93,7 @@ export function PassageScreen() {
   const openItem = words.item ? sentences.find((item) => item.id === words.item) : undefined;
 
   return (
-    <AppShell title={passage.title} onBack="history">
+    <AppShell title={passage.title} trail={readTrail(course)} onBack="history">
       <header className={styles.passageHeader}>
         {titleTranslation && <p className={styles.cardMeaning}>{titleTranslation.text}</p>}
         <p className={styles.cardMeta}>

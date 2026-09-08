@@ -12,6 +12,7 @@
  * not read — the split `session-url.ts` exists to enforce.
  */
 
+import type { Crumb } from '../../components/Breadcrumb';
 import { coursePath, type Course } from '../../domain/content';
 
 export const STUDY_TABS = [
@@ -26,6 +27,51 @@ export const STUDY_TABS = [
   'categories',
 ] as const;
 export type StudyTab = (typeof STUDY_TABS)[number];
+
+/** What Study calls the screen itself, in a trail and on its own heading. */
+export const STUDY_LABEL = 'Study';
+
+/**
+ * What each section is called.
+ *
+ * Here rather than only in the section list `StudyScreen` builds, because a
+ * sheet opened *from* a section has to be able to name the section it came from
+ * without rebuilding that list — a mission's header says `Study › Missions`, and
+ * Missions is the same word the tab uses or the trail is lying about where Back
+ * goes. `settings-url.ts` keeps its labels beside its addresses for the same
+ * reason; the section list adds the icon and the count, which are the parts only
+ * that screen needs.
+ */
+export const STUDY_TAB_LABELS: Readonly<Record<StudyTab, string>> = {
+  missions: 'Missions',
+  batches: 'Sets',
+  alphabet: 'Alphabet',
+  numbers: 'Numbers',
+  words: 'Words',
+  phrases: 'Phrases',
+  grammar: 'Grammar',
+  abilities: 'Abilities',
+  categories: 'Categories',
+};
+
+/**
+ * Where a screen that lives inside Study sits, as a breadcrumb.
+ *
+ * Missions, sheets and texts are all reached *through* Study rather than being
+ * destinations of their own, and two of them — a mission and a session — hide
+ * the tab bar entirely, so nothing on those screens said so. This is that fact
+ * in the one shape a header can show and a learner can tap.
+ *
+ * The section is optional for the same reason `parseStudyOrigin` returns
+ * `undefined`: a sheet reached by a stale or hand-written link does not know
+ * which section sent it, and `Study` alone is still true. It is never guessed —
+ * a trail that points at a section the learner was not in is worse than a short
+ * one.
+ */
+export function studyTrail(course: Course, tab?: StudyTab): readonly Crumb[] {
+  const study: Crumb = { label: STUDY_LABEL, to: studyPath(course) };
+  return tab ? [study, { label: STUDY_TAB_LABELS[tab], to: studyPath(course, tab) }] : [study];
+}
 
 export function isStudyTab(value: string | null | undefined): value is StudyTab {
   return value !== null && value !== undefined && (STUDY_TABS as readonly string[]).includes(value);

@@ -41,7 +41,15 @@ export function SettingsScreen() {
   const active = SETTINGS_TAB_OPTIONS.find((option) => option.id === tab);
 
   return (
-    <AppShell title="Settings">
+    <AppShell
+      title="Settings"
+      /*
+        The open section, in the sticky header and so in the tab title too: six
+        sections all called "Settings · Linguastein" is not a bug report you can
+        read, and the strip below scrolls away while the header does not.
+      */
+      {...(active ? { subtitle: active.label } : {})}
+    >
       <SectionTabs
         label="Settings sections"
         current={tab}

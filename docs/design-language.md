@@ -316,6 +316,16 @@ The bar's height and the rail's width are `--nav-height` and `--rail-width`, and
 four hand-written numbers describing two things, which is how a taller bar ends
 up overlapping the last button on a page.
 
+The header carries what the nav cannot. Above the title sits a **breadcrumb** —
+`Study › Missions` over a mission — for the screens that are reached _through_ a
+destination rather than being one, and for the two that hide the nav entirely.
+It is furniture, so it is set at the smallest step of the type scale and stays on
+one line; the last crumb is drawn a shade louder than the way up to it, because
+that is the crumb that says what kind of thing this screen is. A destination the
+tab bar already lights up gets no trail at all — the header is sticky, and a line
+of it spent restating the nav is paid on every screen of every scroll. See "The
+header says where you are" in [screens-and-urls.md](screens-and-urls.md).
+
 ---
 
 ## Why not Tailwind

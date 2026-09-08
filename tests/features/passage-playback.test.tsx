@@ -76,7 +76,14 @@ function readDialogue() {
   return { voice, user: userEvent.setup() };
 }
 
-const lines = () => screen.getAllByRole('listitem');
+/*
+ * The lines of the passage, not every `li` on the screen. Scoped to the
+ * transcript by its own accessible name, because the header carries a
+ * breadcrumb — which is an `ol` of places, and was picked up as line one the
+ * day it arrived.
+ */
+const lines = () =>
+  within(screen.getByRole('list', { name: /sentences$/ })).getAllByRole('listitem');
 
 describe('reading a passage aloud', () => {
   it('reads one line at a time and says which line it is on', async () => {

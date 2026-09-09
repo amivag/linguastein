@@ -23,7 +23,7 @@
  */
 
 import { baseLanguage, type LanguageTag } from '../domain/content/language';
-import type { Rng } from '../utils/random';
+import type { DrillGuide } from '../domain/drills/guide';
 import { SPANISH_ADDRESS_FORMS } from './es/address';
 import type { NumeralRule } from './es/numerals';
 import type { AddressFormSpec } from './types';
@@ -124,19 +124,25 @@ export function alphabetGuide(tag: LanguageTag): AlphabetGuideLoader | undefined
  * the speller itself arrives in its own chunk only for the learner who opens it.
  * A language with no entry here simply has no Numbers section, which is the rule
  * every other list on that screen already follows.
+ *
+ * Its shape now lives in the engine as {@link DrillGuide}, because none of it was
+ * ever about language: a closed rule set in teaching order, a sampler, a grader,
+ * and `rulesFor` saying what an attempt is evidence about. This is that interface
+ * at `Target = number`, plus the one bound a speller has and a drill in general
+ * does not. Renaming `spell` to `render` was the whole cost of the move —
+ * "spell" is the right word for a numeral and the wrong one for an interval or
+ * an expression, and only one of the two names could be the interface's.
  */
-export interface NumeralGuide {
-  /** The rules this language's numerals put to work, in teaching order. */
-  readonly rules: readonly string[];
-  /** `1042` → `mil cuarenta y dos`. Throws on a value it cannot spell. */
-  spell(value: number): string;
-  /** The inverse, for grading what a learner typed. `null` when it is not one. */
-  parse(text: string): number | null;
-  /** Which rules a value exercises — what an attempt on it is evidence about. */
-  rulesFor(value: number): readonly string[];
-  /** A number that puts one rule to work, for the drill to ask. */
-  sampleFor(rule: string, rng: Rng): number;
-  /** The largest value the speller will produce, so a drill cannot exceed it. */
+export interface NumeralGuide extends DrillGuide<number> {
+  /**
+   * The largest value the speller will produce, so a drill cannot exceed it.
+   *
+   * The one member that stayed behind when the rest of this interface became
+   * {@link DrillGuide}. A speller has a largest number; an interval drill has
+   * twelve classes and no comparable quantity, so requiring a bound of every
+   * subject would have meant inventing one. `docs/framework.md` §1 records the
+   * spike that established this.
+   */
   readonly maxValue: number;
 }
 
@@ -149,7 +155,7 @@ export function numeralGuide(tag: LanguageTag): NumeralGuideLoader | undefined {
         const es = await import('./es/numerals');
         return {
           rules: es.NUMERAL_RULES,
-          spell: (value) => es.spellCardinal(value),
+          render: (value) => es.spellCardinal(value),
           parse: es.parseCardinal,
           rulesFor: es.rulesFor,
           // Narrowed at the boundary rather than in the module: the interface

@@ -19,8 +19,8 @@ are not facts about Spanish. The question is how much of the code that implement
 them knows that.
 
 Measured rather than guessed: **4% ports unchanged, 26% needs parameterising, and
-70% is subject-specific and should be** — and the seam the generic part needs
-already exists in this repository under another name.
+70% is subject-specific and should be** — and the seam the generic part needs was
+already here under another name, which it no longer has ([§3](#3-the-seam-was-named-after-numerals-and-now-is-not)).
 
 The portable core is small. That is the honest headline and it is not a
 disappointment: the 4% is the memory model, and the memory model is the part
@@ -176,18 +176,19 @@ whose subject is not text should not be made to borrow a text item model.
 
 ---
 
-## 3. The seam exists, and it is named after numerals
+## 3. The seam was named after numerals, and now is not
 
-[`languages/runtime.ts`](../src/languages/runtime.ts) declares `NumeralGuide`:
-_"Everything a numbers drill needs from a language, or nothing."_ Read it with the
-word "numeral" removed and it is a **general drill interface**:
+It began as `NumeralGuide` in [`languages/runtime.ts`](../src/languages/runtime.ts)
+— _"Everything a numbers drill needs from a language, or nothing."_ Read with the
+word "numeral" removed, none of it was about language, and it now lives in the
+engine as [`domain/drills/guide.ts`](../src/domain/drills/guide.ts):
 
 ```ts
-/** What a drill needs from a subject: a closed rule set, and targets for it. */
+/** What a drill needs from a subject: a closed set of rules, and targets for them. */
 export interface DrillGuide<Target> {
-  /** The rules this subject puts to work, in teaching order. */
+  /** The rules this subject puts to work, **in teaching order**. */
   readonly rules: readonly string[];
-  /** A target that exercises one rule, for the drill to ask. */
+  /** A target that puts one rule to work, for the drill to ask. */
   sampleFor(rule: string, rng: Rng): Target;
   /** Which rules a target exercises — what an attempt on it is evidence about. */
   rulesFor(target: Target): readonly string[];
@@ -198,11 +199,17 @@ export interface DrillGuide<Target> {
 }
 ```
 
-`NumeralGuide` is this with `Target = number`, `render` called `spell`, and one
-extra bound (`maxValue`) that a numeral speller happens to have. Music instantiates
-it with an interval or a chord, and its rules are interval classes; maths
-instantiates it with an expression, and its rules are the identities that
-expression exercises. Nothing in `drills/select.ts` changes.
+`NumeralGuide` is now `extends DrillGuide<number>` plus `maxValue`, the bound a
+speller has and a drill in general does not. Music instantiates it with an
+interval or a chord and its rules are interval classes; maths instantiates it with
+an expression and its rules are the identities that expression exercises. Nothing
+in `drills/select.ts` changed, and neither did the numbers drill's behaviour —
+`spell` became `render` at two call sites and that was the whole of it.
+
+`Target` is deliberately unconstrained. A `string` bound was tempting and would
+have been wrong: `render` already covers a target becoming text and `parse` covers
+text becoming a target, so a target that _was_ a string would make both identity
+functions and hide the step where a subject decides how it is written.
 
 The wider `SubjectModule` should copy `LanguageModule` wholesale, because
 [`languages/types.ts`](../src/languages/types.ts) already got the hard parts right:
@@ -254,14 +261,22 @@ set has exactly that failure mode, one layer further in.
    injected randomness is a precondition of the whole thing being testable under a
    seed.
 
-4. **Generalise `NumeralGuide` to `DrillGuide<Target>` — the precondition is now
-   met.** Doing this before the spike would have been worth almost nothing: an
+4. ~~**Generalise `NumeralGuide` to `DrillGuide<Target>`.**~~ **Done** —
+   [`src/domain/drills/guide.ts`](../src/domain/drills/guide.ts), beside
+   `select.ts`: that file decides which subject is next, this one is how a
+   subject answers "so ask me something". `NumeralGuide` is now
+   `DrillGuide<number>` plus `maxValue`, the one member that did not generalise.
+
+   Doing it _before_ the spike would have been worth almost nothing — an
    interface with one implementation compiles by construction, `Target = number`
    is the instantiation it was written for, and that is speculative generality of
    the kind the argument against template repositories already covers. The spike
-   supplied the second `Target`, so the rename now has evidence behind it. Leave
-   `maxValue` on the numeral module rather than lifting it into the interface —
-   it was the one member that did not generalise.
+   supplied the second `Target` first, which is the only reason this step has
+   evidence behind it rather than a hope.
+
+   The whole cost was renaming `spell` to `render`, at two call sites. Only one
+   of the two names could belong to the interface: "spell" is exactly right for a
+   numeral and wrong for an interval or an expression.
 
 5. **Parameterise Tier 2 only if the second app actually needs it.**
    `SessionConfig` carries `referenceLanguage`, `pronunciationLocale` and

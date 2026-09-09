@@ -208,7 +208,7 @@ export function NumbersSection() {
       // §7: expand to words before the seam, never hand digits to a voice. What
       // an engine does with "1042" varies by engine and locale, and the whole
       // point of the module is that the app decides how a number is said.
-      void services.audio.speak({ text: guide.spell(value), locale, ...(voice ? { voice } : {}) });
+      void services.audio.speak({ text: guide.render(value), locale, ...(voice ? { voice } : {}) });
     },
     [guide, locale, services.audio, voice],
   );
@@ -253,7 +253,7 @@ export function NumbersSection() {
     }
 
     setLoaded({ ...loaded, progress: updated });
-    setVerdict({ correct, value: question.value, spelled: guide.spell(question.value), rules });
+    setVerdict({ correct, value: question.value, spelled: guide.render(question.value), rules });
   };
 
   if (!loader) return null;

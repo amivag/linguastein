@@ -135,7 +135,9 @@ These are load-bearing. Breaking one is a design change, not a refactor. Rules
 ```text
 src/app/         composition root, routing, the current course (`course.ts`)
 src/domain/      the engine (content, exercises, sessions, progress, missions,
-                 batches)
+                 batches, drills — `drills/guide.ts` is the subject-neutral
+                 contract a drill's material comes through, `select.ts` decides
+                 which subject is next)
 src/languages/   language-specific morphology and the alphabet, behind two
                  interfaces: `types.ts` is the build's half (`index.ts` loads one
                  by tag) and `runtime.ts` is the screens' half. Not engine

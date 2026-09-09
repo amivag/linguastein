@@ -7,6 +7,13 @@ This repository is two things at once: a Spanish practice app, and the base othe
 apps get scaffolded from. This document is about the second one — what is
 reusable, what is not, and what to do in which order.
 
+Its companion is [framework.md](framework.md), which asks a harder question this
+document answers only by declining it. Everything below treats `src/domain/**` as
+the app and says to delete it; that is right for an app with a different _subject_
+but the same _shell_. It is wrong for one with the same **pedagogy** — spaced
+repetition and drills are not facts about Spanish — and `framework.md` measures
+which 17% of the engine actually ports.
+
 It stays **in** the working app on purpose. A stripped template repository with no
 real application in it is never run, so it rots: the tests pass because there is
 nothing to break, and the first project scaffolded from it discovers six months of
@@ -199,10 +206,12 @@ Honest list. These are the things a second project will hit.
   here yet.
 - **No dead-code detection.** Step 2 above deletes a large subtree, and nothing
   reports what became unreachable as a result. `knip` would.
-- **`@/*` is configured and unused.** `tsconfig.app.json` declares the alias;
-  every one of the 167 relative imports in `src` ignores it. Pick one before the
-  tree grows — deep relative paths make moving a file a rewrite, and aliases make
-  the lint boundaries easier to express.
+- **`@/*` is configured and unused.** `tsconfig.app.json` declares the alias; all
+  863 relative imports in `src` ignore it. Pick one before the tree grows — deep
+  relative paths make moving a file a rewrite, and aliases make the lint
+  boundaries easier to express. The count was 167 when this was written and is
+  recorded here as it grows, because "the tree grows" is the whole argument and a
+  frozen figure hid it.
 - **No i18n seam.** UI strings are English literals in components. Fine for one
   app, a real decision for a skeleton.
 - **No telemetry or error-reporting seam.** `ErrorBoundary` takes an `onError`

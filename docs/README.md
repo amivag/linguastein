@@ -8,18 +8,19 @@ Everything below either expands one of its sections or is a task brief.
 
 ## Start here
 
-| If you are about to…                         | Read                                                                       |
-| -------------------------------------------- | -------------------------------------------------------------------------- |
-| change any code at all                       | [AGENTS.md](../AGENTS.md) — commands, rules, layout                        |
-| touch a screen, a route or a query parameter | [screens-and-urls.md](screens-and-urls.md)                                 |
-| add or edit a row of content                 | [content-authoring.md](content-authoring.md)                               |
-| change what a content record can contain     | [dataset-format.md](dataset-format.md)                                     |
-| style anything                               | [design-language.md](design-language.md), and `/design` in the running app |
-| add a palette, a contrast level or an axis   | [theming.md](theming.md)                                                   |
-| move a layer or add a dependency             | [architecture.md](architecture.md), [skeleton.md](skeleton.md)             |
-| start a new app from this repository         | [skeleton.md](skeleton.md)                                                 |
-| deploy, or debug a base-path problem         | [deploy.md](deploy.md)                                                     |
-| pick up the next piece of work               | [roadmap.md](roadmap.md), then a brief in [tasks/](tasks/)                 |
+| If you are about to…                          | Read                                                                       |
+| --------------------------------------------- | -------------------------------------------------------------------------- |
+| change any code at all                        | [AGENTS.md](../AGENTS.md) — commands, rules, layout                        |
+| touch a screen, a route or a query parameter  | [screens-and-urls.md](screens-and-urls.md)                                 |
+| add or edit a row of content                  | [content-authoring.md](content-authoring.md)                               |
+| change what a content record can contain      | [dataset-format.md](dataset-format.md)                                     |
+| style anything                                | [design-language.md](design-language.md), and `/design` in the running app |
+| add a palette, a contrast level or an axis    | [theming.md](theming.md)                                                   |
+| move a layer or add a dependency              | [architecture.md](architecture.md), [skeleton.md](skeleton.md)             |
+| start a new app from this repository          | [skeleton.md](skeleton.md)                                                 |
+| reuse the learning engine for another subject | [framework.md](framework.md)                                               |
+| deploy, or debug a base-path problem          | [deploy.md](deploy.md)                                                     |
+| pick up the next piece of work                | [roadmap.md](roadmap.md), then a brief in [tasks/](tasks/)                 |
 
 ## Reference
 
@@ -41,6 +42,10 @@ Everything below either expands one of its sections or is a task brief.
   roles, and how a palette is solved rather than picked.
 - **[skeleton.md](skeleton.md)** — what in this repository is generic and what is
   this app, for scaffolding a new project. Also the honest list of known gaps.
+- **[framework.md](framework.md)** — whether the engine, not just the shell, could
+  carry a music or a maths app. The three tiers measured, why the item model is
+  the real fork, and the drill seam that already exists under the name
+  `NumeralGuide`. A costing, not a plan of record.
 - **[deploy.md](deploy.md)** — GitHub Pages, the one setting that matters, the
   subpath, and the rough edges.
 - **[roadmap.md](roadmap.md)** — the feature inventory: what is in place, what is

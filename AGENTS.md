@@ -50,6 +50,10 @@ design system, test harness — is kept app-agnostic on purpose.
 [docs/skeleton.md](docs/skeleton.md) is the map: what is generic, what is this
 app, and the order to do things in when starting a new project. Read it before
 adding a dependency or moving a layer.
+[docs/framework.md](docs/framework.md) is its companion, for the harder version:
+reusing the **engine** rather than the shell, for a subject that is not a
+language. Nothing in it is a plan of record — it is a costing, and its first
+recommendation is not to build the framework yet.
 
 Two consequences for ordinary work here:
 

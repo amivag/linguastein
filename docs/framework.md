@@ -1,6 +1,10 @@
 # A framework for other subjects
 
 **Written:** 2026-09-09
+**Revised:** 2026-09-09 — the tier table was rebuilt from imports rather than
+vocabulary, and Tier 1 was then tested with a throwaway spike instead of argued
+about; see [§1](#1-the-three-tiers-measured). The first version's headline figure
+was wrong by a factor of four.
 **For:** deciding whether the learning engine — not just the shell — can carry a
 music or a maths app.
 
@@ -14,48 +18,123 @@ This document is about the cut that document declines to make: keep the
 are not facts about Spanish. The question is how much of the code that implements
 them knows that.
 
-Measured rather than guessed: **17% ports unchanged, 16% needs parameterising, and
-66% is subject-specific and should be** — and the seam the generic part needs
+Measured rather than guessed: **4% ports unchanged, 26% needs parameterising, and
+70% is subject-specific and should be** — and the seam the generic part needs
 already exists in this repository under another name.
+
+The portable core is small. That is the honest headline and it is not a
+disappointment: the 4% is the memory model, and the memory model is the part
+nobody should be rewriting per subject.
 
 ---
 
 ## 1. The three tiers, measured
 
-Line counts are exact. The verdicts come from reading each file for what it
-assumes, rather than from counting imports.
+Line counts are exact. The tiers are assigned **per file, by what each one
+imports** — see the methodology warning below, which is here because the first
+version of this table got it wrong.
 
-| Layer                         | Lines     | Share   | Verdict                                     |
-| ----------------------------- | --------- | ------- | ------------------------------------------- |
-| `progress/**`                 | 728       | 10%     | Ports unchanged                             |
-| `batches/**`                  | 300       | 4%      | Ports; drop `Course` / `LanguageTag`        |
-| `missions/progress.ts`        | 192       | 3%      | Ports unchanged                             |
-| `drills/**`                   | 87        | 1%      | Ports unchanged                             |
-| **Tier 1**                    | **1,307** | **17%** | **The extraction worth doing**              |
-| `sessions/**`                 | 475       | 6%      | Right structure, three language fields      |
-| `content/course.ts`           | 399       | 5%      | Mechanism general, concept named for one    |
-| `missions/model.ts`           | 353       | 5%      | Parameterise the stage vocabulary           |
-| **Tier 2**                    | **1,227** | **16%** | **Rename and parameterise, not rewrite**    |
-| `content/**` less `course.ts` | 3,908     | 52%     | Per subject                                 |
-| `exercises/**`                | 1,028     | 14%     | Per subject                                 |
-| **Tier 3**                    | **4,936** | **66%** | **Should differ per subject. Not a defect** |
+| Layer                            | Lines     | Share   | Coupling that decides it                          |
+| -------------------------------- | --------- | ------- | ------------------------------------------------- |
+| `progress/fsrs.ts`               | 163       | 2%      | **Nothing outside `progress/`**                   |
+| `progress/scheduler.ts`          | 20        | <1%     | **Nothing outside `progress/`**                   |
+| `drills/select.ts`               | 87        | 1%      | One branded id type, plus the injected RNG        |
+| **Tier 1**                       | **275**   | **4%**  | **Ports unchanged. The memory model**             |
+| `progress/tracker.ts`            | 193       | 3%      | `ExerciseKind`, `isItemId`, `ItemId`              |
+| `progress/types.ts`              | 132       | 2%      | `ExerciseKind`, `packIdOf`                        |
+| `batches/**`                     | 300       | 4%      | `ExerciseKind`, `Course`, `ItemId`, `LanguageTag` |
+| `sessions/**`                    | 475       | 6%      | Three language fields on `SessionConfig`          |
+| `content/course.ts`              | 399       | 5%      | Mechanism general, concept named for one          |
+| `content/ids.ts`                 | 84        | 1%      | Generic scheme; the `kind` list is language-ish   |
+| `missions/model.ts`              | 353       | 5%      | Stage vocabulary                                  |
+| **Tier 2**                       | **1,936** | **26%** | **Parameterise, do not rewrite**                  |
+| `content/**` less `course`/`ids` | 3,824     | 51%     | Per subject                                       |
+| `exercises/**`                   | 1,028     | 14%     | Per subject                                       |
+| `progress/mastery.ts`            | 215       | 3%      | `ContentRepository`, `LexemeId`, `SkillId`        |
+| `missions/progress.ts`           | 192       | 3%      | `ContentRepository`, `LearningItem`, `Passage`    |
+| **Tier 3**                       | **5,259** | **70%** | **Should differ per subject. Not a defect**       |
 
-### Tier 1 is neutral by construction, not by luck
+### A methodology warning, because this table was wrong once
 
-The reason is already written down in
+The first version scored each file by counting **subject vocabulary** — verb,
+noun, conjugate, sentence, token — and put whole directories in Tier 1 on a low
+score. That measures the wrong thing. **Coupling hides in type imports, whose
+names carry no domain vocabulary at all.**
+
+Two files got waved through, and both are in Tier 3 above:
+
+- `progress/mastery.ts` scored 12 language hits in 215 lines, and imports
+  `ContentRepository`. It weights a word by how many distinct sentences use it,
+  which is a language-specific model of what mastery even means.
+- `missions/progress.ts` scored **one** hit in 192 lines, and imports
+  `ContentRepository`, `LearningItem` and `Passage`.
+
+The published figure was 17% and the real one is 4%. Anyone re-measuring this
+should read the import list, not the prose — and if a cheap proxy is wanted,
+`grep "from '\.\./"` per file beats any amount of vocabulary counting.
+
+### Tier 1 was then tested rather than argued about
+
+Branch `spike/interval-drill`, commit `1d6e661`: twelve interval classes drilled
+for fifty answers through `fsrs.ts`, `scheduler.ts` and `drills/select.ts`
+**unmodified**, with the failure condition written into the file before it was run
+— any edit to a Tier 1 file counts as failure. Six assertions pass and
+`tsc -p tsconfig.app.json` is clean, which is the half that mattered: branded ids
+and `exactOptionalPropertyTypes` are where a foreign subject was expected to
+fight, and neither did.
+
+**The seam falls in a sharper place than this document first said.**
+`Scheduler.review` takes `(SubjectProgress, ReviewGrade, Timestamp)` and no
+exercise kind at all, so the entire drill loop runs without one. **Scheduling is
+subject-neutral; attempt _logging_ is not.** The blocker is one field on one log
+record, not anything in the memory model — which means a second app can use the
+scheduler on day one and defer the log until it knows what its own interactions
+are called.
+
+Both predicted frictions showed up, and neither is structural:
+
+- **Branded ids.** `core-music:skill:perfect-fifth` parses — `skill` is already an
+  entity kind and `core-music` matches the namespace pattern — and `packIdOf`
+  returns `core-music`, so a progress row groups correctly. Minting one outside
+  the dataset build needs a cast, because only the build constructs ids. A
+  one-line helper.
+- **`ExerciseKind`.** Six closed language interactions; ear training is none of
+  them, and the nearest honest name (`listen-identify`) does not exist. This is
+  the one place a music app cannot reuse Tier 2 as it stands.
+
+One thing the spike settled that argument could not: **`DrillGuide` fits a second
+`Target`.** All five members were natural for `Target = Interval` and
+`render`/`parse` round-trip, while `maxValue` — `NumeralGuide`'s sixth member —
+did not generalise, which is the evidence that it belongs to numerals rather than
+to the interface. `nextSubject` also returned unmet intervals in curriculum order
+rather than id order, so teaching order stays data exactly as it is for numerals.
+
+### What makes the 4% possible
+
+Rule 4's widening, written down in
 [`progress/types.ts`](../src/domain/progress/types.ts): _"The subject is any
-content entity, not only an item."_ Rule 4's widening — taken for verb forms and
-grammatical patterns — is the same widening a different subject needs.
+content entity, not only an item."_ That widening — taken for verb forms and
+grammatical patterns — is the same one a different subject needs.
 `core-es:skill:numerals-y-joining` and a hypothetical
 `core-music:skill:perfect-fifth` are structurally identical: a closed, stable,
-dataset-owned id that a progress row can be about.
+dataset-owned id that a progress row can be about. `types.ts` is nonetheless Tier
+2, because the row it defines carries an `exerciseKind` drawn from a fixed
+language-shaped enum.
 
-[`drills/select.ts`](../src/domain/drills/select.ts) is the clearest case. Its own
-docstring describes _"a small, fixed set of subjects … seven numeral patterns, a
-verb's twenty forms"_ returned to _"for as long as the learner keeps going."_ That
-is interval training. That is times tables. The file contains no language
-vocabulary at all, and its three-part order — due first, then unmet in teaching
-order, then weakest — is a claim about memory, not about Spanish.
+[`drills/select.ts`](../src/domain/drills/select.ts) is the clearest Tier 1 case,
+and the interesting one. Its docstring describes _"a small, fixed set of subjects
+… seven numeral patterns, a verb's twenty forms"_ returned to _"for as long as the
+learner keeps going."_ That is interval training. That is times tables. Its
+three-part order — due first, then unmet in teaching order, then weakest — is a
+claim about memory rather than about Spanish.
+
+The detail worth noticing is that it **ships its own eight-line `strength()`
+rather than importing `mastery.ts`**, and says why: that module's `itemStrength`
+_"is about an item inside a course and folds in how many distinct sentences used a
+word. A pattern has no sentences of its own."_ So the drill path had already
+discovered the coupling this document's first version missed, and had already
+routed around it. The 4% is not a lucky residue — it is the subset that a previous
+piece of work already needed to be subject-neutral, for its own reasons.
 
 ### The proof already shipped
 
@@ -168,14 +247,21 @@ set has exactly that failure mode, one layer further in.
    unchanged in both is the package. What diverged was never generic, and the diff
    says so at no cost. This is the step that replaces the design meeting.
 
-3. **Extract `@learn/scheduler`** from what survived — FSRS, mastery, subject
-   progress, drill selection. Take `src/utils/random.ts` with it; rule 7's injected
-   randomness is a precondition of the whole thing being testable under a seed.
+3. **Extract `@learn/scheduler`** from what survived — `fsrs.ts`, the `Scheduler`
+   seam, drill selection, and `types.ts` once `exerciseKind` is dealt with. **Not
+   `mastery.ts`**, which is Tier 3 and whose absence the drill path already
+   demonstrates it can live with. Take `src/utils/random.ts` along; rule 7's
+   injected randomness is a precondition of the whole thing being testable under a
+   seed.
 
-4. **Generalise `NumeralGuide` to `DrillGuide<Target>` in place, in this
-   repository**, before either app depends on it. It is a rename plus one type
-   parameter, and doing it here means the Spanish app is what proves the
-   generalisation compiles.
+4. **Generalise `NumeralGuide` to `DrillGuide<Target>` — the precondition is now
+   met.** Doing this before the spike would have been worth almost nothing: an
+   interface with one implementation compiles by construction, `Target = number`
+   is the instantiation it was written for, and that is speculative generality of
+   the kind the argument against template repositories already covers. The spike
+   supplied the second `Target`, so the rename now has evidence behind it. Leave
+   `maxValue` on the numeral module rather than lifting it into the interface —
+   it was the one member that did not generalise.
 
 5. **Parameterise Tier 2 only if the second app actually needs it.**
    `SessionConfig` carries `referenceLanguage`, `pronunciationLocale` and
@@ -217,10 +303,12 @@ Three, all of which bite at step 3 rather than at step 1.
 
 ## 6. What this document does not answer
 
-- **The item model for a non-text subject.** §2 states the problem and stops.
-  Whether music notation and maths expressions share _any_ item model, or whether
-  each simply gets its own, is the open design question — and the music app is how
-  to find out, rather than something to settle first.
+- **The item model for a non-text subject.** §2 states the problem and stops, and
+  the spike did **not** touch it: it drilled durable subjects, which is precisely
+  the path that has no items in it. So "Tier 1 held" is a claim about the drill
+  loop and says nothing about whether music notation and maths expressions can
+  share an item model. That remains the open design question, and it is what the
+  music app would actually be spent finding out.
 - **Whether missions generalise.** `missions/model.ts` sequences authored passages
   through understand → practise → use. That ladder is a claim about acquiring
   language. Whether it describes learning an instrument is a pedagogy question, not

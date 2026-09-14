@@ -1,6 +1,8 @@
 # Task: the retrieval ladder, verified rather than prescribed
 
-**Status:** briefed 2026-09-14. Stage A in progress.
+**Status:** **Stage A landed 2026-09-14** — `modeOfKind`, `ModeEvidence`, the
+fold, the gate, the transfer field and the tests are in; no screen changed.
+Stages B (mastery reads it) and C (the surface) are briefed and not started.
 **Written:** 2026-09-14
 **For:** a fresh agent session, no prior context assumed
 **Scope:** `src/domain/progress/`, `src/domain/sessions/composer.ts`, the

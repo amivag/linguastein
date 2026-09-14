@@ -409,7 +409,8 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     which item 8 and [learner-profile.md](tasks/learner-profile.md) §9.2 both
     circle.
 
-13. **The retrieval ladder, verified rather than prescribed** — `retrievalModeFor`
+13. **The retrieval ladder, verified rather than prescribed** — **Stage A done
+    2026-09-14.** `retrievalModeFor`
     reads `stability` and `difficulty`, which fold every exercise kind together,
     so an item answered ten times as a four-way multiple choice is promoted to
     production having never been produced. `Attempt.exerciseKind` is on every
@@ -418,7 +419,10 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     question in the learning model" — and the answer turns out to be smaller than
     the question: **evidence per mode, not a memory per mode.** The scheduler is
     untouched, the field is folded in `applyAttempt` and rebuilt by replay, and an
-    absent one behaves exactly as today. Briefed in full in
+    absent one behaves exactly as today — nobody's ladder resets on upgrade. What
+    remains is what a learner sees: mastery split by the mode its evidence came
+    from (Stage B), and a screen that can say "you recognise this and have never
+    produced it" (Stage C). Briefed in full in
     [docs/tasks/retrieval-evidence.md](tasks/retrieval-evidence.md).
 
 14. **Typed production, graded morphologically** — no exercise kind asks the

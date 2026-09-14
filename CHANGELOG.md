@@ -104,6 +104,23 @@ in the pack's own counts.
 
 ### Changed
 
+- **A wrong answer says what was wrong with it.** `Answer: Mi madre me trajo sopa
+y fruta.` was the whole of the feedback, and it was the same feedback whether
+  you missed a tense, missed a person, or wrote a different sentence — three
+  mistakes with three different fixes. Where the pack can tell, the card now adds
+  a line: `Wrong tense: trae is present, trajo is preterite.`
+
+  It says nothing rather than guessing. One word has to differ, and both
+  spellings have to be forms of the same word, or there is no line — a sentence
+  you typed differently is not a grammar mistake to explain, and a word the pack
+  cannot place is not evidence you picked the wrong one.
+
+- **A session no longer deals a card it cannot ask.** Picking what to practise
+  and deciding how to ask it are separate, so a session could be handed an item
+  its chosen exercise refuses — showing "This item has no exercise available yet"
+  and a turn to skip. Those items are dropped now, which makes the session
+  shorter rather than padding it out with a dead card.
+
 - **Write it: the first exercise that asks you to supply the words.** Six kinds
   shipped before this one and none of them did — you pick the answer from four,
   arrange the words you are handed, or grade yourself. `Write it` gives you the

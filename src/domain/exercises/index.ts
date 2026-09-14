@@ -1,3 +1,4 @@
+export * from './diagnose';
 export * from './generators';
 export * from './grading';
 export * from './modes';

@@ -430,7 +430,8 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     Briefed in full in
     [docs/tasks/retrieval-evidence.md](tasks/retrieval-evidence.md).
 
-14. **Typed production, graded morphologically** — **Stage A done 2026-09-14.**
+14. **Typed production, graded morphologically** — **Stages A and B done
+    2026-09-14.**
     No exercise kind asked the
     learner to supply words rather than arrange or choose them, and
     `GradeResult` is `{ correct, grade, expected }`, so a miss is binary. Both
@@ -448,8 +449,17 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     without an accented keyboard, and marking it right teaches that `él` and `el`
     are the same word. Which marks are accents is asked of a locale-aware
     collator rather than decided in the engine, because stripping every combining
-    mark turns `año` into `ano`. The morphological diagnosis — right verb, wrong
-    tense — is Stage B and not started. Briefed in
+    mark turns `año` into `ano`.
+
+    The diagnosis landed with it and **needed no language module**, which is the
+    finding worth keeping: the brief assumed naming a missed tense means knowing
+    how Spanish conjugates, and the pack had already answered that at build time.
+    Every `InflectedForm` carries a language-neutral `Morphology` and every token
+    carries its lexeme, so a wrong word is diagnosed by comparing two records —
+    `Wrong tense: trae is present, trajo is preterite`. It declines far more often
+    than it answers, on purpose: one substituted word, both spellings forms of one
+    lexeme, or nothing is said. What remains is Stage C, whether a named axis
+    should record against the skill it implicates. Briefed in
     [docs/tasks/typed-production.md](tasks/typed-production.md).
 
 ## Later (architecture allows, code does not attempt)

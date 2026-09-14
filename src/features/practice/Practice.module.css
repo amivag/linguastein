@@ -522,3 +522,10 @@
 .typedInput {
   width: 100%;
 }
+
+/* The diagnosis under a wrong typed answer: a second line, not a second panel. */
+.verdictMiss {
+  display: block;
+  margin-block-start: var(--space-2);
+  font-size: var(--text-sm);
+}

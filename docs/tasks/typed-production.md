@@ -1,9 +1,10 @@
 # Task: typed production, graded morphologically
 
-**Status:** **Stage A landed 2026-09-14** — the `type-it` kind, the
-three-verdict comparator, the card and a `Write it` preset. Stage B (the Spanish
-diagnoser) and Stage C (the axis as evidence) are briefed and not started. §6's
-three open questions are all answered below, two of them by measurement.
+**Status:** **Stages A and B landed 2026-09-14** — the `type-it` kind, the
+three-verdict comparator, the card, a `Write it` preset, and the diagnosis that
+names the axis a wrong answer slipped on. Stage C (the axis as evidence) is
+briefed and not started. §6's three open questions are answered below, two of
+them by measurement; §3.3's language seam was **not built**, and §8 says why.
 **Written:** 2026-09-14
 **For:** a fresh agent session, no prior context assumed
 **Scope:** one new exercise kind, a comparator in `src/domain/exercises/`, a
@@ -117,7 +118,20 @@ it counts, it schedules sooner, and the feedback names the accent specifically.
 punctuation-blind comparison `tap-to-build` grades with. Reuse them; do not write
 a second normaliser.
 
-### 3.3 The diagnoser seam
+### 3.3 The diagnoser seam — specified, then not needed
+
+**This section was wrong, and the correction is the most useful thing Stage B
+produced.** It is kept as written below, because the reasoning is the obvious
+reasoning and the next person to reach for a language module for a
+grammar-shaped problem should see it fail here first. What actually shipped is in
+§8.
+
+The premise — "naming the axis that slipped is language-specific" — sounds
+unarguable and is false for this app, because the pack already carries the
+answer. Stage B is `src/domain/exercises/diagnose.ts`, has no language module
+behind it, and works for any pack that ships forms.
+
+The original text follows.
 
 Naming the axis that slipped is **language-specific** and must not leak into the
 engine. It goes behind a loader beside the two seams that already exist for this
@@ -231,3 +245,49 @@ The knowledge is CLDR's rather than this repository's, the tag comes off the ite
 (`answerLanguage`), and a language whose pack is not loaded compares the marks as
 written — strict rather than wrong. `MissDiagnoser` in §3.3 is still the right
 shape for Stage B; it simply is not needed for the verdict.
+
+## 8. What Stage B actually needed
+
+**No language module.** §3.3 assumed that naming a missed tense means knowing how
+the language conjugates. It does not, because the pack has already done that
+work at build time:
+
+- every `InflectedForm` carries a `Morphology` — `tense`, `person`, `number`,
+  `gender`, `mood`, `formality` — and those field _names_ are language-neutral by
+  construction, since the same record shape serves every pack;
+- `core-es` ships **9,206** of them;
+- every sentence token already carries the `lexeme` the build linked it to.
+
+So the diagnosis is a lookup and a field comparison: find the one substituted
+word, take its token's lexeme, find both spellings among that lexeme's forms, and
+report the `Morphology` fields on which the two disagree. `MISS_AXES` is
+`satisfies readonly (keyof Morphology)[]`, so a field added to the model cannot
+become silently undiagnosable. A French pack gets all of this for nothing.
+
+**What it refuses to do is most of the work.** A diagnosis is offered only where
+exactly one word differs _and_ both spellings are forms of the same lexeme.
+Everything else returns `null` and the card says what it said before. In
+particular a word the pack cannot place is **not** reported as the wrong word: it
+may be a different lexeme, or a form this pack does not carry, and those need
+different sentences on screen. §5's Stage C risk — a wrong diagnosis quietly
+rescheduling the wrong thing — is the same risk one screen earlier, and the
+answer is the same: a missing lemma shows up in a coverage report, a confidently
+wrong one is counted as a success.
+
+Measured against the shipped pack: **2,630 of the 2,657 sentences** short enough
+for `type-it` have at least one token a diagnosis can be built from, so this is
+the ordinary case rather than a garnish.
+
+### 8.1 The dead card `Write it` exposed
+
+A preset that allows one exercise kind can be dealt an item that kind declines,
+and the card then reads "This item has no exercise available yet" — a turn the
+learner has to skip past. It was reachable before `type-it` (an item with no
+translation refuses `think-say` the same way) and the length ceiling made it
+ordinary, at about one sentence in eight.
+
+`useSessionRunner` now drops items no allowed kind can render, before composing.
+That shortens a session rather than padding it, which is the honest trade: seven
+real cards beat eight with a dead one among them. The alternative — teaching the
+planner what an exercise is — would put content and exercises back into one
+system, which is the thing architecture rule 1 exists to prevent.

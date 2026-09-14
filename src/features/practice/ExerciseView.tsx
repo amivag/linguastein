@@ -3,8 +3,8 @@ import { useTargetLanguage } from '../../app/course';
 import { correctnessPraise } from '../../languages/runtime';
 import { useServices } from '../../app/services-context';
 import { Button, type ButtonVariant } from '../../components/Button';
-import type { Exercise, GradeResult } from '../../domain/exercises';
-import { isSelfRated } from '../../domain/exercises';
+import type { Exercise, GradeResult, Miss } from '../../domain/exercises';
+import { diagnoseMiss, isSelfRated } from '../../domain/exercises';
 
 import { languageOption, type TokenId } from '../../domain/content';
 import { REVIEW_GRADES, type ReviewGrade } from '../../domain/progress';
@@ -125,6 +125,20 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   const audioLocked = answerLocked && exercise.kind !== 'multiple-choice';
 
   const openItem = words.item ? services.repository.getItem(words.item) : undefined;
+
+  /*
+   * Why the answer was wrong, where that can be said without guessing.
+   *
+   * Computed here rather than inside `gradeExercise` because it is an
+   * explanation and not a grade: it needs the repository, grading is pure, and
+   * whether an answer counts must not depend on whether the pack happens to be
+   * able to explain it. Absent for every kind but this one, and for most wrong
+   * answers even here — see `diagnoseMiss`.
+   */
+  const miss =
+    exercise.kind === 'type-it' && runner.lastResult?.verdict === 'wrong'
+      ? diagnoseMiss(exercise, typed, services.repository)
+      : null;
 
   return (
     <section ref={cardRef} className={styles.card} tabIndex={-1} aria-labelledby={headingId}>
@@ -389,7 +403,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             so it is a different *kind* of thing before it is a different colour.
           */
           <div className={styles.outcomeBar}>
-            <Verdict result={runner.lastResult} />
+            <Verdict result={runner.lastResult} miss={miss} />
             <Button variant="primary" block large onClick={runner.next}>
               Continue
               <Icon name="forward" />
@@ -427,7 +441,13 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
  * announced through `role="status"` for anyone not looking at the screen.
  */
 
-function Verdict({ result }: { readonly result: GradeResult | null }) {
+function Verdict({
+  result,
+  miss,
+}: {
+  readonly result: GradeResult | null;
+  readonly miss: Miss | null;
+}) {
   const lang = useTargetLanguage();
   if (result === null) return null;
   const correct = result.correct;
@@ -465,6 +485,25 @@ function Verdict({ result }: { readonly result: GradeResult | null }) {
       ) : (
         <span>
           Answer: <span className={styles.verdictAnswer}>{result.expected}</span>
+          {/*
+            What was wrong with it, not only what was right.
+
+            "Answer: Ayer hablé con mi hermana" is the same feedback for a missed
+            tense, a missed person and an entirely different sentence, and those
+            are three mistakes with three different fixes. The line names the one
+            axis that slipped and the value on each side of it — the full parse
+            is on the record and is deliberately not shown, because `1st · sg ·
+            present · indicative` buries the single difference among three things
+            the learner got right.
+          */}
+          {miss && (
+            <span className={styles.verdictMiss}>
+              Wrong {miss.axis}: <span lang={lang}>{miss.written}</span>
+              {miss.writtenValue ? ` is ${miss.writtenValue}` : ''},{' '}
+              <span lang={lang}>{miss.expected}</span>
+              {miss.expectedValue ? ` is ${miss.expectedValue}` : ''}.
+            </span>
+          )}
         </span>
       )}
     </p>

@@ -154,13 +154,42 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
       const plan = planSession({ repository, config, progress, now: Date.now() });
       if (cancelled) return;
 
+      /*
+       * Items this session can actually render, which is not every item it was
+       * dealt.
+       *
+       * The planner chooses from content and knows nothing about exercises, so a
+       * preset that allows one kind can be handed an item that kind declines —
+       * and the card then reads "This item has no exercise available yet", which
+       * is a dead turn a learner has to skip past. It was reachable before
+       * `type-it` (an item with no translation refuses `think-say` the same way)
+       * and `Write it` is what made it ordinary: the kind has a length ceiling,
+       * so around one sentence in eight is one it will not ask for.
+       *
+       * Dropping them shortens the session rather than padding it, which is the
+       * honest trade: a session of seven real cards beats one of eight with a
+       * dead one in it, and the alternative — teaching the planner what an
+       * exercise is — would put content and exercises back in one system.
+       */
+      const renderable = plan.itemIds
+        .map((id) => repository.getItem(id))
+        .filter((item) => item !== undefined)
+        .filter((item) =>
+          exercises
+            .supportedKinds(item, {
+              repository,
+              referenceLanguage: config.referenceLanguage,
+              // Unused by `supports`, which is a pure question about the item.
+              rng: seededRng(0),
+            })
+            .some((kind) => config.exerciseKinds.includes(kind)),
+        );
+
       // The planner picks what to practise; the composer picks how, moving each
       // item along the recognition → recall → production ladder and keeping the
       // session from settling into a single exercise type.
       const composed = composeSession({
-        items: plan.itemIds
-          .map((id) => repository.getItem(id))
-          .filter((item) => item !== undefined),
+        items: renderable,
         progress,
         allowed: config.exerciseKinds,
         rng: seededRng(hash(plan.id)),
@@ -182,7 +211,7 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
     return () => {
       cancelled = true;
     };
-  }, [repository, storage, config, generation]);
+  }, [repository, storage, exercises, config, generation]);
 
   const step = steps[index] ?? null;
 

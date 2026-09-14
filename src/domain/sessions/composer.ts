@@ -18,20 +18,26 @@
  */
 
 import type { ItemId, LearningItem } from '../content';
+import {
+  GRADED_MODES,
+  MODE_KINDS,
+  RETRIEVAL_MODES,
+  rungOf,
+  type GradedMode,
+  type RetrievalMode,
+} from '../exercises/modes';
 import type { ExerciseKind } from '../exercises/types';
 import type { SubjectProgress } from '../progress/types';
 import { shuffle, type Rng } from '../../utils/random';
 
-export const RETRIEVAL_MODES = ['recognition', 'cued-recall', 'production', 'study'] as const;
-export type RetrievalMode = (typeof RETRIEVAL_MODES)[number];
-
-/** Exercise kinds that realise each mode, hardest-first within the mode. */
-export const MODE_KINDS: Record<RetrievalMode, readonly ExerciseKind[]> = {
-  recognition: ['multiple-choice', 'reveal'],
-  'cued-recall': ['cloze-choice', 'tap-to-build', 'multiple-choice'],
-  production: ['think-say', 'listen-repeat'],
-  study: ['reveal', 'listen-repeat'],
-};
+/*
+ * The mode vocabulary moved to `exercises/modes.ts` on 2026-09-14. It is a
+ * statement about exercise kinds rather than about sessions, and `progress/` has
+ * to read it — `SubjectProgress.evidence` is keyed by mode, and progress
+ * importing sessions would be a cycle. Re-exported here because this is where
+ * every existing caller looks for it.
+ */
+export { GRADED_MODES, MODE_KINDS, RETRIEVAL_MODES, type GradedMode, type RetrievalMode };
 
 /** Stability in days at which an item is ready for the next rung. */
 const CUED_RECALL_AT = 1;
@@ -56,16 +62,61 @@ export interface ComposeInput {
   readonly maxRun?: number;
 }
 
-/** Where an item sits on the recognition → production ladder. */
+/**
+ * Where an item sits on the recognition → production ladder.
+ *
+ * Two questions, deliberately answered separately. **What has the memory
+ * earned**, from stability and difficulty — and **what has the learner actually
+ * shown**, from the evidence per mode. Stability alone was the whole answer
+ * until 2026-09-14, and it folds every exercise kind into one number: an item
+ * answered ten times as a four-way multiple choice crossed `PRODUCTION_AT` and
+ * was offered as production having never once been produced. Recognition
+ * inflating the ladder meant to gate it is the bug
+ * `docs/tasks/retrieval-evidence.md` exists to close.
+ */
 export function retrievalModeFor(progress: SubjectProgress | undefined): RetrievalMode {
   if (!progress || progress.attempts === 0) return 'recognition';
   // A lapse drops the item back a rung: rebuild before testing production.
   if (progress.status === 'learning') return 'recognition';
 
   const stability = progress.stability ?? 0;
-  if (stability >= PRODUCTION_AT && progress.difficulty < 0.6) return 'production';
-  if (stability >= CUED_RECALL_AT) return 'cued-recall';
-  return 'recognition';
+  const earned: GradedMode =
+    stability >= PRODUCTION_AT && progress.difficulty < 0.6
+      ? 'production'
+      : stability >= CUED_RECALL_AT
+        ? 'cued-recall'
+        : 'recognition';
+
+  return gateByEvidence(earned, progress.evidence);
+}
+
+/**
+ * The highest rung at or below `earned` whose prerequisite has been met.
+ *
+ * A rung is offered only once the rung below it has been passed at least once,
+ * so producing has to be earned by having completed, and completing by having
+ * recognised. In practice that descends at most one step — an item with no
+ * correct answer anywhere is already held at `recognition` by
+ * `status === 'learning'` above — but the rule is the descent rather than the
+ * single step, and writing it as one step would be a special case standing in
+ * for a general one.
+ *
+ * **An absent map is "unknown", not "never".** Rows written before evidence
+ * existed keep behaving exactly as they did; nobody's ladder resets on upgrade.
+ * A learner who only ever runs a recognition-only preset does stay at
+ * recognition, and that is the true statement about what they have shown rather
+ * than a stall to be worked around — saying so on screen is Stage C.
+ */
+function gateByEvidence(earned: GradedMode, evidence: SubjectProgress['evidence']): GradedMode {
+  if (!evidence) return earned;
+
+  let mode = earned;
+  for (let rung = rungOf(earned); rung > 0; rung--) {
+    const below = GRADED_MODES[rung - 1];
+    if (below === undefined || (evidence[below]?.correct ?? 0) > 0) break;
+    mode = below;
+  }
+  return mode;
 }
 
 export function composeSession(input: ComposeInput): readonly SessionStep[] {

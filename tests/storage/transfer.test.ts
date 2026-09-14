@@ -157,6 +157,29 @@ describe('a round trip', () => {
   });
 });
 
+describe('evidence per retrieval mode', () => {
+  /**
+   * A row with attempts in the merged log is rebuilt by folding them, so its
+   * evidence comes back whether or not the file carried any. The case that
+   * needs the field on the wire is the other one: a file whose log has been
+   * pruned, or which names a subject the receiving device has never practised.
+   * Dropping it there would reset those rows to "never produced", which reads as
+   * a fact rather than as the gap it is.
+   */
+  it('survives a file whose attempts did not travel with it', async () => {
+    const source = await usedDevice();
+    const envelope = await buildExport(source, options);
+    const held = envelope.progress.find((row) => row.subject === ITEM)?.evidence;
+    expect(held?.production?.attempts).toBe(5);
+
+    const target = createMemoryStorage();
+    const report = await applyExport(target, { ...envelope, attempts: [] }, importing);
+
+    expect(report.attemptsAdded).toBe(0);
+    expect((await target.progress.get(ITEM))?.evidence).toEqual(held);
+  });
+});
+
 describe('merging into a device that has been used', () => {
   /**
    * The case a "replace everything" import would destroy, and the reason there

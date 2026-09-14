@@ -5,6 +5,7 @@
  */
 
 import { packIdOf, type EntityId, type PackId } from '../content';
+import type { GradedMode } from '../exercises/modes';
 import type { ExerciseKind } from '../exercises/types';
 
 export const ITEM_STATUSES = ['new', 'learning', 'review', 'mastered'] as const;
@@ -88,6 +89,37 @@ export interface SubjectProgress {
    * which is why it is here before there is anything to merge.
    */
   readonly updatedAt: Timestamp;
+  /**
+   * How this subject has been tested, and how it went, per retrieval mode.
+   *
+   * One `stability` and one `difficulty` fold a four-way multiple choice and a
+   * production answer into the same number, and `retrievalModeFor` then reads
+   * that number to decide which of the two to offer next — so recognition
+   * inflates the ladder that is meant to gate it. This is the evidence that
+   * ladder was missing. See `docs/tasks/retrieval-evidence.md`.
+   *
+   * **Evidence, not a memory per mode.** The scheduler is untouched and stays
+   * one trace per subject: FSRS models decay, not question formats, and four
+   * estimates of one quantity leave nothing able to say which of them `dueAt`
+   * comes from. What a mode needs to answer is narrower than that — *has this
+   * ever been produced?* — and a count answers it.
+   *
+   * Optional for the same reason `stability` is: rows written before this
+   * existed have none, and they must behave exactly as they did rather than
+   * having a learner's ladder reset underneath them. Bounded at three keys, so
+   * it is a small fixed record rather than an accumulator that grows. Folded in
+   * `applyAttempt` and nowhere else, which is what keeps
+   * `fold(attempts) === stored progress` true and lets a merge rebuild it.
+   */
+  readonly evidence?: Partial<Record<GradedMode, ModeEvidence>>;
+}
+
+/** What one retrieval mode's attempts on a subject add up to. */
+export interface ModeEvidence {
+  readonly attempts: number;
+  /** Non-`again` grades, matching what `streak` already treats as a pass. */
+  readonly correct: number;
+  readonly lastAt: Timestamp;
 }
 
 export interface Attempt {

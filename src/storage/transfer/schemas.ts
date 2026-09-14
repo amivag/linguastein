@@ -29,6 +29,7 @@ import {
   type ItemId,
   type PackId,
 } from '../../domain/content';
+import { GRADED_MODES } from '../../domain/exercises/modes';
 import { EXERCISE_KINDS } from '../../domain/exercises/types';
 import {
   ITEM_STATUSES,
@@ -152,6 +153,28 @@ export const attemptSchema = z
   });
 
 /**
+ * Evidence per retrieval mode.
+ *
+ * It travels even though a row with attempts is rebuilt by folding them, because
+ * a row *without* them is not: an export whose log has been pruned, or a file
+ * carrying a subject the receiving device has never practised, is taken as it
+ * stands. Leaving this out would silently reset those rows to "never produced",
+ * which reads as a fact rather than as the gap it is.
+ *
+ * Unknown mode keys are dropped rather than refused — the same repair-never-reject
+ * rule the rest of this boundary follows, and what a mode added by a later build
+ * looks like from an older one.
+ */
+const evidenceSchema = z.partialRecord(
+  z.enum(GRADED_MODES),
+  z.object({
+    attempts: z.number().int().nonnegative(),
+    correct: z.number().int().nonnegative(),
+    lastAt: timestamp,
+  }),
+);
+
+/**
  * The projection. Read leniently on purpose: a row that survives here is only a
  * starting point, because any item with attempts in the merged log is rebuilt
  * from that log rather than from this.
@@ -172,6 +195,7 @@ export const progressSchema = z
     hintsUsed: z.number().int().nonnegative(),
     streak: z.number().int().nonnegative(),
     updatedAt: timestamp,
+    evidence: evidenceSchema.optional(),
   })
   .transform((row, ctx): SubjectProgress => {
     const subject = subjectOf(row);
@@ -194,6 +218,7 @@ export const progressSchema = z
       hintsUsed: row.hintsUsed,
       streak: row.streak,
       updatedAt: row.updatedAt,
+      ...optional('evidence', row.evidence),
     };
   });
 

@@ -5,6 +5,7 @@
 
 import { systemRng, token, type Rng } from '../../utils/random';
 import { isItemId, type EntityId, type ItemId } from '../content';
+import { modeOfKind, type GradedMode } from '../exercises/modes';
 import type { ExerciseKind } from '../exercises/types';
 import { fsrsScheduler } from './fsrs';
 import type { Scheduler } from './scheduler';
@@ -12,6 +13,7 @@ import {
   isDue,
   newProgress,
   type Attempt,
+  type ModeEvidence,
   type ReviewGrade,
   type SubjectProgress,
   type Timestamp,
@@ -60,9 +62,38 @@ export function applyAttempt(
     ...reviewed,
     hintsUsed: previous.hintsUsed + (attempt.hintsUsed ?? 0),
     updatedAt: attempt.at,
+    evidence: withEvidence(previous.evidence, attempt),
     ...(attempt.latencyMs !== undefined
       ? { averageLatencyMs: smoothLatency(previous.averageLatencyMs, attempt.latencyMs) }
       : {}),
+  };
+}
+
+/**
+ * The evidence map one more attempt implies.
+ *
+ * Here rather than in the scheduler because it is not a scheduling quantity: it
+ * records *how* the subject was tested, which `stability` deliberately does not
+ * distinguish. `docs/tasks/retrieval-evidence.md` §4.1 has the argument.
+ *
+ * A row that had no map gets one, which is why an upgrade costs nothing: the
+ * absent case is read as "unknown", never as "never produced", and only
+ * `retrievalModeFor` decides what to do about the difference.
+ */
+function withEvidence(
+  previous: SubjectProgress['evidence'],
+  attempt: Attempt,
+): Partial<Record<GradedMode, ModeEvidence>> {
+  const mode = modeOfKind(attempt.exerciseKind);
+  const held = previous?.[mode];
+
+  return {
+    ...previous,
+    [mode]: {
+      attempts: (held?.attempts ?? 0) + 1,
+      correct: (held?.correct ?? 0) + (attempt.grade === 'again' ? 0 : 1),
+      lastAt: attempt.at,
+    },
   };
 }
 

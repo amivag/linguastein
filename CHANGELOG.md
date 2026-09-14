@@ -104,6 +104,25 @@ in the pack's own counts.
 
 ### Changed
 
+- **Producing has to be earned by having completed, and completing by having
+  recognised.** The exercise an item is offered as climbs a ladder —
+  recognise it, then complete it, then produce it — and which rung it sits on was
+  decided by memory stability alone. Stability folds every exercise kind into one
+  number, so an item answered ten times as a four-way multiple choice crossed the
+  threshold and was offered as production having never once been produced.
+  Recognition was inflating the ladder that exists to gate it.
+
+  Each attempt now also records **which retrieval mode it was evidence of**, read
+  off the exercise kind it was answered with, and a rung is offered only once the
+  rung below it has been passed at least once. Nothing about the schedule changes:
+  a memory is one memory, and FSRS keeps one stability and one difficulty per
+  item rather than gaining three of each.
+
+  Nobody's ladder resets. An item practised before this build carries no evidence,
+  and an absent record is read as "unknown" rather than as "never produced", so it
+  behaves exactly as it did. Evidence accumulates from the next answer onwards,
+  and a device restoring a backup rebuilds it by replaying the attempt log.
+
 - **The journey on Home is a strip you can move through.** The mission card showed
   the next rung and nothing else; the whole ladder lived in Study, so "not that
   one, the one after" — a one-gesture decision — was a two-screen trip.

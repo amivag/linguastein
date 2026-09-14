@@ -409,6 +409,29 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     which item 8 and [learner-profile.md](tasks/learner-profile.md) §9.2 both
     circle.
 
+13. **The retrieval ladder, verified rather than prescribed** — `retrievalModeFor`
+    reads `stability` and `difficulty`, which fold every exercise kind together,
+    so an item answered ten times as a four-way multiple choice is promoted to
+    production having never been produced. `Attempt.exerciseKind` is on every
+    attempt and nothing aggregates it. This is
+    [learner-profile.md](tasks/learner-profile.md) §9.2 — "the biggest open
+    question in the learning model" — and the answer turns out to be smaller than
+    the question: **evidence per mode, not a memory per mode.** The scheduler is
+    untouched, the field is folded in `applyAttempt` and rebuilt by replay, and an
+    absent one behaves exactly as today. Briefed in full in
+    [docs/tasks/retrieval-evidence.md](tasks/retrieval-evidence.md).
+
+14. **Typed production, graded morphologically** — no exercise kind asks the
+    learner to supply words rather than arrange or choose them, and
+    `GradeResult` is `{ correct, grade, expected }`, so a miss is binary. Both
+    are worth fixing together: the app _generates_ its paradigms, so it can locate
+    a wrong answer inside one and name the axis that slipped — right verb, right
+    person, wrong tense — which an app whose content is a list of sentences
+    cannot. The diagnoser is language-specific and sits behind a loader beside
+    `alphabetGuide` and `drillGuide`; a language that declares none gets today's
+    feedback. Briefed in
+    [docs/tasks/typed-production.md](tasks/typed-production.md).
+
 ## Later (architecture allows, code does not attempt)
 
 Story mode · speech recognition and pronunciation scoring · AI tutor behind an

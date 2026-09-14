@@ -69,8 +69,10 @@ Roughly by state, as this index was written:
 - **In progress** — [numerals.md](tasks/numerals.md),
   [game-feel.md](tasks/game-feel.md),
   [canonical-audio.md](tasks/canonical-audio.md) (both code halves done; nothing
-  generated), [second-language.md](tasks/second-language.md).
-- **Briefed, not started** — [dataset-expansion.md](tasks/dataset-expansion.md),
+  generated), [second-language.md](tasks/second-language.md),
+  [retrieval-evidence.md](tasks/retrieval-evidence.md).
+- **Briefed, not started** — [typed-production.md](tasks/typed-production.md),
+  [dataset-expansion.md](tasks/dataset-expansion.md),
   [past-tense-mission.md](tasks/past-tense-mission.md),
   [feelings-mood-state.md](tasks/feelings-mood-state.md),
   [function-words.md](tasks/function-words.md),

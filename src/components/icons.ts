@@ -45,6 +45,7 @@ import {
   Package,
   Palette,
   Pause,
+  PenLine,
   Play,
   Plus,
   RefreshCw,
@@ -200,6 +201,9 @@ export const ICONS = {
   meaning: MessageSquareQuote,
   /* An authored aside about a phrase: when to use it, what it implies. */
   note: StickyNote,
+  /* Producing the language in writing. A pen rather than a keyboard: the act is
+     writing the words, and the keyboard is only how a phone happens to do it. */
+  write: PenLine,
   /* Who you may say this to — the `tu`/`usted` choice, and its consequences. */
   audience: Users,
   /* The learner themselves. Singular against `audience`'s plural, which is the

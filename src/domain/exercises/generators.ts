@@ -18,6 +18,7 @@ import type {
   RevealExercise,
   TapToBuildExercise,
   ThinkSayExercise,
+  TypeItExercise,
 } from './types';
 
 export interface GenerationContext {
@@ -207,6 +208,49 @@ export const tapToBuildGenerator: ExerciseGenerator<'tap-to-build'> = {
   },
 };
 
+/**
+ * The longest answer worth asking anybody to type.
+ *
+ * Measured against the pack rather than guessed, and the measurement corrected
+ * the guess: `docs/tasks/typed-production.md` §6 worried about "a twenty-word B1
+ * sentence", and `core-es` has none — the longest sentence in it is thirteen
+ * words. Eight admits 88% of the 3,016 sentences, which is material enough that
+ * the kind is never starved, while leaving out the tail that turns a recall
+ * exercise into a typing test on a phone.
+ *
+ * Words rather than characters because words are the unit everything else here
+ * already grades in, and a limit in a second unit is a limit nobody can predict.
+ */
+export const TYPE_IT_MAX_WORDS = 8;
+
+/**
+ * Needs a reference-language prompt, and an answer short enough to be worth
+ * typing.
+ *
+ * No minimum, unlike `tap-to-build`: arranging one word is not a question, but
+ * typing one is — a vocabulary card is among the best things this kind can ask.
+ */
+export const typeItGenerator: ExerciseGenerator<'type-it'> = {
+  kind: 'type-it',
+  supports: (item, context) =>
+    translationOf(item, context) !== undefined && words(item).length <= TYPE_IT_MAX_WORDS,
+  generate(item, context): TypeItExercise | null {
+    const translation = translationOf(item, context);
+    if (!translation || words(item).length > TYPE_IT_MAX_WORDS) return null;
+
+    const answerLanguage = context.repository.languageOfItem(item);
+    return {
+      id: exerciseId(item, 'type-it'),
+      kind: 'type-it',
+      item,
+      translation,
+      prompt: translation.text,
+      answer: item.text,
+      ...(answerLanguage ? { answerLanguage } : {}),
+    };
+  },
+};
+
 export const DEFAULT_GENERATORS: readonly ExerciseGenerator[] = [
   listenRepeatGenerator,
   revealGenerator,
@@ -214,6 +258,7 @@ export const DEFAULT_GENERATORS: readonly ExerciseGenerator[] = [
   multipleChoiceGenerator,
   clozeChoiceGenerator,
   tapToBuildGenerator,
+  typeItGenerator,
 ];
 
 export class ExerciseEngine {

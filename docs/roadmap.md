@@ -430,7 +430,8 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     Briefed in full in
     [docs/tasks/retrieval-evidence.md](tasks/retrieval-evidence.md).
 
-14. **Typed production, graded morphologically** — no exercise kind asks the
+14. **Typed production, graded morphologically** — **Stage A done 2026-09-14.**
+    No exercise kind asked the
     learner to supply words rather than arrange or choose them, and
     `GradeResult` is `{ correct, grade, expected }`, so a miss is binary. Both
     are worth fixing together: the app _generates_ its paradigms, so it can locate
@@ -438,7 +439,17 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     person, wrong tense — which an app whose content is a list of sentences
     cannot. The diagnoser is language-specific and sits behind a loader beside
     `alphabetGuide` and `drillGuide`; a language that declares none gets today's
-    feedback. Briefed in
+    feedback.
+
+    What shipped is the kind, a three-verdict comparator and a `Write it` preset
+    beside `Think & say`. The middle verdict is the substance: an answer that
+    matches once the written accents are set aside counts, schedules sooner, and
+    is told which spelling was wanted — marking it wrong punishes a learner
+    without an accented keyboard, and marking it right teaches that `él` and `el`
+    are the same word. Which marks are accents is asked of a locale-aware
+    collator rather than decided in the engine, because stripping every combining
+    mark turns `año` into `ano`. The morphological diagnosis — right verb, wrong
+    tense — is Stage B and not started. Briefed in
     [docs/tasks/typed-production.md](tasks/typed-production.md).
 
 ## Later (architecture allows, code does not attempt)

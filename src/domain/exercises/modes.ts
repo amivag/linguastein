@@ -33,7 +33,7 @@ export type GradedMode = (typeof GRADED_MODES)[number];
 export const MODE_KINDS: Record<RetrievalMode, readonly ExerciseKind[]> = {
   recognition: ['multiple-choice', 'reveal'],
   'cued-recall': ['cloze-choice', 'tap-to-build', 'multiple-choice'],
-  production: ['think-say', 'listen-repeat'],
+  production: ['type-it', 'think-say', 'listen-repeat'],
   study: ['reveal', 'listen-repeat'],
 };
 

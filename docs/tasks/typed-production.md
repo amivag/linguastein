@@ -1,6 +1,9 @@
 # Task: typed production, graded morphologically
 
-**Status:** briefed 2026-09-14, not started.
+**Status:** **Stage A landed 2026-09-14** — the `type-it` kind, the
+three-verdict comparator, the card and a `Write it` preset. Stage B (the Spanish
+diagnoser) and Stage C (the axis as evidence) are briefed and not started. §6's
+three open questions are all answered below, two of them by measurement.
 **Written:** 2026-09-14
 **For:** a fresh agent session, no prior context assumed
 **Scope:** one new exercise kind, a comparator in `src/domain/exercises/`, a
@@ -188,15 +191,43 @@ rather than a drift.
   in a coverage report, and a confidently wrong one is counted as a success. The
   pack has made that mistake once already (`segunda`, recorded in roadmap item 0).
 
-## 6. Open questions
+## 6. Open questions, as answered
 
-- **Where it sits on the ladder.** `production`, presumably, beside `think-say` —
-  but it is the only machine-checked member, and
-  [retrieval-evidence.md](retrieval-evidence.md) §6 argues the others are weak
-  evidence. It may be worth `MODE_KINDS.production` listing `type-it` first.
-- **Which items can carry it.** A four-word phrase is a fair thing to type; a
-  twenty-word B1 sentence is a typing test. A length ceiling is likely, and it
-  should be measured against the pack rather than guessed.
-- **Accent entry.** Whether to offer an accent row above the input. It is a real
-  affordance on a phone and it is also a hint; if it ships, `hintsUsed` is
-  already the field that records having used one.
+- **Where it sits on the ladder — `production`, first.** `MODE_KINDS.production`
+  reads `['type-it', 'think-say', 'listen-repeat']`. First because it is the only
+  member whose answer the app checks; the other two record what the learner says
+  about their answer.
+
+- **Which items can carry it — eight words, and the guess was wrong.** This
+  section worried about "a twenty-word B1 sentence", and `core-es` has none: the
+  longest sentence in the pack is **thirteen** words, and the distribution is
+  88% at eight or fewer, 95.6% at nine, 98.6% at ten. `TYPE_IT_MAX_WORDS = 8`
+  therefore admits 2,657 of the 3,016 sentences — material enough that the kind
+  is never starved — while leaving the tail that turns recall into a typing test
+  on a phone. The ceiling withholds one kind and never an item: an eleven-word
+  sentence still supports five others, and a test asserts it.
+
+- **Accent entry — not shipped, and the comparator is why.** An accent row was
+  going to be the answer to "how does anyone type `hablé` on an English
+  keyboard". The `near` verdict answers it better: the learner types `hable`, it
+  counts, and the card names the accent. That is a correction rather than a hint,
+  so `hintsUsed` stays out of it. Revisit only if learners start asking for the
+  row.
+
+## 7. What Stage A settled that the brief had not thought about
+
+**Which marks are accents is a question about the language, and the engine must
+not answer it.** §3.2 said "accents and punctuation are normalised" as though
+that were one operation. It is not: `normalise` in `domain/content` strips every
+combining mark, so it turns `año` into `ano` — a different word, and precisely
+the accident `src/languages/es/orthography.ts` was written to record. A
+comparator built on it would have accepted `ano` for `año` while correctly
+accepting `hable` for `hablé`, and only the second looks like the feature working.
+
+The fix keeps the engine neutral without a new seam: `compareTyped` asks
+`Intl.Collator(language, { sensitivity: 'base' })`, which equates `hable` with
+`hablé` and separates `cana` from `caña` in `es`, and equates both in `en`.
+The knowledge is CLDR's rather than this repository's, the tag comes off the item
+(`answerLanguage`), and a language whose pack is not loaded compares the marks as
+written — strict rather than wrong. `MissDiagnoser` in §3.3 is still the right
+shape for Stage B; it simply is not needed for the verdict.

@@ -13,6 +13,7 @@ export const EXERCISE_KINDS = [
   'multiple-choice',
   'cloze-choice',
   'tap-to-build',
+  'type-it',
 ] as const;
 export type ExerciseKind = (typeof EXERCISE_KINDS)[number];
 
@@ -76,6 +77,37 @@ export interface ClozeChoiceExercise extends ExerciseBase {
   readonly choices: readonly Choice[];
 }
 
+/**
+ * Produce the target text from meaning, typed — the one machine-checked
+ * production exercise.
+ *
+ * Every other kind either hands the learner the answer to pick from, hands them
+ * its words to arrange, or asks them to grade themselves. This one asks them to
+ * supply the words and checks what they supplied, which is why it is the first
+ * thing under `MODE_KINDS.production` that is evidence rather than a claim. See
+ * `docs/tasks/typed-production.md`.
+ */
+export interface TypeItExercise extends ExerciseBase {
+  readonly kind: 'type-it';
+  readonly prompt: string;
+  readonly answer: string;
+  /**
+   * The language the answer is written in, for the comparator rather than for a
+   * `lang` attribute.
+   *
+   * Whether a missing mark is a typo or a different word is a property of the
+   * language: `hablé`/`hable` differ by an accent, `año`/`ano` differ by a
+   * letter, and nothing in this module can tell those apart from the characters
+   * alone. Carrying the tag lets grading ask a locale-aware collator instead of
+   * the engine growing an opinion about Spanish (architecture rule 1).
+   *
+   * Absent where the item's pack is not loaded — the same honest answer
+   * `promptLanguage` gives — in which case grading falls back to comparing the
+   * marks as written.
+   */
+  readonly answerLanguage?: LanguageTag;
+}
+
 /** Rebuild the sentence by tapping words in order (spec §4.6). */
 export interface TapToBuildExercise extends ExerciseBase {
   readonly kind: 'tap-to-build';
@@ -91,7 +123,8 @@ export type Exercise =
   | ThinkSayExercise
   | MultipleChoiceExercise
   | ClozeChoiceExercise
-  | TapToBuildExercise;
+  | TapToBuildExercise
+  | TypeItExercise;
 
 export type ExerciseOf<K extends ExerciseKind> = Extract<Exercise, { kind: K }>;
 

@@ -14,6 +14,7 @@ export const PRESET_IDS = [
   'quick',
   'listen',
   'speaking',
+  'writing',
   'flashcards',
   'verbs',
   'vocabulary',
@@ -51,6 +52,7 @@ export const PRESETS: Record<PresetId, Preset> = {
       'multiple-choice',
       'cloze-choice',
       'tap-to-build',
+      'type-it',
       'think-say',
       'listen-repeat',
     ],
@@ -81,6 +83,28 @@ export const PRESETS: Record<PresetId, Preset> = {
     ordering: 'smart',
     filter: () => ({ types: ['sentence', 'phrase'] }),
   },
+  writing: {
+    id: 'writing',
+    label: 'Write it',
+    /*
+     * The counterpart to `speaking`, and the only preset whose answers the app
+     * can actually check. Every other production card is self-rated, so it
+     * records what the learner says about their answer rather than what their
+     * answer was — see `docs/tasks/retrieval-evidence.md` §6.
+     *
+     * It exists as a preset rather than only as a rung because a kind reachable
+     * only once an item is already durable is a kind most learners would never
+     * meet. Naming it is what makes it a thing you can choose to practise.
+     */
+    description: 'Type it from the meaning, accents and all',
+    icon: 'write',
+    exerciseKinds: ['type-it'],
+    mode: 'practice',
+    ordering: 'smart',
+    // Same narrowing as `speaking`: a word card's answer is one word, which is
+    // fine to type, but the promise in the description is a sentence.
+    filter: () => ({ types: ['sentence', 'phrase'] }),
+  },
   flashcards: {
     id: 'flashcards',
     label: 'Flashcards',
@@ -108,6 +132,7 @@ export const PRESETS: Record<PresetId, Preset> = {
       'cloze-choice',
       'multiple-choice',
       'tap-to-build',
+      'type-it',
       'think-say',
       'listen-repeat',
     ],
@@ -131,7 +156,7 @@ export const PRESETS: Record<PresetId, Preset> = {
     label: 'Vocabulary',
     description: 'Words, with examples in context',
     icon: 'word',
-    exerciseKinds: ['multiple-choice', 'think-say', 'reveal', 'listen-repeat'],
+    exerciseKinds: ['multiple-choice', 'type-it', 'think-say', 'reveal', 'listen-repeat'],
     mode: 'practice',
     ordering: 'smart',
     filter: () => ({ types: ['word'] }),

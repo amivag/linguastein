@@ -104,6 +104,28 @@ in the pack's own counts.
 
 ### Changed
 
+- **Write it: the first exercise that asks you to supply the words.** Six kinds
+  shipped before this one and none of them did — you pick the answer from four,
+  arrange the words you are handed, or grade yourself. `Write it` gives you the
+  meaning and an empty field, and checks what you typed. It sits beside
+  `Think & say` on Home, and turns up inside mixed practice once an item is
+  durable enough to be worth producing.
+
+  **A missing accent counts.** Type `Ayer hable con mi hermana` and the card says
+  `Almost — the accents: Ayer hablé con mi hermana.` — it is marked correct and
+  scheduled sooner rather than marked wrong. Marking it wrong punishes someone
+  who knew the answer and has no accented keyboard; marking it simply right
+  teaches that the accents are decoration, when `él`/`el` and `té`/`te` are
+  different words. Capitals and punctuation are never counted at all.
+
+  A letter is not an accent, though: `ano` is not accepted for `año`, nor `cana`
+  for `caña`. Which marks a language treats as decoration is asked of the
+  language rather than assumed.
+
+  Answers of more than eight words are not asked for. The pack is 88% at or below
+  that, so there is plenty to practise, and the rest would be a typing test
+  rather than a recall one — those sentences still have every other kind.
+
 - **A word's row says how you have recalled it, not only how well.** The
   "Words & skills" rows on Progress read `shaky · seen in 3 sentences`, and
   strength is one number — which cannot tell a word recognised among four options

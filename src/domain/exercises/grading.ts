@@ -3,7 +3,7 @@
  * themselves; audio-first ones are self-rated by the learner (spec §4.2).
  */
 
-import { normalise, splitWords } from '../content';
+import { normalise, splitWords, type LanguageTag } from '../content';
 import type { ReviewGrade } from '../progress';
 import type { Exercise } from './types';
 
@@ -18,7 +18,22 @@ export interface GradeResult {
   readonly correct: boolean;
   readonly grade: ReviewGrade;
   readonly expected: string;
+  /** How close a typed answer was. Absent for every other kind. */
+  readonly verdict?: TypedVerdict;
 }
+
+/**
+ * A typed answer is not a boolean, and the middle value is the reason this kind
+ * can exist on a phone at all.
+ *
+ * `near` is an answer that matches once the written accents are set aside.
+ * Marking it wrong punishes a learner who knew the tense for a keyboard they do
+ * not have; marking it right teaches that Spanish accents are decoration, when
+ * `él`/`el` and `té`/`te` are different words — `content/es/stem-collisions.tsv`
+ * records eight such pairs the pack has already hit. So it counts, it schedules
+ * sooner, and the feedback says which mark was missing.
+ */
+export type TypedVerdict = 'exact' | 'near' | 'wrong';
 
 export function gradeExercise(exercise: Exercise, answer: Answer): GradeResult | null {
   switch (exercise.kind) {
@@ -41,12 +56,63 @@ export function gradeExercise(exercise: Exercise, answer: Answer): GradeResult |
         expected: exercise.item.text,
       };
     }
+    case 'type-it': {
+      const written = typeof answer.value === 'string' ? answer.value : answer.value.join(' ');
+      const verdict = compareTyped(written, exercise.answer, exercise.answerLanguage);
+      return {
+        // A missing accent is an answer the learner got right; `verdict` is what
+        // carries the part they did not, so the summary counts it and the card
+        // still says what was missing.
+        correct: verdict !== 'wrong',
+        grade:
+          verdict === 'exact' ? gradeFromLatency(answer) : verdict === 'near' ? 'hard' : 'again',
+        expected: exercise.answer,
+        verdict,
+      };
+    }
     case 'listen-repeat':
     case 'reveal':
     case 'think-say':
       // Self-rated: the learner supplies the grade directly.
       return null;
   }
+}
+
+/**
+ * How close a typed answer is: exact, accents aside, or wrong.
+ *
+ * Case and punctuation never count. A learner typing `tengo que trabajar` for
+ * `Tengo que trabajar.` has produced the sentence, and a capital letter is not
+ * what the card is asking about.
+ *
+ * **Whether a mark is an accent or a letter is asked of the locale, not decided
+ * here.** `hablé`/`hable` differ by an accent and `año`/`ano` differ by a
+ * letter, and nothing about the characters says which is which — stripping
+ * every combining mark would accept `ano` for `año`, the exact accident
+ * `src/languages/es/orthography.ts` exists to record. A collator at `sensitivity:
+ * 'base'` knows, because CLDR knows: in `es` it equates `hable` with `hablé` and
+ * separates `cana` from `caña`, while in `en` it equates both. That keeps the
+ * engine free of any claim about Spanish (architecture rule 1) while still
+ * getting Spanish right — and a language whose tag is missing simply compares
+ * the marks as written, which is strict rather than wrong.
+ */
+export function compareTyped(
+  written: string,
+  expected: string,
+  language?: LanguageTag,
+): TypedVerdict {
+  const left = splitWords(written);
+  const right = splitWords(expected);
+  if (left.length !== right.length) return 'wrong';
+
+  const caseOnly = new Intl.Collator(language, { sensitivity: 'accent' });
+  if (left.every((word, index) => caseOnly.compare(word, right[index] ?? '') === 0)) return 'exact';
+
+  if (language === undefined) return 'wrong';
+  const accentBlind = new Intl.Collator(language, { sensitivity: 'base' });
+  return left.every((word, index) => accentBlind.compare(word, right[index] ?? '') === 0)
+    ? 'near'
+    : 'wrong';
 }
 
 /**

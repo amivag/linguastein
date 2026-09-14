@@ -504,3 +504,21 @@
     color: var(--color-text);
   }
 }
+
+/*
+ * The typed-answer field.
+ *
+ * The input itself is styled globally — it is the one control the design
+ * language keeps a border on, because a field has no fill and no label inside it
+ * and the boundary genuinely is how a learner knows it is a control. All that is
+ * needed here is the width and the space above the Check row.
+ */
+.typed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.typedInput {
+  width: 100%;
+}

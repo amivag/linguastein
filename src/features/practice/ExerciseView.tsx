@@ -41,6 +41,7 @@ function cardHeading(kind: Exercise['kind'], language: string | undefined): stri
     'multiple-choice': 'Choose the meaning',
     'cloze-choice': 'Choose the missing word',
     'tap-to-build': 'Build the sentence',
+    'type-it': language ? `Write it in ${language}` : 'Write it from the meaning',
   };
   return headings[kind];
 }
@@ -69,6 +70,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   // Which choice was tapped, so the feedback can mark that one rather than
   // painting every distractor red.
   const [chosen, setChosen] = useState<string | null>(null);
+  const [typed, setTyped] = useState('');
 
   // Per-card state resets by remounting on a new exercise (SessionScreen keys
   // this component by exercise id), so no reset effect is needed. The clock is
@@ -304,6 +306,61 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
         </>
       )}
 
+      {exercise.kind === 'type-it' && (
+        <>
+          <Annotation facet="meaning" lead>
+            {exercise.prompt}
+          </Annotation>
+          {/*
+            A form rather than a button with a key handler: Enter submits for
+            free, and a phone keyboard offers Go instead of a newline.
+
+            Spelling and autocorrect are off because the card grades spelling. A
+            browser set to English will happily rewrite `cerveza`, and a learner
+            marked wrong for what their keyboard did would have no way to tell
+            that is what happened.
+          */}
+          <form
+            className={styles.typed}
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (answered || typed.trim() === '') return;
+              runner.submitAnswer({ value: typed, latencyMs: elapsed() });
+            }}
+          >
+            <input
+              aria-labelledby={headingId}
+              className={styles.typedInput}
+              lang={lang}
+              value={typed}
+              onChange={(event) => setTyped(event.target.value)}
+              disabled={answered}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="done"
+            />
+            <div className={styles.footer}>
+              <Button type="submit" variant="primary" disabled={answered || typed.trim() === ''}>
+                Check
+              </Button>
+            </div>
+          </form>
+          {/* The sentence itself, once it can no longer give the answer away. */}
+          {answered && (
+            <>
+              <TokenizedText
+                item={item}
+                className={styles.prompt}
+                onSelect={selectWord}
+                selected={words.tokensFor(item.id)}
+              />
+              <AudioControls item={item} />
+            </>
+          )}
+        </>
+      )}
+
       {isSelfRated(exercise.kind) ? (
         <div className={styles.ratings}>
           {REVIEW_GRADES.map((grade) => (
@@ -389,7 +446,22 @@ function Verdict({ result }: { readonly result: GradeResult | null }) {
         <Icon name={correct ? 'correct' : 'incorrect'} size="lg" />
       </span>
       {correct ? (
-        <span {...(praise ? { lang } : {})}>{praise ?? 'Correct!'}</span>
+        /*
+          A near miss counts and still says what was missing. Praise alone would
+          teach that the accents are decoration, and `él`/`el` and `té`/`te` are
+          different words; marking it wrong would punish somebody who knew the
+          answer and has no accented keyboard. So: yes, and here is the spelling.
+        */
+        result.verdict === 'near' ? (
+          <span>
+            Almost — the accents:{' '}
+            <span className={styles.verdictAnswer} lang={lang}>
+              {result.expected}
+            </span>
+          </span>
+        ) : (
+          <span {...(praise ? { lang } : {})}>{praise ?? 'Correct!'}</span>
+        )
       ) : (
         <span>
           Answer: <span className={styles.verdictAnswer}>{result.expected}</span>

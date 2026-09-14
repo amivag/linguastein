@@ -9,7 +9,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { ItemId } from '../../src/domain/content';
+import type { ItemId, LexemeId } from '../../src/domain/content';
 import {
   EXERCISE_KINDS,
   GRADED_MODES,
@@ -19,13 +19,15 @@ import {
 } from '../../src/domain/exercises';
 import {
   applyAttempt,
+  inferMastery,
   newProgress,
+  reachedMode,
   type Attempt,
   type ModeEvidence,
   type SubjectProgress,
 } from '../../src/domain/progress';
 import { retrievalModeFor } from '../../src/domain/sessions';
-import { id } from '../fixtures/pack';
+import { id, testRepository } from '../fixtures/pack';
 
 const ITEM = id<ItemId>('test-es:item:001');
 const AT = 1_700_000_000_000;
@@ -143,5 +145,60 @@ describe('gating the ladder on evidence', () => {
       status: 'learning',
     };
     expect(retrievalModeFor(lapsed)).toBe('recognition');
+  });
+});
+
+describe('mastery split by the mode its evidence came from', () => {
+  const TENER = id<LexemeId>('test-es:lexeme:tener');
+  const repository = testRepository();
+
+  const row = (local: string, evidence?: SubjectProgress['evidence']): SubjectProgress => ({
+    ...newProgress(id<ItemId>(`test-es:item:${local}`)),
+    attempts: 4,
+    correct: 4,
+    stability: 20,
+    ...(evidence ? { evidence } : {}),
+  });
+
+  const tener = (rows: readonly SubjectProgress[]) =>
+    inferMastery(repository, rows, AT).lexemes.get(TENER);
+
+  it('counts distinct items, not attempts', () => {
+    // Both sentences using `tener` were recognised; only one was produced.
+    const mastery = tener([
+      row('001', { recognition: passed(9), production: passed(4) }),
+      row('002', { recognition: passed(3) }),
+    ]);
+
+    expect(mastery?.modes.recognition).toEqual({ tried: 2, passed: 2 });
+    expect(mastery?.modes.production).toEqual({ tried: 1, passed: 1 });
+    expect(mastery?.modes['cued-recall']).toEqual({ tried: 0, passed: 0 });
+  });
+
+  it('separates having tried a mode from having passed it', () => {
+    const mastery = tener([row('001', { production: { attempts: 6, correct: 0, lastAt: AT } })]);
+
+    expect(mastery?.modes.production).toEqual({ tried: 1, passed: 0 });
+  });
+
+  it('names the hardest mode passed', () => {
+    const mastery = tener([row('001', { recognition: passed(), 'cued-recall': passed() })]);
+
+    expect(mastery && reachedMode(mastery)).toBe('cued-recall');
+  });
+
+  it('says nothing about a word practised before evidence was recorded', () => {
+    // The row is strong by every other measure. Claiming it has never been
+    // produced would read as a fact rather than as the gap it is.
+    const mastery = tener([row('001'), row('002')]);
+
+    expect(mastery?.strength).toBeGreaterThan(0);
+    expect(mastery && reachedMode(mastery)).toBeUndefined();
+  });
+
+  it('says nothing when every attempt at every mode has failed', () => {
+    const mastery = tener([row('001', { recognition: { attempts: 3, correct: 0, lastAt: AT } })]);
+
+    expect(mastery && reachedMode(mastery)).toBeUndefined();
   });
 });

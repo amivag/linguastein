@@ -104,6 +104,23 @@ in the pack's own counts.
 
 ### Changed
 
+- **A word's row says how you have recalled it, not only how well.** The
+  "Words & skills" rows on Progress read `shaky · seen in 3 sentences`, and
+  strength is one number — which cannot tell a word recognised among four options
+  from the same word produced from nothing, though that is the difference worth
+  acting on. They now read `shaky · recognised · seen in 3 sentences`, naming the
+  hardest way the word has actually been recalled.
+
+  Counted in sentences rather than in answers, like the "seen in" figure beside
+  it: twenty multiple-choice answers on one sentence are not evidence across
+  three.
+
+  **Where there is nothing to name, nothing is said.** Every word practised
+  before this build carries no record of how it was tested, and printing "never
+  produced" over the entire existing library would be a false claim that looks
+  like a finding. The middle term is simply absent until there is evidence for
+  it.
+
 - **Producing has to be earned by having completed, and completing by having
   recognised.** The exercise an item is offered as climbs a ladder —
   recognise it, then complete it, then produce it — and which rung it sits on was

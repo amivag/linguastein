@@ -25,6 +25,7 @@
  */
 
 import { isItemId, type ContentRepository, type LexemeId, type SkillId } from '../content';
+import { GRADED_MODES, type GradedMode } from '../exercises/modes';
 import { isDue, type SubjectProgress, type Timestamp } from './types';
 
 export type MasteryKind = 'lexeme' | 'skill';
@@ -44,6 +45,31 @@ export interface MasteryRecord {
   /** Items using it that are due for review now. */
   readonly due: number;
   readonly status: 'weak' | 'developing' | 'strong';
+  /**
+   * How the evidence was gathered, per retrieval mode.
+   *
+   * `strength` is one number, and one number cannot distinguish a word
+   * recognised among four options from the same word produced from nothing —
+   * which is the difference the learner actually cares about and the difference
+   * `docs/tasks/retrieval-evidence.md` exists to make legible. Counted in
+   * *distinct items*, like `encounters`, rather than in attempts: twenty
+   * multiple-choice answers on one sentence are not breadth.
+   *
+   * Every mode is present with zeros rather than the key being absent, so a
+   * reader never has to decide what a missing key meant. All-zero is a real
+   * state and it means **unknown** — rows practised before evidence was recorded
+   * have none, and {@link reachedMode} is what turns that into "say nothing"
+   * rather than into "never produced".
+   */
+  readonly modes: Readonly<Record<GradedMode, ModeReach>>;
+}
+
+/** How far one retrieval mode's evidence for a word or pattern reaches. */
+export interface ModeReach {
+  /** Distinct items using it that have been tried at this mode. */
+  readonly tried: number;
+  /** …of those, the ones passed at least once. */
+  readonly passed: number;
 }
 
 export interface Mastery {
@@ -66,6 +92,15 @@ interface Accumulator {
   correct: number;
   due: number;
   strengthTotal: number;
+  modes: Record<GradedMode, { tried: number; passed: number }>;
+}
+
+function noReach(): Record<GradedMode, { tried: number; passed: number }> {
+  return {
+    recognition: { tried: 0, passed: 0 },
+    'cued-recall': { tried: 0, passed: 0 },
+    production: { tried: 0, passed: 0 },
+  };
 }
 
 export function inferMastery(
@@ -140,8 +175,21 @@ function add<K>(
     correct: 0,
     due: 0,
     strengthTotal: 0,
+    modes: noReach(),
   };
   entry.encounters += 1;
+  /*
+   * One item contributes at most one to each mode, whatever it was answered
+   * however many times. `encounters` counts distinct items and the strength
+   * floor is calibrated against that; a tally of raw attempts beside it would
+   * be two different units under one heading.
+   */
+  for (const mode of GRADED_MODES) {
+    const held = record.evidence?.[mode];
+    if (!held || held.attempts === 0) continue;
+    entry.modes[mode].tried += 1;
+    if (held.correct > 0) entry.modes[mode].passed += 1;
+  }
   entry.contexts.add(context);
   entry.attempts += record.attempts;
   entry.correct += record.correct;
@@ -176,6 +224,7 @@ function finalise<K extends LexemeId | SkillId>(
       due: entry.due,
       strength,
       status: statusFor(strength, entry.contexts.size, minimumContexts(id)),
+      modes: entry.modes,
     });
   }
 
@@ -200,6 +249,19 @@ function statusFor(
   if (strength < 0.35) return 'weak';
   if (strength < 0.7 || contexts < minimumContexts) return 'developing';
   return 'strong';
+}
+
+/**
+ * The hardest way this word or pattern has actually been recalled, if any.
+ *
+ * `undefined` covers two different-looking cases that a surface must treat the
+ * same way: nothing has been tried at any mode (a row practised before evidence
+ * was recorded), and everything tried has failed. Neither supports a claim about
+ * what the learner can do, so the honest rendering of both is to say nothing —
+ * the same rule `retrievalModeFor` follows when the map is absent.
+ */
+export function reachedMode(record: MasteryRecord): GradedMode | undefined {
+  return [...GRADED_MODES].reverse().find((mode) => record.modes[mode].passed > 0);
 }
 
 /** Weakest first — what a session should spend its time on. */

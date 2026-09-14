@@ -409,7 +409,7 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     which item 8 and [learner-profile.md](tasks/learner-profile.md) §9.2 both
     circle.
 
-13. **The retrieval ladder, verified rather than prescribed** — **Stage A done
+13. ~~**The retrieval ladder, verified rather than prescribed**~~ — **done
     2026-09-14.** `retrievalModeFor`
     reads `stability` and `difficulty`, which fold every exercise kind together,
     so an item answered ten times as a four-way multiple choice is promoted to
@@ -419,10 +419,15 @@ device · 3.1 MB of 6.4 MB`), what finishing would cost (`Keep offline
     question in the learning model" — and the answer turns out to be smaller than
     the question: **evidence per mode, not a memory per mode.** The scheduler is
     untouched, the field is folded in `applyAttempt` and rebuilt by replay, and an
-    absent one behaves exactly as today — nobody's ladder resets on upgrade. What
-    remains is what a learner sees: mastery split by the mode its evidence came
-    from (Stage B), and a screen that can say "you recognise this and have never
-    produced it" (Stage C). Briefed in full in
+    absent one behaves exactly as today — nobody's ladder resets on upgrade.
+
+    Mastery reads it too: `MasteryRecord.modes` counts, per mode, the distinct
+    items using a word that have been tried and passed, so "strong" can mean
+    strong _at something_. The Progress rows say which: the line that read
+    `shaky · seen in …` now carries `recognised`, `recalled` or `produced`
+    between the two — and carries nothing there where no evidence names one,
+    because everyone's existing library has none until it is practised again.
+    Briefed in full in
     [docs/tasks/retrieval-evidence.md](tasks/retrieval-evidence.md).
 
 14. **Typed production, graded morphologically** — no exercise kind asks the

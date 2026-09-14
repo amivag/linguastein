@@ -1,8 +1,10 @@
 # Task: the retrieval ladder, verified rather than prescribed
 
-**Status:** **Stage A landed 2026-09-14** — `modeOfKind`, `ModeEvidence`, the
-fold, the gate, the transfer field and the tests are in; no screen changed.
-Stages B (mastery reads it) and C (the surface) are briefed and not started.
+**Status:** **done 2026-09-14.** Stage A (the fold and the gate), Stage B
+(`MasteryRecord.modes`, derived) and Stage C (the reach on the Progress rows) all
+landed. Verified in the running app as well as under vitest: one multiple-choice
+answer gives `shaky · recognised · seen in 1 sentence`. What is deliberately left
+open is in §6 and §9.
 **Written:** 2026-09-14
 **For:** a fresh agent session, no prior context assumed
 **Scope:** `src/domain/progress/`, `src/domain/sessions/composer.ts`, the
@@ -179,10 +181,23 @@ bypass here.
 - **Stage B — mastery reads it.** `MasteryRecord.strength` is one number
   (`mastery.ts`). Add the per-mode breakdown, derived, never stored — the module's
   own standing rule. "Strong" then means strong _at something_.
+
+  **Landed as `MasteryRecord.modes`**, a `{ tried, passed }` pair per mode counted
+  in _distinct items_ rather than in attempts — the unit `encounters` already
+  uses, because twenty multiple-choice answers on one sentence are not breadth.
+  `reachedMode()` is the reader every surface should go through.
+
 - **Stage C — the surface.** Progress and the end-of-session summary say which
   mode the evidence came from. The sentence worth being able to write is "you
   recognise this and have never produced it", and Stage C is the only stage a
   learner sees.
+
+  **Landed on the Progress rows**, which already read
+  `shaky · seen in 3 sentences` and now read `shaky · recognised · seen in 3
+sentences`. The end-of-session summary was left alone: it is about what moved
+  in the last ten minutes, and a mode is a standing fact about a word rather than
+  news. Where there is no evidence the middle term is simply absent — §9 is why
+  that is not a smaller version of saying "never produced".
 
 ## 5. Rules and constraints
 
@@ -233,3 +248,21 @@ it better evidence to be honest about.
   generated log that mixes kinds.
 - A test that an item answered only by multiple choice never reaches
   `production`, which is the bug in one line.
+
+## 9. What "no evidence" is allowed to look like
+
+Three places now read an absent record, and all three must say the same thing:
+**unknown, never "no".**
+
+- `retrievalModeFor` leaves the rung exactly as stability earned it.
+- `reachedMode` returns `undefined`.
+- The Progress row omits the middle term rather than printing a word for it.
+
+The reason is that everybody practising today has rows with no evidence on them,
+and will until they have practised each item again. A screen that read those as
+"never produced" would be stating something false about the whole existing
+library on the day this shipped — and it would be _stable_ false, because the
+claim looks like a finding rather than a gap and nothing would prompt anyone to
+check it. `segunda` in roadmap item 0 is the same failure in the dataset: a
+missing lemma shows up in a coverage report, and a confidently wrong one is
+counted as a success.

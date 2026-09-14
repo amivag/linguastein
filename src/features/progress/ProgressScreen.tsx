@@ -13,6 +13,7 @@ import { isItemId } from '../../domain/content';
 import {
   inferMastery,
   itemProgressIn,
+  reachedMode,
   summarise,
   weakest as weakestMastery,
   type MasteryRecord,
@@ -38,6 +39,27 @@ const MASTERY_LABELS: Record<MasteryRecord['status'], string> = {
   developing: 'coming along',
   strong: 'solid',
 };
+
+/**
+ * The hardest way the learner has recalled it — not how well, which is what
+ * `MASTERY_LABELS` already says.
+ *
+ * Strength alone cannot tell a word recognised among four options from the same
+ * word produced from nothing, and the difference is the one a learner acts on.
+ * Absent where nothing has been passed at any mode: a row practised before
+ * evidence was recorded says nothing rather than claiming the word has never
+ * been produced. See `docs/tasks/retrieval-evidence.md` §4.5.
+ */
+const REACH_LABELS = {
+  recognition: 'recognised',
+  'cued-recall': 'recalled',
+  production: 'produced',
+} as const;
+
+function reachLabel(record: MasteryRecord): string | undefined {
+  const reached = reachedMode(record);
+  return reached ? REACH_LABELS[reached] : undefined;
+}
 
 /** What the learner has actually done — the counterpart to the practice loop. */
 export function ProgressScreen() {
@@ -235,8 +257,9 @@ export function ProgressScreen() {
                         <span lang={lang}>{record.label}</span>
                       </span>
                       <span className={styles.muted}>
-                        {MASTERY_LABELS[record.status]} · seen in {record.encounters}{' '}
-                        {record.encounters === 1 ? 'sentence' : 'sentences'}
+                        {MASTERY_LABELS[record.status]}
+                        {reachLabel(record) && <> · {reachLabel(record)}</>} · seen in{' '}
+                        {record.encounters} {record.encounters === 1 ? 'sentence' : 'sentences'}
                       </span>
                       <Icon name="next" size="sm" className={styles.rowChevron} />
                     </Link>
@@ -245,7 +268,9 @@ export function ProgressScreen() {
               </ul>
               <p className={styles.caption}>
                 Strength combines retrieval quality with evidence across different sentences, not
-                just how well one prompt is remembered.
+                just how well one prompt is remembered. The second word, where there is one, is the
+                hardest way you have recalled it so far — recognised among options, recalled with a
+                cue, or produced from meaning alone.
               </p>
             </section>
           )}

@@ -1,16 +1,12 @@
 # Task: learner state as a profile
 
-**Status:** **All three stages have landed.** Stored state is at database version
-4: version 2 gave a progress row its pack and its clock, and version 4 split the
-one flat settings record into device preferences plus per-course state. §5, §6 and
-§7 now read as a record of why each piece is shaped as it is rather than as work
-to do. §9.1 — the decision the file format was waiting on — was settled
-2026-08-25 and is what Stage C is built on: the attempt log is authoritative and
-progress is a projection folded out of it. §9.4 is settled too, in `format.ts`;
-see the note under Stage C landed.
+**Status:** historical rationale; all three implementation stages landed.
+For current storage shapes and migration versions, read `src/storage/`; for open
+persistence/retry bugs, see [current-state.md](../current-state.md). The sections
+below record the original reasoning, not a fresh implementation plan.
 **Written:** 2026-08-21
 **Stage C landed:** 2026-09-05 — `src/storage/transfer/` (the envelope, a zod
-boundary over it, and the merge), `applyAttempt` / `replayItem` split out of
+boundary over it, and the merge), `applyAttempt` / `replaySubject` split out of
 `recordAttempt` in `domain/progress/tracker.ts`, `putMany` / `appendMany` / `all`
 on the three history stores, and Backup and restore under Settings → You.
 **Two decisions taken while building it**, both of which §7 left open:
@@ -25,7 +21,7 @@ by the boundary Stage A already built rather than by dropping the field.
 the incremental path disagree for two attempts sharing a millisecond, because the
 canonical order is (`at`, `id`) and arrival order is not recorded. Reachable only
 synthetically — an attempt is a person answering a card — and the id order is the
-right one, since it is the one two devices agree on. Recorded on `replayItem`.
+right one, since it is the one two devices agree on. Recorded on `replaySubject`.
 **Stage A landed:** 2026-08-30 — `CourseState` keyed by target language, a
 `CourseStateStore` beside the preferences store, `useCourse().state` /
 `updateState` as the only way a screen reads or writes any of the five, the

@@ -63,6 +63,16 @@ receive them through `ServicesContext` and depend on interfaces. That is what
 keeps Rules 7 and 8 (no hard-wired AI, no hard-wired vendor) enforceable rather
 than aspirational.
 
+## Optional server layer
+
+The future server direction is modern PHP with SQL persistence behind repository
+and transaction interfaces. See [server-foundation.md](server-foundation.md) for
+SQLite/MySQL/MariaDB/PostgreSQL portability, API contracts and retry semantics.
+Local storage remains the practice read/write path; optional HTTP synchronization
+reconciles in the background. The TypeScript engine imports neither network nor
+database code. The PHP framework and first database remain implementation-time
+decisions.
+
 ## The validation boundary
 
 Datasets are untrusted input. `src/data/validation` parses every record with
@@ -174,27 +184,28 @@ revision cached.
 
 ## Extension points already in place
 
-| Seam                          | Where                            | For                                    |
-| ----------------------------- | -------------------------------- | -------------------------------------- |
-| `ExerciseGenerator`           | `domain/exercises/generators.ts` | new exercise types                     |
-| `Scheduler`                   | `domain/progress/scheduler.ts`   | a different SRS, or per-user weights   |
-| `DatasetSource`               | `data/loaders/source.ts`         | bundled, remote or user-imported packs |
-| `LearnerStorage`              | `storage/types.ts`               | cloud sync behind the same contract    |
-| `TtsProvider`                 | `audio/types.ts`                 | higher-quality or cached voices        |
-| `TtsVoice`                    | `audio/types.ts`                 | voice choice, without vendor types     |
-| `SpeechRecognitionProvider`   | `audio/types.ts`                 | pronunciation practice                 |
-| `MicrophoneLevels`            | `audio/types.ts`                 | live input level, and the permission   |
-| `Provenance`                  | `domain/content/provenance.ts`   | community + AI-generated content       |
-| Reference-language resolution | `domain/content/language.ts`     | translation packs beyond English       |
+| Seam                          | Where                            | For                                        |
+| ----------------------------- | -------------------------------- | ------------------------------------------ |
+| `ExerciseGenerator`           | `domain/exercises/generators.ts` | new exercise types                         |
+| `Scheduler`                   | `domain/progress/scheduler.ts`   | a different SRS, or per-user weights       |
+| `DatasetSource`               | `data/loaders/source.ts`         | bundled, remote or user-imported packs     |
+| `LearnerStorage`              | `storage/types.ts`               | local storage plus a separate sync service |
+| `TtsProvider`                 | `audio/types.ts`                 | higher-quality or cached voices            |
+| `TtsVoice`                    | `audio/types.ts`                 | voice choice, without vendor types         |
+| `SpeechRecognitionProvider`   | `audio/types.ts`                 | pronunciation practice                     |
+| `MicrophoneLevels`            | `audio/types.ts`                 | live input level, and the permission       |
+| `Provenance`                  | `domain/content/provenance.ts`   | community + AI-generated content           |
+| Reference-language resolution | `domain/content/language.ts`     | translation packs beyond English           |
 
 None of these are implemented beyond what v0.1 needs. They exist so that adding
 them later is additive.
 
 ## Deliberately not built yet
 
-Backend, accounts, sync, community submissions, AI tutor, pronunciation
-scoring, stories and dialogues — see §29 of the spec. The data model leaves room
-for each; the app does not pretend to have them.
+Backend, users/registration, sync, community submissions, an AI tutor and
+pronunciation scoring remain future work. Stories/dialogues already exist as
+passages. See [roadmap.md](roadmap.md) for current work and
+[server-foundation.md](server-foundation.md) for the account/server direction.
 
 Three of those have since been briefed rather than merely deferred, because they
 are what the seams above were built for and it is worth knowing which seam pays

@@ -32,6 +32,9 @@ export const APP = {
   /** The half of the name that says what the app is *for*. */
   tagline: 'Spanish Practice',
 
+  /** Install metadata belongs to the app, never to the shared build config. */
+  description: 'Mobile-first Spanish practice: listen, repeat, reveal, review.',
+
   /**
    * Where the app is served from.
    *

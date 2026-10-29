@@ -146,3 +146,20 @@ describe('fsrsScheduler', () => {
     expect(overdue.stability).toBeGreaterThan(onTime.stability!);
   });
 });
+
+it('preserves app-owned progress fields without mutating the input', () => {
+  const before: SubjectProgress = {
+    ...newProgress(ITEM),
+    hintsUsed: 2,
+    updatedAt: NOW,
+    evidence: { production: { attempts: 1, correct: 1, lastAt: NOW } },
+  };
+  const after = fsrsScheduler.review(before, 'good', NOW);
+  expect(after.subject).toBe(before.subject);
+  expect(after.packId).toBe(before.packId);
+  expect(after.hintsUsed).toBe(2);
+  expect(after.updatedAt).toBe(NOW);
+  expect(after.evidence).toEqual(before.evidence);
+  expect(before.attempts).toBe(0);
+  expect(after.attempts).toBe(1);
+});

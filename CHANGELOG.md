@@ -15,7 +15,28 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Maintenance
+
+- Refresh compatible application and tooling dependencies through `sfw npm`,
+  including Zod 4.6.7, Vite 8.3.5, Vitest/coverage 4.1.12, React 19.3.1 and
+  React Router 7.18.4. Retain the existing major versions and TypeScript 5.9.
+- The production dependency audit is clean. Remaining low-severity tooling
+  findings concern `deepmerge` (no patched release) and `serialize-javascript`
+  (patched releases are newer than the configured npm cutoff). Preserve that
+  cutoff rather than bypassing it or accepting npm's obsolete PWA downgrade.
+
 ### Added
+
+- Portable appearance core with app-owned theme catalogs and stylesheets,
+  namespaced preferences and shared first-paint configuration. Existing palettes
+  and appearance choices remain compatible. Blocked localStorage access no
+  longer prevents applying an appearance axis.
+
+- A copyable, subject-neutral engine for memory scheduling, drill selection,
+  seeded randomness and non-text drill targets, exercised by Spanish and a rhythm
+  contract fixture. See `docs/framework.md` for the reuse audit and remaining gaps.
+- Scheduler regression coverage for a last-review timestamp of zero; install
+  descriptions now derive from the app identity when scaffolding another app.
 
 - **The header says where you are, not only what this is.** A breadcrumb sits
   above the title on every screen that is reached _through_ a section rather than

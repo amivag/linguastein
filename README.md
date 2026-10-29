@@ -18,7 +18,7 @@ simply be discarded. Do not treat a streak here as durable yet.
 ## Quick start
 
 ```bash
-npm install
+sfw npm install
 ```
 
 ```bash
@@ -45,14 +45,16 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 | `npm run review:data`    | Editorial review aid: content questions, by exception            |
 | `npm run build:palette`  | Solve a palette's colours from a handful of hue angles           |
 | `npm run generate:audio` | Synthesise canonical audio into the ledger, in batches           |
-| `npm run check`          | Everything above, in the order CI runs it                        |
+| `npm run check`          | Typecheck, lint, coverage, dataset validation, build, formatting |
 
 ## Layout
 
 ```text
 src/
 ├── app/          composition root, routing, the current course, services context
-├── domain/       the engine — pure, framework-free, fully tested
+├── appearance/   portable theme catalogs, axes and first-paint metadata
+├── engine/       shared scheduling, drills and seeded randomness; no app imports
+├── domain/       Spanish content, exercises, sessions and progress adapters
 │   ├── content/  language model: items, lexemes, forms, skills, translations
 │   ├── exercises/exercise generation and grading
 │   ├── sessions/ session planning: filters, ordering, sizing
@@ -121,6 +123,8 @@ feed the same local FSRS schedule as ordinary practice; speech can grade them
 automatically, and every device has an explicit self-rating fallback after
 reveal. A communicative ability is never called reliable from one memorised
 passage alone.
+
+The pack includes 123 passages. Fourteen missions use a dialogue model.
 
 Every mission now includes a **response palette**: several natural ways to
 perform its central communicative move, with meaning and pragmatic nuance. Three

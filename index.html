@@ -40,7 +40,7 @@
         // unreadable key must not leave the page unthemed.
         function stored(axis) {
           try {
-            var value = localStorage.getItem('%APP_ID%.' + axis.key);
+            var value = localStorage.getItem(axis.storageKey);
             return axis.values.indexOf(value) >= 0 ? value : axis.fallback;
           } catch (error) {
             return axis.fallback;

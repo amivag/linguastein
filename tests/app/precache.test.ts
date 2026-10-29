@@ -172,3 +172,9 @@ describe('the packs at runtime', () => {
     expect(source).toContain("from './src/app/identity.ts'");
   });
 });
+
+// A scaffold renamed through identity.ts must not install with the previous subject's description.
+it('derives the install description from app identity', () => {
+  expect(source).toContain('description: APP.description');
+  expect(source).not.toContain("description: 'Mobile-first Spanish");
+});

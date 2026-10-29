@@ -97,7 +97,7 @@ export default defineConfig({
       manifest: {
         name: `${APP.name} — ${APP.tagline}`,
         short_name: APP.name,
-        description: 'Mobile-first Spanish practice: listen, repeat, reveal, review.',
+        description: APP.description,
         lang: 'en',
         start_url: BASE,
         scope: BASE,
@@ -248,6 +248,8 @@ export default defineConfig({
         branches: 73,
         functions: 73,
         lines: 80,
+        'src/appearance/**': { statements: 88, branches: 76, functions: 90, lines: 92 },
+        'src/engine/**': { statements: 88, branches: 76, functions: 90, lines: 92 },
         'src/domain/**': { statements: 88, branches: 76, functions: 90, lines: 92 },
         'src/languages/**': { statements: 96, branches: 96, functions: 95, lines: 97 },
       },

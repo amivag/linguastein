@@ -1,7 +1,8 @@
 /**
  * Persistence contracts (spec §23). Learner state is local-first: no account,
- * no backend. A future `SyncProvider` implements these same interfaces on top
- * of a remote store without the app noticing.
+ * no backend. A future sync service reconciles this local store over HTTP;
+ * SQL repositories live on the server, not behind individual UI store calls.
+ * See docs/server-foundation.md for the optional PHP/SQL direction.
  */
 
 import type { BatchDefinition } from '../domain/batches';

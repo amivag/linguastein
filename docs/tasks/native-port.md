@@ -153,7 +153,7 @@ under pressure**, and losing a learner's FSRS history to an eviction is worse
 than losing it to a reinstall because nobody chose it. The fix is a native
 storage provider behind the same interface — and it is the same seam cloud sync
 lands behind, so read [accounts-and-sync.md](accounts-and-sync.md) §3 before
-designing one. Doing export/import first (that task's Stage C) makes an eviction
+designing one. Doing export/import first (the existing transfer implementation) makes an eviction
 survivable without any native work at all, which is a good argument for
 sequencing it ahead of this task.
 

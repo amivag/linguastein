@@ -1,0 +1,15 @@
+/* App-owned palette entry point. Loaded before shared contrast overrides. */
+@import '../styles/themes/indigo-dark.css';
+@import '../styles/themes/indigo-light.css';
+@import '../styles/themes/teal-dark.css';
+@import '../styles/themes/teal-light.css';
+@import '../styles/themes/plum-dark.css';
+@import '../styles/themes/plum-light.css';
+@import '../styles/themes/sand-dark.css';
+@import '../styles/themes/sand-light.css';
+@import '../styles/themes/slate-dark.css';
+@import '../styles/themes/slate-light.css';
+@import '../styles/themes/rose-dark.css';
+@import '../styles/themes/rose-light.css';
+@import '../styles/themes/olive-dark.css';
+@import '../styles/themes/olive-light.css';

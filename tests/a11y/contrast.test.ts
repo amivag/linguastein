@@ -17,7 +17,7 @@ import { CONTRAST_LEVELS, DEFAULT_CONTRAST } from '../../src/styles/contrast';
 import { DEFAULT_INTENSITY, INTENSITIES } from '../../src/styles/intensity';
 import { prePaintAxes } from '../../src/styles/axes';
 import { KIND_HUE_COUNT } from '../../src/styles/kinds';
-import { PALETTES, THEME_PREFERENCES } from '../../src/styles/themes';
+import { DEFAULT_PALETTE, PALETTES, THEME_PREFERENCES } from '../../src/styles/themes';
 import { READING_SIZES } from '../../src/styles/reading-size';
 
 const THEME_DIR = resolve(process.cwd(), 'src/styles/themes');
@@ -351,6 +351,19 @@ describe('the appearance registry and the stylesheets agree', () => {
     expect(paletteFiles).toEqual([...expected].sort());
   });
 
+  it('loads each registered palette once and gives the app default bare mode selectors', () => {
+    const entry = readFileSync(resolve(process.cwd(), 'src/app/themes.css'), 'utf8');
+    const imports = [...entry.matchAll(/@import ['"]\.\.\/styles\/themes\/([^'"]+)['"]/g)].map(
+      (match) => match[1]!,
+    );
+    const expected = PALETTES.flatMap((palette) => MODES.map((mode) => `${palette}-${mode}.css`));
+    expect([...imports].sort()).toEqual([...expected].sort());
+    for (const mode of MODES) {
+      const css = readFileSync(resolve(THEME_DIR, `${DEFAULT_PALETTE}-${mode}.css`), 'utf8');
+      expect(css).toContain(`[data-theme='${mode}'],`);
+    }
+  });
+
   it('ships one file per contrast level per mode, except the default', () => {
     const expected = OVERLAID.flatMap((level) => MODES.map((mode) => `${level}-${mode}.css`));
     expect(levelFiles).toEqual([...expected].sort());
@@ -363,7 +376,11 @@ describe('the appearance registry and the stylesheets agree', () => {
      * every level silently stops applying, which looks exactly like a level
      * nobody ever authored.
      */
-    const css = readFileSync(GLOBAL_CSS, 'utf8');
+    const global = readFileSync(GLOBAL_CSS, 'utf8');
+    const entry = readFileSync(resolve(process.cwd(), 'src/app/themes.css'), 'utf8');
+    expect(global).toContain("@import '../app/themes.css'");
+    // Expand the app's palette entry at its actual position in the cascade.
+    const css = global.replace("@import '../app/themes.css';", entry);
 
     expect(paletteFiles.filter((file) => !css.includes(`themes/${file}`))).toEqual([]);
     expect(levelFiles.filter((file) => !css.includes(`contrast/${file}`))).toEqual([]);

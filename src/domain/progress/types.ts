@@ -8,14 +8,9 @@ import { packIdOf, type EntityId, type PackId } from '../content';
 import type { GradedMode } from '../exercises/modes';
 import type { ExerciseKind } from '../exercises/types';
 
-export const ITEM_STATUSES = ['new', 'learning', 'review', 'mastered'] as const;
-export type ItemStatus = (typeof ITEM_STATUSES)[number];
-
-export const REVIEW_GRADES = ['again', 'hard', 'good', 'easy'] as const;
-export type ReviewGrade = (typeof REVIEW_GRADES)[number];
-
-/** Epoch milliseconds. Stored as numbers so records survive JSON round-trips. */
-export type Timestamp = number;
+import type { MemoryState, ItemStatus, ReviewGrade, Timestamp } from '../../engine/memory';
+export { ITEM_STATUSES, REVIEW_GRADES, isDue } from '../../engine/memory';
+export type { ItemStatus, ReviewGrade, Timestamp } from '../../engine/memory';
 
 /**
  * What one thing the learner is getting better at looks like.
@@ -37,7 +32,7 @@ export type Timestamp = number;
  * an id the dataset owns and can never invalidate. Only the set of ids widened,
  * and it widened to one that already existed.
  */
-export interface SubjectProgress {
+export interface SubjectProgress extends MemoryState {
   /**
    * What this row is about: `core-es:item:000123`, `core-es:form:ser-pres-1s`,
    * `core-es:skill:numerals-y-joining`.
@@ -157,8 +152,4 @@ export function newProgress(subject: EntityId, now: Timestamp = 0): SubjectProgr
     streak: 0,
     updatedAt: now,
   };
-}
-
-export function isDue(progress: SubjectProgress, now: Timestamp): boolean {
-  return progress.dueAt !== undefined && progress.dueAt <= now;
 }

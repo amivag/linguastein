@@ -27,6 +27,9 @@ in the pack's own counts.
 
 ### Added
 
+- Portable page layout with host-owned header, navigation and notice slots;
+  Spanish navigation and speech stay in the app wrapper. A provider-free rhythm
+  fixture and dependency boundary test verify reuse.
 - Stable modal focus across rerenders, nested portals and empty dialogs, with
   background isolation, one keyboard owner and reliable focus restoration.
 - Atomic learner-data transactions for assessments, imports and resets, with

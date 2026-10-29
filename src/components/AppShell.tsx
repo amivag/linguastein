@@ -1,6 +1,7 @@
-import { useEffect, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { documentTitle } from '../app/identity';
+import { PageLayout } from '../layout/PageLayout';
 import { AppNav } from './AppNav';
 import { Breadcrumb, type Crumb } from './Breadcrumb';
 import { HomeLink } from './HomeLink';
@@ -54,13 +55,8 @@ interface AppShellProps {
 }
 
 /**
- * Single-column mobile layout with a compact header.
- *
- * Every screen gets exactly one `<h1>`, one `<main>` and a matching document
- * title, so both screen readers and automated agents can tell where they are.
- *
- * The header sticks: it carries the way back and the voice control, and both
- * are needed halfway down a long passage as much as at the top of it.
+ * Spanish app composition: course navigation, history, speech and updates.
+ * The shared PageLayout owns page structure and responsive spacing.
  */
 export function AppShell({
   title,
@@ -75,50 +71,33 @@ export function AppShell({
   const navigate = useNavigate();
   const back = onBack === 'history' ? () => void navigate(-1) : onBack;
 
-  useEffect(() => {
-    // Both, where there are both: a tab reading "Quick practice" says nothing
-    // about which of five open sessions it is.
-    document.title = documentTitle(subtitle ? `${title} · ${subtitle}` : title);
-  }, [title, subtitle]);
-
   return (
-    <div className={`${styles.shell} ${showNav ? styles.withNav : ''} ${wide ? styles.wide : ''}`}>
-      <a className={styles.skipLink} href="#main">
-        Skip to content
-      </a>
-      <header className={styles.header}>
-        {back && (
+    <PageLayout
+      title={title}
+      {...(subtitle ? { subtitle } : {})}
+      documentTitle={documentTitle(subtitle ? `${title} · ${subtitle}` : title)}
+      leading={
+        back && (
           <button type="button" className={styles.back} onClick={back} aria-label="Go back">
             <Icon name="back" size="lg" />
           </button>
-        )}
-        <div className={styles.heading}>
-          {/* Above the heading, so the chain reads down into the name of the
-              place it ends at — and so a screen reader meets "where is this"
-              before "what is it called", which is the order the two are useful
-              in. */}
-          {trail && <Breadcrumb items={trail} />}
-          <h1 className={styles.title}>{title}</h1>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-        </div>
-        {/* A screen without the tab bar still has to offer the way out of it.
-            Paired with the shell's own rule rather than passed in, so a screen
-            cannot hide the nav and forget. */}
-        {!showNav && <HomeLink />}
-        {/* Every screen, pinned: the app's voice is a running condition, not a
-            setup step, so what is speaking — or that nothing is — stays visible
-            and adjustable wherever you are. */}
-        <VoicePresence />
-        {action}
-      </header>
-      <main id="main" className={styles.main} tabIndex={-1}>
-        {/* Inside `main` so the skip link reaches it, and above the content so it
-            is read before whatever the screen is asking of you. Renders nothing
-            until the worker reports a new build. */}
-        <UpdateBanner />
-        {children}
-      </main>
-      {showNav && <AppNav />}
-    </div>
+        )
+      }
+      trail={trail && <Breadcrumb items={trail} />}
+      actions={
+        <>
+          {/* A screen without the tab bar still offers the course home. */}
+          {!showNav && <HomeLink />}
+          <VoicePresence />
+          {action}
+        </>
+      }
+      notice={<UpdateBanner />}
+      navigation={showNav && <AppNav />}
+      navigationLayout="bar-rail"
+      wide={wide}
+    >
+      {children}
+    </PageLayout>
   );
 }

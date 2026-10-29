@@ -107,7 +107,7 @@ describe('the motion scale', () => {
      * are the same on both sides of a navigation, so animating them would report
      * a change that did not happen.
      */
-    const css = withoutComments(read('components/AppShell.module.css'));
+    const css = withoutComments(read('layout/PageLayout.module.css'));
     const main = css.slice(css.indexOf('.main {'));
     expect(main.slice(0, main.indexOf('}'))).toMatch(/animation:\s*\w+\s+var\(--transition-/);
     expect(css).toMatch(/@keyframes\s+\w+/);

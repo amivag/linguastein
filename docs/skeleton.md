@@ -7,18 +7,25 @@ PHP/SQL and account boundaries.
 
 ## Reuse inventory
 
-| Keep the mechanism                                                 | Adapt or replace                                                               |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| `src/engine/`: memory, drill selection/material, seeded randomness | Subject evidence, generators, content model and grading                        |
-| `app/identity.ts`, build identity, error-boundary pattern          | App identity values, static icons/artwork and npm metadata                     |
-| `src/appearance/`, palette solver, tokens and surface recipes      | App theme catalog/CSS, grammar semantics and material-kind assignments         |
-| Button, Chip, Sheet, Icon and focus containment                    | AppShell/AppNav course/voice dependencies; use layout slots and an app wrapper |
-| Contrast, motion, hover and design-language checks                 | Screen accessibility tests and grammar examples in `/design`                   |
-| Strict TypeScript, lint boundaries and CI/local-gate parity        | Directory coverage entries and subject-specific dataset steps                  |
-| Async storage interfaces and transaction pattern                   | Spanish records, IndexedDB schema, exports and settings                        |
+| Keep the mechanism                                                 | Adapt or replace                                                       |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| `src/engine/`: memory, drill selection/material, seeded randomness | Subject evidence, generators, content model and grading                |
+| `app/identity.ts`, build identity, error-boundary pattern          | App identity values, static icons/artwork and npm metadata             |
+| `src/appearance/`, palette solver, tokens and surface recipes      | App theme catalog/CSS, grammar semantics and material-kind assignments |
+| `src/layout/`, Button, Chip, Sheet, Icon and focus containment     | AppShell/AppNav course/voice composition                               |
+| Contrast, motion, hover and design-language checks                 | Screen accessibility tests and grammar examples in `/design`           |
+| Strict TypeScript, lint boundaries and CI/local-gate parity        | Directory coverage entries and subject-specific dataset steps          |
+| Async storage interfaces and transaction pattern                   | Spanish records, IndexedDB schema, exports and settings                |
 
 `ThemeToggle` uses the app service provider. `UpdateBanner` needs the update
 service. Shared directory placement does not imply provider independence.
+
+Copy `src/layout/` with the design tokens for provider-independent `PageLayout`.
+Its slots accept header controls, breadcrumbs, notices and navigation. The host
+formats `documentTitle` and supplies routes/services. Navigation flows by default;
+`navigationLayout="bar-rail"` reserves `--nav-height` / `--rail-width` space for a
+fixed bar/rail. `AppShell` composes the Spanish controls over this layout; keep it
+with the app. `tests/fixtures/rhythm-layout.tsx` demonstrates a different host.
 `src/utils/random.ts` re-exports the engine, so retain the engine when copying it.
 
 ## Starting sequence
@@ -45,7 +52,7 @@ service. Shared directory placement does not imply provider independence.
 
 ## Known limits
 
-- The shell, storage and learning screens still contain Spanish/course concepts;
+- The app wrapper, storage and learning screens contain Spanish/course concepts;
   see the current findings in [current-state.md](current-state.md).
 - There is no browser end-to-end test suite, dead-code check or enforced bundle
   budget. Add them to a demonstrated need, using measured limits.

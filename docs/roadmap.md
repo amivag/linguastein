@@ -8,6 +8,7 @@ counts are in the manifests and the public [README](../README.md).
 ## In place
 
 - React/TypeScript/Vite PWA with IndexedDB and in-memory storage.
+- Provider-independent page layout; app wrapper supplies navigation and services.
 - Pure shared learning core for memory scheduling, drill material/selection and
   seeded randomness; Spanish exercises, composition and mastery remain specific.
 - Course-scoped routes and URL-described sessions, per-course settings, study
@@ -23,8 +24,8 @@ counts are in the manifests and the public [README](../README.md).
 
 ## Foundation priorities
 
-1. Reusable shell layout and explicit learning policies when the second app
-   needs them; preserve Spanish behavior.
+1. Explicit learning policies when a real second subject needs different
+   behavior; preserve Spanish behavior.
 2. Browser/device coverage, measured bundle limits and dead-code checks where
    they address actual risks. Keep the existing full gate and coverage floors.
 

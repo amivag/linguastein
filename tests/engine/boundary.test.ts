@@ -1,4 +1,4 @@
-/** A copyable engine must have no hidden imports back into its host app. */
+/** Copyable foundations must have no hidden imports back into their host app. */
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve, relative, isAbsolute } from 'node:path';
 import ts from 'typescript';
@@ -7,11 +7,11 @@ import { expect, it } from 'vitest';
 function sources(folder: string): string[] {
   return readdirSync(folder, { withFileTypes: true }).flatMap((entry) => {
     const path = join(folder, entry.name);
-    return entry.isDirectory() ? sources(path) : path.endsWith('.ts') ? [path] : [];
+    return entry.isDirectory() ? sources(path) : /\.tsx?$/.test(path) ? [path] : [];
   });
 }
 
-it.each(['src/engine', 'src/appearance'])(
+it.each(['src/engine', 'src/appearance', 'src/layout'])(
   'keeps every %s dependency inside its copyable directory',
   (directory) => {
     const root = resolve(directory);
@@ -29,6 +29,7 @@ it.each(['src/engine', 'src/appearance'])(
         ) {
           expect(ts.isStringLiteral(node.moduleSpecifier)).toBe(true);
           const name = (node.moduleSpecifier as ts.StringLiteral).text;
+          if (directory === 'src/layout' && name === 'react') return;
           expect(name.startsWith('.'), `${path}: ${name}`).toBe(true);
           const target = relative(root, resolve(dirname(path), name));
           expect(target.startsWith('..') || isAbsolute(target), `${path}: ${name}`).toBe(false);

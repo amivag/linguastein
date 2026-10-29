@@ -37,8 +37,9 @@ physical-input accuracy or motor-learning validity of the memory model.
   implementations demonstrate common requirements.
 - Storage schemas, transfers and settings are not generic libraries. Share
   transaction/retry guarantees before sharing records.
-- AppShell and navigation depend on courses and voice. Extract a neutral layout
-  with header/navigation slots and retain an app wrapper when needed.
+- `src/layout/PageLayout.tsx` is provider-independent page structure with slots.
+  AppShell supplies course navigation, history, speech and updates; keep that
+  wrapper with Spanish. A non-language fixture and dependency test guard the seam.
 - The standalone `src/appearance/` core accepts app-owned theme catalogs and CSS.
   Control primitives port; grammar demos, service-bound
   controls and semantic color assignments need adaptation.

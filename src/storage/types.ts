@@ -187,6 +187,7 @@ export interface ProgressStore {
 }
 
 export interface AttemptStore {
+  get(id: string): Promise<Attempt | undefined>;
   append(attempt: Attempt): Promise<void>;
   /** See {@link ProgressStore.putMany}. Idempotent: an attempt id is unique. */
   appendMany(attempts: readonly Attempt[]): Promise<void>;
@@ -261,14 +262,26 @@ export interface CourseStateStore {
   write(language: LanguageTag, patch: Partial<CourseState>): Promise<CourseStates>;
 }
 
-/** Everything the app persists, resolved once at the composition root. */
-export interface LearnerStorage {
+/** Transaction-scoped stores; no vendor objects or nested transactions escape. */
+export interface LearnerStores {
   readonly progress: ProgressStore;
   readonly attempts: AttemptStore;
   readonly sessions: SessionStore;
   readonly batches: BatchStore;
   readonly preferences: PreferencesStore;
   readonly courses: CourseStateStore;
+}
+
+/** Everything the app persists, resolved once at the composition root. */
+export interface LearnerStorage extends LearnerStores {
+  /**
+   * Serialize read/modify/write and commit all stores together, or roll back.
+   * Await only the supplied stores inside this callback: external I/O may let
+   * IndexedDB auto-close, and calling the outer store can deadlock a transaction.
+   * Scoped stores expire when the callback finishes. This is a local capability,
+   * not a transaction object to send across a future HTTP API.
+   */
+  transaction<T>(operation: (stores: LearnerStores) => Promise<T>): Promise<T>;
   /**
    * Wipes all learner data, preferences and batches included. Settings uses this
    * for a clean local reset; its narrower "reset progress" action clears the

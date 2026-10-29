@@ -69,6 +69,15 @@ with **no fill mode** — so a renderer that never composites shows the sheet wh
 it belongs instead of stranding it at the first keyframe. The design-language test
 asserts that no second copy of it appears.
 
+Modal keyboard ownership is shared per document. Only the top sheet receives
+Tab and Escape; background branches are inert and hidden from assistive
+technology. Nested portals keep their logical order, and rerenders preserve the
+learner's focus. Removed or disabled controls move focus to a surviving control;
+empty dialogs focus their container. Closing restores the opener, or the main
+landmark when that opener has disappeared. Existing background attributes are
+restored when the last sheet closes. Regression coverage lives in
+`tests/components/focus-trap.test.tsx`.
+
 ### 4. One display voice
 
 Spanish is set in `--font-display` and set large. The furniture — labels, counts,

@@ -18,6 +18,7 @@ import {
   LEVEL_SCOPE_ALL,
   packIdOf,
   type Course,
+  type EntityId,
   type ItemId,
   type LanguageTag,
   type LevelScope,
@@ -31,7 +32,7 @@ import {
   mergePreferences,
 } from './preferences';
 import { readCourseStates, readPreferences } from './schemas';
-import type { LearnerStorage, Preferences } from './types';
+import type { LearnerStores, LearnerStorage, Preferences } from './types';
 
 const DB_NAME = APP.id;
 const DB_VERSION = 5;
@@ -337,179 +338,179 @@ async function upgradeToV5(
   }
 }
 
-/**
- * Every row in one transaction, so a write of many is all or none.
- *
- * `tx.done` is awaited *after* the puts are queued rather than each put being
- * awaited in turn: `idb` resolves a request when the browser has it, and
- * awaiting one at a time lets the transaction auto-close between rows on some
- * engines — the failure this helper exists to make unrepeatable, since the
- * caller is an import writing a year of somebody's history.
- */
-async function putAll<K extends 'progress' | 'attempts' | 'sessions'>(
-  db: IDBPDatabase<AppDatabase>,
-  store: K,
-  rows: readonly AppDatabase[K]['value'][],
-): Promise<void> {
-  if (rows.length === 0) return;
-  const tx = db.transaction(store, 'readwrite');
-  await Promise.all([...rows.map((row) => tx.store.put(row)), tx.done]);
+type Store = StoreNames<AppDatabase>;
+type ReadTransaction = IDBPTransaction<AppDatabase, Store[], 'readonly' | 'readwrite'>;
+type WriteTransaction = IDBPTransaction<AppDatabase, Store[], 'readwrite'>;
+const STORES: Store[] = ['progress', 'attempts', 'sessions', 'batches', 'meta'];
+
+async function finish<T>(
+  tx: { readonly done: Promise<void>; abort(): void },
+  work: () => Promise<T>,
+): Promise<T> {
+  try {
+    const result = await work();
+    await tx.done;
+    return result;
+  } catch (error) {
+    try {
+      tx.abort();
+    } catch {
+      /* A failed request may already have aborted it. */
+    }
+    await tx.done.catch(() => {});
+    throw error;
+  }
 }
 
 export function createIndexedDbStorage(db: IDBPDatabase<AppDatabase>): LearnerStorage {
-  return {
-    progress: {
-      async get(itemId) {
-        return db.get('progress', itemId);
+  function stores(scope?: WriteTransaction): LearnerStores {
+    async function read<T>(names: Store[], work: (tx: ReadTransaction) => Promise<T>): Promise<T> {
+      if (scope) return work(scope);
+      const tx = db.transaction(names, 'readonly');
+      return finish(tx, () => work(tx));
+    }
+    async function write<T>(
+      names: Store[],
+      work: (tx: WriteTransaction) => Promise<T>,
+    ): Promise<T> {
+      if (scope) return work(scope);
+      const tx = db.transaction(names, 'readwrite');
+      return finish(tx, () => work(tx));
+    }
+    return {
+      progress: {
+        get: (subject) => read(['progress'], (tx) => tx.objectStore('progress').get(subject)),
+        getMany: (subjects) =>
+          read(['progress'], async (tx) => {
+            const rows = await Promise.all(
+              subjects.map(
+                async (subject) =>
+                  [subject, await tx.objectStore('progress').get(subject)] as const,
+              ),
+            );
+            return new Map(
+              rows.filter(
+                (row): row is readonly [EntityId, SubjectProgress] => row[1] !== undefined,
+              ),
+            );
+          }),
+        all: () => read(['progress'], (tx) => tx.objectStore('progress').getAll()),
+        count: () => read(['progress'], (tx) => tx.objectStore('progress').count()),
+        put: (row) =>
+          write(['progress'], async (tx) => {
+            await tx.objectStore('progress').put(row);
+          }),
+        putMany: (rows) =>
+          write(['progress'], async (tx) => {
+            await Promise.all(rows.map((row) => tx.objectStore('progress').put(row)));
+          }),
+        clear: () => write(['progress'], (tx) => tx.objectStore('progress').clear()),
       },
-      async getMany(itemIds) {
-        const entries = await Promise.all(
-          itemIds.map(async (id) => [id, await db.get('progress', id)] as const),
-        );
-        return new Map(
-          entries.filter(
-            (entry): entry is readonly [ItemId, SubjectProgress] => entry[1] !== undefined,
+      attempts: {
+        get: (id) => read(['attempts'], (tx) => tx.objectStore('attempts').get(id)),
+        append: (row) =>
+          write(['attempts'], async (tx) => {
+            await tx.objectStore('attempts').put(row);
+          }),
+        appendMany: (rows) =>
+          write(['attempts'], async (tx) => {
+            await Promise.all(rows.map((row) => tx.objectStore('attempts').put(row)));
+          }),
+        count: () => read(['attempts'], (tx) => tx.objectStore('attempts').count()),
+        recent: (limit) =>
+          read(['attempts'], async (tx) => {
+            const rows: Attempt[] = [];
+            let cursor = await tx.objectStore('attempts').index('by-time').openCursor(null, 'prev');
+            while (cursor && rows.length < limit) {
+              rows.push(cursor.value);
+              cursor = await cursor.continue();
+            }
+            return rows;
+          }),
+        forSubject: (subject, limit = 20) =>
+          read(['attempts'], async (tx) => {
+            const rows = await tx.objectStore('attempts').index('by-subject').getAll(subject);
+            return rows.sort((a, b) => b.at - a.at).slice(0, limit);
+          }),
+        all: () => read(['attempts'], (tx) => tx.objectStore('attempts').index('by-time').getAll()),
+        clear: () => write(['attempts'], (tx) => tx.objectStore('attempts').clear()),
+      },
+      sessions: {
+        put: (row) =>
+          write(['sessions'], async (tx) => {
+            await tx.objectStore('sessions').put(row);
+          }),
+        putMany: (rows) =>
+          write(['sessions'], async (tx) => {
+            await Promise.all(rows.map((row) => tx.objectStore('sessions').put(row)));
+          }),
+        all: () => read(['sessions'], (tx) => tx.objectStore('sessions').index('by-time').getAll()),
+        count: () => read(['sessions'], (tx) => tx.objectStore('sessions').count()),
+        recent: (limit, language) =>
+          read(['sessions'], async (tx) => {
+            const rows: SessionRecord[] = [];
+            let cursor = await tx.objectStore('sessions').index('by-time').openCursor(null, 'prev');
+            while (cursor && rows.length < limit) {
+              if (!language || cursor.value.course.language === language) rows.push(cursor.value);
+              cursor = await cursor.continue();
+            }
+            return rows;
+          }),
+        clear: () => write(['sessions'], (tx) => tx.objectStore('sessions').clear()),
+      },
+      batches: {
+        all: () => read(['batches'], (tx) => tx.objectStore('batches').getAll()),
+        put: (row) =>
+          write(['batches'], async (tx) => {
+            await tx.objectStore('batches').put(row);
+          }),
+        remove: (id) => write(['batches'], (tx) => tx.objectStore('batches').delete(id)),
+        clear: () => write(['batches'], (tx) => tx.objectStore('batches').clear()),
+      },
+      preferences: {
+        read: () =>
+          read(['meta'], async (tx) =>
+            readPreferences(await tx.objectStore('meta').get(PREFERENCES_KEY)),
           ),
-        );
+        write: (patch) =>
+          write(['meta'], async (tx) => {
+            const next = mergePreferences(
+              readPreferences(await tx.objectStore('meta').get(PREFERENCES_KEY)),
+              patch,
+            );
+            await tx.objectStore('meta').put(next, PREFERENCES_KEY);
+            return next;
+          }),
       },
-      async all() {
-        return db.getAll('progress');
+      courses: {
+        read: () =>
+          read(['meta'], async (tx) =>
+            readCourseStates(await tx.objectStore('meta').get(COURSES_KEY)),
+          ),
+        write: (language, patch) =>
+          write(['meta'], async (tx) => {
+            const current = readCourseStates(await tx.objectStore('meta').get(COURSES_KEY));
+            const next = {
+              ...current,
+              [language]: mergeCourseState(courseStateOf(current, language), patch),
+            };
+            await tx.objectStore('meta').put(next, COURSES_KEY);
+            return next;
+          }),
       },
-      async count() {
-        return db.count('progress');
-      },
-      async put(progress) {
-        await db.put('progress', progress);
-      },
-      async putMany(rows) {
-        await putAll(db, 'progress', rows);
-      },
-      async clear() {
-        await db.clear('progress');
-      },
-    },
-    attempts: {
-      async append(attempt) {
-        await db.put('attempts', attempt);
-      },
-      async appendMany(attempts) {
-        await putAll(db, 'attempts', attempts);
-      },
-      async count() {
-        return db.count('attempts');
-      },
-      async recent(limit) {
-        const all = await db.getAllFromIndex('attempts', 'by-time');
-        return all.reverse().slice(0, limit);
-      },
-      async forSubject(subject, limit = 20) {
-        const all = await db.getAllFromIndex('attempts', 'by-subject', subject);
-        return all.sort((a, b) => b.at - a.at).slice(0, limit);
-      },
-      // Read through the time index, so "oldest first" is the database's order
-      // rather than a sort over everything the learner has ever answered.
-      async all() {
-        return db.getAllFromIndex('attempts', 'by-time');
-      },
-      async clear() {
-        await db.clear('attempts');
-      },
-    },
-    sessions: {
-      async put(record) {
-        await db.put('sessions', record);
-      },
-      async putMany(records) {
-        await putAll(db, 'sessions', records);
-      },
-      async all() {
-        return db.getAllFromIndex('sessions', 'by-time');
-      },
-      async count() {
-        return db.count('sessions');
-      },
-      async recent(limit, language) {
-        // A cursor walked back from the newest, rather than every row read and
-        // reversed: narrowing by language has to happen *before* the limit or a
-        // page of five comes back short, and reading the whole table to hand
-        // back five rows is a cost that grows with every session ever practised.
-        const records: SessionRecord[] = [];
-        let cursor = await db
-          .transaction('sessions')
-          .store.index('by-time')
-          .openCursor(null, 'prev');
-
-        while (cursor && records.length < limit) {
-          if (!language || cursor.value.course.language === language) records.push(cursor.value);
-          cursor = await cursor.continue();
-        }
-
-        return records;
-      },
-      async clear() {
-        await db.clear('sessions');
-      },
-    },
-    batches: {
-      async all() {
-        return db.getAll('batches');
-      },
-      async put(batch) {
-        await db.put('batches', batch);
-      },
-      async remove(id) {
-        await db.delete('batches', id);
-      },
-      async clear() {
-        await db.clear('batches');
-      },
-    },
-    preferences: {
-      async read() {
-        // Repaired rather than trusted: what comes back out of `meta` is a record
-        // an older or newer build wrote, and Stage C will make it a file a person
-        // can edit. See `schemas.ts`.
-        return readPreferences(await db.get('meta', PREFERENCES_KEY));
-      },
-      async write(patch) {
-        const next = mergePreferences(
-          readPreferences(await db.get('meta', PREFERENCES_KEY)),
-          patch,
-        );
-        await db.put('meta', next, PREFERENCES_KEY);
-        return next;
-      },
-    },
-
-    courses: {
-      async read() {
-        return readCourseStates(await db.get('meta', COURSES_KEY));
-      },
-      async write(language, patch) {
-        const current = readCourseStates(await db.get('meta', COURSES_KEY));
-        /*
-         * Read, merge and put the whole record, which is why `App.tsx` chains
-         * these writes exactly as it chains preference writes: two concurrent
-         * calls would both read this same starting point and the last put would
-         * silently discard the other. Picking three categories in a row is what
-         * broke it the first time.
-         */
-        const next = {
-          ...current,
-          [language]: mergeCourseState(courseStateOf(current, language), patch),
-        };
-        await db.put('meta', next, COURSES_KEY);
-        return next;
-      },
+    };
+  }
+  return {
+    ...stores(),
+    transaction(operation) {
+      const tx = db.transaction(STORES, 'readwrite');
+      return finish(tx, () => operation(stores(tx)));
     },
     async clearAll() {
-      await Promise.all([
-        db.clear('progress'),
-        db.clear('attempts'),
-        db.clear('sessions'),
-        db.clear('batches'),
-        db.clear('meta'),
-      ]);
+      const tx = db.transaction(STORES, 'readwrite');
+      await finish(tx, async () => {
+        await Promise.all(STORES.map((name) => tx.objectStore(name).clear()));
+      });
     },
   };
 }

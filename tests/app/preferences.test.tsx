@@ -126,9 +126,9 @@ describe('changing several preferences in a row', () => {
     // Applied locally, so the next tap computes from this value rather than
     // from the one it replaced — and the tile does not sit unmarked for the
     // half-second the write takes.
-    expect(screen.getByRole('button', { name: /Change what to practise/ })).toHaveAccessibleName(
-      /Food and drink/,
-    );
+    expect(
+      screen.getByRole('button', { name: /Change what to practise/, hidden: true }),
+    ).toHaveAccessibleName(/Food and drink/);
   });
 
   it('keeps changes to different settings from clobbering each other', async () => {

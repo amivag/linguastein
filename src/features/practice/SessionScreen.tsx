@@ -1,3 +1,4 @@
+import { PersistenceNotice } from '../../components/PersistenceNotice';
 import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useCourse, usePronunciationLocale } from '../../app/course';
@@ -161,6 +162,7 @@ export function SessionScreen() {
       onBack={() => void navigate(back)}
       showNav={false}
     >
+      <PersistenceNotice status={runner.saveStatus} onRetry={runner.retrySave} />
       {runner.status === 'loading' && <p className={styles.hint}>Preparing…</p>}
 
       {runner.status === 'empty' && (
@@ -218,7 +220,11 @@ export function SessionScreen() {
           </p>
           <p className={styles.hint}>
             {runner.tracked
-              ? 'Session complete. Progress saved on this device.'
+              ? runner.saveStatus === 'saved'
+                ? 'Session complete. Progress saved on this device.'
+                : runner.saveStatus === 'saving'
+                  ? 'Session complete. Saving progress…'
+                  : 'Session complete. Some progress has not been saved.'
               : `${runner.total === 1 ? 'Card' : 'Cards'} reviewed. Studying is not scored, so nothing was recorded.`}
           </p>
 

@@ -1,3 +1,4 @@
+import { saveAttempts } from '../../storage';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { MISSIONS } from '../../app/missions';
@@ -252,7 +253,8 @@ export function MissionScreen() {
       const sessionId =
         missionUseSession.current ?? missionUseSessionId(mission.id, context, now.toString(36));
       missionUseSession.current = sessionId;
-      const current = await services.storage.progress.get(item.id);
+      const known = await services.storage.progress.all();
+      const current = known.find((row) => row.subject === item.id);
       const recorded = recordAttempt(
         current,
         {
@@ -266,12 +268,12 @@ export function MissionScreen() {
         now,
       );
 
-      await Promise.all([
-        services.storage.progress.put(recorded.progress),
-        services.storage.attempts.append(recorded.attempt),
-      ]);
-      const progress = await services.storage.progress.all();
-      return inferMastery(services.repository, progress).skills;
+      const updated = await saveAttempts(services.storage, [recorded.attempt]);
+      // No fallible storage work after commit: a failed refresh must not invite
+      // rating the same turn again when its evidence was already saved.
+      const progress = new Map(known.map((row) => [row.subject, row]));
+      for (const [subject, row] of updated) progress.set(subject, row);
+      return inferMastery(services.repository, [...progress.values()]).skills;
     },
     [mission, services, transferStep],
   );

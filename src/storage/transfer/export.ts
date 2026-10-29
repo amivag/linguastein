@@ -23,28 +23,30 @@ export async function buildExport(
   storage: LearnerStorage,
   { packs, now, app }: ExportOptions,
 ): Promise<LearnerExport> {
-  const [preferences, courses, progress, attempts, sessions, batches] = await Promise.all([
-    storage.preferences.read(),
-    storage.courses.read(),
-    storage.progress.all(),
-    storage.attempts.all(),
-    storage.sessions.all(),
-    storage.batches.all(),
-  ]);
+  return storage.transaction(async (stores) => {
+    const [preferences, courses, progress, attempts, sessions, batches] = await Promise.all([
+      stores.preferences.read(),
+      stores.courses.read(),
+      stores.progress.all(),
+      stores.attempts.all(),
+      stores.sessions.all(),
+      stores.batches.all(),
+    ]);
 
-  return {
-    app,
-    schema: EXPORT_SCHEMA,
-    exportedAt: now,
-    scheduler: fsrsScheduler.id,
-    packs,
-    preferences,
-    courses,
-    progress,
-    attempts,
-    sessions,
-    batches,
-  };
+    return {
+      app,
+      schema: EXPORT_SCHEMA,
+      exportedAt: now,
+      scheduler: fsrsScheduler.id,
+      packs,
+      preferences,
+      courses,
+      progress,
+      attempts,
+      sessions,
+      batches,
+    };
+  });
 }
 
 /**

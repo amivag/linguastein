@@ -27,11 +27,15 @@ export function AboutSettings() {
   const navigate = useNavigate();
   const [resetTarget, setResetTarget] = useState<ResetTarget | null>(null);
   const [resetResult, setResetResult] = useState<ResetResult>(null);
+  const [resetError, setResetError] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const resetProgress = async () => {
-    await services.storage.progress.clear();
-    await services.storage.attempts.clear();
-    await services.storage.sessions.clear();
+    await services.storage.transaction(async (stores) => {
+      await stores.progress.clear();
+      await stores.attempts.clear();
+      await stores.sessions.clear();
+    });
     // Preferences are deliberately kept: nobody asking to clear their history
     // is also asking to have their voice and theme picked again. Batches are
     // kept for the same reason and a stronger one — a batch is material the
@@ -83,6 +87,20 @@ export function AboutSettings() {
     );
   };
 
+  const confirmReset = async () => {
+    if (resetting) return;
+    setResetting(true);
+    setResetError(false);
+    try {
+      if (resetTarget === 'all') await resetAllLocalData();
+      else await resetProgress();
+    } catch {
+      setResetError(true);
+    } finally {
+      setResetting(false);
+    }
+  };
+
   return (
     <>
       <div className={styles.field}>
@@ -119,7 +137,13 @@ export function AboutSettings() {
           Clear attempts, sessions and review schedules while keeping your course and appearance
           settings.
         </p>
-        <Button block onClick={() => setResetTarget('progress')}>
+        <Button
+          block
+          onClick={() => {
+            setResetError(false);
+            setResetTarget('progress');
+          }}
+        >
           Reset progress
         </Button>
       </div>
@@ -133,7 +157,14 @@ export function AboutSettings() {
           Restore this device to the app defaults, including progress, course, theme, colours,
           contrast, text size, voice and practice preferences.
         </p>
-        <Button variant="danger" block onClick={() => setResetTarget('all')}>
+        <Button
+          variant="danger"
+          block
+          onClick={() => {
+            setResetError(false);
+            setResetTarget('all');
+          }}
+        >
           Reset all local data
         </Button>
       </div>
@@ -159,14 +190,10 @@ export function AboutSettings() {
               ? 'This erases every attempt, session and review schedule stored on this device. Your settings stay unchanged. It cannot be undone.'
               : 'This erases all learning history and restores every app setting on this device to its default. It cannot be undone.'}
           </p>
+          {resetError && <p role="alert">Could not finish clearing data. Please try again.</p>}
           <div className={styles.confirm}>
             <Button onClick={() => setResetTarget(null)}>Cancel</Button>
-            <Button
-              variant="danger"
-              onClick={() =>
-                void (resetTarget === 'progress' ? resetProgress() : resetAllLocalData())
-              }
-            >
+            <Button variant="danger" disabled={resetting} onClick={() => void confirmReset()}>
               {resetTarget === 'progress' ? 'Erase learning history' : 'Erase all local data'}
             </Button>
           </div>

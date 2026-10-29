@@ -9,6 +9,7 @@ Start with [AGENTS.md](../AGENTS.md). Read only the topic needed for the change.
 | Screens, routes, URL codecs                     | [screens-and-urls.md](screens-and-urls.md)          |
 | Learning behavior and release conventions       | [working-conventions.md](working-conventions.md)    |
 | Authoring content                               | [content-authoring.md](content-authoring.md)        |
+| Local transactions, retries and write feedback  | [storage.md](storage.md)                            |
 | Content record formats                          | [dataset-format.md](dataset-format.md)              |
 | UI design and live examples                     | [design-language.md](design-language.md), `/design` |
 | Palettes and appearance axes                    | [theming.md](theming.md)                            |

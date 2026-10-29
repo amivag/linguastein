@@ -94,6 +94,9 @@ describe('agent surface', () => {
     // lines are held to below.
     await user.click(screen.getByRole('button', { name: /^Filters:/ }));
     expect(screen.getByRole('button', { name: 'Starting with C, 2 items' })).toBeInTheDocument();
+    // The result behind a modal is intentionally absent from the accessible tree.
+    expect(screen.queryByRole('button', { name: 'Listen to “cerveza”' })).toBeNull();
+    await user.keyboard('{Escape}');
     expect(screen.getByRole('button', { name: 'Listen to “cerveza”' })).toBeInTheDocument();
   });
 

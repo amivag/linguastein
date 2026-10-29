@@ -151,6 +151,7 @@ describe('a round trip', () => {
     const second = await applyExport(target, envelope, importing);
 
     expect(second.attemptsAdded).toBe(0);
+    expect(second.itemsRebuilt).toBe(0);
     expect(second.attemptsAlreadyHeld).toBe(10);
     expect(await target.attempts.count()).toBe(10);
     expect(sorted(await buildExport(target, options))).toEqual(sorted(envelope));

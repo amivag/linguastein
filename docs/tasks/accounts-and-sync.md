@@ -15,10 +15,10 @@ available and local progress does not await a network request.
 
 Local per-course settings and versioned file transfers already exist. Consult
 `src/storage/transfer`, `src/storage/types.ts` and their tests for current shapes.
-`replaySubject` rebuilds progress from attempts. Atomic persistence, interrupted
-import recovery and concurrent settings writes still need the fixes recorded in
-[current-state.md](../current-state.md); a file round trip alone does not prove
-network retry safety.
+`replaySubject` rebuilds progress from attempts. Local assessment/import/reset
+writes are transactional, exports use consistent snapshots, and settings writes
+are serialized inside storage. [Storage](../storage.md) owns guarantees and tests;
+network retry, authentication and durable outbox work still need their own design.
 
 ## 3. Local storage and sync
 

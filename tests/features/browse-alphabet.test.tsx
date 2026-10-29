@@ -65,6 +65,7 @@ describe('the letter index', () => {
     await user.click(chip);
 
     expect(chip).toHaveAttribute('aria-pressed', 'true');
+    await user.keyboard('{Escape}');
     expect(await screen.findByRole('status')).toHaveTextContent('2 items');
     expect(
       screen.getByRole('button', { name: 'Filters: Starts with C, 1 active' }),
@@ -79,6 +80,7 @@ describe('the letter index', () => {
     const index = await openLetters(user);
     await user.click(index.getByRole('button', { name: /Starting with T/ }));
 
+    await user.keyboard('{Escape}');
     // `¿Tienes tiempo?` is a T, which is where a learner reading it would look.
     expect(shown()).toContain('¿Tienes tiempo?');
     expect(await screen.findByRole('status')).toHaveTextContent('3 items');
@@ -94,6 +96,7 @@ describe('the letter index', () => {
     await user.click(chip);
 
     expect(chip).toHaveAttribute('aria-pressed', 'false');
+    await user.keyboard('{Escape}');
     expect(await screen.findByRole('status')).toHaveTextContent('7 items');
   });
 
@@ -107,6 +110,7 @@ describe('the letter index', () => {
     await user.click(any);
 
     expect(any).toHaveAttribute('aria-pressed', 'true');
+    await user.keyboard('{Escape}');
     expect(await screen.findByRole('status')).toHaveTextContent('7 items');
   });
 });
@@ -169,6 +173,7 @@ describe('sorting', () => {
     await user.click(await screen.findByRole('button', { name: /^Filters:/ }));
     const filters = within(screen.getByRole('dialog', { name: 'Filter results' }));
     await user.selectOptions(filters.getByLabelText('Type'), 'word');
+    await user.keyboard('{Escape}');
     await user.selectOptions(screen.getByLabelText('Sort'), 'az');
 
     expect(shown()).toEqual(['agua', 'café', 'cerveza', 'pan']);

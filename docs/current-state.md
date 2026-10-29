@@ -23,18 +23,21 @@
   Keep TypeScript compatible with the installed ESLint parser. Query installed
   versions and audits when needed; do not cache volatile results here.
 
+## Implemented foundation guarantees
+
+Atomic assessment/import/reset operations, snapshot exports and transactional
+settings updates protect local state. Retry repairs older interrupted imports;
+practice reports unsaved writes. [Storage](storage.md) owns these contracts.
+
+Modal focus survives rerenders, isolates the top dialog, and restores its opener.
+Nested portals share keyboard ownership; background branches are inert.
+[Design language](design-language.md#3-overlay-never-push) owns the UI contract.
+
 ## Verified unresolved foundation findings
 
-1. Attempts/progress use separate writes. An interrupted import can retain an
-   attempt while leaving progress stale, and retry may rebuild nothing.
-   Start with atomic persistence and partial-failure recovery tests.
-2. Concurrent IndexedDB settings writes can lose a patch. Make read/merge/write
-   transactional inside storage; a UI queue does not cover other tabs/callers.
-3. The focus trap depends on callback identity. Stabilize its lifecycle and test
-   ordinary rerenders, nested dialogs and empty dialogs.
-4. Shared scheduling still embeds learning-policy thresholds; make policies
+1. Shared scheduling still embeds learning-policy thresholds; make policies
    explicit when a real second subject needs different behavior.
-5. `AppShell` still depends on course navigation and speech UI. Use a neutral
+2. `AppShell` still depends on course navigation and speech UI. Use a neutral
    layout plus an app wrapper when building the second app.
 
 These are findings, not completed fixes. Keep the list current as fixes land.

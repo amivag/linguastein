@@ -96,8 +96,9 @@ describe('the practising summary', () => {
     expect(screen.queryByRole('group', { name: 'Lead with' })).not.toBeInTheDocument();
     expect(panel()).toHaveAttribute('aria-expanded', 'false');
 
-    await user.click(panel());
-    expect(panel()).toHaveAttribute('aria-expanded', 'true');
+    const trigger = panel();
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByRole('group', { name: 'Lead with' })).toBeInTheDocument();
   });
 });

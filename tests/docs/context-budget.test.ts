@@ -14,6 +14,7 @@ const budgets = [
   ['docs/skeleton.md', 700],
   ['docs/framework.md', 750],
   ['docs/theming.md', 1400],
+  ['docs/storage.md', 700],
   ['docs/server-foundation.md', 1200],
   ['docs/roadmap.md', 800],
   ['docs/tasks/accounts-and-sync.md', 450],

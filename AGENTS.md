@@ -34,6 +34,7 @@ worktrees; use another agent only when the session instructions authorize it.
 | Content record shapes                           | [dataset-format.md](docs/dataset-format.md)                      |
 | Styling                                         | [design-language.md](docs/design-language.md) and live `/design` |
 | Appearance axes or palettes                     | [theming.md](docs/theming.md)                                    |
+| Storage, atomic writes and retry behavior       | [storage.md](docs/storage.md)                                    |
 | Learning behavior, releases, coding conventions | [working-conventions.md](docs/working-conventions.md)            |
 | Dependency or layer changes; scaffolding        | [skeleton.md](docs/skeleton.md)                                  |
 | Shared engine or another learning subject       | [framework.md](docs/framework.md)                                |

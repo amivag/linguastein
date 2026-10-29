@@ -51,6 +51,8 @@ function stubRunner(exercise: Exercise, answered: boolean): SessionRunner {
 
   return {
     status: 'active',
+    saveStatus: 'saved',
+    retrySave: () => {},
     startedAt: 0,
     durationMs: null,
     exercise,

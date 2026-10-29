@@ -131,17 +131,8 @@ export function App() {
     };
   }, [services]);
 
-  /**
-   * A preference change, applied at once and persisted in order.
-   *
-   * Both halves matter, and neither was there. Applying it locally first means a
-   * second change made in the same breath — picking three categories, toggling
-   * two switches — computes from the value the first one set rather than from the
-   * one it replaced. Chaining the writes means they cannot interleave inside the
-   * store: `write` reads the stored record, merges and puts it back, so three
-   * concurrent calls all read the same starting point and the last put wins,
-   * silently discarding the other two.
-   */
+  // Optimistic UI plus ordered acknowledgements. Storage transactions protect
+  // all callers; this queue orders this instance's returned settings snapshots.
   const pending = useRef<Promise<unknown>>(Promise.resolve());
   const updatePreferences = useCallback(
     (patch: Partial<Preferences>) => {
@@ -158,20 +149,8 @@ export function App() {
     [services],
   );
 
-  /**
-   * A course's own choices, changed the same way and chained on the same queue.
-   *
-   * The same queue rather than a second one, and that is the point rather than
-   * an economy. `CourseBar` writes both in one gesture — the language it is
-   * switching to is a preference, the level and the accent it carries are the
-   * course's — and two queues would let the second land before the first, so a
-   * reload could reopen a language whose level had not been written yet.
-   *
-   * `meta:courses` is one record holding every course, so this store has exactly
-   * the read-merge-put shape that made chaining necessary for preferences:
-   * picking three categories in a row is what broke it the first time, and
-   * `tests/app/preferences.test.tsx` is the test that caught it.
-   */
+  // Keep course and preference acknowledgements on the same UI queue. Storage
+  // itself now guarantees read/merge/write atomicity across tabs and callers.
   const updateCourse = useCallback(
     (language: string, patch: Partial<CourseState>) => {
       if (!services) return;

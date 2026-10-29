@@ -62,12 +62,12 @@ describe('selecting a phrase', () => {
 
     await screen.findByRole('dialog', { name: 'About Tengo que' });
     for (const word of ['Tengo', 'que']) {
-      expect(screen.getByRole('button', { name: `About “${word}”` })).toHaveAttribute(
+      expect(screen.getByRole('button', { name: `About “${word}”`, hidden: true })).toHaveAttribute(
         'aria-expanded',
         'true',
       );
     }
-    expect(screen.getByRole('button', { name: 'About “trabajar”' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'About “trabajar”', hidden: true })).toHaveAttribute(
       'aria-expanded',
       'false',
     );

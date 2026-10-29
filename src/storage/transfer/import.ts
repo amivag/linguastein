@@ -31,7 +31,9 @@
 import type { BatchDefinition } from '../../domain/batches';
 import { replaySubject, type Attempt, type SubjectProgress } from '../../domain/progress';
 import type { EntityId } from '../../domain/content';
-import type { LearnerStorage } from '../types';
+import type { LearnerStores, LearnerStorage } from '../types';
+import { sameAttempt } from '../save-attempts';
+import { GRADED_MODES } from '../../domain/exercises/modes';
 import { readCourseStates, readPreferences } from '../schemas';
 import { EXPORT_SCHEMA, type LearnerExport } from './format';
 import {
@@ -146,7 +148,7 @@ export interface ImportReport {
    * control updates the live app rather than reloading it.
    */
   readonly batchesAdded: readonly BatchDefinition[];
-  /** Subjects whose progress row was recomputed from the merged log. */
+  /** Subjects whose stored projection actually changed after replay. */
   readonly itemsRebuilt: number;
   /**
    * Rows referencing a pack this device does not have installed.
@@ -184,14 +186,47 @@ export async function applyExport(
   envelope: LearnerExport,
   { installedPacks, settings }: ImportOptions,
 ): Promise<ImportReport> {
+  return storage.transaction((stores) =>
+    mergeExport(stores, envelope, { installedPacks, settings }),
+  );
+}
+
+function sameProgress(a: SubjectProgress | undefined, b: SubjectProgress): boolean {
+  if (!a) return false;
+  const keys = Object.keys({ ...a, ...b }) as (keyof SubjectProgress)[];
+  if (keys.some((key) => key !== 'evidence' && a[key] !== b[key])) return false;
+  if ((a.evidence === undefined) !== (b.evidence === undefined)) return false;
+  return GRADED_MODES.every((mode) => {
+    const left = a.evidence?.[mode];
+    const right = b.evidence?.[mode];
+    return left === undefined || right === undefined
+      ? left === right
+      : left.attempts === right.attempts &&
+          left.correct === right.correct &&
+          left.lastAt === right.lastAt;
+  });
+}
+
+async function mergeExport(
+  storage: LearnerStores,
+  envelope: LearnerExport,
+  { installedPacks, settings }: ImportOptions,
+): Promise<ImportReport> {
   const [localAttempts, localSessions, localBatches] = await Promise.all([
     storage.attempts.all(),
     storage.sessions.all(),
     storage.batches.all(),
   ]);
 
-  const heldAttempts = new Set(localAttempts.map((attempt) => attempt.id));
-  const newAttempts = envelope.attempts.filter((attempt) => !heldAttempts.has(attempt.id));
+  const heldAttempts = new Map(localAttempts.map((attempt) => [attempt.id, attempt]));
+  const incoming = new Map<string, Attempt>();
+  for (const attempt of envelope.attempts) {
+    const existing = incoming.get(attempt.id) ?? heldAttempts.get(attempt.id);
+    if (existing && !sameAttempt(existing, attempt))
+      throw new Error('Attempt id already belongs to different evidence');
+    incoming.set(attempt.id, attempt);
+  }
+  const newAttempts = [...incoming.values()].filter((attempt) => !heldAttempts.has(attempt.id));
 
   const heldSessions = new Set(localSessions.map((record) => record.id));
   const newSessions = envelope.sessions.filter((record) => !heldSessions.has(record.id));
@@ -199,14 +234,12 @@ export async function applyExport(
   const heldBatches = new Set(localBatches.map((batch) => batch.id));
   const newBatches = envelope.batches.filter((batch) => !heldBatches.has(batch.id));
 
-  /*
-   * Only the subjects the file actually touched, which is what keeps this
-   * bounded: a learner importing one phone's week replays that week's subjects,
-   * not everything they have ever practised. The whole merged log is what each
-   * of those is folded from, though — a file can carry attempts *older* than the
-   * local ones, and a fold over the tail alone would be a different row.
-   */
-  const touched = new Set<EntityId>(newAttempts.map((attempt) => attempt.subject));
+  // Include already-held evidence: a retry must repair a projection left stale
+  // by an older non-atomic importer, even when no attempt is new this time.
+  const touched = new Set<EntityId>([
+    ...envelope.attempts.map((attempt) => attempt.subject),
+    ...envelope.progress.map((row) => row.subject),
+  ]);
   const mergedBySubject = new Map<EntityId, Attempt[]>();
   for (const attempt of [...localAttempts, ...newAttempts]) {
     if (!touched.has(attempt.subject)) continue;
@@ -215,10 +248,12 @@ export async function applyExport(
     else mergedBySubject.set(attempt.subject, [attempt]);
   }
 
+  const known = await storage.progress.all();
+  const held = new Map(known.map((row) => [row.subject, row]));
   const rebuilt: SubjectProgress[] = [];
   for (const [subject, log] of mergedBySubject) {
     const row = replaySubject(subject, log);
-    if (row) rebuilt.push(row);
+    if (row && !sameProgress(held.get(subject), row)) rebuilt.push(row);
   }
 
   /*
@@ -229,10 +264,9 @@ export async function applyExport(
    * row folded from a real log is never overwritten by one that cannot be
    * checked.
    */
-  const known = await storage.progress.all();
   const heldSubjects = new Set(known.map((row) => row.subject));
   const unbacked = envelope.progress.filter(
-    (row) => !touched.has(row.subject) && !heldSubjects.has(row.subject),
+    (row) => !mergedBySubject.has(row.subject) && !heldSubjects.has(row.subject),
   );
 
   await Promise.all([
@@ -256,7 +290,7 @@ export async function applyExport(
 
   return {
     attemptsAdded: newAttempts.length,
-    attemptsAlreadyHeld: envelope.attempts.length - newAttempts.length,
+    attemptsAlreadyHeld: incoming.size - newAttempts.length,
     sessionsAdded: newSessions.length,
     batchesAdded: newBatches,
     itemsRebuilt: rebuilt.length,

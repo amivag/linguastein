@@ -83,6 +83,8 @@ function buildCard() {
 function runner(exercise: Exercise, submitted: Answer[]): SessionRunner {
   return {
     status: 'active',
+    saveStatus: 'saved',
+    retrySave: () => {},
     startedAt: 0,
     durationMs: null,
     exercise,

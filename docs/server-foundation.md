@@ -100,11 +100,10 @@ commit; test upgrades on every supported engine.
 
 ## Next work
 
-Fix the verified local persistence/retry/settings bugs in
-[current-state.md](current-state.md) first. Add atomic application-level storage
-operations, transactional settings updates, shared contract tests and
-failure-injection cases before sync. Do not add a speculative outbox, auth SDK,
-server scaffolding or database dependency yet.
+Local atomic persistence, retry repair and transactional settings updates are
+implemented; [storage.md](storage.md) owns their contracts. Preserve those tests
+before adding sync. A durable outbox, auth SDK, server scaffolding and database
+dependencies remain deferred until a concrete feature needs them.
 
 When server work is selected, settle the HTTP/auth and ownership contracts, PHP
 runtime/framework, first database, migrations and integration environment. Add

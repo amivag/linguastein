@@ -1,3 +1,6 @@
+import { PersistenceNotice } from '../../components/PersistenceNotice';
+import { useLocalWrites } from '../../components/useLocalWrites';
+import { saveAttempts } from '../../storage';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
   useCourse,
@@ -10,7 +13,7 @@ import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import type { EntityId, SkillId } from '../../domain/content';
 import { nextSubject } from '../../domain/drills';
-import { recordAttempt, type SubjectProgress } from '../../domain/progress';
+import { recordAttempt, type Attempt, type SubjectProgress } from '../../domain/progress';
 import { numeralGuide, type NumeralGuide } from '../../languages/runtime';
 import { systemRng } from '../../utils/random';
 import styles from './NumbersSection.module.css';
@@ -150,6 +153,7 @@ export function NumbersSection() {
   const [question, setQuestion] = useState<Question | undefined>(undefined);
   const [answer, setAnswer] = useState('');
   const [verdict, setVerdict] = useState<Verdict | undefined>(undefined);
+  const writes = useLocalWrites();
 
   /*
    * Memoised, because `numeralGuide` hands back a *new closure* each call and
@@ -230,6 +234,7 @@ export function NumbersSection() {
     const rules = guide.rulesFor(question.value);
     const now = Date.now();
     const updated = new Map(loaded.progress);
+    const attempts: Attempt[] = [];
 
     for (const rule of rules) {
       const pattern = patterns.find((entry) => entry.rule === rule);
@@ -248,10 +253,11 @@ export function NumbersSection() {
         now,
       );
       updated.set(pattern.id, recorded.progress);
-      void storage.progress.put(recorded.progress);
-      void storage.attempts.append(recorded.attempt);
+      attempts.push(recorded.attempt);
     }
 
+    if (attempts.length > 0)
+      writes.enqueue(`number:${attempts[0]!.id}`, () => saveAttempts(storage, attempts));
     setLoaded({ ...loaded, progress: updated });
     setVerdict({ correct, value: question.value, spelled: guide.render(question.value), rules });
   };
@@ -270,6 +276,7 @@ export function NumbersSection() {
 
   return (
     <div className={styles.drill}>
+      <PersistenceNotice status={writes.status} onRetry={writes.retry} />
       <p className={styles.lead}>
         {question?.direction === 'hear'
           ? 'Listen, and write the number in digits.'

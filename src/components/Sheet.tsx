@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from './Button';
 import { Icon } from './Icon';
-import { useFocusTrap } from './useFocusTrap';
+import { FocusScopeContext, useFocusTrap } from './useFocusTrap';
 import styles from './Sheet.module.css';
 
 interface SheetProps {
@@ -83,43 +83,46 @@ export function Sheet({
   width = 'narrow',
   anchor = 'center',
 }: SheetProps) {
-  const sheetRef = useFocusTrap<HTMLDivElement>(onClose);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useFocusTrap<HTMLDivElement>(onClose, overlayRef);
   // Spelled out rather than `styles[anchor]`: this file's stylesheet already has
   // a `.header` of its own, and indexing by the prop name would have collided
   // with it. Named variants keep the two apart at the point it matters.
   const anchored = anchor === 'header' ? styles.anchorHeader : styles.anchorCenter;
 
   return createPortal(
-    <div className={`${styles.overlay} ${anchored}`}>
-      {/* Not a button: a screen reader user leaves by Escape or by the close
+    <FocusScopeContext value={sheetRef}>
+      <div ref={overlayRef} className={`${styles.overlay} ${anchored}`}>
+        {/* Not a button: a screen reader user leaves by Escape or by the close
           control, and an extra focusable stop before the dialog's own content
           is noise. The click target is for a pointer. */}
-      <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
-      <div
-        ref={sheetRef}
-        id={id}
-        className={`${styles.sheet} ${styles[width]}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        tabIndex={-1}
-      >
-        <header className={styles.header}>
-          {/* Decoration: the dialog is already named, and a handle that
+        <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
+        <div
+          ref={sheetRef}
+          id={id}
+          className={`${styles.sheet} ${styles[width]}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
+          tabIndex={-1}
+        >
+          <header className={styles.header}>
+            {/* Decoration: the dialog is already named, and a handle that
               announced itself would be one more thing to hear first. */}
-          <span className={styles.grip} aria-hidden="true" />
-          {heading ?? <h2 className={styles.title}>{title}</h2>}
-          {actions}
-          <Button variant="ghost" icon onClick={onClose} aria-label="Close">
-            <Icon name="close" />
-          </Button>
-        </header>
+            <span className={styles.grip} aria-hidden="true" />
+            {heading ?? <h2 className={styles.title}>{title}</h2>}
+            {actions}
+            <Button variant="ghost" icon onClick={onClose} aria-label="Close">
+              <Icon name="close" />
+            </Button>
+          </header>
 
-        {pinned !== undefined && <div className={styles.pinned}>{pinned}</div>}
+          {pinned !== undefined && <div className={styles.pinned}>{pinned}</div>}
 
-        <div className={styles.body}>{children}</div>
+          <div className={styles.body}>{children}</div>
+        </div>
       </div>
-    </div>,
+    </FocusScopeContext>,
     document.body,
   );
 }

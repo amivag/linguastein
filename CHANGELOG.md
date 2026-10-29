@@ -27,6 +27,14 @@ in the pack's own counts.
 
 ### Added
 
+- Stable modal focus across rerenders, nested portals and empty dialogs, with
+  background isolation, one keyboard owner and reliable focus restoration.
+- Atomic learner-data transactions for assessments, imports and resets, with
+  consistent export snapshots and settings updates safe across tabs. Retrying
+  an older interrupted import repairs stale progress without duplicating answers.
+- Visible practice-save failures and retries that retain the original evidence;
+  session summaries wait for persistence before reporting progress saved.
+
 - Portable appearance core with app-owned theme catalogs and stylesheets,
   namespaced preferences and shared first-paint configuration. Existing palettes
   and appearance choices remain compatible. Blocked localStorage access no

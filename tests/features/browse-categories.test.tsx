@@ -71,6 +71,7 @@ describe('browsing by category', () => {
     await user.click(tile);
 
     expect(tile).toHaveAttribute('aria-pressed', 'true');
+    await user.keyboard('{Escape}');
     expect(await screen.findByRole('status')).toHaveTextContent('4 items');
   });
 
@@ -106,6 +107,7 @@ describe('browsing by category', () => {
     await user.click(tile);
 
     expect(tile).toHaveAttribute('aria-pressed', 'false');
+    await user.keyboard('{Escape}');
     expect(await screen.findByRole('status')).toHaveTextContent('7 items');
   });
 
@@ -121,6 +123,7 @@ describe('browsing by category', () => {
     await openFilters(user);
 
     await user.click(categories().getByRole('button', { name: /Food and drink/ }));
+    await user.keyboard('{Escape}');
     await user.click(screen.getByRole('button', { name: 'Practise these' }));
 
     // Built through `sessionPath`, so the session screen reads what was picked
@@ -193,6 +196,7 @@ describe('browsing by word kind', () => {
     await openFilters(user);
 
     await user.selectOptions(await screen.findByLabelText('Word kind'), 'NOUN');
+    await user.keyboard('{Escape}');
 
     expect(screen.getByText('4 items')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'About “cerveza”' })).toBeInTheDocument();

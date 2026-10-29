@@ -16,6 +16,7 @@ import {
   DEFAULT_COURSE_STATE,
   DEFAULT_PREFERENCES,
   type CourseState,
+  type LearnerStorage,
   type Preferences,
 } from '../../src/storage';
 import { READING_SIZE_STORAGE_KEY } from '../../src/styles/reading-size';
@@ -218,4 +219,38 @@ describe('reset progress', () => {
     expect(await stored(storage)).toEqual({ progress: 1, attempts: 1, sessions: 1 });
     expect((await storage.courses.read())['es']?.voiceName).toBe('Paulina');
   });
+});
+
+it('keeps all history when clearing one store fails, and lets the confirmed reset retry', async () => {
+  const base = await storageWithHistory();
+  let fails = true;
+  const storage: LearnerStorage = {
+    ...base,
+    transaction: (operation) =>
+      base.transaction((tx) =>
+        operation({
+          ...tx,
+          attempts: {
+            ...tx.attempts,
+            clear: async () => {
+              if (fails) throw new Error('Unavailable');
+              await tx.attempts.clear();
+            },
+          },
+        }),
+      ),
+  };
+  const user = userEvent.setup();
+  renderWithServices(<SettingsScreen />, {
+    services: testServices({ storage }),
+    route: '/settings?tab=about',
+  });
+  await user.click(screen.getByRole('button', { name: 'Reset progress' }));
+  await user.click(screen.getByRole('button', { name: 'Erase learning history' }));
+  await screen.findByText(/Could not finish clearing data/);
+  expect(await stored(base)).toEqual({ progress: 1, attempts: 1, sessions: 1 });
+  fails = false;
+  await user.click(screen.getByRole('button', { name: 'Erase learning history' }));
+  await screen.findByText('Learning history cleared.');
+  expect(await stored(base)).toEqual({ progress: 0, attempts: 0, sessions: 0 });
 });

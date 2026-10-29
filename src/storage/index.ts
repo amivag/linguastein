@@ -6,6 +6,7 @@ export * from './memory-storage';
 export * from './preferences';
 export * from './schemas';
 export * from './types';
+export * from './save-attempts';
 export { createIndexedDbStorage, openAppDatabase };
 
 /**

@@ -26,6 +26,8 @@ import {
   type SessionConfig,
   type SessionStep,
 } from '../../domain/sessions';
+import { useLocalWrites, type LocalWriteStatus } from '../../components/useLocalWrites';
+import { saveAttempts } from '../../storage';
 import { seededRng } from '../../utils/random';
 
 export type SessionStatus = 'loading' | 'active' | 'complete' | 'empty';
@@ -78,6 +80,8 @@ function stageDelta(from: ItemStatus, to: ItemStatus): number {
 
 export interface SessionRunner {
   readonly status: SessionStatus;
+  readonly saveStatus: LocalWriteStatus;
+  retrySave(): void;
   /** Epoch ms the session became active; 0 while it is still being planned. */
   readonly startedAt: number;
   /** How long it took, once finished. Null while it is still running. */
@@ -109,10 +113,13 @@ export interface SessionRunner {
 export function useSessionRunner(config: SessionConfig, course: Course): SessionRunner {
   const { services } = useServices();
   const { repository, storage, exercises } = services;
+  const { status: saveStatus, enqueue, retry: retrySave } = useLocalWrites();
 
   const [status, setStatus] = useState<SessionStatus>('loading');
   const [steps, setSteps] = useState<readonly SessionStep[]>([]);
   const [sessionId, setSessionId] = useState('');
+  const [persistedSession, setPersistedSession] = useState('');
+  const activeSession = useRef('');
   const [index, setIndex] = useState(0);
   const [stats, setStats] = useState<SessionStats>({ answered: 0, correct: 0 });
   const [lastResult, setLastResult] = useState<GradeResult | null>(null);
@@ -198,6 +205,7 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
 
       setStartedAt(Date.now());
       setDurationMs(null);
+      activeSession.current = plan.id;
       setSessionId(plan.id);
       setSteps(composed);
       setIndex(0);
@@ -278,8 +286,7 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
           now,
         );
         progressRef.current.set(item.id, progress);
-        void storage.progress.put(progress);
-        void storage.attempts.append(attempt);
+        enqueue(`attempt:${attempt.id}`, () => saveAttempts(storage, [attempt]));
 
         // One entry per item, keeping the *net* move across a session that saw
         // the same item twice: reporting a word as both advanced and lapsed
@@ -309,13 +316,13 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
         correct: current.correct + (grade === 'again' ? 0 : 1),
       }));
     },
-    [exercise, item, sessionId, storage, tracked],
+    [exercise, item, sessionId, storage, tracked, enqueue],
   );
 
   // Session totals are written once the last item is graded.
   useEffect(() => {
     if (status !== 'complete' || !tracked) return;
-    void storage.sessions.put({
+    const record = {
       id: sessionId,
       course,
       startedAt,
@@ -323,8 +330,12 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
       planned: steps.length,
       completed: stats.answered,
       correct: stats.correct,
+    };
+    enqueue(`session:${sessionId}`, async () => {
+      await storage.sessions.put(record);
+      if (activeSession.current === record.id) setPersistedSession(record.id);
     });
-  }, [status, tracked, sessionId, course, startedAt, steps.length, stats, storage]);
+  }, [status, tracked, sessionId, course, startedAt, steps.length, stats, storage, enqueue]);
 
   const submitAnswer = useCallback(
     (answer: Answer): GradeResult | null => {
@@ -370,6 +381,13 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
 
   return {
     status,
+    // Completion renders before the totals effect runs; do not claim a save
+    // during that gap or while the summary itself has not committed.
+    saveStatus:
+      tracked && status === 'complete' && saveStatus === 'saved' && persistedSession !== sessionId
+        ? 'saving'
+        : saveStatus,
+    retrySave,
     startedAt,
     durationMs,
     exercise,

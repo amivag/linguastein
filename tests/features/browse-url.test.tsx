@@ -70,6 +70,7 @@ describe('a sheet the URL describes', () => {
       'aria-pressed',
       'true',
     );
+    await userEvent.setup().keyboard('{Escape}');
     expect(screen.getByRole('combobox', { name: /sort/i })).toHaveValue('az');
   });
 
@@ -97,9 +98,10 @@ describe('a sheet the URL describes', () => {
     browse('/browse?pos=verb,noun');
     const filters = await openFilters();
 
+    expect(filters.getByRole('combobox', { name: /word kind/i })).toHaveValue('VERB');
+    await userEvent.setup().keyboard('{Escape}');
     const listed = await screen.findByRole('list', { name: 'Results' });
     expect(listed.children.length).toBeGreaterThan(4);
-    expect(filters.getByRole('combobox', { name: /word kind/i })).toHaveValue('VERB');
   });
 
   it('falls back to the whole pack when the link narrows to nothing it knows', async () => {

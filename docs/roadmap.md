@@ -12,6 +12,8 @@ counts are in the manifests and the public [README](../README.md).
   seeded randomness; Spanish exercises, composition and mastery remain specific.
 - Course-scoped routes and URL-described sessions, per-course settings, study
   versus assessed practice, reading, browsing, missions and word inspection.
+- Atomic assessment/import/reset operations, consistent export snapshots,
+  transactional settings and visible retryable practice-save failures.
 - Validated/versioned content packs and translation sets, generated language
   forms, editorial-review tooling and file export/import.
 - Device speech services, optional recognition, offline pack controls and
@@ -21,12 +23,9 @@ counts are in the manifests and the public [README](../README.md).
 
 ## Foundation priorities
 
-1. Atomic attempt/progress persistence and recovery after interrupted imports.
-2. Transactional settings updates safe across callers/tabs.
-3. Stable modal focus across rerenders, nested and empty dialogs.
-4. Reusable shell layout and explicit learning policies when the second app
+1. Reusable shell layout and explicit learning policies when the second app
    needs them; preserve Spanish behavior.
-5. Browser/device coverage, measured bundle limits and dead-code checks where
+2. Browser/device coverage, measured bundle limits and dead-code checks where
    they address actual risks. Keep the existing full gate and coverage floors.
 
 ## Product work to evaluate

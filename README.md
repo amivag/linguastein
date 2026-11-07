@@ -52,6 +52,11 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 ## Layout
 
 ```text
+packages/
+├── engine/       shared scheduling, drills and seeded randomness; no imports at all
+├── appearance/   portable theme catalogs, axes and first-paint metadata
+├── web/          error log, update signals, durable storage, Trusted Types policy
+└── build/        security policy, host headers, deployment settings, Vite plugins
 apps/linguastein/src/
 ├── app/          composition root, routing, the current course, services context
 ├── domain/       Spanish content, exercises, sessions and progress adapters

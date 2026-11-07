@@ -5,9 +5,25 @@ fixture proves a second subject can exercise it; no rhythm app is implemented.
 Use [current-state.md](current-state.md) for open findings, not historical reuse
 percentages or line counts.
 
-## The copyable core
+## Platform packages
 
-Depend on `@platform/engine` (`packages/engine`) and import from its index. It has no external imports,
+Apps depend on these workspace packages; none imports an app. Each has its own
+typecheck, lint boundary, tests and coverage floors.
+
+| Package                | Holds                                                            |
+| ---------------------- | ---------------------------------------------------------------- |
+| `@platform/engine`     | Learning core below; no imports, no DOM or Node types            |
+| `@platform/appearance` | Appearance axes, theme catalogs, pre-paint serializer            |
+| `@platform/web`        | Error log, update signals, durable storage, Trusted Types policy |
+| `@platform/build`      | Security policy, host headers, deployment settings, Vite plugins |
+
+Not extracted yet: the UI kit (layout, Button, Sheet, focus handling, tokens).
+It waits on router-agnostic links, an extensible icon registry and separating
+platform tokens from app semantics, decided with the router move.
+
+## The learning core
+
+Depend on `@platform/engine` and import from its index. It has no external imports,
 React, browser/Node ambient types, content ids or closed Spanish exercise enum.
 
 | Module      | Shared responsibility                                                   | App responsibility                      |

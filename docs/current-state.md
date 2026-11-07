@@ -1,11 +1,15 @@
 # Current project state
 
-**Reviewed:** 2026-10-29. Repository memory; update facts in place.
+**Reviewed:** 2026-11-07. Repository memory; update facts in place.
 
 ## Decisions
 
-- Spanish is the working app. Its shell is a scaffold for other apps; the pure
-  `@platform/engine` package is the reusable learning core. Rhythm training with
+- This core is meant to launch several apps (rhythm, a meditation timer, perhaps
+  mini-games) on the web, as PWAs and possibly natively. The repository is an
+  npm workspace: Spanish is `apps/linguastein`, and shared code lives in
+  `packages/*` ([framework.md](framework.md#platform-packages)). The UI kit is
+  the next extraction, decided together with the move to TanStack Router.
+- `@platform/engine` is the reusable learning core. Rhythm training with
   hands/pencils is the next subject being considered, not a built app.
 - Keep content, exercises, evidence and learner state separate. Rhythm owns
   temporal targets and grading; it must not pretend to be text or Spanish.

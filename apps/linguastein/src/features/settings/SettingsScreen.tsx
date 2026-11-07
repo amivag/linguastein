@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router';
+import { useSearchParams } from '../../app/navigation';
 import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
 import { SectionTabs } from '../../components/SectionTabs';

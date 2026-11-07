@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useRouteParams } from '../../app/navigation';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
@@ -26,7 +26,7 @@ const EMPTY_ITEMS: readonly LearningItem[] = [];
  * reason to read, not a second copy of the content.
  */
 export function PassageScreen() {
-  const { id = '' } = useParams();
+  const { id = '' } = useRouteParams();
   const navigate = useNavigate();
   const { course, path } = useCourse();
   const { services, preferences } = useServices();

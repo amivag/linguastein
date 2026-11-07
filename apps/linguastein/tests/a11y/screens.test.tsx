@@ -1,6 +1,6 @@
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from '../fixtures/router';
 import { describe, expect, it } from 'vitest';
 import { markUpdateReady, resetUpdateState } from '@platform/web';
 import { HomeScreen } from '../../src/features/home/HomeScreen';

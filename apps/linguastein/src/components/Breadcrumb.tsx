@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from '../app/navigation';
 import styles from './Breadcrumb.module.css';
 
 export interface Crumb {

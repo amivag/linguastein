@@ -8,7 +8,7 @@
 
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from '../fixtures/router';
 import { NotFoundScreen } from '../../src/features/not-found/NotFoundScreen';
 import { PassageScreen } from '../../src/features/read/PassageScreen';
 import { renderWithServices } from '../fixtures/services';

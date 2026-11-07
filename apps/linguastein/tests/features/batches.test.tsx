@@ -11,7 +11,7 @@
 
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useLocation } from 'react-router';
+import { useLocation } from '../../src/app/navigation';
 import { describe, expect, it, vi } from 'vitest';
 import type { BatchDefinition } from '../../src/domain/batches';
 import type { ItemId } from '../../src/domain/content';

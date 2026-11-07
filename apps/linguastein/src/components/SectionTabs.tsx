@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from '../app/navigation';
 import { Icon, type IconName } from './Icon';
 import styles from './SectionTabs.module.css';
 

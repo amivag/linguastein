@@ -16,7 +16,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { act, render, screen } from '@testing-library/react';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from '../fixtures/router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../src/app/App';
 import type { ContentLoading } from '../../src/app/content';

@@ -74,6 +74,10 @@
               {
                 "group": ["lucide-react", "lucide-react/*"],
                 "message": "The icon set lives behind a seam: import from `components/Icon` (or add a semantic name to `components/icons.ts`, the only file allowed to name the vendor). Swapping icon sets should be one edit, not forty."
+              },
+              {
+                "group": ["react-router", "react-router/*", "@tanstack/react-router"],
+                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `app/navigation`. Only it and the route table in `App.tsx` name the router."
               }
             ]
           }
@@ -147,6 +151,10 @@
                 "message": "The icon set lives behind a seam: import from `components/Icon` (or add a semantic name to `components/icons.ts`, the only file allowed to name the vendor). Swapping icon sets should be one edit, not forty."
               },
               {
+                "group": ["react-router", "react-router/*", "@tanstack/react-router"],
+                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `app/navigation`. Only it and the route table in `App.tsx` name the router."
+              },
+              {
                 "group": ["**/features/**"],
                 "message": "A shared component cannot depend on one screen. Take what it needs as a prop, or move the component into that feature."
               }
@@ -166,6 +174,14 @@
      */
     {
       "files": ["src/components/icons.ts"],
+      "rules": { "no-restricted-imports": "off" }
+    },
+
+    /*
+     * The router seam and the route table: the two files that may name it.
+     */
+    {
+      "files": ["src/app/navigation.tsx", "src/app/App.tsx"],
       "rules": { "no-restricted-imports": "off" }
     }
   ]

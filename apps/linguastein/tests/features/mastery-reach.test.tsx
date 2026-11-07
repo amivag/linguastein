@@ -10,7 +10,7 @@
  */
 
 import { screen, within } from '@testing-library/react';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from '../fixtures/router';
 import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
 import { newProgress, type SubjectProgress } from '../../src/domain/progress';

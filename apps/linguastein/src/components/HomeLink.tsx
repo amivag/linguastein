@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from '../app/navigation';
 import { useCourse } from '../app/course';
 import { Icon } from './Icon';
 import styles from './AppShell.module.css';

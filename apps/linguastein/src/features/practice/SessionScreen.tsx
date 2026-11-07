@@ -1,6 +1,6 @@
 import { PersistenceNotice } from '../../components/PersistenceNotice';
 import { useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from '../../app/navigation';
 import { useCourse, usePronunciationLocale } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MISSIONS } from '../../app/missions';

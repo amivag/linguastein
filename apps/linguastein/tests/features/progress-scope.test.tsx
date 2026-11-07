@@ -9,7 +9,7 @@
  */
 
 import { screen } from '@testing-library/react';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from '../fixtures/router';
 import { describe, expect, it } from 'vitest';
 import { ProgressScreen } from '../../src/features/progress/ProgressScreen';
 import { newProgress } from '../../src/domain/progress';

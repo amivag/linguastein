@@ -2,7 +2,8 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes, useLocation, useNavigate } from 'react-router';
+import { Route, Routes } from '../fixtures/router';
+import { useLocation, useNavigate } from '../../src/app/navigation';
 import { describe, expect, it } from 'vitest';
 import type { SpeechRecognitionProvider } from '../../src/audio';
 import {

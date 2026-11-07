@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Link } from 'react-router';
+import { Link } from '../../app/navigation';
 import {
   useCourse,
   usePronunciationLocale,

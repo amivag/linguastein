@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from '../app/navigation';
 import { documentTitle } from '../app/identity';
 import { PageLayout } from '../layout/PageLayout';
 import { AppNav } from './AppNav';

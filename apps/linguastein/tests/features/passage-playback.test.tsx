@@ -11,7 +11,7 @@
 
 import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from '../fixtures/router';
 import { describe, expect, it } from 'vitest';
 import { createAudioService, type SpeechSpan, type TtsProvider } from '../../src/audio';
 import { PassageScreen } from '../../src/features/read/PassageScreen';

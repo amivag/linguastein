@@ -1,6 +1,6 @@
 import { saveAttempts } from '../../storage';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { useNavigate, useRouteParams, useSearchParams } from '../../app/navigation';
 import { MISSIONS } from '../../app/missions';
 import { MISSION_VARIATIONS } from '../../app/mission-variations';
 import {
@@ -77,7 +77,7 @@ interface ResolvedResponsePalette {
 
 /** The reusable Understand → Practise → Use journey over one connected passage. */
 export function MissionScreen() {
-  const { missionId = '', stage = 'understand' } = useParams();
+  const { missionId = '', stage = 'understand' } = useRouteParams();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { course, filter, option, ladder } = useCourse();

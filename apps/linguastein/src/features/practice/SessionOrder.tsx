@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from '../../app/navigation';
 import type { Course } from '../../domain/content';
 import { ORDERINGS, type Ordering } from '../../domain/sessions';
 import { sessionPath, type SessionUrl } from './session-url';

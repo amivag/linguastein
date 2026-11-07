@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from '../../app/navigation';
 import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';

@@ -13,7 +13,7 @@
  */
 
 import { use, useMemo, useSyncExternalStore } from 'react';
-import { useParams } from 'react-router';
+import { useRouteParams } from './navigation';
 import {
   courseFilter,
   courseOptions,
@@ -97,7 +97,7 @@ function currentCourses(repository: ContentRepository): readonly CourseOption[] 
 
 export function useCourse(): CourseScope {
   const { services, courses, updateCourse } = useServices();
-  const params = useParams();
+  const params = useRouteParams();
   const language = params['language'];
   const level = params['level'];
 
@@ -139,7 +139,7 @@ export function useCourse(): CourseScope {
  */
 export function useTargetLanguage(): LanguageTag | undefined {
   const value = use(ServicesContext);
-  const params = useParams();
+  const params = useRouteParams();
   const language = params['language'];
   const level = params['level'];
   const repository = value?.services.repository;

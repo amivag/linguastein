@@ -16,7 +16,7 @@
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from '../fixtures/router';
 import { describe, expect, it, vi } from 'vitest';
 import { NOOP_PLAYBACK } from '../../src/audio';
 import type { PlayOptions } from '../../src/audio';

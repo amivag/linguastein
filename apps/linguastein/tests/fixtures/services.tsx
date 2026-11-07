@@ -1,6 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
 import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
 import { ServicesContext } from '../../src/app/services-context';
 import type { AppServices } from '../../src/app/services';
 import { NOTHING_TO_LOAD } from '../../src/app/content';
@@ -15,6 +14,7 @@ import {
   type Preferences,
 } from '../../src/storage';
 import { testRepository } from './pack';
+import { TestRouter } from './router';
 
 /**
  * No device speech in tests, but the dataset-audio path stays reachable.
@@ -122,7 +122,7 @@ export function renderWithServices(
         removeBatch: options.removeBatch ?? (() => {}),
       }}
     >
-      <MemoryRouter initialEntries={[options.route ?? '/']}>{children}</MemoryRouter>
+      <TestRouter route={options.route ?? '/'}>{children}</TestRouter>
     </ServicesContext>
   );
 

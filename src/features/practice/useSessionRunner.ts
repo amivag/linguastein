@@ -71,6 +71,20 @@ export interface SessionOutcome {
   readonly nextDueInDays?: number;
 }
 
+/**
+ * What a card in this session was answered with.
+ *
+ * Kept per position because Previous is for looking back, not for answering
+ * again: having just seen the verdict, a second attempt would be recorded as
+ * another successful recall, and would move the item up by no real effort.
+ */
+export interface AnsweredCard {
+  readonly grade: ReviewGrade;
+  /** The verdict and what was given. Absent on a self-rated card. */
+  readonly result: GradeResult | null;
+  readonly answer: Answer | null;
+}
+
 const STAGE_ORDER: readonly ItemStatus[] = ['new', 'learning', 'review', 'mastered'];
 
 /** Positive when the second stage is further along than the first. */
@@ -95,6 +109,8 @@ export interface SessionRunner {
   /** False in study mode: nothing is written and no score is reported. */
   readonly tracked: boolean;
   readonly lastResult: GradeResult | null;
+  /** How the current card was answered, when it has been. */
+  readonly answered: AnsweredCard | null;
   /** Machine-graded exercises: returns the verdict and records it. */
   submitAnswer(answer: Answer): GradeResult | null;
   /** Self-rated exercises (spec §4.2). */
@@ -122,7 +138,7 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
   const activeSession = useRef('');
   const [index, setIndex] = useState(0);
   const [stats, setStats] = useState<SessionStats>({ answered: 0, correct: 0 });
-  const [lastResult, setLastResult] = useState<GradeResult | null>(null);
+  const [answers, setAnswers] = useState<ReadonlyMap<number, AnsweredCard>>(new Map());
   const [changes, setChanges] = useState<readonly StageChange[]>([]);
   const [nextDueInDays, setNextDueInDays] = useState<number | undefined>(undefined);
   const [generation, setGeneration] = useState(0);
@@ -210,7 +226,7 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
       setSteps(composed);
       setIndex(0);
       setStats({ answered: 0, correct: 0 });
-      setLastResult(null);
+      setAnswers(new Map());
       setChanges([]);
       setNextDueInDays(undefined);
       setStatus(composed.length === 0 ? 'empty' : 'active');
@@ -248,7 +264,6 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
   ]);
 
   const advance = useCallback(() => {
-    setLastResult(null);
     setIndex((current) => {
       const next = current + 1;
       if (next >= steps.length) {
@@ -340,27 +355,32 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
   const submitAnswer = useCallback(
     (answer: Answer): GradeResult | null => {
       if (!exercise) return null;
+      const held = answers.get(index);
+      if (held) return held.result;
       const result = gradeExercise(exercise, answer);
       if (!result) return null;
-      setLastResult(result);
+      setAnswers((current) => new Map(current).set(index, { grade: result.grade, result, answer }));
       persist(result.grade, result.correct, answer.latencyMs);
       return result;
     },
-    [exercise, persist],
+    [exercise, persist, answers, index],
   );
 
   const submitGrade = useCallback(
     (grade: ReviewGrade, latencyMs?: number) => {
+      if (answers.has(index)) return;
+      setAnswers((current) => new Map(current).set(index, { grade, result: null, answer: null }));
       persist(grade, undefined, latencyMs);
       advance();
     },
-    [persist, advance],
+    [persist, advance, answers, index],
   );
 
   const previous = useCallback(() => {
-    setLastResult(null);
     setIndex((current) => Math.max(0, current - 1));
   }, []);
+
+  const answered = answers.get(index) ?? null;
 
   /**
    * Derived, never stored, like everything else about progress. Both halves are
@@ -397,7 +417,8 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
     stats,
     outcome,
     tracked,
-    lastResult,
+    lastResult: answered?.result ?? null,
+    answered,
     submitAnswer,
     submitGrade,
     next: advance,

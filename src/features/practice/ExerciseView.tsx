@@ -67,10 +67,14 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
   // was used — leaving the sentence impossible to finish and marked wrong.
   const [built, setBuilt] = useState<readonly number[]>([]);
   const words = useWordSelection();
+  // A card returned to through Previous remounts, and shows what was given then.
+  const given = runner.answered?.answer?.value;
+  const givenText = typeof given === 'string' ? given : null;
+  const givenWords = given !== undefined && typeof given !== 'string' ? given.join(' ') : '';
   // Which choice was tapped, so the feedback can mark that one rather than
   // painting every distractor red.
-  const [chosen, setChosen] = useState<string | null>(null);
-  const [typed, setTyped] = useState('');
+  const [chosen, setChosen] = useState<string | null>(givenText);
+  const [typed, setTyped] = useState(givenText ?? '');
 
   // Per-card state resets by remounting on a new exercise (SessionScreen keys
   // this component by exercise id), so no reset effect is needed. The clock is
@@ -267,7 +271,7 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
             {exercise.prompt}
           </Annotation>
           <p className={styles.built} lang={lang}>
-            {builtWords.join(' ') || ' '}
+            {builtWords.join(' ') || givenWords || ' '}
           </p>
           {/*
             Raised, not `option`.
@@ -376,17 +380,23 @@ export function ExerciseView({ exercise, runner }: ExerciseViewProps) {
       )}
 
       {isSelfRated(exercise.kind) ? (
-        <div className={styles.ratings}>
-          {REVIEW_GRADES.map((grade) => (
-            <Button
-              key={grade}
-              onClick={() => runner.submitGrade(grade, elapsed())}
-              variant={grade === 'good' ? 'primary' : 'default'}
-            >
-              {GRADE_LABELS[grade]}
-            </Button>
-          ))}
-        </div>
+        <>
+          {runner.answered && (
+            <p className={styles.hint}>You rated this {GRADE_LABELS[runner.answered.grade]}.</p>
+          )}
+          <div className={styles.ratings}>
+            {REVIEW_GRADES.map((grade) => (
+              <Button
+                key={grade}
+                disabled={runner.answered !== null}
+                onClick={() => runner.submitGrade(grade, elapsed())}
+                variant={(runner.answered?.grade ?? 'good') === grade ? 'primary' : 'default'}
+              >
+                {GRADE_LABELS[grade]}
+              </Button>
+            ))}
+          </div>
+        </>
       ) : (
         answered && (
           /*

@@ -95,6 +95,7 @@ function runner(exercise: Exercise, submitted: Answer[]): SessionRunner {
     outcome: { advanced: [], lapsed: [] },
     tracked: true,
     lastResult: null,
+    answered: null,
     submitAnswer: (answer) => {
       submitted.push(answer);
       return null;

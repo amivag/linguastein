@@ -63,6 +63,7 @@ function stubRunner(exercise: Exercise, answered: boolean): SessionRunner {
     outcome: { advanced: [], lapsed: [] },
     tracked: true,
     lastResult: result,
+    answered: null,
     submitAnswer: () => result,
     submitGrade: () => {},
     next: () => {},

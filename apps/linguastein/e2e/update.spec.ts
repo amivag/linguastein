@@ -31,7 +31,9 @@ test('offers a new build instead of reloading by itself', async ({ page }) => {
 
     await expect(
       page.getByRole('status').filter({ hasText: 'A new version is ready.' }),
-    ).toBeVisible();
+      // Installing the new worker re-checks every precached file; CI runners can
+      // take longer than the default five seconds to do it.
+    ).toBeVisible({ timeout: 20_000 });
     expect(page.url()).toBe(url);
   } finally {
     writeFileSync(WORKER, original);

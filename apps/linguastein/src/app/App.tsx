@@ -43,7 +43,9 @@ import { applyIntensity, DEFAULT_INTENSITY } from '../styles/intensity';
 import { applyReadingSize } from '../styles/reading-size';
 import { NotFoundScreen } from '../features/not-found/NotFoundScreen';
 import { recordError } from './diagnostics';
+import { UiProvider } from '@platform/ui';
 import { ErrorBoundary } from './ErrorBoundary';
+import { kitIcon } from './kit-icon';
 import {
   AppRouter,
   Redirect,
@@ -284,7 +286,9 @@ export function App() {
       }}
     >
       <ErrorBoundary onError={reportInterfaceError}>
-        <AppRouter basepath={import.meta.env.BASE_URL} routes={ROUTES} layout={CourseContent} />
+        <UiProvider icon={kitIcon}>
+          <AppRouter basepath={import.meta.env.BASE_URL} routes={ROUTES} layout={CourseContent} />
+        </UiProvider>
       </ErrorBoundary>
     </ServicesContext>
   );

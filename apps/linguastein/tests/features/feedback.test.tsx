@@ -9,7 +9,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import buttonStyles from '../../src/components/Button.module.css';
+import buttonStyles from '@platform/ui/styles/Button.module.css';
 import styles from '../../src/features/practice/Practice.module.css';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { renderWithServices } from '../fixtures/services';

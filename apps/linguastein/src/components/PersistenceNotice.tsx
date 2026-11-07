@@ -1,4 +1,4 @@
-import { Button } from './Button';
+import { Button } from '@platform/ui';
 import type { LocalWriteStatus } from './useLocalWrites';
 
 export function PersistenceNotice({

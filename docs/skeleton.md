@@ -12,7 +12,7 @@ PHP/SQL and account boundaries.
 | `@platform/engine`: memory, drill selection/material, seeded randomness | Subject evidence, generators, content model and grading                |
 | `app/identity.ts`, build identity, error-boundary pattern               | App identity values, static icons/artwork and npm metadata             |
 | `@platform/appearance`, palette solver, tokens and surface recipes      | App theme catalog/CSS, grammar semantics and material-kind assignments |
-| `src/layout/`, Button, Chip, Sheet, Icon and focus containment          | AppShell/AppNav course/voice composition                               |
+| `@platform/ui`: layout, Button, Sheet, focus containment; Chip, Icon    | AppShell/AppNav course/voice composition                               |
 | Contrast, motion, hover and design-language checks                      | Screen accessibility tests and grammar examples in `/design`           |
 | Strict TypeScript, lint boundaries and CI/local-gate parity             | Directory coverage entries and subject-specific dataset steps          |
 | Async storage interfaces and transaction pattern                        | Spanish records, IndexedDB schema, exports and settings                |
@@ -20,12 +20,12 @@ PHP/SQL and account boundaries.
 `ThemeToggle` uses the app service provider. `UpdateBanner` needs the update
 service. Shared directory placement does not imply provider independence.
 
-Copy `src/layout/` with the design tokens for provider-independent `PageLayout`.
+Depend on `@platform/ui` and define its design tokens for provider-independent `PageLayout`.
 Its slots accept header controls, breadcrumbs, notices and navigation. The host
 formats `documentTitle` and supplies routes/services. Navigation flows by default;
 `navigationLayout="bar-rail"` reserves `--nav-height` / `--rail-width` space for a
 fixed bar/rail. `AppShell` composes the Spanish controls over this layout; keep it
-with the app. `tests/fixtures/rhythm-layout.tsx` demonstrates a different host.
+with the app. `packages/ui/tests/fixtures/rhythm-layout.tsx` demonstrates a different host.
 `src/utils/random.ts` re-exports the engine, so retain the engine when copying it.
 
 ## Starting sequence

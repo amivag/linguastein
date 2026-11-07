@@ -9,7 +9,7 @@ import {
 import { MISSIONS } from '../../app/missions';
 import { useServices } from '../../app/services-context';
 import { Annotation } from '../../components/Annotation';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { GrammarTags } from '../../components/GrammarTags';
 import { Icon, type IconName } from '../../components/Icon';
 import { TokenizedText } from '../../components/TokenizedText';

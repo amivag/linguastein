@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon, type IconName } from '../../components/Icon';
 import styles from './MissionTrack.module.css';
 

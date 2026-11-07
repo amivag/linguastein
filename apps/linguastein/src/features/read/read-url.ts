@@ -11,7 +11,7 @@
  * it here in order to send Back there. `study-url.ts` owns that spelling.
  */
 
-import type { Crumb } from '../../components/Breadcrumb';
+import type { Crumb } from '@platform/ui';
 import { coursePath, type Course } from '../../domain/content';
 import { parseStudyOrigin, studyTrail, writeStudyOrigin, type StudyTab } from '../study/study-url';
 

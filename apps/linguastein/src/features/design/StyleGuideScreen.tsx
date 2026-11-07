@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { AppShell } from '../../components/AppShell';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Chip } from '../../components/Chip';
 import { Icon, type IconName } from '../../components/Icon';
 import { ICON_NAMES } from '../../components/icons';
-import { Sheet } from '../../components/Sheet';
+import { Sheet } from '@platform/ui';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { UsageBadges } from '../../components/UsageBadges';
 import { Annotation } from '../../components/Annotation';

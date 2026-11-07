@@ -16,10 +16,12 @@ typecheck, lint boundary, tests and coverage floors.
 | `@platform/appearance` | Appearance axes, theme catalogs, pre-paint serializer            |
 | `@platform/web`        | Error log, update signals, durable storage, Trusted Types policy |
 | `@platform/build`      | Security policy, host headers, deployment settings, Vite plugins |
+| `@platform/navigation` | Router seam: links, hooks, route tables; TanStack, or in memory  |
+| `@platform/ui`         | PageLayout, Button, Sheet, focus scopes, Breadcrumb, meters      |
 
-Not extracted yet: the UI kit (layout, Button, Sheet, focus handling, tokens).
-It waits on router-agnostic links, an extensible icon registry and separating
-platform tokens from app semantics, decided with the router move.
+The kit draws glyphs through `UiProvider`'s `icon` and reads tokens as CSS
+custom properties the app defines; the app's style tests scan its CSS too. The
+icon set, token values, `Chip`, `Annotation` and `SectionTabs` stay in the app.
 
 ## The learning core
 
@@ -53,12 +55,8 @@ physical-input accuracy or motor-learning validity of the memory model.
   implementations demonstrate common requirements.
 - Storage schemas, transfers and settings are not generic libraries. Share
   transaction/retry guarantees before sharing records.
-- `src/layout/PageLayout.tsx` is provider-independent page structure with slots.
-  AppShell supplies course navigation, history, speech and updates; keep that
-  wrapper with Spanish. A non-language fixture and dependency test guard the seam.
-- The standalone `@platform/appearance` core accepts app-owned theme catalogs and CSS.
-  Control primitives port; grammar demos, service-bound
-  controls and semantic color assignments need adaptation.
+- AppShell composes `PageLayout` with Spanish navigation, speech and updates;
+  keep that wrapper with the app. Grammar demos and semantic colours stay too.
 - A future PHP/SQL service and users/registration are anticipated, not built.
   [server-foundation.md](server-foundation.md) owns that contract. Local practice
   and the pure engine must stay independent of authentication and connectivity.

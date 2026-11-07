@@ -3,7 +3,7 @@ import { Link, useNavigate } from '@platform/navigation';
 import { useCourse, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon } from '../../components/Icon';
 import { TokenizedText } from '../../components/TokenizedText';

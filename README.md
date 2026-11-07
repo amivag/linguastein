@@ -57,7 +57,8 @@ packages/
 ├── appearance/   portable theme catalogs, axes and first-paint metadata
 ├── web/          error log, update signals, durable storage, Trusted Types policy
 ├── build/        security policy, host headers, deployment settings, Vite plugins
-└── navigation/   router seam: links, hooks, route tables; TanStack in the app, memory in tests
+├── navigation/   router seam: links, hooks, route tables; TanStack in the app, memory in tests
+└── ui/           page layout, Button, Sheet and focus scopes, Breadcrumb, meters
 apps/linguastein/src/
 ├── app/          composition root, routing, the current course, services context
 ├── domain/       Spanish content, exercises, sessions and progress adapters
@@ -76,7 +77,7 @@ apps/linguastein/src/
 │                 settings (one file per section), sharing, not-found, design;
 │                 plus search/ — the lookup box, its results and the ?q= codec,
 │                 which is not a screen and is rendered by Home
-├── components/   shared UI: AppShell, AppNav, Button, Chip, Sheet, Icon, CourseBar,
+├── components/   app UI: AppShell, AppNav, Chip, Icon, CourseBar,
 │                 ThemeToggle, PaletteControl, ContrastControl, IntensityControl,
 │                 ReadingSizeControl, VoiceInput, TokenizedText, WordInfoSheet;
 │                 icons.ts is the icon-set seam

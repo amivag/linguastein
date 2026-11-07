@@ -11,10 +11,10 @@ import {
 } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../../components/Icon';
 import { SectionTabs } from '../../components/SectionTabs';
-import { Sheet } from '../../components/Sheet';
+import { Sheet } from '@platform/ui';
 import { TokenizedText } from '../../components/TokenizedText';
 import { PlaybackTransport } from '../../components/PlaybackTransport';
 import { Transcript } from '../../components/Transcript';

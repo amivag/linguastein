@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from '@platform/navigation';
 import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../../components/Icon';
 import { studyPath } from '../study/study-url';
 import styles from './NotFound.module.css';

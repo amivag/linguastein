@@ -8,7 +8,7 @@ import { batchById } from '../../domain/batches';
 import type { LexemeId, SkillId } from '../../domain/content';
 import { missionById } from '../../domain/missions';
 import { AppShell } from '../../components/AppShell';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { SessionOrder } from './SessionOrder';
 import { SessionOutcomeSummary } from './SessionOutcomeSummary';
 import { SessionProgress } from './SessionProgress';

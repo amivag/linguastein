@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { applyUpdate, useUpdateState } from '@platform/web';
-import { Button } from './Button';
+import { Button } from '@platform/ui';
 import { Icon } from './Icon';
 import styles from './UpdateBanner.module.css';
 

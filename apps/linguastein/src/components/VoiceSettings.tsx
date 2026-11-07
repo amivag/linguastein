@@ -3,7 +3,7 @@ import { useCourse, usePronunciationLocale, useVoiceName } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
 import { languageOption, pronunciationLocales } from '../domain/content';
-import { Button } from './Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../components/Icon';
 import styles from './VoiceSettings.module.css';
 

@@ -4,10 +4,10 @@ import { useCourse, usePronunciationLocale, useVoiceName } from '../../app/cours
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
 import { Icon } from '../../components/Icon';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Chip } from '../../components/Chip';
 import { CourseBar } from '../../components/CourseBar';
-import { Sheet } from '../../components/Sheet';
+import { Sheet } from '@platform/ui';
 import { TokenizedText } from '../../components/TokenizedText';
 import { UsageBadges } from '../../components/UsageBadges';
 import { useWordSelection } from '../../components/useWordSelection';

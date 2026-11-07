@@ -1,9 +1,9 @@
 import { useId, useRef, useState } from 'react';
 import { APP } from '../../app/identity';
 import { useServices } from '../../app/services-context';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../../components/Icon';
-import { Sheet } from '../../components/Sheet';
+import { Sheet } from '@platform/ui';
 import {
   applyExport,
   buildExport,

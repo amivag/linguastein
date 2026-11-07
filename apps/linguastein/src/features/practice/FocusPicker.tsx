@@ -1,9 +1,9 @@
 import { useId, useState } from 'react';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../../components/Icon';
-import { Sheet } from '../../components/Sheet';
+import { Sheet } from '@platform/ui';
 import { reachableTopics } from '../../domain/content';
 import { SESSION_FOCUSES, type SessionFocus } from '../../domain/sessions';
 import type { IconName } from '../../components/Icon';

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { PackOffline } from '../../app/offline';
 import { useServices } from '../../app/services-context';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../../components/Icon';
 import {
   installedPacks,

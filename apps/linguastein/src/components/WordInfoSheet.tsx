@@ -12,10 +12,10 @@ import {
   type WordInfo,
 } from '../domain/content';
 import { Annotation } from './Annotation';
-import { Button } from './Button';
+import { Button } from '@platform/ui';
 import { GrammarTags } from './GrammarTags';
 import { Icon, type IconName } from './Icon';
-import { Sheet } from './Sheet';
+import { Sheet } from '@platform/ui';
 import { UsageBadges } from './UsageBadges';
 import styles from './WordInfoSheet.module.css';
 

@@ -3,7 +3,7 @@ import { useNavigate, useRouteParams } from '@platform/navigation';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { PlaybackTransport } from '../../components/PlaybackTransport';
 import { Transcript } from '../../components/Transcript';
 import { UsageBadges } from '../../components/UsageBadges';

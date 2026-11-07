@@ -12,23 +12,13 @@
  * same approach `contrast.test.ts` takes to the palette.
  */
 
-import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readStylesheet, stylesheets } from '../fixtures/stylesheets';
 
-const SRC = resolve(process.cwd(), 'src');
 const PRIMITIVES = 'styles/primitives.css';
 const GLOBAL = 'styles/global.css';
 
-function stylesheets(directory = SRC): string[] {
-  return readdirSync(directory).flatMap((entry) => {
-    const path = join(directory, entry);
-    if (statSync(path).isDirectory()) return stylesheets(path);
-    return path.endsWith('.css') ? [relative(SRC, path).replaceAll('\\', '/')] : [];
-  });
-}
-
-const read = (file: string) => readFileSync(join(SRC, file), 'utf8');
+const read = readStylesheet;
 const withoutComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, '');
 
 /** The `prefers-reduced-motion` block, which is *meant* to hard-code a duration. */
@@ -107,7 +97,7 @@ describe('the motion scale', () => {
      * are the same on both sides of a navigation, so animating them would report
      * a change that did not happen.
      */
-    const css = withoutComments(read('layout/PageLayout.module.css'));
+    const css = withoutComments(read('@platform/ui/PageLayout.module.css'));
     const main = css.slice(css.indexOf('.main {'));
     expect(main.slice(0, main.indexOf('}'))).toMatch(/animation:\s*\w+\s+var\(--transition-/);
     expect(css).toMatch(/@keyframes\s+\w+/);

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePronunciationLocale, useVoiceName } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { SLOW_RATE } from '../../audio';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import type { LearningItem } from '../../domain/content';
 import { Icon } from '../../components/Icon';
 import { useIsSpeaking } from '../../components/usePlayback';

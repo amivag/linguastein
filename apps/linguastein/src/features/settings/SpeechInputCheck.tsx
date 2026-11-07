@@ -8,9 +8,9 @@ import {
   type SpeechEnvironment,
   type SpeechFailure,
 } from '../../audio';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon, type IconName } from '../../components/Icon';
-import { MicLevel } from '../../components/MicLevel';
+import { MicLevel } from '@platform/ui';
 import styles from './Settings.module.css';
 
 /** How loud counts as "the microphone is reaching this page". */

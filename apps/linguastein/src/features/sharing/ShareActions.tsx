@@ -3,7 +3,7 @@ import { buildLearnerContext, type LearnerContext } from '../../ai';
 import { useServices } from '../../app/services-context';
 import { useTargetLanguage } from '../../app/course';
 import { APP } from '../../app/identity';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import type { LearningItem } from '../../domain/content';
 import { canShare, copyToClipboard, shareText } from '../../utils/clipboard';
 import { buildSharePayloads } from './payloads';

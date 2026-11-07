@@ -1,6 +1,6 @@
 /** Contract fixture, not a rhythm trainer: no router or Spanish app providers. */
 import { useState } from 'react';
-import { PageLayout } from '../../src/layout/PageLayout';
+import { PageLayout } from '../../src/index.ts';
 
 export function RhythmLayout({ onBack }: { readonly onBack: () => void }) {
   const [tempo, setTempo] = useState(80);

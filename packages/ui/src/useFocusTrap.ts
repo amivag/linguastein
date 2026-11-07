@@ -6,7 +6,7 @@ import {
   useRef,
   type RefObject,
 } from 'react';
-import { registerFocusScope } from './focus-scope';
+import { registerFocusScope } from './focus-scope.ts';
 
 /** Logical ancestry survives portals, including nested dialogs mounted together. */
 export const FocusScopeContext = createContext<object | null>(null);

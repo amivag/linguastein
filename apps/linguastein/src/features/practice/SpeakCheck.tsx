@@ -8,7 +8,7 @@ import {
   SPEECH_ABORTED,
   type SpeechFailure,
 } from '../../audio';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { settingsPath } from '../settings/settings-url';
 import {
   bestExpectedAlternative,
@@ -16,7 +16,7 @@ import {
   type SpeechComparison,
 } from '../../domain/exercises';
 import { Icon } from '../../components/Icon';
-import { MicLevel } from '../../components/MicLevel';
+import { MicLevel } from '@platform/ui';
 import styles from './SpeakCheck.module.css';
 
 interface SpeakCheckProps {

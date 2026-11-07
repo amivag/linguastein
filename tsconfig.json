@@ -17,6 +17,9 @@
       "path": "./packages/navigation"
     },
     {
+      "path": "./packages/ui"
+    },
+    {
       "path": "./apps/linguastein"
     }
   ]

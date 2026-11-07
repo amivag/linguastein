@@ -31,6 +31,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env['CI']),
   reporter: process.env['CI'] ? [['github'], ['list']] : 'list',
+  // A cold production boot in three engines at once is slow in Firefox; five
+  // seconds failed it under load while passing alone.
+  expect: { timeout: 10_000 },
   use: {
     baseURL: `${ORIGIN}${APP.basePath}`,
     trace: 'retain-on-failure',

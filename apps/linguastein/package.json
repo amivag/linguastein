@@ -29,6 +29,7 @@
     "generate:audio": "tsx scripts/generate-audio.ts"
   },
   "dependencies": {
+    "@platform/ui": "*",
     "@platform/navigation": "*",
     "@platform/appearance": "*",
     "@platform/engine": "*",

@@ -66,6 +66,8 @@ in the pack's own counts.
 - Routing moves to TanStack Router behind a navigation seam (`app/navigation.tsx`).
   Every address answers as before, and query strings are kept byte for byte.
   Component tests run on an in-memory implementation of the same seam.
+- The platform gains `@platform/navigation` (the router seam) and `@platform/ui`
+  (page layout, buttons, sheets and focus handling, breadcrumbs, meters).
 - Move to the latest majors: React Router 8.5, Vitest 5, vite-plugin-pwa 2 and
   TypeScript 7 for compiling. The `typescript` package is the TypeScript 6 API
   alias, which the ESLint parser and AST tests need.

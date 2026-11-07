@@ -12,7 +12,7 @@
  * not read — the split `session-url.ts` exists to enforce.
  */
 
-import type { Crumb } from '../../components/Breadcrumb';
+import type { Crumb } from '@platform/ui';
 import { coursePath, type Course } from '../../domain/content';
 
 export const STUDY_TABS = [

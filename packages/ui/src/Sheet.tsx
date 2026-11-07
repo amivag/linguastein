@@ -1,8 +1,8 @@
 import { useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Button } from './Button';
-import { Icon } from './Icon';
-import { FocusScopeContext, useFocusTrap } from './useFocusTrap';
+import { Button } from './Button.tsx';
+import { KitIcon } from './icons.tsx';
+import { FocusScopeContext, useFocusTrap } from './useFocusTrap.ts';
 import styles from './Sheet.module.css';
 
 interface SheetProps {
@@ -113,7 +113,7 @@ export function Sheet({
             {heading ?? <h2 className={styles.title}>{title}</h2>}
             {actions}
             <Button variant="ghost" icon onClick={onClose} aria-label="Close">
-              <Icon name="close" />
+              <KitIcon name="close" />
             </Button>
           </header>
 

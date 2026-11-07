@@ -4,14 +4,14 @@ import { useCourse } from '../../app/course';
 import { MISSIONS } from '../../app/missions';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { CourseBar } from '../../components/CourseBar';
 import { Icon, type IconName } from '../../components/Icon';
 import { SectionTabs } from '../../components/SectionTabs';
 import { alphabetGuide, numeralGuide } from '../../languages/runtime';
 import { AlphabetSection } from './AlphabetSection';
 import { NumbersSection } from './NumbersSection';
-import { Sheet } from '../../components/Sheet';
+import { Sheet } from '@platform/ui';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { levelLabel, POS_LABELS, type PartOfSpeech, type SkillKind } from '../../domain/content';
 import {

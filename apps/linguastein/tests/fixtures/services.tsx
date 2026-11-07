@@ -15,6 +15,8 @@ import {
 } from '../../src/storage';
 import { testRepository } from './pack';
 import { TestRouter } from './router';
+import { UiProvider } from '@platform/ui';
+import { kitIcon } from '../../src/app/kit-icon';
 
 /**
  * No device speech in tests, but the dataset-audio path stays reachable.
@@ -122,7 +124,9 @@ export function renderWithServices(
         removeBatch: options.removeBatch ?? (() => {}),
       }}
     >
-      <TestRouter route={options.route ?? '/'}>{children}</TestRouter>
+      <UiProvider icon={kitIcon}>
+        <TestRouter route={options.route ?? '/'}>{children}</TestRouter>
+      </UiProvider>
     </ServicesContext>
   );
 

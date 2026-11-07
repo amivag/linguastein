@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from '@platform/navigation';
 import { documentTitle } from '../app/identity';
-import { PageLayout } from '../layout/PageLayout';
+import { PageLayout } from '@platform/ui';
 import { AppNav } from './AppNav';
-import { Breadcrumb, type Crumb } from './Breadcrumb';
+import { Breadcrumb, type Crumb } from '@platform/ui';
 import { HomeLink } from './HomeLink';
 import { Icon } from './Icon';
 import { MovedNotice } from './MovedNotice';

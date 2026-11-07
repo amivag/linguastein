@@ -9,7 +9,7 @@ import {
 } from '../audio';
 import type { LanguageTag } from '../domain/content';
 import { Icon } from '../components/Icon';
-import { MicLevel } from '../components/MicLevel';
+import { MicLevel } from '@platform/ui';
 import styles from './VoiceInput.module.css';
 
 interface VoiceInputProps {

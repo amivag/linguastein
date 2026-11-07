@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react"],
+  "categories": { "correctness": "error" },
+  "ignorePatterns": ["coverage", "node_modules"],
+  "rules": {
+    "typescript/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }],
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "eqeqeq": ["error", "smart"]
+  },
+  "overrides": [
+    {
+      /*
+       * The UI kit every app shares. It may use React, the DOM and the navigation
+       * seam, and nothing app-shaped: glyphs, names and content arrive as props.
+       */
+      "files": ["src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["*", "!./*", "!react", "!react-dom", "!@platform/navigation"],
+                "message": "The UI kit imports only itself, React and @platform/navigation. Take app-specific values as props; glyphs come through UiProvider."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

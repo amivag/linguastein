@@ -1,6 +1,6 @@
-import { Button } from './Button';
+import { Button } from '@platform/ui';
 import { Icon } from './Icon';
-import { SpeakingBars } from './SpeakingBars';
+import { SpeakingBars } from '@platform/ui';
 import type { Sequence } from './usePlayback';
 import styles from './PlaybackTransport.module.css';
 

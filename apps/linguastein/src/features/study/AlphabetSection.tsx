@@ -7,7 +7,7 @@ import {
 } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { Annotation } from '../../components/Annotation';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../../components/Icon';
 import { regionLabel } from '../../domain/content';
 import { alphabetGuide, type AlphabetEntry, type AlphabetGuide } from '../../languages/runtime';

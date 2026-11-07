@@ -4,7 +4,7 @@ import { useCourse, usePronunciationLocale, useVoiceName } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';
 import { Icon } from './Icon';
-import { Sheet } from './Sheet';
+import { Sheet } from '@platform/ui';
 import { VoiceSettings } from './VoiceSettings';
 import styles from './VoicePresence.module.css';
 

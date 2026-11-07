@@ -2,7 +2,7 @@ import { isSpeaking } from '../audio';
 import type { ItemId, LearningItem, TokenId } from '../domain/content';
 import { kindHue } from '../styles/kinds';
 import { Icon } from './Icon';
-import { SpeakingBars } from './SpeakingBars';
+import { SpeakingBars } from '@platform/ui';
 import { TokenizedText } from './TokenizedText';
 import { usePlayback } from './usePlayback';
 import styles from './Transcript.module.css';

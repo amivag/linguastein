@@ -3,8 +3,7 @@ import { flushSync } from 'react-dom';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Sheet } from '../../src/components/Sheet';
-import { useFocusTrap } from '../../src/components/useFocusTrap';
+import { Sheet, useFocusTrap } from '../src/index.ts';
 
 function Empty({ close }: { close: () => void }) {
   const ref = useFocusTrap<HTMLDivElement>(close);

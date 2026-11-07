@@ -1,9 +1,9 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { PageLayout } from '../../src/layout/PageLayout';
-import styles from '../../src/layout/PageLayout.module.css';
-import { RhythmLayout } from '../fixtures/rhythm-layout';
+import { PageLayout } from '../src/index.ts';
+import styles from '../src/PageLayout.module.css';
+import { RhythmLayout } from './fixtures/rhythm-layout';
 
 describe('subject-neutral page layout', () => {
   it('runs a second subject with native navigation and no application providers', async () => {

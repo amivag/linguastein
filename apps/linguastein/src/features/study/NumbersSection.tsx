@@ -9,7 +9,7 @@ import {
   useVoiceName,
 } from '../../app/course';
 import { useServices } from '../../app/services-context';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../../components/Icon';
 import type { EntityId, SkillId } from '../../domain/content';
 import { nextSubject } from '../../domain/drills';

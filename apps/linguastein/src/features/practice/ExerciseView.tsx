@@ -2,7 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useTargetLanguage } from '../../app/course';
 import { correctnessPraise } from '../../languages/runtime';
 import { useServices } from '../../app/services-context';
-import { Button, type ButtonVariant } from '../../components/Button';
+import { Button, type ButtonVariant } from '@platform/ui';
 import type { Exercise, GradeResult, Miss } from '../../domain/exercises';
 import { diagnoseMiss, isSelfRated } from '../../domain/exercises';
 

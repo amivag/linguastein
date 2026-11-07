@@ -12,15 +12,14 @@
  * itself; the palette behind it is checked in `contrast.test.ts`.
  */
 
-import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-
-const SRC = resolve(process.cwd(), 'src');
+import { readStylesheet, stylesheets } from '../fixtures/stylesheets';
 
 /** Stylesheet, and the property every one of its backgrounds must flow through. */
 const VARIANT_CONTROLS: readonly [file: string, token: string][] = [
-  ['src/components/Button.module.css', '--button-bg'],
+  ['../../packages/ui/src/Button.module.css', '--button-bg'],
   ['src/components/ThemeToggle.module.css', '--control-bg'],
   ['src/components/ReadingSizeControl.module.css', '--control-bg'],
   ['src/components/Chip.module.css', '--chip-bg'],
@@ -55,15 +54,6 @@ describe.each(VARIANT_CONTROLS)('%s', (file, token) => {
   });
 });
 
-/** Every stylesheet under `src`, so a rule cannot be escaped by moving a file. */
-function stylesheets(directory = SRC): string[] {
-  return readdirSync(directory).flatMap((entry) => {
-    const path = join(directory, entry);
-    if (statSync(path).isDirectory()) return stylesheets(path);
-    return path.endsWith('.css') ? [relative(SRC, path).replaceAll('\\', '/')] : [];
-  });
-}
-
 /**
  * The other route out of the same trap: a control whose state is an *attribute*,
  * so `[aria-pressed='true']:hover` outranks `.chip:hover` outright and no custom
@@ -77,7 +67,7 @@ function stylesheets(directory = SRC): string[] {
  * it appears.
  */
 const PRESSED = stylesheets().filter((file) =>
-  withoutComments(readFileSync(join(SRC, file), 'utf8')).includes("[aria-pressed='true']"),
+  withoutComments(readStylesheet(file)).includes("[aria-pressed='true']"),
 );
 
 describe('controls whose selected state is an ARIA attribute', () => {
@@ -87,7 +77,7 @@ describe('controls whose selected state is an ARIA attribute', () => {
   });
 
   describe.each(PRESSED)('%s', (file) => {
-    const css = withoutComments(readFileSync(join(SRC, file), 'utf8'));
+    const css = withoutComments(readStylesheet(file));
 
     /** Declaration block of the rule whose selector contains `needle`. */
     function block(needle: string): string {

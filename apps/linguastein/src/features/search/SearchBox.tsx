@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import { useCourse } from '../../app/course';
 import { languageOption, type LanguageTag } from '../../domain/content';
-import { Button } from '../../components/Button';
+import { Button } from '@platform/ui';
 import { Icon } from '../../components/Icon';
 import { VoiceInput } from '../../components/VoiceInput';
 import { settingsPath } from '../settings/settings-url';

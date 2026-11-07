@@ -16,21 +16,10 @@
  * protected is about what the source says anyway.
  */
 
-import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readStylesheet, stylesheets } from '../fixtures/stylesheets';
 
-const SRC = resolve(process.cwd(), 'src');
-
-function stylesheets(directory = SRC): string[] {
-  return readdirSync(directory).flatMap((entry) => {
-    const path = join(directory, entry);
-    if (statSync(path).isDirectory()) return stylesheets(path);
-    return path.endsWith('.css') ? [relative(SRC, path).replaceAll('\\', '/')] : [];
-  });
-}
-
-const read = (file: string) => readFileSync(join(SRC, file), 'utf8');
+const read = readStylesheet;
 const withoutComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, '');
 
 /**
@@ -147,6 +136,6 @@ describe('overlay, never push', () => {
       return /position:\s*fixed[^}]*inset:\s*0|inset:\s*0[^}]*position:\s*fixed/.test(css);
     });
 
-    expect(overlays).toEqual(['components/Sheet.module.css']);
+    expect(overlays).toEqual(['@platform/ui/Sheet.module.css']);
   });
 });

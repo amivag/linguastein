@@ -213,6 +213,5 @@ out where: [accounts and sync](tasks/accounts-and-sync.md) behind
 `LearnerStorage`, and [a native port](tasks/native-port.md) behind
 `TtsProvider`, `SpeechRecognitionProvider`, `MicrophoneLevels` and
 `DatasetSource`. [Monetisation](tasks/monetisation.md) needs no seam and is
-mostly a set of constraints. The router remains the one vendor with no seam
-([tanstack-router.md](tasks/tanstack-router.md)), which is why it is named in
-both of the first two.
+mostly a set of constraints. The router (TanStack) sits behind
+`app/navigation.tsx`; see [screens-and-urls.md](screens-and-urls.md).

@@ -7,9 +7,7 @@ import {
   useState,
   useSyncExternalStore,
   type ErrorInfo,
-  type ReactNode,
 } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { BrowseScreen } from '../features/browse/BrowseScreen';
 import { StudyScreen } from '../features/study/StudyScreen';
 import { HomeScreen } from '../features/home/HomeScreen';
@@ -46,6 +44,14 @@ import { applyReadingSize } from '../styles/reading-size';
 import { NotFoundScreen } from '../features/not-found/NotFoundScreen';
 import { recordError } from './diagnostics';
 import { ErrorBoundary } from './ErrorBoundary';
+import {
+  AppRouter,
+  Redirect,
+  RouteOutlet,
+  useLocation,
+  useRouteParams,
+  type RouteTable,
+} from './navigation';
 import { APP } from './identity';
 import { createServices, type AppServices } from './services';
 import { ServicesContext, useServices } from './services-context';
@@ -278,72 +284,7 @@ export function App() {
       }}
     >
       <ErrorBoundary onError={reportInterfaceError}>
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <CourseContent>
-            <Routes>
-              {/* Every screen lives inside a course, so what is being studied is
-              legible in the address bar and travels with a shared link. */}
-              <Route path="/:language/:level" element={<HomeScreen />} />
-              <Route path="/:language/:level/study" element={<StudyScreen />} />
-              <Route path="/:language/:level/browse" element={<BrowseScreen />} />
-              <Route path="/:language/:level/read" element={<ReadScreen />} />
-              <Route path="/:language/:level/read/:id" element={<PassageScreen />} />
-              <Route path="/:language/:level/progress" element={<ProgressScreen />} />
-              <Route path="/:language/:level/session" element={<SessionScreen />} />
-              <Route
-                path="/:language/:level/mission/:missionId/:stage"
-                element={<MissionScreen />}
-              />
-              <Route path="/:language/:level/settings" element={<SettingsScreen />} />
-              {/* An unknown screen *inside* a course, matched before the global
-              catch-all so the 404 keeps the course it was reached from: a
-              learner on A1 who follows a stale link should be offered A1, not
-              whichever scope their preference happens to hold. */}
-              <Route path="/:language/:level/*" element={<NotFoundScreen />} />
-
-              {/* Who the learner is, and what this device is holding about them:
-              the first Settings section now, not a screen of its own. The
-              address stays because it was one — a learner's bookmark, and the
-              shortest thing to type — and a redirect is how it keeps meaning
-              what it meant. */}
-              <Route
-                path="/user"
-                element={<CourseRedirect to={(course) => settingsPath(course, 'user')} />}
-              />
-
-              {/* Outside the course routes: the design system is a property of the
-              app, not of what is being studied. `useCourse` resolves to the
-              widest real course when the path carries none, so the navigation
-              still points somewhere sensible. */}
-              <Route
-                path="/design"
-                element={
-                  <Suspense fallback={<Splash message="Loading the design system…" />}>
-                    <StyleGuideScreen />
-                  </Suspense>
-                }
-              />
-
-              {/* Links written before courses existed, kept working: the query
-              string is what carries a shared session, so it has to survive the
-              hop rather than being dropped at the door. */}
-              {LEGACY_SCREENS.map((screen) => (
-                <Route
-                  key={screen}
-                  path={`/${screen}`}
-                  element={<CourseRedirect screen={screen} keepSearch />}
-                />
-              ))}
-              <Route path="/read/:id" element={<LegacyPassageRedirect />} />
-
-              {/* `/` has no screen of its own, so it redirects to the course the
-              learner left. Anything else unrecognised is a 404 and says so —
-              see `NotFoundScreen` for why silently redirecting was worse. */}
-              <Route path="/" element={<CourseRedirect />} />
-              <Route path="*" element={<NotFoundScreen />} />
-            </Routes>
-          </CourseContent>
-        </BrowserRouter>
+        <AppRouter basepath={import.meta.env.BASE_URL} routes={ROUTES} layout={CourseContent} />
       </ErrorBoundary>
     </ServicesContext>
   );
@@ -351,6 +292,59 @@ export function App() {
 
 /** One-segment paths the app used before courses. */
 const LEGACY_SCREENS = ['browse', 'read', 'progress', 'session', 'settings'] as const;
+
+/**
+ * Every address the app answers, as data (`app/navigation.tsx` turns it into the
+ * router's own table). The more specific pattern wins, whatever the order here.
+ */
+const ROUTES: RouteTable = {
+  // Every screen lives inside a course, so what is being studied is legible in
+  // the address bar and travels with a shared link.
+  '/:language/:level': <HomeScreen />,
+  '/:language/:level/study': <StudyScreen />,
+  '/:language/:level/browse': <BrowseScreen />,
+  '/:language/:level/read': <ReadScreen />,
+  '/:language/:level/read/:id': <PassageScreen />,
+  '/:language/:level/progress': <ProgressScreen />,
+  '/:language/:level/session': <SessionScreen />,
+  '/:language/:level/mission/:missionId/:stage': <MissionScreen />,
+  '/:language/:level/settings': <SettingsScreen />,
+  // An unknown screen *inside* a course, so the 404 keeps the course it was
+  // reached from: a learner on A1 who follows a stale link should be offered A1,
+  // not whichever scope their preference happens to hold.
+  '/:language/:level/*': <NotFoundScreen />,
+
+  // Who the learner is, and what this device is holding about them: the first
+  // Settings section now, not a screen of its own. The address stays because it
+  // was one (a bookmark, and the shortest thing to type), and a redirect is how
+  // it keeps meaning what it meant.
+  '/user': <CourseRedirect to={(course) => settingsPath(course, 'user')} />,
+
+  // Outside the course routes: the design system is a property of the app, not
+  // of what is being studied. `useCourse` resolves to the widest real course
+  // when the path carries none, so the navigation still points somewhere.
+  '/design': (
+    <Suspense fallback={<Splash message="Loading the design system…" />}>
+      <StyleGuideScreen />
+    </Suspense>
+  ),
+
+  // Links written before courses existed, kept working: the query string is
+  // what carries a shared session, so it has to survive the hop.
+  ...Object.fromEntries(
+    LEGACY_SCREENS.map((screen) => [
+      `/${screen}`,
+      <CourseRedirect key={screen} screen={screen} keepSearch />,
+    ]),
+  ),
+  '/read/:id': <LegacyPassageRedirect />,
+
+  // `/` has no screen of its own, so it redirects to the course the learner left.
+  // Anything else unrecognised is a 404 and says so; see `NotFoundScreen` for
+  // why silently redirecting was worse.
+  '/': <CourseRedirect />,
+  '*': <NotFoundScreen />,
+};
 
 /**
  * The content the address needs, before the screens that read it.
@@ -370,7 +364,7 @@ const LEGACY_SCREENS = ['browse', 'read', 'progress', 'session', 'settings'] as 
  * uses. A path naming no level — `/design`, `/user`, a legacy `/browse` — needs
  * nothing beyond what boot loaded.
  */
-function CourseContent({ children }: { readonly children: ReactNode }) {
+function CourseContent() {
   const { services } = useServices();
   const { pathname } = useLocation();
   const { level } = parseCoursePath(pathname);
@@ -410,7 +404,7 @@ function CourseContent({ children }: { readonly children: ReactNode }) {
     return <Splash message={`Could not load ${levelLabel(level)}: ${failure.error.message}`} />;
   }
   if (!ready) return <Splash message="Loading…" />;
-  return children;
+  return <RouteOutlet />;
 }
 
 /**
@@ -451,12 +445,12 @@ function CourseRedirect({
   );
   const search = keepSearch ? location.search : '';
 
-  return <Navigate replace to={`${to ? to(course) : coursePath(course, screen)}${search}`} />;
+  return <Redirect to={`${to ? to(course) : coursePath(course, screen)}${search}`} />;
 }
 
 /** `/read/700001` → `/es/all/read/700001`, keeping the passage. */
 function LegacyPassageRedirect() {
-  const { id } = useParams();
+  const { id } = useRouteParams();
   return <CourseRedirect screen={`read/${id ?? ''}`} />;
 }
 

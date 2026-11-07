@@ -77,7 +77,7 @@
               },
               {
                 "group": ["react-router", "react-router/*", "@tanstack/react-router"],
-                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `app/navigation`. Only it and the route table in `App.tsx` name the router."
+                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `app/navigation`. It is the only file that names the router."
               }
             ]
           }
@@ -152,7 +152,7 @@
               },
               {
                 "group": ["react-router", "react-router/*", "@tanstack/react-router"],
-                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `app/navigation`. Only it and the route table in `App.tsx` name the router."
+                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `app/navigation`. It is the only file that names the router."
               },
               {
                 "group": ["**/features/**"],
@@ -178,10 +178,10 @@
     },
 
     /*
-     * The router seam and the route table: the two files that may name it.
+     * The router seam: the one file that may name it.
      */
     {
-      "files": ["src/app/navigation.tsx", "src/app/App.tsx"],
+      "files": ["src/app/navigation.tsx"],
       "rules": { "no-restricted-imports": "off" }
     }
   ]

@@ -413,13 +413,16 @@ so a second language pack appears in the picker — and in the URL — with no c
 change. `tests/fixtures/pack.ts` ships a small French pack for exactly this:
 anything that assumes one language or one pack fails there.
 
-The router itself is the one vendor here with no seam: `react-router` is named in
-eighteen files under `src/`, which is why replacing it is a task rather than a
-bump. The briefed migration to TanStack Router —
-[docs/tasks/tanstack-router.md](tasks/tanstack-router.md) — starts by
-introducing that seam, so the first commit is worth landing whichever router
-wins. Read it before adding a route, and do not adopt `validateSearch`: the URL
-codecs drop unrecognised values on purpose, and it throws.
+The router is TanStack Router, behind one seam: [`app/navigation.tsx`](../apps/linguastein/src/app/navigation.tsx).
+Screens use its `Link`, `useNavigate`, `useLocation`, `useRouteParams` and
+`useSearchParams` with codec-built strings; lint forbids naming the router
+anywhere else. Routes are a data table in `App.tsx`; a pattern that prefixes
+others becomes their parent, so `/:language/:level` outranks
+`/:language/:level/*`. The query string is carried opaquely, so a link keeps the
+exact bytes its codec wrote. Do not adopt `validateSearch`: the codecs drop
+unrecognised values on purpose, and it throws. Component tests run in
+`MemoryNavigation`, an in-memory implementation of the same seam, through
+`tests/fixtures/router.tsx`.
 
 ## What a session practises
 

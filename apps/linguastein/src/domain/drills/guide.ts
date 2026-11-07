@@ -7,7 +7,7 @@
  * See docs/framework.md for the current reuse boundary.
  */
 
-import type { DrillMaterial } from '../../engine/drill';
+import type { DrillMaterial } from '@platform/engine';
 
 export interface DrillGuide<Target> extends DrillMaterial<Target> {
   /** The target as the learner should produce it: `1042` → `mil cuarenta y dos`. */

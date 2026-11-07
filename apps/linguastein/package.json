@@ -29,6 +29,7 @@
     "generate:audio": "tsx scripts/generate-audio.ts"
   },
   "dependencies": {
+    "@platform/engine": "*",
     "idb": "^8.0.4",
     "lucide-react": "^1.61.0",
     "react": "^19.3.1",

@@ -5,7 +5,7 @@
 ## Decisions
 
 - Spanish is the working app. Its shell is a scaffold for other apps; the pure
-  `src/engine/` directory is the reusable learning core. Rhythm training with
+  `@platform/engine` package is the reusable learning core. Rhythm training with
   hands/pencils is the next subject being considered, not a built app.
 - Keep content, exercises, evidence and learner state separate. Rhythm owns
   temporal targets and grading; it must not pretend to be text or Spanish.

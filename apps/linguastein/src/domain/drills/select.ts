@@ -1,1 +1,1 @@
-export { nextSubject } from '../../engine/select';
+export { nextSubject } from '@platform/engine';

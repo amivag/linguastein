@@ -1,4 +1,11 @@
 {
   "files": [],
-  "references": [{ "path": "./apps/linguastein" }]
+  "references": [
+    {
+      "path": "./packages/engine"
+    },
+    {
+      "path": "./apps/linguastein"
+    }
+  ]
 }

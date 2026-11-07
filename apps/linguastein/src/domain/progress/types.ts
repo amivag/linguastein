@@ -8,9 +8,9 @@ import { packIdOf, type EntityId, type PackId } from '../content';
 import type { GradedMode } from '../exercises/modes';
 import type { ExerciseKind } from '../exercises/types';
 
-import type { MemoryState, ItemStatus, ReviewGrade, Timestamp } from '../../engine/memory';
-export { ITEM_STATUSES, REVIEW_GRADES, isDue } from '../../engine/memory';
-export type { ItemStatus, ReviewGrade, Timestamp } from '../../engine/memory';
+import type { MemoryState, ItemStatus, ReviewGrade, Timestamp } from '@platform/engine';
+export { ITEM_STATUSES, REVIEW_GRADES, isDue } from '@platform/engine';
+export type { ItemStatus, ReviewGrade, Timestamp } from '@platform/engine';
 
 /**
  * What one thing the learner is getting better at looks like.

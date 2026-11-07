@@ -1,1 +1,1 @@
-export * from '../engine/random';
+export * from '@platform/engine';

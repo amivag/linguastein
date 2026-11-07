@@ -57,9 +57,9 @@ These are design constraints; prefer executable enforcement over repeated prose.
 
 1. **Separate content, exercises and learner state.** `src/domain` and
    `src/languages` are pure TypeScript: no React, DOM, fetch or vendor SDKs.
-   `src/engine` is the subject-neutral subset, with no imports outside its own
-   directory and no browser/Node ambient types (`tests/engine/boundary.test.ts`,
-   `tsconfig.engine.json`). Lint enforces the pure-layer boundaries.
+   `@platform/engine` (`packages/engine`) is the subject-neutral subset, with no imports outside its own
+   package and no browser/Node ambient types (its `tests/boundary.test.ts` and
+   `tsconfig.src.json`). Lint enforces the pure-layer boundaries.
 2. **Derive exercises; never store them in content.** Use
    `domain/exercises/generators.ts`.
 3. **Store semantic data; derive presentation.** Tokens have ids/order;
@@ -74,7 +74,7 @@ These are design constraints; prefer executable enforcement over repeated prose.
    Shared components may not import screens; lint enforces these boundaries.
 6. **English is a fallback, not a structural requirement.** Translations are
    separate records resolved through the reference-language fallback chain.
-7. **Inject randomness.** Use `src/engine/random.ts` (also re-exported by
+7. **Inject randomness.** Use `@platform/engine` randomness (also re-exported by
    `utils/random.ts`) so seeds reproduce sessions.
 8. **A course is a scope, not a partition.** Derive it from loaded packs; CEFR
    level is a ceiling. Narrow downstream through an `ItemFilter`. Device

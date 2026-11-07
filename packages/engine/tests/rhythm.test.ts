@@ -6,7 +6,7 @@ import {
   seededRng,
   type DrillMaterial,
   type MemoryState,
-} from '../../src/engine';
+} from '../src';
 
 const DAY = 86_400_000;
 const rules = ['rhythm:skill:pulse', 'rhythm:skill:offbeat'] as const;

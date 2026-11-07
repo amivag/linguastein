@@ -95,12 +95,7 @@
      * accident, because the fix for "I need this in the UI" always looks local.
      */
     {
-      "files": [
-        "src/domain/**/*.ts",
-        "src/languages/**/*.ts",
-        "src/engine/**/*.ts",
-        "src/appearance/**/*.ts"
-      ],
+      "files": ["src/domain/**/*.ts", "src/languages/**/*.ts", "src/appearance/**/*.ts"],
       "rules": {
         "no-restricted-imports": [
           "error",

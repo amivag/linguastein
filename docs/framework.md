@@ -7,7 +7,7 @@ percentages or line counts.
 
 ## The copyable core
 
-Copy all of `src/engine/` and import from its index. It has no external imports,
+Depend on `@platform/engine` (`packages/engine`) and import from its index. It has no external imports,
 React, browser/Node ambient types, content ids or closed Spanish exercise enum.
 
 | Module      | Shared responsibility                                                   | App responsibility                      |
@@ -22,9 +22,9 @@ The Spanish scheduler adapter preserves app-owned progress fields. Legacy drill
 selection and random paths re-export the shared implementations. `DrillGuide`
 extends `DrillMaterial` with text render/parse; non-text subjects need no parser.
 
-`tests/engine/rhythm.test.ts` exercises numeric beat onsets, curriculum selection,
+`packages/engine/tests/rhythm.test.ts` exercises numeric beat onsets, curriculum selection,
 review and lapse scheduling. The boundary test rejects external imports/runtime
-module loading; `tsconfig.engine.json` compiles without DOM/Node types. Engine
+module loading; its `tsconfig.src.json` compiles without DOM/Node types. Engine
 coverage floors match the domain floors. This establishes the contract, not
 physical-input accuracy or motor-learning validity of the memory model.
 

@@ -11,7 +11,7 @@ function sources(folder: string): string[] {
   });
 }
 
-it.each(['src/engine', 'src/appearance', 'src/layout'])(
+it.each(['src/appearance', 'src/layout'])(
   'keeps every %s dependency inside its copyable directory',
   (directory) => {
     const root = resolve(directory);

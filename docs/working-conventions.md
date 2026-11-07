@@ -5,7 +5,7 @@ Read for learning behavior or release work. Core architectural rules are in
 
 ## Learning model
 
-- Scheduling models memory through `src/engine/fsrs.ts`; the domain adapter
+- Scheduling models memory through `@platform/engine` (`fsrs.ts`); the domain adapter
   preserves Spanish-owned progress fields. Default weights are not a per-user
   fit or a validated model of rhythm performance.
 - `domain/sessions/composer.ts` chooses retrieval mode from evidence, climbing

@@ -6,6 +6,7 @@ import { AppNav } from './AppNav';
 import { Breadcrumb, type Crumb } from './Breadcrumb';
 import { HomeLink } from './HomeLink';
 import { Icon } from './Icon';
+import { MovedNotice } from './MovedNotice';
 import { UpdateBanner } from './UpdateBanner';
 import { VoicePresence } from './VoicePresence';
 import styles from './AppShell.module.css';
@@ -92,7 +93,12 @@ export function AppShell({
           {action}
         </>
       }
-      notice={<UpdateBanner />}
+      notice={
+        <>
+          <MovedNotice />
+          <UpdateBanner />
+        </>
+      }
       navigation={showNav && <AppNav />}
       navigationLayout="bar-rail"
       wide={wide}

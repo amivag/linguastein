@@ -1,12 +1,16 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 // With the extension: Vite's future native config loader refuses an
 // extensionless import, and it already warns about one today.
 import { withContentSecurityPolicy } from './scripts/csp.ts';
+import { deploymentFrom } from './scripts/deployment.ts';
+import { cloudflareHeaders } from './scripts/headers.ts';
 import { APP, cacheName } from './src/app/identity.ts';
 import { prePaintAxes } from './src/styles/axes.ts';
 
@@ -23,8 +27,12 @@ const pkg = JSON.parse(
  * Base path, name and machine id all come from `src/app/identity.ts` — the one
  * module a new project edits. It is plain data with no imports precisely so a
  * config file can read it: nothing here may touch the DOM.
+ *
+ * The deploy environment can override the base path and name the host; unset,
+ * it builds exactly what GitHub Pages serves today (`scripts/deployment.ts`).
  */
-const BASE = APP.basePath;
+const DEPLOYMENT = deploymentFrom(process.env, APP.basePath);
+const BASE = DEPLOYMENT.basePath;
 
 function buildCommit(): string {
   if (process.env['LINGUASTEIN_BUILD_COMMIT']) return process.env['LINGUASTEIN_BUILD_COMMIT'];
@@ -52,6 +60,7 @@ export default defineConfig({
     __BUILD_TIME__: JSON.stringify(
       process.env['LINGUASTEIN_BUILD_TIME'] ?? new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
     ),
+    __APP_MOVED_TO__: JSON.stringify(DEPLOYMENT.movedTo),
   },
   plugins: [
     /**
@@ -96,6 +105,25 @@ export default defineConfig({
         handler: withContentSecurityPolicy,
       },
     },
+    /**
+     * Response headers for a host that reads `_headers`, written once the HTML
+     * is on disk so the policy hashes the inline script that actually shipped.
+     * Only for that host: GitHub Pages would serve the file as a page instead.
+     */
+    ((): Plugin => {
+      let outDir = '';
+      return {
+        name: 'host-headers',
+        apply: () => DEPLOYMENT.target === 'cloudflare',
+        configResolved(config) {
+          outDir = resolve(config.root, config.build.outDir);
+        },
+        closeBundle() {
+          const html = readFileSync(resolve(outDir, 'index.html'), 'utf8');
+          writeFileSync(resolve(outDir, '_headers'), cloudflareHeaders(html, BASE));
+        },
+      };
+    })(),
     react(),
     VitePWA({
       registerType: 'autoUpdate',

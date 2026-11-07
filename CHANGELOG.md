@@ -47,6 +47,9 @@ in the pack's own counts.
 
 - Settings → About lists recent errors recorded on this device and copies them
   into a bug report. Nothing is sent anywhere.
+- Ready to move to Cloudflare, off until configured: a build for a subdomain
+  root with security headers, a gated deploy job, and a notice that sends
+  learners at the old address to the new one.
 
 ### Maintenance
 

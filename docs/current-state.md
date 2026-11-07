@@ -17,6 +17,9 @@
 - Future users, registration and sign-in must be accommodated, not implemented
   now. Guest practice remains available. Identity, app/account ownership and
   guest-to-account migration need explicit contracts before sync.
+- Hosting moves to Cloudflare, one subdomain per app, with a moved notice left
+  at the GitHub Pages address. The domain is undecided; the switch is prepared
+  and off ([deploy.md](deploy.md#switching-hosts)).
 - No backend vendor is fixed. [server-foundation.md](server-foundation.md) owns
   the server/account plan; older Supabase-only notes are superseded.
 - Use `sfw npm` for dependency work and respect the configured release cutoff.

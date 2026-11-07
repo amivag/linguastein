@@ -14,6 +14,11 @@
 export const APP_VERSION = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : '0.0.0-dev';
 export const BUILD_COMMIT = typeof __BUILD_COMMIT__ === 'string' ? __BUILD_COMMIT__ : 'unknown';
 export const BUILD_TIME = typeof __BUILD_TIME__ === 'string' ? __BUILD_TIME__ : '';
+/**
+ * Where this app now lives, when this build is the one left at its old address.
+ * `''` everywhere else, which is every build until a host switch.
+ */
+export const MOVED_TO = typeof __APP_MOVED_TO__ === 'string' ? __APP_MOVED_TO__ : '';
 
 /**
  * `0.1.0 (a1b2c3d)` — the string a bug report should quote, and short enough

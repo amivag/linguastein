@@ -66,19 +66,51 @@ two will collide.
   `<meta>` written by the build ([`scripts/csp.ts`](../scripts/csp.ts)), with
   Trusted Types required. A meta policy cannot set `frame-ancestors`, so the app
   can still be framed; a host with headers fixes that.
+- **Nothing gates the site.** Free Pages cannot be access-controlled; private
+  Pages needs GitHub Pro. The URL is public from the first deploy.
 
 ## Workflow permissions
 
-The deploy workflow has two jobs. `build` installs packages, runs the gate and
-uploads the artifact with read-only permissions. `deploy` holds `pages: write`
-and `id-token: write`, and runs no repository or package code. A compromised
-dependency can therefore fail a build but not publish one. Actions are pinned to
-commit SHAs, and Dependabot keeps those pins current. `.npmrc` blocks install
-scripts and holds back releases younger than seven days, for CI as well as
-locally.
+The deploy workflow's `build` job installs packages, runs the gate and uploads
+artifacts with read-only permissions. `deploy` (Pages) holds `pages: write` and
+`id-token: write`; `cloudflare` holds the Cloudflare token. Neither runs
+repository or package code, so a compromised dependency can fail a build but not
+publish one. Actions are pinned to commit SHAs, and Dependabot keeps those pins
+current. `.npmrc` blocks install scripts and holds back releases younger than
+seven days, for CI as well as locally.
 
-- **Nothing gates the site.** Free Pages cannot be access-controlled; private
-  Pages needs GitHub Pro. The URL is public from the first deploy.
+## Switching hosts
+
+Decided: Cloudflare (Workers static assets), one subdomain per app, and a
+moved notice at the old address. Not decided: the domain. Everything below is in
+the repository and off; switching is configuration, in this order.
+
+1. **Preview on Cloudflare.** Create the Cloudflare account and an API token
+   with the _Workers Scripts: Edit_ permission. In the GitHub repository, add the
+   secret `CLOUDFLARE_API_TOKEN` and the variables `CLOUDFLARE_ACCOUNT_ID` and
+   `CLOUDFLARE_DEPLOY=true`. The next push deploys to
+   `linguastein.<account>.workers.dev` as well as Pages. Treat that address as a
+   preview: data saved there does not carry over to the final domain.
+2. **Attach the domain.** Add a `routes` entry to
+   [`wrangler.json`](../wrangler.json), for example
+   `{ "pattern": "linguastein.example.com", "custom_domain": true }`, then turn
+   on HSTS for the domain in Cloudflare. Check the response headers with
+   `curl -I`: the content security policy, `frame-ancestors` and a 200 status on
+   a deep link such as `/es/a1/study`.
+3. **Point the old address at it.** Set the variable
+   `APP_MOVED_TO=https://linguastein.example.com/`. The Pages build keeps working,
+   and every screen there says where the app went and how to carry progress over
+   (save a backup, then restore it at the new address). Browser storage belongs to
+   an origin, so it cannot move by itself.
+4. **Retire Pages** once nobody needs the old copy: delete the `deploy` job and
+   `APP_MOVED_TO`, and set Pages to unpublished.
+
+The build reads `DEPLOY_TARGET`, `APP_BASE_PATH` and `APP_MOVED_TO`
+([`scripts/deployment.ts`](../scripts/deployment.ts)); unset, it builds exactly
+today's Pages site. A Cloudflare build adds `_headers`
+([`scripts/headers.ts`](../scripts/headers.ts)), whose policy hashes the shipped
+HTML. To build one locally, run
+`DEPLOY_TARGET=cloudflare APP_BASE_PATH=/ npx vite build`.
 
 ## On the source being public
 

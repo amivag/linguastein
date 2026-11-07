@@ -48,8 +48,13 @@ jobs:
 
       # `tsc -b` runs inside this, and the checkout is a real git clone, so
       # vite.config.ts resolves the build commit on its own.
+      #
+      # `APP_MOVED_TO` is empty until the app has a new home. Once it is set, this
+      # build tells learners where the app went (see "Switching hosts").
       - name: Build
         run: npm run build
+        env:
+          APP_MOVED_TO: ${{ vars.APP_MOVED_TO }}
 
       # Pages has no rewrite rule, so a hard refresh on /practice would 404.
       # Serving the app shell as the 404 body lets the router take over.
@@ -59,6 +64,25 @@ jobs:
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: dist
+
+      # The same app for Cloudflare: served from its own origin's root, with the
+      # `_headers` file Pages cannot use. Off until `CLOUDFLARE_DEPLOY` is `true`.
+      # Packaged with `wrangler.json`, so the deploy job needs no checkout.
+      - name: Build for Cloudflare
+        if: vars.CLOUDFLARE_DEPLOY == 'true'
+        run: |
+          npx vite build --outDir cloudflare/dist --emptyOutDir
+          cp wrangler.json cloudflare/
+        env:
+          DEPLOY_TARGET: cloudflare
+          APP_BASE_PATH: ${{ vars.CLOUDFLARE_BASE_PATH || '/' }}
+
+      - if: vars.CLOUDFLARE_DEPLOY == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: cloudflare
+          path: cloudflare
+          if-no-files-found: error
 
   # Holds the publishing permissions, and runs no repository or package code.
   deploy:
@@ -75,3 +99,29 @@ jobs:
 
       - id: deploy
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  # Publishes to Cloudflare. Like `deploy`, it runs no repository or package
+  # code: only a pinned Wrangler, in a directory holding nothing but the build.
+  # Needs the `CLOUDFLARE_API_TOKEN` secret and `CLOUDFLARE_ACCOUNT_ID` variable.
+  cloudflare:
+    needs: build
+    if: vars.CLOUDFLARE_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    permissions: {}
+    environment:
+      name: cloudflare
+    steps:
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: cloudflare
+
+      - name: Deploy
+        run: npx --yes wrangler@4.156.0 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          npm_config_ignore_scripts: 'true'

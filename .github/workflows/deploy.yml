@@ -34,7 +34,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --engine-strict
 
       # Deliberately the full gate, not just the build. This duplicates ci.yml on
       # a push to main, which is cheap next to publishing a broken app: nothing

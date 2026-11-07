@@ -16,7 +16,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      - run: npm ci
+      # Strict so a dependency that outgrows .nvmrc fails here, by name, rather
+      # than as every test worker crashing on an API the pinned Node lacks.
+      - run: npm ci --engine-strict
 
       - name: Type check
         run: npm run typecheck

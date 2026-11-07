@@ -7,7 +7,7 @@ import {
   createThemeMode,
   defineThemeCatalog,
   serializeAxes,
-} from '../../src/appearance';
+} from '@platform/appearance';
 
 function boot(saved: Record<string, string>, blocked = false, mediaAvailable = true) {
   const appearance = createAppearance({ namespace: 'rhythm' });

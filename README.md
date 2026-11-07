@@ -54,7 +54,6 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 ```text
 apps/linguastein/src/
 ├── app/          composition root, routing, the current course, services context
-├── appearance/   portable theme catalogs, axes and first-paint metadata
 ├── domain/       Spanish content, exercises, sessions and progress adapters
 │   ├── content/  language model: items, lexemes, forms, skills, translations
 │   ├── exercises/exercise generation and grading

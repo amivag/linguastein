@@ -5,7 +5,7 @@ import {
   defineThemeCatalog,
   serializeAxes,
   type AppearanceHost,
-} from '../../src/appearance';
+} from '../src/index.ts';
 
 function fixture(namespace = 'rhythm') {
   const dataset: Record<string, string> = {};

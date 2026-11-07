@@ -11,7 +11,7 @@ PHP/SQL and account boundaries.
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | `@platform/engine`: memory, drill selection/material, seeded randomness | Subject evidence, generators, content model and grading                |
 | `app/identity.ts`, build identity, error-boundary pattern               | App identity values, static icons/artwork and npm metadata             |
-| `src/appearance/`, palette solver, tokens and surface recipes           | App theme catalog/CSS, grammar semantics and material-kind assignments |
+| `@platform/appearance`, palette solver, tokens and surface recipes      | App theme catalog/CSS, grammar semantics and material-kind assignments |
 | `src/layout/`, Button, Chip, Sheet, Icon and focus containment          | AppShell/AppNav course/voice composition                               |
 | Contrast, motion, hover and design-language checks                      | Screen accessibility tests and grammar examples in `/design`           |
 | Strict TypeScript, lint boundaries and CI/local-gate parity             | Directory coverage entries and subject-specific dataset steps          |

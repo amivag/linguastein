@@ -1,4 +1,4 @@
-import type { createAppearance } from './axis';
+import type { createAppearance } from './axis.ts';
 
 export const THEME_PREFERENCES = ['system', 'dark', 'light'] as const;
 export type ThemePreference = (typeof THEME_PREFERENCES)[number];

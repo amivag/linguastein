@@ -1,6 +1,6 @@
 # Portable appearance and app theme plugins
 
-The shared mechanism is `src/appearance/`; each app supplies its namespace,
+The shared mechanism is `@platform/appearance` (`packages/appearance`); each app supplies its namespace,
 theme catalog and CSS. Themes are build-time plugins: apps may combine theme
 modules, but arbitrary runtime downloads/installation are not implemented.
 Existing Spanish preferences, palette ids, CSS values and control APIs remain
@@ -8,18 +8,18 @@ compatible. See live `/design` for the rendered token/control reference.
 
 ## Ownership
 
-| Location                    | Responsibility                                                                        |
-| --------------------------- | ------------------------------------------------------------------------------------- |
-| `src/appearance/axis.ts`    | Injectable host, namespaced axes, validation, application and pre-paint serialization |
-| `src/appearance/catalog.ts` | Validated, immutable theme metadata and fallback selection                            |
-| `src/appearance/mode.ts`    | System/light/dark preference resolution, independent of app colors                    |
-| `src/app/themes.ts`         | This app's theme modules, labels, descriptions, order and default                     |
-| `src/app/themes.css`        | This app's palette stylesheet imports                                                 |
-| `src/styles/themes/*.css`   | This app's light/dark role definitions and intensity variants                         |
-| `src/styles/appearance.ts`  | Binds shared mechanics to `APP.id`                                                    |
-| `src/styles/themes.ts`      | Compatibility adapter for existing UI/storage imports                                 |
-| `src/styles/axes.ts`        | App composition of theme, palette, contrast, intensity and size                       |
-| `src/styles/global.css`     | Shared primitives, app palette entry, then contrast overrides                         |
+| Location                   | Responsibility                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------- |
+| `axis.ts`                  | Injectable host, namespaced axes, validation, application and pre-paint serialization |
+| `catalog.ts`               | Validated, immutable theme metadata and fallback selection                            |
+| `mode.ts`                  | System/light/dark preference resolution, independent of app colors                    |
+| `src/app/themes.ts`        | This app's theme modules, labels, descriptions, order and default                     |
+| `src/app/themes.css`       | This app's palette stylesheet imports                                                 |
+| `src/styles/themes/*.css`  | This app's light/dark role definitions and intensity variants                         |
+| `src/styles/appearance.ts` | Binds shared mechanics to `APP.id`                                                    |
+| `src/styles/themes.ts`     | Compatibility adapter for existing UI/storage imports                                 |
+| `src/styles/axes.ts`       | App composition of theme, palette, contrast, intensity and size                       |
+| `src/styles/global.css`    | Shared primitives, app palette entry, then contrast overrides                         |
 
 The portable directory imports no app identity, React, CSS or external modules.
 It compiles without DOM/Node ambient types alongside the engine. Boundary tests
@@ -27,7 +27,7 @@ reject dependencies on the host app; coverage floors match the pure domain.
 
 ## Supplying another app's themes
 
-Keep `src/appearance/` unchanged. Register the app's metadata once:
+Keep `@platform/appearance` unchanged. Register the app's metadata once:
 
 ```ts
 import { createAppearance, defineThemeCatalog } from '../appearance';

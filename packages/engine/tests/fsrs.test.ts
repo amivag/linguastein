@@ -1,6 +1,12 @@
 /** The FSRS scheduler, through its public contract only. */
 import { describe, expect, it } from 'vitest';
-import { fsrsScheduler, intervalDays, isDue, retrievability, type MemoryState } from '../src';
+import {
+  fsrsScheduler,
+  intervalDays,
+  isDue,
+  retrievability,
+  type MemoryState,
+} from '../src/index.ts';
 
 const DAY = 86_400_000;
 

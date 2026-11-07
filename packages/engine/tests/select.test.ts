@@ -1,6 +1,6 @@
 /** Choosing the next drill subject: due first, then unmet in order, then weakest. */
 import { describe, expect, it } from 'vitest';
-import { nextSubject, seededRng, type MemoryState } from '../src';
+import { nextSubject, seededRng, type MemoryState } from '../src/index.ts';
 
 const DAY = 86_400_000;
 const NOW = 100 * DAY;

@@ -9,7 +9,7 @@
   hands/pencils is the next subject being considered, not a built app.
 - Keep content, exercises, evidence and learner state separate. Rhythm owns
   temporal targets and grading; it must not pretend to be text or Spanish.
-- Theme infrastructure is portable in `src/appearance/`; each app supplies its
+- Theme infrastructure is portable in `@platform/appearance`; each app supplies its
   namespace, catalog and CSS. Build-time theme modules are supported; runtime
   downloads are not. [Theming](theming.md) owns registration and accessibility.
 - A future optional server is likely modern PHP. SQLite, MySQL, MariaDB and

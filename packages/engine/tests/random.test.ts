@@ -1,6 +1,6 @@
 /** Seeded randomness: the property every reproducible session rests on. */
 import { describe, expect, it } from 'vitest';
-import { pick, randomInt, sample, seededRng, shuffle, systemRng, token } from '../src';
+import { pick, randomInt, sample, seededRng, shuffle, systemRng, token } from '../src/index.ts';
 
 describe('seededRng', () => {
   it('repeats exactly for the same seed, and differs for another', () => {

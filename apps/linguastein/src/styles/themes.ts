@@ -1,9 +1,9 @@
 /** Compatibility exports bound to this app's palette catalog. */
 import { APP_THEMES } from '../app/themes';
-import { createThemeMode } from '../appearance';
+import { createThemeMode } from '@platform/appearance';
 import { appearance, defineAxis } from './appearance';
-export { THEME_PREFERENCES, THEME_OPTIONS, resolveTheme } from '../appearance';
-export type { ThemePreference, ThemeId, ThemeOption } from '../appearance';
+export { THEME_PREFERENCES, THEME_OPTIONS, resolveTheme } from '@platform/appearance';
+export type { ThemePreference, ThemeId, ThemeOption } from '@platform/appearance';
 
 export const PALETTES = APP_THEMES.ids;
 export type PaletteId = (typeof PALETTES)[number];

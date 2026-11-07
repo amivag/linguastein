@@ -26,8 +26,8 @@
  * in the same order.
  */
 
-import { isDue, type MemoryState, type Timestamp } from './memory';
-import { randomInt, type Rng } from './random';
+import { isDue, type MemoryState, type Timestamp } from './memory.ts';
+import { randomInt, type Rng } from './random.ts';
 
 /**
  * How well a subject is held, 0 (not at all) to 1.

@@ -16,7 +16,7 @@
  * harder items are scheduled sooner) rather than exact constants.
  */
 
-import type { MemoryState, ItemStatus, ReviewGrade, Timestamp, Scheduler } from './memory';
+import type { MemoryState, ItemStatus, ReviewGrade, Timestamp, Scheduler } from './memory.ts';
 
 const MINUTE = 60_000;
 const DAY = 24 * 60 * MINUTE;

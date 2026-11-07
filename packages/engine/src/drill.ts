@@ -1,4 +1,4 @@
-import type { Rng } from './random';
+import type { Rng } from './random.ts';
 
 /** Target generation and durable curriculum, independent of response modality. */
 export interface DrillMaterial<Target> {

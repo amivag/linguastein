@@ -1,5 +1,5 @@
 /** This app's theme plugins. Core appearance code never imports this catalog. */
-import { defineThemeCatalog } from '../appearance';
+import { defineThemeCatalog } from '@platform/appearance';
 export const APP_THEMES = defineThemeCatalog(
   [
     { id: 'indigo', label: 'Indigo', description: 'Cool indigo with a warm amber second voice.' },

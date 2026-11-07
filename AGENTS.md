@@ -123,7 +123,7 @@ These are design constraints; prefer executable enforcement over repeated prose.
   highlight means new material, success/danger mean verdicts. Kind hues identify
   material; control state wins. Motion uses intent tokens, never raw durations.
 - Theme, palette, contrast, intensity and reading size remain independent axes
-  declared with `defineAxis`. `src/appearance` is portable; app theme metadata
+  declared with `defineAxis`. `@platform/appearance` (`packages/appearance`) is portable; app theme metadata
   and CSS entries live in `src/app/themes.ts` and `themes.css`. Keep app identity
   and palette choices outside the core. Contrast owns neutrals, intensity owns hues.
   Pre-paint settings are injected from the registry; do not duplicate its lists.

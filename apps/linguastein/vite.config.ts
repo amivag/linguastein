@@ -317,7 +317,6 @@ export default defineConfig({
         branches: 73,
         functions: 73,
         lines: 80,
-        'src/appearance/**': { statements: 88, branches: 76, functions: 90, lines: 92 },
         'src/domain/**': { statements: 88, branches: 76, functions: 90, lines: 92 },
         'src/languages/**': { statements: 96, branches: 96, functions: 95, lines: 97 },
       },

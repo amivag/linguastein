@@ -56,8 +56,9 @@ with the app. `tests/fixtures/rhythm-layout.tsx` demonstrates a different host.
   see the current findings in [current-state.md](current-state.md).
 - There is no browser end-to-end test suite, dead-code check or enforced bundle
   budget. Add them to a demonstrated need, using measured limits.
-- UI strings are English literals. Error reporting has an `ErrorBoundary`
-  callback, not an implemented telemetry service.
+- UI strings are English literals. Errors and policy violations are kept on the
+  device (`app/diagnostics.ts`) and copied from Settings → About; nothing sends
+  them anywhere. Identity also owns the chrome colour and orientation.
 - An import alias is configured; inspect current usage before choosing a
   convention for the new app. Do not carry historical import counts as guidance.
 - Concurrent agents need separate worktrees to avoid staging each other's work.

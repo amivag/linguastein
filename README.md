@@ -44,6 +44,7 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 | `npm run validate:data`  | Validate every shipped dataset                                   |
 | `npm run review:data`    | Editorial review aid: content questions, by exception            |
 | `npm run build:palette`  | Solve a palette's colours from a handful of hue angles           |
+| `npm run build:icons`    | Rasterize the PNG app icons from the SVGs in `public/icons`      |
 | `npm run generate:audio` | Synthesise canonical audio into the ledger, in batches           |
 | `npm run check`          | Typecheck, lint, coverage, dataset validation, build, formatting |
 

@@ -47,6 +47,19 @@ export const APP = {
    * A leading and trailing slash are both required.
    */
   basePath: '/linguastein/',
+
+  /**
+   * The colour the OS paints around the app before and outside its own pixels:
+   * the install splash, the title bar and the browser chrome. It matches the dark
+   * icon tile rather than a palette, because a palette is chosen after launch.
+   */
+  chromeColor: '#0f1115',
+
+  /**
+   * `any` lets the device decide. A practice app reads in either orientation; a
+   * game that needs one should say so here rather than in the shared build.
+   */
+  orientation: 'any',
 } as const;
 
 /** `Browse · Linguastein` — the one spelling of a document title. */

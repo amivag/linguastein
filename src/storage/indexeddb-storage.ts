@@ -112,8 +112,42 @@ type LegacyPreferences = Partial<Preferences> & {
 
 type UpgradeTransaction = IDBPTransaction<AppDatabase, StoreNames<AppDatabase>[], 'versionchange'>;
 
-export async function openAppDatabase(): Promise<IDBPDatabase<AppDatabase>> {
+/**
+ * What one tab needs to hear about the database's other users.
+ *
+ * A schema upgrade waits until every other connection to the database has closed.
+ * The update flow keeps old tabs alive on purpose (`app/updates.ts`), so without
+ * these hooks an old tab would leave a newer tab's boot waiting forever.
+ */
+export interface DatabaseEvents {
+  /** An older tab is still holding the database open; this upgrade is waiting for it. */
+  readonly onBlocked?: () => void;
+  /**
+   * This connection is gone: closed so a newer build can upgrade, or terminated
+   * by the browser. Writes fail from here on, and only a reload reconnects.
+   */
+  readonly onClosed?: () => void;
+}
+
+export async function openAppDatabase(
+  events: DatabaseEvents = {},
+): Promise<IDBPDatabase<AppDatabase>> {
   return openDB<AppDatabase>(DB_NAME, DB_VERSION, {
+    blocked() {
+      events.onBlocked?.();
+    },
+    /*
+     * Step aside for the newer build. Holding on would gain nothing: this tab's
+     * code cannot write the newer schema anyway, and the newer tab cannot start
+     * until this connection closes.
+     */
+    blocking(_currentVersion, _blockedVersion, event) {
+      (event.target as IDBDatabase).close();
+      events.onClosed?.();
+    },
+    terminated() {
+      events.onClosed?.();
+    },
     async upgrade(db, oldVersion, _newVersion, tx) {
       if (oldVersion < 1) {
         /*

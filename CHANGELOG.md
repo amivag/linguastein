@@ -27,18 +27,37 @@ in the pack's own counts.
 ### Fixed
 
 - Previous shows a card as it was answered instead of grading it a second time.
+- An app update in one tab no longer leaves another tab's boot waiting forever.
+  The old tab releases the database and asks for a reload; the new one says it is
+  waiting for other tabs to close.
+- The browser is asked to keep learner data persistent once there is some.
+- iOS gets a PNG home-screen icon, and install surfaces get 192 and 512 PNGs.
+- The app follows the device's orientation instead of forcing portrait.
+
+### Security
+
+- A content security policy with Trusted Types: no inline script except the
+  hashed pre-paint resolver, no `eval`, and no HTML string sinks.
+- Deploying is split into a read-only build job and a publishing job that runs
+  no package code. Workflow actions are pinned to commit SHAs.
+- `.npmrc` blocks install scripts and holds back releases younger than seven
+  days, in CI as well as locally. Dependabot proposes updates with the same delay.
+
+### Added
+
+- Settings → About lists recent errors recorded on this device and copies them
+  into a bug report. Nothing is sent anywhere.
 
 ### Maintenance
 
 - Node 26.13 is the baseline. CI installs with `--engine-strict`.
 
-- Refresh compatible application and tooling dependencies through `sfw npm`,
-  including Zod 4.6.7, Vite 8.3.5, Vitest/coverage 4.1.12, React 19.3.1 and
-  React Router 7.18.4. Retain the existing major versions and TypeScript 5.9.
-- The production dependency audit is clean. Remaining low-severity tooling
-  findings concern `deepmerge` (no patched release) and `serialize-javascript`
-  (patched releases are newer than the configured npm cutoff). Preserve that
-  cutoff rather than bypassing it or accepting npm's obsolete PWA downgrade.
+- Move to the latest majors: React Router 8.5, Vitest 5, vite-plugin-pwa 2 and
+  TypeScript 7 for compiling. The `typescript` package is the TypeScript 6 API
+  alias, which the ESLint parser and AST tests need.
+- The production dependency audit is clean. Remaining moderate and low tooling
+  findings are in ESLint's and Workbox's dependency trees, and npm's only offered
+  fix is downgrading those tools.
 
 ### Added
 

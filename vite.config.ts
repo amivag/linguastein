@@ -6,6 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 // With the extension: Vite's future native config loader refuses an
 // extensionless import, and it already warns about one today.
+import { withContentSecurityPolicy } from './scripts/csp.ts';
 import { APP, cacheName } from './src/app/identity.ts';
 import { prePaintAxes } from './src/styles/axes.ts';
 
@@ -76,7 +77,23 @@ export default defineConfig({
             .replaceAll('%APP_ID%', APP.id)
             .replaceAll('%APP_NAME%', APP.name)
             .replaceAll('%APP_TAGLINE%', APP.tagline)
+            .replaceAll('%APP_DESCRIPTION%', APP.description)
+            .replaceAll('%APP_CHROME_COLOR%', APP.chromeColor)
             .replaceAll('%APPEARANCE_AXES%', JSON.stringify(prePaintAxes())),
+      },
+    },
+    /**
+     * The content security policy, hashed against the finished HTML. `post` so
+     * the inline script it hashes is the one that ships, after the placeholders
+     * above are filled; build-only because the dev server's hot-reload preamble
+     * is inline script no production policy should allow. See `scripts/csp.ts`.
+     */
+    {
+      name: 'content-security-policy',
+      apply: 'build',
+      transformIndexHtml: {
+        order: 'post' as const,
+        handler: withContentSecurityPolicy,
       },
     },
     react(),
@@ -95,6 +112,12 @@ export default defineConfig({
        * `tests/app/precache.test.ts` fails if a second one starts overlapping it.
        */
       manifest: {
+        /*
+         * The install's identity. Absent, browsers derive it from `start_url`, so
+         * changing the start page would turn every install into a different app.
+         * Set to what they derive today, which keeps existing installs the same app.
+         */
+        id: BASE,
         name: `${APP.name} — ${APP.tagline}`,
         short_name: APP.name,
         description: APP.description,
@@ -102,10 +125,28 @@ export default defineConfig({
         start_url: BASE,
         scope: BASE,
         display: 'standalone',
-        orientation: 'portrait',
-        background_color: '#0f1115',
-        theme_color: '#0f1115',
+        orientation: APP.orientation,
+        background_color: APP.chromeColor,
+        theme_color: APP.chromeColor,
+        /*
+         * PNGs for the install surfaces that do not rasterize SVG, generated
+         * from the SVGs by `npm run build:icons`. The SVGs stay for those that do.
+         */
         icons: [
+          { src: `${BASE}icons/icon-192.png`, sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: `${BASE}icons/icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'any' },
+          {
+            src: `${BASE}icons/icon-maskable-192.png`,
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+          {
+            src: `${BASE}icons/icon-maskable-512.png`,
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
           { src: `${BASE}icons/icon.svg`, sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
           {
             src: `${BASE}icons/icon-maskable.svg`,

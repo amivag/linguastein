@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type ErrorInfo,
   type ReactNode,
 } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router';
@@ -43,7 +44,9 @@ import { applyContrast, DEFAULT_CONTRAST } from '../styles/contrast';
 import { applyIntensity, DEFAULT_INTENSITY } from '../styles/intensity';
 import { applyReadingSize } from '../styles/reading-size';
 import { NotFoundScreen } from '../features/not-found/NotFoundScreen';
+import { recordError } from './diagnostics';
 import { ErrorBoundary } from './ErrorBoundary';
+import { APP } from './identity';
 import { createServices, type AppServices } from './services';
 import { ServicesContext, useServices } from './services-context';
 
@@ -61,7 +64,7 @@ const StyleGuideScreen = lazy(() =>
 );
 
 type BootState =
-  | { readonly phase: 'loading' }
+  | { readonly phase: 'loading'; readonly waitingForOtherTab?: true }
   | { readonly phase: 'ready'; readonly services: AppServices }
   | { readonly phase: 'failed'; readonly error: Error };
 
@@ -73,7 +76,12 @@ export function App() {
 
   useEffect(() => {
     let cancelled = false;
-    void createServices().then(
+    void createServices({
+      // Boot resumes by itself once the other tab closes; this only explains the wait.
+      onStorageBlocked: () => {
+        if (!cancelled) setBoot({ phase: 'loading', waitingForOtherTab: true });
+      },
+    }).then(
       (services) => {
         if (cancelled) return;
         setBoot({ phase: 'ready', services });
@@ -234,7 +242,16 @@ export function App() {
     applyReadingSize(readingSize);
   }, [readingSize]);
 
-  if (boot.phase === 'loading') return <Splash message="Loading…" />;
+  if (boot.phase === 'loading')
+    return (
+      <Splash
+        message={
+          boot.waitingForOtherTab
+            ? `Finishing an update. Close any other ${APP.name} tabs to continue.`
+            : 'Loading…'
+        }
+      />
+    );
   if (boot.phase === 'failed')
     return <Splash message={`Could not load content: ${boot.error.message}`} />;
   if (!services || !preferences) return <Splash message="Loading…" />;
@@ -260,7 +277,7 @@ export function App() {
         removeBatch,
       }}
     >
-      <ErrorBoundary>
+      <ErrorBoundary onError={reportInterfaceError}>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <CourseContent>
             <Routes>
@@ -441,6 +458,12 @@ function CourseRedirect({
 function LegacyPassageRedirect() {
   const { id } = useParams();
   return <CourseRedirect screen={`read/${id ?? ''}`} />;
+}
+
+/** A caught render failure: kept for Settings → About, and still in the console. */
+function reportInterfaceError(error: Error, info: ErrorInfo): void {
+  recordError('interface', error, `${error.stack ?? ''}\n${info.componentStack ?? ''}`.trim());
+  console.error('Unhandled error in the interface', error, info.componentStack);
 }
 
 function Splash({ message }: { readonly message: string }) {

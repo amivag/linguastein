@@ -1,3 +1,6 @@
+// Must stay the first import: it sets up error capture, Trusted Types and Zod
+// before any other module evaluates. See `app/guards.ts`.
+import './app/guards';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';

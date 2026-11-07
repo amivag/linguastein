@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
+import { clearErrors, errorReport, recentErrors } from '../../app/diagnostics';
 import { APP } from '../../app/identity';
 import { useServices } from '../../app/services-context';
 import { buildDate, buildLabel } from '../../app/version';
@@ -7,6 +8,7 @@ import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { DEFAULT_COURSE_STATE, DEFAULT_PREFERENCES } from '../../storage';
+import { copyToClipboard } from '../../utils/clipboard';
 import { settingsPath } from './settings-url';
 import { CONTRAST_STORAGE_KEY } from '../../styles/contrast';
 import { READING_SIZE_STORAGE_KEY } from '../../styles/reading-size';
@@ -20,6 +22,55 @@ import styles from './Settings.module.css';
  */
 type ResetTarget = 'progress' | 'all';
 type ResetResult = ResetTarget | null;
+
+/**
+ * What has gone wrong on this device, for a bug report.
+ *
+ * Copy rather than send: nothing leaves the device unless the learner pastes it
+ * somewhere themselves.
+ */
+function ErrorLog() {
+  const [records, setRecords] = useState(recentErrors);
+  const [copied, setCopied] = useState<boolean | null>(null);
+  const count = records.length;
+
+  const copy = async () => {
+    setCopied(await copyToClipboard(errorReport(`${APP.name} ${buildLabel()}`, records)));
+  };
+
+  return (
+    <div className={styles.field}>
+      <span className={styles.label}>
+        <Icon name="explain" size="sm" className={styles.labelIcon} />
+        Recent errors
+      </span>
+      <p className={styles.hint}>
+        {count === 0
+          ? 'None recorded on this device.'
+          : `${count} recorded on this device. They stay here unless you copy them into a bug report.`}
+      </p>
+      {count > 0 && (
+        <div className={styles.confirm}>
+          <Button onClick={() => void copy()}>Copy error report</Button>
+          <Button
+            onClick={() => {
+              clearErrors();
+              setRecords([]);
+              setCopied(null);
+            }}
+          >
+            Clear errors
+          </Button>
+        </div>
+      )}
+      {copied !== null && (
+        <p className={styles.hint} role="status">
+          {copied ? 'Error report copied.' : 'Could not copy. Your browser refused the clipboard.'}
+        </p>
+      )}
+    </div>
+  );
+}
 
 /** This build, the design system, and the data this device is holding. */
 export function AboutSettings() {
@@ -115,6 +166,8 @@ export function AboutSettings() {
           {buildDate() && ` · built ${buildDate()}`}
         </p>
       </div>
+
+      <ErrorLog />
 
       <div className={styles.field}>
         <span className={styles.label}>

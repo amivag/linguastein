@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { applyUpdate, useUpdateReady } from '../app/updates';
+import { applyUpdate, useUpdateState } from '../app/updates';
 import { Button } from './Button';
 import { Icon } from './Icon';
 import styles from './UpdateBanner.module.css';
@@ -17,22 +17,31 @@ interface UpdateBannerProps {
  * steals focus mid-question is worse than a stale build. `role="status"` means it
  * is announced without interrupting, and it can be dismissed — the update is
  * still applied on the next natural load either way.
+ *
+ * Except when this tab has lost its database connection. Then nothing practised
+ * here can be saved, so the banner is an alert and offers no "Later".
  */
 export function UpdateBanner({ onReload = applyUpdate }: UpdateBannerProps) {
-  const ready = useUpdateReady();
+  const state = useUpdateState();
   const [dismissed, setDismissed] = useState(false);
 
-  if (!ready || dismissed) return null;
+  if (state === 'none' || (state === 'ready' && dismissed)) return null;
 
+  const required = state === 'required';
   return (
-    <div className={styles.banner} role="status">
+    <div className={styles.banner} role={required ? 'alert' : 'status'}>
       <p className={styles.message}>
-        <Icon name="update" size="sm" className={styles.icon} />A new version is ready.
+        <Icon name="update" size="sm" className={styles.icon} />
+        {required
+          ? 'This tab can no longer save progress. Reload to keep practising.'
+          : 'A new version is ready.'}
       </p>
       <div className={styles.actions}>
-        <Button variant="ghost" onClick={() => setDismissed(true)}>
-          Later
-        </Button>
+        {!required && (
+          <Button variant="ghost" onClick={() => setDismissed(true)}>
+            Later
+          </Button>
+        )}
         <Button variant="primary" onClick={onReload}>
           Reload
         </Button>

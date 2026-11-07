@@ -15,9 +15,11 @@ import { UpdateBanner } from '../../src/components/UpdateBanner';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import {
   isUpdateReady,
+  markReloadRequired,
   markUpdateReady,
   resetUpdateState,
   subscribeToUpdates,
+  updateState,
 } from '../../src/app/updates';
 import { renderWithServices } from '../fixtures/services';
 
@@ -94,6 +96,30 @@ describe('the update banner', () => {
 
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
     expect(onReload).not.toHaveBeenCalled();
+  });
+});
+
+describe('a tab that can no longer save', () => {
+  it('alerts, offers only a reload, and outranks an update already dismissed', async () => {
+    const user = userEvent.setup();
+    const onReload = vi.fn();
+    render(<UpdateBanner onReload={onReload} />);
+    announceUpdate();
+    await user.click(screen.getByRole('button', { name: 'Later' }));
+
+    act(() => markReloadRequired());
+
+    expect(screen.getByRole('alert')).toHaveTextContent('This tab can no longer save progress.');
+    expect(screen.queryByRole('button', { name: 'Later' })).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Reload' }));
+    expect(onReload).toHaveBeenCalledTimes(1);
+  });
+
+  it('is not downgraded by a later update notice', () => {
+    markReloadRequired();
+    markUpdateReady();
+
+    expect(updateState()).toBe('required');
   });
 });
 

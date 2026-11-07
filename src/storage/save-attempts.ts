@@ -6,6 +6,7 @@ import {
   type Attempt,
   type SubjectProgress,
 } from '../domain/progress';
+import { requestDurableStorage } from './durability';
 import type { LearnerStorage } from './types';
 
 const ATTEMPT_FIELDS = [
@@ -26,7 +27,7 @@ export async function saveAttempts(
   storage: LearnerStorage,
   attempts: readonly Attempt[],
 ): Promise<ReadonlyMap<EntityId, SubjectProgress>> {
-  return storage.transaction(async (stores) => {
+  const saved = await storage.transaction(async (stores) => {
     const updated = new Map<EntityId, SubjectProgress>();
     for (const attempt of attempts) {
       const existing = await stores.attempts.get(attempt.id);
@@ -50,4 +51,8 @@ export async function saveAttempts(
     }
     return updated;
   });
+  // Evidence now exists that is worth keeping. Not awaited: a permission prompt
+  // must never hold up the answer that triggered it.
+  void requestDurableStorage();
+  return saved;
 }

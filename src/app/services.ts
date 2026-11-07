@@ -25,6 +25,7 @@ import type { BatchDefinition } from '../domain/batches';
 import { ContentRepository, DEFAULT_REFERENCE_LANGUAGE, parseCoursePath } from '../domain/content';
 import { createContentLoading, type ContentLoading } from './content';
 import { createOfflinePacks, type OfflinePacks } from './offline';
+import { markReloadRequired } from './updates';
 import { standaloneLetters } from '../languages/runtime';
 import { ExerciseEngine } from '../domain/exercises';
 import { courseStateOf, createStorage } from '../storage';
@@ -88,6 +89,11 @@ export interface CreateServicesOptions {
    * Injectable so the decision is testable without navigating a document.
    */
   readonly path?: string;
+  /**
+   * The database upgrade is waiting for another tab to close. Boot continues by
+   * itself once it does; this exists so the wait can be explained.
+   */
+  readonly onStorageBlocked?: () => void;
 }
 
 export async function createServices(options: CreateServicesOptions = {}): Promise<AppServices> {
@@ -99,7 +105,13 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
    * fetch below now waits on both: the catalog for what to fetch, and the
    * preference for how much of it when the address does not say.
    */
-  const [catalog, storage] = await Promise.all([loadCatalog(source), createStorage()]);
+  const [catalog, storage] = await Promise.all([
+    loadCatalog(source),
+    createStorage({
+      ...(options.onStorageBlocked ? { onBlocked: options.onStorageBlocked } : {}),
+      onClosed: markReloadRequired,
+    }),
+  ]);
   const [preferences, courses, batches] = await Promise.all([
     storage.preferences.read(),
     storage.courses.read(),

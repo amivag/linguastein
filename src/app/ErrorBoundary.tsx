@@ -27,10 +27,10 @@ interface ErrorBoundaryState {
  *
  * Three things it does *not* do, each on purpose:
  *
- * - **It does not phone home.** There is no telemetry seam in this app and
- *   inventing one here would put a network call in the one code path that runs
- *   when things are already wrong. `onError` is the seam; wire it to a reporter
- *   in `services.ts` if a project ever wants one.
+ * - **It does not phone home.** A network call does not belong in the one code
+ *   path that runs when things are already wrong. `onError` is the seam: `App`
+ *   passes one that keeps the error on the device (`app/diagnostics.ts`), where
+ *   Settings → About can copy it into a report.
  * - **It does not clear stored state.** A render bug is not a reason to delete a
  *   learner's history, and "reset everything" as the only offered escape is how
  *   people lose data to a bug that a reload would have survived.

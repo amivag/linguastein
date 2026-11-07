@@ -39,6 +39,21 @@ than calling an unchanged re-import a reschedule. Log-less cached progress remai
 preserved as fallback evidence. Exports read one consistent transaction snapshot.
 History-only reset is transactional; full reset clears all stores atomically.
 
+## Connections and durability
+
+Updates wait for the learner, so an old tab can be open when a newer build
+upgrades the schema. The old connection closes itself on `versionchange` and
+marks the tab reload-required: its banner becomes a non-dismissible alert. A
+newer tab whose upgrade is still blocked says so on the boot screen and continues
+once the other tab closes. It does not fall back to memory storage, which would
+lose what is practised next. A connection the browser terminates is treated the
+same way as one that closed for an upgrade.
+
+After the first evidence commits, `saveAttempts` asks for persistent storage
+(`navigator.storage.persist()`), once per page load. Firefox shows a prompt
+for it, so it is not asked at boot. `tests/storage/connection.test.ts` and
+`durability.test.ts` cover both behaviours.
+
 ## Feedback and tests
 
 Practice and number drills retain failed write operations with their original

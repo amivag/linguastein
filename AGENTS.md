@@ -130,10 +130,13 @@ floors live in `vite.config.ts`; never lower them to accommodate changes.
 Dataset-script tests use `createScratchPack` from `tests/fixtures/dataset.ts`.
 Comments explain why. CSS Modules `composes` requires one local-class selector.
 
-Oxlint handles core/architecture rules; ESLint handles React rules. TypeScript
-remains 5.9 while the installed parser's peer range requires it; check metadata
-before changing that constraint. Render must be pure: read clocks in effects or
-handlers. Device speech requires a matching voice; explained silence is deliberate.
+Oxlint handles core/architecture rules; ESLint handles React rules. `tsc` is
+TypeScript 7 (`@typescript/native`); the `typescript` package is aliased to
+`@typescript/typescript6` because the ESLint parser and AST tests import its API,
+which 7.0 lacks. Check parser metadata before removing the alias. `.npmrc` blocks
+install scripts and enforces the release age. Render must be pure: read clocks in
+effects or handlers. Device speech requires a matching voice; explained silence
+is deliberate.
 
 ## Documentation and memory
 

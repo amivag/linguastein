@@ -27,8 +27,9 @@ import reactRefresh from 'eslint-plugin-react-refresh';
  *
  * The parser is the cost of keeping ESLint. `@typescript-eslint/parser` is what
  * lets ESLint read `.tsx` at all — plain espree treats the first type annotation
- * as a syntax error — and it declares `typescript: >=4.8.4 <6.1.0`. That ceiling
- * is the whole reason TypeScript stays on 5.9; see **Known constraints** in
+ * as a syntax error — and it declares `typescript: >=4.8.4 <6.1.0`. That ceiling,
+ * and TypeScript 7.0 having no JavaScript API, are why the `typescript` package is
+ * aliased to `@typescript/typescript6` while `tsc` runs TypeScript 7; see
  * `AGENTS.md`.
  *
  * Only `src` is matched, so `eslint .` lints the app and leaves tests, scripts and

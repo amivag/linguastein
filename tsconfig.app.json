@@ -25,9 +25,8 @@
     "noUnusedParameters": true,
 
     /* Imports */
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "types": ["vite/client", "vite-plugin-pwa/client", "node"]
   },

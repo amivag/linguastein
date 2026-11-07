@@ -62,7 +62,21 @@ two will collide.
   `noindex`.
 - **No response headers.** `X-Robots-Tag`, CSP and cache-control cannot be set on
   Pages. The crawler opt-outs live in a `<meta>` tag and
-  [`robots.txt`](../public/robots.txt) instead.
+  [`robots.txt`](../public/robots.txt) instead. The content security policy is a
+  `<meta>` written by the build ([`scripts/csp.ts`](../scripts/csp.ts)), with
+  Trusted Types required. A meta policy cannot set `frame-ancestors`, so the app
+  can still be framed; a host with headers fixes that.
+
+## Workflow permissions
+
+The deploy workflow has two jobs. `build` installs packages, runs the gate and
+uploads the artifact with read-only permissions. `deploy` holds `pages: write`
+and `id-token: write`, and runs no repository or package code. A compromised
+dependency can therefore fail a build but not publish one. Actions are pinned to
+commit SHAs, and Dependabot keeps those pins current. `.npmrc` blocks install
+scripts and holds back releases younger than seven days, for CI as well as
+locally.
+
 - **Nothing gates the site.** Free Pages cannot be access-controlled; private
   Pages needs GitHub Pro. The URL is public from the first deploy.
 

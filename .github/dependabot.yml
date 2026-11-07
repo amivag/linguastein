@@ -1,0 +1,29 @@
+# Dependency update pull requests.
+#
+# The cooldown matches `min-release-age` in `.npmrc`: no release is proposed
+# before it is a week old. Minor and patch updates arrive as one grouped pull
+# request per ecosystem; a major version gets its own, because it is a decision.
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    open-pull-requests-limit: 5
+
+  # Keeps the commit-SHA pins in the workflows, and their version comments, current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ['*']

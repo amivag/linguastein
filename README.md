@@ -36,6 +36,7 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 | `npm run preview`        | Serve the production build locally                               |
 | `npm test`               | Vitest (unit + component)                                        |
 | `npm run test:coverage`  | Vitest with the enforced coverage floors                         |
+| `npm run test:e2e`       | Playwright on the production build in Chromium, Firefox, WebKit  |
 | `npm run typecheck`      | TypeScript, no emit                                              |
 | `npm run lint`           | oxlint, then ESLint for the React rules oxlint has no plugin for |
 | `npm run format`         | Prettier, writing rather than only checking                      |

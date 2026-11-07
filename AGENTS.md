@@ -12,6 +12,7 @@ npm run check            # typecheck, lint, coverage, validate:data, build, form
 npm run format           # write formatting
 npm test                 # vitest
 npx vitest run tests/a11y # after any UI change
+npm run test:e2e         # Playwright, 3 engines; after PWA, storage, CSP or boot changes
 npm run build:data       # generate packs from content/es; optional -- <tag>
 npm run review:data      # editorial exceptions
 npm run build            # production PWA

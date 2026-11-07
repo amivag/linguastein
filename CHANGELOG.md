@@ -33,6 +33,12 @@ in the pack's own counts.
 - The browser is asked to keep learner data persistent once there is some.
 - iOS gets a PNG home-screen icon, and install surfaces get 192 and 512 PNGs.
 - The app follows the device's orientation instead of forcing portrait.
+- The app opens offline after a single visit. Content read before the service
+  worker took over was never cached, so the first offline launch failed with
+  "Could not load content".
+- Safari applies the app's dynamic styles again. The new content security policy
+  blocked them there, because WebKit checks React's style writes as inline
+  attributes.
 
 ### Security
 
@@ -47,6 +53,8 @@ in the pack's own counts.
 
 - Settings → About lists recent errors recorded on this device and copies them
   into a bug report. Nothing is sent anywhere.
+- Browser tests (Playwright) run the production build in Chromium, Firefox and
+  WebKit in CI and before every deploy.
 - Ready to move to Cloudflare, off until configured: a build for a subdomain
   root with security headers, a gated deploy job, and a notice that sends
   learners at the old address to the new one.

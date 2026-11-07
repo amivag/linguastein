@@ -46,6 +46,14 @@ jobs:
       - name: Check
         run: npm run check
 
+      # And the browser suite, for the same reason: the service worker, offline
+      # launch and the security policy only fail in a real browser.
+      - name: Install browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Browser tests
+        run: npm run test:e2e
+
       # `tsc -b` runs inside this, and the checkout is a real git clone, so
       # vite.config.ts resolves the build commit on its own.
       #

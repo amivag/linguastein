@@ -18,13 +18,14 @@ import {
   loadPacks,
   loadTranslationUnit,
   translationUnitFor,
+  type DatasetSource,
   type LoadedTranslations,
 } from '../data/loaders';
 import type { ValidationIssue } from '../data/validation';
 import type { BatchDefinition } from '../domain/batches';
 import { ContentRepository, DEFAULT_REFERENCE_LANGUAGE, parseCoursePath } from '../domain/content';
 import { createContentLoading, type ContentLoading } from './content';
-import { createOfflinePacks, type OfflinePacks } from './offline';
+import { createOfflinePacks, keepWhatWasRead, type OfflinePacks } from './offline';
 import { markReloadRequired } from './updates';
 import { standaloneLetters } from '../languages/runtime';
 import { ExerciseEngine } from '../domain/exercises';
@@ -98,7 +99,19 @@ export interface CreateServicesOptions {
 
 export async function createServices(options: CreateServicesOptions = {}): Promise<AppServices> {
   const datasetBaseUrl = options.datasetBaseUrl ?? `${import.meta.env.BASE_URL}packs/`;
-  const source = httpDatasetSource(datasetBaseUrl);
+  /*
+   * Every file read, as an absolute url, so the ones fetched before the service
+   * worker could cache them are kept afterwards (`keepWhatWasRead`).
+   */
+  const read = new Set<string>();
+  const http = httpDatasetSource(datasetBaseUrl);
+  const source: DatasetSource = {
+    name: http.name,
+    read(path) {
+      read.add(new URL(`${http.name}${path}`, location.origin).href);
+      return http.read(path);
+    },
+  };
 
   /*
    * The catalog and the learner's own storage in parallel, because the pack
@@ -192,6 +205,7 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     translations: () => content.translationUnits(),
     baseUrl: assetBaseUrl,
   });
+  keepWhatWasRead(offline, () => [...read]);
 
   const audio = createAudioService({
     repository,

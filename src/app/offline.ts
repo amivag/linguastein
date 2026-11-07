@@ -53,6 +53,12 @@ export interface OfflinePacks {
   install(pack: PackId, onProgress?: (done: number, total: number) => void): Promise<void>;
   /** Takes the pack off the device. What is already in memory stays there. */
   remove(pack: PackId): Promise<void>;
+  /**
+   * Keeps pack files the app has already read, when no worker was there to
+   * cache them. Each file that is missing is fetched once more; a failure is
+   * left for the next visit.
+   */
+  retain(urls: readonly string[]): Promise<void>;
 }
 
 /**
@@ -67,7 +73,33 @@ export const NO_OFFLINE_PACKS: OfflinePacks = {
   status: () => Promise.resolve([]),
   install: () => Promise.resolve(),
   remove: () => Promise.resolve(),
+  retain: () => Promise.resolve(),
 };
+
+/**
+ * Closes the first-visit gap in "a pack accumulates as it is read".
+ *
+ * The worker's `CacheFirst` route only sees requests made while it controls the
+ * page. On a first visit it does not yet: boot fetches the course's shards, the
+ * worker installs afterwards, and those shards were never cached. The next
+ * offline launch then failed with "Could not load content". Once a worker is
+ * active, and again when it takes control, the files read so far go into the
+ * pack cache.
+ */
+export function keepWhatWasRead(
+  offline: OfflinePacks,
+  readUrls: () => readonly string[],
+  workers: ServiceWorkerContainer | undefined = globalThis.navigator?.serviceWorker,
+): void {
+  if (!offline.supported || !workers) return;
+  const keep = () => {
+    offline.retain(readUrls()).catch((error: unknown) => {
+      console.warn('Could not keep the content read so far for offline use', error);
+    });
+  };
+  void workers.ready.then(keep);
+  workers.addEventListener('controllerchange', keep);
+}
 
 export interface OfflinePacksOptions {
   /** What boot loaded: each pack's manifest, and the path it was read from. */
@@ -181,6 +213,21 @@ export function createOfflinePacks(options: OfflinePacksOptions): OfflinePacks {
           await Promise.all(pack.files.map((file) => cache.delete(file.url)));
         }),
       );
+    },
+
+    async retain(urls) {
+      const cache = await caches.open(PACK_CACHE);
+      for (const url of urls) {
+        // Only what the worker's pack route would have cached; manifests and
+        // the catalog are precached already.
+        if (!new URL(url).pathname.endsWith('.jsonl')) continue;
+        if (await caches.match(url)) continue;
+        try {
+          await cache.add(url);
+        } catch {
+          // Offline now, or the file moved: the next visit reads and keeps it.
+        }
+      }
     },
   };
 }

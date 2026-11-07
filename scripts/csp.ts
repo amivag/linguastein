@@ -34,6 +34,15 @@ export function contentSecurityPolicy(html: string): string {
     "default-src 'self'",
     `script-src 'self' ${inlineScriptHashes(html).join(' ')}`.trim(),
     "style-src 'self'",
+    /*
+     * Inline `style` attributes are allowed. React writes them through the
+     * CSSOM, which the CSP spec exempts, but WebKit still checks those writes
+     * against `style-src-attr` and drops them, so without this Safari loses
+     * every dynamic style (found by `e2e/boot.spec.ts`). Style elements and
+     * stylesheets stay restricted to this origin. Script is unaffected, and
+     * Trusted Types already stop injected HTML from carrying attributes in.
+     */
+    "style-src-attr 'unsafe-inline'",
     "img-src 'self' data:",
     "object-src 'none'",
     "base-uri 'none'",

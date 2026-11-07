@@ -206,6 +206,7 @@ describe('the levels above the ceiling', () => {
       status,
       install: () => Promise.resolve(),
       remove: () => Promise.resolve(),
+      retain: () => Promise.resolve(),
     };
 
     vi.spyOn(boot, 'createServices').mockResolvedValue(testServices({ content, offline }));

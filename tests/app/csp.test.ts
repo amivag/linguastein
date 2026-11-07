@@ -34,8 +34,13 @@ describe('the content security policy', () => {
 
   it('never allows arbitrary inline code or eval', () => {
     const policy = contentSecurityPolicy(html);
+    const directive = (name: string) =>
+      policy.split('; ').find((entry) => entry.startsWith(`${name} `)) ?? '';
 
-    expect(policy).not.toContain("'unsafe-inline'");
+    expect(directive('script-src')).not.toContain("'unsafe-inline'");
+    expect(directive('style-src')).not.toContain("'unsafe-inline'");
+    // Style attributes only, for WebKit's handling of CSSOM writes; see csp.ts.
+    expect(directive('style-src-attr')).toBe("style-src-attr 'unsafe-inline'");
     expect(policy).not.toContain("'unsafe-eval'");
     expect(policy).toContain("object-src 'none'");
     expect(policy).toContain("require-trusted-types-for 'script'");

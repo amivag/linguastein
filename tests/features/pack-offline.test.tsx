@@ -29,6 +29,7 @@ function offlinePacks(initial: Partial<PackOffline> = {}) {
   };
   const packs: OfflinePacks = {
     supported: true,
+    retain: () => Promise.resolve(),
     status: () => Promise.resolve([held]),
     install: vi.fn(() => {
       held = { ...held, cached: held.files, cachedBytes: held.bytes };

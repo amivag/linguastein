@@ -10,7 +10,7 @@
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createOfflinePacks, NO_OFFLINE_PACKS } from '../../src/app/offline';
+import { createOfflinePacks, keepWhatWasRead, NO_OFFLINE_PACKS } from '../../src/app/offline';
 import type { LoadedPack, LoadedTranslations } from '../../src/data/loaders';
 import type { PackId } from '../../src/domain/content';
 import { id } from '../fixtures/pack';
@@ -201,6 +201,56 @@ describe('keeping a pack', () => {
     // Sequential rather than `addAll` is what buys this: two of three on the
     // device and a screen that can say so, instead of nothing and an error.
     expect((await offline.status())[0]?.cached).toBe(2);
+  });
+});
+
+describe('keeping what a first visit read', () => {
+  it('caches the shards no worker was there to cache, and only those', async () => {
+    const fake = fakeCaches({ 'linguastein-packs': [`${ROOT}sentences-a2.jsonl`] });
+    const offline = createOfflinePacks(course());
+
+    await offline.retain([
+      `${ROOT}pack.json`,
+      `${ROOT}sentences-a1.jsonl`,
+      `${ROOT}sentences-a2.jsonl`,
+    ]);
+
+    // Not the manifest, which is precached, and not the shard already here.
+    expect(fake.fetched).toEqual([`${ROOT}sentences-a1.jsonl`]);
+    expect(fake.stores.get('linguastein-packs')?.has(`${ROOT}sentences-a1.jsonl`)).toBe(true);
+  });
+
+  it('leaves a file that cannot be fetched for the next visit', async () => {
+    fakeCaches();
+    vi.stubGlobal('fetch', () => Promise.resolve({ ok: false, status: 503 }));
+
+    await expect(
+      createOfflinePacks(course()).retain([`${ROOT}sentences-a1.jsonl`]),
+    ).resolves.toBeUndefined();
+  });
+
+  it('runs once a worker is active, and again when it takes control', async () => {
+    const retain = vi.fn(() => Promise.resolve());
+    const listeners: (() => void)[] = [];
+    const workers = {
+      ready: Promise.resolve(),
+      addEventListener: (_type: string, listener: () => void) => listeners.push(listener),
+    } as unknown as ServiceWorkerContainer;
+
+    keepWhatWasRead({ ...NO_OFFLINE_PACKS, supported: true, retain }, () => ['a.jsonl'], workers);
+    await vi.waitFor(() => expect(retain).toHaveBeenCalledTimes(1));
+    for (const listener of listeners) listener();
+
+    expect(retain).toHaveBeenCalledTimes(2);
+    expect(retain).toHaveBeenLastCalledWith(['a.jsonl']);
+  });
+
+  it('does nothing where nothing can be kept', () => {
+    const retain = vi.fn(() => Promise.resolve());
+
+    keepWhatWasRead({ ...NO_OFFLINE_PACKS, retain }, () => ['a.jsonl'], undefined);
+
+    expect(retain).not.toHaveBeenCalled();
   });
 });
 

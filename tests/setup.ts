@@ -24,10 +24,9 @@ if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
 }
 
 /**
- * Newer Node versions define their own `localStorage` global, which is undefined
- * without `--localstorage-file` and which vitest does not replace with jsdom's.
- * Bound explicitly so the tests read the browser's storage on every supported
- * Node, rather than crashing on some of them.
+ * Node defines its own `localStorage` global, which is undefined without
+ * `--localstorage-file` and which vitest does not replace with jsdom's. Bound
+ * explicitly so the tests read the browser's storage rather than crashing on it.
  */
 const dom = (globalThis as { jsdom?: { window: Window } }).jsdom;
 if (dom) {

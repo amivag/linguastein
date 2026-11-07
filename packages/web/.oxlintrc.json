@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript"],
+  "categories": { "correctness": "error" },
+  "ignorePatterns": ["coverage", "node_modules"],
+  "rules": {
+    "typescript/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }],
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "eqeqeq": ["error", "smart"]
+  },
+  "overrides": [
+    {
+      /*
+       * Browser runtime every app shares. It may use the DOM and React (as a peer,
+       * for hooks), but nothing app-shaped: each app passes in its keys and names.
+       */
+      "files": ["src/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["*", "!./*", "!react"],
+                "message": "The runtime package imports only itself and React. Take app-specific values as parameters."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -29,6 +29,7 @@
     "generate:audio": "tsx scripts/generate-audio.ts"
   },
   "dependencies": {
+    "@platform/web": "*",
     "@platform/appearance": "*",
     "@platform/engine": "*",
     "idb": "^8.0.4",

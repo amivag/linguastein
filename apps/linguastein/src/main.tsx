@@ -5,7 +5,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';
 import { App } from './app/App';
-import { markUpdateReady } from './app/updates';
+import { markUpdateReady } from '@platform/web';
 import './styles/global.css';
 
 const container = document.getElementById('root');
@@ -20,5 +20,5 @@ createRoot(container).render(
 // Installable, offline-capable app shell (spec §24).
 //
 // `onNeedReload` is what stops `autoUpdate` reloading the page from under
-// someone mid-session; the app offers the reload instead. See `app/updates.ts`.
+// someone mid-session; the app offers the reload instead. See `updates.ts` in `@platform/web`.
 registerSW({ immediate: true, onNeedReload: markUpdateReady });

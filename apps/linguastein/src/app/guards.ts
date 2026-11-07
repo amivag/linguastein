@@ -8,7 +8,7 @@
 
 import { config as zodConfig } from 'zod';
 import { installErrorCapture } from './diagnostics';
-import { installTrustedTypesPolicy } from './trusted-types';
+import { installTrustedTypesPolicy } from '@platform/web';
 
 // First, so a failure anywhere below is still kept for Settings → About.
 installErrorCapture();

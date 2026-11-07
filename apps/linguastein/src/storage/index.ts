@@ -2,7 +2,6 @@ import { createIndexedDbStorage, openAppDatabase, type DatabaseEvents } from './
 import { createMemoryStorage } from './memory-storage';
 import type { LearnerStorage } from './types';
 
-export * from './durability';
 export * from './memory-storage';
 export * from './preferences';
 export * from './schemas';

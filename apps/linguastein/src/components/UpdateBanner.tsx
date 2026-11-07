@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { applyUpdate, useUpdateState } from '../app/updates';
+import { applyUpdate, useUpdateState } from '@platform/web';
 import { Button } from './Button';
 import { Icon } from './Icon';
 import styles from './UpdateBanner.module.css';

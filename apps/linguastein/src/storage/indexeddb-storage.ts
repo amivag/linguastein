@@ -116,7 +116,7 @@ type UpgradeTransaction = IDBPTransaction<AppDatabase, StoreNames<AppDatabase>[]
  * What one tab needs to hear about the database's other users.
  *
  * A schema upgrade waits until every other connection to the database has closed.
- * The update flow keeps old tabs alive on purpose (`app/updates.ts`), so without
+ * The update flow keeps old tabs alive on purpose (`updates.ts` in `@platform/web`), so without
  * these hooks an old tab would leave a newer tab's boot waiting forever.
  */
 export interface DatabaseEvents {

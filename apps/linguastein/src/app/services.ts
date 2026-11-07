@@ -26,7 +26,7 @@ import type { BatchDefinition } from '../domain/batches';
 import { ContentRepository, DEFAULT_REFERENCE_LANGUAGE, parseCoursePath } from '../domain/content';
 import { createContentLoading, type ContentLoading } from './content';
 import { createOfflinePacks, keepWhatWasRead, type OfflinePacks } from './offline';
-import { markReloadRequired } from './updates';
+import { markReloadRequired } from '@platform/web';
 import { standaloneLetters } from '../languages/runtime';
 import { ExerciseEngine } from '../domain/exercises';
 import { courseStateOf, createStorage } from '../storage';

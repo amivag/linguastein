@@ -156,7 +156,7 @@ rather than leaving a stale clip behind a stable item id.
 moment a new worker activates. That is the wrong behaviour here: it can land
 mid-answer, and because a session is described by its URL the learner is dropped
 back at its start. `main.tsx` passes `onNeedReload` to suppress it, and
-`src/app/updates.ts` turns the event into a flag the UI reads — so the app offers
+`updates.ts` in `@platform/web` turns the event into a flag the UI reads — so the app offers
 a reload and the person practising picks the moment. The new build is already
 cached either way, so nothing is lost by waiting.
 

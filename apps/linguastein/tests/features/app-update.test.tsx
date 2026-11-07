@@ -13,14 +13,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { UpdateBanner } from '../../src/components/UpdateBanner';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
-import {
-  isUpdateReady,
-  markReloadRequired,
-  markUpdateReady,
-  resetUpdateState,
-  subscribeToUpdates,
-  updateState,
-} from '../../src/app/updates';
+import { markReloadRequired, markUpdateReady, resetUpdateState } from '@platform/web';
 import { renderWithServices } from '../fixtures/services';
 
 /** The worker reporting a new build, from outside React. */
@@ -30,31 +23,7 @@ afterEach(() => {
   resetUpdateState();
 });
 
-describe('the update store', () => {
-  it('starts quiet, so a first visit is not told it is out of date', () => {
-    expect(isUpdateReady()).toBe(false);
-  });
-
-  it('notifies subscribers once, however many times the worker reports', () => {
-    const listener = vi.fn();
-    subscribeToUpdates(listener);
-
-    markUpdateReady();
-    markUpdateReady();
-
-    expect(isUpdateReady()).toBe(true);
-    expect(listener).toHaveBeenCalledTimes(1);
-  });
-
-  it('stops notifying after unsubscribe', () => {
-    const listener = vi.fn();
-    subscribeToUpdates(listener)();
-
-    markUpdateReady();
-
-    expect(listener).not.toHaveBeenCalled();
-  });
-});
+// The store itself is tested in @platform/web; these tests cover the banner and the shell.
 
 describe('the update banner', () => {
   it('shows nothing until there is an update', () => {
@@ -113,13 +82,6 @@ describe('a tab that can no longer save', () => {
     expect(screen.queryByRole('button', { name: 'Later' })).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Reload' }));
     expect(onReload).toHaveBeenCalledTimes(1);
-  });
-
-  it('is not downgraded by a later update notice', () => {
-    markReloadRequired();
-    markUpdateReady();
-
-    expect(updateState()).toBe('required');
   });
 });
 

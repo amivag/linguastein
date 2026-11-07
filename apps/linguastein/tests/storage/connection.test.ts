@@ -1,7 +1,7 @@
 /**
  * Two tabs, two builds, one database.
  *
- * Updates wait for the learner (`app/updates.ts`), so an old tab can still be
+ * Updates wait for the learner (`updates.ts` in `@platform/web`), so an old tab can still be
  * open when a newer build upgrades the schema. IndexedDB holds that upgrade
  * until every other connection closes. These tests pin both halves of the
  * handover: the old connection steps aside and says so, and a newer open that is

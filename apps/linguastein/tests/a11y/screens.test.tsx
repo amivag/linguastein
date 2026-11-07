@@ -2,7 +2,7 @@ import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { describe, expect, it } from 'vitest';
-import { markUpdateReady, resetUpdateState } from '../../src/app/updates';
+import { markUpdateReady, resetUpdateState } from '@platform/web';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { SessionScreen } from '../../src/features/practice/SessionScreen';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';

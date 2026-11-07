@@ -6,7 +6,7 @@ import {
   type Attempt,
   type SubjectProgress,
 } from '../domain/progress';
-import { requestDurableStorage } from './durability';
+import { requestDurableStorage } from '@platform/web';
 import type { LearnerStorage } from './types';
 
 const ATTEMPT_FIELDS = [

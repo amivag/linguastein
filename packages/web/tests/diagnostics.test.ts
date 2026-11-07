@@ -6,13 +6,12 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  clearErrors,
-  errorReport,
-  installErrorCapture,
-  recentErrors,
-  recordError,
-} from '../../src/app/diagnostics';
+import { createErrorLog, errorReport } from '../src/index.ts';
+
+const KEY = 'test.errors';
+const { clearErrors, installErrorCapture, recentErrors, recordError } = createErrorLog({
+  key: KEY,
+});
 
 let uninstall = () => {};
 
@@ -50,11 +49,21 @@ describe('recordError', () => {
   });
 
   it('ignores a corrupted record instead of failing', () => {
-    localStorage.setItem('linguastein.errors', '{not json');
+    localStorage.setItem(KEY, '{not json');
 
     expect(recentErrors()).toEqual([]);
     expect(() => recordError('uncaught', 'still recorded')).not.toThrow();
     expect(recentErrors()).toHaveLength(1);
+  });
+});
+
+describe('the limit', () => {
+  it('is configurable per log', () => {
+    const short = createErrorLog({ key: 'short.errors', limit: 2 });
+    for (const message of ['a', 'b', 'c']) short.recordError('uncaught', message);
+
+    expect(short.recentErrors().map((record) => record.message)).toEqual(['b', 'c']);
+    short.clearErrors();
   });
 });
 

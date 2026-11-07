@@ -44,7 +44,7 @@ Read these first, in order:
 1. [`AGENTS.md`](../../AGENTS.md) — the **Datasets** section is the one this task
    is constrained by. Item ids are permanent, `public/packs/**` is generated, and
    the `-` sentinel has a specific meaning
-2. [`scripts/build-dataset.ts`](../../scripts/build-dataset.ts) — where all four
+2. [`scripts/build-dataset.ts`](../../apps/linguastein/scripts/build-dataset.ts) — where all four
    code edits land. Read `readSource` (~line 152) first: it is what decides
    whether a row's first cell is an id
 3. [`docs/tasks/dataset-expansion.md`](dataset-expansion.md) §4 — why an id is

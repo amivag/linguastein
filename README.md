@@ -327,7 +327,7 @@ cached on first play, and all learner state lives in IndexedDB on the device.
 The app reports its own version in Settings → About as `Linguastein <version> (<commit>)`,
 alongside the version of each loaded content pack — content ships independently of
 the app. `package.json` is the source of truth; the build injects it. Changes are
-recorded in [CHANGELOG.md](CHANGELOG.md).
+recorded in [CHANGELOG.md](apps/linguastein/CHANGELOG.md).
 
 JS and CSS are content-hashed, so an update can never be served from a stale
 cache. When the service worker has fetched a new build, the app offers a reload
@@ -340,7 +340,7 @@ must not be HTTP-cached: [docs/architecture.md](docs/architecture.md#updates-and
 Live at **https://amivag.github.io/linguastein/**. A push to `main` checks, builds
 and uploads `dist/` as a GitHub Pages artifact — about a minute. Because a project
 page is served under `/<repo>/`, the subpath is threaded through the build from a
-single `BASE` constant in [vite.config.ts](vite.config.ts); the dev server uses it
+single `BASE` constant in [vite.config.ts](apps/linguastein/vite.config.ts); the dev server uses it
 too, so a base-path mistake surfaces locally. Setup, the one Pages setting that
 matters, and the rough edges: [docs/deploy.md](docs/deploy.md).
 

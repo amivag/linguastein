@@ -60,24 +60,25 @@ jobs:
       # `APP_MOVED_TO` is empty until the app has a new home. Once it is set, this
       # build tells learners where the app went (see "Switching hosts").
       - name: Build
-        run: npm run build
+        run: npm run build -w linguastein-app
         env:
           APP_MOVED_TO: ${{ vars.APP_MOVED_TO }}
 
       # Pages has no rewrite rule, so a hard refresh on /practice would 404.
       # Serving the app shell as the 404 body lets the router take over.
       - name: SPA fallback
-        run: cp dist/index.html dist/404.html
+        run: cp apps/linguastein/dist/index.html apps/linguastein/dist/404.html
 
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: dist
+          path: apps/linguastein/dist
 
       # The same app for Cloudflare: served from its own origin's root, with the
       # `_headers` file Pages cannot use. Off until `CLOUDFLARE_DEPLOY` is `true`.
       # Packaged with `wrangler.json`, so the deploy job needs no checkout.
       - name: Build for Cloudflare
         if: vars.CLOUDFLARE_DEPLOY == 'true'
+        working-directory: apps/linguastein
         run: |
           npx vite build --outDir cloudflare/dist --emptyOutDir
           cp wrangler.json cloudflare/
@@ -89,7 +90,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: cloudflare
-          path: cloudflare
+          path: apps/linguastein/cloudflare
           if-no-files-found: error
 
   # Holds the publishing permissions, and runs no repository or package code.

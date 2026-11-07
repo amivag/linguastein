@@ -78,12 +78,12 @@ Read these first, in order:
    learning model**. Rule 4 is what this task must not break; rule 8's last
    sentence ("progress is untouched by it") is what Stage B has to keep true
    while adding a pack field to a progress record
-2. [`src/storage/types.ts`](../../src/storage/types.ts) — the whole contract, 85
+2. [`src/storage/types.ts`](../../apps/linguastein/src/storage/types.ts) — the whole contract, 85
    lines, worth reading before anything else
-3. [`src/domain/progress/types.ts`](../../src/domain/progress/types.ts) and
-   [`tracker.ts`](../../src/domain/progress/tracker.ts) — the records, and the one
+3. [`src/domain/progress/types.ts`](../../apps/linguastein/src/domain/progress/types.ts) and
+   [`tracker.ts`](../../apps/linguastein/src/domain/progress/tracker.ts) — the records, and the one
    pure function that writes them
-4. [`src/app/course.ts`](../../src/app/course.ts) — where a course comes from.
+4. [`src/app/course.ts`](../../apps/linguastein/src/app/course.ts) — where a course comes from.
    Stage A hangs off this, because the path already knows which course is open
 5. [`docs/spec/spanish_learning_app_spec_v0.1.md`](../spec/spanish_learning_app_spec_v0.1.md)
    §23 — what local-first was meant to cover
@@ -132,7 +132,7 @@ the summary and by every writer. Do not re-derive it at a call site.
 
 ### 4.3 The URL parser is not the bug — the writer is
 
-`slugs()` in [`session-url.ts`](../../src/features/practice/session-url.ts) says
+`slugs()` in [`session-url.ts`](../../apps/linguastein/src/features/practice/session-url.ts) says
 plainly that topics and skills "are pack vocabulary rather than domain enums, so
 there is no `allowed` list to check them against", and that is correct: the parser
 cannot know. What is inconsistent is what happens next. `SessionScreen` resolves a
@@ -153,10 +153,10 @@ a link a learner could have typed._
 ### 4.4 The manifest already declares pronunciation locales, and nothing reads it
 
 `PackManifest.pronunciationLocales` exists in
-[`model.ts:295`](../../src/domain/content/model.ts), is validated in
+[`model.ts:295`](../../apps/linguastein/src/domain/content/model.ts), is validated in
 `schemas.ts:264`, and is populated by `build-dataset.ts:1585` with
 `['es-ES', 'es-MX']`. The app instead offers the hard-coded four-entry
-`PRONUNCIATION_LOCALES` in [`language.ts:70`](../../src/domain/content/language.ts),
+`PRONUNCIATION_LOCALES` in [`language.ts:70`](../../apps/linguastein/src/domain/content/language.ts),
 which is Spanish-only. Deriving the list from the loaded packs is the same move
 `courseOptions()` already makes for languages, and it is what makes a second
 language's accents appear with no code change — the property
@@ -164,7 +164,7 @@ language's accents appear with no code change — the property
 
 Same shape, smaller: `VOICE_SAMPLE = 'Tengo que trabajar.'` is hard-coded Spanish
 inside the otherwise app-agnostic
-[`VoiceSettings`](../../src/components/VoiceSettings.tsx), which the skeleton rule
+[`VoiceSettings`](../../apps/linguastein/src/components/VoiceSettings.tsx), which the skeleton rule
 about app identity would not allow if it were a name.
 
 ### 4.5 Nothing stored was indexable by pack, and it could not be
@@ -236,7 +236,7 @@ interface CourseState {
 
 Two records rather than one nested object, because `updatePreferences(patch)` is
 called with a flat patch from eleven sites in five files, and the chained-write fix in
-[`App.tsx:75`](../../src/app/App.tsx) depends on that shape. Keeping the device
+[`App.tsx:75`](../../apps/linguastein/src/app/App.tsx) depends on that shape. Keeping the device
 record flat means those call sites do not move, and a new
 `updateCourse(language, patch)` needs the same chaining for the same reason:
 picking three categories in a row is exactly what broke it the first time, and
@@ -507,7 +507,7 @@ while it was still a question.
 `ItemProgress` is not a document. It is a **fold**: `attempts + 1`,
 `correct + (failed ? 0 : 1)`, `streak + 1`, an exponential mean over latency, and
 stability and difficulty computed from the previous pair
-([`fsrs.ts:68`](../../src/domain/progress/fsrs.ts), [`tracker.ts:45`](../../src/domain/progress/tracker.ts))
+([`fsrs.ts:68`](../../apps/linguastein/src/domain/progress/fsrs.ts), [`tracker.ts:45`](../../apps/linguastein/src/domain/progress/tracker.ts))
 _(verified 2026-08-25)_. Every field is a function of the row before it and the
 attempt applied to it. Nothing in the chain reads a clock or a random source —
 `recordAttempt` takes an `Rng` and its doc comment says what for: the attempt's

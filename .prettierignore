@@ -9,7 +9,7 @@ docs/spec/
 # how to wrap short arrays, and CI checks both `prettier --check` and
 # `git diff --exit-code public/packs` — so formatting this directory makes one of
 # the two fail whichever way the files are committed.
-public/packs/
+**/public/packs/
 
 # Written by oxlint's rule probe while it runs. Tool artifacts, not source: the
 # two loose files are transient, which is worse than untidy — a `prettier --check`

@@ -26,8 +26,8 @@ nothing else selects a language, so there is no way to build `de` from
 `content/es` or to label a Spanish pack German.
 
 Everything language-specific arrives through **one seam**:
-`LanguageModule` in [src/languages/types.ts](../src/languages/types.ts), loaded by
-tag from [src/languages/index.ts](../src/languages/index.ts) with a dynamic
+`LanguageModule` in [src/languages/types.ts](../apps/linguastein/src/languages/types.ts), loaded by
+tag from [src/languages/index.ts](../apps/linguastein/src/languages/index.ts) with a dynamic
 `import()`. The `import()` is the point rather than a style choice — a static map
 would put Spanish's conjugator in memory for a German build, and
 `tests/data/second-language-build.test.ts` proves it does not by declaring
@@ -68,10 +68,10 @@ without a file being deleted.
 building German would have spoken the wrong pack and said nothing about it.
 
 **A mission is a curriculum spine plus a per-language realisation.**
-[src/app/missions/spines.ts](../src/app/missions/spines.ts) holds what is not about a
+[src/app/missions/spines.ts](../apps/linguastein/src/app/missions/spines.ts) holds what is not about a
 language — the order, the goal, the capabilities, the estimated minutes and the
 transfer ladder's guided→independent arc — and
-[src/app/missions/es.ts](../src/app/missions/es.ts) holds the passages, the spotlight
+[src/app/missions/es.ts](../apps/linguastein/src/app/missions/es.ts) holds the passages, the spotlight
 line, the learner's speaker part and the response palettes. `resolveMissions`
 joins them into the `MissionDefinition` every screen already reads, which is why
 the split touched no consumer. A second language realises the existing spines

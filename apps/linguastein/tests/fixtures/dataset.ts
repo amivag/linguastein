@@ -25,7 +25,11 @@ import {
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
+/** This app's directory: its content, packs and configs. Tests run from it. */
 export const repoRoot = resolve(process.cwd());
+
+/** The workspace root, where the shared docs and agent guidance live. */
+export const workspaceRoot = resolve(repoRoot, '..', '..');
 
 /** Directory the `core-es` pack is written into, inside any packs root. */
 export const PACK_DIR = 'core-es';

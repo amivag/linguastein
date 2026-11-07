@@ -4,14 +4,23 @@ Keep this entry point short. Read only the topic document needed for the task;
 [docs/README.md](docs/README.md) is the map. Current decisions and unresolved
 foundation findings live in [docs/current-state.md](docs/current-state.md).
 
+## Layout
+
+An npm workspace. `apps/linguastein/` is the Spanish app; `packages/*` hold the
+platform code other apps share ([framework.md](docs/framework.md)). Paths in this
+file such as `src/` or `tests/` are relative to `apps/linguastein/` unless they
+name a package. Docs and this guidance stay at the root.
+
 ## Commands
+
+Run from the root; each delegates to the workspaces.
 
 ```bash
 npm run dev
-npm run check            # typecheck, lint, coverage, validate:data, build, format:check
+npm run check            # per workspace: typecheck, lint, coverage, data, build; then format
 npm run format           # write formatting
-npm test                 # vitest
-npx vitest run tests/a11y # after any UI change
+npm test                 # vitest, every workspace
+npm test -w linguastein-app -- tests/a11y # after any UI change
 npm run test:e2e         # Playwright, 3 engines; after PWA, storage, CSP or boot changes
 npm run build:data       # generate packs from content/es; optional -- <tag>
 npm run review:data      # editorial exceptions

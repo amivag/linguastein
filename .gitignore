@@ -62,6 +62,6 @@ public/packs/*/audio/
 .rulelist.json
 
 # browser tests
-/test-results/
-/playwright-report/
-/blob-report/
+test-results/
+playwright-report/
+blob-report/

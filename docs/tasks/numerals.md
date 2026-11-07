@@ -28,11 +28,11 @@ Read these first, in order:
 
 1. [`AGENTS.md`](../../AGENTS.md) — the architecture rules; the Datasets and
    The learning model sections are the two this task is constrained by
-2. [`src/languages/es/conjugation.ts`](../../src/languages/es/conjugation.ts) —
+2. [`src/languages/es/conjugation.ts`](../../apps/linguastein/src/languages/es/conjugation.ts) —
    **the model to copy.** Its header states the principle this task extends:
    ~100 verbs by ~20 forms is 2,000 chances to misplace an accent, so forms are
    generated from auditable rules rather than typed
-3. [`src/languages/es/irregulars.ts`](../../src/languages/es/irregulars.ts) — how
+3. [`src/languages/es/irregulars.ts`](../../apps/linguastein/src/languages/es/irregulars.ts) — how
    an exception table is declared and cross-checked by the build
 4. [`docs/dataset-format.md`](../dataset-format.md) — record shapes, and what a
    `skill` record is
@@ -67,7 +67,7 @@ hand-typed conjugations are wrong, only more so:
   billion. No table of numbers teaches one of them.
 - **The dataset has an honesty problem here already.** `numbers` is the thinnest
   topic in the shipped pack — 2 items — and `uno` through `mil` sit in
-  [`modifiers.tsv`](../../content/es/modifiers.tsv) as `NUM` lexemes with no id,
+  [`modifiers.tsv`](../../apps/linguastein/content/es/modifiers.tsv) as `NUM` lexemes with no id,
   so they contribute a lexeme and no word card. Numbers are not practisable
   today. Adding forty rows would make that look solved without solving it.
 
@@ -256,7 +256,7 @@ reachable from a real number, so the pack cannot ship dead curriculum.
 ## 6. Exercises are derived, never stored
 
 Rule 2. A numeral exercise is generated in
-[`domain/exercises/generators.ts`](../../src/domain/exercises/generators.ts) like
+[`domain/exercises/generators.ts`](../../apps/linguastein/src/domain/exercises/generators.ts) like
 every other kind, and nothing numeral-shaped goes into a content record.
 
 Three kinds, in descending order of how much they prove:

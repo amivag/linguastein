@@ -10,15 +10,29 @@
     },
     {
       "name": "linguastein-preview-root",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["vite", "preview", "--outDir", ".tmp-cf", "--port", "4175", "--strictPort"],
-      "env": { "DEPLOY_TARGET": "cloudflare", "APP_BASE_PATH": "/" },
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "preview",
+        "-w",
+        "linguastein-app",
+        "--",
+        "--outDir",
+        ".tmp-cf",
+        "--port",
+        "4175",
+        "--strictPort"
+      ],
+      "env": {
+        "DEPLOY_TARGET": "cloudflare",
+        "APP_BASE_PATH": "/"
+      },
       "port": 4175
     },
     {
       "name": "linguastein-preview",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "preview"],
+      "runtimeArgs": ["run", "preview", "-w", "linguastein-app"],
       "port": 4173,
       "autoPort": true
     }

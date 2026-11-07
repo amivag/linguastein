@@ -18,7 +18,7 @@ import { MISSIONS } from '../../src/app/missions';
 import { MISSION_VARIATIONS } from '../../src/app/mission-variations';
 import { APPEARANCE_AXES } from '../../src/styles/axes';
 import { PALETTES } from '../../src/styles/themes';
-import { repoRoot, shippedRecords } from '../fixtures/dataset';
+import { shippedRecords, workspaceRoot } from '../fixtures/dataset';
 
 /** Docs that quote the pack's size, and are expected to agree with it. */
 const DOCS = ['README.md', 'docs/roadmap.md'];
@@ -46,7 +46,7 @@ const totalItems = actual.sentences + actual.words;
 /** Thousands separators, the way the docs write them. */
 const groups = (value: number) => value.toLocaleString('en-US');
 
-const read = (doc: string) => readFileSync(join(repoRoot, doc), 'utf8');
+const read = (doc: string) => readFileSync(join(workspaceRoot, doc), 'utf8');
 
 /**
  * A claim in the docs: the label as written, and the number it should carry.

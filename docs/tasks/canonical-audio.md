@@ -34,8 +34,8 @@ Read these first, in order:
 2. [`docs/spec/spanish_learning_app_spec_v0.1.md`](../spec/spanish_learning_app_spec_v0.1.md)
    §6 (audio and pronunciation) and §25 (public/free service constraints)
 3. [`docs/dataset-format.md`](../dataset-format.md) — record shapes and the pack layout
-4. [`src/audio/types.ts`](../../src/audio/types.ts) and
-   [`src/audio/audio-service.ts`](../../src/audio/audio-service.ts) — the seam
+4. [`src/audio/types.ts`](../../apps/linguastein/src/audio/types.ts) and
+   [`src/audio/audio-service.ts`](../../apps/linguastein/src/audio/audio-service.ts) — the seam
    this task feeds
 5. [`docs/tasks/dataset-expansion.md`](dataset-expansion.md) §4 — why an item id
    survives a typo fix, which is what §4.2 below has to work around
@@ -53,27 +53,27 @@ Spanish either.
 
 The runtime half is done, and the extension point for the data half is clean.
 
-| Piece                      | Where                                                                      | State                                                                       |
-| -------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Canonical-audio-first play | [`audio-service.ts:90`](../../src/audio/audio-service.ts)                  | `repository.audioOf(item, locale)` is consulted before the TTS seam         |
-| Locale resolution          | [`repository.ts:226`](../../src/domain/content/repository.ts)              | falls back across pronunciation locales, so one locale is a valid start     |
-| Record shape               | [`schemas.ts:91`](../../src/data/validation/schemas.ts)                    | `audioRefSchema`: `locale`, `src`, `durationMs?`, `voice?`, `provenance?`   |
-| Pack file kinds            | [`model.ts:199`](../../src/domain/content/model.ts)                        | `PACK_FILE_KINDS` + `RECORD_SCHEMAS` — adding a kind is a three-line change |
-| Generic loading            | [`pack.ts:95`](../../src/data/loaders/pack.ts)                             | validates and collects by `file.kind`; a new kind needs no loader change    |
-| Asset base URL             | [`services.ts:54`](../../src/app/services.ts)                              | pack-relative `src` resolves against the dataset base URL                   |
-| On-demand caching          | [`vite.config.ts:37`](../../vite.config.ts)                                | audio requests are `CacheFirst`, deliberately **not** precached             |
-| Playback controls          | [`AudioControls.tsx`](../../src/features/practice/AudioControls.tsx)       | normal, slow, replay, loop ×3, auto-play                                    |
-| Voice preference           | [`types.ts:44`](../../src/audio/types.ts)                                  | `PlayOptions.voice` already exists, currently only for device voices        |
-| Dialogue speakers          | [`schemas.ts:197`](../../src/data/validation/schemas.ts)                   | `passageSchema.speakers` — the hook for voicing a dialogue with two voices  |
-| Honest silence             | [`SettingsScreen.tsx:113`](../../src/features/settings/SettingsScreen.tsx) | explains itself when no voice exists, and promises dataset audio wins       |
+| Piece                      | Where                                                                                       | State                                                                       |
+| -------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Canonical-audio-first play | [`audio-service.ts:90`](../../apps/linguastein/src/audio/audio-service.ts)                  | `repository.audioOf(item, locale)` is consulted before the TTS seam         |
+| Locale resolution          | [`repository.ts:226`](../../apps/linguastein/src/domain/content/repository.ts)              | falls back across pronunciation locales, so one locale is a valid start     |
+| Record shape               | [`schemas.ts:91`](../../apps/linguastein/src/data/validation/schemas.ts)                    | `audioRefSchema`: `locale`, `src`, `durationMs?`, `voice?`, `provenance?`   |
+| Pack file kinds            | [`model.ts:199`](../../apps/linguastein/src/domain/content/model.ts)                        | `PACK_FILE_KINDS` + `RECORD_SCHEMAS` — adding a kind is a three-line change |
+| Generic loading            | [`pack.ts:95`](../../apps/linguastein/src/data/loaders/pack.ts)                             | validates and collects by `file.kind`; a new kind needs no loader change    |
+| Asset base URL             | [`services.ts:54`](../../apps/linguastein/src/app/services.ts)                              | pack-relative `src` resolves against the dataset base URL                   |
+| On-demand caching          | [`vite.config.ts:37`](../../apps/linguastein/vite.config.ts)                                | audio requests are `CacheFirst`, deliberately **not** precached             |
+| Playback controls          | [`AudioControls.tsx`](../../apps/linguastein/src/features/practice/AudioControls.tsx)       | normal, slow, replay, loop ×3, auto-play                                    |
+| Voice preference           | [`types.ts:44`](../../apps/linguastein/src/audio/types.ts)                                  | `PlayOptions.voice` already exists, currently only for device voices        |
+| Dialogue speakers          | [`schemas.ts:197`](../../apps/linguastein/src/data/validation/schemas.ts)                   | `passageSchema.speakers` — the hook for voicing a dialogue with two voices  |
+| Honest silence             | [`SettingsScreen.tsx:113`](../../apps/linguastein/src/features/settings/SettingsScreen.tsx) | explains itself when no voice exists, and promises dataset audio wins       |
 
 `senses` is already a declared kind with zero shipped records, so a pack that
 declares a kind it does not yet ship is an established pattern rather than a new
 one.
 
-The generator half now exists too — [`scripts/generate-audio.ts`](../../scripts/generate-audio.ts)
+The generator half now exists too — [`scripts/generate-audio.ts`](../../apps/linguastein/scripts/generate-audio.ts)
 (`npm run generate:audio`), covered by
-[`tests/data/audio-generation.test.ts`](../../tests/data/audio-generation.test.ts):
+[`tests/data/audio-generation.test.ts`](../../apps/linguastein/tests/data/audio-generation.test.ts):
 provider seam, the twenty-item sample of §4.1, hash-keyed naming, dedupe on text,
 the ledger, resumable batches, ffmpeg post-processing, and `--compare` for blind
 listening. It ships a `stub` provider that writes a padded tone, so all of that
@@ -81,7 +81,7 @@ is testable with no TTS installed.
 
 The `audio` record kind has landed too: schema, generic loading, a repository
 index, voice-aware resolution and integrity checks, with tests in
-[`tests/domain/repository.test.ts`](../../tests/domain/repository.test.ts).
+[`tests/domain/repository.test.ts`](../../apps/linguastein/tests/domain/repository.test.ts).
 
 What is still missing: **an engine and a voice** (§4.0), the build step that turns
 ledger rows into records, and the review pass.
@@ -175,7 +175,7 @@ template, so adopting one later is an environment variable rather than a rewrite
 ### 4.1 Which voice — and may you ship its output?
 
 The one that can invalidate a finished batch.
-[`pack.json`](../../public/packs/core-es/pack.json) declares
+[`pack.json`](../../apps/linguastein/public/packs/core-es/pack.json) declares
 `"license": "CC0-1.0"`. Most hosted TTS terms permit commercial _use_ of the
 output while forbidding redistribution as a standalone asset library — which is
 exactly what shipping `audio/**` inside an exportable pack is. **Free tiers are
@@ -223,7 +223,7 @@ Three consequences, all load-bearing:
 - **The file name contains a short hash of the exact spoken text**, so a
   corrected row produces a _different_ file:
   `audio/es-ES/lucia/000201-9f3ab27c.m4a`. Content-addressed names also make the
-  `CacheFirst` rule in [`vite.config.ts:37`](../../vite.config.ts) safe — under a
+  `CacheFirst` rule in [`vite.config.ts:37`](../../apps/linguastein/vite.config.ts) safe — under a
   stable name that cache would serve a stale clip for its full 90-day life.
 - **The build compares hashes and reports drift**: _N current, M stale, K
   missing_, per voice. Once the pipeline is real, stale clips fail the build, in
@@ -288,7 +288,7 @@ Audio takes the same shape — a separate record kind, one record per clip:
 ```
 
 Adding `'audio'` to `PACK_FILE_KINDS` and a schema to `RECORD_SCHEMAS` is a
-three-line change; [`pack.ts:95`](../../src/data/loaders/pack.ts) collects by
+three-line change; [`pack.ts:95`](../../apps/linguastein/src/data/loaders/pack.ts) collects by
 kind and needs no edit. Add the array to `ContentPack`, index it by item in the
 repository, and extend `audioOf` to prefer a requested voice while keeping its
 present behaviour when none is asked for. Add a variants accessor for the UI.
@@ -351,7 +351,7 @@ both are expensive to retrofit:
   is then a self-contained unit that zips, ships and imports as-is.
 - **Route `src` resolution through one function instead of inlining
   `new URL(audio.src, assetBaseUrl)`** at
-  [`audio-service.ts:93`](../../src/audio/audio-service.ts). An imported pack's
+  [`audio-service.ts:93`](../../apps/linguastein/src/audio/audio-service.ts). An imported pack's
   clips will live in IndexedDB as blobs, not under a URL base, so playback needs
   one resolver that can return either an HTTP URL or a blob URL. One indirection
   now; a rewrite of the playback path later if skipped.
@@ -395,7 +395,7 @@ item	locale	voice	textHash	file	durationMs	generated	review
 000201	es-ES	lucia	9f3ab27c	audio/es-ES/lucia/000201-9f3ab27c.m4a	2180	2026-08-17	approved
 ```
 
-**Unlike [`id-ledger.tsv`](../../content/es/id-ledger.tsv), this one is not purely
+**Unlike [`id-ledger.tsv`](../../apps/linguastein/content/es/id-ledger.tsv), this one is not purely
 generated.** The generator fills every column except `review`; a human owns that
 one. The file says so in its own header, because otherwise a future session
 regenerates it and throws the review work away.
@@ -433,7 +433,7 @@ Variants are the point, so decide how one is chosen.
   recognising a waveform instead of a word. Rotating variants across reviews is a
   feature worth having.
 - **Any variation goes through the injected `Rng`** (architecture rule 7,
-  [`src/utils/random.ts`](../../src/utils/random.ts)). A seeded session must
+  [`src/utils/random.ts`](../../apps/linguastein/src/utils/random.ts)). A seeded session must
   replay with the same voices, so `Math.random()` in the audio path would break
   reproducibility — the one way this feature can quietly violate an architecture
   rule.
@@ -469,7 +469,7 @@ building an editor.
 
 ## 9. One caching change
 
-`maxEntries: 500` in [`vite.config.ts:43`](../../vite.config.ts) is below the
+`maxEntries: 500` in [`vite.config.ts:43`](../../apps/linguastein/vite.config.ts) is below the
 1,028 clip count, and variants multiply it further, so a learner working through
 the pack evicts clips for items they have already met and loses offline replay of
 exactly what they studied most. Raise it past the expected clip count, or precache
@@ -483,7 +483,7 @@ rather than hard-coded again.
 ## 10. Rules and constraints
 
 - **Never pre-generate a slow variant.** `element.playbackRate` at
-  [`audio-service.ts:49`](../../src/audio/audio-service.ts) implements the slow
+  [`audio-service.ts:49`](../../apps/linguastein/src/audio/audio-service.ts) implements the slow
   control and browsers preserve pitch by default. A `0.7×` file is pure waste —
   and this is the one place where "we do not care about size" does not apply,
   because it doubles review surface for nothing.

@@ -33,5 +33,5 @@ parallel memory files or reproduce this index in agent instructions. Avoid fixed
 line counts, source-size percentages and transient package/audit inventories.
 Replace stale decisions in place; link detail from one owner.
 
-[CHANGELOG.md](../CHANGELOG.md) records shipped app changes;
+[CHANGELOG.md](../apps/linguastein/CHANGELOG.md) records shipped app changes;
 [CONTRIBUTING.md](../CONTRIBUTING.md) owns contribution requirements.

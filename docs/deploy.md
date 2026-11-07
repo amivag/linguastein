@@ -35,7 +35,7 @@ named `amivag.github.io` gets the root, and that one is kept free for a landing
 page across several apps.
 
 So the subpath has to be threaded through the build. It is declared once, as
-`BASE` in [`vite.config.ts`](../vite.config.ts), and reaches four places:
+`BASE` in [`vite.config.ts`](../apps/linguastein/vite.config.ts), and reaches four places:
 
 | Consumer                     | How                                                          |
 | ---------------------------- | ------------------------------------------------------------ |
@@ -62,8 +62,8 @@ two will collide.
   `noindex`.
 - **No response headers.** `X-Robots-Tag`, CSP and cache-control cannot be set on
   Pages. The crawler opt-outs live in a `<meta>` tag and
-  [`robots.txt`](../public/robots.txt) instead. The content security policy is a
-  `<meta>` written by the build ([`scripts/csp.ts`](../scripts/csp.ts)), with
+  [`robots.txt`](../apps/linguastein/public/robots.txt) instead. The content security policy is a
+  `<meta>` written by the build ([`scripts/csp.ts`](../apps/linguastein/scripts/csp.ts)), with
   Trusted Types required. A meta policy cannot set `frame-ancestors`, so the app
   can still be framed; a host with headers fixes that.
 - **Nothing gates the site.** Free Pages cannot be access-controlled; private
@@ -92,7 +92,7 @@ the repository and off; switching is configuration, in this order.
    `linguastein.<account>.workers.dev` as well as Pages. Treat that address as a
    preview: data saved there does not carry over to the final domain.
 2. **Attach the domain.** Add a `routes` entry to
-   [`wrangler.json`](../wrangler.json), for example
+   [`wrangler.json`](../apps/linguastein/wrangler.json), for example
    `{ "pattern": "linguastein.example.com", "custom_domain": true }`, then turn
    on HSTS for the domain in Cloudflare. Check the response headers with
    `curl -I`: the content security policy, `frame-ancestors` and a 200 status on
@@ -106,9 +106,9 @@ the repository and off; switching is configuration, in this order.
    `APP_MOVED_TO`, and set Pages to unpublished.
 
 The build reads `DEPLOY_TARGET`, `APP_BASE_PATH` and `APP_MOVED_TO`
-([`scripts/deployment.ts`](../scripts/deployment.ts)); unset, it builds exactly
+([`scripts/deployment.ts`](../apps/linguastein/scripts/deployment.ts)); unset, it builds exactly
 today's Pages site. A Cloudflare build adds `_headers`
-([`scripts/headers.ts`](../scripts/headers.ts)), whose policy hashes the shipped
+([`scripts/headers.ts`](../apps/linguastein/scripts/headers.ts)), whose policy hashes the shipped
 HTML. To build one locally, run
 `DEPLOY_TARGET=cloudflare APP_BASE_PATH=/ npx vite build`.
 

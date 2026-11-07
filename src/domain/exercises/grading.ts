@@ -42,7 +42,7 @@ export function gradeExercise(exercise: Exercise, answer: Answer): GradeResult |
       const chosen = exercise.choices.find((choice) => choice.id === answer.value);
       const expected = exercise.choices.find((choice) => choice.correct)?.text ?? '';
       const correct = chosen?.correct === true;
-      return { correct, grade: correct ? gradeFromLatency(answer) : 'again', expected };
+      return { correct, grade: correct ? gradeFromChoice(answer) : 'again', expected };
     }
     case 'tap-to-build': {
       const built = Array.isArray(answer.value) ? answer.value : [answer.value];
@@ -126,6 +126,18 @@ function sameWords(built: readonly string[], solution: readonly string[]): boole
   const left = built.flatMap((part) => splitWords(normalise(part)));
   const right = solution.flatMap((part) => splitWords(normalise(part)));
   return left.length === right.length && left.every((word, index) => word === right[index]);
+}
+
+/**
+ * A choice never earns `easy`, however quickly it was made.
+ *
+ * The answer was on screen, so speed shows recognition rather than effortless
+ * recall — and one lucky tap in four is not a memory. FSRS would otherwise read
+ * that first tap as two weeks of stability, and not bring the item back until then.
+ */
+function gradeFromChoice(answer: Answer): ReviewGrade {
+  const grade = gradeFromLatency(answer);
+  return grade === 'easy' ? 'good' : grade;
 }
 
 /** Fast and unhinted answers count as `easy`; hesitant ones as `hard`. */

@@ -42,6 +42,16 @@ export { GRADED_MODES, MODE_KINDS, RETRIEVAL_MODES, type GradedMode, type Retrie
 /** Stability in days at which an item is ready for the next rung. */
 const CUED_RECALL_AT = 1;
 const PRODUCTION_AT = 7;
+/**
+ * The same offer for an item the learner has found hard, once it has held anyway.
+ *
+ * One miss on first sight sets difficulty high and `good` answers barely lower it,
+ * so without this the item waits fourteen reviews, and years, to be offered
+ * production. Production is what "mastered" requires, so it could never get there.
+ * Repeated misses put an item past `STUBBORN_DIFFICULTY`, and that one stays back.
+ */
+const PRODUCTION_WHEN_HARD_AT = 21;
+const STUBBORN_DIFFICULTY = 0.8;
 
 export interface SessionStep {
   readonly itemId: ItemId;
@@ -81,7 +91,8 @@ export function retrievalModeFor(progress: SubjectProgress | undefined): Retriev
 
   const stability = progress.stability ?? 0;
   const earned: GradedMode =
-    stability >= PRODUCTION_AT && progress.difficulty < 0.6
+    (stability >= PRODUCTION_AT && progress.difficulty < 0.6) ||
+    (stability >= PRODUCTION_WHEN_HARD_AT && progress.difficulty < STUBBORN_DIFFICULTY)
       ? 'production'
       : stability >= CUED_RECALL_AT
         ? 'cued-recall'

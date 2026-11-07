@@ -359,7 +359,7 @@ describe('grading', () => {
 
     expect(gradeExercise(exercise, { value: correct.id, latencyMs: 1000 })).toEqual({
       correct: true,
-      grade: 'easy',
+      grade: 'good',
       expected: 'beer',
     });
     expect(gradeExercise(exercise, { value: wrong.id })?.grade).toBe('again');

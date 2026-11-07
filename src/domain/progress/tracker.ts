@@ -57,16 +57,38 @@ export function applyAttempt(
 ): SubjectProgress {
   const previous = current ?? newProgress(attempt.subject, attempt.at);
   const reviewed = scheduler.review(previous, attempt.grade, attempt.at);
+  const evidence = withEvidence(previous.evidence, attempt);
 
   return {
     ...reviewed,
+    status: statusShownBy(reviewed.status, evidence),
     hintsUsed: previous.hintsUsed + (attempt.hintsUsed ?? 0),
     updatedAt: attempt.at,
-    evidence: withEvidence(previous.evidence, attempt),
+    evidence,
     ...(attempt.latencyMs !== undefined
       ? { averageLatencyMs: smoothLatency(previous.averageLatencyMs, attempt.latencyMs) }
       : {}),
   };
+}
+
+/**
+ * The status the evidence supports, given the one the memory model reached.
+ *
+ * The engine knows only that a memory is durable, and it can be durable as
+ * recognition. "Mastered" is what Home and Progress tell the learner, so it also
+ * needs a production answer that passed. Here rather than in the engine, whose
+ * subjects need not have retrieval modes at all.
+ */
+function statusShownBy(
+  status: SubjectProgress['status'],
+  evidence: NonNullable<SubjectProgress['evidence']>,
+): SubjectProgress['status'] {
+  return status === 'mastered' && !hasProduced(evidence) ? 'review' : status;
+}
+
+/** Whether a production attempt has ever passed. Shared with the stored-row migration. */
+export function hasProduced(evidence: NonNullable<SubjectProgress['evidence']>): boolean {
+  return (evidence.production?.correct ?? 0) > 0;
 }
 
 /**

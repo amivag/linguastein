@@ -15,7 +15,22 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Changed
+
+- A correct multiple-choice or cloze answer no longer counts as `easy`, however
+  fast, so a first correct tap returns in days rather than two weeks.
+- "Mastered" now requires a production answer that passed. Items already stored as
+  mastered without one return to `review`; their schedules are unchanged.
+- An item missed early can reach production once it has 21 days of stability,
+  unless repeated misses have made it very difficult.
+
+### Fixed
+
+- Previous shows a card as it was answered instead of grading it a second time.
+
 ### Maintenance
+
+- Node 26.13 is the baseline. CI installs with `--engine-strict`.
 
 - Refresh compatible application and tooling dependencies through `sfw npm`,
   including Zod 4.6.7, Vite 8.3.5, Vitest/coverage 4.1.12, React 19.3.1 and

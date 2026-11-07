@@ -38,7 +38,9 @@ the rung below. Three consequences, all reachable today:
 - An item a learner can produce but keeps mis-recognising sits at `recognition`,
   because a lapse on the easiest mode drops the rung for all of them.
 - `status: 'mastered'` can be earned entirely on recognition, and every screen
-  that counts mastered items repeats the claim.
+  that counts mastered items repeats the claim. **Closed 2026-11-07:** `applyAttempt`
+  holds an item at `review` until a production answer has passed, and database
+  version 6 corrected rows already stored.
 
 [learner-profile.md](learner-profile.md) §9.2 states it exactly: "recognition
 inflates the ladder that is meant to gate it." `AGENTS.md` states the principle

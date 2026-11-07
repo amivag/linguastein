@@ -23,7 +23,12 @@ import {
   type LanguageTag,
   type LevelScope,
 } from '../domain/content';
-import type { Attempt, SubjectProgress, Timestamp } from '../domain/progress';
+import {
+  hasProduced,
+  type Attempt,
+  type SubjectProgress,
+  type Timestamp,
+} from '../domain/progress';
 import type { SessionFocus, SessionRecord } from '../domain/sessions';
 import {
   courseStateOf,
@@ -35,7 +40,7 @@ import { readCourseStates, readPreferences } from './schemas';
 import type { LearnerStores, LearnerStorage, Preferences } from './types';
 
 const DB_NAME = APP.id;
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 const PREFERENCES_KEY = 'preferences';
 const COURSES_KEY = 'courses';
 
@@ -149,6 +154,8 @@ export async function openAppDatabase(): Promise<IDBPDatabase<AppDatabase>> {
       if (oldVersion < 4) await upgradeToV4(tx, oldVersion);
 
       if (oldVersion < 5) await upgradeToV5(db, tx, oldVersion);
+
+      if (oldVersion < 6) await upgradeToV6(db, tx, oldVersion);
     },
   });
 }
@@ -335,6 +342,31 @@ async function upgradeToV5(
   for (const row of (await attempts.getAll()) as unknown as readonly PreV5Attempt[]) {
     const { itemId, ...rest } = row;
     await attempts.put({ ...rest, subject: itemId });
+  }
+}
+
+/**
+ * Version 6: "mastered" came to require a production answer that passed.
+ *
+ * The fold applies that from now on, but a row is only rewritten when it is next
+ * answered, which for a mastered item can be a year away. Until then Home would go
+ * on repeating a claim the app no longer makes, so the rows are corrected here.
+ *
+ * Only the status moves; the schedule is still true. A row with no evidence map
+ * predates evidence, which reads as unknown rather than as never produced.
+ */
+async function upgradeToV6(
+  db: IDBPDatabase<AppDatabase>,
+  tx: UpgradeTransaction,
+  oldVersion: number,
+): Promise<void> {
+  if (oldVersion < 1 || !db.objectStoreNames.contains('progress')) return;
+
+  const progress = tx.objectStore('progress');
+  for (const row of await progress.getAll()) {
+    if (row.status === 'mastered' && row.evidence && !hasProduced(row.evidence)) {
+      await progress.put({ ...row, status: 'review' });
+    }
   }
 }
 

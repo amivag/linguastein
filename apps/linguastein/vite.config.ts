@@ -1,16 +1,17 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
-import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
+import {
+  contentSecurityPolicyPlugin,
+  deploymentFrom,
+  hostHeaders,
+  htmlPlaceholders,
+} from '@platform/build';
 // With the extension: Vite's future native config loader refuses an
 // extensionless import, and it already warns about one today.
-import { withContentSecurityPolicy } from './scripts/csp.ts';
-import { deploymentFrom } from './scripts/deployment.ts';
-import { cloudflareHeaders } from './scripts/headers.ts';
 import { APP, cacheName } from './src/app/identity.ts';
 import { prePaintAxes } from './src/styles/axes.ts';
 
@@ -29,7 +30,7 @@ const pkg = JSON.parse(
  * config file can read it: nothing here may touch the DOM.
  *
  * The deploy environment can override the base path and name the host; unset,
- * it builds exactly what GitHub Pages serves today (`scripts/deployment.ts`).
+ * it builds exactly what GitHub Pages serves today (`deploymentFrom` in `@platform/build`).
  */
 const DEPLOYMENT = deploymentFrom(process.env, APP.basePath);
 const BASE = DEPLOYMENT.basePath;
@@ -77,53 +78,18 @@ export default defineConfig({
      * whole new axis needs no edit to the HTML, which is the property that makes
      * this layer reusable in another app rather than merely tidy in this one.
      */
-    {
-      name: 'app-identity-html',
-      transformIndexHtml: {
-        order: 'pre' as const,
-        handler: (html: string) =>
-          html
-            .replaceAll('%APP_ID%', APP.id)
-            .replaceAll('%APP_NAME%', APP.name)
-            .replaceAll('%APP_TAGLINE%', APP.tagline)
-            .replaceAll('%APP_DESCRIPTION%', APP.description)
-            .replaceAll('%APP_CHROME_COLOR%', APP.chromeColor)
-            .replaceAll('%APPEARANCE_AXES%', JSON.stringify(prePaintAxes())),
-      },
-    },
-    /**
-     * The content security policy, hashed against the finished HTML. `post` so
-     * the inline script it hashes is the one that ships, after the placeholders
-     * above are filled; build-only because the dev server's hot-reload preamble
-     * is inline script no production policy should allow. See `scripts/csp.ts`.
-     */
-    {
-      name: 'content-security-policy',
-      apply: 'build',
-      transformIndexHtml: {
-        order: 'post' as const,
-        handler: withContentSecurityPolicy,
-      },
-    },
-    /**
-     * Response headers for a host that reads `_headers`, written once the HTML
-     * is on disk so the policy hashes the inline script that actually shipped.
-     * Only for that host: GitHub Pages would serve the file as a page instead.
-     */
-    ((): Plugin => {
-      let outDir = '';
-      return {
-        name: 'host-headers',
-        apply: () => DEPLOYMENT.target === 'cloudflare',
-        configResolved(config) {
-          outDir = resolve(config.root, config.build.outDir);
-        },
-        closeBundle() {
-          const html = readFileSync(resolve(outDir, 'index.html'), 'utf8');
-          writeFileSync(resolve(outDir, '_headers'), cloudflareHeaders(html, BASE));
-        },
-      };
-    })(),
+    htmlPlaceholders({
+      APP_ID: APP.id,
+      APP_NAME: APP.name,
+      APP_TAGLINE: APP.tagline,
+      APP_DESCRIPTION: APP.description,
+      APP_CHROME_COLOR: APP.chromeColor,
+      APPEARANCE_AXES: JSON.stringify(prePaintAxes()),
+    }),
+    // Hashes the finished HTML's inline script; production builds only.
+    contentSecurityPolicyPlugin(),
+    // `_headers` for hosts that read it. The microphone is for pronunciation practice.
+    hostHeaders(DEPLOYMENT, { allow: ['microphone'] }),
     react(),
     VitePWA({
       registerType: 'autoUpdate',

@@ -3,7 +3,7 @@
  *
  * The defaults reproduce today's GitHub Pages build exactly, so an unset
  * environment changes nothing. Moving hosts is a matter of setting these in the
- * deploy workflow (see `docs/deploy.md`, "Switching hosts"), not of editing code:
+ * deploy workflow (Linguastein: `docs/deploy.md`, "Switching hosts"), not of editing code:
  *
  * - `DEPLOY_TARGET`: `github-pages` (default) or `cloudflare`. Cloudflare builds
  *   also emit `_headers`, carrying the security headers Pages cannot send.

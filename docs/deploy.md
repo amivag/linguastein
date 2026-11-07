@@ -63,7 +63,7 @@ two will collide.
 - **No response headers.** `X-Robots-Tag`, CSP and cache-control cannot be set on
   Pages. The crawler opt-outs live in a `<meta>` tag and
   [`robots.txt`](../apps/linguastein/public/robots.txt) instead. The content security policy is a
-  `<meta>` written by the build ([`scripts/csp.ts`](../apps/linguastein/scripts/csp.ts)), with
+  `<meta>` written by the build ([`csp.ts`](../packages/build/src/csp.ts) in `@platform/build`), with
   Trusted Types required. A meta policy cannot set `frame-ancestors`, so the app
   can still be framed; a host with headers fixes that.
 - **Nothing gates the site.** Free Pages cannot be access-controlled; private
@@ -106,9 +106,9 @@ the repository and off; switching is configuration, in this order.
    `APP_MOVED_TO`, and set Pages to unpublished.
 
 The build reads `DEPLOY_TARGET`, `APP_BASE_PATH` and `APP_MOVED_TO`
-([`scripts/deployment.ts`](../apps/linguastein/scripts/deployment.ts)); unset, it builds exactly
+([`deployment.ts`](../packages/build/src/deployment.ts)); unset, it builds exactly
 today's Pages site. A Cloudflare build adds `_headers`
-([`scripts/headers.ts`](../apps/linguastein/scripts/headers.ts)), whose policy hashes the shipped
+([`headers.ts`](../packages/build/src/headers.ts)), whose policy hashes the shipped
 HTML. To build one locally, run
 `DEPLOY_TARGET=cloudflare APP_BASE_PATH=/ npx vite build`.
 

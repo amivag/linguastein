@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript"],
+  "categories": { "correctness": "error" },
+  "ignorePatterns": ["coverage", "node_modules"],
+  "rules": {
+    "typescript/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }],
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "eqeqeq": ["error", "smart"]
+  },
+  "overrides": [
+    {
+      /*
+       * Runs in Node, inside each app's Vite config. It may use Node and Vite's
+       * types, but nothing app-shaped: each app passes in its names and choices.
+       */
+      "files": ["src/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["*", "!./*", "!node:*", "!vite"],
+                "message": "The build package imports only itself, Node and Vite. Take app-specific values as parameters."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

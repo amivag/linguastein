@@ -1,7 +1,7 @@
 /**
  * The one Trusted Types policy this app needs.
  *
- * The content security policy (`scripts/csp.ts`) requires Trusted Types for
+ * The content security policy (`@platform/build`) requires Trusted Types for
  * script sinks, so assigning a string to `innerHTML`, `eval` or a script URL
  * throws. The app itself uses none of them. Registering the service worker is
  * the exception: `navigator.serviceWorker.register` is a script-URL sink, and

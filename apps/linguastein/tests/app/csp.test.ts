@@ -15,7 +15,7 @@ import {
   contentSecurityPolicy,
   inlineScriptHashes,
   withContentSecurityPolicy,
-} from '../../scripts/csp';
+} from '@platform/build';
 
 const html = readFileSync(join(process.cwd(), 'index.html'), 'utf8');
 

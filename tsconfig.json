@@ -11,6 +11,9 @@
       "path": "./packages/web"
     },
     {
+      "path": "./packages/build"
+    },
+    {
       "path": "./apps/linguastein"
     }
   ]

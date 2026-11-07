@@ -10,5 +10,5 @@
 declare const __APP_VERSION__: string;
 declare const __BUILD_COMMIT__: string;
 declare const __BUILD_TIME__: string;
-/** The app's new address, or `''`. Set by `APP_MOVED_TO`; see `scripts/deployment.ts`. */
+/** The app's new address, or `''`. Set by `APP_MOVED_TO`; see `deploymentFrom` in `@platform/build`. */
 declare const __APP_MOVED_TO__: string;

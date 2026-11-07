@@ -13,7 +13,7 @@
  */
 
 import { use, useMemo, useSyncExternalStore } from 'react';
-import { useRouteParams } from './navigation';
+import { useRouteParams } from '@platform/navigation';
 import {
   courseFilter,
   courseOptions,

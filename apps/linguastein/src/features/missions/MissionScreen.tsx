@@ -1,6 +1,6 @@
 import { saveAttempts } from '../../storage';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { useNavigate, useRouteParams, useSearchParams } from '../../app/navigation';
+import { useNavigate, useRouteParams, useSearchParams } from '@platform/navigation';
 import { MISSIONS } from '../../app/missions';
 import { MISSION_VARIATIONS } from '../../app/mission-variations';
 import {

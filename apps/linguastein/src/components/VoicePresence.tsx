@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from '../app/navigation';
+import { Link } from '@platform/navigation';
 import { useCourse, usePronunciationLocale, useVoiceName } from '../app/course';
 import { useServices } from '../app/services-context';
 import type { TtsVoice } from '../audio';

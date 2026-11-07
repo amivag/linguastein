@@ -413,7 +413,7 @@ so a second language pack appears in the picker — and in the URL — with no c
 change. `tests/fixtures/pack.ts` ships a small French pack for exactly this:
 anything that assumes one language or one pack fails there.
 
-The router is TanStack Router, behind one seam: [`app/navigation.tsx`](../apps/linguastein/src/app/navigation.tsx).
+The router is TanStack Router, behind one seam: [`@platform/navigation`](../packages/navigation/src/navigation.tsx).
 Screens use its `Link`, `useNavigate`, `useLocation`, `useRouteParams` and
 `useSearchParams` with codec-built strings; lint forbids naming the router
 anywhere else. Routes are a data table in `App.tsx`; a pattern that prefixes

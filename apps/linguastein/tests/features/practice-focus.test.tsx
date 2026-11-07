@@ -11,7 +11,7 @@
 
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useLocation } from '../../src/app/navigation';
+import { useLocation } from '@platform/navigation';
 import { describe, expect, it } from 'vitest';
 import { HomeScreen } from '../../src/features/home/HomeScreen';
 import { DEFAULT_COURSE_STATE, type CourseState } from '../../src/storage';

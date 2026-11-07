@@ -21,7 +21,7 @@ import {
   useNavigate,
   useRouteParams,
   useSearchParams,
-} from '../../src/app/navigation';
+} from '../src/index.ts';
 
 function Where() {
   const { pathname, search } = useLocation();

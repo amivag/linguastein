@@ -1,4 +1,4 @@
-import { Link } from '../app/navigation';
+import { Link } from '@platform/navigation';
 import styles from './Breadcrumb.module.css';
 
 export interface Crumb {

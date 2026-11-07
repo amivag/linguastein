@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from '../../app/navigation';
+import { Link, useNavigate } from '@platform/navigation';
 import { clearErrors, errorReport, recentErrors } from '../../app/diagnostics';
 import { APP } from '../../app/identity';
 import { useServices } from '../../app/services-context';

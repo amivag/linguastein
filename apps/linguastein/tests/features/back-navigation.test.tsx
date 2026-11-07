@@ -16,7 +16,7 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from '../fixtures/router';
-import { useLocation } from '../../src/app/navigation';
+import { useLocation } from '@platform/navigation';
 import { describe, expect, it } from 'vitest';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { MissionScreen } from '../../src/features/missions/MissionScreen';

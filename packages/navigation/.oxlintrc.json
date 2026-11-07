@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react"],
+  "categories": { "correctness": "error" },
+  "ignorePatterns": ["coverage", "node_modules"],
+  "rules": {
+    "typescript/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }],
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "eqeqeq": ["error", "smart"]
+  },
+  "overrides": [
+    {
+      /*
+       * The navigation seam every app shares. It names the router so apps do
+       * not have to, and nothing app-shaped: routes arrive as data.
+       */
+      "files": ["src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["*", "!./*", "!react", "!@tanstack/react-router"],
+                "message": "The navigation package imports only itself, React and TanStack Router. Take app routes and layouts as parameters."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

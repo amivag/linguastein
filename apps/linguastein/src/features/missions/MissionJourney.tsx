@@ -1,4 +1,4 @@
-import { Link } from '../../app/navigation';
+import { Link } from '@platform/navigation';
 import {
   MISSION_STAGE_LABELS as LABELS,
   MISSION_STAGES,

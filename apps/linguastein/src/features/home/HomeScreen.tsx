@@ -1,5 +1,5 @@
 import { useDeferredValue, useEffect, useId, useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from '../../app/navigation';
+import { Link, useNavigate, useSearchParams } from '@platform/navigation';
 import { useCourse, usePronunciationLocale } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { MISSIONS } from '../../app/missions';

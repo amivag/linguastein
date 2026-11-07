@@ -3,6 +3,9 @@ import 'fake-indexeddb/auto';
 import { cleanup } from '@testing-library/react';
 import { afterEach } from 'vitest';
 
+// The router restores scroll on navigation; jsdom has no layout to scroll.
+if (typeof window !== 'undefined') window.scrollTo = () => {};
+
 /**
  * jsdom implements no media queries at all, and the app resolves the `system`
  * theme through one on mount. Anything that renders `App` itself needs this;

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate, useRouteParams } from '../../app/navigation';
+import { useNavigate, useRouteParams } from '@platform/navigation';
 import { useCourse } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';

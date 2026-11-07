@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useState } from 'react';
-import { Link } from '../../app/navigation';
+import { Link } from '@platform/navigation';
 import { useCourse } from '../../app/course';
 import { APP, storageKey } from '../../app/identity';
 import { useServices } from '../../app/services-context';

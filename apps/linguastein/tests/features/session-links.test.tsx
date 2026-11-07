@@ -10,7 +10,7 @@
 
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useLocation } from '../../src/app/navigation';
+import { useLocation } from '@platform/navigation';
 import { describe, expect, it } from 'vitest';
 import type { ItemId } from '../../src/domain/content';
 import { newProgress } from '../../src/domain/progress';

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Link } from '../../app/navigation';
+import { Link } from '@platform/navigation';
 import {
   useCourse,
   usePronunciationLocale,

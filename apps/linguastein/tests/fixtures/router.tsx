@@ -18,7 +18,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { MemoryNavigation, RouteOutlet } from '../../src/app/navigation';
+import { MemoryNavigation, RouteOutlet } from '@platform/navigation';
 
 interface RouteProps {
   readonly path: string;

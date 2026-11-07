@@ -214,4 +214,4 @@ out where: [accounts and sync](tasks/accounts-and-sync.md) behind
 `TtsProvider`, `SpeechRecognitionProvider`, `MicrophoneLevels` and
 `DatasetSource`. [Monetisation](tasks/monetisation.md) needs no seam and is
 mostly a set of constraints. The router (TanStack) sits behind
-`app/navigation.tsx`; see [screens-and-urls.md](screens-and-urls.md).
+`@platform/navigation`; see [screens-and-urls.md](screens-and-urls.md).

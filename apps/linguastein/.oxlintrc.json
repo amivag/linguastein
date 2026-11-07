@@ -76,8 +76,8 @@
                 "message": "The icon set lives behind a seam: import from `components/Icon` (or add a semantic name to `components/icons.ts`, the only file allowed to name the vendor). Swapping icon sets should be one edit, not forty."
               },
               {
-                "group": ["react-router", "react-router/*", "@tanstack/react-router"],
-                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `app/navigation`. It is the only file that names the router."
+                "group": ["react-router", "react-router/*", "@tanstack/*"],
+                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `@platform/navigation`, the only code that names the router."
               }
             ]
           }
@@ -151,8 +151,8 @@
                 "message": "The icon set lives behind a seam: import from `components/Icon` (or add a semantic name to `components/icons.ts`, the only file allowed to name the vendor). Swapping icon sets should be one edit, not forty."
               },
               {
-                "group": ["react-router", "react-router/*", "@tanstack/react-router"],
-                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `app/navigation`. It is the only file that names the router."
+                "group": ["react-router", "react-router/*", "@tanstack/*"],
+                "message": "The router lives behind a seam: import Link, useNavigate, useLocation, useRouteParams and useSearchParams from `@platform/navigation`, the only code that names the router."
               },
               {
                 "group": ["**/features/**"],
@@ -174,14 +174,6 @@
      */
     {
       "files": ["src/components/icons.ts"],
-      "rules": { "no-restricted-imports": "off" }
-    },
-
-    /*
-     * The router seam: the one file that may name it.
-     */
-    {
-      "files": ["src/app/navigation.tsx"],
       "rules": { "no-restricted-imports": "off" }
     }
   ]

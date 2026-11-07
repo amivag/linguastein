@@ -56,7 +56,8 @@ packages/
 ├── engine/       shared scheduling, drills and seeded randomness; no imports at all
 ├── appearance/   portable theme catalogs, axes and first-paint metadata
 ├── web/          error log, update signals, durable storage, Trusted Types policy
-└── build/        security policy, host headers, deployment settings, Vite plugins
+├── build/        security policy, host headers, deployment settings, Vite plugins
+└── navigation/   router seam: links, hooks, route tables; TanStack in the app, memory in tests
 apps/linguastein/src/
 ├── app/          composition root, routing, the current course, services context
 ├── domain/       Spanish content, exercises, sessions and progress adapters

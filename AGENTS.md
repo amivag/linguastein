@@ -71,7 +71,7 @@ These are design constraints; prefer executable enforcement over repeated prose.
    course (`tests/features/non-item-progress.test.tsx`).
 5. **Vendors sit behind seams.** Choose storage, content, speech, audio and AI
    adapters in `src/app/services.ts`. Only `components/icons.ts` imports Lucide;
-   only `app/navigation.tsx` imports the router (TanStack).
+   only `@platform/navigation` imports the router (TanStack).
    Shared components may not import screens; lint enforces these boundaries.
 6. **English is a fallback, not a structural requirement.** Translations are
    separate records resolved through the reference-language fallback chain.

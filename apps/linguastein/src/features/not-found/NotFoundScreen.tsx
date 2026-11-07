@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from '../../app/navigation';
+import { useLocation, useNavigate } from '@platform/navigation';
 import { useCourse } from '../../app/course';
 import { AppShell } from '../../components/AppShell';
 import { Button } from '../../components/Button';

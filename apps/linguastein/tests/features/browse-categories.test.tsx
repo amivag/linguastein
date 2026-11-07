@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useLocation } from '../../src/app/navigation';
+import { useLocation } from '@platform/navigation';
 import { describe, expect, it } from 'vitest';
 import { BrowseScreen } from '../../src/features/browse/BrowseScreen';
 import { renderWithServices } from '../fixtures/services';

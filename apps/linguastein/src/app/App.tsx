@@ -51,7 +51,7 @@ import {
   useLocation,
   useRouteParams,
   type RouteTable,
-} from './navigation';
+} from '@platform/navigation';
 import { APP } from './identity';
 import { createServices, type AppServices } from './services';
 import { ServicesContext, useServices } from './services-context';

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from '../../app/navigation';
+import { Link, useNavigate, useSearchParams } from '@platform/navigation';
 import { useCourse, useTargetLanguage } from '../../app/course';
 import { useServices } from '../../app/services-context';
 import { AppShell } from '../../components/AppShell';

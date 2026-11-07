@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from '../app/navigation';
+import { Link } from '@platform/navigation';
 import { useServices } from '../app/services-context';
 import {
   describeSpeechFailure,

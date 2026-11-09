@@ -48,10 +48,8 @@ slots; `AppShell` composes Spanish navigation, history, speech and updates.
 
 1. Shared scheduling still embeds learning-policy thresholds; make policies
    explicit when a real second subject needs different behavior.
-2. Since TanStack Router (2026-11-07), the update-banner browser test fails only
-   in the Deploy job: the new service worker installs and stays waiting. CI and
-   local runs pass. Deploy skips the `*-update` projects; CI still runs them.
-   Find the cause from the job's trace before trusting the banner on every device.
+2. Only in the Deploy job, the new service worker stays waiting and the update
+   banner test fails; CI gates it, Deploy skips `*-update`. Cause unknown.
 
 These are findings, not completed fixes. Keep the list current as fixes land.
 

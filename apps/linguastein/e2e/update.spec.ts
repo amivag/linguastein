@@ -12,12 +12,22 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Request } from '@playwright/test';
 import { openHome, waitForServiceWorker } from './helpers';
 
 const WORKER = join(process.cwd(), 'dist', 'sw.js');
 
-test('offers a new build instead of reloading by itself', async ({ page }) => {
+test('offers a new build instead of reloading by itself', async ({ page, context }) => {
+  // Every request in the context, the service worker's own included, so a
+  // failure can name whatever is still open: a waiting worker takes over only
+  // once the active one has no events in flight.
+  const open = new Map<object, string>();
+  const label = (request: Request) =>
+    `${request.serviceWorker() ? 'sw' : 'page'} ${request.method()} ${request.url()}`;
+  context.on('request', (request) => open.set(request, label(request)));
+  context.on('requestfinished', (request) => open.delete(request));
+  context.on('requestfailed', (request) => open.delete(request));
+
   await openHome(page);
   await waitForServiceWorker(page);
   const url = page.url();

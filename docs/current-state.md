@@ -48,8 +48,9 @@ slots; `AppShell` composes Spanish navigation, history, speech and updates.
 
 1. Shared scheduling still embeds learning-policy thresholds; make policies
    explicit when a real second subject needs different behavior.
-2. Only in the Deploy job, the new service worker stays waiting and the update
-   banner test fails; CI gates it, Deploy skips `*-update`. Cause unknown.
+2. Since TanStack Router, on GitHub runners the new service worker often stays
+   waiting and the update-banner test fails (locally it passes). Deploy skips
+   `*-update`; CI still runs it. Cause unknown.
 
 These are findings, not completed fixes. Keep the list current as fixes land.
 

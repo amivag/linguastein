@@ -21,6 +21,7 @@
 import {
   createContext,
   use,
+  useCallback,
   useLayoutEffect,
   useMemo,
   useState,
@@ -103,13 +104,20 @@ export function useSearchParams(): readonly [
   (next: URLSearchParams | string, options?: NavigateOptions) => void,
 ] {
   const { location, navigate } = useNavigation();
-  return [
-    new URLSearchParams(location.search),
-    (next, options) => {
+  const { pathname, search } = location;
+  /*
+   * The same object until the query changes, as React Router's was: screens
+   * memoize on `params`, and a fresh one each render recomputed all of it.
+   */
+  const params = useMemo(() => new URLSearchParams(search), [search]);
+  const setParams = useCallback(
+    (next: URLSearchParams | string, options?: NavigateOptions) => {
       const query = String(next).replace(/^\?/, '');
-      navigate(query ? `${location.pathname}?${query}` : location.pathname, options);
+      navigate(query ? `${pathname}?${query}` : pathname, options);
     },
-  ];
+    [navigate, pathname],
+  );
+  return [params, setParams];
 }
 
 export interface LinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
@@ -362,33 +370,38 @@ export function MemoryNavigation({
 }: Partial<RouterOptions> & { readonly route: string }) {
   const [history, setHistory] = useState({ entries: [route], index: 0 });
   const address = history.entries[history.index] ?? '/';
-  const location = locationOf(address);
 
-  let best: { score: number; params: Record<string, string>; element: ReactNode } | undefined;
-  for (const [pattern, element] of Object.entries(routes)) {
-    if (pattern === '*') continue;
-    const match = matchRoute(pattern, location.pathname);
-    if (match && (!best || match.score > best.score)) best = { ...match, element };
-  }
-  const outlet = best ? best.element : (routes['*'] ?? null);
-
-  const navigation: Navigation = {
-    location,
-    params: best?.params ?? {},
-    navigate: (to, options) =>
-      setHistory((current) => {
-        if (to === -1) return { ...current, index: Math.max(0, current.index - 1) };
-        const target = resolve(to, current.entries[current.index] ?? '/');
-        if (options?.replace) {
-          const entries = [...current.entries];
-          entries[current.index] = target;
-          return { entries, index: current.index };
-        }
-        const entries = [...current.entries.slice(0, current.index + 1), target];
-        return { entries, index: entries.length - 1 };
-      }),
-    href: (to) => to,
-  };
+  /*
+   * Stable while the address is, like the router's: screens memoize on what the
+   * hooks return, and fresh objects each render would recompute all of it.
+   */
+  const { navigation, outlet } = useMemo(() => {
+    const location = locationOf(address);
+    let best: { score: number; params: Record<string, string>; element: ReactNode } | undefined;
+    for (const [pattern, element] of Object.entries(routes)) {
+      if (pattern === '*') continue;
+      const match = matchRoute(pattern, location.pathname);
+      if (match && (!best || match.score > best.score)) best = { ...match, element };
+    }
+    const value: Navigation = {
+      location,
+      params: best?.params ?? {},
+      navigate: (to, options) =>
+        setHistory((current) => {
+          if (to === -1) return { ...current, index: Math.max(0, current.index - 1) };
+          const target = resolve(to, current.entries[current.index] ?? '/');
+          if (options?.replace) {
+            const entries = [...current.entries];
+            entries[current.index] = target;
+            return { entries, index: current.index };
+          }
+          const entries = [...current.entries.slice(0, current.index + 1), target];
+          return { entries, index: entries.length - 1 };
+        }),
+      href: (to) => to,
+    };
+    return { navigation: value, outlet: best ? best.element : (routes['*'] ?? null) };
+  }, [address, routes]);
 
   return (
     <NavigationContext value={navigation}>

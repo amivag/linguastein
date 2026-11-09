@@ -13,7 +13,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test, type Request } from '@playwright/test';
-import { openHome, waitForServiceWorker } from './helpers';
+import { openHome, uncachedContent, waitForServiceWorker } from './helpers';
 
 const WORKER = join(process.cwd(), 'dist', 'sw.js');
 
@@ -30,6 +30,8 @@ test('offers a new build instead of reloading by itself', async ({ page, context
 
   await openHome(page);
   await waitForServiceWorker(page);
+  await expect.poll(() => uncachedContent(page)).toEqual([]);
+  await expect.poll(() => open.size).toBe(0);
   const url = page.url();
 
   const original = readFileSync(WORKER, 'utf8');

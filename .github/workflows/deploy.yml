@@ -56,7 +56,7 @@ jobs:
       # banner never comes; CI runs the same test on the same browsers and it
       # passes, as it does locally. CI still gates it; see docs/current-state.md.
       - name: Browser tests
-        run: npm run test:e2e -- --project=chromium --project=firefox --project=webkit
+        run: npm run test:e2e -w linguastein-app -- --project=chromium --project=firefox --project=webkit
 
       # `tsc -b` runs inside this, and the checkout is a real git clone, so
       # vite.config.ts resolves the build commit on its own.

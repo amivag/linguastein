@@ -74,7 +74,38 @@ test('offers a new build instead of reloading by itself', async ({ page, context
       });
       const first = (error as Error).message.split('\n')[0];
       const pending = JSON.stringify([...open.values()]);
-      throw new Error(`${first}\nstate: ${JSON.stringify(state)}\nopen: ${pending}`);
+      // Inside each worker: can it still reach its caches and the IndexedDB that
+      // Workbox's cache expiry writes to? A stuck one holds activation back.
+      const workers = await Promise.all(
+        context.serviceWorkers().map((worker) =>
+          worker
+            .evaluate(async () => {
+              const within = <T>(work: Promise<T>) =>
+                Promise.race([
+                  work.then(() => 'ok'),
+                  new Promise<string>((resolve) => setTimeout(() => resolve('timeout'), 3000)),
+                ]).catch((reason: unknown) => `error ${String(reason)}`);
+              const idb = new Promise<void>((resolve, reject) => {
+                const request = indexedDB.open('workbox-expiration');
+                request.onsuccess = () => {
+                  request.result.close();
+                  resolve();
+                };
+                request.onerror = () => reject(request.error);
+                request.onblocked = () => reject(new Error('blocked'));
+              });
+              return {
+                url: (globalThis as unknown as { location: Location }).location.href,
+                caches: await within(caches.keys()),
+                expiration: await within(idb),
+              };
+            })
+            .catch((reason: unknown) => ({ error: String(reason) })),
+        ),
+      );
+      throw new Error(
+        `${first}\nstate: ${JSON.stringify(state)}\nopen: ${pending}\nworkers: ${JSON.stringify(workers)}`,
+      );
     }
     expect(page.url()).toBe(url);
   } finally {

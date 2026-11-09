@@ -44,6 +44,13 @@ export default defineConfig({
       name: `${name}-update`,
       use: { ...device },
       testMatch: UPDATE,
+      /*
+       * Chromium on Linux occasionally leaves the simulated new worker waiting
+       * instead of promoting it: about 1 run in 40 to 60, measured in the
+       * Playwright Docker image, and present before any of the navigation work.
+       * A retry tells that apart from a real regression, which fails every time.
+       */
+      retries: 2,
       dependencies:
         index === 0 ? ENGINES.map(([engine]) => engine) : [`${ENGINES[index - 1]![0]}-update`],
     })),

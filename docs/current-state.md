@@ -48,8 +48,6 @@ slots; `AppShell` composes Spanish navigation, history, speech and updates.
 
 1. Shared scheduling still embeds learning-policy thresholds; make policies
    explicit when a real second subject needs different behavior.
-2. On GitHub runners the update test's new worker stays waiting (not locally).
-   Deploy skips `*-update`; CI runs it. Cause unknown.
 
 These are findings, not completed fixes. Keep the list current as fixes land.
 

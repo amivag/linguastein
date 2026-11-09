@@ -29,11 +29,33 @@ test('offers a new build instead of reloading by itself', async ({ page }) => {
       await (await navigator.serviceWorker.getRegistration())?.update();
     });
 
-    await expect(
-      page.getByRole('status').filter({ hasText: 'A new version is ready.' }),
-      // Installing the new worker re-checks every precached file; CI runners can
-      // take longer than the default five seconds to do it.
-    ).toBeVisible({ timeout: 20_000 });
+    try {
+      await expect(
+        page.getByRole('status').filter({ hasText: 'A new version is ready.' }),
+        // Installing the new worker re-checks every precached file; CI runners can
+        // take longer than the default five seconds to do it.
+      ).toBeVisible({ timeout: 20_000 });
+    } catch (error) {
+      // What the worker and page were doing, in the failure message itself, since
+      // a CI log is the only place a failure here can be read.
+      const state = await page.evaluate(async () => {
+        const registration = await navigator.serviceWorker.getRegistration();
+        return {
+          active: registration?.active?.state ?? null,
+          waiting: registration?.waiting?.state ?? null,
+          installing: registration?.installing?.state ?? null,
+          controlled: Boolean(navigator.serviceWorker.controller),
+          url: location.href,
+          h1: document.querySelector('h1')?.textContent ?? null,
+          statuses: [...document.querySelectorAll('[role=status],[role=alert]')].map(
+            (node) => node.textContent,
+          ),
+          errors: localStorage.getItem('linguastein.errors'),
+        };
+      });
+      const first = (error as Error).message.split('\n')[0];
+      throw new Error(`${first}\nstate: ${JSON.stringify(state)}`);
+    }
     expect(page.url()).toBe(url);
   } finally {
     writeFileSync(WORKER, original);

@@ -73,7 +73,8 @@ test('offers a new build instead of reloading by itself', async ({ page, context
         };
       });
       const first = (error as Error).message.split('\n')[0];
-      throw new Error(`${first}\nstate: ${JSON.stringify(state)}`);
+      const pending = JSON.stringify([...open.values()]);
+      throw new Error(`${first}\nstate: ${JSON.stringify(state)}\nopen: ${pending}`);
     }
     expect(page.url()).toBe(url);
   } finally {

@@ -51,6 +51,15 @@ test('offers a new build instead of reloading by itself', async ({ page }) => {
             (node) => node.textContent,
           ),
           errors: localStorage.getItem('linguastein.errors'),
+          media: [...document.querySelectorAll('audio,video')].map(
+            (node) =>
+              `${(node as HTMLMediaElement).currentSrc}:${(node as HTMLMediaElement).networkState}`,
+          ),
+          unfinished: performance
+            .getEntriesByType('resource')
+            .filter((entry) => (entry as PerformanceResourceTiming).responseEnd === 0)
+            .map((entry) => entry.name),
+          resources: performance.getEntriesByType('resource').length,
         };
       });
       const first = (error as Error).message.split('\n')[0];

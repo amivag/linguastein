@@ -49,7 +49,7 @@ unimplemented. Keep content generation distinct from human editorial approval.
 - **Other learning apps:** a hands/pencils rhythm trainer is being considered.
   [Framework](framework.md) defines the reusable core and first timing/input slice;
   [skeleton](skeleton.md) covers scaffolding.
-- **Users, registration and sync:** guest access remains available. Modern PHP
+- **Users, registration and sync:** guest access remains available. PHP 8.5+
   is likely; SQLite, MySQL, MariaDB and PostgreSQL are candidates. No vendor,
   auth method or database is fixed. [Server foundation](server-foundation.md)
   owns identity, guest adoption, account switching, HTTP and SQL requirements.

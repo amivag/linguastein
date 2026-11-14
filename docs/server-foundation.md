@@ -1,6 +1,6 @@
 # Optional server, accounts and registration
 
-**Direction:** future planning only, reviewed 2026-10-29. Modern PHP is likely;
+**Direction:** future planning only, reviewed 2026-11-14. PHP 8.5+ is likely;
 SQLite, MySQL, MariaDB and PostgreSQL are database candidates. No framework,
 authentication method, deployment, database or account UI is selected or built.
 This document owns the plan; [current-state.md](current-state.md) owns the short

@@ -16,7 +16,7 @@
 - Theme infrastructure is portable in `@platform/appearance`; each app supplies its
   namespace, catalog and CSS. Build-time theme modules are supported; runtime
   downloads are not. [Theming](theming.md) owns registration and accessibility.
-- A future optional server is likely modern PHP. SQLite, MySQL, MariaDB and
+- A future optional server is likely PHP 8.5+. SQLite, MySQL, MariaDB and
   PostgreSQL are candidates; no framework, deployment or database is selected.
 - Future users, registration and sign-in must be accommodated, not implemented
   now. Guest practice remains available. Identity, app/account ownership and

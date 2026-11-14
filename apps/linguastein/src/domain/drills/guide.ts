@@ -4,7 +4,7 @@
  * directly with timed responses. Generated targets have no progress identity:
  * evidence belongs to the durable rules they exercise. Subject-specific bounds
  * such as NumeralGuide.maxValue stay on the subject's own interface.
- * See docs/framework.md for the current reuse boundary.
+ * See ../../docs/framework.md for the current reuse boundary.
  */
 
 import type { DrillMaterial } from '@platform/engine';

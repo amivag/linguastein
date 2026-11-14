@@ -22,9 +22,9 @@ tests rather than by review.
 
 It is deliberately short enough to read in one sitting; the detail lives beside
 it, and [docs/README.md](docs/README.md) says which file answers which question.
-Two are worth knowing by name — [screens-and-urls.md](docs/screens-and-urls.md)
+Two are worth knowing by name — [screens-and-urls.md](apps/linguastein/docs/screens-and-urls.md)
 before touching a route or a query parameter, and
-[content-authoring.md](docs/content-authoring.md) before editing a row of
+[content-authoring.md](apps/linguastein/docs/content-authoring.md) before editing a row of
 `content/es`.
 
 ## Licensing your contribution

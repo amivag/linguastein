@@ -8,7 +8,7 @@ phone, offline, with no account.
 
 Status: **alpha.** The architecture, engine and practice loop are
 in place, with a generated A1–B1 Spanish pack of 3,816 practisable items awaiting
-editorial review (see [`docs/spec`](docs/spec) for the product specification).
+editorial review (see [`docs/spec`](apps/linguastein/docs/spec) for the product specification).
 
 Alpha means what it says: anything may change drastically, including the data
 model, the stored shape of learner progress and the exercise mix. There is no
@@ -52,6 +52,7 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 ## Layout
 
 ```text
+docs/             platform docs: framework, theming, skeleton, deploy, roadmap
 packages/
 ├── engine/       shared scheduling, drills and seeded randomness; no imports at all
 ├── appearance/   portable theme catalogs, axes and first-paint metadata
@@ -89,8 +90,8 @@ content/          capabilities.tsv — the language-neutral capability registry
 content/es/       dataset authoring sources (TSV) — the human-edited input
 public/packs/     generated, shipped content packs (JSONL + manifest)
 public/robots.txt crawl and training opt-outs for the deployed site
-docs/             architecture notes, the design language, dataset format,
-                  deployment, product spec, and briefed tasks under docs/tasks/
+docs/             the app's own docs: architecture, design language, dataset format,
+                  product spec, and briefed tasks under docs/tasks/
 tests/            unit and component tests, mirroring src/
 scripts/          dataset build, validation and review; the palette solver;
                   the audio generator
@@ -186,13 +187,13 @@ Three systems, deliberately kept apart:
 3. **Learner state** references stable IDs only, so datasets can grow and
    change without invalidating progress.
 
-Details and the rules that keep it that way: [`docs/architecture.md`](docs/architecture.md).
+Details and the rules that keep it that way: [`architecture.md`](apps/linguastein/docs/architecture.md).
 [`docs/README.md`](docs/README.md) is the map of everything else — which document
 answers which question, and the state of every briefed task.
 
 ## Data
 
-Canonical content is JSON + JSONL (`docs/dataset-format.md`). Everything read
+Canonical content is JSON + JSONL ([`dataset-format.md`](apps/linguastein/docs/dataset-format.md)). Everything read
 from a dataset passes through the validation boundary in
 `src/data/validation`; malformed records are reported and skipped rather than
 breaking a session.
@@ -209,7 +210,7 @@ pack drifts from its sources.
 
 The pack is machine-generated and carries `source: generated, review:
 unreviewed` in its manifest. It is good enough to practise with, and it is not
-yet reviewed curriculum. See [`docs/dataset-format.md`](docs/dataset-format.md).
+yet reviewed curriculum. See [`docs/dataset-format.md`](apps/linguastein/docs/dataset-format.md).
 
 ## Audio
 
@@ -258,7 +259,7 @@ Two things to know if it does not work on a phone:
 
 ## Design, themes and layout
 
-Six rules, written down in [`docs/design-language.md`](docs/design-language.md)
+Six rules, written down in [`docs/design-language.md`](apps/linguastein/docs/design-language.md)
 and enforced by four test files: depth rather than outlines, soft geometry,
 overlay rather than push, one display voice, colour that means something, and
 motion that confirms without informing. The whole app draws three borders, each
@@ -338,7 +339,7 @@ JS and CSS are content-hashed, so an update can never be served from a stale
 cache. When the service worker has fetched a new build, the app offers a reload
 rather than taking one — being thrown back to the start of a session mid-answer is
 worse than running a few minutes behind. Details, including the two files that
-must not be HTTP-cached: [docs/architecture.md](docs/architecture.md#updates-and-caching).
+must not be HTTP-cached: [docs/architecture.md](apps/linguastein/docs/architecture.md#updates-and-caching).
 
 ## Deploying
 

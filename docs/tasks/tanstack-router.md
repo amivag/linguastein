@@ -1,6 +1,6 @@
 # Task: move the routing layer to TanStack Router
 
-**Status:** done 2026-11-07, through a seam (`app/navigation.tsx`) rather than typed routes; see [screens-and-urls.md](../screens-and-urls.md). Kept as rationale.
+**Status:** done 2026-11-07, through a seam (`app/navigation.tsx`) rather than typed routes; see [screens-and-urls.md](../../apps/linguastein/docs/screens-and-urls.md). Kept as rationale.
 **Written:** 2026-08-24
 **For:** a fresh agent session, no prior context assumed
 **Scope:** the routing layer and the test harness that mounts screens. No screen

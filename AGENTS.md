@@ -9,7 +9,8 @@ foundation findings live in [docs/current-state.md](docs/current-state.md).
 An npm workspace. `apps/linguastein/` is the Spanish app; `packages/*` hold the
 platform code other apps share ([framework.md](docs/framework.md)). Paths in this
 file such as `src/` or `tests/` are relative to `apps/linguastein/` unless they
-name a package. Docs and this guidance stay at the root.
+name a package. Platform docs and this guidance live in the root `docs/`; the
+Spanish app's docs, briefs and spec live in `apps/linguastein/docs/`.
 
 ## Commands
 
@@ -37,19 +38,19 @@ worktrees; use another agent only when the session instructions authorize it.
 
 ## Read when relevant
 
-| Task                                            | Source                                                           |
-| ----------------------------------------------- | ---------------------------------------------------------------- |
-| Screens, routes, query parameters               | [screens-and-urls.md](docs/screens-and-urls.md)                  |
-| Content rows or generated forms                 | [content-authoring.md](docs/content-authoring.md)                |
-| Content record shapes                           | [dataset-format.md](docs/dataset-format.md)                      |
-| Styling                                         | [design-language.md](docs/design-language.md) and live `/design` |
-| Appearance axes or palettes                     | [theming.md](docs/theming.md)                                    |
-| Storage, atomic writes and retry behavior       | [storage.md](docs/storage.md)                                    |
-| Learning behavior, releases, coding conventions | [working-conventions.md](docs/working-conventions.md)            |
-| Dependency or layer changes; scaffolding        | [skeleton.md](docs/skeleton.md)                                  |
-| Shared engine or another learning subject       | [framework.md](docs/framework.md)                                |
-| PHP, SQL, accounts, registration or sync        | [server-foundation.md](docs/server-foundation.md)                |
-| Service-worker or caching changes               | [architecture.md](docs/architecture.md#updates-and-caching)      |
+| Task                                            | Source                                                                            |
+| ----------------------------------------------- | --------------------------------------------------------------------------------- |
+| Screens, routes, query parameters               | [screens-and-urls.md](apps/linguastein/docs/screens-and-urls.md)                  |
+| Content rows or generated forms                 | [content-authoring.md](apps/linguastein/docs/content-authoring.md)                |
+| Content record shapes                           | [dataset-format.md](apps/linguastein/docs/dataset-format.md)                      |
+| Styling                                         | [design-language.md](apps/linguastein/docs/design-language.md) and live `/design` |
+| Appearance axes or palettes                     | [theming.md](docs/theming.md)                                                     |
+| Storage, atomic writes and retry behavior       | [storage.md](apps/linguastein/docs/storage.md)                                    |
+| Learning behavior, releases, coding conventions | [working-conventions.md](apps/linguastein/docs/working-conventions.md)            |
+| Dependency or layer changes; scaffolding        | [skeleton.md](docs/skeleton.md)                                                   |
+| Shared engine or another learning subject       | [framework.md](docs/framework.md)                                                 |
+| PHP, SQL, accounts, registration or sync        | [server-foundation.md](docs/server-foundation.md)                                 |
+| Service-worker or caching changes               | [architecture.md](apps/linguastein/docs/architecture.md#updates-and-caching)      |
 
 ## Architecture rules
 

@@ -18,15 +18,15 @@ record. No content, no dataset, no scheduler. If a change here needs a change in
 
 Read these first, in order:
 
-1. [`AGENTS.md`](../../AGENTS.md) — especially **Accessibility is the agent
+1. [`AGENTS.md`](../../../../AGENTS.md) — especially **Accessibility is the agent
    interface** and **Theming**. Both constrain everything below, and neither is
    negotiable in exchange for polish
-2. [`src/styles/primitives.css`](../../apps/linguastein/src/styles/primitives.css) — every
+2. [`src/styles/primitives.css`](../../src/styles/primitives.css) — every
    non-colour design token there is, which is fewer than you expect
-3. [`src/styles/themes/indigo-light.css`](../../apps/linguastein/src/styles/themes/indigo-light.css)
+3. [`src/styles/themes/indigo-light.css`](../../src/styles/themes/indigo-light.css)
    — the full set of colour roles. There is one file per palette per mode now, not
    a single `light.css`; the default palette is the one to read
-4. [`src/features/practice/SessionScreen.tsx`](../../apps/linguastein/src/features/practice/SessionScreen.tsx)
+4. [`src/features/practice/SessionScreen.tsx`](../../src/features/practice/SessionScreen.tsx)
    — the loop that matters most, and the end-of-session state that currently
    rewards a learner with a fraction
 5. [`docs/spec/spanish_learning_app_spec_v0.1.md`](../spec/spanish_learning_app_spec_v0.1.md)

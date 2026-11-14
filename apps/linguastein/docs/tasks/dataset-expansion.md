@@ -16,12 +16,12 @@ should not need changing.
 
 Read these first, in order:
 
-1. [`AGENTS.md`](../../AGENTS.md) — commands, architecture rules, conventions
+1. [`AGENTS.md`](../../../../AGENTS.md) — commands, architecture rules, conventions
 2. [`docs/dataset-format.md`](../dataset-format.md) — record shapes, authoring
    workflow, usage fields
 3. [`docs/spec/spanish_learning_app_spec_v0.1.md`](../spec/spanish_learning_app_spec_v0.1.md)
    — the product specification, especially §9–§21
-4. [`docs/roadmap.md`](../roadmap.md) — what exists and what is deliberately absent
+4. [`../../docs/roadmap.md`](../../../../docs/roadmap.md) — what exists and what is deliberately absent
 
 Then run `npm run check`. It must pass before you start; if it does not, fix
 that first and mention it.
@@ -476,7 +476,7 @@ checklist states a _condition_; the table states where we are against it.
       whether the values are _right_ is §9's second bullet, and still open
 - [x] `npm run check` passes; `npm run validate:data` reports 0 / 0
 - [x] `npm run build:data` produces no diff on a second run
-- [ ] `docs/dataset-format.md` updated to match reality (`docs/roadmap.md` and the
+- [ ] `docs/dataset-format.md` updated to match reality (`../../docs/roadmap.md` and the
       README are held to the pack by `doc-stats.test.ts`, and §2 by
       `brief-table.test.ts`)
 - [ ] The coverage report in the build output tells the truth about what is

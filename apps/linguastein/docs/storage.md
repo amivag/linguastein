@@ -61,7 +61,7 @@ ids while mounted, expose an alert/retry and do not regrade on retry. A complete
 session says saved only after its attempts and summary have committed. This
 in-memory retry state is not a durable outbox: leaving the page loses unsaved
 operations. Future sync/outbox and account ownership requirements belong in
-[server-foundation.md](server-foundation.md), not this local API.
+[server-foundation.md](../../../docs/server-foundation.md), not this local API.
 
 `tests/storage/atomicity.test.ts` exercises both implementations, rollback,
 concurrent updates, duplicate/conflicting requests and legacy import repair;

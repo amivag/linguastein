@@ -8,7 +8,7 @@ donations. Where do we stand, and what needs doing?"
 already looked at and what was not.
 
 This is a findings log, not a plan. The plans it produced are three separate
-briefs: [native-port.md](native-port.md), [accounts-and-sync.md](accounts-and-sync.md)
+briefs: [native-port.md](native-port.md), [accounts-and-sync.md](../../../../docs/tasks/accounts-and-sync.md)
 and [monetisation.md](monetisation.md). Read this first if you want to know **why**
 they say what they say, or to avoid re-deriving something.
 
@@ -66,7 +66,7 @@ one file, which is why a Capacitor build's `/` base is a build-mode switch rathe
 than a hunt through eleven files.
 
 **The exception is the router**, and it is the reason
-[tanstack-router.md](tanstack-router.md)'s first commit is recommended ahead of
+[tanstack-router.md](../../../../docs/tasks/tanstack-router.md)'s first commit is recommended ahead of
 the native port: that commit introduces the navigation seam and is worth landing
 whichever router wins.
 
@@ -181,7 +181,7 @@ in §5.1 of that task.
 
 ### 4.6 The docs said this was all out of scope — fixed
 
-[roadmap.md](../roadmap.md) ended with "Explicitly out of scope for now: Backend,
+[roadmap.md](../../../../docs/roadmap.md) ended with "Explicitly out of scope for now: Backend,
 accounts, social features, moderation, native app, app-store pipeline,
 gamification", and [architecture.md](../architecture.md) said the same under
 "Deliberately not built yet". Both now point at the three briefs instead, because

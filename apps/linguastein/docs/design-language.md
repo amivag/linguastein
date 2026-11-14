@@ -28,7 +28,7 @@ boundary indicator, only that a boundary must reach 3:1 if one exists. A filled
 button with a label at 4.5:1 is identified by its label and its fill.
 
 So the exceptions are narrow and enumerated, in
-[`tests/a11y/design-language.test.ts`](../apps/linguastein/tests/a11y/design-language.test.ts):
+[`tests/a11y/design-language.test.ts`](../tests/a11y/design-language.test.ts):
 
 | Where                               | Why                                                                                 |
 | ----------------------------------- | ----------------------------------------------------------------------------------- |
@@ -53,7 +53,7 @@ Nothing in the app is a right-angled box.
 ### 3. Overlay, never push
 
 A control that expands opens **over** the page, through
-[`Sheet`](../apps/linguastein/src/components/Sheet.tsx) — a bottom sheet on a phone, a panel on a
+[`Sheet`](../../../packages/ui/src/Sheet.tsx) — a bottom sheet on a phone, a panel on a
 pointer device.
 
 The rule earns its place from a specific failure. `FocusPicker` used to open an
@@ -136,7 +136,7 @@ one that matters:
   hues are `aria-hidden` throughout; nothing reaches an accessible name. This is
   the colour-is-never-the-only-signal rule, unchanged.
 - **A hue belongs to the thing, not to the row.** `kindHue()` in
-  [`src/styles/kinds.ts`](../apps/linguastein/src/styles/kinds.ts) derives it from the stable id,
+  [`src/styles/kinds.ts`](../src/styles/kinds.ts) derives it from the stable id,
   so a category keeps its colour as the dataset grows around it. Colouring by
   position looks identical and throws away the recognition the moment a pack
   gains a row.
@@ -161,7 +161,7 @@ These are **chosen** positions on the wheel rather than hashed ones, and that is
 the difference from a topic's colour. There are three genders and five open word
 classes; they are closed sets a language actually has, and _which_ colour each one
 gets is the point rather than an implementation detail. They live in
-[`src/styles/semantics.ts`](../apps/linguastein/src/styles/semantics.ts) with the reasoning beside
+[`src/styles/semantics.ts`](../src/styles/semantics.ts) with the reasoning beside
 each assignment.
 
 The justification is narrow and worth holding to. These are the facts about a
@@ -207,7 +207,7 @@ highlight is cool: a warm accent beside a warm highlight reads as one hue at two
 strengths, and the highlight's whole job is to be a second voice.
 
 Every role passes contrast in **every** palette at **every** contrast level,
-checked by [`contrast.test.ts`](../apps/linguastein/tests/a11y/contrast.test.ts), which discovers
+checked by [`contrast.test.ts`](../tests/a11y/contrast.test.ts), which discovers
 both from their directories. The categorical rows are generated from
 `KIND_HUE_COUNT` rather than written out, so the count cannot drift between what
 a palette declares and what a screen can ask for. No component may hard-code a colour; the
@@ -222,7 +222,7 @@ the same rule that rules out colour-only feedback. Every transition collapses
 under `prefers-reduced-motion`, globally, in `global.css`.
 
 Components name an intent (`var(--transition-fast)`), never a duration and a
-curve. [`motion.test.ts`](../apps/linguastein/tests/a11y/motion.test.ts) refuses both a hard-coded
+curve. [`motion.test.ts`](../tests/a11y/motion.test.ts) refuses both a hard-coded
 duration and a named easing outside `primitives.css`.
 
 ---

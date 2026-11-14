@@ -10,7 +10,7 @@ report should quote. Content packs version independently — `core-es` carries i
 own version in `pack.json`, shown next to the app's.
 
 This file records changes to the **app**. The full feature inventory and what is
-planned next live in [docs/roadmap.md](docs/roadmap.md); dataset growth is visible
+planned next live in [docs/roadmap.md](../../docs/roadmap.md); dataset growth is visible
 in the pack's own counts.
 
 ## Unreleased
@@ -1395,7 +1395,7 @@ tagged.
   constant reaching Vite, the router's basename, the manifest's `start_url`,
   `scope` and icons, and the dataset fetches. Includes an SPA fallback, and
   `robots.txt` and `<meta>` opt-outs for crawlers and model training. Rationale
-  and the known rough edges in [docs/deploy.md](docs/deploy.md).
+  and the known rough edges in [docs/deploy.md](../../docs/deploy.md).
 - Production sourcemaps are on again, the repository being public: they give a
   visitor nothing GitHub does not, and they are the difference between debugging a
   phone-only problem and guessing at one.
@@ -1450,7 +1450,7 @@ tagged.
 - Relicensed from MIT to **AGPL-3.0-only** for the code and **CC BY-SA 4.0** for
   the datasets, copyright amivag. Free and open with attribution, but a modified
   version served to others must publish its source. Contribution sign-off is now
-  required ([CONTRIBUTING.md](CONTRIBUTING.md)) so a future commercial licence
+  required ([CONTRIBUTING.md](../../CONTRIBUTING.md)) so a future commercial licence
   stays possible.
 - "Reset progress" now asks for confirmation before erasing learner history. It
   is irreversible and there is no server copy, so a single mis-tap should not be

@@ -4,9 +4,9 @@
 > that started the project on 2026-08-17. It is kept because the _reasoning_ in it
 > is still the best account of why the app is shaped this way — §15 on annotation,
 > §9 on data architecture and §2 on the product philosophy are all still binding —
-> and because [roadmap.md](../roadmap.md) tracks delivery against its §28.
+> and because [roadmap.md](../../../../docs/roadmap.md) tracks delivery against its §28.
 >
-> **Where it and the code disagree, the code and [AGENTS.md](../../AGENTS.md)
+> **Where it and the code disagree, the code and [AGENTS.md](../../../../AGENTS.md)
 > win.** Two things in it are now flatly obsolete and are left in place rather
 > than rewritten, so the record stays honest:
 >

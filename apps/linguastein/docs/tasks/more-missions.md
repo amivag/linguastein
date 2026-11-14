@@ -5,7 +5,7 @@
 **For:** a fresh agent session, no prior context assumed
 **Scope:** content first, then sequencing records. The engine needs no changes.
 
-Read [`AGENTS.md`](../../AGENTS.md) and follow the rule it states twice:
+Read [`AGENTS.md`](../../../../AGENTS.md) and follow the rule it states twice:
 **author the content a mission teaches before authoring the mission.** Six
 missions landed at once because their vocabulary was already there — travel had
 148 items before `buy-a-ticket` existed.

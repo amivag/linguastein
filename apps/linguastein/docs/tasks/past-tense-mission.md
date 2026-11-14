@@ -95,7 +95,7 @@ Landing a mission is not only content. In order:
 4. `tests/domain/missions.test.ts` — the A1 ordering assertion counts missions;
    an A2 mission does not join it.
 5. `tests/data/doc-stats.test.ts` — the sentence and item counts quoted in
-   `README.md` and `docs/roadmap.md` must match the pack again.
+   `README.md` and `../../docs/roadmap.md` must match the pack again.
 6. `tests/data/authored-skills.test.ts` — add the new group; the A1 assertion
    hard-codes `level: 'a1'`, so an A2 group needs its own check, as `healthIds`
    has.

@@ -37,11 +37,11 @@ pnpm-debug.log*
 dev-dist/
 
 # candidate voices under comparison — throwaway, several voices' worth of the
-# same twenty phrases (docs/tasks/canonical-audio.md §4.1)
+# same twenty phrases (apps/linguastein/docs/tasks/canonical-audio.md §4.1)
 audio-samples/
 
 # a TTS toolchain, if one is ever set up here. No engine is chosen yet
-# (docs/tasks/canonical-audio.md §4.0); these are listed so a local experiment
+# (apps/linguastein/docs/tasks/canonical-audio.md §4.0); these are listed so a local experiment
 # can never be committed by accident. Keep any such toolchain project-local, and
 # note that package caches must sit OUTSIDE the repo — something in this folder
 # holds handles on new files and breaks atomic renames.

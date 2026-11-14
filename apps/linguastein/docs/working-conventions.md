@@ -1,7 +1,7 @@
 # Learning and release conventions
 
 Read for learning behavior or release work. Core architectural rules are in
-[AGENTS.md](../AGENTS.md); this document owns the details below.
+[AGENTS.md](../../../AGENTS.md); this document owns the details below.
 
 ## Learning model
 
@@ -52,7 +52,7 @@ registration, runtime caches or lazy chunks.
 
 ## Durable notes
 
-Keep [current-state.md](current-state.md) as concise project memory: decisions,
+Keep [current-state.md](../../../docs/current-state.md) as concise project memory: decisions,
 open constraints and verified unresolved issues. Implementation and test results
 belong in source, tests and change descriptions. Historical rationale can be
 retrieved from Git history or a relevant task brief; do not duplicate it in the

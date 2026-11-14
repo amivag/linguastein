@@ -140,7 +140,7 @@ export interface NumeralGuide extends DrillGuide<number> {
    * The one member that stayed behind when the rest of this interface became
    * {@link DrillGuide}. A speller has a largest number; an interval drill has
    * twelve classes and no comparable quantity, so requiring a bound of every
-   * subject would have meant inventing one. `docs/framework.md` §1 records the
+   * subject would have meant inventing one. `../../docs/framework.md` §1 records the
    * spike that established this.
    */
   readonly maxValue: number;

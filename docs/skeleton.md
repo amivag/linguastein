@@ -66,5 +66,5 @@ with the app. `packages/ui/tests/fixtures/rhythm-layout.tsx` demonstrates a diff
 - Concurrent agents need separate worktrees to avoid staging each other's work.
 
 Detailed appearance invariants belong in [theming.md](theming.md), interaction
-rules in [design-language.md](design-language.md), and dependency boundaries in
-[architecture.md](architecture.md). Do not copy those narratives into this guide.
+rules in [design-language.md](../apps/linguastein/docs/design-language.md), and dependency boundaries in
+[architecture.md](../apps/linguastein/docs/architecture.md). Do not copy those narratives into this guide.

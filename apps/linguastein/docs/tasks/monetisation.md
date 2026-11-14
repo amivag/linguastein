@@ -7,7 +7,7 @@ yet.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** what the app may ask money for, and what it must never do to get it.
 
-Read [`AGENTS.md`](../../AGENTS.md) and
+Read [`AGENTS.md`](../../../../AGENTS.md) and
 [design-language.md](../design-language.md) first. The constraints below are not
 squeamishness — several of them are enforced by tests that read the stylesheets,
 and a change that breaks one fails `npm run check`.
@@ -39,7 +39,7 @@ re-licensing it is a decision the licence makes deliberately hard.
 
 What is not given away is the app and the service around it — the engine, the
 FSRS scheduling, the mission ladder, and (once
-[accounts-and-sync.md](accounts-and-sync.md) lands) sync across devices. **Sell
+[accounts-and-sync.md](../../../../docs/tasks/accounts-and-sync.md) lands) sync across devices. **Sell
 convenience, not curriculum.** That also happens to be the version that does not
 put a paywall between a learner and the language, which is the version worth
 shipping.
@@ -60,14 +60,14 @@ concrete rather than aesthetic.
   outside a theme file, a border outside two enumerated exceptions, a hover state
   that can repaint a control in a colour its label was not chosen for, and a
   duration or easing outside `primitives.css` _(verified: `tests/a11y/`,
-  [skeleton.md](../skeleton.md))_. A third-party ad iframe is none of those things
+  [skeleton.md](../../../../docs/skeleton.md))_. A third-party ad iframe is none of those things
   and cannot be made to be.
 - **The app works offline.** An ad slot is a network dependency in a product
   whose selling point is a train.
 - **An ad SDK is a tracking surface**, which means a consent-management
   obligation (GDPR/TCF) and an ATT prompt on iOS — in the app that currently
   needs no privacy policy at all (see
-  [accounts-and-sync.md](accounts-and-sync.md) §5).
+  [accounts-and-sync.md](../../../../docs/tasks/accounts-and-sync.md) §5).
 - WCAG 2.2 AA is enforced in CI _(verified)_. Ad creatives are not, and an ad
   that fails contrast fails it inside your product.
 
@@ -107,7 +107,7 @@ plain link, which is another reason the web build stays primary
 
 The defensible paid product, in order of how well it fits what exists:
 
-1. **Sync and backup across devices** — [accounts-and-sync.md](accounts-and-sync.md).
+1. **Sync and backup across devices** — [accounts-and-sync.md](../../../../docs/tasks/accounts-and-sync.md).
    Costs real money to run, which is the honest basis for charging for it, and it
    is convenience rather than curriculum.
 2. **Canonical audio** — roadmap item 3. Real recurring cost (synthesis, and ~2
@@ -125,7 +125,7 @@ scheduler. A learner who pays nothing gets the whole language.
 
 **6.1 Whether money requires accounts.** A receipt wants an identity, so a paid
 tier is the one feature with a real reason to require an account
-([accounts-and-sync.md](accounts-and-sync.md) §6.2). Let it be _that_ — one
+([accounts-and-sync.md](../../../../docs/tasks/accounts-and-sync.md) §6.2). Let it be _that_ — one
 feature behind an account — rather than the reason accounts exist.
 
 **6.2 The licence, again.** [native-port.md](native-port.md) §2 has to be settled

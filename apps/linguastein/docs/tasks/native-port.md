@@ -8,7 +8,7 @@ schedulable, and one non-technical decision (§2) blocks iOS entirely.
 No engine changes, no URL changes, no content changes. Every address the web app
 answers must keep answering, because the web build stays the primary one.
 
-Read [`AGENTS.md`](../../AGENTS.md) first — architecture rule 5 (_no vendor above
+Read [`AGENTS.md`](../../../../AGENTS.md) first — architecture rule 5 (_no vendor above
 a seam_) and **This repository is also a skeleton**. Most of this task is
 collecting on rule 5; the parts that hurt are the two places it was never
 applied.
@@ -152,7 +152,7 @@ change nothing. The reason to revisit it is that **iOS evicts WebView storage
 under pressure**, and losing a learner's FSRS history to an eviction is worse
 than losing it to a reinstall because nobody chose it. The fix is a native
 storage provider behind the same interface — and it is the same seam cloud sync
-lands behind, so read [accounts-and-sync.md](accounts-and-sync.md) §3 before
+lands behind, so read [accounts-and-sync.md](../../../../docs/tasks/accounts-and-sync.md) §3 before
 designing one. Doing export/import first (the existing transfer implementation) makes an eviction
 survivable without any native work at all, which is a good argument for
 sequencing it ahead of this task.
@@ -166,7 +166,7 @@ They are listed here because a native port is when they start costing something.
 15 under `tests/` _(verified)_. It is the last vendor above a seam in the
 codebase. It is not a native-port blocker, but the routing layer is what a
 custom-scheme base path and any deep-linking work both go through, so doing
-[tanstack-router.md](tanstack-router.md)'s first commit — which introduces the
+[tanstack-router.md](../../../../docs/tasks/tanstack-router.md)'s first commit — which introduces the
 seam and is worth landing whichever router wins — before this task is cheaper
 than doing it after.
 

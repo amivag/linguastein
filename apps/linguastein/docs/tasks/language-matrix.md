@@ -12,7 +12,7 @@ arrives whose accents do not simply fold.
 transport, and the runtime language seam. No German, Greek or Chinese content is
 authored here.
 
-Read [`AGENTS.md`](../../AGENTS.md) — **Architecture rules** 5, 6 and 8,
+Read [`AGENTS.md`](../../../../AGENTS.md) — **Architecture rules** 5, 6 and 8,
 **Courses and the URL**, and **Datasets** — then
 [`second-language.md`](second-language.md), which briefs the _second target
 language_ from one direction. This brief is the other direction: a learner
@@ -28,7 +28,7 @@ and the runtime seam. Everything here is cheaper before German exists than after
 
 `second-language.md` §6 files this under Chinese. It is not a Chinese problem; it
 is the next two languages on the roadmap. `slug`
-([`build-dataset.ts:897`](../../apps/linguastein/scripts/build-dataset.ts)) ends
+([`build-dataset.ts:897`](../../scripts/build-dataset.ts)) ends
 `.replace(/[^a-z0-9]+/g, '-')`, and every lexeme id and every form-id stem is
 built from it:
 
@@ -42,7 +42,7 @@ built from it:
 | `Straße`                                            | `stra-e`           | ß becomes a hyphen                       |
 
 Nothing failed on any of this before 2026-08-25, and that is the finding. `lexemeId`
-([`build-dataset.ts:853`](../../apps/linguastein/scripts/build-dataset.ts)) resolves a taken id by
+([`build-dataset.ts:853`](../../scripts/build-dataset.ts)) resolves a taken id by
 appending the part of speech, because `mañana` is legitimately both a noun and an
 adverb. It compares **stems**, not lemmas — so `schön` colliding with `schon`
 looks exactly like `mañana` colliding with `mañana`, and ships as
@@ -259,7 +259,7 @@ Three problems collapse at once: the matrix becomes additive, the download
 becomes small, and a base language can be added to an already-shipped pack
 without touching it.
 
-The seam exists. [`loadPack`](../../apps/linguastein/src/data/loaders/pack.ts) walks
+The seam exists. [`loadPack`](../../src/data/loaders/pack.ts) walks
 `manifest.files`, each entry carrying a `kind`, over the `DatasetSource`
 abstraction — so selective loading is a filter on that list plus a second
 manifest for the pairs, not new machinery. `referenceLanguages(repository)`
@@ -386,7 +386,7 @@ with the UI chrome, not here.
 
 **All four parts have landed; the section is kept for the reasoning.**
 `workbox.globPatterns` precached `**/*.jsonl`
-([`vite.config.ts`](../../apps/linguastein/vite.config.ts)) — `core-es` alone is 6.4 MB, and five
+([`vite.config.ts`](../../vite.config.ts)) — `core-es` alone is 6.4 MB, and five
 languages would have been ~30 MB fetched before a learner saw the first screen.
 
 - ~~**Precache the shell and `catalog.json`.**~~ — done. The catalog is small and
@@ -513,7 +513,7 @@ and pinyin bucketing. `Ñ` is already special-cased inside the language-neutral
 - **runtime** — segment, normalise, bucket, collate, address pronouns, praise
 
 Load the runtime half when the course resolves, hold it in
-[`services.ts`](../../apps/linguastein/src/app/services.ts) per rule 5, and it stays synchronous
+[`services.ts`](../../src/app/services.ts) per rule 5, and it stays synchronous
 at every call site while shipping as a per-language chunk — the same story as the
 datasets. Keeping both halves under one `src/languages/<tag>/` directory is what
 stops a language being half-added.
@@ -565,7 +565,7 @@ either of the two above.
 | §6 `LanguageModule`, both halves                     |                                |
 | `second-language.md` §3 local-id resolution scope    |                                |
 
-`CEFR_LEVELS` ([`model.ts:15`](../../apps/linguastein/src/domain/content/model.ts)) is the most
+`CEFR_LEVELS` ([`model.ts:15`](../../src/domain/content/model.ts)) is the most
 urgent of these, because Chinese is taught in HSK bands and the level reaches the
 zod schema, the URL path, mission filtering, `session-url.ts` and `ReadScreen`.
 It is a URL migration and a data migration at once, and §5's shard names come out

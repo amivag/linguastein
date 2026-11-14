@@ -41,10 +41,10 @@ a row of the table, not designing one.
 
 Read these first, in order:
 
-1. [`AGENTS.md`](../../AGENTS.md) — the **Datasets** section is the one this task
+1. [`AGENTS.md`](../../../../AGENTS.md) — the **Datasets** section is the one this task
    is constrained by. Item ids are permanent, `public/packs/**` is generated, and
    the `-` sentinel has a specific meaning
-2. [`scripts/build-dataset.ts`](../../apps/linguastein/scripts/build-dataset.ts) — where all four
+2. [`scripts/build-dataset.ts`](../../scripts/build-dataset.ts) — where all four
    code edits land. Read `readSource` (~line 152) first: it is what decides
    whether a row's first cell is an id
 3. [`docs/tasks/dataset-expansion.md`](dataset-expansion.md) §4 — why an id is
@@ -117,7 +117,7 @@ Do not treat any of these as surprises:
   per-topic counts and the build's `under 8 items` list both move. Check
   `tests/data/topics.test.ts`.
 - **`tests/data/doc-stats.test.ts`** exists to keep the numbers quoted in prose
-  honest, so the pack counts in `README.md`, `docs/roadmap.md` and anywhere else
+  honest, so the pack counts in `README.md`, `../../docs/roadmap.md` and anywhere else
   will need updating. Let the test tell you where.
 - **`tests/data/duplicate-items.test.ts`, `item-ids.test.ts`,
   `shipped-packs.test.ts`** are the other likely ones.

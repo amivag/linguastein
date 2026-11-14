@@ -4,7 +4,7 @@
 **For:** a fresh agent session, no prior context assumed
 **Scope:** content first, then a mission. The engine needs no changes.
 
-Read [`AGENTS.md`](../../AGENTS.md) and
+Read [`AGENTS.md`](../../../../AGENTS.md) and
 [`docs/tasks/dataset-expansion.md`](dataset-expansion.md) before starting, and
 follow the rule they both state: **author the content a mission teaches before
 authoring the mission.** Six missions landed at once because their vocabulary was

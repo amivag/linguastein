@@ -1,7 +1,7 @@
 /**
  * The contrast axis: how far apart a palette's neutrals sit.
  *
- * Its own axis rather than a set of palettes, for the reason `docs/theming.md`
+ * Its own axis rather than a set of palettes, for the reason `../../docs/theming.md`
  * gives: encoding it into the theme id would mean `dark-teal-more` and a new
  * file for every combination. A level restates the neutral roles as positions
  * along the palette's own `paper` → `ink` line, so it works for palettes written

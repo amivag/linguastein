@@ -101,7 +101,7 @@ commit; test upgrades on every supported engine.
 ## Next work
 
 Local atomic persistence, retry repair and transactional settings updates are
-implemented; [storage.md](storage.md) owns their contracts. Preserve those tests
+implemented; [storage.md](../apps/linguastein/docs/storage.md) owns their contracts. Preserve those tests
 before adding sync. A durable outbox, auth SDK, server scaffolding and database
 dependencies remain deferred until a concrete feature needs them.
 

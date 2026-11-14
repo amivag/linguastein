@@ -8,7 +8,7 @@ the same-language case. Always-qualified links (B) are deferred, not rejected
 **Scope:** URL spelling, pack identity and the missing-content path. No content
 authoring. The learning engine needs no changes.
 
-Read [`AGENTS.md`](../../AGENTS.md) — especially **Courses and the URL** and the
+Read [`AGENTS.md`](../../../../AGENTS.md) — especially **Courses and the URL** and the
 `session-url.ts` rules — plus
 [`docs/architecture.md`](../architecture.md#updates-and-caching) before touching
 anything the service worker caches.

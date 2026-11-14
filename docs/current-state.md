@@ -34,11 +34,11 @@
 
 Atomic assessment/import/reset operations, snapshot exports and transactional
 settings updates protect local state. Retry repairs older interrupted imports;
-practice reports unsaved writes. [Storage](storage.md) owns these contracts.
+practice reports unsaved writes. [Storage](../apps/linguastein/docs/storage.md) owns these contracts.
 
 Modal focus survives rerenders, isolates the top dialog, and restores its opener.
 Nested portals share keyboard ownership; background branches are inert.
-[Design language](design-language.md#3-overlay-never-push) owns the UI contract.
+[Design language](../apps/linguastein/docs/design-language.md#3-overlay-never-push) owns the UI contract.
 
 Provider-independent `PageLayout` (`@platform/ui`) owns page structure and layout
 slots; `AppShell` composes Spanish navigation, history, speech and updates.

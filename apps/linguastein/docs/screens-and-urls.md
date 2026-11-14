@@ -2,7 +2,7 @@
 
 How the app is divided into screens, and — the part that is load-bearing — how
 each one's state is spelled in the address bar. Split out of
-[AGENTS.md](../AGENTS.md) when that file passed seventy kilobytes; the rules here
+[AGENTS.md](../../../AGENTS.md) when that file passed seventy kilobytes; the rules here
 are as binding as the ones that stayed.
 
 One rule underlies all of it, and it is the reason this is a document rather than
@@ -324,7 +324,7 @@ screen names nothing to fix.
 Settings' **You** section (`/es/a1/settings?tab=user`) is the learner rather than
 the app: a name, the gender they speak about themselves in, and an account of
 what this device is holding. There is no account behind any of it yet
-([accounts-and-sync.md](tasks/accounts-and-sync.md)), which is why the
+([accounts-and-sync.md](../../../docs/tasks/accounts-and-sync.md)), which is why the
 section says where the data lives before it says how much of it there is — and
 names the store rather than gesturing at it: the IndexedDB database (from
 `identity.ts`, never typed out), the `localStorage` mirrors, the packs as the
@@ -413,7 +413,7 @@ so a second language pack appears in the picker — and in the URL — with no c
 change. `tests/fixtures/pack.ts` ships a small French pack for exactly this:
 anything that assumes one language or one pack fails there.
 
-The router is TanStack Router, behind one seam: [`@platform/navigation`](../packages/navigation/src/navigation.tsx).
+The router is TanStack Router, behind one seam: [`@platform/navigation`](../../../packages/navigation/src/navigation.tsx).
 Screens use its `Link`, `useNavigate`, `useLocation`, `useRouteParams` and
 `useSearchParams` with codec-built strings; lint forbids naming the router
 anywhere else. Routes are a data table in `App.tsx`; a pattern that prefixes

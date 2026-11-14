@@ -4,7 +4,7 @@
  * This is what stands between a browser evicting the app's storage and a lost
  * year of practice. There is no account and no server — `UserSettings` says so
  * plainly — which makes a file the only backup available, and the same four
- * things a sync would later need (`docs/tasks/accounts-and-sync.md`).
+ * things a sync would later need (`../../docs/tasks/accounts-and-sync.md`).
  *
  * ## `schema` is not `DB_VERSION`
  *

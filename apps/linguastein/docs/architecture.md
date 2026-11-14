@@ -66,7 +66,7 @@ than aspirational.
 ## Optional server layer
 
 The future server direction is modern PHP with SQL persistence behind repository
-and transaction interfaces. See [server-foundation.md](server-foundation.md) for
+and transaction interfaces. See [server-foundation.md](../../../docs/server-foundation.md) for
 SQLite/MySQL/MariaDB/PostgreSQL portability, API contracts and retry semantics.
 Local storage remains the practice read/write path; optional HTTP synchronization
 reconciles in the background. The TypeScript engine imports neither network nor
@@ -204,12 +204,12 @@ them later is additive.
 
 Backend, users/registration, sync, community submissions, an AI tutor and
 pronunciation scoring remain future work. Stories/dialogues already exist as
-passages. See [roadmap.md](roadmap.md) for current work and
-[server-foundation.md](server-foundation.md) for the account/server direction.
+passages. See [roadmap.md](../../../docs/roadmap.md) for current work and
+[server-foundation.md](../../../docs/server-foundation.md) for the account/server direction.
 
 Three of those have since been briefed rather than merely deferred, because they
 are what the seams above were built for and it is worth knowing which seam pays
-out where: [accounts and sync](tasks/accounts-and-sync.md) behind
+out where: [accounts and sync](../../../docs/tasks/accounts-and-sync.md) behind
 `LearnerStorage`, and [a native port](tasks/native-port.md) behind
 `TtsProvider`, `SpeechRecognitionProvider`, `MicrophoneLevels` and
 `DatasetSource`. [Monetisation](tasks/monetisation.md) needs no seam and is

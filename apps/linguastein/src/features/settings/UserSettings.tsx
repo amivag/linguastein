@@ -49,7 +49,7 @@ interface DataCounts {
  * is stored, where it is stored and who else can see it. That last one leads
  * with the location rather than the numbers, because "on this device, no
  * account" is the part that decides whether the numbers matter
- * (`docs/tasks/accounts-and-sync.md` is where an account would change it).
+ * (`../../docs/tasks/accounts-and-sync.md` is where an account would change it).
  *
  * The gender control is the one that touches content, and it says so with the
  * pair it reorders rather than with a paragraph about agreement. It is a bias

@@ -133,7 +133,7 @@ working version.
 
 Push to `main`, wait about a minute, open the URL. The service worker uses
 `registerType: 'autoUpdate'`, so a second visit picks up the new build — see
-[architecture.md](architecture.md#updates-and-caching) for what that means for a
+[architecture.md](../apps/linguastein/docs/architecture.md#updates-and-caching) for what that means for a
 session in progress.
 
 To test without publishing, the dev server is reachable across your own network,

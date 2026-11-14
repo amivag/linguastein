@@ -123,5 +123,5 @@ contrast/intensity; generated variants must not leave stale hues behind.
 `tests/a11y/contrast.test.ts` discovers the complete role/pairing contract from its
 assertions and registries. Read it before changing roles. The solver targets
 consistent tones rather than maximum chroma, and constrains gamut, semantic
-separation and label/background contrast. [Design language](design-language.md)
+separation and label/background contrast. [Design language](../apps/linguastein/docs/design-language.md)
 owns interaction/surface rules; do not duplicate its rationale here.

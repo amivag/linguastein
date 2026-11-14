@@ -29,7 +29,12 @@ const DOCS = ['README.md', 'docs/roadmap.md'];
  * Wider than `DOCS` because the figures there are not all about the pack:
  * `AGENTS.md` and the screens document both count missions and palettes.
  */
-const SCANNED = [...DOCS, 'AGENTS.md', 'docs/screens-and-urls.md', 'docs/theming.md'];
+const SCANNED = [
+  ...DOCS,
+  'AGENTS.md',
+  'apps/linguastein/docs/screens-and-urls.md',
+  'docs/theming.md',
+];
 
 const count = (file: string) => shippedRecords(file).length;
 

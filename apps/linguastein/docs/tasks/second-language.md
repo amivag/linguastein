@@ -7,7 +7,7 @@
 base-language seam. No German, Greek or Chinese content is authored here — this
 is what has to be true _before_ it is.
 
-Read [`AGENTS.md`](../../AGENTS.md) — **Architecture rules** 6 and 8, **Courses
+Read [`AGENTS.md`](../../../../AGENTS.md) — **Architecture rules** 6 and 8, **Courses
 and the URL**, and **Datasets** — and
 [`docs/tasks/pack-addressing.md`](pack-addressing.md), which briefs §3 below from
 the one-language side and is now overtaken by events.
@@ -236,7 +236,7 @@ predicted — each is the real output of the real function.
 | `Intl.Collator('zh').compare`              | `爱 去 我 银行`      | Sorting is fine — ICU already collates by pinyin. It is the _bucketing_ that is not                      |
 
 `slug` is the hardest stop. It ends `.replace(/[^a-z0-9]+/g, '-')`
-([`scripts/build-dataset.ts:897`](../../apps/linguastein/scripts/build-dataset.ts)), so `银行`,
+([`scripts/build-dataset.ts:897`](../../scripts/build-dataset.ts)), so `银行`,
 `我` and `你好` all return the empty string. The build's form-id guarantee — "a
 form id's stem comes from the **lexeme id**, which `lexemeId` already keeps
 unique" — collapses entirely, and the ñ/n collision that guarantee was written to
@@ -269,7 +269,7 @@ Both are additive today and migrations once content exists. That asymmetry is th
 whole argument for doing them with §4 rather than later.
 
 **`level` should be an open per-pack scheme, not a closed CEFR enum.**
-`CEFR_LEVELS` ([`model.ts:15`](../../apps/linguastein/src/domain/content/model.ts)) is a closed
+`CEFR_LEVELS` ([`model.ts:15`](../../src/domain/content/model.ts)) is a closed
 list that reaches the zod schema, the URL path (`/zh/a1/browse`), mission
 filtering, `session-url.ts` and `ReadScreen`. Chinese is taught in HSK bands, so
 an HSK pack cannot declare its own level — and because the level is _in the URL_

@@ -31,15 +31,15 @@ counts are in the manifests and the public [README](../README.md).
 
 ## Product work to evaluate
 
-| Area                                                         | Entry point; verify remaining work against source                                                                                     |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Editorial review and broader content                         | [content guide](content-authoring.md), [dataset expansion](tasks/dataset-expansion.md)                                                |
-| Canonical audio generation, licensing and listening approval | [canonical audio](tasks/canonical-audio.md)                                                                                           |
-| More passages and higher-level missions                      | [passage practice](tasks/passage-practice.md), [more missions](tasks/more-missions.md)                                                |
-| Verb depth, non-item drills and mastery                      | [verb cards](tasks/verb-cards.md), [numerals](tasks/numerals.md)                                                                      |
-| Typed production and diagnostic evidence                     | [typed production](tasks/typed-production.md), [retrieval evidence](tasks/retrieval-evidence.md)                                      |
-| Additional languages and pack resolution                     | [second language](tasks/second-language.md), [language matrix](tasks/language-matrix.md), [pack addressing](tasks/pack-addressing.md) |
-| Interaction polish, offline/install UX and raster PWA icons  | [game feel](tasks/game-feel.md), [architecture](architecture.md)                                                                      |
+| Area                                                         | Entry point; verify remaining work against source                                                                                                                                                                |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Editorial review and broader content                         | [content guide](../apps/linguastein/docs/content-authoring.md), [dataset expansion](../apps/linguastein/docs/tasks/dataset-expansion.md)                                                                         |
+| Canonical audio generation, licensing and listening approval | [canonical audio](../apps/linguastein/docs/tasks/canonical-audio.md)                                                                                                                                             |
+| More passages and higher-level missions                      | [passage practice](../apps/linguastein/docs/tasks/passage-practice.md), [more missions](../apps/linguastein/docs/tasks/more-missions.md)                                                                         |
+| Verb depth, non-item drills and mastery                      | [verb cards](../apps/linguastein/docs/tasks/verb-cards.md), [numerals](../apps/linguastein/docs/tasks/numerals.md)                                                                                               |
+| Typed production and diagnostic evidence                     | [typed production](../apps/linguastein/docs/tasks/typed-production.md), [retrieval evidence](../apps/linguastein/docs/tasks/retrieval-evidence.md)                                                               |
+| Additional languages and pack resolution                     | [second language](../apps/linguastein/docs/tasks/second-language.md), [language matrix](../apps/linguastein/docs/tasks/language-matrix.md), [pack addressing](../apps/linguastein/docs/tasks/pack-addressing.md) |
+| Interaction polish, offline/install UX and raster PWA icons  | [game feel](../apps/linguastein/docs/tasks/game-feel.md), [architecture](../apps/linguastein/docs/architecture.md)                                                                                               |
 
 These are candidate work areas, not a promise that every historical brief is
 unimplemented. Keep content generation distinct from human editorial approval.
@@ -53,10 +53,10 @@ unimplemented. Keep content generation distinct from human editorial approval.
   is likely; SQLite, MySQL, MariaDB and PostgreSQL are candidates. No vendor,
   auth method or database is fixed. [Server foundation](server-foundation.md)
   owns identity, guest adoption, account switching, HTTP and SQL requirements.
-- **Native distribution:** [native-port](tasks/native-port.md) is a historical
+- **Native distribution:** [native-port](../apps/linguastein/docs/tasks/native-port.md) is a historical
   investigation; verify device APIs, hosting and distribution/licensing rules
   when selecting this work.
-- **Commercial features:** [monetisation](tasks/monetisation.md) is a historical
+- **Commercial features:** [monetisation](../apps/linguastein/docs/tasks/monetisation.md) is a historical
   product brief, not an active implementation commitment.
 
 Social features, moderation, a generic plugin/package platform and an AI tutor

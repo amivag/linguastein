@@ -53,7 +53,7 @@ on" is unrecoverable after the tab closes. This is the hole Stage A fills.
 
 **Missions are the same shape and the wrong mechanism.** A mission already is a
 bounded set of material with derived completion, and
-[`domain/missions/progress.ts`](../../apps/linguastein/src/domain/missions/progress.ts) is the
+[`domain/missions/progress.ts`](../../src/domain/missions/progress.ts) is the
 pattern to copy. But a mission is a sequencing record over _authored_ passages,
 and its completion reads authored `capabilities` and a `transfers` ladder — so
 making one learner-editable breaks both. More decisively: a mission's "same
@@ -65,20 +65,20 @@ intent; do not fold one into the other.
 
 Read these first, in order:
 
-1. [`AGENTS.md`](../../AGENTS.md) — architecture rules 1, 4 and 8, **What a
+1. [`AGENTS.md`](../../../../AGENTS.md) — architecture rules 1, 4 and 8, **What a
    session practises**, and **The learning model**. Rule 4 is what the standing
    calculation must not break
-2. [`src/domain/missions/progress.ts`](../../apps/linguastein/src/domain/missions/progress.ts) —
+2. [`src/domain/missions/progress.ts`](../../src/domain/missions/progress.ts) —
    **the model to copy.** Its header states the principle this task reuses: a
    definition may be stored, but where the learner stands is computed from the
    attempt log, so a catalogue stays safe to reorder and a pack safe to grow
-3. [`src/features/practice/session-url.ts`](../../apps/linguastein/src/features/practice/session-url.ts) —
+3. [`src/features/practice/session-url.ts`](../../src/features/practice/session-url.ts) —
    in particular the note at line 137 on why `ids` is deliberately absent from a
    URL, which is what forces §5.2's design
-4. [`src/features/practice/SessionScreen.tsx`](../../apps/linguastein/src/features/practice/SessionScreen.tsx) —
+4. [`src/features/practice/SessionScreen.tsx`](../../src/features/practice/SessionScreen.tsx) —
    how `?passage=` becomes `filter.ids`. A batch resolves the same way, but §6.3
    is why it cannot resolve from the same place
-5. [`src/domain/progress/mastery.ts`](../../apps/linguastein/src/domain/progress/mastery.ts) — and
+5. [`src/domain/progress/mastery.ts`](../../src/domain/progress/mastery.ts) — and
    then §4.3 below, which is why this task must **not** use its `strong` status
 6. [`docs/tasks/learner-profile.md`](learner-profile.md) — §9.2 (per-kind
    scheduling) and Stage C (export). This task is the first consumer of
@@ -156,7 +156,7 @@ Neither of these needs changing, and both should be stated in the code so nobody
   earlier plus the two not yet met — not a replay of the first. Repeated slots on
   one set sharpen by construction.
 - `maxNewItems` lifts automatically for a deliberately picked set
-  ([`presets.ts:173`](../../apps/linguastein/src/features/practice/presets.ts:173)), so a 30-item
+  ([`presets.ts:173`](../../src/features/practice/presets.ts:173)), so a 30-item
   batch deals all 30 rather than capping at 8. The carve-out exists already and
   its comment already gives this exact reason.
 
@@ -369,7 +369,7 @@ building it:
 ### 7.1 Creation, on Browse
 
 Browse already ends in **Practise these** / **Study these** over the current
-filter ([`BrowseScreen.tsx:592`](../../apps/linguastein/src/features/browse/BrowseScreen.tsx:592)),
+filter ([`BrowseScreen.tsx:592`](../../src/features/browse/BrowseScreen.tsx:592)),
 and the filter is already the exact expression of "these 30 nouns". Add a third
 action that saves the current results as a batch, taking the first N in the
 _displayed_ sort order.
@@ -491,7 +491,7 @@ adds a noun to that sentence.
 - **`session-url.ts`** gains one parameter and its round-trip test. Do not add
   `ids` to `writeItemFilter` while you are in there — read the note at line 137
   first.
-- **`docs/roadmap.md`** — a line under _In place_, and item 8 ("word-level
+- **`../../docs/roadmap.md`** — a line under _In place_, and item 8 ("word-level
   progress") should cross-reference this: "words I keep looking up" is a batch
   source, and the two would otherwise be designed twice.
 - **`AGENTS.md`** — the **What a session practises** section lists course, focus

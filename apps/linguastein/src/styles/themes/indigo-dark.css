@@ -110,7 +110,7 @@
    * colours can appear in the same role, and these never do.
    *
    * The hues themselves are picked by the search described in
-   * `docs/theming.md`: one target lightness and chroma per mode, twelve angles
+   * `../../docs/theming.md`: one target lightness and chroma per mode, twelve angles
    * 30 degrees apart, each hue pulled off that target only as far as the
    * contrast floors force it. That is what makes them a family rather than a
    * rainbow, and it is why they are not maximally saturated.

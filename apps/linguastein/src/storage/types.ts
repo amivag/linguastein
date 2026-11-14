@@ -2,7 +2,7 @@
  * Persistence contracts (spec §23). Learner state is local-first: no account,
  * no backend. A future sync service reconciles this local store over HTTP;
  * SQL repositories live on the server, not behind individual UI store calls.
- * See docs/server-foundation.md for the optional PHP/SQL direction.
+ * See ../../docs/server-foundation.md for the optional PHP/SQL direction.
  */
 
 import type { BatchDefinition } from '../domain/batches';
@@ -21,7 +21,7 @@ export interface Preferences {
    *
    * Stored beside the settings rather than in a record of its own because that
    * is what it is today: one string on one device, with no account behind it.
-   * When there is an account (`docs/tasks/accounts-and-sync.md`) this is the
+   * When there is an account (`../../docs/tasks/accounts-and-sync.md`) this is the
    * field that stops being local, which is why the User screen says so plainly
    * rather than implying a profile that does not exist.
    */
@@ -76,7 +76,7 @@ export interface Preferences {
    *
    * A separate axis from light/dark on purpose: a learner keeps their palette
    * when the OS flips to dark, and a palette added later needs no new
-   * preference. See docs/theming.md.
+   * preference. See ../../docs/theming.md.
    */
   readonly palette: PaletteId;
   /** How far apart the palette's neutrals sit. Never below WCAG AA. */

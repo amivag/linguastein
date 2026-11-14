@@ -22,7 +22,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { packFiles, readJsonl, repoRoot, workspaceRoot } from '../fixtures/dataset';
+import { packFiles, readJsonl, repoRoot } from '../fixtures/dataset';
 
 const PACKS = join(repoRoot, 'public/packs');
 const BRIEF = 'docs/tasks/dataset-expansion.md';
@@ -104,7 +104,7 @@ function firstNumber(cell: string): number | undefined {
 }
 
 function tableRows(): Map<string, string> {
-  const text = readFileSync(join(workspaceRoot, BRIEF), 'utf8');
+  const text = readFileSync(join(repoRoot, BRIEF), 'utf8');
   const rows = new Map<string, string>();
   for (const line of text.split(/\r?\n/)) {
     if (!line.startsWith('|')) continue;
@@ -134,7 +134,7 @@ describe(`the measurement table in ${BRIEF}`, () => {
   });
 
   it('states the pack version it was measured against', () => {
-    const text = readFileSync(join(workspaceRoot, BRIEF), 'utf8');
+    const text = readFileSync(join(repoRoot, BRIEF), 'utf8');
     const declared = readFileSync(join(repoRoot, 'content/es/pack.tsv'), 'utf8')
       .split(/\r?\n/)
       .find((line) => line.trim().length > 0 && !line.startsWith('#'))

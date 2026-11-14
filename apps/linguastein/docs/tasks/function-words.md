@@ -8,7 +8,7 @@ design: object `la`/`los`/`las`, which is a senses problem rather than authoring
 **Scope:** one product decision, then a small amount of code and a content pass.
 The learning engine needs no changes; the exercise generators need none either.
 
-Read [`AGENTS.md`](../../AGENTS.md) and
+Read [`AGENTS.md`](../../../../AGENTS.md) and
 [`docs/tasks/dataset-expansion.md`](dataset-expansion.md) first. This task is a
 sibling of [`feelings-mood-state.md`](feelings-mood-state.md): both are content
 gaps briefed separately because each needs deciding before anything is written.
@@ -18,7 +18,7 @@ gaps briefed separately because each needs deciding before anything is written.
 ## 1. What already landed, so it is not redone
 
 The question words have their **sentences**.
-[`content/es/sentences-questions.tsv`](../../apps/linguastein/content/es/sentences-questions.tsv)
+[`content/es/sentences-questions.tsv`](../../content/es/sentences-questions.tsv)
 gave `cuándo`, `cuál`, `quién` and `por qué` a dialogue each plus a palette of
 answers on both sides, and the demonstratives ride along at the end. The
 `questions` topic now carries 172 sentences — third-largest in the pack, behind
@@ -47,10 +47,10 @@ did not.
 
 Two constants decide it, and they disagree with each other:
 
-- [`scripts/build-dataset.ts`](../../apps/linguastein/scripts/build-dataset.ts) — `CARD_POS` is
+- [`scripts/build-dataset.ts`](../../scripts/build-dataset.ts) — `CARD_POS` is
   `{ADJ, NUM}`, so no other modifier row ever gets an id, and without an id there
   is no card.
-- [`src/domain/content/annotation.ts`](../../apps/linguastein/src/domain/content/annotation.ts) —
+- [`src/domain/content/annotation.ts`](../../src/domain/content/annotation.ts) —
   `STUDYABLE_POS` is `[VERB, NOUN, ADJ, ADV, NUM]`.
 
 `ADV` is in the second list and absent from the first. So Study derives an

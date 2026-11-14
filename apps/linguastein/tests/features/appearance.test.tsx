@@ -5,7 +5,7 @@
  * bug this file exists to prevent is any of them being folded into another: the
  * moment "teal" means "teal at normal contrast", a learner who wants Soft has to
  * give up their colours, and every palette added afterwards doubles the number
- * of files. `docs/theming.md` states the rule; these assert it.
+ * of files. `../../docs/theming.md` states the rule; these assert it.
  *
  * The palettes themselves are checked in `tests/a11y/contrast.test.ts`, which
  * holds every palette to WCAG AA at every contrast level.

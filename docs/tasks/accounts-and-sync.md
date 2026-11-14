@@ -17,7 +17,7 @@ Local per-course settings and versioned file transfers already exist. Consult
 `src/storage/transfer`, `src/storage/types.ts` and their tests for current shapes.
 `replaySubject` rebuilds progress from attempts. Local assessment/import/reset
 writes are transactional, exports use consistent snapshots, and settings writes
-are serialized inside storage. [Storage](../storage.md) owns guarantees and tests;
+are serialized inside storage. [Storage](../../apps/linguastein/docs/storage.md) owns guarantees and tests;
 network retry, authentication and durable outbox work still need their own design.
 
 ## 3. Local storage and sync

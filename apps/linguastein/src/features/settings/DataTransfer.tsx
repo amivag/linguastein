@@ -22,7 +22,7 @@ import styles from './Settings.module.css';
  * There is no account and no server, which the section above this one says
  * plainly — so a file is the only backup a learner can have, and a browser
  * evicting the app's storage is the thing it exists to survive. It is also the
- * same four records a sync would need (`docs/tasks/accounts-and-sync.md`), which
+ * same four records a sync would need (`../../docs/tasks/accounts-and-sync.md`), which
  * is why the merge lives in `storage/transfer` rather than here: this file asks,
  * confirms and reports, and decides nothing.
  *

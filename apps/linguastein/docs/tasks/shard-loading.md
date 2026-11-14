@@ -50,7 +50,7 @@ records stays legible.
 pack, `tests/data/level-shards.test.ts` the loader half, and
 `tests/domain/course.test.ts` the description-without-content half.
 
-Read [`AGENTS.md`](../../AGENTS.md) — **Architecture rules** 1 and 5, and
+Read [`AGENTS.md`](../../../../AGENTS.md) — **Architecture rules** 1 and 5, and
 **Courses and the URL** — then [`language-matrix.md`](language-matrix.md) §5,
 which this is the last step of.
 

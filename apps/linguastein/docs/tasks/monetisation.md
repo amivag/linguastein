@@ -8,7 +8,7 @@ yet.
 **Scope:** what the app may ask money for, and what it must never do to get it.
 
 Read [`AGENTS.md`](../../../../AGENTS.md) and
-[design-language.md](../design-language.md) first. The constraints below are not
+[design-language.md](../../../../docs/design-language.md) first. The constraints below are not
 squeamishness — several of them are enforced by tests that read the stylesheets,
 and a change that breaks one fails `npm run check`.
 

@@ -5,7 +5,7 @@
 landed. §4.6 remains.
 **Written:** 2026-08-20
 **Revised:** 2026-08-21 — §4.2 landed as part of the design-language pass; see
-[docs/design-language.md](../design-language.md), which now owns the visual rules
+[docs/design-language.md](../../../../docs/design-language.md), which now owns the visual rules
 this task was working towards.
 **For:** a fresh agent session, no prior context assumed
 **Scope:** `src/styles`, `src/components`, `src/features` and the preferences

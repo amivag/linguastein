@@ -8,26 +8,26 @@ code. Spanish lives in [`apps/linguastein/docs/`](../apps/linguastein/docs/).
 
 ## Platform and repository
 
-| Question                                        | Source                                       |
-| ----------------------------------------------- | -------------------------------------------- |
-| Palettes and appearance axes                    | [theming.md](theming.md)                     |
-| Scaffold another application                    | [skeleton.md](skeleton.md)                   |
-| Reuse the learning core; rhythm direction       | [framework.md](framework.md)                 |
-| Future PHP/SQL, registration, accounts and sync | [server-foundation.md](server-foundation.md) |
-| Product work and historical task entry points   | [roadmap.md](roadmap.md)                     |
-| Hosting and base paths                          | [deploy.md](deploy.md)                       |
+| Question                                            | Source                                       |
+| --------------------------------------------------- | -------------------------------------------- |
+| UI design; live examples at Linguastein's `/design` | [design-language.md](design-language.md)     |
+| Palettes and appearance axes                        | [theming.md](theming.md)                     |
+| Scaffold another application                        | [skeleton.md](skeleton.md)                   |
+| Reuse the learning core; rhythm direction           | [framework.md](framework.md)                 |
+| Future PHP/SQL, registration, accounts and sync     | [server-foundation.md](server-foundation.md) |
+| Product work and historical task entry points       | [roadmap.md](roadmap.md)                     |
+| Hosting and base paths                              | [deploy.md](deploy.md)                       |
 
 ## Linguastein (Spanish)
 
-| Question                                       | Source                                                                       |
-| ---------------------------------------------- | ---------------------------------------------------------------------------- |
-| Architecture, composition and caching          | [architecture.md](../apps/linguastein/docs/architecture.md)                  |
-| Screens, routes, URL codecs                    | [screens-and-urls.md](../apps/linguastein/docs/screens-and-urls.md)          |
-| Learning behavior and release conventions      | [working-conventions.md](../apps/linguastein/docs/working-conventions.md)    |
-| Authoring content                              | [content-authoring.md](../apps/linguastein/docs/content-authoring.md)        |
-| Local transactions, retries and write feedback | [storage.md](../apps/linguastein/docs/storage.md)                            |
-| Content record formats                         | [dataset-format.md](../apps/linguastein/docs/dataset-format.md)              |
-| UI design and live examples                    | [design-language.md](../apps/linguastein/docs/design-language.md), `/design` |
+| Question                                       | Source                                                                    |
+| ---------------------------------------------- | ------------------------------------------------------------------------- |
+| Architecture, composition and caching          | [architecture.md](../apps/linguastein/docs/architecture.md)               |
+| Screens, routes, URL codecs                    | [screens-and-urls.md](../apps/linguastein/docs/screens-and-urls.md)       |
+| Learning behavior and release conventions      | [working-conventions.md](../apps/linguastein/docs/working-conventions.md) |
+| Authoring content                              | [content-authoring.md](../apps/linguastein/docs/content-authoring.md)     |
+| Local transactions, retries and write feedback | [storage.md](../apps/linguastein/docs/storage.md)                         |
+| Content record formats                         | [dataset-format.md](../apps/linguastein/docs/dataset-format.md)           |
 
 ## Current versus historical
 

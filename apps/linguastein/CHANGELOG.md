@@ -1184,7 +1184,7 @@ tagged.
   lines of a passage. `tests/a11y/design-language.test.ts` fails on a fourth, and
   on a hard-coded colour outside a theme file. The reasoning, including why
   Tailwind was considered and declined, is in
-  [docs/design-language.md](docs/design-language.md).
+  [docs/design-language.md](../../docs/design-language.md).
 - **The design system, at `/design`, showing itself.** Every colour role, token,
   icon and control the build is actually drawing with — read out of the loaded
   stylesheets rather than from a list someone has to remember to update. Add a

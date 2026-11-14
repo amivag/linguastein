@@ -38,7 +38,7 @@ practice reports unsaved writes. [Storage](../apps/linguastein/docs/storage.md) 
 
 Modal focus survives rerenders, isolates the top dialog, and restores its opener.
 Nested portals share keyboard ownership; background branches are inert.
-[Design language](../apps/linguastein/docs/design-language.md#3-overlay-never-push) owns the UI contract.
+[Design language](design-language.md#3-overlay-never-push) owns the UI contract.
 
 Provider-independent `PageLayout` (`@platform/ui`) owns page structure and layout
 slots; `AppShell` composes Spanish navigation, history, speech and updates.

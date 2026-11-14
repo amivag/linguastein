@@ -52,7 +52,8 @@ Then open the printed URL. On a phone, use the network URL from the same Wi-Fi.
 ## Layout
 
 ```text
-docs/             platform docs: framework, theming, skeleton, deploy, roadmap
+docs/             platform docs: framework, theming, design language, skeleton,
+                  deploy, roadmap
 packages/
 ├── engine/       shared scheduling, drills and seeded randomness; no imports at all
 ├── appearance/   portable theme catalogs, axes and first-paint metadata
@@ -90,8 +91,8 @@ content/          capabilities.tsv — the language-neutral capability registry
 content/es/       dataset authoring sources (TSV) — the human-edited input
 public/packs/     generated, shipped content packs (JSONL + manifest)
 public/robots.txt crawl and training opt-outs for the deployed site
-docs/             the app's own docs: architecture, design language, dataset format,
-                  product spec, and briefed tasks under docs/tasks/
+docs/             the app's own docs: architecture, dataset format, product spec,
+                  storage, and briefed tasks under docs/tasks/
 tests/            unit and component tests, mirroring src/
 scripts/          dataset build, validation and review; the palette solver;
                   the audio generator
@@ -259,7 +260,7 @@ Two things to know if it does not work on a phone:
 
 ## Design, themes and layout
 
-Six rules, written down in [`docs/design-language.md`](apps/linguastein/docs/design-language.md)
+Six rules, written down in [`docs/design-language.md`](docs/design-language.md)
 and enforced by four test files: depth rather than outlines, soft geometry,
 overlay rather than push, one display voice, colour that means something, and
 motion that confirms without informing. The whole app draws three borders, each

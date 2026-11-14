@@ -38,19 +38,19 @@ worktrees; use another agent only when the session instructions authorize it.
 
 ## Read when relevant
 
-| Task                                            | Source                                                                            |
-| ----------------------------------------------- | --------------------------------------------------------------------------------- |
-| Screens, routes, query parameters               | [screens-and-urls.md](apps/linguastein/docs/screens-and-urls.md)                  |
-| Content rows or generated forms                 | [content-authoring.md](apps/linguastein/docs/content-authoring.md)                |
-| Content record shapes                           | [dataset-format.md](apps/linguastein/docs/dataset-format.md)                      |
-| Styling                                         | [design-language.md](apps/linguastein/docs/design-language.md) and live `/design` |
-| Appearance axes or palettes                     | [theming.md](docs/theming.md)                                                     |
-| Storage, atomic writes and retry behavior       | [storage.md](apps/linguastein/docs/storage.md)                                    |
-| Learning behavior, releases, coding conventions | [working-conventions.md](apps/linguastein/docs/working-conventions.md)            |
-| Dependency or layer changes; scaffolding        | [skeleton.md](docs/skeleton.md)                                                   |
-| Shared engine or another learning subject       | [framework.md](docs/framework.md)                                                 |
-| PHP, SQL, accounts, registration or sync        | [server-foundation.md](docs/server-foundation.md)                                 |
-| Service-worker or caching changes               | [architecture.md](apps/linguastein/docs/architecture.md#updates-and-caching)      |
+| Task                                            | Source                                                                       |
+| ----------------------------------------------- | ---------------------------------------------------------------------------- |
+| Screens, routes, query parameters               | [screens-and-urls.md](apps/linguastein/docs/screens-and-urls.md)             |
+| Content rows or generated forms                 | [content-authoring.md](apps/linguastein/docs/content-authoring.md)           |
+| Content record shapes                           | [dataset-format.md](apps/linguastein/docs/dataset-format.md)                 |
+| Styling                                         | [design-language.md](docs/design-language.md) and live `/design`             |
+| Appearance axes or palettes                     | [theming.md](docs/theming.md)                                                |
+| Storage, atomic writes and retry behavior       | [storage.md](apps/linguastein/docs/storage.md)                               |
+| Learning behavior, releases, coding conventions | [working-conventions.md](apps/linguastein/docs/working-conventions.md)       |
+| Dependency or layer changes; scaffolding        | [skeleton.md](docs/skeleton.md)                                              |
+| Shared engine or another learning subject       | [framework.md](docs/framework.md)                                            |
+| PHP, SQL, accounts, registration or sync        | [server-foundation.md](docs/server-foundation.md)                            |
+| Service-worker or caching changes               | [architecture.md](apps/linguastein/docs/architecture.md#updates-and-caching) |
 
 ## Architecture rules
 

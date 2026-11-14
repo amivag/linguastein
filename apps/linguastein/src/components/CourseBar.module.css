@@ -29,7 +29,7 @@
 
 /* Chrome from `global.css`, which is also where the reason a field keeps its
    border is recorded. Pills because these are controls that *select*, which is
-   what `--radius-pill` is for (`docs/design-language.md`). */
+   what `--radius-pill` is for (`../../docs/design-language.md`). */
 .language select,
 .level select {
   border-radius: var(--radius-pill);

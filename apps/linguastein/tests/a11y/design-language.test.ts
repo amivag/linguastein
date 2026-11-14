@@ -1,7 +1,7 @@
 /**
  * The design language, as an assertion rather than a document.
  *
- * `docs/design-language.md` explains the rules; this is what keeps them true.
+ * `../../docs/design-language.md` explains the rules; this is what keeps them true.
  * The one it exists for is **depth, not outlines**: the app used to draw 1px
  * boundaries around cards, panels, rows, badges, banners and every button, which
  * is the single reason it read as a form rather than as an app. That is trivially

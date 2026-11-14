@@ -91,7 +91,7 @@ export function CourseBar({ compact = false }: CourseBarProps) {
         away from the search and the mission.
 
         The count comes along rather than being traded away. It is what makes the
-        control legible — `docs/design-language.md`'s "a count is what makes a
+        control legible — `../../docs/design-language.md`'s "a count is what makes a
         filter honest" — and in compact mode it is the *only* place the in-scope
         figure appears, which is why the note below is suppressed there.
       */}

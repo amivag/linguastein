@@ -82,7 +82,9 @@ beforeAll(() => {
   );
   write(
     'nouns.tsv',
-    '# Columns: lemma\tgloss\tgender\tplural\tlevel\ttopics\tregions\tregister\nHaus\thouse\tm\t\ta1\t\t\t\n',
+    // Neuter, as German has it. The fixture said `m` for as long as the build
+    // read every gender but `f` as masculine, which is why nothing noticed.
+    '# Columns: lemma\tgloss\tgender\tplural\tlevel\ttopics\tregions\tregister\nHaus\thouse\tn\t\ta1\t\t\t\n',
   );
   // `zwanzig` is a NUM row no Spanish numeral module can read or spell.
   write(
@@ -96,7 +98,9 @@ beforeAll(() => {
       // the sentences header says so and this fixture did it anyway, which parsed
       // the gloss as the level and shipped an item with no text. It built for as
       // long as nothing checked a level against a ladder.
-      'Das Haus ist alt.\tThe house is old.\ta1\n',
+      // An umlaut typed decomposed (o + U+0308) and an `ß`: the tokeniser was a
+      // Spanish character class, and split `schön` into `sch` + `n`.
+      'Das schöne Haus ist groß.\tThe beautiful house is big.\ta1\n',
   );
 
   result = tryRunScript('scripts/build-dataset.ts', {
@@ -148,7 +152,7 @@ describe('building a language with no module', () => {
     expect(manifest.referenceLanguage).toBe('en');
     // Its own, from `translations.tsv`, and not the pack's — which happens to be
     // the same string here because the fixture cut both at once. The point is
-    // that it was *read* from the other file: `es` ships 0.16.0 for both today
+    // that it was *read* from the other file: `es` ships 0.17.0 for both today
     // and they diverge the first time a gloss is reworded on its own.
     expect(manifest.version).toBe('0.1.0');
     // Priced, so Settings can add it to what keeping the course offline costs.
@@ -182,6 +186,30 @@ describe('building a language with no module', () => {
       ? readJsonl<{ id: string }>(join(packDir(), 'de-a1-core-skills.jsonl'))
       : [];
     expect(skills.filter((skill) => skill.id.includes('numerals-'))).toEqual([]);
+  });
+
+  it('keeps umlauts and ß inside their words, composed', () => {
+    const [sentence] = readJsonl<{ text: string; tokens: { text: string; lexeme?: string }[] }>(
+      join(packDir(), 'de-a1-core-sentences-a1.jsonl'),
+    );
+
+    expect(sentence?.text).toBe('Das schöne Haus ist groß.');
+    expect(sentence?.tokens.map((token) => token.text)).toEqual([
+      'Das',
+      'schöne',
+      'Haus',
+      'ist',
+      'groß',
+      '.',
+    ]);
+    expect(sentence?.tokens.find((token) => token.text === 'Haus')?.lexeme).toBeDefined();
+  });
+
+  it('ships a neuter noun as neuter', () => {
+    const [noun] = readJsonl<{ lemma: string; gender: string }>(
+      join(packDir(), 'de-a1-core-nouns.jsonl'),
+    );
+    expect(noun).toMatchObject({ lemma: 'Haus', gender: 'neuter' });
   });
 
   it('does not consult the Spanish irregularity table', () => {

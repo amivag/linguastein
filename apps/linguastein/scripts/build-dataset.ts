@@ -248,7 +248,14 @@ function readSource(file: string): SourceFile {
 
   for (const [line, text] of lines.entries()) {
     if (text.trim().length === 0 || text.startsWith('#')) continue;
-    const cells = text.split('\t').map((cell) => cell.trim());
+    /*
+     * NFC, because the same letter can arrive as one code point or as a base
+     * plus a combining mark — Greek `ά`, German `ü` — depending on the editor
+     * that typed it. Composed is what the tokeniser and the surface index
+     * compare, so a decomposed source row would link nothing and say nothing.
+     * Only the parsed cells change: write-back uses `lines`, as authored.
+     */
+    const cells = text.split('\t').map((cell) => cell.trim().normalize('NFC'));
     const hasId = ID_PATTERN.test(cells[0] ?? '');
     const noCard = cells[0] === NO_CARD;
     rows.push({
@@ -897,6 +904,15 @@ for (const sentence of sentences.filter((entry) => entry.speakerGender)) {
  * common word in the surface index. Those are taught in sentences instead, so
  * "every letter name has a card" is deliberately not the rule.
  */
+for (const noun of nouns) {
+  if (!['m', 'f', 'n'].includes(noun.gender)) {
+    problems.push(
+      `nouns.tsv (${noun.lemma}): gender "${noun.gender}" is not m, f or n — ` +
+        'it would otherwise ship as masculine',
+    );
+  }
+}
+
 const CLAIMS_LETTER = /^the letter /i;
 for (const noun of nouns) {
   if (!CLAIMS_LETTER.test(noun.gloss)) continue;
@@ -1342,12 +1358,27 @@ const verbLexemes: LexemeRecord[] = verbs.map((verb) => ({
   tags: verb.regularity === 'irregular' ? ['irregular'] : [],
 }));
 
+/*
+ * The gender column, read rather than defaulted.
+ *
+ * It used to be `f` or else masculine, which held while the only language had
+ * two genders. German and Greek have a third, and under that rule every neuter
+ * noun — `das Haus`, `το σπίτι` — would have shipped as masculine with no
+ * warning, as would a typo. An unknown letter is refused by the gate above.
+ */
+const GENDERS: Readonly<Record<string, 'masculine' | 'feminine' | 'neuter'>> = {
+  m: 'masculine',
+  f: 'feminine',
+  n: 'neuter',
+};
+const genderOf = (noun: { gender: string }) => GENDERS[noun.gender] ?? 'masculine';
+
 const nounLexemes: LexemeRecord[] = nouns.map((noun) => ({
   id: lexemeId(noun.lemma, 'NOUN'),
   lemma: noun.lemma,
   pos: 'NOUN',
   level: noun.level,
-  gender: noun.gender === 'f' ? 'feminine' : 'masculine',
+  gender: genderOf(noun),
   ...(noun.register ? { register: noun.register } : {}),
   ...(noun.regions.length > 0 ? { regions: noun.regions } : {}),
 }));
@@ -1602,7 +1633,7 @@ function closedClassRecords(modifier: ModifierRow): NominalForm[] {
 const nominalForms: NominalForm[] = [
   ...nouns.flatMap((noun): NominalForm[] => {
     const lexeme = lexemeId(noun.lemma, 'NOUN');
-    const gender = noun.gender === 'f' ? 'feminine' : 'masculine';
+    const gender = genderOf(noun);
     const key = formStem(lexeme);
     // A form of `papa` is as regional as the lexeme: the plural of a word a
     // learner should not be taught is not a word either.
@@ -1816,7 +1847,17 @@ interface ItemRecord {
   provenance?: { source: string; review: string };
 }
 
-const TOKEN_PATTERN = /[¿¡]|[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+|[.,!?;:]/g;
+/*
+ * A word is any run of letters with their combining marks, in any script.
+ *
+ * This was a Spanish character class (`A-Za-z` plus `áéíóúüñ`), which a second
+ * language broke silently rather than loudly: Greek produced no word tokens at
+ * all, and German split at every umlaut and `ß` — `schön` became `sch` + `n`.
+ * `\p{L}` covers each of them, and the Spanish pack builds identically because
+ * every letter it uses was already in the old class. `;` stays punctuation,
+ * which is also the Greek question mark.
+ */
+const TOKEN_PATTERN = /[¿¡]|\p{L}[\p{L}\p{M}]*|[.,!?;:]/gu;
 const PUNCTUATION = new Set(['.', ',', '!', '?', ';', ':', '¿', '¡']);
 
 /** Words after which a noun or adjective is far more likely than a verb. */

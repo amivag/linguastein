@@ -21,6 +21,28 @@ even if Chinese is not on the roadmap.
 
 ## 1. Where this stands
 
+**Re-checked 2026-11-21 against source.** Tokenising is now script-neutral
+(Greek words, umlauts and `ß` come out whole, NFC) and nouns carry `m`, `f` or `n`,
+refusing anything else; `greek-build.test.ts` and `second-language-build.test.ts`
+pin both. Still Spanish-only, roughly in the order a German or Greek A1 course
+would hit them:
+
+- **Lexeme ids** are a Latin slug, so a Greek lemma has none until the module
+  supplies `transliterate` (the build refuses the empty stem by name).
+- **The annotator in `scripts/build-dataset.ts`**: `NOMINAL_CUES`,
+  `SUBJUNCTIVE_TRIGGERS`, `ENCLITICS`, `PROCLITICS`, `PATTERNS`,
+  `SELF_DESCRIBING_VERBS` and `deriveAddress` (which returns `tu`/`vosotros`) run
+  for every language. §2's "landed" covers the morphology seam, not these.
+- **Article tags** in `src/styles/semantics.ts` map genders to `el/la/lo`.
+- **Typed answers**: `grading.ts` leaves `Schoen`≠`Schön` and `Strasse` only
+  near `Straße`; capitals are ignored, which German nouns need.
+- **Model gaps**: no verb `aspect`; `spellCardinal` takes no gender; separable
+  verbs are never joined into one `Annotation.lexeme`; `reading` has no source
+  column.
+- **Smaller**: alphabet guide and numeral guide are Spanish; capitals are made with
+  `toUpperCase` (ς→Σ, ß→SS); `FILTERABLE_REGIONS`, missions, `identity.ts`'s
+  "Spanish Practice" and `review-dataset.ts` article checks are Spanish.
+
 The runtime is in better shape than the pipeline. The engine was built so that
 "one target language" is a scope rather than an assumption, and the parts that
 hold it are real:

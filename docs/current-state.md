@@ -48,6 +48,9 @@ slots; `AppShell` composes Spanish navigation, history, speech and updates.
 
 1. Shared scheduling still embeds learning-policy thresholds; make policies
    explicit when a real second subject needs different behavior.
+2. Greek and German cannot be built as courses yet;
+   [second language](../apps/linguastein/docs/tasks/second-language.md) §1 lists
+   what is still Spanish-only.
 
 These are findings, not completed fixes. Keep the list current as fixes land.
 

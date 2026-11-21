@@ -1,4 +1,5 @@
 export * from './audio-service';
+export * from './cues';
 export * from './failure';
 export * from './microphone';
 export * from './playback';

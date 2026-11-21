@@ -28,6 +28,7 @@ import {
 } from '../../domain/sessions';
 import { useLocalWrites, type LocalWriteStatus } from '../../components/useLocalWrites';
 import { saveAttempts } from '../../storage';
+import { signalVerdict } from './verdict-feedback';
 import { seededRng } from '../../utils/random';
 
 export type SessionStatus = 'loading' | 'active' | 'complete' | 'empty';
@@ -127,7 +128,7 @@ export interface SessionRunner {
  * was, and the screen is the last place that knows.
  */
 export function useSessionRunner(config: SessionConfig, course: Course): SessionRunner {
-  const { services } = useServices();
+  const { services, preferences } = useServices();
   const { repository, storage, exercises } = services;
   const { status: saveStatus, enqueue, retry: retrySave } = useLocalWrites();
 
@@ -361,9 +362,12 @@ export function useSessionRunner(config: SessionConfig, course: Course): Session
       if (!result) return null;
       setAnswers((current) => new Map(current).set(index, { grade: result.grade, result, answer }));
       persist(result.grade, result.correct, answer.latencyMs);
+      // Only here, where an answer was checked: a self-rated `submitGrade`
+      // proves nothing, so it gets no sound either.
+      signalVerdict(services, preferences, result.correct);
       return result;
     },
-    [exercise, persist, answers, index],
+    [exercise, persist, answers, index, services, preferences],
   );
 
   const submitGrade = useCallback(

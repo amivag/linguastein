@@ -31,6 +31,7 @@ import {
   type TtsProvider,
   type TtsVoice,
 } from './types';
+import { NO_CUES, type CuePlayer } from './cues';
 
 export interface AudioServiceOptions {
   readonly repository: ContentRepository;
@@ -39,6 +40,8 @@ export interface AudioServiceOptions {
   readonly tts?: TtsProvider;
   /** Injectable for tests; defaults to the DOM `Audio` element. */
   readonly createElement?: (src: string) => HTMLAudioElement;
+  /** Verdict sounds. Absent means the app makes none. */
+  readonly cues?: CuePlayer;
 }
 
 /** One thing to play, and how to start it. */
@@ -51,6 +54,7 @@ interface Track {
 
 export function createAudioService(options: AudioServiceOptions): AudioService {
   const { repository, assetBaseUrl, tts } = options;
+  const cues = options.cues ?? NO_CUES;
   const createElement = options.createElement ?? ((src: string) => new Audio(src));
 
   let current: PlaybackHandle | null = null;
@@ -251,6 +255,9 @@ export function createAudioService(options: AudioServiceOptions): AudioService {
     },
 
     stop,
+    // Laid over whatever is playing, never through `run`: see `cues.ts`.
+    cue: (kind) => cues.play(kind),
+    canCue: () => cues.isAvailable(),
     pause,
     resume,
 

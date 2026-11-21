@@ -15,6 +15,12 @@ in the pack's own counts.
 
 ## Unreleased
 
+### Added
+
+- Optional sound and vibration when an answer is checked, both off by default and
+  offered in Settings → Learning only where the device supports them. Self-rated
+  cards stay silent.
+
 ### Changed
 
 - A correct multiple-choice or cloze answer no longer counts as `easy`, however

@@ -16,6 +16,7 @@ import {
 import { testRepository } from './pack';
 import { TestRouter } from './router';
 import { UiProvider } from '@platform/ui';
+import { NO_HAPTICS } from '@platform/web';
 import { kitIcon } from '../../src/app/kit-icon';
 
 /**
@@ -30,6 +31,8 @@ export const silentAudio: AudioService = {
   play: () => Promise.resolve(NOOP_PLAYBACK),
   playAll: () => Promise.resolve(NOOP_PLAYBACK),
   speak: () => Promise.resolve(NOOP_PLAYBACK),
+  cue: () => {},
+  canCue: () => false,
   stop: () => {},
   pause: () => {},
   resume: () => {},
@@ -75,6 +78,7 @@ export function testServices(overrides: Partial<AppServices> = {}): AppServices 
     storage: createMemoryStorage(),
     audio: silentAudio,
     speech: noSpeech,
+    haptics: NO_HAPTICS,
     exercises: new ExerciseEngine(),
     preferences: DEFAULT_PREFERENCES,
     /*

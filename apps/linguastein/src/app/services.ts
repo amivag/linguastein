@@ -6,6 +6,7 @@
 
 import {
   createAudioService,
+  createWebAudioCues,
   createWebMicrophoneLevels,
   createWebSpeechRecognitionProvider,
   createWebSpeechTtsProvider,
@@ -26,7 +27,7 @@ import type { BatchDefinition } from '../domain/batches';
 import { ContentRepository, DEFAULT_REFERENCE_LANGUAGE, parseCoursePath } from '../domain/content';
 import { createContentLoading, type ContentLoading } from './content';
 import { createOfflinePacks, keepWhatWasRead, type OfflinePacks } from './offline';
-import { markReloadRequired } from '@platform/web';
+import { createHaptics, markReloadRequired, type Haptics } from '@platform/web';
 import { standaloneLetters } from '../languages/runtime';
 import { ExerciseEngine } from '../domain/exercises';
 import { courseStateOf, createStorage } from '../storage';
@@ -53,6 +54,12 @@ export interface AppServices {
   readonly audio: AudioService;
   /** Optional speech input; absent where the browser cannot listen. */
   readonly speech: SpeechRecognitionProvider;
+  /**
+   * A buzz under the thumb, where the device has a motor. Beside `audio` rather
+   * than inside it because it is not sound; like a cue, whether to use it is the
+   * learner's preference (`feedbackHaptics`), checked by the caller.
+   */
+  readonly haptics: Haptics;
   readonly exercises: ExerciseEngine;
   readonly preferences: Preferences;
   /**
@@ -211,6 +218,7 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
     repository,
     assetBaseUrl,
     tts: createWebSpeechTtsProvider(),
+    cues: createWebAudioCues(),
   });
 
   return {
@@ -226,6 +234,7 @@ export async function createServices(options: CreateServicesOptions = {}): Promi
      * recogniser's behalf — and what the level meter reads while listening.
      */
     speech: createWebSpeechRecognitionProvider({ microphone: createWebMicrophoneLevels() }),
+    haptics: createHaptics(),
     exercises: new ExerciseEngine(),
     preferences,
     courses,

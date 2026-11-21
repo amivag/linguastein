@@ -39,7 +39,7 @@ counts are in the manifests and the public [README](../README.md).
 | Verb depth, non-item drills and mastery                      | [verb cards](../apps/linguastein/docs/tasks/verb-cards.md), [numerals](../apps/linguastein/docs/tasks/numerals.md)                                                                                               |
 | Typed production and diagnostic evidence                     | [typed production](../apps/linguastein/docs/tasks/typed-production.md), [retrieval evidence](../apps/linguastein/docs/tasks/retrieval-evidence.md)                                                               |
 | Additional languages and pack resolution                     | [second language](../apps/linguastein/docs/tasks/second-language.md), [language matrix](../apps/linguastein/docs/tasks/language-matrix.md), [pack addressing](../apps/linguastein/docs/tasks/pack-addressing.md) |
-| Interaction polish, offline/install UX and raster PWA icons  | [game feel](../apps/linguastein/docs/tasks/game-feel.md), [architecture](../apps/linguastein/docs/architecture.md)                                                                                               |
+| Offline/install UX                                           | [architecture](../apps/linguastein/docs/architecture.md)                                                                                                                                                         |
 
 These are candidate work areas, not a promise that every historical brief is
 unimplemented. Keep content generation distinct from human editorial approval.

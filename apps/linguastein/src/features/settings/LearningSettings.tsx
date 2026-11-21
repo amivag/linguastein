@@ -106,6 +106,37 @@ export function LearningSettings() {
         How long the session has been running. There is no limit and no penalty — switch it off if a
         clock is a distraction.
       </span>
+
+      {/* Offered only where the device can do it, so neither is a switch that does
+          nothing. Both off until asked for: game-feel §4.6. */}
+      {services.audio.canCue() && (
+        <>
+          <label className={styles.toggle}>
+            <input
+              type="checkbox"
+              checked={preferences.feedbackSound}
+              onChange={(event) => updatePreferences({ feedbackSound: event.target.checked })}
+            />
+            <span>Sound on checked answers</span>
+          </label>
+          <span className={styles.hint}>
+            A quiet tone as each answer is checked. Cards you rate yourself stay silent.
+          </span>
+        </>
+      )}
+      {services.haptics.isAvailable() && (
+        <>
+          <label className={styles.toggle}>
+            <input
+              type="checkbox"
+              checked={preferences.feedbackHaptics}
+              onChange={(event) => updatePreferences({ feedbackHaptics: event.target.checked })}
+            />
+            <span>Vibrate on checked answers</span>
+          </label>
+          <span className={styles.hint}>One tap for a match, two for a miss.</span>
+        </>
+      )}
     </>
   );
 }

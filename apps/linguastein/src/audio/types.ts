@@ -8,6 +8,7 @@
  */
 
 import type { ItemId, LanguageTag, LearningItem } from '../domain/content';
+import type { FeedbackCue } from './cues';
 
 export interface SpeechRequest {
   readonly text: string;
@@ -129,6 +130,14 @@ export interface AudioService {
    */
   playAll(items: readonly LearningItem[], options: SequenceOptions): Promise<PlaybackHandle>;
   speak(request: SpeechRequest): Promise<PlaybackHandle>;
+  /**
+   * A short verdict sound, laid over whatever is playing rather than replacing
+   * it. Does not touch {@link playing}. Whether to make it is the learner's
+   * choice, so the caller checks the preference; this only makes the noise.
+   */
+  cue(kind: FeedbackCue): void;
+  /** Whether this device can make cue sounds at all, for offering the setting. */
+  canCue(): boolean;
   stop(): void;
   /** Holds playback where it is; `resume` picks it up. Both are no-ops if idle. */
   pause(): void;

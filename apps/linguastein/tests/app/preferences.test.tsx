@@ -29,6 +29,7 @@ import { createMemoryStorage, DEFAULT_PREFERENCES } from '../../src/storage';
 import { ExerciseEngine } from '../../src/domain/exercises';
 import { testRepository } from '../fixtures/pack';
 import { silentAudio } from '../fixtures/services';
+import { NO_HAPTICS } from '@platform/web';
 
 /**
  * Storage that takes its time, and takes less of it each call — so a second
@@ -76,6 +77,7 @@ async function bootApp() {
       listen: () => Promise.reject(new Error('unavailable')),
       stop: () => {},
     },
+    haptics: NO_HAPTICS,
     exercises: new ExerciseEngine(),
     preferences: DEFAULT_PREFERENCES,
     courses: {},

@@ -1,8 +1,7 @@
 # Task: make it feel good to use
 
-**Status:** in progress — §4.1 (motion scale), §4.2 (answer feedback), §4.3
-(segmented progress), §4.4 (the earned summary) and §4.5 (adaptive Home) have
-landed. §4.6 remains.
+**Status:** done 2026-11-21 — §4.1 to §4.6 have all landed. Kept as rationale;
+§3 still binds any later polish.
 **Written:** 2026-08-20
 **Revised:** 2026-08-21 — §4.2 landed as part of the design-language pass; see
 [docs/design-language.md](../../../../docs/design-language.md), which now owns the visual rules
@@ -210,7 +209,16 @@ fresh-first session. Learning rhythm also names when this course was last
 practised. The clock is read in the existing storage effect rather than during
 render, preserving the React Compiler constraint.
 
-### 4.6 Optional sound and haptics
+### 4.6 Optional sound and haptics — landed
+
+Two device preferences, `feedbackSound` and `feedbackHaptics`, both off and each
+offered only where the device can act on it. Tones are synthesised through
+`AudioService.cue` (`src/audio/cues.ts`) and laid over speech rather than
+interrupting it; haptics are `@platform/web`'s `createHaptics`, which also asks
+for a touch screen because desktop Chromium defines `vibrate` with no motor.
+Only checked answers signal; self-rated study cards stay silent.
+
+The original brief:
 
 Both off by default, both behind a preference in the existing preferences
 record, both trivially ignorable. Sound goes through the existing audio seam —
@@ -261,12 +269,12 @@ the least valuable if the earlier ones landed well.
 - [x] Session progress reads as progress, with the progressbar contract intact
 - [x] End of session says what was achieved; study mode says its honest version
 - [x] Home leads with what is due
-- [ ] Sound and haptics exist, off by default, behind preferences
-- [ ] No new hard-coded colour anywhere; any new role passes contrast in every
+- [x] Sound and haptics exist, off by default, behind preferences
+- [x] No new hard-coded colour anywhere; any new role passes contrast in every
       theme
-- [ ] `npm run check` passes; `npx vitest run tests/a11y` passes
-- [ ] A reduced-motion pass loses no information
-- [ ] Nothing in §3 has crept in
+- [x] `npm run check` passes; `npx vitest run tests/a11y` passes
+- [x] A reduced-motion pass loses no information
+- [x] Nothing in §3 has crept in
 
 ## 7. Verification
 

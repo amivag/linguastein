@@ -58,6 +58,17 @@ export interface Preferences {
    */
   readonly showTimer: boolean;
   readonly slowAudio: boolean;
+  /**
+   * A short sound with each checked answer. Off by default, like
+   * {@link feedbackHaptics}: it is the kind of feedback most likely to be wrong
+   * for a given learner — on a train, beside someone asleep, under a screen
+   * reader already talking — so it is asked for, never assumed
+   * (`docs/tasks/game-feel.md` §4.6). Self-rated study cards make no sound,
+   * because a reveal proves nothing worth marking.
+   */
+  readonly feedbackSound: boolean;
+  /** A buzz with each checked answer, where the device can. Off by default. */
+  readonly feedbackHaptics: boolean;
   /*
    * `showRomanisationHints` was here, defaulted, and read by nothing. It is
    * gone rather than kept for a language that might want it, because this

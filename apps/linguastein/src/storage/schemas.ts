@@ -52,6 +52,8 @@ const preferencesShape = {
   autoPlayAudio: z.boolean(),
   showTimer: z.boolean(),
   slowAudio: z.boolean(),
+  feedbackSound: z.boolean(),
+  feedbackHaptics: z.boolean(),
   theme: z.enum(['light', 'dark', 'system']),
   palette: z.enum(PALETTES),
   contrast: z.enum(CONTRAST_LEVELS),

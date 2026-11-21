@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Browser runtime shared by the apps: on-device error log, update signals, durable storage and the Trusted Types policy.",
+  "description": "Browser runtime shared by the apps: on-device error log, update signals, durable storage, haptics and the Trusted Types policy.",
   "license": "AGPL-3.0-only",
   "sideEffects": false,
   "exports": {

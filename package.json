@@ -28,6 +28,6 @@
     "review:data": "npm run review:data -w linguastein-app --"
   },
   "devDependencies": {
-    "prettier": "^3.9.10"
+    "prettier": "^3.10.1"
   }
 }

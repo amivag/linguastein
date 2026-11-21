@@ -1,8 +1,8 @@
 {
   "pack": "core-es",
   "referenceLanguage": "en",
-  "version": "0.16.0",
-  "updated": "2026-08-30",
+  "version": "0.17.0",
+  "updated": "2026-11-21",
   "name": "Spanish Core A1–B1 · English meanings",
   "license": "CC0-1.0",
   "authors": [
@@ -21,7 +21,7 @@
     {
       "kind": "translations",
       "path": "es-a1-b1-core-translations-en.jsonl",
-      "bytes": 479461
+      "bytes": 500642
     }
   ]
 }

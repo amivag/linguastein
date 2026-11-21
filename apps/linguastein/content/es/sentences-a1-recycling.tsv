@@ -1,0 +1,220 @@
+# A1 recycling batch: passages written around the A1 words still short of their
+# six contexts (see recycling.tsv and §3.1 of the dataset-expansion brief).
+# Every line is built from vocabulary the pack already has, so each one pays into
+# the recycling target instead of adding a new word that needs contexts of its own.
+# Columns: id	spanish	english	level	topics	note	register	address	regions	passage	speaker	skills
+#
+# ── consulta-garganta ──
+003017	Buenos días, doctora. Me duele mucho la garganta.	Good morning, doctor. My throat hurts a lot.	a1	health,body					consulta-garganta	Pablo
+003018	¿Le duele también la cabeza?	Does your head hurt too?	a1	health,body					consulta-garganta	Lucía
+003019	Sí, y también la nariz y los ojos.	Yes, and my nose and eyes too.	a1	health,body					consulta-garganta	Pablo
+003020	Ahora miro su boca y su garganta.	Now I'll look at your mouth and throat.	a1	health,body					consulta-garganta	Lucía
+003021	Su garganta está muy roja.	Your throat is very red.	a1	health,body					consulta-garganta	Lucía
+003022	¿Es algo malo, doctora?	Is it something bad, doctor?	a1	health,body					consulta-garganta	Pablo
+003023	No, pero usted está enfermo y necesita descansar.	No, but you are ill and need to rest.	a1	health,body					consulta-garganta	Lucía
+003024	Tiene que beber mucha agua y tomar sopa caliente.	You have to drink lots of water and have hot soup.	a1	health,body					consulta-garganta	Lucía
+003025	¿Puedo trabajar el miércoles?	Can I work on Wednesday?	a1	health,body					consulta-garganta	Pablo
+003026	Mejor no. Su salud es más importante que el trabajo.	Better not. Your health is more important than work.	a1	health,body					consulta-garganta	Lucía
+#
+# ── cuerpo-deporte ──
+003027	Hoy me duele todo el cuerpo.	Today my whole body hurts.	a1	body,sport,health					cuerpo-deporte	
+003028	Me duelen las piernas, los brazos y hasta los dedos.	My legs, my arms and even my fingers hurt.	a1	body,sport,health					cuerpo-deporte	
+003029	Los sábados juego al fútbol con mis compañeros de trabajo.	On Saturdays I play football with my workmates.	a1	body,sport,health					cuerpo-deporte	
+003030	El juego es divertido, pero ellos son más rápidos que yo.	The game is fun, but they are faster than me.	a1	body,sport,health					cuerpo-deporte	
+003031	Yo corro detrás de ellos todo el tiempo.	I run behind them the whole time.	a1	body,sport,health					cuerpo-deporte	
+003032	Mi corazón dice que no, pero mi cabeza dice que sí.	My heart says no, but my head says yes.	a1	body,sport,health					cuerpo-deporte	
+003033	Después tengo hambre y mucha sed.	Afterwards I am hungry and very thirsty.	a1	body,sport,health					cuerpo-deporte	
+003034	Siempre tomo un plátano y un zumo de naranja.	I always have a banana and an orange juice.	a1	body,sport,health					cuerpo-deporte	
+003035	Mañana voy a estar cansado, pero contento.	Tomorrow I am going to be tired, but happy.	a1	body,sport,health					cuerpo-deporte	
+#
+# ── presentar-novia ──
+003036	Tía Ana, te presento a Elena, mi novia.	Aunt Ana, this is Elena, my girlfriend.	a1	family,people					presentar-novia	Carlos
+003037	¡Hola, Elena! Carlos siempre habla de ti.	Hi, Elena! Carlos always talks about you.	a1	family,people					presentar-novia	Ana
+003038	Hola. Tú eres su tía favorita, ¿verdad?	Hi. You are his favourite aunt, right?	a1	family,people					presentar-novia	Elena
+003039	Sí, y también la más divertida de la familia.	Yes, and also the most fun one in the family.	a1	family,people					presentar-novia	Ana
+003040	¿Y tú eres de aquí?	And are you from here?	a1	family,people					presentar-novia	Ana
+003041	No, soy de Argentina, pero ahora vivo en Granada.	No, I am from Argentina, but I live in Granada now.	a1	family,people					presentar-novia	Elena
+003042	¡Qué bonito! ¿Y qué haces en Granada?	How lovely! And what do you do in Granada?	a1	family,people					presentar-novia	Ana
+003043	Soy estudiante en la universidad. Estudio idiomas.	I am a student at the university. I study languages.	a1	family,people					presentar-novia	Elena
+003044	Mi esposo es de Grecia, de Atenas.	My husband is from Greece, from Athens.	a1	family,people					presentar-novia	Ana
+003045	Me encanta Grecia. Quiero visitar Atenas en junio.	I love Greece. I want to visit Athens in June.	a1	family,people					presentar-novia	Elena
+#
+# ── sobrina-bebe ──
+003046	Mi hermana tiene una niña de seis meses.	My sister has a six-month-old baby girl.	a1	family,people					sobrina-bebe	
+003047	Es su primera hija.	She is her first daughter.	a1	family,people					sobrina-bebe	
+003048	La bebé se llama Lucía y es muy guapa.	The baby is called Lucía and she is very pretty.	a1	family,people					sobrina-bebe	
+003049	Tiene el pelo negro y los ojos azules.	She has black hair and blue eyes.	a1	family,people					sobrina-bebe	
+003050	Su cara es pequeña y su nariz también.	Her face is small and so is her nose.	a1	family,people					sobrina-bebe	
+003051	Cuando canto una canción, la niña está feliz.	When I sing a song, the little girl is happy.	a1	family,people					sobrina-bebe	
+003052	Mi hermana y su esposo están cansados, pero felices.	My sister and her husband are tired, but happy.	a1	family,people					sobrina-bebe	
+003053	Por la noche la niña duerme poco.	At night the little girl sleeps little.	a1	family,people					sobrina-bebe	
+003054	Mi abuelo dice que es la niña más bonita del mundo.	My grandfather says she is the prettiest girl in the world.	a1	family,people					sobrina-bebe	
+#
+# ── cumple-abuelo ──
+003055	El cumpleaños del abuelo es el miércoles.	Grandpa's birthday is on Wednesday.	a1	family,food-drink					cumple-abuelo	Marta
+003056	¿Cuántos años tiene?	How old is he?	a1	family,food-drink					cumple-abuelo	Daniel
+003057	Ochenta. Es el mayor de la familia.	Eighty. He is the eldest in the family.	a1	family,food-drink					cumple-abuelo	Marta
+003058	¿Hacemos una fiesta en casa?	Shall we have a party at home?	a1	family,food-drink					cumple-abuelo	Daniel
+003059	Sí, pero algo pequeño, porque él está un poco enfermo.	Yes, but something small, because he is a bit ill.	a1	family,food-drink					cumple-abuelo	Marta
+003060	Yo preparo un pastel de chocolate.	I will make a chocolate cake.	a1	family,food-drink					cumple-abuelo	Daniel
+003061	Mejor sin mucho azúcar. Es por su salud.	Better without much sugar. It is for his health.	a1	family,food-drink					cumple-abuelo	Marta
+003062	Bueno, entonces un pastel de fruta con limón.	OK, then a fruit cake with lemon.	a1	family,food-drink					cumple-abuelo	Daniel
+003063	Perfecto. Y el tío Luis trae el helado.	Perfect. And Uncle Luis is bringing the ice cream.	a1	family,food-drink					cumple-abuelo	Marta
+003064	¡Qué bien! A él le encanta el helado.	Great! He loves ice cream.	a1	family,food-drink					cumple-abuelo	Daniel
+#
+# ── cena-especial ──
+003065	Buenas noches. ¿Qué desean?	Good evening. What would you like?	a1	restaurant,food-drink					cena-especial	Luis
+003066	¿Nos trae el menú, por favor?	Could you bring us the menu, please?	a1	restaurant,food-drink					cena-especial	Carmen
+003067	Claro. Hoy tenemos sopa de tomate y pollo con arroz.	Of course. Today we have tomato soup and chicken with rice.	a1	restaurant,food-drink					cena-especial	Luis
+003068	Yo quiero la carne con patatas y una ensalada.	I would like the meat with potatoes and a salad.	a1	restaurant,food-drink					cena-especial	Pablo
+003069	Para mí, el pescado con verdura.	For me, the fish with vegetables.	a1	restaurant,food-drink					cena-especial	Carmen
+003070	¿Y qué quieren beber?	And what would you like to drink?	a1	restaurant,food-drink					cena-especial	Luis
+003071	Una botella de vino de la casa, por favor.	A bottle of the house wine, please.	a1	restaurant,food-drink					cena-especial	Pablo
+003072	Perdón, ¿nos trae otro tenedor y un cuchillo?	Excuse me, could you bring us another fork and a knife?	a1	restaurant,food-drink					cena-especial	Carmen
+003073	Ahora mismo. ¿Necesitan algo más?	Right away. Do you need anything else?	a1	restaurant,food-drink					cena-especial	Luis
+003074	No, gracias. Es una cena especial: hoy es nuestro día.	No, thanks. It is a special dinner: today is our day.	a1	restaurant,food-drink					cena-especial	Pablo
+#
+# ── almuerzo-oficina ──
+003075	Almuerzo todos los días a las dos con mi compañera Elena.	I have lunch every day at two with my colleague Elena.	a1	food-drink,work					almuerzo-oficina	
+003076	Ella siempre trae una ensalada de huevo y una manzana.	She always brings an egg salad and an apple.	a1	food-drink,work					almuerzo-oficina	
+003077	Yo prefiero algo caliente, porque a esa hora tengo mucha hambre.	I prefer something hot, because at that time I am very hungry.	a1	food-drink,work					almuerzo-oficina	
+003078	En la oficina hay una máquina de café, pero el café es malo.	There is a coffee machine in the office, but the coffee is bad.	a1	food-drink,work					almuerzo-oficina	
+003079	Por eso tomamos un café en el bar de la plaza.	That is why we have a coffee in the bar on the square.	a1	food-drink,work					almuerzo-oficina	
+003080	El almuerzo es corto, solo media hora.	Lunch is short, only half an hour.	a1	food-drink,work					almuerzo-oficina	
+003081	Pero es mi momento favorito del día.	But it is my favourite moment of the day.	a1	food-drink,work					almuerzo-oficina	
+#
+# ── meses-pueblo ──
+003082	En primavera el campo está verde y hay flores en todas partes.	In spring the countryside is green and there are flowers everywhere.	a1	weather,months,nature					meses-pueblo	
+003083	En abril y mayo llueve mucho.	In April and May it rains a lot.	a1	weather,months,nature					meses-pueblo	
+003084	En julio y agosto hace mucho calor y el cielo siempre está azul.	In July and August it is very hot and the sky is always blue.	a1	weather,months,nature					meses-pueblo	
+003085	En septiembre empieza la escuela y en octubre llega el otoño.	In September school starts and in October autumn arrives.	a1	weather,months,nature					meses-pueblo	
+003086	En otoño hay mucho viento y los árboles están amarillos.	In autumn there is a lot of wind and the trees are yellow.	a1	weather,months,nature					meses-pueblo	
+003087	En noviembre y diciembre hace frío, y a veces hay nieve en la montaña.	In November and December it is cold, and sometimes there is snow on the mountain.	a1	weather,months,nature					meses-pueblo	
+003088	Mi mes favorito es febrero, porque es el mes de mi cumpleaños.	My favourite month is February, because it is the month of my birthday.	a1	weather,months,nature					meses-pueblo	
+003089	Y tú, ¿qué mes prefieres?	And you, which month do you prefer?	a1	weather,months,nature					meses-pueblo	
+#
+# ── tiempo-sabado ──
+003090	¿Vamos a la playa el sábado?	Shall we go to the beach on Saturday?	a1	weather,social					tiempo-sabado	Ana
+003091	No sé. Dicen que va a haber lluvia y viento.	I don't know. They say there is going to be rain and wind.	a1	weather,social					tiempo-sabado	Carlos
+003092	¡Qué mala suerte!	What bad luck!	a1	weather,social					tiempo-sabado	Ana
+003093	¿Y una película en el cine?	And a film at the cinema?	a1	weather,social					tiempo-sabado	Carlos
+003094	Prefiero algo fuera. ¿La montaña?	I would prefer something outside. The mountains?	a1	weather,social					tiempo-sabado	Ana
+003095	En la montaña hace frío y todavía hay nieve en marzo.	In the mountains it is cold and there is still snow in March.	a1	weather,social					tiempo-sabado	Carlos
+003096	Entonces, ¿una tarde en casa con música y chocolate caliente?	Then an afternoon at home with music and hot chocolate?	a1	weather,social					tiempo-sabado	Ana
+003097	¡Genial! Es un plan perfecto.	Great! It is a perfect plan.	a1	weather,social					tiempo-sabado	Carlos
+#
+# ── aeropuerto-berlin ──
+003098	Por fin estamos en el aeropuerto.	At last we are at the airport.	a1	travel					aeropuerto-berlin	Marta
+003099	¿Tienes el pasaporte?	Have you got the passport?	a1	travel					aeropuerto-berlin	Daniel
+003100	Sí, está en mi bolsa, con los billetes.	Yes, it is in my bag, with the tickets.	a1	travel					aeropuerto-berlin	Marta
+003101	Nuestro avión sale a las once de la mañana.	Our plane leaves at eleven in the morning.	a1	travel					aeropuerto-berlin	Daniel
+003102	Tenemos tiempo. ¿Tomamos algo antes?	We have time. Shall we have something first?	a1	travel					aeropuerto-berlin	Marta
+003103	No, prefiero esperar cerca de la puerta. Tengo un poco de miedo.	No, I would rather wait near the gate. I am a bit scared.	a1	travel					aeropuerto-berlin	Daniel
+003104	¿De verdad? Pero viajas mucho por trabajo.	Really? But you travel a lot for work.	a1	travel					aeropuerto-berlin	Marta
+003105	Sí, pero nunca estoy tranquilo en un avión.	Yes, but I am never calm on a plane.	a1	travel					aeropuerto-berlin	Daniel
+003106	En Berlín vamos a estar muy bien, ya vas a ver.	We are going to have a great time in Berlin, you will see.	a1	travel					aeropuerto-berlin	Marta
+003107	Sí. Es mi primer viaje a Alemania.	Yes. It is my first trip to Germany.	a1	travel					aeropuerto-berlin	Daniel
+#
+# ── taxi-aeropuerto ──
+003108	Disculpe, ¿es este el taxi para López?	Excuse me, is this the taxi for López?	a1	travel,city					taxi-aeropuerto	Carlos
+003109	Sí, señor. ¿Adónde va?	Yes, sir. Where are you going?	a1	travel,city					taxi-aeropuerto	Luis
+003110	Al aeropuerto, por favor. Tengo un poco de prisa.	To the airport, please. I am in a bit of a hurry.	a1	travel,city					taxi-aeropuerto	Carlos
+003111	¿A qué hora sale su avión?	What time does your plane leave?	a1	travel,city					taxi-aeropuerto	Luis
+003112	A las cinco. ¿Está lejos el aeropuerto?	At five. Is the airport far?	a1	travel,city					taxi-aeropuerto	Carlos
+003113	Unos treinta minutos en carro.	About thirty minutes by car.	a1	travel,city					taxi-aeropuerto	Luis
+003114	Perfecto. ¿Puedo pagar con tarjeta?	Perfect. Can I pay by card?	a1	travel,city					taxi-aeropuerto	Carlos
+003115	Sí, claro. ¿Tiene su boleto en el celular?	Yes, of course. Do you have your ticket on your phone?	a1	travel,city					taxi-aeropuerto	Luis
+003116	Sí, aquí está. Y el pasaporte también.	Yes, here it is. And the passport too.	a1	travel,city					taxi-aeropuerto	Carlos
+003117	Entonces está todo listo.	Then everything is ready.	a1	travel,city					taxi-aeropuerto	Luis
+#
+# ── biblioteca-tarde ──
+003118	Soy estudiante y paso muchas horas en la biblioteca de la universidad.	I am a student and I spend many hours in the university library.	a1	school					biblioteca-tarde	
+003119	Allí todo está tranquilo.	Everything is calm there.	a1	school					biblioteca-tarde	
+003120	Hoy tengo mucha tarea para la clase de inglés.	Today I have a lot of homework for the English class.	a1	school					biblioteca-tarde	
+003121	Prefiero el lápiz al bolígrafo: si hay un error, no es un problema.	I prefer a pencil to a pen: if there is a mistake, it is not a problem.	a1	school					biblioteca-tarde	
+003122	Cuando tengo una pregunta, mi compañera Lucía me ayuda.	When I have a question, my classmate Lucía helps me.	a1	school					biblioteca-tarde	
+003123	Ella habla italiano, inglés y español.	She speaks Italian, English and Spanish.	a1	school					biblioteca-tarde	
+003124	A las ocho la biblioteca está cerrada y vuelvo a casa.	At eight the library is closed and I go back home.	a1	school					biblioteca-tarde	
+003125	Estoy cansado, pero contento con mi trabajo del día.	I am tired, but happy with my work for the day.	a1	school					biblioteca-tarde	
+#
+# ── vecina-nueva ──
+003126	Hola, soy Elena, la nueva vecina del tercer piso.	Hi, I am Elena, the new neighbour on the third floor.	a1	home,people					vecina-nueva	Elena
+003127	¡Hola, Elena! Yo soy Marta. ¿Te gusta el apartamento?	Hi, Elena! I am Marta. Do you like the flat?	a1	home,people					vecina-nueva	Marta
+003128	Sí, mucho. Es pequeño, pero tiene mucha luz.	Yes, very much. It is small, but it has a lot of light.	a1	home,people					vecina-nueva	Elena
+003129	El ascensor está roto otra vez, ¿verdad?	The lift is broken again, isn't it?	a1	home,people					vecina-nueva	Marta
+003130	Sí, y con las maletas es un problema.	Yes, and with the suitcases it is a problem.	a1	home,people					vecina-nueva	Elena
+003131	Si necesitas algo, mi puerta siempre está abierta.	If you need anything, my door is always open.	a1	home,people					vecina-nueva	Marta
+003132	Muchas gracias. Eres muy amable.	Thank you very much. You are very kind.	a1	home,people					vecina-nueva	Elena
+003133	¿Tienes animales? Mi perro es grande, pero muy simpático.	Do you have pets? My dog is big, but very friendly.	a1	home,people					vecina-nueva	Marta
+003134	No, pero me encantan los perros.	No, but I love dogs.	a1	home,people					vecina-nueva	Elena
+#
+# ── ropa-fiesta ──
+003135	Esta noche hay una fiesta y no sé qué ropa llevar.	There is a party tonight and I don't know what to wear.	a1	clothes,colours					ropa-fiesta	Ana
+003136	¿Y el vestido verde? Es muy bonito.	What about the green dress? It is very pretty.	a1	clothes,colours					ropa-fiesta	Lucía
+003137	Está sucio. Y la falda amarilla es un poco corta.	It is dirty. And the yellow skirt is a bit short.	a1	clothes,colours					ropa-fiesta	Ana
+003138	Entonces, un pantalón negro y una camiseta blanca.	Then black trousers and a white T-shirt.	a1	clothes,colours					ropa-fiesta	Lucía
+003139	¿No es un poco aburrido para una fiesta?	Isn't that a bit boring for a party?	a1	clothes,colours					ropa-fiesta	Ana
+003140	Con tu chaqueta roja, no.	Not with your red jacket.	a1	clothes,colours					ropa-fiesta	Lucía
+003141	¡Buena idea! ¿Y qué color es mejor para los zapatos?	Good idea! And which colour is best for the shoes?	a1	clothes,colours					ropa-fiesta	Ana
+003142	Negro. El negro va con todo.	Black. Black goes with everything.	a1	clothes,colours					ropa-fiesta	Lucía
+#
+# ── domingo-bicicleta ──
+003143	Los domingos voy en bicicleta al río con mi novio.	On Sundays I cycle to the river with my boyfriend.	a1	sport,nature,animals					domingo-bicicleta	
+003144	Salimos temprano, cuando la ciudad todavía duerme.	We leave early, when the city is still asleep.	a1	sport,nature,animals					domingo-bicicleta	
+003145	Por la calle vemos gatos y muchos pájaros.	In the street we see cats and lots of birds.	a1	sport,nature,animals					domingo-bicicleta	
+003146	Él es muy fuerte, pero yo soy más rápida.	He is very strong, but I am faster.	a1	sport,nature,animals					domingo-bicicleta	
+003147	Cerca del río comemos pan, queso y fruta fresca.	Near the river we eat bread, cheese and fresh fruit.	a1	sport,nature,animals					domingo-bicicleta	
+003148	Después descansamos debajo de un árbol.	Afterwards we rest under a tree.	a1	sport,nature,animals					domingo-bicicleta	
+003149	Es mi día favorito de la semana.	It is my favourite day of the week.	a1	sport,nature,animals					domingo-bicicleta	
+003150	Volvemos a casa a la hora del almuerzo, con hambre y felices.	We get home at lunchtime, hungry and happy.	a1	sport,nature,animals					domingo-bicicleta	
+#
+# ── noche-rutina ──
+003151	Por la noche ceno a las nueve con mi esposa.	In the evening I have dinner at nine with my wife.	a1	daily-routine,home					noche-rutina	
+003152	Después vemos una película en la televisión.	Then we watch a film on television.	a1	daily-routine,home					noche-rutina	
+003153	A las once me ducho con agua caliente.	At eleven I take a hot shower.	a1	daily-routine,home					noche-rutina	
+003154	Me lavo los dientes y me acuesto.	I brush my teeth and go to bed.	a1	daily-routine,home					noche-rutina	
+003155	Mi esposa lee un libro en la cama.	My wife reads a book in bed.	a1	daily-routine,home					noche-rutina	
+003156	Yo miro el móvil un poco, pero tengo mucho sueño.	I look at my phone a little, but I am very sleepy.	a1	daily-routine,home					noche-rutina	
+003157	Pongo el móvil encima de la mesa, lejos de la cama.	I put my phone on the table, far from the bed.	a1	daily-routine,home					noche-rutina	
+003158	Así duermo mejor.	That way I sleep better.	a1	daily-routine,home					noche-rutina	
+#
+# ── mensaje-carmen ──
+003159	Hola, Pablo. Te escribo este mensaje desde el tren.	Hi, Pablo. I am writing you this message from the train.	a1	communication,travel					mensaje-carmen	
+003160	Llego a Barcelona el viernes por la tarde.	I arrive in Barcelona on Friday afternoon.	a1	communication,travel					mensaje-carmen	
+003161	¿Estás libre el sábado? Podemos visitar la ciudad juntos.	Are you free on Saturday? We can visit the city together.	a1	communication,travel					mensaje-carmen	
+003162	No tengo mapa, y tú conoces todos los lugares bonitos.	I don't have a map, and you know all the nice places.	a1	communication,travel					mensaje-carmen	
+003163	Por la noche podemos bailar en algún bar.	In the evening we can go dancing in some bar.	a1	communication,travel					mensaje-carmen	
+003164	Si estás ocupado, no pasa nada.	If you are busy, it doesn't matter.	a1	communication,travel					mensaje-carmen	
+003165	Espero tu respuesta. Carmen.	I am waiting for your answer. Carmen.	a1	communication,travel					mensaje-carmen	
+#
+# ── madre-enferma ──
+003166	¡Hola, Carmen! ¿Cómo estás?	Hi, Carmen! How are you?	a1	social,health,family					madre-enferma	Daniel
+003167	Regular. Hoy estoy un poco triste.	So-so. I am a bit sad today.	a1	social,health,family					madre-enferma	Carmen
+003168	¿Por qué? ¿Qué pasa?	Why? What is going on?	a1	social,health,family					madre-enferma	Daniel
+003169	Mi madre está enferma y vive lejos, en el pueblo.	My mother is ill and lives far away, in the village.	a1	social,health,family					madre-enferma	Carmen
+003170	¿Es algo malo?	Is it something serious?	a1	social,health,family					madre-enferma	Daniel
+003171	No mucho, pero tiene dolor de cabeza todos los días.	Not very, but she has a headache every day.	a1	social,health,family					madre-enferma	Carmen
+003172	¿Por qué no la visitas este fin de semana?	Why don't you visit her this weekend?	a1	social,health,family					madre-enferma	Daniel
+003173	Sí, es buena idea. Voy el sábado en tren.	Yes, it is a good idea. I will go on Saturday by train.	a1	social,health,family					madre-enferma	Carmen
+003174	Buen viaje, y mucha salud para tu madre.	Have a good trip, and good health to your mother.	a1	social,health,family					madre-enferma	Daniel
+003175	Gracias, Daniel. Eres un buen amigo.	Thanks, Daniel. You are a good friend.	a1	social,health,family					madre-enferma	Carmen
+#
+# ── primer-dia-clase ──
+003176	Hoy es el primer día de clase de mi hijo.	Today is my son's first day of school.	a1	school,family					primer-dia-clase	
+003177	Tiene seis años y tiene un poco de miedo.	He is six and he is a bit scared.	a1	school,family					primer-dia-clase	
+003178	Su profesora es joven y muy simpática.	His teacher is young and very nice.	a1	school,family					primer-dia-clase	
+003179	En la clase hay veinte niños y niñas.	There are twenty boys and girls in the class.	a1	school,family					primer-dia-clase	
+003180	Mi hijo está en la tercera mesa, detrás de una chica con el pelo largo.	My son is at the third table, behind a girl with long hair.	a1	school,family					primer-dia-clase	
+003181	A la una lo busco en la puerta de la escuela.	At one I pick him up at the school gate.	a1	school,family					primer-dia-clase	
+003182	Él está contento y dice que la escuela es genial.	He is happy and says that school is great.	a1	school,family					primer-dia-clase	
+003183	Ya tiene un amigo nuevo, que se llama Carlos.	He already has a new friend, called Carlos.	a1	school,family					primer-dia-clase	
+#
+# ── desayuno-mexico ──
+003184	Estoy de vacaciones en México con mi familia.	I am on holiday in Mexico with my family.	a1	food-drink,travel					desayuno-mexico	
+003185	Cada mañana tomamos el desayuno en un pequeño restaurante.	Every morning we have breakfast in a small restaurant.	a1	food-drink,travel					desayuno-mexico	
+003186	Yo pido huevos con papas y un jugo de naranja.	I order eggs with potatoes and an orange juice.	a1	food-drink,travel					desayuno-mexico	
+003187	Mi hijo prefiere un plátano con chocolate.	My son prefers a banana with chocolate.	a1	food-drink,travel					desayuno-mexico	
+003188	Mi esposo nunca encuentra sus lentes.	My husband can never find his glasses.	a1	food-drink,travel					desayuno-mexico	
+003189	¿Están en el carro o en el hotel?	Are they in the car or at the hotel?	a1	food-drink,travel					desayuno-mexico	
+003190	Siempre están encima de su cabeza.	They are always on top of his head.	a1	food-drink,travel					desayuno-mexico	
+003191	Después miro el mapa en el celular y salimos.	Then I look at the map on my phone and we head out.	a1	food-drink,travel					desayuno-mexico	

@@ -126,10 +126,10 @@ describe('a course described before its content', () => {
     expect(spanish?.levels.map((entry) => entry.level)).toEqual(['a1', 'a2', 'b1', 'all']);
 
     const counts = new Map(spanish?.levels.map((entry) => [entry.level, entry.count]));
-    expect(counts.get('a1')).toBe(2059);
+    expect(counts.get('a1')).toBe(2234);
     // Cumulative, from the pack's own exact per-level figures.
-    expect(counts.get('b1')).toBe(3816);
-    expect(counts.get('all')).toBe(3816);
+    expect(counts.get('b1')).toBe(3991);
+    expect(counts.get('all')).toBe(3991);
   });
 });
 

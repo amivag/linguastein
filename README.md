@@ -7,7 +7,7 @@ engine is language-agnostic by design.
 phone, offline, with no account.
 
 Status: **alpha.** The architecture, engine and practice loop are
-in place, with a generated A1–B1 Spanish pack of 3,816 practisable items awaiting
+in place, with a generated A1–B1 Spanish pack of 3,991 practisable items awaiting
 editorial review (see [`docs/spec`](apps/linguastein/docs/spec) for the product specification).
 
 Alpha means what it says: anything may change drastically, including the data
@@ -118,7 +118,7 @@ about yourself in, and what is stored on this device — used to be a screen of 
 own; it is a Settings section now, and `/user` redirects into it.
 
 Browse and Read are sheets _inside_ Study rather than destinations of their own —
-search and filter all 3,816 items by category or facet (and dictate the search
+search and filter all 3,991 items by category or facet (and dictate the search
 with the mic), or open a connected text with every word tappable. Both still work
 as deep links.
 
@@ -133,7 +133,7 @@ automatically, and every device has an explicit self-rating fallback after
 reveal. A communicative ability is never called reliable from one memorised
 passage alone.
 
-The pack includes 123 passages. Fourteen missions use a dialogue model.
+The pack includes 143 passages. Fourteen missions use a dialogue model.
 
 Every mission now includes a **response palette**: several natural ways to
 perform its central communicative move, with meaning and pragmatic nuance. Three
@@ -200,7 +200,7 @@ from a dataset passes through the validation boundary in
 breaking a session.
 
 The shipped `core-es` pack covers A1–B1: **185 verbs** with generated forms,
-**476 nouns**, **327 modifiers** and **3,016 example sentences** — 3,816 practisable
+**476 nouns**, **327 modifiers** and **3,191 example sentences** — 3,991 practisable
 items in total.
 
 Humans author compact TSV in `content/es/`; `npm run build:data` derives

@@ -43,9 +43,15 @@ because content landed and the paragraph describing it did not:
 npm run build:data
 ```
 
-**Re-measured 2026-08-26**, against pack `0.16.0`. Goals 2 and 3 of §5 have since
+**Re-measured 2026-11-21**, against pack `0.17.0`. Goals 2 and 3 of §5 have since
 been met — read the table before planning volume work, because the figures this
 brief was written against are less than half of what now ships.
+
+The 0.17.0 pass was the first written straight off the A1 recycling report: 20
+passages (175 sentences) built only from existing vocabulary and aimed at the
+shortest words. It took the A1 short count from 236 to 191 and halved the
+lexemes met exactly once, without adding a lexeme — the §3.1 method, measured
+again.
 
 The B1 pass is the reason for the jump, and it changes what §6.2 is asking for.
 A1 is still the open row: B1 met a four-encounter target on its first pass by
@@ -55,26 +61,26 @@ method §3.1 describes, confirmed on a level where nothing had to be retrofitted
 
 | Measure                              | Now                                       |
 | ------------------------------------ | ----------------------------------------- |
-| Practisable items                    | 3,816                                     |
-| — sentences and phrases              | 3,016                                     |
+| Practisable items                    | 3,991                                     |
+| — sentences and phrases              | 3,191                                     |
 | — word cards                         | 800                                       |
 | Lexemes                              | 988 (185 verbs, 476 nouns, 327 other)     |
 | Generated verb forms                 | 7,770 (42 per verb, subjunctive included) |
-| Generated noun and adjective forms   | 1,372                                     |
-| Running words of Spanish             | **18,543 (~154 minutes of reading)**      |
-| Average sentence length              | 6.1 words                                 |
-| Longest single item                  | 13 words                                  |
-| Multi-sentence texts                 | **123 (59 texts, 64 dialogues)**          |
-| — sentences read in context          | 1548, averaging 12.6 per passage          |
-| Tokens linked to a lexeme            | 18,495 of 18,543 (100%)                   |
-| Lexemes appearing in ≥1 sentence     | 974 of 988                                |
-| Lexemes appearing in exactly one     | **62 (6%)**                               |
-| Lexemes with ≥6 encounters           | **545 (55%)**                             |
-| Questions / statements               | 534 / 2,467, with **5** minimal pairs     |
+| Generated noun and adjective forms   | 1,436                                     |
+| Running words of Spanish             | **19,927 (~166 minutes of reading)**      |
+| Average sentence length              | 6.2 words                                 |
+| Longest single item                  | 15 words                                  |
+| Multi-sentence texts                 | **143 (69 texts, 74 dialogues)**          |
+| — sentences read in context          | 1723, averaging 12.0 per passage          |
+| Tokens linked to a lexeme            | 19,879 of 19,927 (100%)                   |
+| Lexemes appearing in ≥1 sentence     | 975 of 988                                |
+| Lexemes appearing in exactly one     | **31 (3%)**                               |
+| Lexemes with ≥6 encounters           | **590 (60%)**                             |
+| Questions / statements               | 573 / 2,607, with **5** minimal pairs     |
 | Items marked with register           | 1,085                                     |
-| Items marked with address (tú/usted) | 590                                       |
-| Items marked with a region           | 125                                       |
-| Items containing `¡`                 | 15                                        |
+| Items marked with address (tú/usted) | 606                                       |
+| Items marked with a region           | 136                                       |
+| Items containing `¡`                 | 23                                        |
 | Items with audio                     | 0                                         |
 | Senses                               | 0                                         |
 | Lexemes with `frequencyRank`         | 0                                         |
@@ -167,9 +173,10 @@ lexemes as it fixed. The passage pass was written from words the pack already
 had, so every sentence paid into the recycling target instead of borrowing from
 it. This is the whole argument for §3.2.
 
-Measured cost of what remains: **1,306 missing encounters**, which at 5.9 linked
-words per sentence is **224 more sentences at an absolute minimum**, and only if
-every one is built entirely from words that are already short. Write them as
+Measured cost of what remains (2026-11-21, pack `0.17.0`): **about 500 missing
+encounters** across the 191 short A1 lexemes, which at 6.0 linked words per
+sentence is **about 85 more sentences at an absolute minimum**, and only if every
+one is built entirely from words that are already short. Write them as
 passages (§6.4) rather than standalone sentences.
 
 That figure has barely moved while the pack doubled, and the reason is the point
@@ -323,7 +330,7 @@ finishing condition.
    **A2 is met**: 170 of its 171 non-numeral lexemes appear in four or more
    sentences, and the one left is `menudo`, which lives only inside `a menudo` — a
    multiword lemma `tokenise` cannot reach, so it is unreachable by construction
-   rather than by neglect. **A1 is the open half**: 339 of 594 still short.
+   rather than by neglect. **A1 is the open half**: 191 of 598 still short.
 
    The gate asked for here now exists, and is a **ratchet** rather than the
    threshold itself: `content/es/recycling.tsv` records where we are, and the

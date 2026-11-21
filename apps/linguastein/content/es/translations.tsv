@@ -38,4 +38,4 @@
 # backwards from 0.16.0 would read as a downgrade to anyone comparing the two.
 # From here the two numbers diverge, which is the point.
 #
-en	0.16.0	5013	2026-08-30	The same English meanings that shipped inside core-es 0.16.0, now a unit of their own
+en	0.17.0	5208	2026-11-21	Meanings for the A1 recycling passages added in core-es 0.17.0

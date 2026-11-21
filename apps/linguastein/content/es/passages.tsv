@@ -135,3 +135,23 @@
 700121	consejo-curso-b1	dialogue	Qué curso elegir	Which course to take	b1	school
 700122	consejo-dinero-b1	dialogue	Ahorrar o gastar	Saving or spending	b1	money
 700123	consejo-salud-b1	dialogue	Un consejo sobre la salud	A word of advice about health	b1	health
+700124	consulta-garganta	dialogue	En la consulta	At the doctor's	a1	health,body
+700125	cuerpo-deporte	text	Después del fútbol	After football	a1	body,sport,health
+700126	presentar-novia	dialogue	Te presento a mi novia	Meet my girlfriend	a1	family,people
+700127	sobrina-bebe	text	La niña de mi hermana	My sister's baby girl	a1	family,people
+700128	cumple-abuelo	dialogue	El cumpleaños del abuelo	Grandpa's birthday	a1	family,food-drink
+700129	cena-especial	dialogue	Una cena especial	A special dinner	a1	restaurant,food-drink
+700130	almuerzo-oficina	text	El almuerzo en la oficina	Lunch at the office	a1	food-drink,work
+700131	meses-pueblo	text	Mi año en el pueblo	My year in the village	a1	weather,months,nature
+700132	tiempo-sabado	dialogue	¿Qué hacemos el sábado?	What shall we do on Saturday?	a1	weather,social
+700133	aeropuerto-berlin	dialogue	En el aeropuerto	At the airport	a1	travel
+700134	taxi-aeropuerto	dialogue	En el taxi	In the taxi	a1	travel,city
+700135	biblioteca-tarde	text	Una tarde en la biblioteca	An afternoon in the library	a1	school
+700136	vecina-nueva	dialogue	Una vecina nueva	A new neighbour	a1	home,people
+700137	ropa-fiesta	dialogue	¿Qué ropa llevo?	What shall I wear?	a1	clothes,colours
+700138	domingo-bicicleta	text	Un domingo en bicicleta	A Sunday on the bike	a1	sport,nature,animals
+700139	noche-rutina	text	Mi noche	My evening	a1	daily-routine,home
+700140	mensaje-carmen	text	Un mensaje de Carmen	A message from Carmen	a1	communication,travel
+700141	madre-enferma	dialogue	Un día regular	A so-so day	a1	social,health,family
+700142	primer-dia-clase	text	El primer día de clase	The first day of school	a1	school,family
+700143	desayuno-mexico	text	Un desayuno en México	A breakfast in Mexico	a1	food-drink,travel

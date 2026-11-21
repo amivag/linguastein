@@ -2,8 +2,8 @@
   "id": "core-es",
   "name": "Spanish Core A1–B1",
   "targetLanguage": "es",
-  "version": "0.16.0",
-  "updated": "2026-08-26",
+  "version": "0.17.0",
+  "updated": "2026-11-21",
   "authors": [
     {
       "name": "Linguastein",
@@ -24,7 +24,7 @@
     "b1"
   ],
   "levelItems": {
-    "a1": 2059,
+    "a1": 2234,
     "a2": 1004,
     "b1": 753
   },
@@ -288,7 +288,7 @@
       "kind": "items",
       "path": "es-a1-b1-core-vocabulary-a1.jsonl",
       "level": "a1",
-      "bytes": 110093
+      "bytes": 111589
     },
     {
       "kind": "items",
@@ -306,7 +306,7 @@
       "kind": "items",
       "path": "es-a1-b1-core-sentences-a1.jsonl",
       "level": "a1",
-      "bytes": 1800300
+      "bytes": 2062963
     },
     {
       "kind": "items",
@@ -323,7 +323,7 @@
     {
       "kind": "passages",
       "path": "es-a1-b1-core-passages.jsonl",
-      "bytes": 60223
+      "bytes": 68084
     }
   ]
 }
